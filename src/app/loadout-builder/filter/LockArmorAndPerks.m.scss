@@ -11,9 +11,9 @@
 }
 
 .area {
-  background-color: #222;
   padding: 4px;
   margin-bottom: 8px;
+  background-color: rgba(0, 0, 0, 0.4);
 
   &:global(.on-drag-enter),
   &:global(.on-drag-hover) {
@@ -22,10 +22,6 @@
 
   &:global(.on-drag-hover) {
     background-color: rgba(128, 128, 128, 0.2);
-  }
-
-  :global(.gradientBackground) & {
-    background-color: rgba(0, 0, 0, 0.4);
   }
 }
 

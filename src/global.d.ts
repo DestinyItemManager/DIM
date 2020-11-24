@@ -32,12 +32,6 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** Move subclass out of weapons */
-  newArrangement: boolean;
-  /** New background */
-  gradientBackground: boolean;
-  /** Move the item popup actions */
-  newItemPopupActions: boolean;
   /** Enable move amounts */
   moveAmounts: boolean;
   /** Enable alt inv mode */
@@ -50,6 +44,8 @@ declare const $featureFlags: {
   awa: boolean;
   /** Incorporate mods directly into loadouts */
   loadoutMods: boolean;
+  /** Show bounty guide */
+  bountyGuide: boolean;
 };
 
 declare namespace React {

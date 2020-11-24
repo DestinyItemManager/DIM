@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import StoreHeading from '../character-tile/StoreHeading';
-import { storeBackgroundColor } from '../shell/filters';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
@@ -52,12 +51,8 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       aria-label={t('Header.Inventory')}
     >
       <HeaderShadowDiv className="store-row store-header">
-        {headerStores.map((store, index) => (
-          <div
-            className={clsx('store-cell', { vault: store.isVault })}
-            key={store.id}
-            style={storeBackgroundColor(store, index)}
-          >
+        {headerStores.map((store) => (
+          <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
             <StoreHeading store={store} />
             <StoreStats store={store} />
           </div>

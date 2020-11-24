@@ -19,14 +19,14 @@
   "ActiveMode": {
     "Beta": "БЕТА",
     "ButtonOff": "Инвентари",
-    "ButtonOn": "Активный Персонаж",
+    "ButtonOn": "Активность",
     "ChangeFilter": "Фильтры",
     "Farming": "Предметы",
     "FarmingStart": "Режим Фарма",
     "Loadouts": "Наборы",
     "NoQuests": "Задания не отслеживаются",
     "NoSearches": "Create saved searches and filter them here.",
-    "Pursuits": "Поручения"
+    "Pursuits": "Контракты"
   },
   "Activities": {
     "Activities": "Активности",
@@ -243,21 +243,6 @@
     "ClickForDetails": "Подробнее...",
     "UserGuideLink": "Руководство"
   },
-  "Ghost": {
-    "crucible": "пвп",
-    "dreaming": "грезы",
-    "edz": "емз",
-    "gambit": "гамбит",
-    "io": "ио",
-    "leviathan": "левиафан",
-    "mars": "марс",
-    "mercury": "меркурий",
-    "moon": "луна",
-    "nessus": "несс",
-    "strikes": "налеты",
-    "tangled": "берега",
-    "titan": "титан"
-  },
   "Header": {
     "About": "О Проекте",
     "BulkTag": "Массовая маркировка предметов",
@@ -297,7 +282,6 @@
     "CheatSheetTitle": "Горячие клавиши:",
     "ClearDialog": "Скрыть",
     "ClearNewItems": "Убрать Новый с предметов",
-    "ClearNewItemsTitle": "Горячая клавиша: [X]",
     "Enter": "[ENTER]",
     "LockUnlock": "Заблокировать/Разблокировать",
     "MarkItemAs": "Тэг '{{tag}}'",
@@ -361,6 +345,7 @@
     "ChooseAPerk": "Выберите Бонус",
     "ClassItem": "Классовый предмет",
     "ClearLocked": "Очистить Обязательное",
+    "Combat": "Combat",
     "ContainsVendorItems": "Этот Набор содержит предметы вендоров",
     "Current": "Текущий",
     "Equip": "Надеть на {{character}}",
@@ -522,6 +507,7 @@
     "MaximizeLight": "Одеться на максимум",
     "MaximizePower": "Надеть макс. Силы",
     "MaximizeStat": "Максимизировать Характеристику",
+    "Mods": "Mods",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NotificationMessage": "Отправка сняряжения с одним предметом в хранилище.",
@@ -627,7 +613,7 @@
       "Untrack": "Не отслеживать {{itemType}}",
       "Untracked": "Отслеживание"
     },
-    "TriageTab": "Triage",
+    "TriageTab": "Приоритет",
     "Vault": "Хранилище"
   },
   "Notes": {
@@ -651,7 +637,6 @@
       "Element": "Стихия",
       "Energy": "Энергия",
       "Event": "Мероприятие",
-      "Ghost": "Патрульная Зона",
       "Icon": "Значок",
       "KillTracker": "Счетчик убийств",
       "Loadouts": "Наборы",
@@ -740,7 +725,7 @@
     "CharacterOrderReversed": "активность (реверс)",
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
-    "CsvImport": "Импорт тэгов/заметок из файла CSV",
+    "CsvImport": "Import CSV",
     "CustomStatDesc": "Укажите какие Характеристики суммируются при подсчёте Почти Всего для каждого класса. Цифра Почти Всего доступна во всплывающей подсказке, Органайзере и Сравнении. Чтобы найти все предметы с Почти Всего большим или равным тридцати наберите \"stat:custom:>=30\" в панели поиска.",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
@@ -769,6 +754,7 @@
     "SortByPrimary": "Уровень Cилы",
     "SortByRarity": "Редкость",
     "SortByRating": "Качество брони (D1)",
+    "SortBySeason": "Season (D2)",
     "SortByTag": "Тэги: Избранное > Оставить > На синтез > Мусор > Архив",
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",

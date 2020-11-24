@@ -12,9 +12,10 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getSpecialtySocketMetadataByPlugCategoryHash, isArmor2Mod } from 'app/utils/item-utils';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import _ from 'lodash';
@@ -25,13 +26,16 @@ import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
-  isModPickerCategory,
   LockedArmor2Mod,
   LockedArmor2ModMap,
   ModPickerCategories,
   ModPickerCategory,
 } from '../types';
-import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
+import {
+  armor2ModPlugCategoriesTitles,
+  getModPickerCategoryFromPlugCategoryHash,
+  isLoadoutBuilderItem,
+} from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
@@ -41,7 +45,6 @@ let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator<LockedArmor2Mod>(
-  compareBy((l) => (l.season ? -l.season : 0)),
   compareBy((l) => l.modDef.plug.energyCost?.energyType),
   compareBy((l) => l.modDef.plug.energyCost?.energyCost),
   compareBy((l) => l.modDef.displayProperties.name)
@@ -51,6 +54,7 @@ interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
   initialQuery?: string;
+  filterLegacy?: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -127,16 +131,10 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const metadata = getSpecialtySocketMetadataByPlugCategoryHash(
-              def.plug.plugCategoryHash
-            );
-            const category =
-              (isModPickerCategory(def.plug.plugCategoryHash) && def.plug.plugCategoryHash) ||
-              (metadata && ModPickerCategories.seasonal) ||
-              undefined;
+            const category = getModPickerCategoryFromPlugCategoryHash(def.plug.plugCategoryHash);
 
             if (category) {
-              transformedMods.push({ modDef: def, category, season: undefined });
+              transformedMods.push({ modDef: def, category });
             }
           }
         }
@@ -167,6 +165,7 @@ function ModPicker({
   isPhonePortrait,
   lockedArmor2Mods,
   initialQuery,
+  filterLegacy,
   lbDispatch,
   onClose,
 }: Props) {
@@ -240,13 +239,27 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.modDef.displayProperties.name) ||
-            regexp.test(mod.modDef.displayProperties.description) ||
-            (mod.season && regexp.test(mod.season.toString())) ||
-            regexp.test(t(armor2ModPlugCategoriesTitles[mod.category]))
+            // TODO I am not thrilled about this filter legacy thing but it will stop
+            // legacy mods being shown when you click on a combat mod socket. Lets aim to
+            // get proper search in here at some point.
+            (!filterLegacy ||
+              combatCompatiblePlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
+            (regexp.test(mod.modDef.displayProperties.name) ||
+              regexp.test(mod.modDef.displayProperties.description) ||
+              regexp.test(mod.modDef.itemTypeDisplayName) ||
+              regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
+              mod.modDef.perks.some((perk) => {
+                const perkDef = defs.SandboxPerk.get(perk.perkHash);
+                return (
+                  perkDef &&
+                  (regexp.test(perkDef.displayProperties.name) ||
+                    regexp.test(perkDef.displayProperties.description) ||
+                    regexp.test(perk.requirementDisplayString))
+                );
+              }))
         )
       : mods;
-  }, [language, query, mods]);
+  }, [language, query, mods, defs.SandboxPerk, filterLegacy]);
 
   const modsByCategory = useMemo(() => {
     const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
@@ -256,7 +269,8 @@ function ModPicker({
       [ModPickerCategories.chest]: [],
       [ModPickerCategories.leg]: [],
       [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.seasonal]: [],
+      [ModPickerCategories.other]: [],
+      [ModPickerCategories.raid]: [],
     };
 
     for (const mod of queryFilteredMods) {
@@ -267,7 +281,7 @@ function ModPicker({
   }, [queryFilteredMods]);
 
   const isGeneralOrSeasonal = (category: ModPickerCategory) =>
-    category === ModPickerCategories.general || category === ModPickerCategories.seasonal;
+    category === ModPickerCategories.general || category === ModPickerCategories.other;
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
@@ -306,7 +320,9 @@ function ModPicker({
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
-          splitBySeason={category === ModPickerCategories.seasonal}
+          splitByItemTypeDisplayName={
+            category === ModPickerCategories.other || category === ModPickerCategories.raid
+          }
           maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
           energyMustMatch={!isGeneralOrSeasonal(category)}
           onModSelected={onModSelected}

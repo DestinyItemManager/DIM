@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
+import { GlobalAlert } from 'bungie-api-ts/core';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { GlobalAlert } from '../bungie-api/bungie-core-api';
 import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { Subscriptions } from '../utils/rx-utils';
-import { alerts$ } from './BungieAlerts';
+import { alerts$, GlobalAlertLevelsToToastLevels } from './BungieAlerts';
 import { DimVersions } from './versions';
 import './WhatsNewLink.scss';
 
@@ -60,7 +60,11 @@ export default class WhatsNewLink extends React.Component<{}, State> {
     if (alerts.length) {
       return (
         <NavLink to="/whats-new" className="link menuItem">
-          <span className={`badge-new bungie-alert-${alerts[0].type}`} />{' '}
+          <span
+            className={`badge-new bungie-alert-${
+              GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]
+            }`}
+          />{' '}
           {t('Header.BungieNetAlert')}
         </NavLink>
       );

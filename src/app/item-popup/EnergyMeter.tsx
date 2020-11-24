@@ -6,7 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import Cost from 'app/vendors/Cost';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -14,7 +14,6 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './EnergyMeter.m.scss';
 
@@ -23,6 +22,12 @@ export const energyStyles = {
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
 };
+
+const swappableEnergyTypes = [
+  DestinyEnergyType.Arc,
+  DestinyEnergyType.Thermal,
+  DestinyEnergyType.Void,
+];
 
 export default function EnergyMeter({
   defs,
@@ -36,7 +41,7 @@ export default function EnergyMeter({
   const [hoverEnergyCapacity, setHoverEnergyCapacity] = useState(0);
   const [previewCapacity, setPreviewCapacity] = useState<number>(energyCapacity);
   const [previewEnergyType, setPreviewEnergyType] = useState<DestinyEnergyType>(energyType);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   if (!item.energy) {
     return null;
@@ -117,11 +122,7 @@ export default function EnergyMeter({
 
   const energyTypes = Object.values(defs.EnergyType.getAll());
 
-  const energyOptions: Option<DestinyEnergyType>[] = [
-    DestinyEnergyType.Arc,
-    DestinyEnergyType.Thermal,
-    DestinyEnergyType.Void,
-  ].map((e) => {
+  const energyOptions: Option<DestinyEnergyType>[] = swappableEnergyTypes.map((e) => {
     const energyDef = energyTypes.find((ed) => ed.enumValue === e)!;
     return {
       key: e.toString(),
@@ -146,15 +147,17 @@ export default function EnergyMeter({
           </div>
         </div>
         <div className={clsx(styles.inner, energyStyles[previewEnergyType])}>
-          <Select<DestinyEnergyType>
-            options={energyOptions}
-            value={previewEnergyType}
-            onChange={onEnergyTypeChange}
-            hideSelected={true}
-            className={styles.elementSelect}
-          >
-            <ElementIcon className={styles.icon} element={energyTypeDef} />
-          </Select>
+          {swappableEnergyTypes.includes(item.energy.energyType) && (
+            <Select<DestinyEnergyType>
+              options={energyOptions}
+              value={previewEnergyType}
+              onChange={onEnergyTypeChange}
+              hideSelected={true}
+              className={styles.elementSelect}
+            >
+              <ElementIcon className={styles.icon} element={energyTypeDef} />
+            </Select>
+          )}
           {meterIncrements.map((incrementStyle, i) => (
             <div
               key={i}
@@ -213,7 +216,7 @@ function EnergyUpgradePreview({
   previewCapacity: number;
   previewEnergyType: DestinyEnergyType;
 }) {
-  if (!item.energy) {
+  if (!item.energy || !swappableEnergyTypes.includes(item.energy.energyType)) {
     return null;
   }
 

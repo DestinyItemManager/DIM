@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
+  ComponentPrivacySetting,
   DestinyAmmunitionType,
   DestinyClass,
   DestinyCollectibleComponent,
@@ -9,11 +10,14 @@ import {
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
+  DestinyItemResponse,
   DestinyItemType,
   DestinyObjectiveProgress,
+  DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
   ItemState,
+  SingleComponentResponse,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -24,6 +28,7 @@ import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
+import { getVault } from '../stores-helpers';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
@@ -131,6 +136,55 @@ export function makeFakeItem(
 }
 
 /**
+ * Create a single item from a DestinyItemResponse, either from getItemDetails or an AWA result.
+ * We can use this item to refresh a single item in the store from this response.
+ */
+export function makeItemSingle(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  item: DestinyItemResponse,
+  stores: DimStore[],
+  mergedCollectibles?: {
+    [hash: number]: DestinyCollectibleComponent;
+  }
+): DimItem | null {
+  if (!item.item.data) {
+    return null;
+  }
+
+  const owner = item.characterId ? stores.find((s) => s.id === item.characterId) : getVault(stores);
+
+  const itemId = item.item.data.itemInstanceId;
+
+  // Convert a single component response into a dictionary component response
+  const empty = { privacy: ComponentPrivacySetting.Public, data: {} };
+  const m: <V>(v: SingleComponentResponse<V>) => DictionaryComponentResponse<V> = itemId
+    ? (v) => ({ privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} })
+    : () => empty;
+
+  // Make it look like a full response
+  return makeItem(
+    defs,
+    buckets,
+    {
+      instances: m(item.instance),
+      perks: m(item.perks),
+      renderData: m(item.renderData),
+      stats: m(item.stats),
+      sockets: m(item.sockets),
+      reusablePlugs: m(item.reusablePlugs),
+      plugObjectives: m(item.plugObjectives),
+      talentGrids: m(item.talentGrid),
+      plugStates: empty,
+      objectives: m(item.objectives),
+    },
+    item.item.data,
+    owner,
+    mergedCollectibles
+  );
+}
+
+/**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
@@ -139,7 +193,7 @@ export function makeFakeItem(
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store.
  */
-// TODO: extract item components first!
+// TODO: extract individual item components first!
 export function makeItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
@@ -255,6 +309,8 @@ export function makeItem(
   const iconOverlay =
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
+    itemDef.iconWatermark ||
+    itemDef.iconWatermarkShelved ||
     undefined;
 
   const collectible =
@@ -555,8 +611,6 @@ function buildPursuitInfo(
         itemDef.inventory!.suppressExpirationWhenObjectivesComplete
       ),
       expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
-      places: [],
-      activityTypes: [],
       modifierHashes: [],
     };
   }
@@ -564,8 +618,6 @@ function buildPursuitInfo(
   if (rewards.length) {
     createdItem.pursuit = {
       suppressExpirationWhenObjectivesComplete: false,
-      places: [],
-      activityTypes: [],
       modifierHashes: [],
       ...createdItem.pursuit,
       rewards,

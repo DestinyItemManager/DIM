@@ -171,6 +171,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "IsSunset": "",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -220,6 +221,7 @@
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -242,21 +244,6 @@
   "General": {
     "ClickForDetails": "Click for details",
     "UserGuideLink": "User guide"
-  },
-  "Ghost": {
-    "crucible": "crucible",
-    "dreaming": "dreaming",
-    "edz": "edz",
-    "gambit": "gambit",
-    "io": "io",
-    "leviathan": "leviathan",
-    "mars": "mars",
-    "mercury": "mercury",
-    "moon": "moon",
-    "nessus": "nessus",
-    "strikes": "strikes",
-    "tangled": "tangled",
-    "titan": "titan"
   },
   "Header": {
     "About": "About DIM",
@@ -404,6 +391,7 @@
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
     "ModLockButton": "Select mods",
+    "Other": "Other",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -411,9 +399,9 @@
       "HelpFull": "Looks at more gear, but takes longer.",
       "ProcessingMode": "Processing mode"
     },
+    "Raid": "Raid",
     "Scaled": "Scaled",
     "SearchAMod": "Search a mod or description",
-    "Seasonal": "Seasonal",
     "SelectMods": "Select Mods",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
@@ -430,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
-    "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -464,7 +451,6 @@
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
-    "SeasonNum": "Season {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -477,7 +463,6 @@
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
-    "Traction": "The Traction perk provides +1 Mobility.",
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
@@ -592,7 +577,6 @@
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
-    "Expand": "Expand item details",
     "Infuse": "Infuse",
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
@@ -652,7 +636,6 @@
       "Element": "Element",
       "Energy": "Energy",
       "Event": "Event",
-      "Ghost": "Ghost Tag",
       "Icon": "Icon",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
@@ -703,7 +686,6 @@
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
     "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
-    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "Milestones & Challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
@@ -741,7 +723,7 @@
     "CharacterOrderReversed": "Most recent character (reversed)",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
-    "CsvImport": "Import tags/notes from CSV",
+    "CsvImport": "Import CSV",
     "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
@@ -773,6 +755,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",
+    "SortBySeason": "Season (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
@@ -879,7 +862,6 @@
     "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
   },
   "Vendors": {
-    "Catalysts": "Catalysts",
     "Collections": "Collections",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",

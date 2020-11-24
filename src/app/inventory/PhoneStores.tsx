@@ -6,7 +6,6 @@ import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import Hammer from 'react-hammerjs';
-import { storeBackgroundColor } from '../shell/filters';
 import { InventoryBuckets } from './inventory-buckets';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { DimStore } from './store-types';
@@ -71,11 +70,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <HeaderShadowDiv
-        className="store-row store-header"
-        style={storeBackgroundColor(selectedStore, 0, true, true)}
-        onTouchStart={(e) => e.stopPropagation()}
-      >
+      <HeaderShadowDiv className="store-row store-header" onTouchStart={(e) => e.stopPropagation()}>
         <PhoneStoresHeader
           selectedStore={selectedStore}
           stores={headerStores}
@@ -156,10 +151,7 @@ function StoresInventory({
   return (
     <>
       {selectedCategoryId === 'Armor' && (
-        <StoreStats
-          store={stores[0]}
-          style={{ ...storeBackgroundColor(stores[0], 0, true, true), paddingBottom: 8 }}
-        />
+        <StoreStats store={stores[0]} style={{ paddingBottom: 8 }} />
       )}
       {showPostmaster &&
         buckets.byCategory['Postmaster'].map((bucket) => (
@@ -170,7 +162,6 @@ function StoresInventory({
             vault={vault}
             currentStore={currentStore}
             labels={true}
-            isPhonePortrait={true}
             singleCharacter={singleCharacter}
           />
         ))}
@@ -182,7 +173,6 @@ function StoresInventory({
           vault={vault}
           currentStore={currentStore}
           labels={true}
-          isPhonePortrait={true}
           singleCharacter={singleCharacter}
         />
       ))}

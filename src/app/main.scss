@@ -413,7 +413,7 @@ a.dim-button {
   }
 }
 
-.gradientBackground {
+.app {
   &::before {
     @include below-header;
     background: $gradient;

@@ -106,12 +106,12 @@ export default function GeneratedSets({
   let groupingDescription;
 
   if (
-    someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.seasonal]) ||
+    someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.other]) ||
     (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general]) &&
-      lockedArmor2Mods[ModPickerCategories.seasonal].length)
+      lockedArmor2Mods[ModPickerCategories.other].length)
   ) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
-  } else if (lockedArmor2Mods[ModPickerCategories.seasonal].length) {
+  } else if (lockedArmor2Mods[ModPickerCategories.other].length) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
   } else if (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general])) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');

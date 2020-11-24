@@ -111,12 +111,11 @@ function App({
   return (
     <div
       key={`lang-${language}`}
-      className={clsx(`lang-${language}`, `char-cols-${charColMobile}`, {
+      className={clsx('app', `lang-${language}`, `char-cols-${charColMobile}`, {
         itemQuality: itemQuality,
         'show-new-items': showNewItems,
         'ms-edge': /Edge/.test(navigator.userAgent),
         ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
-        gradientBackground: $featureFlags.gradientBackground,
       })}
     >
       <ScrollToTop />

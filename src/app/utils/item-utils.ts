@@ -17,7 +17,10 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import modSocketMetadata, { ModSocketMetadata } from 'app/search/specialty-modslots';
+import modSocketMetadata, {
+  ModSocketMetadata,
+  modTypeTagByPlugCategoryHash,
+} from 'app/search/specialty-modslots';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import _ from 'lodash';
@@ -38,10 +41,6 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 // process its data here and export it to thing that needs it
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
-const modMetadataByPlugCategoryHash = objectifyArray(
-  modSocketMetadata,
-  'compatiblePlugCategoryHashes'
-);
 
 export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
 
@@ -78,13 +77,10 @@ export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] 
     .filter(Boolean);
 
 /**
- * returns ModMetadata if the plugCategoryHash (from a mod definition's .plug) is known
- *
- * if you use this you can only trust the returned season, tag, and emptyModSocketHash
+ * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
-export const getSpecialtySocketMetadataByPlugCategoryHash = (
-  plugCategoryHash: number
-): ModSocketMetadata | undefined => modMetadataByPlugCategoryHash[plugCategoryHash];
+export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
+  modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
  * this always returns a string for easy printing purposes

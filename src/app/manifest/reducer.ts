@@ -1,3 +1,4 @@
+import { Destiny2CoreSettings } from 'bungie-api-ts/core/interfaces';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import type { AccountsAction } from '../accounts/reducer';
@@ -8,6 +9,13 @@ import * as actions from './actions';
 export interface ManifestState {
   d1Manifest?: D1ManifestDefinitions;
   d2Manifest?: D2ManifestDefinitions;
+
+  /**
+   * Bungie.net core Destiny settings.
+   * We load these remotely, and they're in the "manifest" state because I mostly think they
+   * should have been included in the manifest.
+   */
+  destiny2CoreSettings?: Destiny2CoreSettings;
 }
 
 export type ManifestAction = ActionType<typeof actions>;
@@ -30,6 +38,13 @@ export const manifest: Reducer<ManifestState, ManifestAction | AccountsAction> =
       return {
         ...state,
         d2Manifest: action.payload,
+      };
+    }
+
+    case getType(actions.coreSettingsLoaded): {
+      return {
+        ...state,
+        destiny2CoreSettings: action.payload,
       };
     }
 

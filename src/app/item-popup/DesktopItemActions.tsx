@@ -6,15 +6,17 @@ import { t } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { setSetting } from 'app/settings/actions';
 import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
@@ -41,7 +43,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   // barring a user selection, default to moving the whole stack of this item
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
@@ -238,13 +240,15 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 <StoreIcon store={vault} /> {t('MovePopup.Vault')}
               </ActionButton>
             )}
-          {item.location.type === 'LostItems' && item.canPullFromPostmaster ? (
-            <PullButtons
-              item={item}
-              itemOwner={itemOwner}
-              submitMoveTo={submitMoveTo}
-              vault={vault}
-            />
+          {item.location.type === 'LostItems' ? (
+            canBePulledFromPostmaster(item, itemOwner, stores) && (
+              <PullButtons
+                item={item}
+                itemOwner={itemOwner}
+                submitMoveTo={submitMoveTo}
+                vault={vault}
+              />
+            )
           ) : (
             <>
               <MoveLocations

@@ -399,6 +399,7 @@
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
     "ModLockButton": "Select mods",
+    "Other": "Other",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -406,6 +407,7 @@
       "HelpFull": "Looks at more gear, but takes longer.",
       "ProcessingMode": "Processing mode"
     },
+    "Raid": "Raid",
     "Scaled": "Scaled",
     "SearchAMod": "Search a mod or description",
     "Seasonal": "Seasonal",
@@ -744,7 +746,7 @@
     "CharacterOrderReversed": "Most recent character (reversed)",
     "ColumnSize": "{{num}} items",
     "ColumnSizeAuto": "Auto",
-    "CsvImport": "Import tags/notes from CSV",
+    "CsvImport": "Import CSV",
     "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
@@ -778,6 +780,7 @@
     "SortByRating": "Armor Quality (D1)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
+    "SortBySeason": "Season (D2)",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
   },

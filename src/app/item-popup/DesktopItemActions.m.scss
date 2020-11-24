@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #161626;
+  background-color: #0d0d16;
 }
 
 .collapsed .hideWhenCollapsed {
@@ -40,11 +40,6 @@
 .itemTagSelector {
   composes: entry;
   padding: 6px 8px;
-
-  :global(.app-icon) {
-    margin-top: 1px;
-    margin-right: 8px;
-  }
 
   .collapsed & {
     padding: 0;
@@ -117,7 +112,7 @@
 .moveLocationIcons {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   margin: 4px 0 0 0;
 }
 
