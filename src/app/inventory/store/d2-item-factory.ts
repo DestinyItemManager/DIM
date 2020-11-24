@@ -264,23 +264,22 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  // 34 = category hash for engrams
   const isEngram =
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
     normalBucket.hash === BucketHashes.Engrams ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
+
   const primaryStat: DimItem['primStat'] =
-    !instanceDef?.primaryStat ||
-    itemDef.stats?.disablePrimaryStatDisplay ||
-    itemType === 'Class' ||
-    isEngram
+    !instanceDef?.primaryStat || itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class'
       ? null
       : {
           ...instanceDef.primaryStat,
           stat: defs.Stat.get(instanceDef.primaryStat.statHash),
+          value: isEngram
+            ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
+            : instanceDef.primaryStat.value,
         } || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
