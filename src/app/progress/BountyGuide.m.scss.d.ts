@@ -5,7 +5,9 @@ interface CssExports {
   'guide': string;
   'itemCategoryIcon': string;
   'pill': string;
+  'pullItem': string;
   'selected': string;
+  'synergy': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

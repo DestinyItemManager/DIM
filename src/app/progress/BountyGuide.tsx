@@ -72,7 +72,8 @@ export default function BountyGuide({
     onSelectedFiltersChanged,
   });
 
-  const pullItemCategory = async (itemCategory: number) => {
+  const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
+    e.stopPropagation();
     try {
       const { item } = await showItemPicker({
         filterItems: (item) =>
@@ -128,6 +129,7 @@ export default function BountyGuide({
   flattened.sort(chainComparator(reverseComparator(compareBy((f) => f.bounties.length))));
 
   const onClickPill = (e: React.MouseEvent, type: DefType, value: number) => {
+    e.stopPropagation();
     const match = (f: BountyFilter) => f.type === type && f.hash === value;
     if (e.shiftKey) {
       const existing = selectedFilters.find(match);
@@ -143,13 +145,19 @@ export default function BountyGuide({
     }
   };
 
+  const clearSelection = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelectedFiltersChanged([]);
+  };
+
   return (
-    <div className={styles.guide}>
+    <div className={styles.guide} onClick={clearSelection}>
       {flattened.map(({ type, value, bounties }) => (
         <div
           key={type + value}
           className={clsx(styles.pill, {
             [styles.selected]: matchPill(type, value, selectedFilters),
+            [styles.synergy]: bounties.some((i) => matchBountyFilters(i, selectedFilters)),
           })}
           onClick={(e) => onClickPill(e, type, value)}
         >
@@ -202,18 +210,6 @@ export default function BountyGuide({
                       />
                     )}
                     {defs.ItemCategory.get(value)?.displayProperties.name}
-                    <span
-                      onClick={
-                        type === 'ItemCategory'
-                          ? (e) => {
-                              e.stopPropagation();
-                              pullItemCategory(value);
-                            }
-                          : undefined
-                      }
-                    >
-                      <AppIcon icon={addIcon} />
-                    </span>
                   </>
                 );
               case 'KillType':
@@ -232,6 +228,16 @@ export default function BountyGuide({
             }
           })()}
           <span className={styles.count}>({bounties.length})</span>
+          {type === 'ItemCategory' && (
+            <span
+              className={styles.pullItem}
+              onClick={(e) => {
+                pullItemCategory(e, value);
+              }}
+            >
+              <AppIcon icon={addIcon} />
+            </span>
+          )}
         </div>
       ))}
     </div>
