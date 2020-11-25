@@ -1,9 +1,5 @@
 @import '../../variables.scss';
 
-.collapseTitle {
-  margin-bottom: 10px;
-}
-
 .activePursuits {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
@@ -23,6 +19,12 @@
       margin-bottom: 5px;
     }
   }
+}
+
+.bountyGuide {
+  display: flex;
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .noQuests {

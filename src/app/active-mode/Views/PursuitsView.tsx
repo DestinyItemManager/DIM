@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import BountyGuide from 'app/progress/BountyGuide';
 import Pursuit from 'app/progress/Pursuit';
 import { sortPursuits } from 'app/progress/Pursuits';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
@@ -78,10 +79,14 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
     <CollapsibleTitle
       title={t('ActiveMode.Pursuits')}
       sectionId={'active-pursuits'}
-      className={styles.collapseTitle}
       defaultCollapsed={true}
     >
       <div className={styles.activePursuits}>
+        {$featureFlags.bountyGuide && (
+          <div className={styles.bountyGuide}>
+            <BountyGuide store={store} defs={defs!} bounties={pursuits} />
+          </div>
+        )}
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
         ))}
