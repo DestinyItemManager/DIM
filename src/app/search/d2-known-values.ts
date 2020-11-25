@@ -178,6 +178,11 @@ export const powerfulSources = [
   4143344829, // InventoryItem "Luminous Engram"
   4039143015, // InventoryItem "Powerful Gear"
   4249081773, // InventoryItem "Powerful Armor"
+  73143230, // Pinnacle
+  3114385605, // Tier 1
+  4039143015, // Powerful
+  3114385606, // Tier 2
+  3114385607, // Tier 3
 ];
 
 //
