@@ -25,10 +25,7 @@
   }
 }
 
-$active-mode-header: 35px;
-
 .header {
-  height: $active-mode-header;
   text-align: right;
 }
 
@@ -45,7 +42,7 @@ $active-mode-header: 35px;
 
 .content {
   position: sticky;
-  height: calc(100vh - #{$header-height} - #{$active-mode-header});
+  height: calc(100vh - #{$header-height});
   overflow-y: scroll;
   padding: 0 15px;
   padding-top: 15px;
