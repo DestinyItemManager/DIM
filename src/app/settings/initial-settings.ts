@@ -19,6 +19,6 @@ export const initialSettingsState: Settings = {
   organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'perks', 'notes'],
   compareBaseStats: false,
   sidecarCollapsed: false,
-  activeMode: false,
+  activeMode: true,
   singleCharacter: false,
 };

@@ -1,3 +1,5 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import ActiveMode from 'app/active-mode/ActiveMode';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
@@ -17,16 +19,24 @@ import { findItemsByBucket, getCurrentStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface Props {
+  account: DestinyAccount;
   stores: DimStore[];
   buckets: InventoryBuckets;
   singleCharacter: boolean;
+  activeMode: boolean;
 }
 /**
  * Display inventory and character headers for all characters and the vault.
  *
  * This is the desktop view only.
  */
-export default function DesktopStores({ stores, buckets, singleCharacter }: Props) {
+export default function DesktopStores({
+  account,
+  stores,
+  buckets,
+  singleCharacter,
+  activeMode,
+}: Props) {
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
   const dispatch = useDispatch();
@@ -43,42 +53,59 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const toggleSingleCharacter = () => dispatch(setSetting('singleCharacter', !singleCharacter));
 
   return (
-    <div
-      className={clsx('inventory-content', `destiny${currentStore.destinyVersion}`, {
-        singleCharacter,
-      })}
-      role="main"
-      aria-label={t('Header.Inventory')}
-    >
-      <HeaderShadowDiv className="store-row store-header">
-        {headerStores.map((store) => (
-          <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
-            <StoreHeading store={store} />
-            <StoreStats store={store} />
-          </div>
-        ))}
-        {stores.length > 2 && (
-          <button
-            type="button"
-            className={styles.singleCharacterButton}
-            onClick={toggleSingleCharacter}
-            title={
-              singleCharacter
-                ? t('Settings.ExpandSingleCharacter')
-                : t('Settings.SingleCharacter') + ': ' + t('Settings.SingleCharacterExplanation')
-            }
-          >
-            <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
-          </button>
-        )}
-      </HeaderShadowDiv>
-      <StoresInventory
-        stores={headerStores}
-        vault={vault}
-        currentStore={currentStore}
-        buckets={buckets}
-        singleCharacter={singleCharacter}
-      />
+    <div className={`inventory-container destiny${currentStore.destinyVersion}`}>
+      {$featureFlags.altInventoryMode && singleCharacter && (
+        <ActiveMode
+          account={account}
+          stores={stores}
+          currentStore={currentStore}
+          buckets={buckets}
+          isOpen={activeMode}
+        />
+      )}
+      <div
+        className={clsx('inventory-content', {
+          singleCharacter,
+        })}
+        role="main"
+        aria-label={t('Header.Inventory')}
+      >
+        <HeaderShadowDiv
+          className={clsx('store-row store-header', {
+            transparentBg: $featureFlags.altInventoryMode && singleCharacter && !activeMode,
+          })}
+        >
+          {headerStores.map((store) => (
+            <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
+              <StoreHeading store={store} />
+              <StoreStats store={store} />
+            </div>
+          ))}
+          {stores.length > 2 && (
+            <button
+              type="button"
+              className={styles.singleCharacterButton}
+              onClick={toggleSingleCharacter}
+              title={
+                singleCharacter
+                  ? t('Settings.ExpandSingleCharacter')
+                  : t('Settings.SingleCharacter') + ': ' + t('Settings.SingleCharacterExplanation')
+              }
+            >
+              <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
+            </button>
+          )}
+        </HeaderShadowDiv>
+
+        <StoresInventory
+          stores={headerStores}
+          vault={vault}
+          currentStore={currentStore}
+          buckets={buckets}
+          singleCharacter={singleCharacter}
+          hidePostmaster={$featureFlags.altInventoryMode && singleCharacter && !activeMode}
+        />
+      </div>
     </div>
   );
 }
@@ -103,6 +130,7 @@ interface InventoryContainerProps {
   currentStore: DimStore;
   vault: DimStore;
   singleCharacter: boolean;
+  hidePostmaster: boolean;
 }
 
 function CollapsibleContainer({
@@ -139,19 +167,21 @@ function CollapsibleContainer({
 }
 
 function StoresInventory(props: InventoryContainerProps) {
-  const { buckets, stores } = props;
+  const { buckets, stores, hidePostmaster } = props;
 
   return (
-    <>
-      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
-        <CollapsibleContainer
-          key={category}
-          {...props}
-          category={category}
-          inventoryBucket={inventoryBucket}
-        />
-      ))}
+    <div className={clsx({ scrollable: hidePostmaster })}>
+      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) =>
+        hidePostmaster && category === 'Postmaster' ? null : (
+          <CollapsibleContainer
+            key={category}
+            {...props}
+            category={category}
+            inventoryBucket={inventoryBucket}
+          />
+        )
+      )}
       {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
-    </>
+    </div>
   );
 }

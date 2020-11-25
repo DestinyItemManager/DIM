@@ -60,30 +60,28 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
   // Consider showing rewards for current activity?
 
   return (
-    <>
-      <CollapsibleTitle
-        title={
-          <>
-            <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />{' '}
-            {gameType || placeName}
-          </>
-        }
-        sectionId={'active-activity'}
-        defaultCollapsed={true}
-      >
-        <div className={styles.currentLocation}>{activityName}</div>
-        <div className={styles.activityItems}>
-          <ActivityInformation defs={defs} store={store} activity={activity} />
-          <VendorBounties
-            account={account}
-            store={store}
-            activity={activity}
-            buckets={buckets}
-            defs={defs}
-          />
-        </div>
-      </CollapsibleTitle>
-    </>
+    <CollapsibleTitle
+      title={
+        <>
+          <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />{' '}
+          {gameType || placeName}
+        </>
+      }
+      sectionId={'active-activity'}
+      defaultCollapsed={true}
+    >
+      <div className={styles.currentLocation}>{activityName}</div>
+      <div className={styles.activityItems}>
+        <ActivityInformation defs={defs} store={store} activity={activity} />
+        <VendorBounties
+          account={account}
+          store={store}
+          activity={activity}
+          buckets={buckets}
+          defs={defs}
+        />
+      </div>
+    </CollapsibleTitle>
   );
 }
 

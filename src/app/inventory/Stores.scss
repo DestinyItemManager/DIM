@@ -1,7 +1,17 @@
 @import '../variables.scss';
 
+.inventory-container {
+  display: flex;
+}
+
 .inventory-content {
   margin: 0 auto;
+  width: 100%;
+
+  .scrollable {
+    overflow: scroll;
+    height: calc(100vh - (var(--store-header-height) + #{$header-height}));
+  }
 
   .title {
     top: 124px;
@@ -241,6 +251,9 @@
     }
   }
 }
+.transparentBg {
+  background: none;
+}
 
 .dim-button.bucket-button {
   align-self: center;
@@ -279,4 +292,8 @@
     color: $orange;
     border-bottom: 2px solid $orange;
   }
+}
+
+.singleCharacter {
+  padding-left: 22px;
 }
