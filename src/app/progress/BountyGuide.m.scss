@@ -13,13 +13,18 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 2px 8px;
   color: white;
   margin: 0 4px 4px 0;
+  border: 1px solid transparent;
+  cursor: pointer;
 
   img {
     margin-right: 4px;
+  }
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -32,9 +37,6 @@
   margin-left: 0.3em;
 }
 
-.clickable {
-  cursor: pointer;
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
+.selected {
+  border-color: white;
 }

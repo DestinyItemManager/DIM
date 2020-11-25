@@ -6,9 +6,11 @@ import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { useWhatChanged } from 'app/utils/useWhatChanged';
 import clsx from 'clsx';
 import pursuitsInfo from 'data/d2/pursuits.json';
 import grenade from 'destiny-icons/weapons/grenade.svg';
@@ -37,6 +39,11 @@ const killTypeIcons: { [key in KillType]: string | undefined } = {
 
 type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
 
+export type BountyFilter = {
+  type: DefType;
+  hash: number;
+};
+
 /**
  * This provides a little visual guide to what bounties you have - specifically, what weapons/activities/locations are required for your bounties.
  *
@@ -46,12 +53,24 @@ export default function BountyGuide({
   store,
   bounties,
   defs,
+  selectedFilters,
+  onSelectedFiltersChanged,
 }: {
   store: DimStore;
   bounties: DimItem[];
   defs: D2ManifestDefinitions;
+  selectedFilters: BountyFilter[];
+  onSelectedFiltersChanged(filters: BountyFilter[]): void;
 }) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+
+  useWhatChanged('BountyGuide', {
+    store,
+    bounties,
+    defs,
+    selectedFilters,
+    onSelectedFiltersChanged,
+  });
 
   const pullItemCategory = async (itemCategory: number) => {
     try {
@@ -106,20 +125,33 @@ export default function BountyGuide({
     return null;
   }
 
-  flattened.sort(
-    chainComparator(
-      // compareBy((f) => f.type),
-      reverseComparator(compareBy((f) => f.bounties.length))
-    )
-  );
+  flattened.sort(chainComparator(reverseComparator(compareBy((f) => f.bounties.length))));
+
+  const onClickPill = (e: React.MouseEvent, type: DefType, value: number) => {
+    const match = (f: BountyFilter) => f.type === type && f.hash === value;
+    if (e.shiftKey) {
+      const existing = selectedFilters.find(match);
+      if (existing) {
+        onSelectedFiltersChanged(selectedFilters.filter((f) => !match(f)));
+      } else {
+        onSelectedFiltersChanged([...selectedFilters, { type, hash: value }]);
+      }
+    } else if (selectedFilters.length > 1 || !selectedFilters.some(match)) {
+      onSelectedFiltersChanged([{ type, hash: value }]);
+    } else {
+      onSelectedFiltersChanged([]);
+    }
+  };
 
   return (
     <div className={styles.guide}>
       {flattened.map(({ type, value, bounties }) => (
         <div
           key={type + value}
-          className={clsx(styles.pill, { [styles.clickable]: type === 'ItemCategory' })}
-          onClick={type === 'ItemCategory' ? () => pullItemCategory(value) : undefined}
+          className={clsx(styles.pill, {
+            [styles.selected]: matchPill(type, value, selectedFilters),
+          })}
+          onClick={(e) => onClickPill(e, type, value)}
         >
           {(() => {
             switch (type) {
@@ -170,6 +202,18 @@ export default function BountyGuide({
                       />
                     )}
                     {defs.ItemCategory.get(value)?.displayProperties.name}
+                    <span
+                      onClick={
+                        type === 'ItemCategory'
+                          ? (e) => {
+                              e.stopPropagation();
+                              pullItemCategory(value);
+                            }
+                          : undefined
+                      }
+                    >
+                      <AppIcon icon={addIcon} />
+                    </span>
                   </>
                 );
               case 'KillType':
@@ -194,4 +238,20 @@ export default function BountyGuide({
   );
 
   return null;
+}
+
+function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
+  return filters.some((f) => f.type === type && f.hash === hash);
+}
+
+export function matchBountyFilters(item: DimItem, filters: BountyFilter[]) {
+  const info = pursuitsInfo[item.hash];
+  if (info) {
+    for (const filter of filters) {
+      if (info[filter.type]?.includes(filter.hash)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
