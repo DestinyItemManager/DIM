@@ -157,7 +157,10 @@ export default function BountyGuide({
           key={type + value}
           className={clsx(styles.pill, {
             [styles.selected]: matchPill(type, value, selectedFilters),
-            [styles.synergy]: bounties.some((i) => matchBountyFilters(i, selectedFilters)),
+            // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
+            [styles.synergy]:
+              selectedFilters.length > 0 &&
+              bounties.some((i) => matchBountyFilters(i, selectedFilters)),
           })}
           onClick={(e) => onClickPill(e, type, value)}
         >
@@ -242,15 +245,19 @@ export default function BountyGuide({
       ))}
     </div>
   );
-
-  return null;
 }
 
 function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
   return filters.some((f) => f.type === type && f.hash === hash);
 }
 
+/**
+ * Returns true if the filter list is empty, or if the item matches *any* of the provided filters ("or").
+ */
 export function matchBountyFilters(item: DimItem, filters: BountyFilter[]) {
+  if (filters.length === 0) {
+    return true;
+  }
   const info = pursuitsInfo[item.hash];
   if (info) {
     for (const filter of filters) {

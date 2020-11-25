@@ -101,7 +101,7 @@ export function PursuitsGroup({
             item={item}
             key={item.index}
             defs={defs}
-            searchHidden={bountyFilters.length > 0 && !matchBountyFilters(item, bountyFilters)}
+            searchHidden={!matchBountyFilters(item, bountyFilters)}
           />
         ))}
       </div>
