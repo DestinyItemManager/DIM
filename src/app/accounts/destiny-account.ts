@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
+  BungieMembershipType,
   DestinyGameVersions,
   DestinyLinkedProfilesResponse,
   DestinyProfileUserInfoCard,
@@ -25,7 +25,7 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
-  // t(`Accounts.${platforms}`, {context: null, contextList:'platforms'})
+  // t('Accounts.', {context: '', contextList: 'platforms'})
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',

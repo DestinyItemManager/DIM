@@ -7,6 +7,7 @@
 .activityColumn {
   margin-top: 0;
   top: $header-height;
+  height: 100vh;
 
   :global(.store-cell) {
     padding: 0;
@@ -14,10 +15,6 @@
 
   :global(.store-row) {
     display: block;
-  }
-
-  :global(.title) {
-    margin-bottom: 10px;
   }
 
   :global(.title.collapsed) {
@@ -50,11 +47,11 @@
 
 .activityInventory {
   padding-top: 4px;
-  
+
   @include phone-portrait {
     padding-top: 0;
   }
-  
+
   :global(.store-row) {
     grid-template-columns:
       repeat(1, calc(6px + var(--character-column-width) + var(--column-padding)))
@@ -71,6 +68,10 @@
         opacity: 1;
       }
     }
+  }
+
+  .inventoryCategory {
+    grid-template-columns: 1.75fr 1fr;
   }
 
   :global(.store-row.title) {

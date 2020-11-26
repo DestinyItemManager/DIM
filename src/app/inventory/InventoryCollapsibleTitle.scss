@@ -14,12 +14,6 @@
         color: rgba(245, 245, 245, 0.25);
       }
     }
-    &:nth-child(even) {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-    &:nth-child(even):hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
     &.vault {
       flex: 1;
     }
@@ -28,20 +22,11 @@
       filter: brightness(0.5);
       min-height: 32px;
       padding-bottom: 4px;
-      &:nth-child(even) {
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-    }
-    .gradientBackground & {
-      background-color: transparent !important;
     }
   }
 
   &.collapsed {
-    background-color: black;
-    .gradientBackground & {
-      background-color: rgba(0, 0, 0, 0.4);
-    }
+    background-color: rgba(0, 0, 0, 0.4);
   }
 
   .collapse-handle {

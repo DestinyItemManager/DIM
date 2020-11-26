@@ -1,5 +1,4 @@
 import {
-  AuditLogResponse,
   DeleteAllResponse,
   DestinyVersion,
   ExportResponse,
@@ -74,14 +73,6 @@ export async function postUpdates(
     body: request,
   });
   return response.results;
-}
-
-export async function getAuditLog() {
-  const response = await authenticatedApi<AuditLogResponse>({
-    url: '/audit',
-    method: 'GET',
-  });
-  return response.log;
 }
 
 export async function deleteAllData() {

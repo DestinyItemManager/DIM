@@ -56,10 +56,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     }
   } else if (moddedStatValue && moddedStatValue < 0 && masterworkDisplayValue) {
     segments.push([
-      Math.max(
-        0,
-        Math.min(masterworkDisplayValue, stat.base + moddedStatValue + masterworkDisplayValue)
-      ),
+      _.clamp(masterworkDisplayValue, 0, stat.base + moddedStatValue + masterworkDisplayValue),
       styles.masterworkStatBar,
     ]);
   } else if (masterworkDisplayValue) {
@@ -213,6 +210,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
     <div className={clsx(styles.value, optionalClasses)}>
       {stat.value}
       {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
+      {stat.statHash === StatHashes.RecoilDirection && <RecoilStat value={stat.value} />}
     </div>
   );
 }

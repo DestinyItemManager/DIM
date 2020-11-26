@@ -4,14 +4,27 @@
 
 .row {
   display: grid;
-  grid-template-columns: 6px 1fr 25% 25%;
+  grid-template-columns: min-content 1fr 25% 25%;
   gap: 4px 4px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  background-color: black;
+  align-items: center;
 
-  label {
+  > * {
+    margin: 4px 0;
+    &:first-child {
+      margin-left: 8px;
+    }
+    &:last-child {
+      margin-right: 4px;
+    }
+  }
+
+  label > span {
     display: flex;
     flex-direction: row;
     align-items: center;
+    white-space: nowrap;
   }
 }
 
@@ -39,7 +52,8 @@
     vertical-align: middle;
   }
 
-  span {
+  label {
+    cursor: pointer;
     vertical-align: middle;
   }
 }

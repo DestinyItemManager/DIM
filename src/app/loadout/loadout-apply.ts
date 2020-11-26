@@ -1,6 +1,5 @@
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { queueAction } from 'app/inventory/action-queue';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -24,6 +23,7 @@ import {
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
+import { queueAction } from 'app/utils/action-queue';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import copy from 'fast-copy';
@@ -269,6 +269,10 @@ function applyLoadoutItems(
 
     try {
       if (item) {
+        // We mark this *first*, because otherwise things observing state (like farming) may not see this
+        // in time.
+        updateManualMoveTimestamp(item);
+
         if (item.maxStackSize > 1) {
           // handle consumables!
           const amountAlreadyHave = amountOfItem(store, pseudoItem);
@@ -312,11 +316,8 @@ function applyLoadoutItems(
           // Pass in the list of items that shouldn't be moved away
           await dispatch(moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds));
         }
-      }
 
-      if (item) {
         scope.successfulItems.push(item);
-        updateManualMoveTimestamp(item);
       }
     } catch (e) {
       const level = e.level || 'error';

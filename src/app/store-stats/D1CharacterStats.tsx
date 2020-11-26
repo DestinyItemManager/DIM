@@ -27,9 +27,8 @@ export default function D1CharacterStats({ stats }: Props) {
 
       let cooldown = stat.cooldown || '';
       if (cooldown) {
+        // t('Cooldown.', { context: '', contextList: 'cooldowns'})
         cooldown = t(`Cooldown.${stat.effect}`, {
-          context: null,
-          contextList: 'cooldowns',
           cooldown,
         });
       }

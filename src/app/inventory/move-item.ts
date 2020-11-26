@@ -5,13 +5,13 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
+import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
-import { queueAction } from './action-queue';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
 import { moveItemTo as moveTo } from './item-move-service';
@@ -111,7 +111,11 @@ export function moveItemTo(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     hideItemPopup();
-    if (item.notransfer && item.owner !== store.id) {
+    if (
+      item.location.inPostmaster
+        ? !item.canPullFromPostmaster
+        : item.notransfer && item.owner !== store.id
+    ) {
       throw new Error(t('Help.CannotMove'));
     }
 
@@ -160,6 +164,10 @@ export function moveItemTo(
         );
       }
 
+      // We mark this *first*, because otherwise things observing state (like farming) may not see this
+      // in time.
+      updateManualMoveTimestamp(item);
+
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(dispatch(moveTo(item, store, equip, moveAmount)))
       );
@@ -172,8 +180,6 @@ export function moveItemTo(
         // Refresh light levels and such
         dispatch(updateCharacters());
       }
-
-      updateManualMoveTimestamp(item);
     } catch (e) {
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting

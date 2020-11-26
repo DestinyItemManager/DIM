@@ -233,7 +233,7 @@ function addItem(
       }
     } else if (item.maxStackSize > 1) {
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-      dupe.amount = dupe.amount + increment;
+      dupe.amount += increment;
       // TODO: handle stack splits
     }
 
@@ -263,7 +263,8 @@ function removeItem(
     }
 
     const decrement = shift ? 5 : 1;
-    loadoutItem.amount = (loadoutItem.amount || 1) - decrement;
+    loadoutItem.amount ||= 1;
+    loadoutItem.amount -= decrement;
     if (loadoutItem.amount <= 0) {
       draftLoadout.items = draftLoadout.items.filter(
         (i) => !(i.hash === item.hash && i.id === item.id)
@@ -383,10 +384,10 @@ function LoadoutDrawer({
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, stores), [
+  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, allItems), [
     defs,
     loadoutItems,
-    stores,
+    allItems,
   ]);
 
   const onAddItem = (item: DimItem, e?: MouseEvent) =>
@@ -473,6 +474,7 @@ function LoadoutDrawer({
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dispatch(deleteLoadout(loadout.id));
     }
+    close();
   };
 
   const bucketTypes = Object.keys(buckets.byType);
@@ -538,6 +540,7 @@ function LoadoutDrawer({
               <LoadoutDrawerContents
                 loadout={loadout}
                 items={items}
+                defs={defs}
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}

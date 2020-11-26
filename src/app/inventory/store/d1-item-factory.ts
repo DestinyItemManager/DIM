@@ -225,7 +225,7 @@ function makeItem(
   const element =
     (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
 
-  itemDef.sourceHashes = itemDef.sourceHashes || [];
+  itemDef.sourceHashes ||= [];
 
   const missingSource = missingSources[itemDef.hash] || [];
   if (missingSource.length) {
@@ -505,7 +505,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
     const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-    const xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
+    const xp = _.clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
     // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
     let dtrHash: string | null = null;

@@ -1,9 +1,9 @@
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
 import styles from './LockButton.m.scss';
@@ -17,7 +17,7 @@ interface Props {
 
 export default function LockButton({ type, item, className, children }: Props) {
   const [locking, setLocking] = useState(false);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   const lockUnlock = async () => {
     if (locking) {
@@ -39,6 +39,8 @@ export default function LockButton({ type, item, className, children }: Props) {
       setLocking(false);
     }
   };
+
+  useHotkey('l', t('Hotkey.LockUnlock'), lockUnlock);
 
   const title = lockButtonTitle(item, type);
 
@@ -68,11 +70,13 @@ export default function LockButton({ type, item, className, children }: Props) {
 
 export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   const data = { itemType: item.typeName };
-  return type === 'lock'
-    ? !item.locked
-      ? t('MovePopup.LockUnlock.Lock', data)
-      : t('MovePopup.LockUnlock.Unlock', data)
-    : !item.tracked
-    ? t('MovePopup.TrackUntrack.Track', data)
-    : t('MovePopup.TrackUntrack.Untrack', data);
+  return (
+    (type === 'lock'
+      ? !item.locked
+        ? t('MovePopup.LockUnlock.Lock', data)
+        : t('MovePopup.LockUnlock.Unlock', data)
+      : !item.tracked
+      ? t('MovePopup.TrackUntrack.Track', data)
+      : t('MovePopup.TrackUntrack.Untrack', data)) + ' [L]'
+  );
 }

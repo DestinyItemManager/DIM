@@ -83,6 +83,7 @@ function GeneratedSet({
           statOrder={statOrder}
           enabledStats={enabledStats}
           existingLoadoutName={existingLoadout?.name}
+          characterClass={selectedStore?.classType}
         />
       </div>
       <div className={styles.items}>

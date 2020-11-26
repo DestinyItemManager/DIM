@@ -2,14 +2,17 @@
 // Please do not change this file!
 interface CssExports {
   'actionButton': string;
-  'classIcon': string;
+  'collapseButton': string;
+  'collapsed': string;
   'disabled': string;
   'entry': string;
   'equip': string;
+  'hideWhenCollapsed': string;
   'interaction': string;
   'itemTagSelector': string;
   'move': string;
-  'null': string;
+  'moveLocationIcons': string;
+  'moveLocations': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

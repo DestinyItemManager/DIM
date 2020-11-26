@@ -1,10 +1,11 @@
 import { AppIcon, banIcon, tagIcon } from 'app/shell/icons';
+import _ from 'lodash';
 import React from 'react';
 import styles from './ValueDial.m.scss';
 
 /** expects a value from 1-100 but caps both ends */
 export default function ValueDial({ value }: { value: number }) {
-  value = Math.min(100, Math.max(0, value));
+  value = _.clamp(value, 0, 100);
   const direction = ((1.5 * value - 75) * Math.PI) / 180;
   const colors = getValueColors(value);
   const x = Math.sin(direction) * 0.9;

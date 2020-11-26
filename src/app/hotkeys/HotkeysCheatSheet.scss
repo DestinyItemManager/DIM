@@ -11,10 +11,10 @@
   height: 100%;
   top: 0;
   left: 0;
-  color: #333;
+  color: white;
   font-size: 1em;
-  background-color: rgba(255, 255, 255, 0.9);
-  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
   @supports (backdrop-filter: blur(5px)) {
     backdrop-filter: blur(5px);
   }
@@ -38,7 +38,7 @@
   grid-template-columns: repeat(auto-fill, 75px minmax(200px, 1fr));
   margin: 0 auto;
   max-width: 800px;
-  color: #333;
+  color: white;
 }
 
 .cfp-hotkeys-keys {
@@ -47,16 +47,8 @@
 }
 
 .cfp-hotkeys-key {
-  display: inline-block;
-  color: #fff;
-  background-color: #333;
-  border: 1px solid #333;
-  border-radius: 5px;
-  text-align: center;
-  margin-right: 5px;
-  box-shadow: inset 0 1px 0 #666, 0 1px 0 #bbb;
-  padding: 5px 9px;
-  font-size: 1em;
+  font-size: 1em !important;
+  padding: 4px 6px !important;
 }
 
 .cfp-hotkeys-text {

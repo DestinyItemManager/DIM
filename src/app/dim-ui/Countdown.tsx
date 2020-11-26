@@ -1,4 +1,4 @@
-import { t } from 'app/i18next-t';
+import { i15dDurationFromMs } from 'app/utils/time';
 import React, { useEffect, useRef, useState } from 'react';
 
 /**
@@ -31,29 +31,7 @@ export default function Countdown({
 
   return (
     <span className="countdown" title={endTime.toLocaleString()}>
-      {dhm(diff / 1000, compact)}
+      {i15dDurationFromMs(diff, compact)}
     </span>
   );
-}
-
-function pad(n: number, width: number) {
-  const s = String(n);
-  return s.length >= width ? s : new Array(width - s.length + 1).join('0') + s;
-}
-
-function dhm(seconds: number, compact = false) {
-  seconds = Math.max(0, seconds);
-  const days = Math.floor(seconds / 86400);
-  seconds %= 86400; // seconds with full days taken out
-  const hours = Math.floor(seconds / 3600);
-  seconds %= 3600; // seconds with full hours taken out
-  const minutes = Math.floor(seconds / 60);
-  const hhMM = `${hours}:${pad(minutes, 2)}`;
-  return days
-    ? `${t('Countdown.Days', {
-        count: days,
-        context: compact ? 'compact' : '',
-        contextList: 'compact',
-      })} ${hhMM}`
-    : `${hhMM}`;
 }

@@ -13,15 +13,10 @@
     margin-left: 10px;
 
     > .title {
+      background-color: rgba(0, 0, 0, 0.2);
+      &:hover,
       &.collapsed {
-        background-color: #111;
-      }
-      .gradientBackground & {
-        background-color: rgba(0, 0, 0, 0.2);
-        &:hover,
-        &.collapsed {
-          background-color: rgba(0, 0, 0, 0.4);
-        }
+        background-color: rgba(0, 0, 0, 0.4);
       }
     }
 
@@ -49,15 +44,10 @@
   &.always-expanded > .presentation-node {
     margin-left: 0;
     > .title {
+      background-color: rgba(0, 0, 0, 0.2);
+      &:hover,
       &.collapsed {
-        background-color: #000;
-      }
-      .gradientBackground & {
-        background-color: rgba(0, 0, 0, 0.2);
-        &:hover,
-        &.collapsed {
-          background-color: rgba(0, 0, 0, 0.4);
-        }
+        background-color: rgba(0, 0, 0, 0.4);
       }
     }
   }

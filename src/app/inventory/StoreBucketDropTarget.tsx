@@ -35,7 +35,9 @@ type Props = InternalProps & ExternalProps;
 
 // This determines what types can be dropped on this target
 function dragType(props: ExternalProps) {
-  return [props.bucket.type!, `${props.storeId}-${props.bucket.type!}`];
+  return props.bucket.inPostmaster
+    ? []
+    : [props.bucket.type!, `${props.storeId}-${props.bucket.type!}`, 'postmaster'];
 }
 
 // This determines the behavior of dropping on this target

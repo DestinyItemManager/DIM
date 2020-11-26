@@ -1,16 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getSpecialtySocketMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import {
-  isModPickerCategory,
-  LockedArmor2Mod,
-  ModPickerCategories,
-  ModPickerCategory,
-} from '../types';
+import { LockedArmor2Mod, ModPickerCategory } from '../types';
+import { getModPickerCategoryFromPlugCategoryHash } from '../utils';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -26,21 +21,16 @@ const undesireablePlugs = [
 interface PlugAndCategory {
   plugDef: PluggableInventoryItemDefinition;
   category?: ModPickerCategory;
-  season?: number;
 }
 
 interface Props {
   item: DimItem;
   lockedMods?: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
-  onSocketClick?(
-    plugDef: PluggableInventoryItemDefinition,
-    category?: ModPickerCategory,
-    season?: number
-  ): void;
+  onSocketClick?(plugDef: PluggableInventoryItemDefinition, category?: ModPickerCategory): void;
 }
 
-function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
+function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
   if (!item.sockets) {
     return null;
   }
@@ -71,26 +61,23 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      const metadata = getSpecialtySocketMetadataByPlugCategoryHash(toSave.plug.plugCategoryHash);
-      const category =
-        (isModPickerCategory(toSave.plug.plugCategoryHash) && toSave.plug.plugCategoryHash) ||
-        (metadata && ModPickerCategories.seasonal) ||
-        undefined;
-
-      modsAndPerks.push({ plugDef: toSave, category, season: metadata?.season });
+      modsAndPerks.push({
+        plugDef: toSave,
+        category: getModPickerCategoryFromPlugCategoryHash(toSave.plug.plugCategoryHash),
+      });
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map(({ plugDef, category, season }, index) => (
+        {modsAndPerks.map(({ plugDef, category }, index) => (
           <Mod
             key={index}
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category, season) : undefined}
+            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category) : undefined}
           />
         ))}
       </div>
@@ -98,4 +85,4 @@ function GeneratedSetSockets({ item, lockedMods, defs, onSocketClick }: Props) {
   );
 }
 
-export default GeneratedSetSockets;
+export default Sockets;

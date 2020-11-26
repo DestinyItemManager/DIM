@@ -1,6 +1,8 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon, {
   ArmorSlotSpecificModSocketIcon,
@@ -8,13 +10,10 @@ import SpecialtyModSlotIcon, {
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { classIcons } from 'app/inventory/StoreBucket';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState } from 'app/store/types';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
@@ -39,7 +38,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: () => true,
     render: (item) => (
       <PressTip elementType="span" tooltip={item.classTypeNameLocalized}>
-        <AppIcon icon={classIcons[item.classType]} className={styles.classIcon} />
+        <ClassIcon classType={item.classType} className={styles.classIcon} />
       </PressTip>
     ),
     value: (item) => item.classType.toString(),
@@ -84,11 +83,14 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: getSpecialtySocketMetadata,
+    runIf: getSpecialtySocketMetadatas,
     render: (item) => (
       <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
     ),
-    value: (item) => getSpecialtySocketMetadata(item)?.tag ?? '',
+    value: (item) =>
+      getSpecialtySocketMetadatas(item)
+        ?.map((m) => m.slotTag)
+        .join() ?? '',
   },
   armorSlot: {
     id: 'armorSlot',
@@ -271,7 +273,8 @@ function collectRelevantItemFactors(exampleItem: DimItem, allItems: DimItem[]) {
     .forEach((item: DimItem) => {
       factorCombos[exampleItem.bucket.sort as factorComboCategory].forEach((factorCombo) => {
         const combination = applyFactorCombo(item, factorCombo);
-        combinationCounts[combination] = (combinationCounts[combination] ?? 0) + 1;
+        combinationCounts[combination] ??= 0;
+        combinationCounts[combination]++;
       });
     });
   return combinationCounts;

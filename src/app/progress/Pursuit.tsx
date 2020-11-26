@@ -19,22 +19,27 @@ interface ProvidedProps {
   item: DimItem;
   defs: D2ManifestDefinitions;
   hideDescription?: boolean;
+  searchHidden?: boolean;
 }
 
 // Props from Redux via mapStateToProps
 interface StoreProps {
   isNew: boolean;
-  searchHidden?: boolean;
 }
 
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { item } = props;
+function mapStateToProps(
+  state: RootState,
+  props: ProvidedProps
+): StoreProps & {
+  searchHidden?: boolean;
+} {
+  const { item, searchHidden } = props;
 
   const settings = settingsSelector(state);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
-    searchHidden: !searchFilterSelector(state)(item),
+    searchHidden: searchHidden || !searchFilterSelector(state)(item),
   };
 }
 

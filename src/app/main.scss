@@ -17,7 +17,6 @@
   // ultimately user-determined. default values here
   --num-characters: 3;
   --tiles-per-char-column: 3;
-  --color-filter: '';
   // equipped item plus character's inventory
   --character-column-width: calc(
     (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
@@ -122,7 +121,11 @@ span:focus {
   // non-inventory page settings
   max-width: 900px;
   margin: 0 auto;
-  filter: var(--color-filter);
+}
+
+// Use this to make images not tappable (Android Chrome will show a download menu)
+.no-pointer-events {
+  pointer-events: none;
 }
 
 .currency img {
@@ -410,10 +413,10 @@ a.dim-button {
   }
 }
 
-.gradientBackground {
+.app {
   &::before {
     @include below-header;
-    background: radial-gradient(circle at 50% 70px, #454568 0%, #161626 100%);
+    background: $gradient;
     background-position: center top;
     background-repeat: no-repeat;
     content: '';

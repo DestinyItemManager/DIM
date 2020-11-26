@@ -148,7 +148,7 @@ function waitForProfileLoad() {
       (_, loaded) => {
         if (loaded) {
           unsubscribe();
-          resolve();
+          resolve(undefined);
         }
       }
     );

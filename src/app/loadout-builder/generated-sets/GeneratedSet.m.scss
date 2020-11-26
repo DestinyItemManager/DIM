@@ -5,7 +5,7 @@
   flex-direction: column;
   box-sizing: border-box;
   padding: 10px 0 4px 0;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
   @include phone-portrait {
     padding-left: 12px;

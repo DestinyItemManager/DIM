@@ -6,14 +6,6 @@
   flex-direction: row;
   align-items: center;
   padding-right: 4px;
-  :global(.app-icon) {
-    color: white !important;
-    width: 16px;
-    text-align: center;
-    margin-right: 4px;
-    font-size: 12px !important;
-    height: 12px;
-  }
 }
 
 .menu {

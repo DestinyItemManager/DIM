@@ -34,10 +34,10 @@ export default function Milestones({
     ? defs.SeasonPass.get(season.seasonPassHash)
     : undefined;
 
-  const milestoneItems = [
-    ...milestonesForCharacter(defs, profileInfo, store),
-    ...profileMilestones,
-  ].flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store.classType));
+  const milestoneItems = _.uniqBy(
+    [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
+    (m) => m.milestoneHash
+  ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
   return (
     <div className="progress-for-character">
@@ -84,7 +84,7 @@ function milestonesForProfile(
     (milestone) =>
       !milestone.availableQuests &&
       !milestone.activities &&
-      (milestone.vendors || milestone.rewards) &&
+      (!milestone.vendors || milestone.rewards) &&
       defs.Milestone.get(milestone.milestoneHash)
   );
 
@@ -111,7 +111,8 @@ function milestonesForCharacter(
       def &&
       (def.showInExplorer || def.showInMilestones) &&
       (milestone.activities ||
-        milestone.availableQuests?.every(
+        !milestone.availableQuests ||
+        milestone.availableQuests.every(
           (q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&

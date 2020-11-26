@@ -1,6 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/dim-api/selectors';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -12,11 +13,9 @@ import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/select
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
-import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
@@ -34,16 +33,10 @@ import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { Settings } from './initial-settings';
 import { itemSortOrder } from './item-sort';
-import Select, { listToOptions, mapToOptions } from './Select';
+import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
-
-const classIcons = {
-  [DestinyClass.Hunter]: dimHunterIcon,
-  [DestinyClass.Titan]: dimTitanIcon,
-  [DestinyClass.Warlock]: dimWarlockIcon,
-};
 
 interface StoreProps {
   currentAccount?: DestinyAccount;
@@ -122,20 +115,6 @@ const languageOptions = mapToOptions({
   'zh-cht': '繁體中文', // Chinese (Traditional)
   'zh-chs': '简体中文', // Chinese (Simplified)
 });
-
-const colorA11yOptions = $featureFlags.colorA11y
-  ? listToOptions([
-      '-',
-      'Protanopia',
-      'Protanomaly',
-      'Deuteranopia',
-      'Deuteranomaly',
-      'Tritanopia',
-      'Tritanomaly',
-      'Achromatopsia',
-      'Achromatomaly',
-    ])
-  : [];
 
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
@@ -216,6 +195,8 @@ function SettingsPage({
     classType: t('Settings.SortByClassType'),
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
+    season: t('Settings.SortBySeason'),
+    sunset: t('Settings.SortBySunset'),
     // archetype: 'Archetype'
   };
 
@@ -296,14 +277,6 @@ function SettingsPage({
                 </div>
               )}
             </div>
-
-            <Select
-              label={t('Settings.ColorA11y')}
-              name="colorA11y"
-              value={settings.colorA11y}
-              options={colorA11yOptions}
-              onChange={onChange}
-            />
           </section>
 
           <section id="items">
@@ -344,7 +317,6 @@ function SettingsPage({
                   type="button"
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
-                  title={t('Hotkey.ClearNewItemsTitle')}
                 >
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
@@ -366,7 +338,7 @@ function SettingsPage({
                     !store.isVault && (
                       <React.Fragment key={store.classType}>
                         <div>
-                          <AppIcon icon={classIcons[store.classType]} /> {store.className}:{' '}
+                          <ClassIcon classType={store.classType} /> {store.className}:{' '}
                         </div>
                         <StatTotalToggle forClass={store.classType} />
                       </React.Fragment>
@@ -379,53 +351,64 @@ function SettingsPage({
           <section id="inventory">
             <h2>{t('Settings.Inventory')}</h2>
             <div className="setting">
-              <label>{t('Settings.CharacterOrder')}</label>
-              <div className="radioOptions">
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecent'}
-                    value="mostRecent"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderRecent')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecentReverse'}
-                    value="mostRecentReverse"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderReversed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'fixed'}
-                    value="fixed"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderFixed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'custom'}
-                    value="custom"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.SortCustom')}</span>
-                </label>
-                {settings.characterOrder === 'custom' && (
-                  <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
-                )}
-              </div>
+              <Checkbox
+                label={t('Settings.SingleCharacter')}
+                name="singleCharacter"
+                value={settings.singleCharacter}
+                onChange={onChange}
+              />
+              <div className="fineprint">{t('Settings.SingleCharacterExplanation')}</div>
             </div>
+            {!settings.singleCharacter && (
+              <div className="setting">
+                <label>{t('Settings.CharacterOrder')}</label>
+                <div className="radioOptions">
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecent'}
+                      value="mostRecent"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderRecent')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecentReverse'}
+                      value="mostRecentReverse"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderReversed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'fixed'}
+                      value="fixed"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderFixed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'custom'}
+                      value="custom"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.SortCustom')}</span>
+                  </label>
+                  {settings.characterOrder === 'custom' && (
+                    <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
+                  )}
+                </div>
+              </div>
+            )}
 
             {supportsCssVar &&
               (isPhonePortrait ? (

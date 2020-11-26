@@ -1,10 +1,10 @@
 import { t } from 'app/i18next-t';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import { showItemPopup } from 'app/item-popup/item-popup';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { showInfuse } from '../infuse/infuse';
 import { DimItem } from '../inventory/item-types';
 import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
@@ -26,7 +26,7 @@ export default function ItemActions({
   const [amount, setAmount] = useState(item.amount);
   const stores = useSelector(sortedStoresSelector);
   const store = getStore(stores, item.owner);
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   // If the item can't be transferred (or is unique) don't show the move amount slider
   const maximum = useMemo(
@@ -92,6 +92,7 @@ export default function ItemActions({
             itemOwnerStore={store}
             vertical={Boolean(mobileInspect)}
             moveItemTo={onMoveItemTo}
+            stores={stores}
           />
         ))}
 

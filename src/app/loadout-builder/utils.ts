@@ -1,6 +1,10 @@
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import {
+  combatCompatiblePlugCategoryHashes,
+  legacyCompatiblePlugCategoryHashes,
+} from 'app/search/specialty-modslots';
+import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyItemSubType,
@@ -9,9 +13,12 @@ import {
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
+  isModPickerCategory,
   LockedArmor2Mod,
   LockedItemType,
   ModPickerCategories,
+  ModPickerCategory,
+  raidPlugs,
   StatTypes,
   statValues,
 } from './types';
@@ -224,7 +231,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
 }
 
 export function statTier(stat: number) {
-  return Math.min(10, Math.max(0, Math.floor(stat / 10)));
+  return _.clamp(Math.floor(stat / 10), 0, 10);
 }
 
 /**
@@ -298,7 +305,7 @@ export function getLockedModStats(
   if (lockedArmor2Mods) {
     for (const lockedMod of lockedArmor2Mods) {
       for (const stat of lockedMod.modDef.investmentStats) {
-        lockedModStats[stat.statTypeHash] = lockedModStats[stat.statTypeHash] || 0;
+        lockedModStats[stat.statTypeHash] ||= 0;
         // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
         lockedModStats[stat.statTypeHash] += stat.value;
       }
@@ -313,7 +320,10 @@ export function getLockedModStats(
  * has an elemental (non-Any) energy requirement
  */
 export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
-  return mods.some((mod) => mod.modDef.plug.energyCost!.energyType !== DestinyEnergyType.Any);
+  return mods.some(
+    (mod) =>
+      !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
+  );
 }
 
 export const armor2ModPlugCategoriesTitles = {
@@ -323,5 +333,28 @@ export const armor2ModPlugCategoriesTitles = {
   [ModPickerCategories.chest]: tl('LB.Chest'),
   [ModPickerCategories.leg]: tl('LB.Legs'),
   [ModPickerCategories.classitem]: tl('LB.ClassItem'),
-  [ModPickerCategories.seasonal]: tl('LB.Seasonal'),
+  [ModPickerCategories.other]: tl('LB.Other'),
+  [ModPickerCategories.raid]: tl('LB.Raid'),
 };
+
+/** Returns the relevant mod picker category from the plug category hash.
+ *
+ * For raid mods, while they will fit into legacy sockets, they have their
+ * own category so expect 'raid' rather than 'other'.
+ *
+ * Legacy and combat mod hashes will return 'other'.
+ */
+export function getModPickerCategoryFromPlugCategoryHash(
+  plugCategoryHash: number
+): ModPickerCategory | undefined {
+  if (isModPickerCategory(plugCategoryHash)) {
+    return plugCategoryHash;
+  } else if (raidPlugs.includes(plugCategoryHash)) {
+    return ModPickerCategories.raid;
+  } else if (
+    legacyCompatiblePlugCategoryHashes.includes(plugCategoryHash) ||
+    combatCompatiblePlugCategoryHashes.includes(plugCategoryHash)
+  ) {
+    return ModPickerCategories.other;
+  }
+}

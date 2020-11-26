@@ -2,7 +2,7 @@
 
 .title {
   padding: 0 16px;
-  background-color: #222;
+  background-color: rgba(0, 0, 0, 0.2);
   color: white;
   min-height: 34px;
   text-transform: uppercase;
@@ -14,8 +14,10 @@
   align-items: center;
   cursor: pointer;
 
-  &:hover {
-    background-color: #1f1f1f;
+  &:hover,
+  &.collapsed {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #ccc;
   }
 
   span[role='button'] {
@@ -33,19 +35,6 @@
     width: 10px;
     margin-right: 8px;
   }
-
-  &.collapsed {
-    color: #ccc;
-    background-color: black;
-  }
-
-  .gradientBackground & {
-    background-color: rgba(0, 0, 0, 0.2);
-    &:hover,
-    &.collapsed {
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-  }
 }
 
 .collapse-icon {
@@ -61,4 +50,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.collapse-content {
+  overflow: hidden;
 }

@@ -1,22 +1,19 @@
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import MaxlightButton from 'app/loadout/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import xpIcon from 'images/xpIcon.svg';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import PressTip from '../dim-ui/PressTip';
-import { queueAction } from '../inventory/action-queue';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
 import { searchFilterSelector } from '../search/search-filter';
@@ -27,30 +24,23 @@ import {
   editIcon,
   engramIcon,
   faRandom,
-  globeIcon,
-  hunterIcon,
   levellingIcon,
-  powerActionIcon,
-  powerIndicatorIcon,
   searchIcon,
   sendIcon,
-  titanIcon,
   undoIcon,
-  warlockIcon,
 } from '../shell/icons';
 import { querySelector } from '../shell/selectors';
+import { queueAction } from '../utils/action-queue';
 import {
   gatherEngramsLoadout,
   itemLevelingLoadout,
-  maxLightItemSet,
-  maxLightLoadout,
   randomLoadout,
   searchLoadout,
 } from './auto-loadouts';
 import { applyLoadout } from './loadout-apply';
 import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, getLight, newLoadout } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout } from './loadout-utils';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import {
   makeRoomForPostmaster,
@@ -59,13 +49,6 @@ import {
   totalPostmasterItems,
 } from './postmaster';
 import { loadoutsSelector, previousLoadoutSelector } from './selectors';
-
-const loadoutIcon = {
-  [DestinyClass.Unknown]: globeIcon,
-  [DestinyClass.Hunter]: hunterIcon,
-  [DestinyClass.Warlock]: warlockIcon,
-  [DestinyClass.Titan]: titanIcon,
-};
 
 interface ProvidedProps {
   dimStore: DimStore;
@@ -145,8 +128,6 @@ function LoadoutPopup({
   dispatch,
 }: Props) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
-  const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
-  const artifactLight = getArtifactBonus(dimStore);
 
   const numPostmasterItems =
     dimStore.destinyVersion === 2 ? pullablePostmasterItems(dimStore, stores).length : 0;
@@ -183,12 +164,6 @@ function LoadoutPopup({
   // A dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = (e) => {
     const loadout = itemLevelingLoadout(allItems, dimStore);
-    onApplyLoadout(loadout, e);
-  };
-
-  // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
-  const makeMaxLightLoadout = (e) => {
-    const loadout = maxLightLoadout(allItems, dimStore);
     onApplyLoadout(loadout, e);
   };
 
@@ -255,7 +230,9 @@ function LoadoutPopup({
             <AppIcon icon={addIcon} />
             <span>{t('Loadouts.Create')}</span>
           </span>
-          <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+          {!dimStore.isVault && (
+            <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+          )}
         </li>
 
         {query.length > 0 && (
@@ -267,37 +244,14 @@ function LoadoutPopup({
           </li>
         )}
 
-        {!dimStore.isVault && (
+        {!dimStore.isVault && !hideFarming && (
           <>
             <li className="loadout-set">
-              <span onClick={makeMaxLightLoadout}>
-                <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
-                  <span className="light">
-                    {dimStore.destinyVersion === 1 ? (
-                      <>
-                        <AppIcon icon={powerIndicatorIcon} />
-                        {Math.floor(maxLight * 10) / 10}
-                      </>
-                    ) : (
-                      <>
-                        <img className="yellowInlineSvg" src={helmetIcon} />
-                        {Math.floor(maxLight)}
-                        {' + '}
-                        <img className="yellowInlineSvg" src={xpIcon} />
-                        {artifactLight}
-                      </>
-                    )}
-
-                    {hasClassified && <sup>*</sup>}
-                  </span>
-                </PressTip>
-                <AppIcon icon={powerActionIcon} />
-                <span>
-                  {dimStore.destinyVersion === 2
-                    ? t('Loadouts.MaximizePower')
-                    : t('Loadouts.MaximizeLight')}
-                </span>
-              </span>
+              <MaxlightButton
+                allItems={allItems}
+                dimStore={dimStore}
+                hasClassified={hasClassified}
+              />
             </li>
 
             {dimStore.destinyVersion === 1 && (
@@ -340,6 +294,27 @@ function LoadoutPopup({
                   </span>
                 </li>
               )}
+            <li className="loadout-set">
+              <span onClick={applyRandomLoadout}>
+                <AppIcon icon={faRandom} />
+                <span>
+                  {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
+                </span>
+              </span>
+              {query.length === 0 && (
+                <span onClick={(e) => applyRandomLoadout(e, true)}>
+                  <span>{t('Loadouts.WeaponsOnly')}</span>
+                </span>
+              )}
+            </li>
+            {!hideFarming && (
+              <li className="loadout-set">
+                <span onClick={onStartFarming}>
+                  <AppIcon icon={engramIcon} />
+                  <span>{t('FarmingMode.FarmingMode')}</span>
+                </span>
+              </li>
+            )}
           </>
         )}
 
@@ -351,29 +326,6 @@ function LoadoutPopup({
             </span>
             <span onClick={(e) => applyGatherEngramsLoadout(e, { exotics: false })}>
               <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
-            </span>
-          </li>
-        )}
-
-        <li className="loadout-set">
-          <span onClick={applyRandomLoadout}>
-            <AppIcon icon={faRandom} />
-            <span>
-              {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
-            </span>
-          </span>
-          {query.length === 0 && (
-            <span onClick={(e) => applyRandomLoadout(e, true)}>
-              <span>{t('Loadouts.WeaponsOnly')}</span>
-            </span>
-          )}
-        </li>
-
-        {!dimStore.isVault && !hideFarming && (
-          <li className="loadout-set">
-            <span onClick={onStartFarming}>
-              <AppIcon icon={engramIcon} />
-              <span>{t('FarmingMode.FarmingMode')}</span>
             </span>
           </li>
         )}
@@ -396,7 +348,7 @@ function LoadoutPopup({
         {loadouts.map((loadout) => (
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
-              <AppIcon className="loadout-type-icon" icon={loadoutIcon[loadout.classType]} />
+              <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
               {loadout.name}
             </span>
             <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>

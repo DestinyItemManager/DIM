@@ -21,6 +21,7 @@ export const damageNamesByEnum: { [key in DamageType]: string | null } = {
   3: 'solar',
   4: 'void',
   5: 'raid',
+  6: 'stasis',
 };
 
 // typescript doesn't understand array.filter

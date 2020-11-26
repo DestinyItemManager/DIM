@@ -1,12 +1,12 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { makeDupeID } from 'app/search/search-filters/dupes';
 import {
-  getItemSpecialtyModSlotDisplayName,
-  getSpecialtySocketMetadata,
+  getItemSpecialtyModSlotDisplayNames,
+  getSpecialtySocketMetadatas,
 } from 'app/utils/item-utils';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -26,14 +26,16 @@ export function findSimilarArmors(
   exampleItem: DimItem
 ): CompareButton[] {
   const exampleItemElementIcon = <ElementIcon key={exampleItem.id} element={exampleItem.element} />;
-  const exampleItemModSlot = getSpecialtySocketMetadata(exampleItem);
+  const exampleItemModSlotMetadatas = getSpecialtySocketMetadatas(exampleItem);
   const specialtyModSlotName =
-    (defs && getItemSpecialtyModSlotDisplayName(exampleItem, defs)) ?? '';
+    (defs && getItemSpecialtyModSlotDisplayNames(exampleItem, defs)) ?? '';
 
   // helper functions for filtering items
   const matchesExample = (key: keyof DimItem) => (item: DimItem) => item[key] === exampleItem[key];
-  const matchingModSlot = (item: DimItem) =>
-    exampleItemModSlot === getSpecialtySocketMetadata(item);
+  const matchingModSlot = (item: DimItem) => {
+    const m = getSpecialtySocketMetadatas(item);
+    return m?.some((n) => exampleItemModSlotMetadatas?.includes(n));
+  };
   const hasEnergy = (item: DimItem) => Boolean(item.energy);
 
   // minimum filter: make sure it's all armor, and can go in the same slot on the same class
@@ -59,7 +61,7 @@ export function findSimilarArmors(
     {
       buttonLabel: [specialtyModSlotName].join(' + '),
       items:
-        hasEnergy(exampleItem) && exampleItemModSlot
+        hasEnergy(exampleItem) && exampleItemModSlotMetadatas
           ? allArmors.filter(hasEnergy).filter(matchingModSlot)
           : [],
     },
@@ -75,7 +77,7 @@ export function findSimilarArmors(
     {
       buttonLabel: [exampleItemElementIcon, specialtyModSlotName],
       items:
-        hasEnergy(exampleItem) && exampleItemModSlot
+        hasEnergy(exampleItem) && exampleItemModSlotMetadatas
           ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
           : [],
     },

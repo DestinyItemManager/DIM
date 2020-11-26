@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import store from 'app/store/store';
 import { errorLog, infoLog } from 'app/utils/log';
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';

@@ -1,10 +1,16 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
-import { DestinyColor, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import {
+  DestinyColor,
+  DestinyItemChangeResponse,
+  DestinyProfileResponse,
+} from 'bungie-api-ts/destiny2';
 import { get } from 'idb-keyval';
 import { createAction } from 'typesafe-actions';
 import { TagValue } from './dim-item-info';
+import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
 
@@ -49,6 +55,16 @@ export const itemMoved = createAction('inventory/MOVE_ITEM')<{
   target: DimStore;
   equip: boolean;
   amount: number;
+}>();
+
+/**
+ * An item was mutated by Advanced Write Actions (perks changed, sockets inserted, etc.).
+ * We need to update the inventory with the updated item and any removed/added items.
+ */
+export const awaItemChanged = createAction('inventory/AWA_CHANGE')<{
+  changes: DestinyItemChangeResponse;
+  defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
 }>();
 
 /*

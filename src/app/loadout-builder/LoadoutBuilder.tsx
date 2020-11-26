@@ -8,7 +8,6 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
-import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -288,7 +287,6 @@ function LoadoutBuilder({
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
-          vertical={!isPhonePortrait}
           isPhonePortrait={isPhonePortrait}
           onCharacterChanged={(storeId: string) => lbDispatch({ type: 'changeCharacter', storeId })}
         />
@@ -344,6 +342,7 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
+              filterLegacy={modPicker.filterLegacy}
               lbDispatch={lbDispatch}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,
@@ -377,7 +376,6 @@ function LoadoutBuilder({
             document.body
           )}
       </PageWithMenu.Contents>
-      <LoadoutDrawer />
     </PageWithMenu>
   );
 }

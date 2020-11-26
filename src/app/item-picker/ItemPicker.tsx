@@ -9,7 +9,7 @@ import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { storesSelector } from '../inventory/selectors';
+import { allItemsSelector } from '../inventory/selectors';
 import { searchFiltersConfigSelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { itemSortOrderSelector } from '../settings/item-sort';
@@ -30,10 +30,9 @@ interface StoreProps {
 
 function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
   const filteredItemsSelector = createSelector(
-    storesSelector,
+    allItemsSelector,
     (_: RootState, ownProps: ProvidedProps) => ownProps.filterItems,
-    (stores, filterItems) =>
-      stores.flatMap((s) => (filterItems ? s.items.filter(filterItems) : s.items))
+    (allitems, filterItems) => (filterItems ? allitems.filter(filterItems) : allitems)
   );
 
   return (state, ownProps) => ({

@@ -34,6 +34,7 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -262,8 +263,9 @@ function ItemTable({
     [dispatch, columns, enabledColumns, itemType]
   );
 
+  const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+
   const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
-    const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
     dispatch(bulkLockItems(selectedItems, lock));
   });
 
@@ -271,8 +273,7 @@ function ItemTable({
     if (!note) {
       note = undefined;
     }
-    if (selectedItemIds.length) {
-      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+    if (selectedItems.length) {
       for (const item of selectedItems) {
         dispatch(setItemNote({ itemId: item.id, note }));
       }
@@ -311,8 +312,7 @@ function ItemTable({
   );
 
   const onMoveSelectedItems = (store: DimStore) => {
-    if (selectedItemIds.length) {
-      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+    if (selectedItems.length) {
       const loadout = newLoadout(
         t('Organizer.BulkMoveLoadoutName'),
         selectedItems.map((i) => convertToLoadoutItem(i, false))
@@ -332,6 +332,17 @@ function ItemTable({
   const gridSpec = `min-content ${filteredColumns
     .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
+
+  const numColumns = filteredColumns.length + 1;
+
+  const rowStyle = [...Array(numColumns).keys()]
+    .map(
+      (_, n) =>
+        `[role="cell"]:nth-of-type(${numColumns * 2}n+${
+          n + 2
+        }){background-color:#1d1c2b !important;}`
+    )
+    .join('\n');
 
   /**
    * Toggle sorting of columns. If shift is held, adds this column to the sort.
@@ -368,7 +379,7 @@ function ItemTable({
    * Select all items, or if any are selected, clear the selection.
    */
   const selectAllItems: React.ChangeEventHandler<HTMLInputElement> = () => {
-    if (selectedItemIds.length === 0) {
+    if (selectedItems.length === 0) {
       setSelectedItemIds(rows.map((r) => r.item.id));
     } else {
       setSelectedItemIds([]);
@@ -455,7 +466,7 @@ function ItemTable({
       <div className={styles.toolbar}>
         <div>
           <ItemActions
-            itemsAreSelected={Boolean(selectedItemIds.length)}
+            itemsAreSelected={Boolean(selectedItems.length)}
             onLock={onLock}
             onNote={onNote}
             stores={stores}
@@ -481,6 +492,7 @@ function ItemTable({
             forClass={classIfAny}
           />
         </div>
+        {ReactDOM.createPortal(<style>{rowStyle}</style>, document.head)}
       </div>
       <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
         <div>
@@ -488,15 +500,13 @@ function ItemTable({
             name="selectAll"
             title={t('Organizer.SelectAll')}
             type="checkbox"
-            checked={selectedItemIds.length === rows.length}
+            checked={selectedItems.length === rows.length}
             ref={(el) =>
               el &&
-              (el.indeterminate =
-                selectedItemIds.length !== rows.length && selectedItemIds.length > 0)
+              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
             }
             onChange={selectAllItems}
           />
-          {selectedItemIds.length || null}
         </div>
       </div>
       {filteredColumns.map((column: ColumnDefinition) => (

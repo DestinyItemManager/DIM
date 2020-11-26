@@ -40,7 +40,7 @@ export default function CompareItem({
           {item.lockable && <LockButton item={item} type="lock" />}
           {item.trackable && <LockButton item={item} type="track" />}
         </div>
-        <ItemTagSelector item={item} className="tagSelector" />
+        <ItemTagSelector item={item} className="tagSelector" hideKeys={true} />
         <div className="close" onClick={() => remove(item)} />
       </div>
       <div className="item-name" onClick={() => itemClick(item)}>

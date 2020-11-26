@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -19,7 +20,6 @@ import { InventoryBuckets } from '../../inventory/inventory-buckets';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
 import { bucketsSelector, storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
-import LoadoutDrawer from '../../loadout/LoadoutDrawer';
 import { getColor } from '../../shell/filters';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -230,238 +230,243 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     const activeHighestSets = getActiveHighestSets(highestsets, activesets);
 
     return (
-      <div className="loadout-builder dim-page itemQuality">
-        <div className="character-select">
-          <CharacterSelect
-            selectedStore={active}
-            stores={stores}
-            isPhonePortrait={isPhonePortrait}
-            onCharacterChanged={this.onSelectedChange}
-          />
-        </div>
-        <LoadoutDrawer />
-        <CollapsibleTitle
-          defaultCollapsed={true}
-          sectionId="lb1-classitems"
-          title={t('LB.ShowGear', { class: active.className })}
-        >
-          <div className="section all-armor">
-            {/* TODO: break into its own component */}
-            <span>{t('Bucket.Armor')}</span>:{' '}
-            <select name="type" value={type} onChange={this.onChange}>
-              {_.map(i18nItemNames, (name, type) => (
-                <option key={type} value={type}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            <label>
-              <input
-                className="vendor-checkbox"
-                type="checkbox"
-                name="includeVendors"
-                checked={includeVendors}
-                onChange={this.onIncludeVendorsChange}
-              />{' '}
-              {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
-            </label>
-            <div className="loadout-builder-section">
-              {_.sortBy(
-                bucket[type].filter((i) => i.primStat && i.primStat.value >= 280),
-                (i) => (i.quality ? -i.quality.min : 0)
-              ).map((item) => (
-                <div key={item.index} className="item-container">
-                  <div className="item-stats">
-                    {item.stats?.map((stat) => (
-                      <div
-                        key={stat.statHash}
-                        style={getColor(
-                          item.normalStats![stat.statHash].qualityPercentage,
-                          'color'
-                        )}
-                      >
-                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                        {item.normalStats![stat.statHash].scaled > 0 && (
-                          <span>
-                            <small>{item.normalStats![stat.statHash].scaled}</small>/
-                            <small>{stat.split}</small>
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <LoadoutBuilderItem shiftClickCallback={this.excludeItem} item={item} />
-                  </div>
-                </div>
-              ))}
-            </div>
+      <PageWithMenu className="itemQuality">
+        <PageWithMenu.Menu>
+          <div className="character-select">
+            <CharacterSelect
+              selectedStore={active}
+              stores={stores}
+              isPhonePortrait={isPhonePortrait}
+              onCharacterChanged={this.onSelectedChange}
+            />
           </div>
-        </CollapsibleTitle>
-        <div className="section">
-          <p>
-            <span className="dim-button locked-button" onClick={this.lockEquipped}>
-              {t('LB.LockEquipped')}
-            </span>
-            <span className="dim-button locked-button" onClick={this.clearLocked}>
-              {t('LB.ClearLocked')}
-            </span>
-            <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
-          </p>
-          <div className="loadout-builder-section">
-            {_.map(lockeditems, (lockeditem, type: ArmorTypes) => (
-              <LoadoutBuilderLockPerk
-                key={type}
-                lockeditem={lockeditem}
-                activePerks={activePerks}
-                lockedPerks={lockedperks}
-                type={type}
-                i18nItemNames={i18nItemNames}
-                onRemove={this.onRemove}
-                onPerkLocked={this.onPerkLocked}
-                onItemLocked={this.onItemLocked}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="section" ng-show="excludeditems.length">
-          <p>
-            <span>{t('LB.Exclude')}</span> - <small>{t('LB.ExcludeHelp')}</small>
-          </p>
-          <div className="loadout-builder-section">
-            <ExcludeItemsDropTarget onExcluded={this.excludeItem} className="excluded-container">
-              <div className="excluded-items">
-                {excludeditems.map((excludeditem) => (
-                  <div key={excludeditem.index} className="excluded-item">
-                    <LoadoutBuilderItem item={excludeditem} />
-                    <div
-                      className="close"
-                      onClick={() => this.onExcludedRemove(excludeditem)}
-                      role="button"
-                      tabIndex={0}
-                    />
+        </PageWithMenu.Menu>
+        <PageWithMenu.Contents className="loadout-builder">
+          <CollapsibleTitle
+            defaultCollapsed={true}
+            sectionId="lb1-classitems"
+            title={t('LB.ShowGear', { class: active.className })}
+          >
+            <div className="section all-armor">
+              {/* TODO: break into its own component */}
+              <span>{t('Bucket.Armor')}</span>:{' '}
+              <select name="type" value={type} onChange={this.onChange}>
+                {_.map(i18nItemNames, (name, type) => (
+                  <option key={type} value={type}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <label>
+                <input
+                  className="vendor-checkbox"
+                  type="checkbox"
+                  name="includeVendors"
+                  checked={includeVendors}
+                  onChange={this.onIncludeVendorsChange}
+                />{' '}
+                {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
+              </label>
+              <div className="loadout-builder-section">
+                {_.sortBy(
+                  bucket[type].filter((i) => i.primStat && i.primStat.value >= 280),
+                  (i) => (i.quality ? -i.quality.min : 0)
+                ).map((item) => (
+                  <div key={item.index} className="item-container">
+                    <div className="item-stats">
+                      {item.stats?.map((stat) => (
+                        <div
+                          key={stat.statHash}
+                          style={getColor(
+                            item.normalStats![stat.statHash].qualityPercentage,
+                            'color'
+                          )}
+                        >
+                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                          {item.normalStats![stat.statHash].scaled > 0 && (
+                            <span>
+                              <small>{item.normalStats![stat.statHash].scaled}</small>/
+                              <small>{stat.split}</small>
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <LoadoutBuilderItem shiftClickCallback={this.excludeItem} item={item} />
+                    </div>
                   </div>
                 ))}
               </div>
-            </ExcludeItemsDropTarget>
-          </div>
-        </div>
-        {progress >= 1 && hasSets && (
+            </div>
+          </CollapsibleTitle>
           <div className="section">
-            {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
-            {t('Stats.Strength')}):{' '}
-            <select name="activesets" onChange={this.onActiveSetsChange} value={activesets}>
-              {allSetTiers.map((val) => (
-                <option key={val} disabled={val.charAt(0) === '-'} value={val}>
-                  {val}
-                </option>
-              ))}
-            </select>{' '}
-            <span className="dim-button" onClick={this.toggleShowAdvanced}>
-              {t('LB.AdvancedOptions')}
-            </span>{' '}
-            <span className="dim-button" onClick={this.toggleShowHelp}>
-              {t('LB.Help.Help')}
-            </span>
-            <span>
-              {showAdvanced && (
-                <div>
-                  <p>
-                    <label>
-                      <select
-                        name="fullMode"
-                        onChange={this.onFullModeChanged}
-                        value={fullMode ? 'true' : 'false'}
-                      >
-                        <option value="false">{t('LB.ProcessingMode.Fast')}</option>
-                        <option value="true">{t('LB.ProcessingMode.Full')}</option>
-                      </select>{' '}
-                      <span>{t('LB.ProcessingMode.ProcessingMode')}</span>
-                    </label>
-                    <small>
-                      {' '}
-                      -{' '}
-                      {fullMode ? t('LB.ProcessingMode.HelpFull') : t('LB.ProcessingMode.HelpFast')}
-                    </small>
-                  </p>
-                  <p>
-                    <label>
-                      <select name="scaleType" value={scaleType} onChange={this.onChange}>
-                        <option value="scaled">{t('LB.Scaled')}</option>
-                        <option value="base">{t('LB.Current')}</option>
-                      </select>{' '}
-                      <span>{t('LB.LightMode.LightMode')}</span>
-                    </label>
-                    <small>
-                      {' '}
-                      - {scaleType === 'scaled' && t('LB.LightMode.HelpScaled')}
-                      {scaleType === 'base' && t('LB.LightMode.HelpCurrent')}
-                    </small>
-                  </p>
-                </div>
-              )}
-            </span>
-            <span>
-              {showHelp && (
-                <div>
-                  <ul>
-                    <li>{t('LB.Help.Lock')}</li>
-                    <ul>
-                      <li>{t('LB.Help.NoPerk')}</li>
-                      <li>{t('LB.Help.MultiPerk')}</li>
-                      <li>
-                        <div className="example ex-or">- {t('LB.Help.Or')}</div>
-                      </li>
-                      <li>
-                        <div className="example ex-and">- {t('LB.Help.And')}</div>
-                      </li>
-                    </ul>
-                    <li>{t('LB.Help.DragAndDrop')}</li>
-                    <li>{t('LB.Help.ShiftClick')}</li>
-                    <li>{t('LB.Help.HigherTiers')}</li>
-                    <ul>
-                      <li>{t('LB.Help.Tier11Example')}</li>
-                      <li>{t('LB.Help.Intellect')}</li>
-                      <li>{t('LB.Help.Discipline')}</li>
-                      <li>{t('LB.Help.Strength')}</li>
-                    </ul>
-                    <li>{t('LB.Help.Synergy')}</li>
-                    <li>{t('LB.Help.ChangeNodes')}</li>
-                    <li>{t('LB.Help.StatsIncrease')}</li>
-                  </ul>
-                </div>
-              )}
-            </span>
-          </div>
-        )}
-        {progress >= 1 && !hasSets && (
-          <div>
-            <p>{t('LB.Missing2')}</p>
-          </div>
-        )}
-        {progress < 1 && hasSets && (
-          <div>
             <p>
-              {t('LB.Loading')} <AppIcon spinning={true} icon={refreshIcon} />
+              <span className="dim-button locked-button" onClick={this.lockEquipped}>
+                {t('LB.LockEquipped')}
+              </span>
+              <span className="dim-button locked-button" onClick={this.clearLocked}>
+                {t('LB.ClearLocked')}
+              </span>
+              <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
             </p>
-          </div>
-        )}
-        {progress >= 1 && (
-          <ErrorBoundary name="Generated Sets">
-            <div>
-              {_.map(activeHighestSets, (setType) => (
-                <GeneratedSet
-                  key={setType.set.setHash}
-                  store={active}
-                  setType={setType}
-                  activesets={activesets}
-                  excludeItem={this.excludeItem}
+            <div className="loadout-builder-section">
+              {_.map(lockeditems, (lockeditem, type: ArmorTypes) => (
+                <LoadoutBuilderLockPerk
+                  key={type}
+                  lockeditem={lockeditem}
+                  activePerks={activePerks}
+                  lockedPerks={lockedperks}
+                  type={type}
+                  i18nItemNames={i18nItemNames}
+                  onRemove={this.onRemove}
+                  onPerkLocked={this.onPerkLocked}
+                  onItemLocked={this.onItemLocked}
                 />
               ))}
             </div>
-          </ErrorBoundary>
-        )}
-      </div>
+          </div>
+          <div className="section" ng-show="excludeditems.length">
+            <p>
+              <span>{t('LB.Exclude')}</span> - <small>{t('LB.ExcludeHelp')}</small>
+            </p>
+            <div className="loadout-builder-section">
+              <ExcludeItemsDropTarget onExcluded={this.excludeItem} className="excluded-container">
+                <div className="excluded-items">
+                  {excludeditems.map((excludeditem) => (
+                    <div key={excludeditem.index} className="excluded-item">
+                      <LoadoutBuilderItem item={excludeditem} />
+                      <div
+                        className="close"
+                        onClick={() => this.onExcludedRemove(excludeditem)}
+                        role="button"
+                        tabIndex={0}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ExcludeItemsDropTarget>
+            </div>
+          </div>
+          {progress >= 1 && hasSets && (
+            <div className="section">
+              {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
+              {t('Stats.Strength')}):{' '}
+              <select name="activesets" onChange={this.onActiveSetsChange} value={activesets}>
+                {allSetTiers.map((val) => (
+                  <option key={val} disabled={val.charAt(0) === '-'} value={val}>
+                    {val}
+                  </option>
+                ))}
+              </select>{' '}
+              <span className="dim-button" onClick={this.toggleShowAdvanced}>
+                {t('LB.AdvancedOptions')}
+              </span>{' '}
+              <span className="dim-button" onClick={this.toggleShowHelp}>
+                {t('LB.Help.Help')}
+              </span>
+              <span>
+                {showAdvanced && (
+                  <div>
+                    <p>
+                      <label>
+                        <select
+                          name="fullMode"
+                          onChange={this.onFullModeChanged}
+                          value={fullMode ? 'true' : 'false'}
+                        >
+                          <option value="false">{t('LB.ProcessingMode.Fast')}</option>
+                          <option value="true">{t('LB.ProcessingMode.Full')}</option>
+                        </select>{' '}
+                        <span>{t('LB.ProcessingMode.ProcessingMode')}</span>
+                      </label>
+                      <small>
+                        {' '}
+                        -{' '}
+                        {fullMode
+                          ? t('LB.ProcessingMode.HelpFull')
+                          : t('LB.ProcessingMode.HelpFast')}
+                      </small>
+                    </p>
+                    <p>
+                      <label>
+                        <select name="scaleType" value={scaleType} onChange={this.onChange}>
+                          <option value="scaled">{t('LB.Scaled')}</option>
+                          <option value="base">{t('LB.Current')}</option>
+                        </select>{' '}
+                        <span>{t('LB.LightMode.LightMode')}</span>
+                      </label>
+                      <small>
+                        {' '}
+                        - {scaleType === 'scaled' && t('LB.LightMode.HelpScaled')}
+                        {scaleType === 'base' && t('LB.LightMode.HelpCurrent')}
+                      </small>
+                    </p>
+                  </div>
+                )}
+              </span>
+              <span>
+                {showHelp && (
+                  <div>
+                    <ul>
+                      <li>{t('LB.Help.Lock')}</li>
+                      <ul>
+                        <li>{t('LB.Help.NoPerk')}</li>
+                        <li>{t('LB.Help.MultiPerk')}</li>
+                        <li>
+                          <div className="example ex-or">- {t('LB.Help.Or')}</div>
+                        </li>
+                        <li>
+                          <div className="example ex-and">- {t('LB.Help.And')}</div>
+                        </li>
+                      </ul>
+                      <li>{t('LB.Help.DragAndDrop')}</li>
+                      <li>{t('LB.Help.ShiftClick')}</li>
+                      <li>{t('LB.Help.HigherTiers')}</li>
+                      <ul>
+                        <li>{t('LB.Help.Tier11Example')}</li>
+                        <li>{t('LB.Help.Intellect')}</li>
+                        <li>{t('LB.Help.Discipline')}</li>
+                        <li>{t('LB.Help.Strength')}</li>
+                      </ul>
+                      <li>{t('LB.Help.Synergy')}</li>
+                      <li>{t('LB.Help.ChangeNodes')}</li>
+                      <li>{t('LB.Help.StatsIncrease')}</li>
+                    </ul>
+                  </div>
+                )}
+              </span>
+            </div>
+          )}
+          {progress >= 1 && !hasSets && (
+            <div>
+              <p>{t('LB.Missing2')}</p>
+            </div>
+          )}
+          {progress < 1 && hasSets && (
+            <div>
+              <p>
+                {t('LB.Loading')} <AppIcon spinning={true} icon={refreshIcon} />
+              </p>
+            </div>
+          )}
+          {progress >= 1 && (
+            <ErrorBoundary name="Generated Sets">
+              <div>
+                {_.map(activeHighestSets, (setType) => (
+                  <GeneratedSet
+                    key={setType.set.setHash}
+                    store={active}
+                    setType={setType}
+                    activesets={activesets}
+                    excludeItem={this.excludeItem}
+                  />
+                ))}
+              </div>
+            </ErrorBoundary>
+          )}
+        </PageWithMenu.Contents>
+      </PageWithMenu>
     );
   }
 

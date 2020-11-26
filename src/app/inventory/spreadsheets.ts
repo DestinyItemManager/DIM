@@ -6,7 +6,7 @@ import { ThunkResult } from 'app/store/types';
 import {
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadatas,
   isD1Item,
 } from 'app/utils/item-utils';
 import { download } from 'app/utils/util';
@@ -312,7 +312,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['Power Limit'] = item.powerCap;
     }
     if (item.destinyVersion === 2) {
-      row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
+      const masterworkType = getMasterworkStatNames(item.masterworkInfo);
+      const index = masterworkType?.indexOf(',') === -1 ? undefined : masterworkType?.indexOf(',');
+      row['Masterwork Type'] = masterworkType.slice(0, index) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }
     row.Owner = nameMap[item.owner];
@@ -378,7 +380,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       });
 
       if (item.sockets) {
-        row['Seasonal Mod'] = getSpecialtySocketMetadata(item)?.tag ?? '';
+        row['Seasonal Mod'] = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? '';
       }
     }
 

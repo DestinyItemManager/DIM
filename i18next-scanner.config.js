@@ -22,33 +22,54 @@ module.exports = {
     contextFallback: true,
     contextDefaultValues: ['male', 'female'],
     contextList: {
+      // contexts
       compact: { list: ['compact'], fallback: false },
       max: { list: ['Max'], fallback: true },
+      // dynamic keys
+      buckets: {
+        list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'],
+        fallback: false,
+        separator: '',
+      },
+      cooldowns: {
+        list: ['Grenade', 'Melee', 'Super'],
+        fallback: false,
+        separator: '',
+      },
+      difficulty: {
+        list: ['Normal', 'Hard'],
+        fallback: false,
+        separator: '',
+      },
       ghost_locations: {
         list: [
           'crucible',
           'dreaming',
           'edz',
           'gambit',
-          'io',
-          'leviathan',
-          'mars',
-          'mercury',
+          'io', // dcv
+          'leviathan', // dcv
+          'mars', // dcv
+          'mercury', // dcv
           'nessus',
           'strikes',
           'tangled',
-          'titan',
+          'titan', // dcv
           'moon',
         ],
         fallback: false,
+        separator: '',
       },
-      cooldowns: { list: ['Grenade', 'Melee', 'Super'], fallback: false },
-      platforms: {
-        list: ['Xbox', 'PlayStation', 'Blizzard', 'Steam', 'Stadia'],
+      minMax: {
+        list: ['Min', 'Max'],
         fallback: false,
+        separator: '',
       },
-      difficulty: { list: ['Normal', 'Hard'], fallback: false },
-      minMax: { list: ['Min', 'Max'], fallback: false },
+      platforms: {
+        list: ['Blizzard', 'PlayStation', 'Stadia', 'Steam', 'Xbox'],
+        fallback: false,
+        separator: '',
+      },
     },
   },
 };

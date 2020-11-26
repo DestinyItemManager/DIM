@@ -1,9 +1,11 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { getSeason } from 'app/inventory/store/season';
+import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import store from '../store/store';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
@@ -134,6 +136,16 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     );
     return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
+  season: reverseComparator(
+    chainComparator(
+      compareBy((item: DimItem) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
+      compareBy((item: DimItem) => item.iconOverlay ?? '')
+    )
+  ),
+  sunset: compareBy((item) => {
+    const sunsetSeason = getItemPowerCapFinalSeason(item);
+    return sunsetSeason !== undefined && D2CalculatedSeason >= sunsetSeason + 1;
+  }),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
@@ -221,44 +233,5 @@ export function getColor(value: number, property = 'background-color') {
   }
   return {
     [property]: `hsla(${color},65%,50%, 1)`,
-  };
-}
-
-export function storeBackgroundColor(
-  store: DimStore,
-  index = 0,
-  header = false,
-  isPhonePortrait = false
-) {
-  if ($featureFlags.gradientBackground || !store.color || isPhonePortrait) {
-    return undefined;
-  }
-
-  let color = store.color;
-
-  if (!header && index % 2 === 1 && !store.isVault) {
-    color = {
-      red: color.red * 0.75,
-      green: color.green * 0.75,
-      blue: color.blue * 0.75,
-      alpha: 1,
-    };
-  } else if (header) {
-    color = {
-      red: color.red * 0.25 + 49 * 0.75,
-      green: color.green * 0.25 + 50 * 0.75,
-      blue: color.blue * 0.25 + 51 * 0.75,
-      alpha: 1,
-    };
-  }
-
-  const alpha = header ? 1 : 0.25;
-
-  const backgroundColor = `rgba(${Math.round(color.red)}, ${Math.round(color.green)}, ${Math.round(
-    color.blue
-  )}, ${alpha})`;
-
-  return {
-    backgroundColor,
   };
 }

@@ -1,16 +1,16 @@
 import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
+import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
-import { ghostBadgeContent } from 'app/inventory/BadgeInfo';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import ElementIcon from 'app/inventory/ElementIcon';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -44,9 +44,8 @@ import {
   getItemPowerCapFinalSeason,
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadata,
+  getSpecialtySocketMetadatas,
   isD1Item,
-  modMetadataByTag,
 } from 'app/utils/item-utils';
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -123,7 +122,7 @@ export function getColumns(
           return undefined;
         }
         return {
-          id: `stat_${statHash}`,
+          id: `stat${statHash}`,
           header: statInfo.displayProperties.hasIcon ? (
             <span title={statInfo.displayProperties.name}>
               <BungieImage src={statInfo.displayProperties.icon} />
@@ -344,17 +343,14 @@ export function getColumns(
       filter: (value) => `event:${value}`,
     },
     destinyVersion === 2 &&
-      isGhost && {
-        id: 'ghost',
-        header: t('Organizer.Columns.Ghost'),
-        value: (item) => ghostBadgeContent(item).join(''),
-      },
-    destinyVersion === 2 &&
       isArmor && {
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
-        value: (item) => getSpecialtySocketMetadata(item)?.tag,
+        value: (item) =>
+          getSpecialtySocketMetadatas(item)
+            ?.map((m) => m.slotTag)
+            .join(','),
         cell: (value, item) =>
           value && (
             <SpecialtyModSlotIcon
@@ -363,12 +359,9 @@ export function getColumns(
               showAllSupportedSeasons={true}
             />
           ),
-        sort: compareBy((tag) =>
-          typeof tag === 'string' ? modMetadataByTag[tag]?.season ?? 99 : 99
-        ),
         filter: (_, item) => {
-          const modSocketTypeHash = getSpecialtySocketMetadata(item)!;
-          return `modslot:${modSocketTypeHash?.tag || 'none'}`;
+          const modSlotMetadata = getSpecialtySocketMetadatas(item);
+          return `modslot:${modSlotMetadata?.[0].slotTag || 'none'}`;
         },
       },
     destinyVersion === 1 && {
@@ -665,7 +658,7 @@ function StoreLocation({ storeId }: { storeId: string }) {
 
   return (
     <div className={styles.locationCell}>
-      <img src={store.icon} width="16" height="16" alt="" /> {store.name}
+      <StoreIcon store={store} /> {store.className}
     </div>
   );
 }

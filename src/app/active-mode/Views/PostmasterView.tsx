@@ -36,6 +36,7 @@ export default function PostmasterView({
           stores={[store]}
           vault={vault}
           currentStore={store}
+          singleCharacter={false}
         />
       ))}
     </CollapsibleTitle>

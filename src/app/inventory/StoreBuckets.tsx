@@ -2,7 +2,6 @@ import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
 import React from 'react';
-import { storeBackgroundColor } from '../shell/filters';
 import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
 import { DimStore } from './store-types';
@@ -16,14 +15,14 @@ export function StoreBuckets({
   vault,
   currentStore,
   labels,
-  isPhonePortrait,
+  singleCharacter,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
   vault: DimStore;
   currentStore: DimStore;
-  isPhonePortrait?: boolean;
   labels?: boolean;
+  singleCharacter: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -42,18 +41,18 @@ export function StoreBuckets({
       <>
         {(allStoresView || stores[0] !== vault) && (
           <div className="store-cell account-wide">
-            <StoreBucket bucket={bucket} store={currentStore} />
+            <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
           <div className="store-cell vault">
-            <StoreBucket bucket={bucket} store={vault} />
+            <StoreBucket bucket={bucket} store={vault} singleCharacter={false} />
           </div>
         )}
       </>
     );
   } else {
-    content = stores.map((store, index) => (
+    content = stores.map((store) => (
       <div
         key={store.id}
         className={clsx('store-cell', {
@@ -63,9 +62,10 @@ export function StoreBuckets({
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),
         })}
-        style={storeBackgroundColor(store, index, false, isPhonePortrait)}
       >
-        {(!store.isVault || bucket.vaultBucket) && <StoreBucket bucket={bucket} store={store} />}
+        {(!store.isVault || bucket.vaultBucket) && (
+          <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
+        )}
         {bucket.type === 'LostItems' &&
           store.destinyVersion === 2 &&
           findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
@@ -74,7 +74,9 @@ export function StoreBuckets({
   }
 
   return (
-    <div className={`store-row bucket-${bucket.hash}`}>
+    <div
+      className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
+    >
       {labels && <BucketLabel bucket={bucket} />}
       {content}
     </div>

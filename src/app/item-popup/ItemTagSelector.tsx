@@ -17,6 +17,8 @@ import styles from './ItemTagSelector.m.scss';
 interface ProvidedProps {
   item: DimItem;
   className?: string;
+  hideKeys?: boolean;
+  hideButtonLabel?: boolean;
 }
 
 interface StoreProps {
@@ -29,7 +31,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function ItemTagSelector({ item, className, tag, dispatch }: Props) {
+function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, dispatch }: Props) {
   const onChange = (tag?: TagValue) => {
     dispatch(
       itemIsInstanced(item)
@@ -50,7 +52,7 @@ function ItemTagSelector({ item, className, tag, dispatch }: Props) {
         ? {
             label: tl('Tags.ClearTag'),
             icon: clearIcon,
-            hotkey: itemTagSelectorList.find((t) => t.type === tag)!.hotkey!,
+            hotkey: 'shift+0',
             sortOrder: -1,
           }
         : t
@@ -58,7 +60,7 @@ function ItemTagSelector({ item, className, tag, dispatch }: Props) {
     (t) => t.sortOrder
   ).map((tagOption) => ({
     key: tagOption.type || 'none',
-    content: <TagOption tagOption={tagOption} />,
+    content: <TagOption tagOption={tagOption} hideKeys={hideKeys} />,
     value: tagOption.type,
   }));
 
@@ -68,19 +70,23 @@ function ItemTagSelector({ item, className, tag, dispatch }: Props) {
       value={tag}
       onChange={onChange}
       hideSelected={true}
-      className={clsx(className, 'item-tag-selector')}
+      className={clsx(className, styles.itemTagSelector, 'item-tag-selector', {
+        [styles.minimized]: hideButtonLabel,
+      })}
     />
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(ItemTagSelector);
 
-function TagOption({ tagOption }: { tagOption: TagInfo }) {
+function TagOption({ tagOption, hideKeys }: { tagOption: TagInfo; hideKeys?: boolean }) {
   return (
     <div className={styles.item}>
       {tagOption.icon ? <AppIcon icon={tagOption.icon} /> : <div className={styles.null} />}
       <span>{t(tagOption.label)}</span>
-      {tagOption.hotkey && <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />}
+      {!hideKeys && tagOption.hotkey && (
+        <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />
+      )}
     </div>
   );
 }

@@ -58,7 +58,6 @@
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
-  max-width: 165px;
 
   .comp-lock-icon .app-icon {
     font-size: 12px;
@@ -111,7 +110,7 @@
     }
   }
   .spacer {
-    height: 44px;
+    height: 46px;
   }
 
   span > .app-icon,
@@ -125,10 +124,14 @@
     display: none;
   }
 
+  .sockets > * {
+    margin-bottom: 8px;
+  }
+
   .socket-container {
     img {
-      width: calc(0.5 * var(--item-size));
-      height: calc(0.5 * var(--item-size));
+      width: 26px;
+      height: 26px;
     }
   }
 

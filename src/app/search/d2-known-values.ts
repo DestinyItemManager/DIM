@@ -82,6 +82,7 @@ export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefin
   73837075: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[905869860] "Kill Tracker"
   90275515: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2240097604] "Kill Tracker"
   2579044636: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2302094943] "Kill Tracker"
+  2285418970: undefined, //
 };
 export const killTrackerSocketTypeHash = 1282012138;
 
@@ -177,6 +178,11 @@ export const powerfulSources = [
   4143344829, // InventoryItem "Luminous Engram"
   4039143015, // InventoryItem "Powerful Gear"
   4249081773, // InventoryItem "Powerful Armor"
+  73143230, // Pinnacle
+  3114385605, // Tier 1
+  4039143015, // Powerful
+  3114385606, // Tier 2
+  3114385607, // Tier 3
 ];
 
 //
@@ -198,18 +204,16 @@ export const armorBuckets = {
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const CATALYSTS_ROOT_NODE = 1111248994;
-export const RAID_NODE = 2975760062;
+export const CATALYSTS_ROOT_NODE = 511607103;
+export const RAID_NODE = 4025982223;
 
 //
 // MISC KNOWN VALUES
 //
 
-export const ENCOUNTERS_COMPLETED_OBJECTIVE = 3133307686;
+export const ENCOUNTERS_COMPLETED_OBJECTIVE = 1579649637;
 
 export const ARMSMASTER_ACTIVITY_MODIFIER = 3704166961;
-
-export const TRACTION_PERK = 1818103563;
 
 // unfortunately the API's raid .order attribute is odd
 export const raidOrder = [
@@ -235,10 +239,11 @@ export const VENDORS = {
   /** rahool. we override how his vendor FakeItems are displayed */
   RAHOOL: 2255782930,
   VAULT: 1037843411,
+  XUR: 2190858386,
 };
 
 /** used to snag the icon for display */
-export const WELL_RESTED_PERK = 2352765282;
+export const WELL_RESTED_PERK = 2319209868;
 
 /** an "All" trait we want to filter out of trait lists */
 export const ALL_TRAIT = 1434215347;
@@ -258,6 +263,7 @@ export const damageNamesByEnum: Record<DamageType, string | null> = {
   [DamageType.Thermal]: 'solar',
   [DamageType.Void]: 'void',
   [DamageType.Raid]: 'raid',
+  [DamageType.Stasis]: 'stasis',
 };
 
 export const breakerTypes = {

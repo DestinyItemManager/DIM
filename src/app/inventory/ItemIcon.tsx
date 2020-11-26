@@ -38,7 +38,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.masterwork]: item.masterwork,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
-  const overlayStyles = item.iconOverlay && clsx(styles.iconOverlay, [itemTierStyles[item.tier]]);
 
   return (
     <>
@@ -49,7 +48,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         />
       )}
       {item.iconOverlay && (
-        <div className={overlayStyles}>
+        <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
       )}
@@ -87,8 +86,7 @@ export function DefItemIcon({
   borderless?: boolean;
 }) {
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
-  borderless =
-    borderless ||
+  borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
   const itemImageStyles = clsx(
@@ -103,9 +101,16 @@ export function DefItemIcon({
   );
   const modInfo = defs && getModCostInfo(itemDef, defs);
 
+  const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
+
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
+      {iconOverlay && (
+        <div className={styles.iconOverlay}>
+          <BungieImage src={iconOverlay} />
+        </div>
+      )}
       {modInfo?.energyCostElementOverlay && (
         <>
           <div

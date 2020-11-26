@@ -1,12 +1,14 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import BountyGuide, { BountyFilter, matchBountyFilters } from './BountyGuide';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
 const defaultExpirationDate = new Date(8640000000000000);
@@ -40,18 +42,10 @@ export default function Pursuits({
   // Get all items in this character's inventory that represent quests - some are actual items that take
   // up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
   // that represent milestones.
-  const filteredItems = findItemsByBucket(store, BucketHashes.Quests).concat(
-    // Include prophecy tablets, which are in consumables
-    findItemsByBucket(store, BucketHashes.Consumables).filter((item) =>
-      item.itemCategoryHashes.includes(ItemCategoryHashes.ProphecyTablets)
-    )
-  );
-
-  const pursuits = _.groupBy(filteredItems, (item) => {
+  const pursuits = _.groupBy(findItemsByBucket(store, BucketHashes.Quests), (item) => {
     const itemDef = defs.InventoryItem.get(item.hash);
     if (
       item.itemCategoryHashes.includes(ItemCategoryHashes.QuestStep) ||
-      item.itemCategoryHashes.includes(ItemCategoryHashes.ProphecyTablets) ||
       itemDef?.objectives?.questlineItemHash
     ) {
       return 'Quests';
@@ -70,15 +64,47 @@ export default function Pursuits({
           pursuits[group] && (
             <section id={group} key={group}>
               <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={'pursuits-' + group}>
-                <div className="progress-for-character">
-                  {pursuits[group].sort(sortPursuits).map((item) => (
-                    <Pursuit item={item} key={item.index} defs={defs} />
-                  ))}
-                </div>
+                <PursuitsGroup pursuits={pursuits[group]} store={store} defs={defs} />
               </CollapsibleTitle>
             </section>
           )
       )}
+    </>
+  );
+}
+
+export function PursuitsGroup({
+  store,
+  defs,
+  pursuits,
+}: {
+  store: DimStore;
+  defs: D2ManifestDefinitions;
+  pursuits: DimItem[];
+}) {
+  const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
+
+  return (
+    <>
+      {$featureFlags.bountyGuide && (
+        <BountyGuide
+          store={store}
+          defs={defs}
+          bounties={pursuits}
+          selectedFilters={bountyFilters}
+          onSelectedFiltersChanged={setBountyFilters}
+        />
+      )}
+      <div className="progress-for-character">
+        {pursuits.sort(sortPursuits).map((item) => (
+          <Pursuit
+            item={item}
+            key={item.index}
+            defs={defs}
+            searchHidden={!matchBountyFilters(item, bountyFilters)}
+          />
+        ))}
+      </div>
     </>
   );
 }

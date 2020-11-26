@@ -2,14 +2,11 @@
 .stat-bars {
   width: 100%;
   max-width: 230px;
-  opacity: 0.8;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   margin-top: 8px;
-  .gradientBackground & {
-    opacity: 1;
-  }
+  opacity: 1;
 
   .phone-portrait & {
     margin-left: auto;
@@ -60,10 +57,7 @@
       height: 14px;
       width: 14px;
       margin-right: 2px;
-      opacity: 0.8;
-      .gradientBackground & {
-        opacity: 1;
-      }
+      opacity: 1;
     }
   }
 
@@ -114,12 +108,9 @@
     .stat {
       flex: 0;
       font-size: 11px;
-      color: #aaa;
+      color: #ccc;
       &.pointerCursor {
         cursor: pointer;
-      }
-      .gradientBackground & {
-        color: #ccc;
       }
     }
   }

@@ -12,18 +12,16 @@ export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestD
   // convert character's DestinyMilestone to manifest's DestinyMilestoneDefinition
   const raidDef = defs.Milestone.get(raid.milestoneHash);
 
-  // nothing to display if there are no activities
-  if (!raid.activities?.length) {
-    return null;
-  }
-
-  const activities = raid.activities.filter((activity) => activity.phases);
+  const activities = raid.activities?.filter((activity) => activity.phases) || [];
 
   // override the sometimes cryptic individual activity names, if there's only 1 tier of the raid
   const displayName = activities.length === 1 ? raidDef.displayProperties.name : '';
 
   return (
     <RaidDisplay displayProperties={raidDef.displayProperties}>
+      {activities.length === 0 && (
+        <span className="milestone-name">{raidDef.displayProperties.name}</span>
+      )}
       {activities.map((activity) => (
         <RaidActivity
           activity={activity}

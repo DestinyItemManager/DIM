@@ -270,13 +270,25 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"
         compareBy((word) => word.split(':').length),
-        // prioritize strings we are typing the beginning of (guessing at user intention)
-        compareBy((word) => word.indexOf(typedToLower) !== 0),
 
-        // prioritize words with less left to type
-        // this needs additional conditions like looking forward for another colon.
-        // otherwise it prioritizes "dawn" over "redwar" which is silly.
-        // compareBy((word) => word.length - (term.length + word.indexOf(lowerTerm))),
+        // prioritize terms we are typing the beginning of (guessing at user intention)
+        compareBy((word) => word.indexOf(typedToLower) !== 0),
+        // and terms where we are typing the beginning of, ignoring the stem.
+        // "is:armor" over "is:sidearm" if you've typed "arm"
+        compareBy((word) => word.indexOf(typedToLower) !== word.indexOf(':') + 1),
+
+        // for is/not, prioritize words with less left to type,
+        // so "is:armor" comes before "is:armormod".
+        // but only is/not, not other list-based suggestions,
+        // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
+        // which i am not into.
+        compareBy((word) => {
+          if (word.startsWith('not:') || word.startsWith('is:')) {
+            return word.length - (typedToLower.length + word.indexOf(typedToLower));
+          } else {
+            return 0;
+          }
+        }),
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"

@@ -5,7 +5,7 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -16,7 +16,7 @@ import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { currentStoreSelector, storesSelector } from '../inventory/selectors';
+import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
@@ -41,8 +41,8 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  stores: DimStore[];
-  currentStore: DimStore;
+  allItems: DimItem[];
+  currentStore?: DimStore;
   lastInfusionDirection: InfuseDirection;
   isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
@@ -50,7 +50,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    stores: storesSelector(state),
+    allItems: allItemsSelector(state),
     currentStore: currentStoreSelector(state)!,
     filters: searchFiltersConfigSelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
@@ -149,7 +149,7 @@ function stateReducer(state: State, action: Action): State {
 }
 
 function InfusionFinder({
-  stores,
+  allItems,
   currentStore,
   filters,
   isPhonePortrait,
@@ -167,17 +167,19 @@ function InfusionFinder({
   const switchDirection = () => stateDispatch({ type: 'swapDirection' });
   const show = query !== undefined;
 
+  const destinyVersion = currentStore?.destinyVersion;
+
   useEffect(() => {
-    if (show) {
-      ga('send', 'pageview', `/profileMembershipId/d${currentStore.destinyVersion}/infuse`);
+    if (show && destinyVersion) {
+      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/infuse`);
     }
-  }, [currentStore.destinyVersion, show]);
+  }, [destinyVersion, show]);
 
   // Listen for items coming in via showInfuse#
   useSubscription(() =>
     showInfuse$.subscribe(({ item }) => {
-      const hasInfusables = stores.some((store) => store.items.some((i) => isInfusable(item, i)));
-      const hasFuel = stores.some((store) => store.items.some((i) => isInfusable(i, item)));
+      const hasInfusables = allItems.some((i) => isInfusable(item, i));
+      const hasFuel = allItems.some((i) => isInfusable(i, item));
       stateDispatch({ type: 'init', item, hasInfusables: hasInfusables, hasFuel });
     })
   );
@@ -193,19 +195,17 @@ function InfusionFinder({
     }
   }, [direction, lastInfusionDirection, dispatch]);
 
-  if (!query) {
+  if (!query || !currentStore) {
     return null;
   }
 
   const filterFn = filters(filter);
 
-  let items = stores.flatMap((store) =>
-    store.items.filter(
-      (item) =>
-        (direction === InfuseDirection.INFUSE
-          ? isInfusable(query, item)
-          : isInfusable(item, query)) && filterFn(item)
-    )
+  let items = allItems.filter(
+    (item) =>
+      (direction === InfuseDirection.INFUSE
+        ? isInfusable(query, item)
+        : isInfusable(item, query)) && filterFn(item)
   );
 
   const dupes = items.filter((item) => item.hash === query.hash);
@@ -352,7 +352,7 @@ function isInfusable(target: DimItem, source: DimItem) {
 }
 
 async function transferItems(
-  dispatch: ThunkDispatchProp['dispatch'],
+  dispatch: DimThunkDispatch,
   currentStore: DimStore,
   onClose: () => void,
   source: DimItem,

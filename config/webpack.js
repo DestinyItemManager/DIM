@@ -11,7 +11,6 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
@@ -20,30 +19,28 @@ const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-web
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const _ = require('lodash');
-const WorkerPlugin = require('worker-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:hash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[md5:contenthash:6].[ext]';
 
 const packageJson = require('../package.json');
 
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (process.env.WEBPACK_DEV_SERVER) {
-    if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
-      console.log('Generating certificate');
-      execSync('mkcert create-ca --validity 825');
-      execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-    }
+  if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
   }
 
+  env.name = Object.keys(env)[0];
   ['release', 'beta', 'dev'].forEach((e) => {
-    // set booleans based on env.name
-    env[e] = e == env.name;
+    // set booleans based on env
+    env[e] = Boolean(env[e]);
   });
 
   let version = packageJson.version.toString();
@@ -62,28 +59,29 @@ module.exports = (env) => {
       authReturn: './src/authReturn.ts',
     },
 
+    // https://github.com/webpack/webpack-dev-server/issues/2758
+    target: env.dev ? 'web' : 'browserslist',
+
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: env.dev ? '[name]-[hash].js' : '[name]-[contenthash:6].js',
-      futureEmitAssets: true,
+      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
+      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
     },
 
     // Dev server
-    devServer: process.env.WEBPACK_DEV_SERVER
-      ? {
-          host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          stats: 'errors-only',
-          https: {
-            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
-          },
-          historyApiFallback: true,
-          hotOnly: true,
-          liveReload: false,
-        }
-      : {},
+    devServer: {
+      host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+      stats: 'errors-only',
+      https: {
+        key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+        cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+      },
+      historyApiFallback: true,
+      hot: true,
+      hotOnly: true,
+      liveReload: false,
+    },
 
     // Bail and fail hard on first error
     bail: !env.dev,
@@ -99,7 +97,7 @@ module.exports = (env) => {
 
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
-      namedChunks: true,
+      // chunkIds: 'named',
       // Extract the runtime into a separate chunk
       runtimeChunk: 'single',
       splitChunks: {
@@ -110,7 +108,6 @@ module.exports = (env) => {
       },
       minimizer: [
         new TerserPlugin({
-          cache: true,
           parallel: true,
           terserOptions: {
             ecma: 8,
@@ -119,7 +116,6 @@ module.exports = (env) => {
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true },
           },
-          sourceMap: true,
         }),
       ],
     },
@@ -190,7 +186,9 @@ module.exports = (env) => {
               options: {
                 modules: {
                   localIdentName:
-                    env.dev || env.beta ? '[name]_[local]-[hash:base64:5]' : '[hash:base64:5]',
+                    env.dev || env.beta
+                      ? '[name]_[local]-[contenthash:base64:5]'
+                      : '[contenthash:base64:5]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 sourceMap: true,
@@ -251,7 +249,7 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: { name: '[name]-[md5:hash:6].[ext]' },
+              options: { name: '[name]-[contenthash:6].[ext]' },
             },
           ],
         },
@@ -280,18 +278,22 @@ module.exports = (env) => {
         'destiny-icons': path.resolve('./destiny-icons/'),
         'idb-keyval': path.resolve('./src/app/storage/idb-keyval.ts'),
       },
+
+      fallback: {
+        fs: false,
+        net: false,
+        tls: false,
+      },
     },
 
     plugins: [
-      new CaseSensitivePathsPlugin(),
-
-      new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
+      new webpack.IgnorePlugin({ resourceRegExp: /caniuse-lite\/data\/regions/ }),
 
       new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: env.dev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: env.dev ? '[name]-[hash].css' : '[id]-[contenthash:6].css',
+        filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:6].css',
+        chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
       }),
 
       new HtmlWebpackPlugin({
@@ -363,8 +365,6 @@ module.exports = (env) => {
 
         // Print debug info to console about item moves
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        // Enable color-blind a11y
-        '$featureFlags.colorA11y': JSON.stringify(true),
         // Debug Service Worker
         '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta only
@@ -374,31 +374,29 @@ module.exports = (env) => {
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(true),
+        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(!env.release),
-        // Rearrange buckets in categories
-        '$featureFlags.newArrangement': JSON.stringify(true),
-        // New background design
-        '$featureFlags.gradientBackground': JSON.stringify(!env.release),
-        // Use a category strip on mobile inventory instead of collapsable headers
-        '$featureFlags.mobileCategoryStrip': JSON.stringify(true),
+        '$featureFlags.mobileInspect': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
-        // Move the item popup actions
-        '$featureFlags.newItemPopupActions': JSON.stringify(!env.release),
         // Enable move amounts
         '$featureFlags.moveAmounts': JSON.stringify(env.release),
         // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(env.dev),
-      }),
-
-      new WorkerPlugin({
-        globalObject: 'self',
+        '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
+        // Enable search results
+        '$featureFlags.searchResults': JSON.stringify(!env.release),
+        // Alternate perks display on item popup
+        '$featureFlags.newPerks': JSON.stringify(env.dev),
+        // Advanced Write Actions (inserting mods)
+        '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
+        // Incorporate mods directly into loadouts
+        '$featureFlags.loadoutMods': JSON.stringify(env.dev),
+        // Show bounty guide
+        '$featureFlags.bountyGuide': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({
@@ -407,15 +405,7 @@ module.exports = (env) => {
         shorthands: true,
         flattening: true,
       }),
-
-      new webpack.WatchIgnorePlugin([/scss\.d\.ts$/]),
     ],
-
-    node: {
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-    },
   };
 
   // Enable if you want to debug the size of the chunks

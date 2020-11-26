@@ -47,6 +47,9 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
 
   &.is-Common {
     background-color: $common;
+    &.pursuit {
+      background-color: #555;
+    }
   }
   &.is-Uncommon {
     background-color: $uncommon;
@@ -62,7 +65,8 @@ $icon-bg-shadow: rgba(0, 0, 0, 1);
   }
   &.is-Uncommon,
   &.is-Rare,
-  &.is-Legendary {
+  &.is-Legendary,
+  &.pursuit {
     color: white;
     a,
     select,

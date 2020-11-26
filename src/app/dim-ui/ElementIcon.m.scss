@@ -1,0 +1,10 @@
+.element {
+  width: calc((8 / 50) * var(--item-size));
+  height: calc((8 / 50) * var(--item-size));
+  margin-right: 1px;
+
+  :global(.destiny1) & {
+    width: calc((10 / 50) * var(--item-size));
+    height: calc((10 / 50) * var(--item-size));
+  }
+}

@@ -1,0 +1,18 @@
+.singleCharacterButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+
+  color: #9e9db5;
+  font-size: 26px;
+  width: min-content;
+  height: 46px;
+  margin-top: 16px;
+  cursor: pointer;
+  transition: transform 100ms ease-in-out, color 100ms ease-in-out;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.5);
+    color: white;
+  }
+}

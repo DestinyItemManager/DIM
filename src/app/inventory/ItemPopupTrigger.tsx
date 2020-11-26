@@ -1,4 +1,3 @@
-import { addItemToLoadout, loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import React, { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { CompareService } from '../compare/compare.service';
@@ -26,9 +25,7 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
       dispatch(clearNewItem(item.id));
 
       // TODO: a dispatcher based on store state?
-      if (!$featureFlags.newItemPopupActions && loadoutDialogOpen) {
-        addItemToLoadout(item, e);
-      } else if (CompareService.dialogOpen) {
+      if (CompareService.dialogOpen) {
         CompareService.addItemsToCompare([item]);
       } else {
         showItemPopup(item, ref.current!, extraData);

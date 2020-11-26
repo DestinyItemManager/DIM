@@ -5,6 +5,7 @@
   padding: 0.85em;
   background: scale-color($red, $lightness: -90%);
   border-top: 4px solid $red;
+
   h2 {
     margin: 0 0 8px 0 !important;
     letter-spacing: normal !important;
@@ -18,9 +19,9 @@
 
 .twitterLinks {
   composes: flexRow from '../dim-ui/common.m.scss';
-  > * {
-    margin-right: 8px;
-  }
+  flex-wrap: wrap;
+  @include horizontal-space-children(8px);
+  gap: 8px 0;
 
   :global(.fa-twitter) {
     font-size: 1.5em;
@@ -44,7 +45,8 @@
     flex-direction: column;
   }
 
-  > div {
+  > div > div {
     height: 400px;
+    outline: 4px solid rgba(255, 255, 255, 0.3);
   }
 }

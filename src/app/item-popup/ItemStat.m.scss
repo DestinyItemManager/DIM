@@ -11,6 +11,11 @@
   grid-column: 2;
   text-align: right !important;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  > svg {
+    vertical-align: middle;
+    margin-left: 4px;
+  }
 }
 
 .icon {

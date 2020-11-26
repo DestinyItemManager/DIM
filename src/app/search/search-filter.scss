@@ -21,6 +21,8 @@
   height: 32px;
   border-radius: 4px;
   min-width: 350px;
+  box-sizing: border-box;
+
   ::placeholder {
     color: #999;
   }
@@ -34,9 +36,6 @@
   @include phone-portrait {
     width: auto;
     height: 34px;
-    .gradientBackground & {
-      background: #000;
-    }
   }
 
   &:hover,
@@ -58,6 +57,10 @@
 
 .search-link {
   flex: 1;
+
+  .search-filter {
+    background: rgba(0, 0, 0, 0.4);
+  }
 
   // Yikes this is a hack
   @include phone-portrait {
@@ -82,9 +85,7 @@
       margin: 0;
       border-radius: 0;
       border-bottom: 1px solid #999;
-      .gradientBackground & {
-        background: rgba(0, 0, 0, 0.4);
-      }
+      background: rgba(0, 0, 0, 0.4);
     }
 
     .filter-input {
@@ -108,6 +109,7 @@
     }
   }
 }
+
 .search-button {
   display: none;
   @include phone-portrait {

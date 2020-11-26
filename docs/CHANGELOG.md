@@ -1,6 +1,134 @@
 ## Next
 
+* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a weapon type to pull a weapon matching that type.
+* New item sort option to sort sunset items last.
+
+### Beta Only
+
+* A new "Single character mode" can be enabled through settings, or the « icon on desktop. This focuses down to a single character, and merges your other characters' inventories into the vault (they're really still on the other characters, we're just displaying them different). This is intended for people who are focused on one character, and always shows the last played character when collapsed.
+* Pinnacle/powerful rewards show a more accurate bonus, taking into account your current max power.
+
+## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
+
+* Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.
+* Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
+* Stop showing extra +3 stats on masterwork weapons. The fix for this means that Adept weapons may not show that bonus when they are released.
+* Progress page now shows more Milestones/Challenges, shows rewards for all of them, includes vendor pictures where available, and gives a hint as to what power pinnacle/powerful engrams can drop at.
+
+## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
+
+* Farming mode will no longer immediately kick out items you manually move onto your character.
+* The Records page now includes all the Triumps and Collections info that are in the game.
+* Mods in the Loadout Optimizer can be searched by their description.
+* Fixed Active Mode showing up in release version if you'd enabled it in Beta.
+* Fixed a crash when viewing Stasis subclasses.
+
+## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
+
+* Xur's location is now shown on his entry in the Vendors page.
+* The Raids section is back in Progress, and Garden of Salvation shows up in Milestones.
+* Search autocomplete suggests the `current` and `next` keywords for seasons.
+* Reworked mod handling to account for new legacy and combat mod slots. New searches include `holdsmod:chargedwithlight`, `holdsmod:warmindcell`, etc., and `modslot:legacy` and `modslot:combatstyle`.
+* Armor tiles now display the energy capacity of the armor.
+* Masterwork levels in the mod details menu once again show which level masterwork they are.
+* Added a new sort order for items, sort by Seasonal icon.
+* Darkened the item actions sidecar to improve contrast with the background.
+* Fixed a visual glitch where the tagging menu looked bad.
+* Fixed logic for determining what can be pulled from postmaster to exclude stacked items like Upgrade Modules when you cannot actually pull any more of them.
+* Removed the counter of how many items were selected in Organizer. This fixes a visual glitch that cut off the icons when items were selected.
+* Fixed the vendor icon for Variks.
+* Loadout drawer, Compare, Farming, and Infusion now work on every page that shows an item from your inventory.
+* Deleting a loadout from the loadout drawer now closes the loadout drawer.
+* When Bungie.net is not returning live perk information, we won't show the default perks anymore.
+
+### Beta Only
+
+* Preview of "Active Mode", an in-progress new view that focuses down to a single character plus your vault, and has easy access to pursuits, farming, max light, and more.
+
+## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
+
+* Removed character gender from tiles and notifications.
+* Don't show empty archetype bar for items in collections.
+* Deprecated the `sunsetsafter` search filter because its meaning is unclear. Introduced the `sunsetsin` filter and the `is:sunset` filter.
+  * Try out `sunsetsin:hunt` for weapons which reached their power cap in season 11.
+  * `is:sunset` won't show anything until Beyond Light launches!
+* Added `current` and `next` as season names for searches. Search `sunsetsin:next` to see what'll be capped in next season even before it has an official name.
+* Vendorengrams.xyz integration has been removed, because of the vendor changes in Beyond Light.
+* Legacy Triumphs have been removed.
+* Fixed the Progress page not loading.
+* Fixed Catalysts not showing on the Records page.
+* Fix errors when selecting mods in Loadout Optimizer.
+* Removed the opaque background from item season icons.
+
+## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
+
+* New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
+* Perk and mod images are once again affected by the item size setting.
+
+## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
+
+* Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
+
+## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
+
+* Fixed not being able to scroll on mobile.
+* Fixed filter help not always showing up.
+
+## 6.37.0 <span className="changelog-date">(2020-11-01)</span>
+
+* Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
+* Added `hunt` as valid season synonym.
+* Clicking on the energy track or element for armor can now let you preview how much it'd cost in total to upgrade energy or change element.
+* Redesigned weapon perks/mods to more clearly call out archetype and key stats.
+* Improved the buttons that show in the item popup for items in postmaster. For stacked items you can now take just one, or all of the item.
+* Some items that DIM couldn't pull from postmaster before, can be pulled now.
+* Fixed the display of stat trackers for raid speed runs.
+* Hide the "kill tracker" perk column on masterworked weapons.
+* Fixed the tagging dropdown not being attached on desktop Safari.
+
+## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
+
+* Some more tweaks to the sidecar layout.
+* Put back automatically showing dupes when launching compare.
+* The item popup now closes when you start dragging an item.
+
+## 6.36.0 <span className="changelog-date">(2020-10-25)</span>
+
+* Rearranged equip/move buttons on sidecar to be horizontal icons instead of menu items.
+* On mobile, you can switch characters in either direction, in a loop.
+* Added cooldown and effect values to stat tooltips.
+* Added stat tooltips to the Loadout Optimizer.
+* Fixed descriptions for mod effects in the Loadout Optimizer's mod picker.
+* New keyboard shortcuts for pull item (P), vault item (V), lock/unlock item (L), expand/collapse sidecar (K), and clear tag (Shift+0). Remember, you must click an item before being able to use shortcuts.
+* Made the item popup a bit thinner.
+* Collapsing sections now animate open and closed.
+
+### Beta Only
+
+* We're experimenting with a new "Search Results" sheet that shows all the items matching your search in one place.
+
+## 6.35.0 <span className="changelog-date">(2020-10-18)</span>
+
+* Added the "sidecar" for item popup actions on desktop. This lets us have more actions, and they're easier to understand. If you always use drag and drop, you can collapse the sidecar down into a smaller version.
+* On mobile, press and hold on an item to access a quick actions menu, then drag your finger to an option and release to execute it. Move items faster than ever before!
+* Added buttons to the settings page to restore the default wish list URL.
+* Tweaked the Loadout Optimizer to make it easier to understand, and more clearly highlight that stats can be dragged to reorder them.
+* In Loadout Optimizer, Compare Loadout can now compare with your currently equipped gear. Also, clicking "Save Loadout" will prompt you for whether you want to overwrite the loadout you're comparing with.
+* Fixed an issue where you couldn't directly edit the minimum power field in Loadout Optimizer.
+* D1 items can no longer incorrectly offer the ability to pull from postmaster.
+* Tuned the search autocomplete algorithm a bit to prefer shorter matches.
+* Fixed multi-stat masterworked exotics messing up the CSV export.
+* Darkened the keyboard shortcut help overlay (accessed via the ? key).
+* Removed tagging keyboard shortcut tips from places where they wouldn't work.
+
 ## 6.34.0 <span className="changelog-date">(2020-10-11)</span>
+
+* Replaced the tagging dropdown with a nicer one that shows the icon and keyboard shortcut hints.
+* Made the farming mode popup on mobile not overlap the category selector, and made it smaller.
+* Secretly started recording which mods you selected in Loadout Optimizer when you create a loadout, for future use.
+* In the Organizer, the selected perk for multi-option perks is now bold.
+* Updated the style and tooltip for wishlist perks to match the thumb icon shown on tiles.
+* Fix some display of masterworked exotics in the CSV export.
 
 ## 6.33.0 <span className="changelog-date">(2020-10-04)</span>
 

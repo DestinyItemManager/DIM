@@ -132,7 +132,7 @@ export default function LoadoutDrawerOptions({
               type="button"
               title={t('Loadouts.Delete')}
             >
-              <AppIcon icon={deleteIcon} />
+              <AppIcon icon={deleteIcon} /> {t('Loadouts.Delete')}
             </button>
           </div>
         )}

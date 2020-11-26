@@ -2,8 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'count': string;
-  'dropdownButton': string;
-  'storeIcon': string;
+  'resultButton': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

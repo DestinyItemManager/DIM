@@ -37,7 +37,12 @@ export default function VendorsMenu({
                     title={t('VendorEngramsXyz.DroppingHigh')}
                   />
                 )}
-                <BungieImage src={vendor.def.displayProperties.icon} />
+                <BungieImage
+                  src={
+                    vendor.def.displayProperties.icon ||
+                    vendor.def.displayProperties.smallTransparentIcon
+                  }
+                />
                 <span>{vendor.def.displayProperties.name}</span>
               </PageWithMenu.MenuButton>
             );

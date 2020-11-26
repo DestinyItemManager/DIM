@@ -1,0 +1,103 @@
+@import '../variables.scss';
+
+.energyMeter {
+  margin: 10px;
+}
+
+.icon {
+  margin: 0 2px 0 0;
+  vertical-align: middle;
+  height: 15px;
+  width: 15px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+
+  &.solar > .used {
+    border-color: #f0631e;
+    background: #f0631e;
+  }
+
+  &.solar > .unused {
+    border-color: #f0631e;
+  }
+
+  &.arc > .used {
+    border-color: #79bbe8;
+    background: #79bbe8;
+  }
+
+  &.arc > .unused {
+    border: 3px solid #79bbe8;
+  }
+
+  &.void > .used {
+    border-color: #8e749e;
+    background: #8e749e;
+  }
+
+  &.void > .unused {
+    border-color: #8e749e;
+  }
+}
+.increments {
+  display: block;
+  box-sizing: border-box;
+  height: 12px;
+  flex-grow: 1;
+  margin: 0 1px;
+  border: 3px solid white;
+
+  .unused {
+    background: transparent;
+  }
+
+  &.disabled {
+    height: 6px;
+    border: 3px solid #888;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.upgradePreview {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  padding: 4px 0;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @include horizontal-space-children(8px);
+
+  > :first-child {
+    flex: 1;
+  }
+}
+
+.upgradeButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  color: #fff;
+  font-size: 16px;
+}
+
+.cost {
+  font-size: 12px !important;
+}
+
+.elementSelect {
+  > button {
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    > span:nth-child(2) {
+      display: none;
+    }
+    cursor: pointer;
+  }
+}

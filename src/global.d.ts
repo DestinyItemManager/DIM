@@ -32,18 +32,20 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable new mobile inspect view when dragging an item */
   mobileInspect: boolean;
-  /** Move subclass out of weapons */
-  newArrangement: boolean;
-  /** New background */
-  gradientBackground: boolean;
-  /** Use mobile category strip on inventory page */
-  mobileCategoryStrip: boolean;
-  /** Move the item popup actions */
-  newItemPopupActions: boolean;
   /** Enable move amounts */
   moveAmounts: boolean;
   /** Enable alt inv mode */
   altInventoryMode: boolean;
+  /** Enable search results */
+  searchResults: boolean;
+  /** Alternate perks display on item popup */
+  newPerks: boolean;
+  /** Advanced Write Actions (inserting mods) */
+  awa: boolean;
+  /** Incorporate mods directly into loadouts */
+  loadoutMods: boolean;
+  /** Show bounty guide */
+  bountyGuide: boolean;
 };
 
 declare namespace React {

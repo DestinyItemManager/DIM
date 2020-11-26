@@ -1,7 +1,7 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
@@ -14,6 +14,7 @@ interface Props {
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
+  allowClickThrough?: boolean;
   onClose(): void;
 }
 
@@ -40,6 +41,7 @@ export default function Sheet({
   children,
   sheetClassName,
   freezeInitialHeight,
+  allowClickThrough,
   onClose: onCloseCallback,
 }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
@@ -52,7 +54,7 @@ export default function Sheet({
 
   const windowHeight = window.innerHeight;
   const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
-  const maxHeight = windowHeight - headerHeight - 16;
+  const maxHeight = windowHeight - headerHeight - 16 - 44;
 
   const sheetContents = useRef<HTMLDivElement | null>(null);
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
@@ -159,7 +161,7 @@ export default function Sheet({
       onKeyDown={stopPropagation}
       onKeyUp={stopPropagation}
       onKeyPress={stopPropagation}
-      onClick={stopPropagation}
+      onClick={allowClickThrough ? undefined : stopPropagation}
     >
       <a href="#" className="sheet-close" onClick={onClose}>
         <AppIcon icon={disabledIcon} />
@@ -244,7 +246,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     [blockEvents, sheetContents]
   );
 
-  useEffect(
+  useLayoutEffect(
     () => () => {
       if (sheetContents.current) {
         setTimeout(() => {

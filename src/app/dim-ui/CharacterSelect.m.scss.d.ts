@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'frame': string;
-  'horizontal': string;
-  'pager': string;
   'select': string;
   'tile': string;
   'track': string;

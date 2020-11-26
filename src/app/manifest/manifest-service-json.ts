@@ -213,9 +213,9 @@ function loadManifestRemote(
               if (response.ok) {
                 break;
               }
-              error = error ?? response;
+              error ??= response;
             } catch (e) {
-              error = error ?? e;
+              error ??= e;
             }
           }
           const body = await (response?.ok ? response.json() : Promise.reject(error));

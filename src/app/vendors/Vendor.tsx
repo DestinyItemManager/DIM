@@ -1,9 +1,13 @@
+import { XurLocation } from '@d2api/d2api-types';
 import { t } from 'app/i18next-t';
+import { VENDORS } from 'app/search/d2-known-values';
+import { RootState } from 'app/store/types';
 import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import vendorEngramSvg from '../../images/engram.svg';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -35,11 +39,17 @@ export default function Vendor({
   vendorDrops?: VendorDrop[];
   characterId: string;
 }) {
-  const placeString = _.uniq(
-    [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
-      (n) => n?.length
-    )
-  ).join(', ');
+  const xurLocation = useSelector((state: RootState) =>
+    vendor.def.hash === VENDORS.XUR ? state.vendors.xurLocation : undefined
+  );
+
+  const placeString = xurLocation
+    ? extractXurLocationString(defs, xurLocation)
+    : _.uniq(
+        [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
+          (n) => n?.length
+        )
+      ).join(', ');
 
   const vendorEngramDrops =
     $featureFlags.vendorEngrams && vendorDrops
@@ -59,7 +69,13 @@ export default function Vendor({
         title={
           <>
             <span className={styles.vendorIconWrapper}>
-              <BungieImage src={vendor.def.displayProperties.icon} className={styles.icon} />
+              <BungieImage
+                src={
+                  vendor.def.displayProperties.icon ||
+                  vendor.def.displayProperties.smallTransparentIcon
+                }
+                className={styles.icon}
+              />
               {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
                 <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
                   <img
@@ -94,4 +110,18 @@ export default function Vendor({
       </CollapsibleTitle>
     </div>
   );
+}
+
+function extractXurLocationString(defs: D2ManifestDefinitions, xurLocation: XurLocation) {
+  const placeDef = defs.Place.get(xurLocation.placeHash);
+  if (!placeDef) {
+    return null;
+  }
+  const destinationDef = defs.Destination.get(xurLocation.destinationHash);
+  if (!destinationDef) {
+    return null;
+  }
+  const bubbleDef = destinationDef.bubbles[xurLocation.bubbleIndex];
+
+  return `${bubbleDef.displayProperties.name}, ${destinationDef.displayProperties.name}, ${placeDef.displayProperties.name}`;
 }

@@ -39,8 +39,8 @@ export interface ProcessItem {
   basePower: number;
   stats: { [statHash: number]: number };
   baseStats: { [statHash: number]: number };
-  season?: number;
   compatibleModSeasons?: string[];
+  hasLegacyModSocket: boolean;
 }
 
 export type ProcessItemsByBucket = Readonly<{
@@ -76,15 +76,13 @@ interface ProcessStat {
 
 export interface ProcessMod {
   hash: number;
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
     /** The energy cost of the mod. */
     val: number;
   };
   investmentStats: ProcessStat[];
-  /** This should only be available in seasonal mods */
-  season?: number;
-  /** This should only be available in seasonal mods */
+  /** This should only be available in legacy, combat and raid mods */
   tag?: string;
 }
 

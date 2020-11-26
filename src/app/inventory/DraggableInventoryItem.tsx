@@ -1,5 +1,5 @@
 import { CompareService } from 'app/compare/compare.service';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
@@ -32,7 +32,11 @@ function dragType(props: ExternalProps): string {
   if ($featureFlags.mobileInspect && props.isPhonePortrait) {
     return mobileDragType;
   }
-  return item.notransfer ? `${item.owner}-${item.bucket.type}` : item.bucket.type!;
+  return item.location.inPostmaster
+    ? 'postmaster'
+    : item.notransfer
+    ? `${item.owner}-${item.bucket.type}`
+    : item.bucket.type!;
 }
 
 export interface DragObject {
@@ -48,17 +52,15 @@ let dragTimeout: number | null = null;
 
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
+    hideItemPopup();
+
     if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
       store.dispatch(stackableDrag(true));
     }
 
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
-      // The colorblind filters interact badly with this
-      const color = settingsSelector(store.getState()).colorA11y;
-      if (!color || color === '-') {
-        document.body.classList.add('drag-perf-show');
-      }
+      document.body.classList.add('drag-perf-show');
     });
 
     isDragging = true;
