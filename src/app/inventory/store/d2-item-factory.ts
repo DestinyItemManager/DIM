@@ -278,7 +278,7 @@ export function makeItem(
           ...instanceDef.primaryStat,
           stat: defs.Stat.get(instanceDef.primaryStat.statHash),
           value: isEngram
-            ? Number(`${instanceDef?.itemLevel}${instanceDef?.quality}`)
+            ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
             : instanceDef.primaryStat.value,
         } || null;
 
