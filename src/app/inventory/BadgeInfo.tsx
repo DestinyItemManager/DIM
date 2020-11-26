@@ -31,6 +31,9 @@ export function hasBadge(item?: DimItem | null): boolean {
   if (!item) {
     return false;
   }
+  if (item.isEngram) {
+    return false;
+  }
   return (
     Boolean(item.primStat?.value) ||
     item.classified ||
@@ -49,7 +52,8 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
   const isGeneric = !isBounty && !isStackable;
 
   const hideBadge = Boolean(
-    (isBounty && (item.complete || item.hidePercentage)) ||
+    item.isEngram ||
+      (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
       (isGeneric && !item.primStat?.value && !item.classified)
   );
