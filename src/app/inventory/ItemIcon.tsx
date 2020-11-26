@@ -59,7 +59,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             className={styles.energyCostOverlay}
           />
           <svg viewBox="0 0 100 100" className={styles.energyCost}>
-            <svg x="100%" y="0" width="0" height="0" overflow="visible">
+            <svg x="100%" y="0" width="100" height="100" overflow="visible">
               <text x="-13" y="26" fontSize="18px" textAnchor="end">
                 {item.plug.energyCost}
               </text>
