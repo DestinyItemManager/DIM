@@ -14,8 +14,7 @@ import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
@@ -95,31 +94,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    const reposition = () => {
-      if (containerRef.current) {
-        let parent = containerRef.current.parentElement;
-        while (parent && !parent.classList.contains('item-popup')) {
-          parent = parent.parentElement;
-        }
-        const arrow = parent?.querySelector('.arrow') as HTMLDivElement;
-        if (!arrow || !parent) {
-          return;
-        }
-        const arrowRect = arrow.getBoundingClientRect();
-        const parentRect = parent.getBoundingClientRect();
-        const containerHeight = containerRef.current.clientHeight;
-        const offset = arrowRect.top - parentRect.top + 2.5;
-
-        const top = _.clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
-
-        containerRef.current.style.transform = `translateY(${Math.round(top)}px)`;
-      }
-    };
-
-    reposition();
-    setTimeout(reposition, 10);
-  });
 
   const onAmountChanged = setAmount;
 
