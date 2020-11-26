@@ -18,6 +18,8 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
+  [DestinyEnergyType.Ghost]: '',
+  [DestinyEnergyType.Subclass]: '',
   [DestinyEnergyType.Any]: '',
 };
 

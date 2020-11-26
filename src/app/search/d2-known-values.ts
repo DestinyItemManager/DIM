@@ -248,6 +248,8 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
   [DestinyEnergyType.Void]: 'void',
+  [DestinyEnergyType.Ghost]: 'ghost',
+  [DestinyEnergyType.Subclass]: 'subclass',
 };
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
