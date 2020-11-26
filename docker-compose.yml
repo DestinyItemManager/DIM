@@ -2,7 +2,7 @@ version: '3'
 services:
   webpack:
     container_name: dim-webpack
-    image: node:dubnium
+    image: node:fermium
     ports:
       - '8080:8080'
     working_dir: /usr/src/app
