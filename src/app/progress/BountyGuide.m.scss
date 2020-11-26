@@ -13,13 +13,19 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 2px 8px;
   color: white;
   margin: 0 4px 4px 0;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 150ms;
 
   img {
     margin-right: 4px;
+  }
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -32,9 +38,25 @@
   margin-left: 0.3em;
 }
 
-.clickable {
-  cursor: pointer;
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
+.synergy {
+  border-color: #ccc;
+}
+
+.selected {
+  border-color: $orange;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.pullItem {
+  display: inline-block;
+  margin-left: 6px;
+  margin-right: -2px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  :global(.app-icon) {
+    transition: transform 150ms ease-in-out;
+  }
+  &:hover :global(.app-icon) {
+    transform: scale(1.3);
   }
 }
