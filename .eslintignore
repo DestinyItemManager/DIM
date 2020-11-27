@@ -5,3 +5,5 @@ src/browsercheck.js
 *.m.scss.d.ts
 *.test.ts
 *.test.tsx
+*.config.js
+Gruntfile.js
