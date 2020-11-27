@@ -26,28 +26,32 @@
 }
 
 .header {
-  text-align: right;
+  display: flex;
+  align-content: center;
+  font-size: 18px;
+  margin: 8px 0;
+  > div {
+    align-self: center;
+  }
 }
 
-.closeButton {
-  display: flex;
-  justify-content: flex-end;
-  cursor: pointer;
-  padding: 5px;
-
-  :global(.app-icon) {
-    font-size: 17px;
-  }
+.emblem {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  background-color: rgba(0, 0, 0, 0);
+  background-size: cover;
 }
 
 .content {
   position: sticky;
+  top: $header-height;
   height: calc(100vh - #{$header-height});
   overflow-y: scroll;
   padding: 0 15px;
-  padding-top: 15px;
   z-index: 10;
-  width: 295px;
+  min-width: 275px;
+  width: 275px;
   background-color: rgba(0, 0, 0, 0.15);
 
   :global(.store-cell) {

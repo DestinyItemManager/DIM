@@ -2,11 +2,13 @@
 
 .shadow {
   @include below-header;
-  height: var(--store-header-height);
+
+  height: 1px;
   box-shadow: 0 1px 4px 0px black;
   width: 100%;
-  position: fixed;
+  position: sticky;
   left: 0;
+  top: calc(var(--store-header-height) + #{$header-height} - 1px);
   z-index: 9;
 }
 
@@ -17,7 +19,6 @@
   position: absolute;
   left: 0;
   z-index: 9;
-
   background: $gradient;
   background-position: center top;
   background-repeat: no-repeat;

@@ -32,9 +32,6 @@ export default function FarmingTools({ store }: Props) {
 
   return (
     <>
-      <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
-        {!isFarming ? t('ActiveMode.FarmingStart') : t('ActiveMode.FarmingStart')}
-      </div>
       <div className="dim-button bucket-button">
         <MaxlightButton
           allItems={allItems}
@@ -42,6 +39,9 @@ export default function FarmingTools({ store }: Props) {
           hasClassified={hasClassified}
           hideIcon={true}
         />
+      </div>
+      <div className="dim-button bucket-button" onClick={() => setIsFarming(!isFarming)}>
+        {isFarming ? t('ActiveMode.FarmingStop') : t('ActiveMode.FarmingStart')}
       </div>
     </>
   );

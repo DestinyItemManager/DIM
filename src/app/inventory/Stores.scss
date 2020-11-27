@@ -1,5 +1,9 @@
 @import '../variables.scss';
 
+.singleCharacter {
+  --num-characters: 1;
+}
+
 .inventory-container {
   display: flex;
 }
@@ -7,11 +11,6 @@
 .inventory-content {
   margin: 0 auto;
   width: 100%;
-
-  .scrollable {
-    overflow: scroll;
-    height: calc(100vh - (var(--store-header-height) + #{$header-height}));
-  }
 
   .title {
     top: 124px;
@@ -51,15 +50,13 @@
     // Vault takes the rest
     1fr;
   box-sizing: border-box;
-  .singleCharacter & {
-    grid-template-columns:
-      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
-      // Vault takes the rest
-      1fr;
-  }
 
+  // Split evenly between character and vault
   .singleCharacter &.account-wide {
     grid-template-columns: 1fr 1fr;
+    .singleCharacter & {
+      grid-column: auto;
+    }
   }
 
   @include phone-portrait {
@@ -251,9 +248,6 @@
     }
   }
 }
-.transparentBg {
-  background: none;
-}
 
 .dim-button.bucket-button {
   align-self: center;
@@ -292,8 +286,4 @@
     color: $orange;
     border-bottom: 2px solid $orange;
   }
-}
-
-.singleCharacter {
-  padding-left: 22px;
 }

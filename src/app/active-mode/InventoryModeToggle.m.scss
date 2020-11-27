@@ -2,13 +2,10 @@
 
 // Mode toggle
 .inventoryToggle {
-  position: fixed;
-  top: 60px;
-  right: 15px;
-  z-index: 100;
   padding: 0;
   padding: 4px 10px;
   display: flex;
+  width: fit-content;
 }
 
 .beta {

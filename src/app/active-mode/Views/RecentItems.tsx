@@ -1,4 +1,3 @@
-import FarmingTools from 'app/active-mode/Views/FarmingTools';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
@@ -6,7 +5,6 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { searchFiltersConfigSelector } from 'app/search/search-filter';
 import { setSearchQuery } from 'app/shell/actions';
@@ -16,7 +14,7 @@ import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './RecentItems.m.scss';
 
-export default function RecentItems({ store }: { store: DimStore }) {
+export default function RecentItems() {
   const allItems = useSelector(allItemsSelector);
   const filters = useSelector(searchFiltersConfigSelector);
   const savedSearches = useSelector(recentSearchesSelector).filter(({ saved }) => saved);
@@ -35,8 +33,6 @@ export default function RecentItems({ store }: { store: DimStore }) {
 
   const dispatch = useDispatch();
 
-  items.length = Math.min(items.length, 8);
-
   return (
     <CollapsibleTitle
       title={t('ActiveMode.Farming')}
@@ -44,7 +40,6 @@ export default function RecentItems({ store }: { store: DimStore }) {
       className={styles.collapseTitle}
       defaultCollapsed={true}
     >
-      <FarmingTools store={store} />
       {options.length > 0 && (
         <div className={styles.options}>
           <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
