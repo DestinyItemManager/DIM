@@ -7,6 +7,7 @@ interface CssExports {
   'container': string;
   'mods': string;
   'title': string;
+  'titleSection': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

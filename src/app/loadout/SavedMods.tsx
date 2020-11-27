@@ -1,9 +1,11 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import Mod from 'app/loadout-builder/generated-sets/Mod';
+import { AppIcon, faInfoCircle } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -53,7 +55,12 @@ function SavedMods({ defs, modHashes }: Props) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>{t('Loadouts.Mods')}</div>
+      <div className={styles.titleSection}>
+        <div className={styles.title}>{t('Loadouts.Mods')}</div>
+        <PressTip tooltip={t('Loadouts.ModsInfo')}>
+          <AppIcon icon={faInfoCircle}></AppIcon>
+        </PressTip>
+      </div>
       <div className={styles.categories}>
         {Object.entries(groupedMods).map(
           ([key, group]) =>

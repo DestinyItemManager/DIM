@@ -5,6 +5,12 @@
 .title {
   font-size: 12px;
   text-transform: uppercase;
+  margin-right: 4px;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: row;
 }
 
 .categories {
