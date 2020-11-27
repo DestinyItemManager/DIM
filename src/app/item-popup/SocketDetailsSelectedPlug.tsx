@@ -111,7 +111,7 @@ export default function SocketDetailsSelectedPlug({
       await dispatch(insertPlug(item, socket, plug.hash));
       closeMenu();
     } catch (e) {
-      showNotification({ type: 'error', title: t('ItemService.InsertPlugError'), body: e.message });
+      showNotification({ type: 'error', title: t('Sockets.InsertPlugError'), body: e.message });
     } finally {
       setInsertInProgress(false);
     }
@@ -176,7 +176,7 @@ export default function SocketDetailsSelectedPlug({
             </motion.span>
           )}
           <motion.span layout>
-            Insert Mod
+            {t('Sockets.InsertModButton')}
             {costs}
           </motion.span>
         </motion.button>
