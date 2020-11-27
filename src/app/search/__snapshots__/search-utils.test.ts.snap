@@ -278,7 +278,7 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'energycapacity' with suggestions [ 'any', 'arc', 'solar', 'void' ] 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'energycapacity' with suggestions [ 'any', 'arc', 'solar', 'void', 'ghost', 'subclass' ] 1`] = `
 Array [
   "energycapacity:",
   "energycapacity:<",
@@ -290,6 +290,8 @@ Array [
   "energycapacity:arc",
   "energycapacity:solar",
   "energycapacity:void",
+  "energycapacity:ghost",
+  "energycapacity:subclass",
 ]
 `;
 
