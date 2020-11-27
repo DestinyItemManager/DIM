@@ -255,6 +255,7 @@ function SocketDetails({
       item={item}
       socket={socket}
       currentPlug={socket.plugged}
+      equippable={unlockedPlugs.has(selectedPlug.hash) || otherUnlockedPlugs.has(selectedPlug.hash)}
     />
   );
 

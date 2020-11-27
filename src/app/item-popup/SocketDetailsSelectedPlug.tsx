@@ -32,12 +32,14 @@ export default function SocketDetailsSelectedPlug({
   defs,
   item,
   currentPlug,
+  equippable,
 }: {
   plug: PluggableInventoryItemDefinition;
   socket: DimSocket;
   defs: D2ManifestDefinitions;
   item: DimItem;
   currentPlug: DimPlug | null;
+  equippable: boolean;
 }) {
   const dispatch = useThunkDispatch();
 
@@ -148,7 +150,12 @@ export default function SocketDetailsSelectedPlug({
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       {$featureFlags.awa && (
-        <button type="button" onClick={onInsertPlug}>
+        <button
+          type="button"
+          className={styles.insertButton}
+          onClick={onInsertPlug}
+          disabled={!equippable}
+        >
           Insert Mod
           {costs}
         </button>
