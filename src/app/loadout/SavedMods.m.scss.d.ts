@@ -5,9 +5,10 @@ interface CssExports {
   'category': string;
   'categoryName': string;
   'container': string;
+  'disclaimer': string;
   'mods': string;
   'title': string;
-  'titleSection': string;
+  'warningIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
