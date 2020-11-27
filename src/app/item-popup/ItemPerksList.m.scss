@@ -3,71 +3,43 @@
 .sockets {
   display: flex;
   flex-direction: column;
+  margin: -12px -10px 0 -10px;
 }
 
-.row {
+.socket {
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
+  align-items: flex-start;
   border-bottom: 1px solid #333;
   padding: 6px 10px;
 
   &:last-child {
     border-bottom: none;
   }
-
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
-.archetype {
-  background-color: #333;
-}
-
-.archetypeMod {
-  flex: 1;
-  img {
-    width: 28px;
-    height: 28px;
-    margin-right: 1em;
-    transform: scale(1.25);
-  }
-}
-
-.socket {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
-  flex: 1;
-}
-
-.mod {
-  margin-left: 4px;
-  cursor: pointer;
-  &:hover {
-    outline: 1px solid $orange;
-  }
-
-  :global(.item-img) {
-    height: 28px;
-    width: 28px;
-  }
 }
 
 .plug {
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
+  align-items: flex-start;
   margin-right: 1em;
+  cursor: pointer;
+
   &:last-child {
     margin-right: 0;
+  }
+
+  h2 {
+    font-size: 12px;
+    line-height: 12px;
+    margin: calc((24 / 50 * var(--item-size) + 4px) / 2 - 6px) 0 4px 0;
   }
 }
 
 .perkIcon {
+  grid-area: icon;
+  align-self: flex-start;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: calc(24 / 50 * var(--item-size));
+  height: calc(24 / 50 * var(--item-size));
   display: block;
   border: 1px solid white;
   border-radius: 50%;
@@ -79,6 +51,9 @@
     width: 100%;
   }
 
+  .selected & {
+    background-color: $orange;
+  }
   .plugged & {
     background-color: #4887ba;
   }
@@ -90,7 +65,18 @@
   }
 }
 
-.plugged {
+.perkInfo {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: flex-start;
+  margin-left: 6px;
+  white-space: pre-wrap;
+
+  > div {
+    color: #aaa;
+  }
+}
+
+.selected {
   flex: 1;
 }
 
