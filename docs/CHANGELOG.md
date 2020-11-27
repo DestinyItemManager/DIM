@@ -1,7 +1,12 @@
 ## Next
 
-* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a weapon type to pull a weapon matching that type.
+* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a category to see bounties that include that category. Other categories will light up to show "synergy" categories that can be worked on while you work on the selected one. Shift-click to select multiple categories. Click the (+) on a weapon type to pull a weapon matching that type.
 * New item sort option to sort sunset items last.
+* Engrams show their power level - click on small engrams to see their power level in the item popup.
+* The checkmark for collectibles is now on the bottom right corner, so it doesn't cover mod cost.
+* Mod costs display correctly on Firefox.
+* Fixed the `is:powerfulreward` search to recognize new powerful/pinnacle engrams.
+* When items are classified (like the new Raid gear was for a bit), any notes added to the item will show on the tile so you can keep track of them.
 
 ### Beta Only
 
