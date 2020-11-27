@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
@@ -9,11 +10,15 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import { showNotification } from 'app/notifications/notifications';
+import { refreshIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
+import { motion } from 'framer-motion';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
@@ -33,6 +38,7 @@ export default function SocketDetailsSelectedPlug({
   item,
   currentPlug,
   equippable,
+  closeMenu,
 }: {
   plug: PluggableInventoryItemDefinition;
   socket: DimSocket;
@@ -40,6 +46,7 @@ export default function SocketDetailsSelectedPlug({
   item: DimItem;
   currentPlug: DimPlug | null;
   equippable: boolean;
+  closeMenu(): void;
 }) {
   const dispatch = useThunkDispatch();
 
@@ -97,11 +104,17 @@ export default function SocketDetailsSelectedPlug({
     })
   );
 
+  const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
-    await dispatch(insertPlug(item, socket, plug.hash));
-    // Handle errors?
-
-    // close the menu?
+    setInsertInProgress(true);
+    try {
+      await dispatch(insertPlug(item, socket, plug.hash));
+      closeMenu();
+    } catch (e) {
+      showNotification({ type: 'error', title: t('ItemService.InsertPlugError'), body: e.message });
+    } finally {
+      setInsertInProgress(false);
+    }
   };
 
   const costs = materialRequirementSet?.materials.map((material) => {
@@ -150,15 +163,23 @@ export default function SocketDetailsSelectedPlug({
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       {$featureFlags.awa && (
-        <button
+        <motion.button
+          layout
           type="button"
           className={styles.insertButton}
           onClick={onInsertPlug}
-          disabled={!equippable}
+          disabled={!equippable || insertInProgress}
         >
-          Insert Mod
-          {costs}
-        </button>
+          {insertInProgress && (
+            <motion.span layout>
+              <AppIcon icon={refreshIcon} spinning={true} />
+            </motion.span>
+          )}
+          <motion.span layout>
+            Insert Mod
+            {costs}
+          </motion.span>
+        </motion.button>
       )}
     </div>
   );
