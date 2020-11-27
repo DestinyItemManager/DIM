@@ -4,7 +4,7 @@ import { isD1Item } from 'app/utils/item-utils';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
@@ -31,7 +31,7 @@ export function hasBadge(item?: DimItem | null): boolean {
   if (!item) {
     return false;
   }
-  if (item.isEngram && item.location.capacity === 10) {
+  if (item.isEngram && item.location.hash === BucketHashes.Engrams) {
     return false;
   }
   return (
@@ -52,7 +52,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
   const isGeneric = !isBounty && !isStackable;
 
   const hideBadge = Boolean(
-    (item.isEngram && item.location.capacity === 10) ||
+    (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
       (isGeneric && !item.primStat?.value && !item.classified)
