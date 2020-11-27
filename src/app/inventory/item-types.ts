@@ -134,7 +134,7 @@ export interface DimItem {
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
   plug?: {
     energyCost: number;
-    costElementIcon: string;
+    costElementIcon?: string;
   };
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
