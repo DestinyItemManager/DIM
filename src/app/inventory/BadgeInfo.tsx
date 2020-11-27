@@ -76,6 +76,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
+        [styles.engram]: item.isEngram,
       })}
     >
       {isD1Item(item) && item.quality && (
