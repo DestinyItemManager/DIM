@@ -23,6 +23,7 @@
     "ChangeFilter": "Changer Filtre",
     "Farming": "Objets récents",
     "FarmingStart": "Commencer Farming",
+    "FarmingStop": "Arrêter Farming",
     "Loadouts": "Arsenaux",
     "NoQuests": "Vous ne suivez aucune quête",
     "NoSearches": "Enregistrer des recherches et les filtrer ici.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Affiche les armures compatible avec un type de Mod Saisonnier spécifique.",
     "InLoadout": "Affiche les objets inclus dans un arsenal.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
+    "IsSunset": "",
     "ItemHash": "Affiche les objets avec le hash d'objet spécifié. Pour les utilisateurs avancés.",
     "ItemId": "Affiche les objets avec l'ID d'objet d'inventaire spécifié. Pour les utilisateurs avancés.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "SunsetAfter": "Affiche les objets en fonction de la dernière saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Affiche les objets portant une certaine étiquette.",
       "Tagged": "Affiche les objets portant une étiquette."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Choisissez un attribut",
     "ClassItem": "Objet de Classe",
     "ClearLocked": "Enlever verrouillés",
-    "Combat": "Combat",
     "ContainsVendorItems": "Cet arsenal contient des objets de marchand",
     "Current": "Actuel",
     "Equip": "Équiper sur {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
     "ModLockButton": "Sélectionner les mods",
+    "Other": "Autre",
     "ProcessingMode": {
       "Fast": "Rapide",
       "Full": "Complet",
@@ -396,9 +399,9 @@
       "HelpFull": "Se concentre sur plus d'équipements, mais prend plus de temps.",
       "ProcessingMode": "Mode de processing"
     },
+    "Raid": "Raid",
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un mod ou une description",
-    "Seasonal": "Saisonnier",
     "SelectMods": "Sélectionner les Mods",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Considérer comme ayant les statistiques de Pièce Maîtresse",
     "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets sont une pièce maîtresse.",
-    "BadPerk": "Un attribut qui modifie \"légèrement\" n'est pas la meilleure option.",
     "ChooseAlternate": "Choisissez un autre objet avec les mêmes statistiques:",
     "ChooseAlternateTitle": "Choisissez un autre objet",
     "CompareLoadout": "Comparer Arsenal",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
     "ResetLocked": "Réinitialiser les objets épinglés",
     "SaveAs": "Enregistrer sous",
-    "SeasonNum": "Saison {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum des Statistiques Totales D'Armure",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
     "TierNumber": "T{{tier}}",
-    "Traction": "L'attribut Traction apporte +1 mobilité.",
     "UnlockItem": "Désépingler Objet"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Maximiser la puissance",
     "MaximizeStat": "Maximiser la Stat",
     "Mods": "Mods",
+    "ModsInfo": "DIM ne peut pas équiper de mods, cela doit être fait en jeu.",
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NotificationMessage": "Envoie d'un groupe de 1 objet dans le coffre.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
     "EquipWithName": "Équiper à {{character}}",
-    "Expand": "Étendre les détails de l'objet",
     "Infuse": "Infuser",
     "ItemDetailSheet": "Voir les détails de l'objet",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Rangs",
     "Items": "Objets de quête",
     "LegacyRecord": "Ce triomphe ne pourra plus être complété après la sorti de Au-delà de la Lumière.",
-    "LegacyTriumphs": "Triomphes Historiques",
     "Milestones": "Jalons & Défis",
     "NoTrackedTriumph": "Vous ne suivez pas de triomphes. Suivez en un dans le jeu, ou autant que vous voulez sur DIM.",
     "PercentPrestige": "{{pct}}% pour réinitialiser",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Une taille d'objet de 50px aura le rendu le plus net, sans flouter l'image de l'objet ou le texte.",
     "DontForgetDupes": "N'oubliez pas que vous pouvez chercher is:dupe pour trouver rapidement vos doublons, et vous pouvez utiliser l'outil de comparaison pour évaluer les objets entre eux.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
+    "ExpandSingleCharacter": "Afficher tous les personnages",
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "ExportSSNoStores": "Vous devez charger votre inventaire une première fois avant de cliquer sur ce bouton.",
@@ -748,6 +748,8 @@
     "SetSort": "Trier les objets par:",
     "Settings": "Paramètres",
     "ShowNewItems": "Indiquer les nouveaux objets avec un point rouge",
+    "SingleCharacter": "Afficher uniquement le personnage actuel",
+    "SingleCharacterExplanation": "DIM masquera tout les personnages sauf celui joué le plus récemment. L'inventaire de ces personnages apparaîtra comme étant dans le coffre.",
     "SizeItem": "Taille des objets",
     "SortByAmount": "Taille de la pile",
     "SortByClassType": "Classe requise",
@@ -755,6 +757,7 @@
     "SortByRarity": "Rareté",
     "SortByRating": "Qualité de l'Armure (D1)",
     "SortBySeason": "Saison (D2)",
+    "SortBySunset": "Puissance Maximale actuelle inatteignable (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
@@ -861,7 +864,6 @@
     "Vote": "Vous voyez un marchand qui vend des objets proche de votre niveau de puissance? Allez sur VendorEngrams.xyz pour voter et faire savoir à la communauté!"
   },
   "Vendors": {
-    "Catalysts": "Catalyseurs",
     "Collections": "Collections",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",

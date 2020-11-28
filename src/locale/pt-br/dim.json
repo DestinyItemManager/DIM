@@ -23,6 +23,7 @@
     "ChangeFilter": "Modificar Filtro",
     "Farming": "Itens Recentes",
     "FarmingStart": "Iniciar Farm",
+    "FarmingStop": "Parar Farm",
     "Loadouts": "Sets",
     "NoQuests": "Você não está rastreando nenhuma jornada",
     "NoSearches": "Crie pesquisas salvas e as filtre aqui.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
     "InLoadout": "Mostra itens que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
+    "IsSunset": "",
     "ItemHash": "Exibe itens com determinado hash de inventário de item. Para usuários avançados.",
     "ItemId": "Exibe o item com determinado ID de inventário de item. Para usuários avançados.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "SunsetAfter": "Exibe itens da última temporada que podem atingir o Limite de Poder Sazonal.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Exibe itens que possuem uma determinada tag.",
       "Tagged": "Exibe itens que possuam qualquer tag."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Escolha um perk",
     "ClassItem": "Item de classe",
     "ClearLocked": "Limpar itens travados",
-    "Combat": "Combate",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
     "Equip": "Equipar em {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Arraste e solte itens para construir sets com itens específicos. SHIFT+Clique para excluir.",
     "Missing2": "Faltam itens raros, lendários ou exóticos para construir um set completo!",
     "ModLockButton": "Selecionar mods",
+    "Other": "Outros",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -396,9 +399,9 @@
       "HelpFull": "Busca por todos os itens, mas leva mais tempo.",
       "ProcessingMode": "Modo de processamento"
     },
+    "Raid": "Incursão",
     "Scaled": "Nivelado",
     "SearchAMod": "Procurar um mod ou descrição",
-    "Seasonal": "Sazonal",
     "SelectMods": "Selecionar mods",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Assumir atributos obra-prima",
     "AssumeMasterworkDetailed": "Gerar sets assumindo que todos os itens são obra-primas.",
-    "BadPerk": "Um perk que modifica \"levemente\" não é a melhor opção.",
     "ChooseAlternate": "Escolher outro item com os mesmos atributos:",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens fixados",
     "SaveAs": "Salvar como",
-    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "SelectMinStatTotal": "Mínimo do Atributo Total de Armadura",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
     "TierNumber": "N{{tier}}",
-    "Traction": "O perk Tração fornece +1 em Mobilidade.",
     "UnlockItem": "Desfixar item"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Maximizar Poder",
     "MaximizeStat": "Maximizar atributos",
     "Mods": "Mods",
+    "ModsInfo": "Mods devem ser equipados diretamente no jogo, uma vez que o DIM não pode de fazer isso.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NotificationMessage": "Enviando set com um item para o cofre.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "EquipWithName": "Equipar em {{character}}",
-    "Expand": "Expandir detalhes do item",
     "Infuse": "Infunda",
     "ItemDetailSheet": "Abrir detalhes do item",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Ranque",
     "Items": "Itens de Jornada",
     "LegacyRecord": "Este triunfo não estará mais disponível para conclusão após o lançamento de Além da Luz.",
-    "LegacyTriumphs": "Triunfos Legados",
     "Milestones": "Marcos e Desafios",
     "NoTrackedTriumph": "Você não está rastreando nenhum triunfo. Selecione um através do jogo ou quantos você quiser aqui no DIM.",
     "PercentPrestige": "{{pct}}% para resetar",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Um item de tamanho 50px vai parecer mais nítido, sem borrar a imagem ou o texto do item.",
     "DontForgetDupes": "Não esqueça que você pode pesquisar is:dupe para encontrar facilmente itens duplicados, e então usar a ferramenta de comparação para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
+    "ExpandSingleCharacter": "Exibir todos os personagens",
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
     "ExportSSNoStores": "Você precisa carregar seu inventário uma vez antes de clicar neste botão.",
@@ -748,6 +748,8 @@
     "SetSort": "Ordenar itens por:",
     "Settings": "Configurações",
     "ShowNewItems": "Indica itens novos com um ponto vermelho",
+    "SingleCharacter": "Exibir apenas o personagem atual",
+    "SingleCharacterExplanation": "DIM exibirá apenas o inventário do personagem mais recente. Os itens dos demais personagens aparecerão como se eles estivessem no cofre.",
     "SizeItem": "Tamanho do item",
     "SortByAmount": "Tamanho da Pilha",
     "SortByClassType": "Classe Requerida",
@@ -755,6 +757,7 @@
     "SortByRarity": "Raridade",
     "SortByRating": "Qualidade da Armadura (D1)",
     "SortBySeason": "Temporada (D2)",
+    "SortBySunset": "Poder Foi Limitado (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
@@ -861,7 +864,6 @@
     "Vote": "Achou um vendedor com itens de poder alto? Acesse VendorEngrams.xyz para votar e avise a comunidade!"
   },
   "Vendors": {
-    "Catalysts": "Catalisadores",
     "Collections": "Coleções",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Exibir apenas não coletados",

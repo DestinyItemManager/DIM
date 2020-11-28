@@ -23,6 +23,7 @@
     "ChangeFilter": "Filter ändern",
     "Farming": "Neueste Gegenstände",
     "FarmingStart": "Farming starten",
+    "FarmingStop": "Stop Farming",
     "Loadouts": "Ausrüstungen",
     "NoQuests": "Du verfolgst keine Quests",
     "NoSearches": "Erstelle gespeicherte Suchanfragen und filtere sie hier.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
     "InLoadout": "Zeigt Gegenstände, welche in einer Ausrüstung verwendet werden.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
+    "IsSunset": "",
     "ItemHash": "Zeigt die Items mit dem angegebenen Inventar-Item Hash. Für fortgeschrittene Benutzer.",
     "ItemId": "Zeigt das Item mit der angegebenen Inventar-Item-ID. Für fortgeschrittene Benutzer.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
     "SunsetAfter": "Zeigt Items basierend auf der letzten Saison an, in der sie die saisonale Power-Grenze erreichen.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Zeigt Items mit einem bestimmten Tag an.",
       "Tagged": "Zeigt Items mit irgend einem Tag an."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Wähle einen Perk",
     "ClassItem": "Klassengegenstand",
     "ClearLocked": "Gesperrte entsperren",
-    "Combat": "Kampf",
     "ContainsVendorItems": "Diese Ausrüstung enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
     "Equip": "Anlegen an {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um es in der Ausrüstung zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
     "Missing2": "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
     "ModLockButton": "Mods auswählen",
+    "Other": "Andere",
     "ProcessingMode": {
       "Fast": "Schnell",
       "Full": "Vollständig",
@@ -396,9 +399,9 @@
       "HelpFull": "Bezieht mehr Ausrüstung ein, braucht dafür länger.",
       "ProcessingMode": "Berechnung"
     },
+    "Raid": "Raid",
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod oder Beschreibung",
-    "Seasonal": "Saisonal",
     "SelectMods": "Mods auswählen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Meisterwerk-Statistiken verwenden",
     "AssumeMasterworkDetailed": "Generiere Sets unter der Voraussetzung, dass alle Gegenstände Meisterwerke sind.",
-    "BadPerk": "Ein Perk, der \"leicht\" modifiziert, ist nicht die beste Option.",
     "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Statistiken:",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
     "ResetLocked": "Setze angepinnte Gegenstände zurück",
     "SaveAs": "Speichern unter",
-    "SeasonNum": "Saison {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Minimum Rüstungs-Stats Total",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Einschließen",
     "TheseModsCouldNotBeAssigned": "Diese Mods konnten der bestehenden Ausrüstung nicht zugewiesen werden.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Der Traktion-Perk bietet + 1 Mobilität.",
     "UnlockItem": "Abpinnen"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Power maximieren",
     "MaximizeStat": "Maximiere Stats",
     "Mods": "Mods",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
     "EquipWithName": "Anlegen an {{character}}",
-    "Expand": "Details erweitern",
     "Infuse": "Infundieren",
     "ItemDetailSheet": "Gegenstand-Details öffnen",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Ränge",
     "Items": "Quest-Gegenstände",
     "LegacyRecord": "Dieser Triumph wird nicht mehr verfügbar sein, nachdem Jenseits des Lichts veröffentlicht wurde.",
-    "LegacyTriumphs": "Vermächtnis Triumphe",
     "Milestones": "Meilensteine & Herausforderungen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge einen im Spiel oder so vielen wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Eine Größe von 50px wird am schärfsten aussehen, ohne das Bild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Gegenstände zu finden und du kannst das Vergleichstool nutzen, um verwandte Gegenstände zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
+    "ExpandSingleCharacter": "Show all characters",
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "ExportSSNoStores": "Du musst dein Inventar einmal laden bevor du diesen Knopf drückst.",
@@ -748,6 +748,8 @@
     "SetSort": "Sortiere Gegenstände nach:",
     "Settings": "Einstellungen",
     "ShowNewItems": "Zeige neue Gegenstände mit einem roten Punkt an",
+    "SingleCharacter": "Only show current character",
+    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "Gegenstandsgröße",
     "SortByAmount": "Stapel Größe",
     "SortByClassType": "Benötigte Klasse",
@@ -755,6 +757,7 @@
     "SortByRarity": "Seltenheit",
     "SortByRating": "Rüstungsqualität (D1)",
     "SortBySeason": "Saison (D2)",
+    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "Markierung ({{taglist}})",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
@@ -861,7 +864,6 @@
     "Vote": "Siehst du einen Verkäufer, der Gegenstände in der Nähe deines Lichtlevels verkauft? Gehe zu VendorEngrams.xyz, um abzustimmen und die Community darüber zu informieren!"
   },
   "Vendors": {
-    "Catalysts": "Katalysatoren",
     "Collections": "Sammlungen",
     "Engram": "Belohnungs-Engramm",
     "FilterToUnacquired": "Nur nicht erworbene Elemente anzeigen",

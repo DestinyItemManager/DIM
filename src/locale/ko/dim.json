@@ -23,6 +23,7 @@
     "ChangeFilter": "필터 변경",
     "Farming": "최근 아이템",
     "FarmingStart": "파밍 시작",
+    "FarmingStop": "파밍 종료",
     "Loadouts": "로드아웃",
     "NoQuests": "추적 중인 퀘스트 없음",
     "NoSearches": "여기서 저장된 검색 기록을 만들고 필터링하세요.",
@@ -171,6 +172,7 @@
     "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "InLoadout": "로드아웃에 포함된 아이템 표시",
     "Infusable": "주입할 수 있는 장비 표시",
+    "IsSunset": "",
     "ItemHash": "주어진 소지품 아이템 해시와 일치하는 아이템 표시. 고급 사용자용.",
     "ItemId": "주어진 소지품 아이템 ID와 일치하는 아이템 표시. 고급 사용자용.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
     "SunsetAfter": "전투력 상한선에 도달할 수 있는 시즌에 따른 아이템 표시",
+    "Sunsets": "",
     "Tags": {
       "Tag": "특정 태그가 있는 아이템 표시",
       "Tagged": "태그가 있는 아이템 표시"
@@ -345,7 +348,6 @@
     "ChooseAPerk": "특성 선택",
     "ClassItem": "직업 아이템",
     "ClearLocked": "잠금 해제",
-    "Combat": "전투",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
     "Equip": "{{character}}에게 장착",
@@ -389,6 +391,7 @@
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ModLockButton": "개조 부품 선택",
+    "Other": "기타",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
@@ -396,9 +399,9 @@
       "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림",
       "ProcessingMode": "처리 모드"
     },
+    "Raid": "레이드",
     "Scaled": "확대 됨",
     "SearchAMod": "개조 부품이나 설명 검색",
-    "Seasonal": "시즌",
     "SelectMods": "개조 부품 선택",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "걸작 능력치 가정",
     "AssumeMasterworkDetailed": "모든 아이템이 걸작인 것으로 가정하여 조합을 생성합니다.",
-    "BadPerk": "\"약간\" 적용되는 특성은 최고의 옵션이 아닙니다.",
     "ChooseAlternate": "동일한 능력치를 가진 다른 아이템 선택:",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
@@ -449,7 +451,6 @@
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "고정된 아이템 초기화",
     "SaveAs": "다른 이름으로 저장",
-    "SeasonNum": "시즌 {{season}}",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "SelectMinStatTotal": "방어구 총 능력치 최솟값",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
     "TierNumber": "T{{tier}}",
-    "Traction": "견인 특성은 기동성 +1을 제공합니다.",
     "UnlockItem": "아이템 고정 해제"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "전투력 최대화",
     "MaximizeStat": "능력치 최대화",
     "Mods": "개조 부품",
+    "ModsInfo": "DIM에서 개조 부품을 장착할 수 없으며, 반드시 게임 내에서 해야 됩니다.",
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NotificationMessage": "1개의 아이템이 포함된 로드아웃을 금고로 이동하였습니다.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "EquipWithName": "{{character}}에게 장착",
-    "Expand": "아이템 세부정보 확장",
     "Infuse": "주입",
     "ItemDetailSheet": "아이템 세부정보 열기",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
     "LegacyRecord": "빛의 저편이 출시된 뒤에는 이 업적을 완료할 수 없습니다.",
-    "LegacyTriumphs": "과거의 업적",
     "Milestones": "이정표 & 도전",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
+    "ExpandSingleCharacter": "모든 캐릭터 표시",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
     "ExportSSNoStores": "이 버튼을 클릭하기 전에 소지품을 한 번 불러와야 합니다.",
@@ -748,6 +748,8 @@
     "SetSort": "아이템 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
+    "SingleCharacter": "현재 캐릭터만 표시",
+    "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
     "SizeItem": "아이템 크기",
     "SortByAmount": "수량",
     "SortByClassType": "필요한 직업",
@@ -755,6 +757,7 @@
     "SortByRarity": "희귀도",
     "SortByRating": "방어구 품질 (D1)",
     "SortBySeason": "시즌 (D2)",
+    "SortBySunset": "만료됨 (D2)",
     "SortByTag": "태그 ({{taglist}})",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
@@ -861,7 +864,6 @@
     "Vote": "상인이 현재 전투력과 비슷한 아이템을 판매하는 것을 보셨나요? VendorEngrams.xyz에서 투표하셔서 커뮤니티가 알 수 있게 해주세요!"
   },
   "Vendors": {
-    "Catalysts": "촉매제",
     "Collections": "수집품",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
