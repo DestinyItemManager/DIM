@@ -10,7 +10,7 @@ export default function InventoryModeToggle({ mode }: { mode: boolean }) {
 
   return (
     <div
-      className={clsx(`dim-button`, styles.inventoryToggle, { [styles.alt]: mode })}
+      className={clsx(`dim-button`, styles.inventoryToggle)}
       onClick={() => {
         dispatch(setSetting('activeMode', !mode));
       }}
