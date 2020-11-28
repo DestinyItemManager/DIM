@@ -7,7 +7,9 @@ import RecentItems from 'app/active-mode/Views/RecentItems';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { getVault } from 'app/inventory/stores-helpers';
+import { loadAllVendors } from 'app/vendors/actions';
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './ActiveMode.m.scss';
 
 interface Props {
@@ -36,10 +38,15 @@ export default function ActiveMode({
   singleCharacter,
 }: Props) {
   const vault = stores && getVault(stores)!;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     ga('send', 'pageview', `/profileMembershipId/d${account.destinyVersion}/active`);
   }, [account]);
+
+  useEffect(() => {
+    dispatch(loadAllVendors(account, currentStore.id));
+  }, [account, currentStore, dispatch]);
 
   return (
     <div className={styles.content}>
