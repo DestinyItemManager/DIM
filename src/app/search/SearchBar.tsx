@@ -248,7 +248,7 @@ function SearchBar(
     setInputValue,
     reset,
     openMenu,
-  } = useCombobox<SearchItem | null>({
+  } = useCombobox<SearchItem>({
     items,
     stateReducer,
     initialIsOpen: isPhonePortrait && mainSearchBar,
