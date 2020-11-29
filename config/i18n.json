@@ -786,6 +786,10 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name"
   },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
+  },
   "Stats": {
     "GrenadeCooldown": "Grenade Cooldown",
     "MeleeCooldown": "Melee Cooldown",
