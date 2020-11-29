@@ -7,6 +7,7 @@
 * Mod costs display correctly on Firefox.
 * Fixed the `is:powerfulreward` search to recognize new powerful/pinnacle engrams.
 * When items are classified (like the new Raid gear was for a bit), any notes added to the item will show on the tile so you can keep track of them.
+* Fixed filter helper only opening the first time it is selected in the search bar
 
 ### Beta Only
 
