@@ -40,7 +40,11 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-function bountiesForActivity(bounties: VendorItem[], activity: DestinyActivityDefinition) {
+function bountiesForActivity(
+  defs: D2ManifestDefinitions,
+  bounties: VendorItem[],
+  activity: DestinyActivityDefinition
+) {
   return bounties.filter(({ item }) => {
     const info = item?.hash && pursuitsInfo[item?.hash];
     if (!info) {
@@ -50,9 +54,12 @@ function bountiesForActivity(bounties: VendorItem[], activity: DestinyActivityDe
     for (const key in info) {
       switch (key) {
         case 'Destination':
-          return info[key].includes(activity.placeHash);
+          return info[key].includes(activity.destinationHash);
         case 'ActivityMode':
-          return activity.activityModeHashes.some((modeHash) => info[key].includes(modeHash));
+          // eslint-disable-next-line no-extra-boolean-cast
+          return Boolean(activity.activityModeHashes)
+            ? activity.activityModeHashes.some((modeHash) => info[key].includes(modeHash))
+            : info[key].includes(defs.ActivityMode[activity.activityTypeHash]);
         default:
           return true; //!info['ActivityMode']; // Filter out things like 'Cast your Super' #171761468
       }
@@ -108,7 +115,7 @@ function VendorBounties({
     return null;
   }
 
-  const suggestedBounties = bountiesForActivity(bounties, activity);
+  const suggestedBounties = bountiesForActivity(defs, bounties, activity);
 
   const ownedBounties: VendorItem[] = [];
   const unownedBounties: VendorItem[] = [];
