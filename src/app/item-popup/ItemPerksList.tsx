@@ -135,11 +135,7 @@ function PerkPlug({
     return null;
   }
 
-  const perkSelected = (e) => {
-    console.log('Click??', e);
-    onPerkSelected(socketInfo, plug);
-  };
-
+  const perkSelected = () => onPerkSelected(socketInfo, plug);
   const selected = selectedPerk || (plug === socketInfo.plugged && !selectedSocket);
 
   return (
