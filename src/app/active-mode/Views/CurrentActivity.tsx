@@ -70,7 +70,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
       sectionId={'active-activity'}
       defaultCollapsed={true}
     >
-      <div className={styles.currentLocation}>{activityName}</div>
+      <div className={styles.title}>{activityName}</div>
       <div className={styles.activityItems}>
         <ActivityInformation defs={defs} store={store} activity={activity} />
         <VendorBounties

@@ -4,12 +4,29 @@
   height: 18px;
   vertical-align: bottom;
 }
-.currentLocation {
-  padding: 5px;
-  margin-bottom: 10px;
-  opacity: 0.8;
-  font-size: 1.1em;
+
+.bountyGuide {
+  display: flex;
+  grid-column: 1 / -1;
+  margin: 0;
 }
+
+.title {
+  display: flex;
+  grid-column: 1 / -1;
+  margin: 0 0 8px 0;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1.7px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .activityItems {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));

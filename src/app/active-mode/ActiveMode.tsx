@@ -54,8 +54,8 @@ export default function ActiveMode({
         {!singleCharacter && <CharacterTile store={currentStore} />}
       </div>
       <FarmingTools store={currentStore} />
-      <CurrentActivity account={account} store={currentStore} buckets={buckets} />
       {singleCharacter && <PostmasterView store={currentStore} vault={vault} buckets={buckets} />}
+      <CurrentActivity account={account} store={currentStore} buckets={buckets} />
       <PursuitsView store={currentStore} />
       <RecentItems />
     </div>
