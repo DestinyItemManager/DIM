@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ActivityInformation from 'app/active-mode/Views/current-activity/ActivityInformation';
-import { Destinations } from 'app/active-mode/Views/current-activity/util';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
 import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
@@ -42,7 +41,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
     refreshActivity({ account, store }).then(setHash);
   }, [defs, account, store]);
 
-  if (!defs || !hash || hash === Destinations.Orbit) {
+  if (!defs || !hash) {
     return null;
   }
 
@@ -63,14 +62,16 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
     <CollapsibleTitle
       title={
         <>
-          <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />{' '}
+          {activity.displayProperties.hasIcon && (
+            <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />
+          )}
           {gameType || placeName}
         </>
       }
       sectionId={'active-activity'}
       defaultCollapsed={true}
     >
-      <div className={styles.title}>{activityName}</div>
+      {activityName.length > 0 && <div className={styles.title}>{activityName}</div>}
       <div className={styles.activityItems}>
         <ActivityInformation defs={defs} store={store} activity={activity} />
         <VendorBounties

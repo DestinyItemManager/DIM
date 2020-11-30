@@ -14,23 +14,15 @@
 .title {
   display: flex;
   grid-column: 1 / -1;
-  margin: 0 0 8px 0;
-  padding: 8px 16px;
-  background-color: rgba(0, 0, 0, 0.1);
-  color: white;
+  margin-bottom: 8px;
+  padding-bottom: 1px;
+  margin-top: 8px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 1.7px;
-  font-size: 12px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  border-bottom: 0.5px solid #666;
 }
 
 .activityItems {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
-  & > div {
-    padding-bottom: 7px;
-  }
 }
