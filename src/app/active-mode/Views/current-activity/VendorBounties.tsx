@@ -61,7 +61,7 @@ function bountiesForActivity(
             ? activity.activityModeHashes.some((modeHash) => info[key].includes(modeHash))
             : info[key].includes(defs.ActivityMode[activity.activityTypeHash]);
         default:
-          return true; //!info['ActivityMode']; // Filter out things like 'Cast your Super' #171761468
+          return !info['ActivityMode']; // Filter out other activity specific bounties
       }
     }
   });
