@@ -486,11 +486,9 @@ function awaItemChanged(
   // say it deleted a stack representing the difference?
   for (const removedItemComponent of changes.removedInventoryItems) {
     // Currencies (glimmer, shards) are easy!
-    if (draft.currencies[removedItemComponent.itemHash]) {
-      draft.currencies[removedItemComponent.itemHash].quantity -= Math.max(
-        0,
-        draft.currencies[removedItemComponent.itemHash].quantity - removedItemComponent.quantity
-      );
+    const currency = draft.currencies.find((c) => c.itemHash === removedItemComponent.itemHash);
+    if (currency) {
+      currency.quantity = Math.max(0, currency.quantity - removedItemComponent.quantity);
     } else if (removedItemComponent.itemInstanceId) {
       for (const store of draft.stores) {
         const removedItemIndex = store.items.findIndex(
@@ -515,7 +513,7 @@ function awaItemChanged(
       while (removeAmount > 0) {
         const sourceItem = sourceItems.shift();
         if (!sourceItem) {
-          warnLog('move', 'Source item missing', item);
+          warnLog('move', 'Source item missing', item, removedItemComponent);
           return;
         }
 
@@ -534,14 +532,12 @@ function awaItemChanged(
   // Add items
   for (const addedItemComponent of changes.addedInventoryItems) {
     // Currencies (glimmer, shards) are easy!
-    if (draft.currencies[addedItemComponent.itemHash]) {
+    const currency = draft.currencies.find((c) => c.itemHash === addedItemComponent.itemHash);
+    if (currency) {
       const max =
         defs.InventoryItem.get(addedItemComponent.itemHash).inventory?.maxStackSize ||
         Number.MAX_SAFE_INTEGER;
-      draft.currencies[addedItemComponent.itemHash].quantity = Math.min(
-        max,
-        draft.currencies[addedItemComponent.itemHash].quantity + addedItemComponent.quantity
-      );
+      currency.quantity = Math.min(max, currency.quantity + addedItemComponent.quantity);
     } else if (addedItemComponent.itemInstanceId) {
       const addedOwner = getSource(addedItemComponent);
       const addedItem = makeItem(

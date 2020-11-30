@@ -1,10 +1,21 @@
 .container {
-  margin-bottom: 8px;
+  margin: 8px 0;
 }
 
 .title {
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
+  margin-right: 4px 0;
+}
+
+.disclaimer {
+  font-style: italic;
+  padding-top: 8px;
+}
+
+.warningIcon {
+  color: yellow;
+  margin-right: 4px;
 }
 
 .categories {

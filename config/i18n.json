@@ -526,6 +526,7 @@
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
     "Mods": "Mods",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NotificationTitle": "Loadout: {{name}}",
@@ -784,6 +785,10 @@
     "SortBySunset": "Has Been Sunset (D2)",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
+  },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
     "GrenadeCooldown": "Grenade Cooldown",

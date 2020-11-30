@@ -1,6 +1,3 @@
-import ActiveMode from 'app/active-mode/ActiveMode';
-import InventoryToggle from 'app/active-mode/InventoryModeToggle';
-import { settingsSelector } from 'app/dim-api/selectors';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
@@ -25,7 +22,6 @@ interface ProvidedProps {
 interface StoreProps {
   storesLoaded: boolean;
   isPhonePortrait: boolean;
-  activeMode: boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -34,7 +30,6 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     storesLoaded: storesLoadedSelector(state),
     isPhonePortrait: isPhonePortraitSelector(state),
-    activeMode: settingsSelector(state).activeMode,
   };
 }
 
@@ -50,7 +45,7 @@ const components = [
 ];
 */
 
-function Inventory({ storesLoaded, account, activeMode, isPhonePortrait }: Props) {
+function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
   useLoadStores(account, storesLoaded);
 
   if (!storesLoaded) {
@@ -59,12 +54,7 @@ function Inventory({ storesLoaded, account, activeMode, isPhonePortrait }: Props
 
   return (
     <ErrorBoundary name="Inventory">
-      {$featureFlags.altInventoryMode && !isPhonePortrait && <InventoryToggle mode={activeMode} />}
-      {$featureFlags.altInventoryMode && activeMode && !isPhonePortrait ? (
-        <ActiveMode account={account} />
-      ) : (
-        <Stores />
-      )}
+      <Stores account={account} />
       {$featureFlags.moveAmounts && <StackableDragHelp />}
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}

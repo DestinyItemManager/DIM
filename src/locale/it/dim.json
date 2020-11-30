@@ -23,6 +23,7 @@
     "ChangeFilter": "Cambia Filtro",
     "Farming": "Oggetti Recenti",
     "FarmingStart": "Attiva Farming",
+    "FarmingStop": "Disattiva Farming",
     "Loadouts": "Loadout",
     "NoQuests": "Non stai seguendo nessuna impresa",
     "NoSearches": "Crea ricerche salvate e filtrale qui.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
+    "IsSunset": "",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
     "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "SunsetAfter": "Mostra gli oggetti basandosi sull'ultima stagione nella quale possono raggiungere il Limite Potere Stagionale.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Mostra gli oggetti con un'etichetta specifica.",
       "Tagged": "Mostra gli oggetti che hanno una qualsiasi etichetta."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Scegli un perk",
     "ClassItem": "Oggetto di classe",
     "ClearLocked": "Pulisci Bloccati",
-    "Combat": "Combattimento",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
     "Equip": "Equipaggia su {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
     "ModLockButton": "Seleziona Modifiche",
+    "Other": "Altro",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -396,9 +399,9 @@
       "HelpFull": "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo.",
       "ProcessingMode": "Procedura"
     },
+    "Raid": "Raid",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica o descrizione",
-    "Seasonal": "Stagionale",
     "SelectMods": "Seleziona Modifiche",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Presupponi statistiche prodigiose",
     "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
-    "BadPerk": "Un perk che modifica \"leggermente\" non è la miglior opzione.",
     "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
     "SaveAs": "Salva come",
-    "SeasonNum": "Stagione {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Il perk Trazione fornisce +1 Mobilità.",
     "UnlockItem": "Sblocca oggetto"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Massimizza Potere",
     "MaximizeStat": "Massimizza Statistica",
     "Mods": "Modifiche",
+    "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
     "EquipWithName": "Equipaggia su {{character}}",
-    "Expand": "Espandi dettagli oggetto",
     "Infuse": "Infondi",
     "ItemDetailSheet": "Apri dettagli oggetto",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
     "LegacyRecord": "Questo Trionfo non sarà più completabile dopo l'uscita di Oltre la Luce.",
-    "LegacyTriumphs": "Trionfi Storici",
     "Milestones": "Pietre miliari & Sfide",
     "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi usare lo strumento di confronto per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
+    "ExpandSingleCharacter": "Mostra tutti i personaggi",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
     "ExportSSNoStores": "Devi caricare il tuo inventario una volta prima di cliccare questo pulsante.",
@@ -748,6 +748,8 @@
     "SetSort": "Ordina gli oggetti per:",
     "Settings": "Impostazioni",
     "ShowNewItems": "Indica i nuovi oggetti con un puntino rosso",
+    "SingleCharacter": "Mostra solo il personaggio attuale",
+    "SingleCharacterExplanation": "DIM mostrerà solo il personaggio giocato più di recente. Gli inventari degli altri personaggi verranno mostrati come se fossero parte del Deposito.",
     "SizeItem": "Dimensione oggetti",
     "SortByAmount": "Dimensione dello stack",
     "SortByClassType": "Classe Richiesta",
@@ -755,6 +757,7 @@
     "SortByRarity": "Rarità",
     "SortByRating": "Qualità dell'armatura (D1)",
     "SortBySeason": "Stagione (D2)",
+    "SortBySunset": "Limite di Potere massimo raggiungibile (D2)",
     "SortByTag": "Etichetta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
@@ -861,7 +864,6 @@
     "Vote": "Vedi un mercante che sta vendendo oggetti vicino al tuo Livello Potere? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità!"
   },
   "Vendors": {
-    "Catalysts": "Catalizzatori",
     "Collections": "Collezioni",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",

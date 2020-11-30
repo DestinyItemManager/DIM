@@ -1,42 +1,23 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import Mod from 'app/loadout-builder/generated-sets/Mod';
-import {
-  armor2PlugCategoryHashes,
-  armor2PlugCategoryHashesByName,
-} from 'app/search/d2-known-values';
+import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import styles from './SavedMods.m.scss';
 
+function modHeaderCleaner(name: string) {
+  return name.replaceAll(/(mod|armor|raid)/gi, '').trim();
+}
+
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   modHashes?: number[];
 }
-
-const modCategoryOrder = [
-  armor2PlugCategoryHashesByName.general,
-  armor2PlugCategoryHashesByName.helmet,
-  armor2PlugCategoryHashesByName.gauntlets,
-  armor2PlugCategoryHashesByName.chest,
-  armor2PlugCategoryHashesByName.leg,
-  armor2PlugCategoryHashesByName.classitem,
-  'combat',
-] as const;
-
-const modCategoryTranslations = {
-  [armor2PlugCategoryHashesByName.general]: tl('LB.General'),
-  [armor2PlugCategoryHashesByName.helmet]: tl('LB.Helmet'),
-  [armor2PlugCategoryHashesByName.gauntlets]: tl('LB.Gauntlets'),
-  [armor2PlugCategoryHashesByName.chest]: tl('LB.Chest'),
-  [armor2PlugCategoryHashesByName.leg]: tl('LB.Legs'),
-  [armor2PlugCategoryHashesByName.classitem]: tl('LB.ClassItem'),
-  combat: tl('LB.Combat'),
-};
 
 const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((def) => def.plug.energyCost?.energyType),
@@ -64,31 +45,26 @@ function SavedMods({ defs, modHashes }: Props) {
 
     mods.sort(sortMods);
 
-    return _.groupBy(mods, (mod) => {
-      if (armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-        return mod.plug.plugCategoryHash;
-      } else {
-        // TODO This is a placeholder for now until we know how to differentiate
-        // between the new mod categories in beyond light
-        return 'combat';
-      }
-    });
+    return _.groupBy(mods, (def) => def.itemTypeDisplayName);
   }, [modHashes, defs]);
 
-  if (!defs.isDestiny2() || !groupedMods.length) {
+  if (!defs.isDestiny2() || !modHashes?.length) {
     return null;
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>{t('Loadouts.Mods')}</div>
+      <div>
+        <div className={styles.title}>{t('Loadouts.Mods')}</div>
+      </div>
       <div className={styles.categories}>
-        {modCategoryOrder.map(
-          (key) =>
-            groupedMods[key] && (
+        {Object.entries(groupedMods).map(
+          ([key, group]) =>
+            group && (
               <div key={key} className={styles.category}>
-                <div className={styles.categoryName}>{t(modCategoryTranslations[key])}</div>
+                <div className={styles.categoryName}>{modHeaderCleaner(key)}</div>
                 <div className={styles.mods}>
+                  {/* Unfortunately we need to use index here as we may have duplicate mods */}
                   {groupedMods[key].map((def, index) => (
                     <Mod key={index} defs={defs} plugDef={def} />
                   ))}
@@ -96,6 +72,10 @@ function SavedMods({ defs, modHashes }: Props) {
               </div>
             )
         )}
+      </div>
+      <div className={styles.disclaimer}>
+        <AppIcon className={styles.warningIcon} icon={faExclamationTriangle} />
+        {t('Loadouts.ModsInfo')}
       </div>
     </div>
   );

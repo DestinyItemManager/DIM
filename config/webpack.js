@@ -394,7 +394,7 @@ module.exports = (env) => {
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Incorporate mods directly into loadouts
-        '$featureFlags.loadoutMods': JSON.stringify(env.dev),
+        '$featureFlags.loadoutMods': JSON.stringify(!env.release),
         // Show bounty guide
         '$featureFlags.bountyGuide': JSON.stringify(!env.release),
       }),

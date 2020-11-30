@@ -23,6 +23,7 @@
     "ChangeFilter": "フィルターを変更",
     "Farming": "最近のアイテム",
     "FarmingStart": "ファーミングを開始する",
+    "FarmingStop": "ファーミングを停止する",
     "Loadouts": "ロードアウト",
     "NoQuests": "クエストを追跡していません",
     "NoSearches": "保存された検索結果を作成し、フィルタリングする。",
@@ -171,6 +172,7 @@
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
     "InLoadout": "装備品に含まれるアイテムを表示",
     "Infusable": "融合可能なアイテムを表示",
+    "IsSunset": "",
     "ItemHash": "与えられた保管庫アイテムハッシュを持つアイテムを表示。上級ユーザー向け。",
     "ItemId": "与えられた保管庫アイテム ID を持つアイテムを表示。上級ユーザー向け。",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
     "SunsetAfter": "最終シーズンにシーズンパワー上限に到達する事ができるアイテムを表示します。",
+    "Sunsets": "",
     "Tags": {
       "Tag": "特定のタグがあるアイテムを表示。",
       "Tagged": "タグのあるアイテムを表示。"
@@ -345,7 +348,6 @@
     "ChooseAPerk": "パークを選択してください",
     "ClassItem": "クラスアイテム",
     "ClearLocked": "ロックを解除",
-    "Combat": "戦闘",
     "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
     "Current": "現在",
     "Equip": "{{character}}に装備する",
@@ -389,6 +391,7 @@
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
     "ModLockButton": "Modを選んでください",
+    "Other": "その他",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -396,9 +399,9 @@
       "HelpFull": "装備が多く見つかりますが、時間がかかります。",
       "ProcessingMode": "処理モード"
     },
+    "Raid": "レイド",
     "Scaled": "縮尺",
     "SearchAMod": "改造パーツ名や説明で検索する",
-    "Seasonal": "シーズン",
     "SelectMods": "Modを選んでください",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "マスターワーク済みと仮定する",
     "AssumeMasterworkDetailed": "すべてのアイテムがマスターワークされていると仮定してセットを生成します。",
-    "BadPerk": "「わずかに」変更するパークは最良の選択肢ではありません。",
     "ChooseAlternate": "同じ統計を持つ別のアイテムを選択してください:",
     "ChooseAlternateTitle": "別のアイテムを選択してください。",
     "CompareLoadout": "ロードアウトを比較",
@@ -449,7 +451,6 @@
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ピン留めされたアイテムをリセットする",
     "SaveAs": "名前をつけて保存",
-    "SeasonNum": "シーズン {{season}}",
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "SelectMinStatTotal": "最小アーマースタット合計",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "含む",
     "TheseModsCouldNotBeAssigned": "これらの mod は、既存のロードアウトに割り当てることができませんでした。",
     "TierNumber": "T{{tier}}",
-    "Traction": "トラクションパークは、+ 1可動性を提供します。",
     "UnlockItem": "アイテムのピン留めを解除"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "パワーを最大化する",
     "MaximizeStat": "統計を最大化する",
     "Mods": "Mod",
+    "ModsInfo": "DIMはMODを装備できません。ゲーム内で行う必要があります。",
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
     "NoExotics": "エングラムは転送できません。",
     "NotificationMessage": "1つのアイテムを含むロードアウトを保管庫に送信します。",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "EquipWithName": "{{character}} に装備させる",
-    "Expand": "アイテムの詳細を表示",
     "Infuse": "融合",
     "ItemDetailSheet": "アイテムの詳細を表示",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "ランク",
     "Items": "クエストアイテム",
     "LegacyRecord": "この勝利の道のりは、光の超越がリリースされた後には利用できなくなります。",
-    "LegacyTriumphs": "継承された勝利の道のり",
     "Milestones": "マイルストーンと挑戦",
     "NoTrackedTriumph": "追跡中の勝利の道のりはありませんでした。ゲーム内で1つを追跡するか、DIMで好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "50pxのアイテムサイズは、アイテムの画像やテキストをぼかすことなく、最もシャープに見えます。",
     "DontForgetDupes": "重複アイテムをすばやく検索するには、 「is:dupe」で検索し、比較ツールを使用して関連アイテムを評価することができます。",
     "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
+    "ExpandSingleCharacter": "全てのキャラクターを表示",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "ExportSSNoStores": "このボタンをクリックする前に、所持品を一度ロードする必要があります。",
@@ -748,6 +748,8 @@
     "SetSort": "アイテムを並べ替える：",
     "Settings": "設定",
     "ShowNewItems": "新しいアイテムを赤い点で示します",
+    "SingleCharacter": "現在のキャラクターのみを表示",
+    "SingleCharacterExplanation": "DIM は、最新のプレイしたキャラクターを除いて、すべてのキャラクターを非表示にします。これらのキャラクターのインベントリは、あたかも保管庫の中にあるかのように表示されます。",
     "SizeItem": "アイテムサイズ",
     "SortByAmount": "スタックサイズ",
     "SortByClassType": "必須クラス",
@@ -755,6 +757,7 @@
     "SortByRarity": "希少性",
     "SortByRating": "防具の品質 (D1)",
     "SortBySeason": "シーズン (D2)",
+    "SortBySunset": "リタイヤ済み (D2)",
     "SortByTag": "タグ ({{taglist}})",
     "SortByType": "種類",
     "SortCustom": "カスタムソート",
@@ -861,7 +864,6 @@
     "Vote": "あなたの光のレベルに近いアイテムを売っているベンダーを見ますか？ VendorEngrams.xyzにアクセスして投票し、コミュニティに知らせてください！"
   },
   "Vendors": {
-    "Catalysts": "触媒",
     "Collections": "コレクション",
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未読アイテムのみ表示する",

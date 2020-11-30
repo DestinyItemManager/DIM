@@ -23,6 +23,7 @@
     "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
+    "FarmingStop": "Stop Farming",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
     "NoSearches": "Create saved searches and filter them here.",
@@ -347,7 +348,6 @@
     "ChooseAPerk": "Choose a perk",
     "ClassItem": "Class Item",
     "ClearLocked": "Clear Locked",
-    "Combat": "Combat",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
     "Equip": "Equip on {{character}}",
@@ -508,6 +508,7 @@
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
     "Mods": "Mods",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
@@ -761,6 +762,10 @@
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name"
+  },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

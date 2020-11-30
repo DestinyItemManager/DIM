@@ -23,6 +23,7 @@
     "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
+    "FarmingStop": "Stop Farming",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
     "NoSearches": "Create saved searches and filter them here.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
+    "IsSunset": "",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Choose a perk",
     "ClassItem": "Class Item",
     "ClearLocked": "清除鎖定",
-    "Combat": "Combat",
     "ContainsVendorItems": "該配裝包含商販物品.",
     "Current": "當前",
     "Equip": "裝備在{{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "拖放物品到選擇框中用以創建一個套裝組.使用Shift +按一下可移除物品.",
     "Missing2": "缺少稀有,傳奇,或異域物品用來打造套裝!",
     "ModLockButton": "Select mods",
+    "Other": "Other",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -396,9 +399,9 @@
       "HelpFull": "查看更多裝備，但是需要更長時間。",
       "ProcessingMode": "處理模式"
     },
+    "Raid": "Raid",
     "Scaled": "縮放",
     "SearchAMod": "Search a mod or description",
-    "Seasonal": "賽季",
     "SelectMods": "Select Mods",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "假設所有物品是大師之作, 生成套裝",
-    "BadPerk": "“輕微”改變的特性不是最好的選擇",
     "ChooseAlternate": "選擇另一個擁有相同狀態的物品：",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "Compare Loadout",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
-    "SeasonNum": "Season {{season}}",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "SelectMinStatTotal": "Minimum Armor Stat Total",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Traction-特性提供+1移動性",
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "最高光等配裝",
     "MaximizeStat": "最高屬性",
     "Mods": "Mods",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
     "NoExotics": "沒有記憶水晶可以轉移.",
     "NotificationMessage": "正在將包含1件物品的配裝轉移到保險櫃",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "EquipWithName": "Equip to {{character}}",
-    "Expand": "展開項目詳細信息",
     "Infuse": "灌注",
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "排名",
     "Items": "任務物品",
     "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
-    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "里程碑和挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "重置百分比{{pct}}%",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "50 px 的物品大小看起來最清晰, 而不會模糊物品圖片或文本。",
     "DontForgetDupes": "您可以在搜尋框使用 is:dupe 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
+    "ExpandSingleCharacter": "Show all characters",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
     "ExportSSNoStores": "請在刷新一次庫存後點擊此按鈕",
@@ -748,6 +748,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "設置",
     "ShowNewItems": "用紅點指示新物品",
+    "SingleCharacter": "Only show current character",
+    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "物品顯示大小",
     "SortByAmount": "堆疊大小",
     "SortByClassType": "必要的類",
@@ -755,6 +757,7 @@
     "SortByRarity": "稀有度",
     "SortByRating": "Armor Quality (D1)",
     "SortBySeason": "Season (D2)",
+    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
@@ -861,7 +864,6 @@
     "Vote": "看到商販銷售平光裝備？去VendorEngrams.xyz 投票讓其他玩家知道這件事吧!"
   },
   "Vendors": {
-    "Catalysts": "催化劑",
     "Collections": "收藏品",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
