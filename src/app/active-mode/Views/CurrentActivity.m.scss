@@ -6,9 +6,13 @@
 }
 
 .bountyGuide {
-  display: flex;
   grid-column: 1 / -1;
   margin: 0;
+
+  :global(.progress-for-character) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  }
 }
 
 .title {

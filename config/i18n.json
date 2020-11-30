@@ -994,6 +994,7 @@
     "FarmingStart": "Start Farming",
     "FarmingStop": "Stop Farming",
     "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here."
+    "NoSearches": "Create saved searches and filter them here.",
+    "SuggestedBounties": "Suggested Bounties"
   }
 }

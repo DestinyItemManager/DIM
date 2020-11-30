@@ -1,11 +1,11 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
 import { ownedItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import BountyGuide, { BountyFilter } from 'app/progress/BountyGuide';
+import { PursuitsGroup } from 'app/progress/Pursuits';
 import { RootState } from 'app/store/types';
 import { toVendor } from 'app/vendors/d2-vendors';
 import { VendorsState } from 'app/vendors/reducer';
@@ -14,7 +14,7 @@ import VendorItemComponent from 'app/vendors/VendorItemComponent';
 import { DestinyActivityDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 interface ProvidedProps {
@@ -77,8 +77,6 @@ function VendorBounties({
   ownedItemHashes,
   account,
 }: Props) {
-  const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
-
   if (!vendors) {
     return null;
   }
@@ -117,46 +115,29 @@ function VendorBounties({
 
   const suggestedBounties = bountiesForActivity(defs, bounties, activity);
 
-  const ownedBounties: VendorItem[] = [];
+  const ownedBountyHashes: number[] = [];
   const unownedBounties: VendorItem[] = [];
   suggestedBounties.forEach((vendorItem) => {
-    vendorItem.item &&
-      (ownedItemHashes.has(vendorItem.item.hash) ? ownedBounties : unownedBounties).push(
-        vendorItem
-      );
+    if (!vendorItem.item) {
+      return;
+    }
+    if (ownedItemHashes.has(vendorItem.item.hash)) {
+      ownedBountyHashes.push(vendorItem.item.hash);
+    } else {
+      unownedBounties.push(vendorItem);
+    }
   });
 
-  const ownedBountyGuide = ownedBounties
-    .map(({ item }) => item ?? undefined)
-    .filter((bounties): bounties is DimItem => bounties !== undefined);
+  const ownedPursuits = store.items.filter(({ hash }) => ownedBountyHashes.includes(hash));
 
   return (
     <>
-      {$featureFlags.bountyGuide && (
-        <div className={styles.bountyGuide}>
-          <BountyGuide
-            defs={defs}
-            store={store}
-            bounties={ownedBountyGuide}
-            selectedFilters={bountyFilters}
-            onSelectedFiltersChanged={setBountyFilters}
-            actionsOnly={true}
-          />
-        </div>
+      <div className={styles.bountyGuide}>
+        <PursuitsGroup defs={defs} store={store} pursuits={ownedPursuits} hideDescriptions />
+      </div>
+      {unownedBounties.length > 0 && (
+        <div className={styles.title}>{t('ActiveMode.SuggestedBounties')}</div>
       )}
-      {ownedBounties?.map(
-        (item: VendorItem) =>
-          item.item && (
-            <VendorItemComponent
-              key={item.key}
-              defs={defs}
-              item={item}
-              owned={false}
-              characterId={store.id}
-            />
-          )
-      )}
-      {unownedBounties.length > 0 && <div className={styles.title}>Suggested Bounties</div>}
       {unownedBounties.map(
         (item: VendorItem) =>
           item.item && (

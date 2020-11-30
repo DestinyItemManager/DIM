@@ -77,10 +77,12 @@ export function PursuitsGroup({
   store,
   defs,
   pursuits,
+  hideDescriptions,
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;
   pursuits: DimItem[];
+  hideDescriptions?: boolean;
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
 
@@ -102,6 +104,7 @@ export function PursuitsGroup({
             key={item.index}
             defs={defs}
             searchHidden={!matchBountyFilters(item, bountyFilters)}
+            hideDescription={hideDescriptions}
           />
         ))}
       </div>
