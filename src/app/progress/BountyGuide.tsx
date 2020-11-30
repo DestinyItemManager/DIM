@@ -155,7 +155,7 @@ export default function BountyGuide({
   return (
     <div className={styles.guide} onClick={clearSelection}>
       {flattened.map(({ type, value, bounties }) =>
-        actionsOnly && ['ActivityMode', 'Destination'].includes(type) ? null : (
+        actionsOnly && !['ActivityMode', 'Destination'].includes(type) && (
           <div
             key={type + value}
             className={clsx(styles.pill, {
