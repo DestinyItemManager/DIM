@@ -502,7 +502,7 @@ module.exports = (env) => {
           commit:
             process.env.TRAVIS_PULL_REQUEST_SHA ||
             process.env.TRAVIS_COMMIT ||
-            process.env.COMMIT_SHA,
+            process.env.GITHUB_SHA,
         });
       }
 
