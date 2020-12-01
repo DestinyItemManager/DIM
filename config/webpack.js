@@ -492,17 +492,29 @@ module.exports = (env) => {
         fail_build: true,
       };
 
-      if (process.env.TRAVIS === 'true' || process.env.CI === 'true') {
-        Object.assign(packOptions, {
-          branch:
-            process.env.TRAVIS_PULL_REQUEST_BRANCH ||
-            process.env.TRAVIS_BRANCH ||
-            process.env.BRANCH_NAME
-          commit:
-            process.env.TRAVIS_PULL_REQUEST_SHA ||
-            process.env.TRAVIS_COMMIT ||
-            process.env.GITHUB_SHA,
-        });
+      if (process.env.CI === 'true') {
+        // Fill in a
+        const event = require(process.env.GITHUB_EVENT_PATH);
+        if(event) {
+          // This is how the packtracker action pulls out detais so lets run this for now.
+          Object.assign(packOptions, {
+            branch: event.ref.replace('refs/heads/', ''),
+            author: event.head_commit.author.email,
+            message: event.head_commit.message,
+            commit: process.env.GITHUB_SHA,
+            committed_at: parseInt(+new Date(event.head_commit.timestamp) / 1000),
+            prior_commit: event.before,
+          });
+        } else {
+          Object.assign(packOptions, {
+            branch:
+              process.env.TRAVIS_PULL_REQUEST_BRANCH ||
+              process.env.TRAVIS_BRANCH
+            commit:
+              process.env.TRAVIS_PULL_REQUEST_SHA ||
+              process.env.TRAVIS_COMMIT
+          });
+        }
       }
 
       config.plugins.push(new PacktrackerPlugin(packOptions));
