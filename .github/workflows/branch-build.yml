@@ -43,20 +43,13 @@ jobs:
       run: yarn test
     - name: Lint
       run: yarn run lint-check
-    - if: github.event_name == 'pull_request'
-      name: Set branch env var
-      run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
     - if: github.event_name == 'push'
       name: Set branch env var
-      run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-    - if: github.event_name == 'pull_request'
-      name: Set branch env var
-      run: echo "BRANCH_NAME=${PR_BRANCH}" >> $GITHUB_ENV
-    - name: Set commit env var
-      run: echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+      run: echo "PUSH_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     - name: Build
       run: yarn run build-beta
       env:
         PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
         PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        COMMIT_SHA: ${{ github.sha }}
 

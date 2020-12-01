@@ -497,7 +497,8 @@ module.exports = (env) => {
           branch:
             process.env.TRAVIS_PULL_REQUEST_BRANCH ||
             process.env.TRAVIS_BRANCH ||
-            process.env.BRANCH_NAME,
+            process.env.PR_BRANCH ||
+            process.env.PUSH_BRANCH,
           commit:
             process.env.TRAVIS_PULL_REQUEST_SHA ||
             process.env.TRAVIS_COMMIT ||
