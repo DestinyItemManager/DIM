@@ -20,7 +20,23 @@ jobs:
         name: dim.rsa # optional
         known_hosts: ${{ secrets.REMOTE_HOST }}
     - uses: actions/checkout@v2
-    - uses: c-hive/gha-yarn-cache@v1
+    - name: Cache .yarn
+      uses: c-hive/gha-yarn-cache@v1
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache_node_modules
+      with:
+        path: $GITHUB_WORKSPACE/node_modules
+        key: node_modules-${{ hashFiles('**/yarn.lock')}}
+        restore-keys: |
+          mode_modules-
+    - name: Cache .cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache_~/.cache
+      with:
+        path: $HOME/.cache/
     - name: Install
       run: yarn install --frozen-lockfile
     - name: Test
