@@ -492,7 +492,7 @@ module.exports = (env) => {
         fail_build: true,
       };
 
-      if (process.env.TRAVIS === 'true' || process.env.CI === 'true') {
+      if (process.env.CI === 'true') {
         Object.assign(packOptions, {
           branch:
             process.env.TRAVIS_PULL_REQUEST_BRANCH ||
@@ -501,7 +501,7 @@ module.exports = (env) => {
           commit:
             process.env.TRAVIS_PULL_REQUEST_SHA ||
             process.env.TRAVIS_COMMIT ||
-            process.env.COMMIT_SHA,
+            process.env.GITHUB_SHA,
         });
       }
 
