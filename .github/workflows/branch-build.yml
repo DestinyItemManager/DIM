@@ -1,4 +1,4 @@
-name: build braches
+name: branch build
 
 on: [push, pull_request]
 
@@ -21,6 +21,7 @@ jobs:
         path: $GITHUB_WORKSPACE/node_modules
         key: node_modules-${{ hashFiles('**/yarn.lock')}}
         restore-keys: |
+          node_modules-${{ hashFiles('**/yarn.lock')}}
           node_modules-
     - name: Cache .cache
       uses: actions/cache@v2
@@ -30,6 +31,7 @@ jobs:
         path: $HOME/.cache/
         key: home-cache-${{ hashFiles('**/yarn.lock')}}
         restore-keys: |
+          home-cache-${{ hashFiles('**/yarn.lock')}}
           home-cache-
     - name: Install
       run: yarn install --frozen-lockfile --prefer-offline
