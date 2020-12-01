@@ -43,6 +43,15 @@ jobs:
       run: yarn test
     - name: Lint
       run: yarn run lint-check
+    - name: Set branch env var
+      run: |
+        $branchName=${GITHUB_REF##*/}
+        echo "Branch is $branchName"
+        echo "BRANCH=${branchName}" >> $GITHUB_ENV
+    - name: Set commit env var
+      run: echo "COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
     - name: Build
       run: yarn run build-beta
+      env:
+        PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
 
