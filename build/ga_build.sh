@@ -2,8 +2,6 @@
 
 set -o pipefail
 
-find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \; && echo Set mtime to MD5 complete!
-
 # Master builds release to Beta
 yarn run publish-beta
 VERSION=$(node -p -e "require('./package.json').version + '.' + process.env.GITHUB_RUN_NUMBER")

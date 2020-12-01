@@ -44,8 +44,9 @@ module.exports = (env) => {
   });
 
   let version = packageJson.version.toString();
-  if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
-    version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
+  const buildNumber = process.env.TRAVIS_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER;
+  if (env.beta && buildNumber) {
+    version += `.${buildNumber}`;
   }
 
   const buildTime = Date.now();
@@ -492,10 +493,16 @@ module.exports = (env) => {
         fail_build: true,
       };
 
-      if (process.env.TRAVIS === 'true') {
+      if (process.env.CI === 'true') {
         Object.assign(packOptions, {
-          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
-          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
+          branch:
+            process.env.TRAVIS_PULL_REQUEST_BRANCH ||
+            process.env.TRAVIS_BRANCH ||
+            process.env.BRANCH_NAME,
+          commit:
+            process.env.TRAVIS_PULL_REQUEST_SHA ||
+            process.env.TRAVIS_COMMIT ||
+            process.env.GITHUB_SHA,
         });
       }
 
