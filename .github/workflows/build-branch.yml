@@ -21,13 +21,16 @@ jobs:
         path: $GITHUB_WORKSPACE/node_modules
         key: node_modules-${{ hashFiles('**/yarn.lock')}}
         restore-keys: |
-          mode_modules-
+          node_modules-
     - name: Cache .cache
       uses: actions/cache@v2
       env:
         cache-name: cache_home_cache
       with:
         path: $HOME/.cache/
+        key: home-cache-${{ hashFiles('**/yarn.lock')}}
+        restore-keys: |
+          home-cache-
     - name: Install
       run: yarn install --frozen-lockfile --prefer-offline
     - name: Test
