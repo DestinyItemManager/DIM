@@ -37,7 +37,7 @@ const killTypeIcons: { [key in KillType]: string | undefined } = {
   [KillType.ClassAbilities]: undefined,
 } as const;
 
-type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
+export type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
 
 export type BountyFilter = {
   type: DefType;

@@ -62,6 +62,10 @@
     display: block;
   }
 
+  :global(.sub-bucket) {
+    padding-left: 0;
+  }
+
   :global(.title) {
     background-color: transparent;
     padding: 0 8px;

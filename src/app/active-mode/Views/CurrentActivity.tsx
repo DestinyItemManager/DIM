@@ -9,6 +9,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { RootState } from 'app/store/types';
+import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
@@ -32,39 +33,42 @@ type Props = ProvidedProps & StoreProps;
 
 async function refreshActivity({ account, store }: { account: DestinyAccount; store: DimStore }) {
   const profileInfo = await getCurrentActivity(account);
-  return profileInfo.characterActivities.data?.[store.id].currentActivityHash;
+  return profileInfo.characterActivities.data?.[store.id]; //
 }
 
 function CurrentActivity({ account, store, defs, buckets }: Props) {
-  const [hash, setHash] = useState<number | undefined>();
+  const [activityInfo, setActivityInfo] = useState<
+    DestinyCharacterActivitiesComponent | undefined
+  >();
   useEffect(() => {
-    refreshActivity({ account, store }).then(setHash);
+    refreshActivity({ account, store }).then(setActivityInfo);
   }, [defs, account, store]);
 
-  if (!defs || !hash) {
+  if (!defs || !activityInfo) {
     return null;
   }
 
-  const activity = defs.Activity.get(hash);
-
-  if (!activity) {
-    return null;
-  }
-
+  const activity = defs.Activity.get(activityInfo.currentActivityHash);
+  const activityMode = defs.ActivityMode[activityInfo.currentActivityModeHash];
   const place = defs.Place.get(activity.placeHash);
+
   const placeName = place.displayProperties.name; // "Earth" "The Crucible"
   const activityName = activity.displayProperties.name; // "Adventure activity quest name" "Rusted Lands"
-  const activityType = defs.ActivityMode[activity.activityTypeHash];
-  const gameType = activityType?.displayProperties.name; // "Explore" (nothing for crucible)
-  // Consider showing rewards for current activity?
+  const gameType = activityMode?.displayProperties.name; // "Explore" "Mayhem"
 
   return (
     <CollapsibleTitle
       title={
         <>
-          {activity.displayProperties.hasIcon && (
-            <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />
-          )}
+          {(activityMode?.displayProperties.hasIcon && (
+            <BungieImage
+              className={styles.activityIcon}
+              src={activityMode.displayProperties.icon}
+            />
+          )) ||
+            (activity.displayProperties.hasIcon && (
+              <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />
+            ))}
           {gameType || placeName}
         </>
       }
@@ -73,11 +77,11 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
     >
       {activityName.length > 0 && <div className={styles.title}>{activityName}</div>}
       <div className={styles.activityItems}>
-        <ActivityInformation defs={defs} store={store} activity={activity} />
+        <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
         <VendorBounties
           account={account}
           store={store}
-          activity={activity}
+          activityInfo={activityInfo}
           buckets={buckets}
           defs={defs}
         />

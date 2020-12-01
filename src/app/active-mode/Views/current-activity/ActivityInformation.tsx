@@ -5,8 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { RaidActivity } from 'app/progress/RaidDisplay';
 import { RootState } from 'app/store/types';
 import {
-  DestinyActivityDefinition,
-  DestinyActivityModeType,
+  DestinyCharacterActivitiesComponent,
   DestinyMilestone,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
@@ -16,7 +15,7 @@ import { connect } from 'react-redux';
 interface ProvidedProps {
   defs: D2ManifestDefinitions;
   store: DimStore;
-  activity: DestinyActivityDefinition;
+  activityInfo: DestinyCharacterActivitiesComponent;
 }
 
 interface StoreProps {
@@ -32,13 +31,8 @@ function mapStateToProps(state: RootState): StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 /** Find unclaimed vendor bounties based on your current activity */
-function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
-  if (
-    !activity?.activityModeTypes?.length ||
-    activity?.activityModeTypes?.includes(DestinyActivityModeType.Social)
-  ) {
-    return null;
-  }
+function ActivityInformation({ defs, store, activityInfo, profileInfo }: Props) {
+  const activity = defs.Activity.get(activityInfo.currentActivityHash);
 
   const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
@@ -53,15 +47,11 @@ function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
     );
   });
 
-  if (!raid) {
-    return null;
-  }
-
-  const activities = raid.activities.filter((activity) => activity.phases);
+  const activities = raid?.activities.filter((activity) => activity.phases);
 
   return (
     <>
-      {raid && (
+      {activities && (
         <div className={styles.activityRaid}>
           {activities.map((raidActivity) => (
             <RaidActivity

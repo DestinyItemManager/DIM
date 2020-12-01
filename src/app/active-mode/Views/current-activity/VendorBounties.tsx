@@ -11,7 +11,7 @@ import { toVendor } from 'app/vendors/d2-vendors';
 import { VendorsState } from 'app/vendors/reducer';
 import { VendorItem } from 'app/vendors/vendor-item';
 import VendorItemComponent from 'app/vendors/VendorItemComponent';
-import { DestinyActivityDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
 import React from 'react';
@@ -22,7 +22,7 @@ interface ProvidedProps {
   account: DestinyAccount;
   store: DimStore;
   buckets: InventoryBuckets;
-  activity: DestinyActivityDefinition;
+  activityInfo: DestinyCharacterActivitiesComponent;
 }
 
 interface StoreProps {
@@ -43,27 +43,30 @@ function mapStateToProps(state: RootState): StoreProps {
 function bountiesForActivity(
   defs: D2ManifestDefinitions,
   bounties: VendorItem[],
-  activity: DestinyActivityDefinition
+  activityInfo: DestinyCharacterActivitiesComponent
 ) {
+  const activity = defs.Activity.get(activityInfo.currentActivityHash);
+  const activityMode = defs.ActivityMode[activityInfo.currentActivityModeHash];
+
   return bounties.filter(({ item }) => {
     const info = item?.hash && pursuitsInfo[item?.hash];
+
     if (!info) {
+      // Until the pursuits.json matches all bounties, we need to return falsy
       return false;
     }
 
-    for (const key in info) {
-      switch (key) {
-        case 'Destination':
-          return info[key].includes(activity.destinationHash);
-        case 'ActivityMode':
-          // eslint-disable-next-line no-extra-boolean-cast
-          return Boolean(activity.activityModeHashes)
-            ? activity.activityModeHashes.some((modeHash) => info[key].includes(modeHash))
-            : info[key].includes(defs.ActivityMode[activity.activityTypeHash]);
-        default:
-          return !info['ActivityMode']; // Filter out other activity specific bounties
-      }
+    if (!info?.ActivityMode && !info?.Destination) {
+      // Show all bounties that can be completed anywhere
+      return true;
     }
+
+    const matchingDestination = info.Destination?.includes(activity.destinationHash);
+    const matchingActivity =
+      (!info.Destination && info.ActivityMode?.includes(activityMode?.hash)) ||
+      activityMode?.parentHashes.some((hash) => info.ActivityMode?.includes(hash));
+
+    return matchingDestination || matchingActivity;
   });
 }
 
@@ -72,7 +75,7 @@ function VendorBounties({
   defs,
   vendors,
   store,
-  activity,
+  activityInfo,
   buckets,
   ownedItemHashes,
   account,
@@ -113,7 +116,7 @@ function VendorBounties({
     return null;
   }
 
-  const suggestedBounties = bountiesForActivity(defs, bounties, activity);
+  const suggestedBounties = bountiesForActivity(defs, bounties, activityInfo);
 
   const ownedBountyHashes: number[] = [];
   const unownedBounties: VendorItem[] = [];
@@ -128,12 +131,20 @@ function VendorBounties({
     }
   });
 
-  const ownedPursuits = store.items.filter(({ hash }) => ownedBountyHashes.includes(hash));
+  const ownedIncompletePursuits = store.items
+    .filter(({ hash }) => ownedBountyHashes.includes(hash))
+    .filter(({ complete }) => !complete);
 
   return (
     <>
       <div className={styles.bountyGuide}>
-        <PursuitsGroup defs={defs} store={store} pursuits={ownedPursuits} hideDescriptions />
+        <PursuitsGroup
+          defs={defs}
+          store={store}
+          pursuits={ownedIncompletePursuits}
+          skipTypes={['ActivityMode', 'Destination']}
+          hideDescriptions
+        />
       </div>
       {unownedBounties.length > 0 && (
         <div className={styles.title}>{t('ActiveMode.SuggestedBounties')}</div>
