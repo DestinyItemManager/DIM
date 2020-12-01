@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         host: process.env.REMOTE_HOST,
         recursive: true,
         ssh: true,
-        privateKey: 'config/dim_travis.rsa',
+        privateKey: '~/.ssh/dim.rsa',
         sshCmdArgs: ["-o StrictHostKeyChecking=no"]
       },
       // Sync everything but the HTML first, so it's ready to go

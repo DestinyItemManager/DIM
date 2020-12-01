@@ -1,0 +1,32 @@
+name: deploy-beta
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        name: dim.rsa # optional
+        known_hosts: ${{ secrets.REMOTE_HOST }}
+    - uses: actions/checkout@v2
+    - uses: c-hive/gha-yarn-cache@v1
+    - name: Install
+      run: yarn install --frozen-lockfile
+    - name: Test
+      run: yarn test
+    - name: Lint
+      run: yarn run lint-check
+    - name: Build and deploy
+      run: ./build/ga_build.sh
+
