@@ -8,10 +8,12 @@ import { DimStore } from 'app/inventory/store-types';
 import { PursuitsGroup } from 'app/progress/Pursuits';
 import { RootState } from 'app/store/types';
 import { toVendor } from 'app/vendors/d2-vendors';
-import { VendorsState } from 'app/vendors/reducer';
 import { VendorItem } from 'app/vendors/vendor-item';
 import VendorItemComponent from 'app/vendors/VendorItemComponent';
-import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
+import {
+  DestinyCharacterActivitiesComponent,
+  DestinyVendorsResponse,
+} from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
 import React, { useEffect, useState } from 'react';
@@ -27,16 +29,16 @@ interface ProvidedProps {
 
 interface StoreProps {
   ownedItemHashes: Set<number>;
-  vendors: VendorsState['vendorsByCharacter'];
+  vendorsResponse?: DestinyVendorsResponse;
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function mapStateToProps(state: RootState): StoreProps {
+function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const ownedItemSelectorInstance = ownedItemsSelector();
   return {
     ownedItemHashes: ownedItemSelectorInstance(state),
-    vendors: state.vendors.vendorsByCharacter,
+    vendorsResponse: state.vendors.vendorsByCharacter[props.store.id]?.vendorsResponse,
   };
 }
 
@@ -73,7 +75,7 @@ function bountiesForActivity(
 /** Find relevant vendor bounties based on your current activity */
 function VendorBounties({
   defs,
-  vendors,
+  vendorsResponse,
   store,
   activityInfo,
   buckets,
@@ -84,16 +86,14 @@ function VendorBounties({
   const [bounties, setBounties] = useState<VendorItem[]>([]);
 
   useEffect(() => {
-    if (!vendors) {
-      return;
-    }
-    const purchasableBounties: VendorItem[] = [];
-    const vendorsResponse = vendors[store.id]?.vendorsResponse;
-    if (!vendorsResponse?.vendors.data) {
+    if (!vendorsResponse) {
       return;
     }
 
-    Object.values(vendorsResponse.vendors.data).forEach((vendor) => {
+    const purchasableBounties: VendorItem[] = [];
+    const { vendors, sales, itemComponents } = vendorsResponse;
+
+    Object.values(vendors.data || []).forEach((vendor) => {
       const { vendorHash } = vendor;
       const d2Vendor = toVendor(
         vendorHash,
@@ -101,22 +101,24 @@ function VendorBounties({
         buckets,
         vendor,
         account,
-        vendorsResponse?.itemComponents[vendorHash],
-        vendorsResponse?.sales.data?.[vendorHash]?.saleItems,
+        itemComponents[vendorHash],
+        sales.data?.[vendorHash]?.saleItems,
         {}
       );
-      const vendorBounties = d2Vendor?.items.filter(
-        ({ item, canPurchase, canBeSold }: VendorItem) =>
-          canPurchase && canBeSold && item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
-      );
-
-      if (vendorBounties) {
-        purchasableBounties.push(...vendorBounties);
+      if (d2Vendor) {
+        purchasableBounties.push(
+          ...d2Vendor.items.filter(
+            ({ item, canPurchase, canBeSold }: VendorItem) =>
+              canPurchase &&
+              canBeSold &&
+              item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
+          )
+        );
       }
     });
 
     setBounties(purchasableBounties);
-  }, [defs, account, buckets, store, vendors]);
+  }, [defs, account, buckets, vendorsResponse]);
 
   useEffect(() => {
     setSuggestedBounties(bountiesForActivity(defs, bounties, activityInfo));
