@@ -995,6 +995,8 @@
     "FarmingStop": "Stop Farming",
     "ChangeFilter": "Change Filter",
     "NoSearches": "Create saved searches and filter them here.",
-    "SuggestedBounties": "Suggested Bounties"
+    "SuggestedBounties": "Suggested Bounties",
+    "Offline": "Offline",
+    "Loading": "Current Activity"
   }
 }

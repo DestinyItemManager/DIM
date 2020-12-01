@@ -43,7 +43,7 @@ function ActivityInformation({ defs, store, activityInfo, profileInfo }: Props) 
   const raid = allMilestones.find((milestone) => {
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return milestoneActivities?.find(
-      (milesoneActivity) => milesoneActivity.activityHash === activity.hash
+      (milesoneActivity) => milesoneActivity.activityHash === activity?.hash
     );
   });
 

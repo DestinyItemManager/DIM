@@ -14,7 +14,7 @@ import VendorItemComponent from 'app/vendors/VendorItemComponent';
 import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 interface ProvidedProps {
@@ -61,7 +61,7 @@ function bountiesForActivity(
       return true;
     }
 
-    const matchingDestination = info.Destination?.includes(activity.destinationHash);
+    const matchingDestination = info.Destination?.includes(activity?.destinationHash);
     const matchingActivity =
       (!info.Destination && info.ActivityMode?.includes(activityMode?.hash)) ||
       activityMode?.parentHashes.some((hash) => info.ActivityMode?.includes(hash));
@@ -80,43 +80,47 @@ function VendorBounties({
   ownedItemHashes,
   account,
 }: Props) {
-  if (!vendors) {
-    return null;
-  }
+  const [suggestedBounties, setSuggestedBounties] = useState<VendorItem[]>([]);
+  const [bounties, setBounties] = useState<VendorItem[]>([]);
 
-  const bounties: VendorItem[] = [];
-  const vendorsResponse = vendors[store.id]?.vendorsResponse;
-  if (!vendorsResponse?.vendors.data) {
-    return null;
-  }
-
-  Object.values(vendorsResponse.vendors.data).forEach((vendor) => {
-    const { vendorHash } = vendor;
-    const d2Vendor = toVendor(
-      vendorHash,
-      defs,
-      buckets,
-      vendor,
-      account,
-      vendorsResponse?.itemComponents[vendorHash],
-      vendorsResponse?.sales.data?.[vendorHash]?.saleItems,
-      {}
-    );
-    const vendorBounties = d2Vendor?.items.filter(
-      ({ item, canPurchase, canBeSold }: VendorItem) =>
-        canPurchase && canBeSold && item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
-    );
-
-    if (vendorBounties) {
-      bounties.push(...vendorBounties);
+  useEffect(() => {
+    if (!vendors) {
+      return;
     }
-  });
+    const purchasableBounties: VendorItem[] = [];
+    const vendorsResponse = vendors[store.id]?.vendorsResponse;
+    if (!vendorsResponse?.vendors.data) {
+      return;
+    }
 
-  if (!bounties.length) {
-    return null;
-  }
+    Object.values(vendorsResponse.vendors.data).forEach((vendor) => {
+      const { vendorHash } = vendor;
+      const d2Vendor = toVendor(
+        vendorHash,
+        defs,
+        buckets,
+        vendor,
+        account,
+        vendorsResponse?.itemComponents[vendorHash],
+        vendorsResponse?.sales.data?.[vendorHash]?.saleItems,
+        {}
+      );
+      const vendorBounties = d2Vendor?.items.filter(
+        ({ item, canPurchase, canBeSold }: VendorItem) =>
+          canPurchase && canBeSold && item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
+      );
 
-  const suggestedBounties = bountiesForActivity(defs, bounties, activityInfo);
+      if (vendorBounties) {
+        purchasableBounties.push(...vendorBounties);
+      }
+    });
+
+    setBounties(purchasableBounties);
+  }, [defs, account, buckets, store, vendors]);
+
+  useEffect(() => {
+    setSuggestedBounties(bountiesForActivity(defs, bounties, activityInfo));
+  }, [defs, bounties, activityInfo]);
 
   const ownedBountyHashes: number[] = [];
   const unownedBounties: VendorItem[] = [];
@@ -133,7 +137,10 @@ function VendorBounties({
 
   const ownedIncompletePursuits = store.items
     .filter(({ hash }) => ownedBountyHashes.includes(hash))
-    .filter(({ complete }) => !complete);
+    .filter(
+      ({ complete, pursuit }) =>
+        ((!complete && pursuit?.expirationDate?.getTime()) ?? 0) > Date.now()
+    );
 
   return (
     <>
