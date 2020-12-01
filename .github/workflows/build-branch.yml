@@ -1,0 +1,39 @@
+name: build braches
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - uses: actions/checkout@v2
+    - name: Cache .yarn
+      uses: c-hive/gha-yarn-cache@v1
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache_node_modules
+      with:
+        path: $GITHUB_WORKSPACE/node_modules
+        key: node_modules-${{ hashFiles('**/yarn.lock')}}
+        restore-keys: |
+          mode_modules-
+    - name: Cache .cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache_home_cache
+      with:
+        path: $HOME/.cache/
+    - name: Install
+      run: yarn install --frozen-lockfile --prefer-offline
+    - name: Test
+      run: yarn test
+    - name: Lint
+      run: yarn run lint-check
+    - name: Build
+      run: yarn run build-beta
+
