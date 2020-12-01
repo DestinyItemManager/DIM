@@ -44,7 +44,7 @@ jobs:
     - name: Lint
       run: yarn run lint-check
     - name: Set branch env var
-      uses: nelonoel/branch-name@v1.0.1
+      run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
     - name: Set commit env var
       run: echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
     - name: Build
