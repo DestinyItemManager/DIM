@@ -1,0 +1,61 @@
+name: PR Build
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2 # So packtracker can get the previous commit
+
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node_modules
+      with:
+        path: $GITHUB_WORKSPACE/node_modules
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Cache eslint
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-eslint
+      with:
+        path: ~/.cache
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install
+      uses: bahmutov/npm-install@v1
+
+    - name: Test
+      run: yarn test
+
+    - name: Lint check
+      run: |
+        find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
+        yarn run lint-check
+
+    - name: Build beta
+      run: yarn run build-beta
+      env:
+        PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+        BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+
