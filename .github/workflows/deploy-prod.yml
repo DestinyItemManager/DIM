@@ -1,9 +1,16 @@
 name: Deploy Prod
 
 on:
-  # TODO: take patch argument
   workflow_dispatch:
-  # TODO: schedule
+    inputs:
+      patch:
+        description: 'Should this be a patch release?'
+        required: true
+        default: 'true'
+  schedule:
+    # Deploy at 5pm Sunday PST, which is 1am Monday UTC
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 1 * * 1'
 
 jobs:
   deploy:
@@ -24,6 +31,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 2 # So packtracker can get the previous commit
+        # Use the dim-release-bot token rather than the default
+        token: ${{ secrets.GH_TOKEN }}
 
     - name: Cache node_modules
       uses: actions/cache@v2
@@ -72,3 +81,4 @@ jobs:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         # Use the dim-release-bot token rather than the default
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        PATCH: ${{ github.event.inputs.patch }}

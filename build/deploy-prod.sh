@@ -5,10 +5,9 @@ git config --global user.name "DIM Release Bot"
 
 # bump version (creates tag and version commit)
 
-if [ -e PATCH ]
+if [ "$PATCH" = "true" ]
 then
     VERSION=$(npm --no-git-tag-version version patch | sed 's/^v//')
-    git rm PATCH
 else
     VERSION=$(npm --no-git-tag-version version minor | sed 's/^v//')
 fi
