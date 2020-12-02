@@ -89,7 +89,7 @@ export default function IssueBanner() {
                   <div
                     className={styles.mercury}
                     style={{
-                      width: `${(state.donations / state.goal) * 100}%`,
+                      width: `${Math.min((state.donations / state.goal) * 100, 100)}%`,
                     }}
                   >
                     <em>${state.donations}</em>
@@ -112,6 +112,19 @@ export default function IssueBanner() {
                 >
                   Donate Now
                 </ExternalLink>
+                {Date.now() >= Date.parse('2020-12-04T21:50:00.000Z') &&
+                  Date.now() <= Date.parse('2020-12-05T02:00:00.000Z') && (
+                    <ExternalLink
+                      className="dim-button streaming"
+                      style={{ backgroundColor: `#c00` }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      href={'https://www.twitch.tv/DestinyItemManager'}
+                    >
+                      Streaming
+                    </ExternalLink>
+                  )}
               </div>
             </div>
           </div>

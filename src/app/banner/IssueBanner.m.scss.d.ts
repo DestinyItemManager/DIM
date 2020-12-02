@@ -8,6 +8,7 @@ interface CssExports {
   'goal': string;
   'maximized': string;
   'mercury': string;
+  'streaming': string;
   'thermo': string;
   'toaster': string;
   'track': string;

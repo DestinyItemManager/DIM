@@ -75,9 +75,14 @@
   display: flex;
   padding-top: 0.5rem;
 
-  button {
+  button,
+  a {
     cursor: pointer;
     padding: 0.25rem 0.375rem;
     margin: 0 0.5rem;
+  }
+
+  .streaming {
+    background-color: #c00 !important;
   }
 }
