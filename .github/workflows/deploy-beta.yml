@@ -62,11 +62,8 @@ jobs:
         find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
         yarn run lint-check
 
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
     - name: Set BRANCH_NAME ENV VAR
-      run: echo "BRANCH_NAME=${GITHUB_REF_SLUG} >> $GITHUB_ENV"
+      run: echo "BRANCH_NAME=${GITHUB_REF##*/} >> $GITHUB_ENV"
 
     - name: Build and deploy
       run: ./build/ga_build.sh
