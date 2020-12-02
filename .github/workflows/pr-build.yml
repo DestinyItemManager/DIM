@@ -57,4 +57,6 @@ jobs:
       run: yarn run build-beta
       env:
         PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+        BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
 
