@@ -135,11 +135,11 @@ export default function IssueBanner() {
             <p>
               Game2Give is an annual charity event for Destiny fans around the globe in support of
               the{' '}
-              <a href="https://bungiefoundation.org/" target="_new">
+              <a href="https://bungiefoundation.org/" target="_blank">
                 Bungie Foundation
               </a>{' '}
               and{' '}
-              <a href="https://childrensmiraclenetworkhospitals.org" target="_new">
+              <a href="https://childrensmiraclenetworkhospitals.org" target="_blank">
                 Children’s Miracle Network Hospitals
               </a>
               ! We're encouraging the community to particpate and support this charity event this
@@ -171,11 +171,11 @@ export default function IssueBanner() {
               <li>Every $500 - Goose will eat a hotter hotwing on stream.</li>
               <li>
                 Top 3 donors will get a 3D (
-                <a href={Ship1} target="_new">
+                <a href={Ship1} target="_blank">
                   1
                 </a>
                 ) (
-                <a href={Ship2} target="_new">
+                <a href={Ship2} target="_blank">
                   2
                 </a>
                 ) printed ship from Destiny made by @Bhollis on the Team.
