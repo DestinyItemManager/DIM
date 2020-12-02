@@ -8,11 +8,11 @@
 * Fixed the `is:powerfulreward` search to recognize new powerful/pinnacle engrams.
 * When items are classified (like the new Raid gear was for a bit), any notes added to the item will show on the tile so you can keep track of them.
 * Fixed filter helper only opening the first time it is selected in the search bar
+* Pinnacle/powerful rewards show a more accurate bonus, taking into account your current max power.
 
 ### Beta Only
 
 * A new "Single character mode" can be enabled through settings, or the « icon on desktop. This focuses down to a single character, and merges your other characters' inventories into the vault (they're really still on the other characters, we're just displaying them different). This is intended for people who are focused on one character, and always shows the last played character when collapsed.
-* Pinnacle/powerful rewards show a more accurate bonus, taking into account your current max power.
 
 ## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
 

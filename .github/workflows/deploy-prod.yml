@@ -70,4 +70,5 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_PATH: app.destinyitemmanager.com
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Use the dim-release-bot token rather than the default
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
