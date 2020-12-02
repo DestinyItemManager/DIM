@@ -69,7 +69,6 @@ jobs:
       run: ./build/ga_build.sh
       env:
         PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
-        COMMIT_SHA: ${{ github.sha }}
         WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
         WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
         WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}

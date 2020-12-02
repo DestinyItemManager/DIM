@@ -501,7 +501,7 @@ module.exports = (env) => {
         process.env.BRANCH_NAME;
 
       const commit =
-        process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT || process.env.COMMIT_SHA;
+        process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT || process.env.GITHUB_SHA;
 
       console.log(`Branch name is ${branch}`);
       console.log(`Commit sha is ${commit}`);
