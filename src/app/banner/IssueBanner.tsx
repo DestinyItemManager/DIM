@@ -1,7 +1,7 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Ship1 from './1.jpg';
 import Ship2 from './2.jpg';
 import Game2GiveImage from './game2give.png';
@@ -26,21 +26,21 @@ export default function IssueBanner() {
     setIsMinimized(true);
   };
 
-  React.useEffect(() => {
-    const getGameTwoGiveData = () => {
-      fetch(
+  useEffect(() => {
+    const getGameTwoGiveData = async () => {
+      const response = await fetch(
         `https://www.helpmakemiracles.org/api/1.2/participants/376997?_=${Date.now().toString()}`
-      )
-        .then((res) => res.json())
-        .then((json) => {
-          if (json) {
-            setState({
-              show: true,
-              goal: Number(json?.fundraisingGoal || 10000),
-              donations: Number(json?.sumDonations || 0),
-            });
-          }
+      );
+
+      const json = await response.json();
+
+      if (json) {
+        setState({
+          show: true,
+          goal: Number(json?.fundraisingGoal || 10000),
+          donations: Number(json?.sumDonations || 0),
         });
+      }
     };
 
     const interval = setInterval(getGameTwoGiveData, 600000);
