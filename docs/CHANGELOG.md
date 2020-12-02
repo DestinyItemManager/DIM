@@ -1,5 +1,7 @@
 ## Next
 
+## 6.41.0 <span className="changelog-date">(2020-12-02)</span>
+
 * Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a category to see bounties that include that category. Other categories will light up to show "synergy" categories that can be worked on while you work on the selected one. Shift-click to select multiple categories. Click the (+) on a weapon type to pull a weapon matching that type.
 * New item sort option to sort sunset items last.
 * Engrams show their power level - click on small engrams to see their power level in the item popup.
