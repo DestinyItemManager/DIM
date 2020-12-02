@@ -208,9 +208,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
     );
   }
 
+  const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
+
   return (
     <>
-      <div id="content">
+      <div id="content" className={mobile ? 'ismobile' : 'isdesktop'}>
         <Switch>
           <Route path={`${path}/inventory`} exact>
             <Inventory account={account} />

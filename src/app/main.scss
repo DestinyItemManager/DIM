@@ -226,6 +226,10 @@ input[type='search'] {
   scroll-margin-top: $header-height;
 }
 
+#content.isdesktop {
+  margin-bottom: 101px;
+}
+
 h2,
 h3,
 h4 {
