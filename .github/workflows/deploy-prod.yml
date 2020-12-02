@@ -21,9 +21,6 @@ jobs:
         name: dim.rsa # optional
         known_hosts: ${{ secrets.REMOTE_HOST }}
 
-    - name: Install hub
-      uses: geertvdc/setup-hub@master
-
     - uses: actions/checkout@v2
       with:
         fetch-depth: 2 # So packtracker can get the previous commit
