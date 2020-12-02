@@ -2,15 +2,19 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import Game2GiveImage from './game2give.png';
 import styles from './IssueBanner.m.scss';
-
-const blmResourcesLink = 'https://blacklivesmatters.carrd.co/';
 
 /**
  * A popup we can enable to get the word out about important issues for the DIM community. Edit the body directly.
  */
 export default function IssueBanner() {
   const [isMinimized, setIsMinimized] = useState(true);
+  const [state, setState] = useState({
+    show: false,
+    goal: 10000,
+    donations: 0,
+  });
 
   const openCampaign = () => {
     setIsMinimized(false);
@@ -20,6 +24,30 @@ export default function IssueBanner() {
     setIsMinimized(true);
   };
 
+  React.useEffect(() => {
+    const getGameTwoGiveData = () => {
+      fetch(
+        `https://www.helpmakemiracles.org/api/1.2/participants/376997?_=${Date.now().toString()}`
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          if (json) {
+            setState({
+              show: true,
+              goal: Number(json?.fundraisingGoal || 10000),
+              donations: Number(json?.sumDonations || 0),
+            });
+          }
+        });
+    };
+
+    const interval = setInterval(getGameTwoGiveData, 600000);
+
+    getGameTwoGiveData();
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div
       className={clsx(styles.toaster, {
@@ -27,34 +55,117 @@ export default function IssueBanner() {
       })}
     >
       {isMinimized ? (
-        <div
-          className="item"
-          style={{
-            fontSize: `24px`,
-            padding: `12px 24px`,
-            backgroundColor: `black`,
-            position: `unset`,
-            contain: `unset`,
-            boxSizing: `unset`,
-            width: `unset`,
-            transition: `unset`,
-          }}
-          onClick={openCampaign}
-        >
-          Black Lives Matter
-        </div>
+        state.show && (
+          <div
+            className="item"
+            style={{
+              fontSize: `24px`,
+              paddingRight: `12px`,
+              backgroundColor: `black`,
+              position: `unset`,
+              contain: `unset`,
+              boxSizing: `unset`,
+              width: `30rem`,
+              transition: `unset`,
+              display: 'flex',
+            }}
+            onClick={openCampaign}
+          >
+            <div className={styles.gametwogive}>
+              <img className={styles.gametwogive} src={Game2GiveImage} />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <div className={styles.thermo}>
+                <div className={styles.track}>
+                  <div
+                    className={styles.mercury}
+                    style={{
+                      width: `${(state.donations / state.goal) * 100}%`,
+                    }}
+                  >
+                    <em>${state.donations}</em>
+                  </div>
+                </div>
+                <div className={styles.goal}>${state.goal}</div>
+              </div>
+              <div className={styles.buttongroup}>
+                <button className="dim-button" type="button">
+                  Learn More
+                </button>
+                <ExternalLink
+                  className="dim-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  href={
+                    'https://www.helpmakemiracles.org/index.cfm?fuseaction=donordrive.participant&participantID=376997'
+                  }
+                >
+                  Donate Now
+                </ExternalLink>
+              </div>
+            </div>
+          </div>
+        )
       ) : (
-        <Sheet onClose={closeCampaign} header={<h1>Black Lives Matter</h1>}>
+        <Sheet onClose={closeCampaign} header={<h1>#Game2Give #LittleLights</h1>}>
           <div className={styles.container}>
             <p>
-              DIM stands in solidarity with the Black community in acknowledging centuries of white
-              oppression and violence. Rest in power George Floyd, Breonna Taylor, Ahmaud Arbery,
-              and the countless victims of systemic violence.
+              Game2Give is an annual charity event for Destiny fans around the globe in support of
+              the{' '}
+              <a href="https://bungiefoundation.org/" target="_new">
+                Bungie Foundation
+              </a>{' '}
+              and{' '}
+              <a href="https://childrensmiraclenetworkhospitals.org" target="_new">
+                Children’s Miracle Network Hospitals
+              </a>
+              ! We're encouraging the community to particpate and support this charity event this
+              year by donating to this wonderful cause.
             </p>
-            <p>Learn how you can help those fighting for justice:</p>
             <p>
-              <ExternalLink className="dim-button" href={blmResourcesLink}>
-                Donate, sign petitions, protest
+              <ExternalLink
+                className="dim-button"
+                href={
+                  'https://www.helpmakemiracles.org/index.cfm?fuseaction=donordrive.participant&participantID=376997'
+                }
+              >
+                Donate Now
+              </ExternalLink>
+            </p>
+            <h3>Incentives</h3>
+            <ul>
+              <li>$25 Donation - Limited Edition Gilded Ghost shell and Mist Blossoms emblem</li>
+              <li>
+                $50 Donation - Every $25 reward, PLUS the Limited Edition Light Keeper’s Emblem
+              </li>
+            </ul>
+            <h3>Milestones</h3>
+            <ul>
+              <li>
+                Each day 2 "Reach Orbit" patches will be raffled from all donors. Donate early for
+                the best chances.
+              </li>
+              <li>Every $500 - Goose will eat a hotter hotwing on stream.</li>
+              <li>
+                Top 3 donors will get a 3D printed ship from Destiny made by @Bhollis on the Team.
+              </li>
+            </ul>
+            <p>
+              <ExternalLink
+                className="dim-button"
+                href={
+                  'https://www.helpmakemiracles.org/index.cfm?fuseaction=donordrive.participant&participantID=376997'
+                }
+              >
+                Donate Now
               </ExternalLink>
             </p>
           </div>
