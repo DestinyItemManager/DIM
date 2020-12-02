@@ -4,7 +4,6 @@ set -o pipefail
 
 # Master builds release to Beta
 yarn run publish-beta
-BUILD_NUMBER =
 VERSION=$(node -p -e "require('./package.json').version + '.' + (parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000)")
 npx sentry-cli releases new "$VERSION" --finalize
 npx sentry-cli releases set-commits "$VERSION" --auto

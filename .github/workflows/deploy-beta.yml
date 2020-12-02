@@ -76,6 +76,5 @@ jobs:
         CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
         CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
-        BROTLI: ${{ secrets.BROTLI }}
+        REMOTE_PATH: beta.destinyitemmanager.com
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
