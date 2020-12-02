@@ -6,6 +6,8 @@ interface CssExports {
   'container': string;
   'gametwogive': string;
   'goal': string;
+  'incentives': string;
+  'link': string;
   'maximized': string;
   'mercury': string;
   'streaming': string;
