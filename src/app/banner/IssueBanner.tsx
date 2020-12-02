@@ -2,6 +2,8 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import Ship1 from './1.jpg';
+import Ship2 from './2.jpg';
 import Game2GiveImage from './game2give.png';
 import styles from './IssueBanner.m.scss';
 
@@ -155,7 +157,15 @@ export default function IssueBanner() {
               </li>
               <li>Every $500 - Goose will eat a hotter hotwing on stream.</li>
               <li>
-                Top 3 donors will get a 3D printed ship from Destiny made by @Bhollis on the Team.
+                Top 3 donors will get a 3D (
+                <a href={Ship1} target="_new">
+                  1
+                </a>
+                ) (
+                <a href={Ship2} target="_new">
+                  2
+                </a>
+                ) printed ship from Destiny made by @Bhollis on the Team.
               </li>
             </ul>
             <p>
