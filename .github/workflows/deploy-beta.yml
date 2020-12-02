@@ -81,3 +81,4 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
         BROTLI: ${{ secrets.BROTLI }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
