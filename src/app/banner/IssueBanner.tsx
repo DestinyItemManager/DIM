@@ -1,7 +1,7 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Ship1 from './1.jpg';
 import Ship2 from './2.jpg';
 import Game2GiveImage from './game2give.png';
@@ -49,6 +49,14 @@ export default function IssueBanner() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Add a class to body to make padding for this element
+  useLayoutEffect(() => {
+    if (state.show) {
+      document.body.classList.add('issue-banner-shown');
+    }
+    return () => document.body.classList.remove('issue-banner-shown');
+  }, [state.show]);
 
   return (
     <div

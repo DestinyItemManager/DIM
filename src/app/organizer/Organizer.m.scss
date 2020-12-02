@@ -1,4 +1,13 @@
+@import '../variables.scss';
+
 .organizer {
+  :global(.issue-banner-shown) & {
+    padding-bottom: $issue-banner-height;
+    @include phone-portrait {
+      padding-bottom: 0;
+    }
+  }
+
   > * {
     margin: 8px;
   }
