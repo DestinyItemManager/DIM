@@ -490,31 +490,12 @@ module.exports = (env) => {
     );
 
     if (process.env.PT_PROJECT_TOKEN) {
-      const packOptions = {
-        upload: true,
-        fail_build: true,
-      };
-
-      const branch =
-        process.env.TRAVIS_PULL_REQUEST_BRANCH ||
-        process.env.TRAVIS_BRANCH ||
-        process.env.BRANCH_NAME;
-
-      const commit =
-        process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT || process.env.GITHUB_SHA;
-
-      console.log(`Branch name is ${branch}`);
-      console.log(`Commit sha is ${commit}`);
-
-      if (process.env.CI === 'true') {
-        console.log(`Setting branch and commit as CI = ${process.env.CI}`);
-        Object.assign(packOptions, {
-          branch,
-          commit,
-        });
-      }
-
-      config.plugins.push(new PacktrackerPlugin(packOptions));
+      config.plugins.push(
+        new PacktrackerPlugin({
+          upload: true,
+          fail_build: true,
+        })
+      );
     }
   }
 
