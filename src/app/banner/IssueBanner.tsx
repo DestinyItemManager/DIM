@@ -157,16 +157,21 @@ export default function IssueBanner() {
             </p>
             <h3>Incentives</h3>
             <ul>
+              <li>$10 Donation - Chance to win 130 gift cards from GameStop and EB Games.</li>
               <li>$25 Donation - Limited Edition Gilded Ghost shell and Mist Blossoms emblem</li>
               <li>
                 $50 Donation - Every $25 reward, PLUS the Limited Edition Light Keeper’s Emblem
+              </li>
+              <li>
+                $100 Donation - Every $25 and $50 reward, PLUS an exclusive item from the G2G20
+                Prize Pool.{' '}
               </li>
             </ul>
             <h3>Milestones</h3>
             <ul>
               <li>
-                Each day 2 "Reach Orbit" patches will be raffled from all donors. Donate early for
-                the best chances.
+                Each day 2 "Reach Orbit" patches will be raffled from donations $5 or more. Donate
+                early for the best chances.
               </li>
               <li>Every $500 - Goose will eat a hotter hotwing on stream.</li>
               <li>
@@ -178,7 +183,7 @@ export default function IssueBanner() {
                 <a href={Ship2} target="_blank">
                   2
                 </a>
-                ) printed ship from Destiny made by @Bhollis on the Team.
+                ) printed ship from Destiny made by @bhollis on the Team.
               </li>
             </ul>
             <p>
