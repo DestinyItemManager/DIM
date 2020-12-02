@@ -34,6 +34,10 @@ type Props = ProvidedProps & StoreProps;
 function ActivityInformation({ defs, store, activityInfo, profileInfo }: Props) {
   const activity = defs.Activity.get(activityInfo.currentActivityHash);
 
+  if (!activity) {
+    return null;
+  }
+
   const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
     ? Object.values(profileMilestoneData)
@@ -43,7 +47,7 @@ function ActivityInformation({ defs, store, activityInfo, profileInfo }: Props) 
   const raid = allMilestones.find((milestone) => {
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return milestoneActivities?.find(
-      (milesoneActivity) => milesoneActivity.activityHash === activity?.hash
+      (milesoneActivity) => milesoneActivity.activityHash === activity.hash
     );
   });
 

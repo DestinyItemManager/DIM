@@ -64,6 +64,11 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
 
       refreshActivity({ account, store }).then(setActivityInfo);
     }, ACTIVITY_REFRESH_RATE);
+
+    return () => {
+      window.clearInterval(intervalId);
+      firstLoad = true;
+    };
   }, [account, store]);
 
   useEffect(() => {

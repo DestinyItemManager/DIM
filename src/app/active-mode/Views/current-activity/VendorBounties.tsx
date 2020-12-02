@@ -105,7 +105,8 @@ function VendorBounties({
         sales.data?.[vendorHash]?.saleItems,
         {}
       );
-      if (d2Vendor) {
+
+      d2Vendor &&
         purchasableBounties.push(
           ...d2Vendor.items.filter(
             ({ item, canPurchase, canBeSold }: VendorItem) =>
@@ -114,7 +115,6 @@ function VendorBounties({
               item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties)
           )
         );
-      }
     });
 
     setBounties(purchasableBounties);
@@ -167,6 +167,7 @@ function VendorBounties({
               item={item}
               owned={false}
               characterId={store.id}
+              hideCosts={true}
             />
           )
       )}
