@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     rsync: {
       options: {
         //dryRun: true,
-        args: ["--verbose"],
+        args: ["--checksum --verbose"],
         excludeFirst: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
         recursive: true,

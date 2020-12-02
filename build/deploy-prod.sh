@@ -39,5 +39,5 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/2c34c69276ed0f6eb2b9e15
 git push --tags origin master:master
 
 # publish a release on GitHub
-gh release create "v$VERSION" -F release-notes.txt -t "v$VERSION"
+gh release create "v$VERSION" -F release-notes.txt -t "$VERSION"
 
