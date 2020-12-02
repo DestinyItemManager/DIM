@@ -2,8 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'activityIcon': string;
-  'activityItems': string;
   'bountyGuide': string;
+  'suggestedBounties': string;
   'title': string;
 }
 export const cssExports: CssExports;

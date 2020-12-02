@@ -122,16 +122,14 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
       {activityInfo && (
         <>
           {activityName?.length > 0 && <div className={styles.title}>{activityName}</div>}
-          <div className={styles.activityItems}>
-            <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
-            <VendorBounties
-              account={account}
-              store={store}
-              activityInfo={activityInfo}
-              buckets={buckets}
-              defs={defs}
-            />
-          </div>
+          <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
+          <VendorBounties
+            account={account}
+            store={store}
+            activityInfo={activityInfo}
+            buckets={buckets}
+            defs={defs}
+          />
         </>
       )}
     </CollapsibleTitle>

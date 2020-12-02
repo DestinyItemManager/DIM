@@ -156,20 +156,24 @@ function VendorBounties({
         />
       </div>
       {unownedBounties.length > 0 && (
-        <div className={styles.title}>{t('ActiveMode.SuggestedBounties')}</div>
-      )}
-      {unownedBounties.map(
-        (item: VendorItem) =>
-          item.item && (
-            <VendorItemComponent
-              key={item.key}
-              defs={defs}
-              item={item}
-              owned={false}
-              characterId={store.id}
-              hideCosts={true}
-            />
-          )
+        <>
+          <div className={styles.title}>{t('ActiveMode.SuggestedBounties')}</div>
+          <div className={styles.suggestedBounties}>
+            {unownedBounties.map(
+              (item: VendorItem) =>
+                item.item && (
+                  <VendorItemComponent
+                    key={item.key}
+                    defs={defs}
+                    item={item}
+                    owned={false}
+                    characterId={store.id}
+                    hideCosts={true}
+                  />
+                )
+            )}
+          </div>
+        </>
       )}
     </>
   );

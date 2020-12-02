@@ -7,7 +7,6 @@
 }
 
 .bountyGuide {
-  grid-column: 1 / -1;
   margin: 0;
 
   :global(.progress-for-character) {
@@ -18,16 +17,15 @@
 
 .title {
   display: flex;
-  grid-column: 1 / -1;
-  margin-bottom: 8px;
+  margin: 8px 0;
   padding-bottom: 1px;
-  margin-top: 8px;
   letter-spacing: 1px;
   text-transform: uppercase;
   border-bottom: 0.5px solid #666;
 }
 
-.activityItems {
+.suggestedBounties {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  grid-gap: 6px 0;
 }
