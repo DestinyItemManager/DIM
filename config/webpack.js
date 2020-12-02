@@ -495,6 +495,9 @@ module.exports = (env) => {
         fail_build: true,
       };
 
+      console.log(`Branch: ${process.env.BRANCH_NAME}`);
+      console.log(`Commit: ${process.env.COMMIT_SHA}`);
+
       if (process.env.CI === 'true') {
         Object.assign(packOptions, {
           branch:
@@ -504,7 +507,7 @@ module.exports = (env) => {
           commit:
             process.env.TRAVIS_PULL_REQUEST_SHA ||
             process.env.TRAVIS_COMMIT ||
-            process.env.GITHUB_SHA,
+            process.env.COMMIT_SHA,
         });
       }
 
