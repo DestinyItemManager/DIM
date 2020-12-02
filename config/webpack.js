@@ -501,13 +501,12 @@ module.exports = (env) => {
         process.env.BRANCH_NAME;
 
       const commit =
-        process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT || process.env.GITHUB_SHA;
+        process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT || process.env.COMMIT_SHA;
 
       console.log(`Branch name is ${branch}`);
       console.log(`Commit sha is ${commit}`);
 
       if (process.env.CI === 'true') {
-        console.log(`Setting branch and commit as CI = ${process.env.CI}`);
         Object.assign(packOptions, {
           branch,
           commit,
