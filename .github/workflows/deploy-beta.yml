@@ -1,4 +1,4 @@
-name: deploy beta
+name: Deploy Beta
 
 on:
   push:
@@ -76,3 +76,8 @@ jobs:
         WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
         WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
         DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+        CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+        CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        BROTLI: ${{ secrets.BROTLI }}
