@@ -224,6 +224,9 @@ input[type='search'] {
   padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   scroll-margin-top: $header-height;
+}
+
+#content.isdesktop {
   margin-bottom: 101px;
 }
 
