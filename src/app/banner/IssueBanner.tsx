@@ -2,10 +2,27 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import Sheet from 'app/dim-ui/Sheet';
 import clsx from 'clsx';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import Ship1 from './1.jpg';
-import Ship2 from './2.jpg';
+import bungieReward from './bungie.jpg';
 import Game2GiveImage from './game2give.png';
 import styles from './IssueBanner.m.scss';
+import patchReward from './patch.png';
+import shipReward from './ship.png';
+
+function Link({
+  href,
+  children,
+  noStyle,
+}: {
+  href: string;
+  noStyle?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <a className={!noStyle ? styles.link : ''} target="_blank" href={href}>
+      {children}
+    </a>
+  );
+}
 
 /**
  * A popup we can enable to get the word out about important issues for the DIM community. Edit the body directly.
@@ -143,15 +160,28 @@ export default function IssueBanner() {
             <p>
               Game2Give is an annual charity event for Destiny fans around the globe in support of
               the{' '}
-              <a href="https://bungiefoundation.org/" target="_blank">
+              <Link noStyle href="https://bungiefoundation.org/">
                 Bungie Foundation
-              </a>{' '}
+              </Link>{' '}
               and{' '}
-              <a href="https://childrensmiraclenetworkhospitals.org" target="_blank">
+              <Link noStyle href="https://childrensmiraclenetworkhospitals.org">
                 Children’s Miracle Network Hospitals
-              </a>
+              </Link>
               ! We're encouraging the community to particpate and support this charity event this
               year by donating to this wonderful cause.
+            </p>
+            <p>
+              The DIM team will be{' '}
+              <Link href={'https://www.twitch.tv/destinyitemmanager'}>streaming on twitch.tv</Link>{' '}
+              on Friday, Dec 4th{' '}
+              <Link
+                noStyle
+                href={
+                  'https://www.thetimezoneconverter.com/?t=2%3A00pm&tz=PST%20(Pacific%20Standard%20Time)&'
+                }
+              >
+                2pm - 6pm PST
+              </Link>
             </p>
             <p>
               <ExternalLink
@@ -163,35 +193,25 @@ export default function IssueBanner() {
                 Donate Now
               </ExternalLink>
             </p>
-            <h3>Incentives</h3>
+            <h3>
+              Bungie Incentives (<Link href={bungieReward}>view all</Link>)
+            </h3>
             <ul>
-              <li>$10 Donation - Chance to win 130 gift cards from GameStop and EB Games.</li>
-              <li>$25 Donation - Limited Edition Gilded Ghost shell and Mist Blossoms emblem</li>
-              <li>
-                $50 Donation - Every $25 reward, PLUS the Limited Edition Light Keeper’s Emblem
-              </li>
-              <li>
-                $100 Donation - Every $25 and $50 reward, PLUS an exclusive item from the G2G20
-                Prize Pool.{' '}
-              </li>
+              <li>$10 Donation - Chance to win a gift card from GameStop and EB Games.</li>
+              <li>$25 Donation - Above PLUS the Gilded Ghost shell & Mist Blossoms emblem.</li>
+              <li>$50 Donation - All above PLUS the Light Keeper’s emblem.</li>
+              <li>$100 Donation - All above PLUS an exclusive item from the G2G20 Prize Pool.</li>
             </ul>
-            <h3>Milestones</h3>
+            <h3>DIM Milestones and Incentives</h3>
             <ul>
               <li>
-                Each day 2 "Reach Orbit" patches will be raffled from donations $5 or more. Donate
-                early for the best chances.
+                $5 Donation - Raffle entry for the{' '}
+                <Link href={patchReward}>DIM "Reach Orbit" Patch</Link>. Two raffles/day.
               </li>
               <li>Every $500 - Goose will eat a hotter hotwing on stream.</li>
               <li>
-                Top 3 donors will get a 3D (
-                <a href={Ship1} target="_blank">
-                  1
-                </a>
-                ) (
-                <a href={Ship2} target="_blank">
-                  2
-                </a>
-                ) printed ship from Destiny made by @bhollis on the Team.
+                Top 3 donors will get a <Link href={shipReward}>3D printed ship</Link> from Destiny
+                made by @bhollis
               </li>
             </ul>
             <p>

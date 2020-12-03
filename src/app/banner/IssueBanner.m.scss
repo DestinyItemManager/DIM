@@ -1,5 +1,8 @@
+@import '../variables.scss';
+
 .banner {
   font-size: 24px;
+  line-height: 24px;
   padding: 12px 24px;
   background-color: black;
 }
@@ -37,8 +40,17 @@
   }
 }
 
+.link {
+  color: $orange;
+}
+
+.incentives {
+  display: flex;
+}
+
 .container {
   margin: 1rem;
+  cursor: default;
 }
 
 .gametwogive {
