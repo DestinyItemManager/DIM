@@ -25,7 +25,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_KEY }}
-          name: dim.rsa # optional
+          name: dim.rsa
           known_hosts: ${{ secrets.REMOTE_HOST }}
 
       - uses: actions/checkout@v2
