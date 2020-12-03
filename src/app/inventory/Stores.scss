@@ -1,7 +1,23 @@
 @import '../variables.scss';
 
+.singleCharacter {
+  --num-characters: 1;
+}
+
+.inventory-container {
+  display: flex;
+
+  .issue-banner-shown & {
+    padding-bottom: $issue-banner-height;
+    @include phone-portrait {
+      padding-bottom: 0;
+    }
+  }
+}
+
 .inventory-content {
   margin: 0 auto;
+  width: 100%;
 
   .title {
     top: 124px;
@@ -41,15 +57,13 @@
     // Vault takes the rest
     1fr;
   box-sizing: border-box;
-  .singleCharacter & {
-    grid-template-columns:
-      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
-      // Vault takes the rest
-      1fr;
-  }
 
+  // Split evenly between character and vault
   .singleCharacter &.account-wide {
     grid-template-columns: 1fr 1fr;
+    .singleCharacter & {
+      grid-column: auto;
+    }
   }
 
   @include phone-portrait {

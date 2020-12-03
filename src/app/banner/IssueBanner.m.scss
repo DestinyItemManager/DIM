@@ -1,5 +1,8 @@
+@import '../variables.scss';
+
 .banner {
   font-size: 24px;
+  line-height: 24px;
   padding: 12px 24px;
   background-color: black;
 }
@@ -37,6 +40,61 @@
   }
 }
 
+.link {
+  color: $orange;
+}
+
+.incentives {
+  display: flex;
+}
+
 .container {
   margin: 1rem;
+  cursor: default;
+}
+
+.gametwogive {
+  width: 200px;
+  height: 101px;
+}
+
+.thermo {
+  font-size: 1rem;
+  background-color: dimgrey;
+  display: flex;
+
+  .track {
+    width: unset;
+    flex-grow: 1;
+  }
+
+  .mercury {
+    width: unset;
+    background-color: #d6272e;
+    padding: 0.125rem 0.25rem;
+  }
+
+  .goal {
+    flex-shrink: 0;
+    width: unset;
+    padding: 0.125rem 0.25rem;
+    background: darkslategrey;
+  }
+}
+
+.buttongroup {
+  justify-content: center;
+  display: flex;
+  padding-top: 0.5rem;
+
+  button,
+  a {
+    cursor: pointer;
+    padding: 0.25rem 0.375rem;
+    margin: 0 0.5rem;
+  }
+
+  .streaming {
+    background-color: #c00 !important;
+  }
 }

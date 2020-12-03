@@ -32,6 +32,12 @@
   h2:first-child {
     margin-top: 8px;
   }
+  :global(.issue-banner-shown) & {
+    padding-bottom: $issue-banner-height;
+    @include phone-portrait {
+      padding-bottom: 0;
+    }
+  }
 }
 
 .menu {

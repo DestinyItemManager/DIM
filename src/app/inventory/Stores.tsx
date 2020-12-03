@@ -1,3 +1,4 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import React, { useEffect } from 'react';
@@ -14,24 +15,29 @@ interface StoreProps {
   isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   singleCharacter: boolean;
+  activeMode: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   const stores = sortedStoresSelector(state);
+  const { singleCharacter, activeMode } = settingsSelector(state);
   return {
     stores,
     buckets: bucketsSelector(state)!,
     isPhonePortrait: state.shell.isPhonePortrait,
-    singleCharacter: stores.length > 2 && settingsSelector(state).singleCharacter,
+    singleCharacter: stores.length > 2 && singleCharacter,
+    activeMode,
   };
 }
 
-type Props = StoreProps;
+type Props = {
+  account: DestinyAccount;
+} & StoreProps;
 
 /**
  * Display inventory and character headers for all characters and the vault.
  */
-function Stores({ stores, buckets, isPhonePortrait, singleCharacter }: Props) {
+function Stores({ account, stores, buckets, isPhonePortrait, singleCharacter, activeMode }: Props) {
   useEffect(() => {
     setTimeout(() => {
       /* Set a CSS variable so we can style things based on the height of the header */
@@ -51,7 +57,13 @@ function Stores({ stores, buckets, isPhonePortrait, singleCharacter }: Props) {
   return isPhonePortrait ? (
     <PhoneStores stores={stores} buckets={buckets} singleCharacter={singleCharacter} />
   ) : (
-    <DesktopStores stores={stores} buckets={buckets} singleCharacter={singleCharacter} />
+    <DesktopStores
+      account={account}
+      stores={stores}
+      buckets={buckets}
+      singleCharacter={singleCharacter}
+      activeMode={activeMode}
+    />
   );
 }
 

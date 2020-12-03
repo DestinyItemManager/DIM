@@ -4,7 +4,7 @@ import { isD1Item } from 'app/utils/item-utils';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
@@ -18,6 +18,8 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
+  [DestinyEnergyType.Ghost]: '',
+  [DestinyEnergyType.Subclass]: '',
   [DestinyEnergyType.Any]: '',
 };
 
@@ -29,6 +31,9 @@ interface Props {
 
 export function hasBadge(item?: DimItem | null): boolean {
   if (!item) {
+    return false;
+  }
+  if (item.isEngram && item.location.hash === BucketHashes.Engrams) {
     return false;
   }
   return (
@@ -49,7 +54,8 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
   const isGeneric = !isBounty && !isStackable;
 
   const hideBadge = Boolean(
-    (isBounty && (item.complete || item.hidePercentage)) ||
+    (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
+      (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
       (isGeneric && !item.primStat?.value && !item.classified)
   );
@@ -70,6 +76,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
+        [styles.engram]: item.isEngram,
       })}
     >
       {isD1Item(item) && item.quality && (

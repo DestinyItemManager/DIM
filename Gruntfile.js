@@ -4,7 +4,11 @@ const fs = require("fs");
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
-  var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
+  // We start the github build number from 1,000,000 so we dont get clashes with travis build numbers.
+  const buildNumber =
+    process.env.TRAVIS_BUILD_NUMBER || parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
+
+  var betaVersion = `${pkg.version.toString()}.${buildNumber}`;
 
   grunt.initConfig({
     pkg: pkg,
@@ -13,12 +17,12 @@ module.exports = function(grunt) {
     rsync: {
       options: {
         //dryRun: true,
-        args: ["--verbose"],
+        args: ["--checksum --verbose"],
         excludeFirst: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
         recursive: true,
         ssh: true,
-        privateKey: 'config/dim_travis.rsa',
+        privateKey: '~/.ssh/dim.rsa',
         sshCmdArgs: ["-o StrictHostKeyChecking=no"]
       },
       // Sync everything but the HTML first, so it's ready to go

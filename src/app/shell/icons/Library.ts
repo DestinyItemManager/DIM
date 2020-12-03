@@ -85,6 +85,7 @@ const faBookmark = 'far fa-bookmark';
 const faBalanceScaleLeft = 'fas fa-balance-scale-left';
 const faGripVertical = 'fas fa-grip-vertical';
 const faThumbtack = 'fas fa-thumbtack';
+const faInfoCircle = 'fas fa-info-circle';
 
 const faXbox = 'fab fa-xbox';
 const faPlaystation = 'fab fa-playstation';
@@ -186,6 +187,7 @@ export {
   faTshirt,
   faGripVertical as dragHandleIcon,
   faExternalLinkAlt,
+  faInfoCircle,
   faXbox,
   faPlaystation,
   faSteam,

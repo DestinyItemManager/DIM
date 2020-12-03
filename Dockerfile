@@ -1,5 +1,5 @@
 # Latest LTS node
-FROM node:dubnium
+FROM node:fermium
 
 # Create app directory
 RUN mkdir -p /usr/src/app

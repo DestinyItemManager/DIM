@@ -159,7 +159,7 @@ export function makeItemSingle(
   // Convert a single component response into a dictionary component response
   const empty = { privacy: ComponentPrivacySetting.Public, data: {} };
   const m: <V>(v: SingleComponentResponse<V>) => DictionaryComponentResponse<V> = itemId
-    ? (v) => ({ privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} })
+    ? (v) => (v ? { privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} } : empty)
     : () => empty;
 
   // Make it look like a full response
@@ -401,11 +401,12 @@ export function makeItem(
     collectibleHash: itemDef.collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
-    plug: itemDef.plug?.energyCost && {
-      energyCost: itemDef.plug.energyCost.energyCost,
-      costElementIcon: defs.Stat.get(
-        defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
-      ).displayProperties.icon,
+    plug: itemDef.plug && {
+      energyCost: itemDef.plug.energyCost?.energyCost || 0,
+      costElementIcon: itemDef.plug.energyCost
+        ? defs.Stat.get(defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash)
+            .displayProperties.icon
+        : undefined,
     },
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
