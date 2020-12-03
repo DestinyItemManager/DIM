@@ -197,8 +197,6 @@ function LoadoutBuilder({
     lockedMap,
     lockedArmor2Mods,
     assumeMasterwork,
-    ignoreAffinity,
-    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower

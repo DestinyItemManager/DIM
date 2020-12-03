@@ -44,8 +44,6 @@ export function useProcess(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
-  ignoreAffinity: boolean,
-  maximumEnergy: number,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
   minimumPower: number
@@ -61,8 +59,6 @@ export function useProcess(
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
-    ignoreAffinity,
-    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower
@@ -82,13 +78,7 @@ export function useProcess(
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      const groupedItems = groupItems(
-        items,
-        lockedArmor2ModMap,
-        statOrder,
-        assumeMasterwork,
-        ignoreAffinity
-      );
+      const groupedItems = groupItems(items, lockedArmor2ModMap, statOrder, assumeMasterwork);
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
         if (item) {
@@ -162,8 +152,6 @@ function useWorkerAndCleanup(
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
   assumeMasterwork: boolean,
-  ignoreAffinity: boolean,
-  maximumEnergy: number,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
   minimumPower: number
@@ -173,8 +161,6 @@ function useWorkerAndCleanup(
     lockedItems,
     lockedArmor2ModMap,
     assumeMasterwork,
-    ignoreAffinity,
-    maximumEnergy,
     statOrder,
     statFilters,
     minimumPower,
@@ -211,8 +197,7 @@ function groupItems(
   items: readonly DimItem[],
   lockedArmor2ModMap: LockedArmor2ModMap,
   statOrder: StatTypes[],
-  assumeMasterwork: boolean,
-  ignoreAffinity: boolean
+  assumeMasterwork: boolean
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
@@ -233,9 +218,8 @@ function groupItems(
     }
 
     if (
-      !ignoreAffinity &&
-      (someModHasEnergyRequirement(lockedArmor2ModMap.other) ||
-        someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general]))
+      someModHasEnergyRequirement(lockedArmor2ModMap.other) ||
+      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
     ) {
       groupId += `${item.energy?.energyType}`;
     }
