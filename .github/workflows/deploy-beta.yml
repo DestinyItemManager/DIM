@@ -62,15 +62,10 @@ jobs:
         find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
         yarn run lint-check
 
-    - name: GitHub Environment Variables Action
-      uses: FranzDiebold/github-env-vars-action@v2.0.0
-
     - name: Build and deploy
       run: ./build/ga_build.sh
       env:
         PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
-        BRANCH_NAME: ${{ env.CI_ACTION_REF_NAME }}
-        COMMIT_SHA: ${{ env.CI_SHA }}
         WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
         WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
         WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
