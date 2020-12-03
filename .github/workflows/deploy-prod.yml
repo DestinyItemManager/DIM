@@ -63,9 +63,6 @@ jobs:
     - name: Install
       uses: bahmutov/npm-install@v1
 
-    - name: Set BRANCH_NAME ENV VAR
-      run: echo "BRANCH_NAME=${GITHUB_REF##*/} >> $GITHUB_ENV"
-
     - name: Build and deploy
       run: ./build/deploy-prod.sh
       env:

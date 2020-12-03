@@ -496,15 +496,11 @@ module.exports = (env) => {
       };
 
       if (process.env.CI === 'true') {
+        // These will be undefined for github actions, this is fine as long
+        // as the action only runs on a push.
         Object.assign(packOptions, {
-          branch:
-            process.env.TRAVIS_PULL_REQUEST_BRANCH ||
-            process.env.TRAVIS_BRANCH ||
-            process.env.BRANCH_NAME,
-          commit:
-            process.env.TRAVIS_PULL_REQUEST_SHA ||
-            process.env.TRAVIS_COMMIT ||
-            process.env.GITHUB_SHA,
+          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
+          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
         });
       }
 
