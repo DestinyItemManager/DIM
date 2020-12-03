@@ -90,12 +90,12 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
     return null;
   }
 
-  const activity = defs.Activity.get(activityInfo?.currentActivityHash ?? 0);
+  const activity = activityInfo && defs.Activity.get(activityInfo.currentActivityHash);
   const activityMode = defs.ActivityMode[activityInfo?.currentActivityModeHash ?? 0];
-  const place = defs.Place.get(activity?.placeHash);
+  const place = activity && defs.Place.get(activity.placeHash);
 
   const placeName = place?.displayProperties.name; // "Earth" "The Crucible"
-  const activityName = activity?.displayProperties.name; // "Adventure activity quest name" "Rusted Lands"
+  const activityName = activity?.displayProperties.name ?? ''; // "Adventure activity quest name" "Rusted Lands"
   const gameType = activityMode?.displayProperties.name; // "Explore" "Mayhem"
 
   return (

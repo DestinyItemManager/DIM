@@ -75,6 +75,15 @@
     margin-bottom: 0;
   }
 
+  :global(.milestone-icon) {
+    margin-right: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: var(--item-size);
+    font-size: 10px;
+  }
+
   :global(.dim-button.bucket-button) {
     border-radius: 5px;
     padding: 8px 0;

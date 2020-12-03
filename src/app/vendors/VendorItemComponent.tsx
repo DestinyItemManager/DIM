@@ -22,13 +22,11 @@ export default function VendorItemComponent({
   defs,
   owned,
   characterId,
-  hideCosts,
 }: {
   defs: D2ManifestDefinitions;
   item: VendorItem;
   owned: boolean;
   characterId?: string;
-  hideCosts?: boolean;
 }) {
   if (item.displayTile) {
     return (
@@ -61,7 +59,7 @@ export default function VendorItemComponent({
       acquired={acquired}
       extraData={{ failureStrings: item.failureStrings, owned, acquired }}
     >
-      {!hideCosts && item.costs.length > 0 && (
+      {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
           {item.costs.map((cost) => (
             <Cost key={cost.itemHash} defs={defs} cost={cost} className={styles.cost} />
