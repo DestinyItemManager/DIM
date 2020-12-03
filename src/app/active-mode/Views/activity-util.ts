@@ -20,8 +20,8 @@ let intervalId = 0;
 let firstLoad = true;
 
 async function refreshActivity({ account, store }: { account: DestinyAccount; store: DimStore }) {
-  const profileInfo = await getCurrentActivity(account);
-  return profileInfo.characterActivities.data?.[store.id];
+  const profileInfo = await getCurrentActivity(account, store.id);
+  return profileInfo.activities.data;
 }
 
 export function useActivityInfo({ account, store }: { account: DestinyAccount; store: DimStore }) {
