@@ -8,7 +8,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import BountyGuide, { BountyFilter, matchBountyFilters } from './BountyGuide';
+import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
 const defaultExpirationDate = new Date(8640000000000000);
@@ -77,10 +77,14 @@ export function PursuitsGroup({
   store,
   defs,
   pursuits,
+  hideDescriptions,
+  skipTypes,
 }: {
   store: DimStore;
   defs: D2ManifestDefinitions;
   pursuits: DimItem[];
+  hideDescriptions?: boolean;
+  skipTypes?: DefType[];
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
 
@@ -93,6 +97,7 @@ export function PursuitsGroup({
           bounties={pursuits}
           selectedFilters={bountyFilters}
           onSelectedFiltersChanged={setBountyFilters}
+          skipTypes={skipTypes}
         />
       )}
       <div className="progress-for-character">
@@ -102,6 +107,7 @@ export function PursuitsGroup({
             key={item.index}
             defs={defs}
             searchHidden={!matchBountyFilters(item, bountyFilters)}
+            hideDescription={hideDescriptions}
           />
         ))}
       </div>
