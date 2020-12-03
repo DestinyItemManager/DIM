@@ -191,7 +191,7 @@ function createWorker() {
  * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
  * - If no general, other or raid mods are locked it groups by (stats, masterworked).
  *
- * Note that assumedMasterwork and ignoreAffinity effects this.
+ * Note that assumedMasterwork effects this.
  */
 function groupItems(
   items: readonly DimItem[],
