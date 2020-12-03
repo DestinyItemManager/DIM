@@ -28,6 +28,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
   grid-gap: 6px 0;
+  margin-bottom: 8px;
 
   > div {
     cursor: pointer;

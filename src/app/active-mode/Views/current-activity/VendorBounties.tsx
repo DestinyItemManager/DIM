@@ -2,7 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import {
   getBountiesForActivity,
   purchasableBountiesSelector,
-} from 'app/active-mode/Views/current-activity/activity-util';
+} from 'app/active-mode/Views/activity-util';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
