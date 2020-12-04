@@ -100,17 +100,17 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHashes: [2493100093],
     emptyModSocketHash: 2493100093,
   },
-  {
-    slotTag: 'reveriedawn',
-    compatibleModTags: [...legacyCompatibleTags, 'reveriedawn'],
-    socketTypeHashes: [1540673283],
-    compatiblePlugCategoryHashes: [
-      ...legacyCompatiblePlugCategoryHashes,
-      2149155760, // riven's curse/transcendant blessing
-    ],
-    emptyModSocketHashes: [3625698764],
-    emptyModSocketHash: 3625698764,
-  },
+  // {
+  //   slotTag: 'reveriedawn',
+  //   compatibleModTags: [...legacyCompatibleTags, 'reveriedawn'],
+  //   socketTypeHashes: [1540673283],
+  //   compatiblePlugCategoryHashes: [
+  //     ...legacyCompatiblePlugCategoryHashes,
+  //     2149155760, // riven's curse/transcendant blessing
+  //   ],
+  //   emptyModSocketHashes: [3625698764],
+  //   emptyModSocketHash: 3625698764,
+  // },
 ];
 
 export default modSocketMetadata;

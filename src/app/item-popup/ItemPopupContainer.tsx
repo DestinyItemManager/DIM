@@ -6,6 +6,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
+import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
@@ -93,6 +94,7 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
         // Log the item so it's easy to inspect item structure by clicking on an item
         if ($DIM_FLAVOR !== 'release') {
           infoLog('clicked item', item);
+          infoLog('clicked item', getSpecialtySocketMetadatas(item));
         }
       }
     })

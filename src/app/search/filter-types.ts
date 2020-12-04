@@ -91,6 +91,11 @@ export type FilterDefinition = {
   filter: (args: { filterValue: string } & FilterContext) => ItemFilter;
 
   /**
+   * given an item, should generate a query string that finds the item using this filter
+   */
+  queryGenerator?: (item: DimItem) => string | undefined;
+
+  /**
    * A list of suggested keywords for filters that can take a freeform filter value.
    */
   suggestions?: string[];

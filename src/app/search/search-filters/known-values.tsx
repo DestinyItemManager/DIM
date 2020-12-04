@@ -31,7 +31,7 @@ const d2AmmoTypes = {
 };
 const classes = ['titan', 'hunter', 'warlock'];
 
-const itemCategoryHashesByName: { [key: string]: number } = {
+export const itemCategoryHashesByName: { [key: string]: number } = {
   ...D1ItemCategoryHashes,
   ...D2ItemCategoryHashesByName,
 };
@@ -105,6 +105,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: damageTypeNames,
     description: tl('Filter.DamageType'),
     filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
+    queryGenerator: generateDamageQuery,
   },
   {
     keywords: Object.values(D2Categories)
@@ -155,3 +156,8 @@ const knownValuesFilters: FilterDefinition[] = [
 ];
 
 export default knownValuesFilters;
+
+export function generateDamageQuery(item: DimItem) {
+  const dmg = getItemDamageShortName(item);
+  return dmg && `is:${dmg}`;
+}

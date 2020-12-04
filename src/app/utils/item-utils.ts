@@ -64,9 +64,12 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
 export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
   if (item.bucket.inArmor) {
-    return item.sockets?.allSockets.filter((socket) =>
+    const specialtySockets = item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
+    if (specialtySockets?.length) {
+      return specialtySockets;
+    }
   }
 };
 
