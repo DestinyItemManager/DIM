@@ -248,15 +248,22 @@ function SocketDetails({
     }
   }, []);
 
-  const footer = selectedPlug && isPluggableItem(selectedPlug) && (
-    <SocketDetailsSelectedPlug
-      plug={selectedPlug}
-      defs={defs}
-      item={item}
-      socket={socket}
-      currentPlug={socket.plugged}
-    />
-  );
+  const footer =
+    selectedPlug &&
+    isPluggableItem(selectedPlug) &&
+    (({ onClose }: { onClose(): void }) => (
+      <SocketDetailsSelectedPlug
+        plug={selectedPlug}
+        defs={defs}
+        item={item}
+        socket={socket}
+        currentPlug={socket.plugged}
+        equippable={
+          unlockedPlugs.has(selectedPlug.hash) || otherUnlockedPlugs.has(selectedPlug.hash)
+        }
+        closeMenu={onClose}
+      />
+    ));
 
   return (
     <Sheet

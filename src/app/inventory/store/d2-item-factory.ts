@@ -159,7 +159,7 @@ export function makeItemSingle(
   // Convert a single component response into a dictionary component response
   const empty = { privacy: ComponentPrivacySetting.Public, data: {} };
   const m: <V>(v: SingleComponentResponse<V>) => DictionaryComponentResponse<V> = itemId
-    ? (v) => ({ privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} })
+    ? (v) => (v ? { privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} } : empty)
     : () => empty;
 
   // Make it look like a full response

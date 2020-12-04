@@ -46,6 +46,8 @@ module.exports = function csp(env) {
       'https://api.destinyitemmanager.com',
       // Xur location
       'paracausal.science',
+      // Game2Give
+      'https://www.helpmakemiracles.org',
     ],
     imgSrc: [
       SELF,

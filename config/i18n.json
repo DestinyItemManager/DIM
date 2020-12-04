@@ -786,6 +786,10 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name"
   },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
+  },
   "Stats": {
     "GrenadeCooldown": "Grenade Cooldown",
     "MeleeCooldown": "Melee Cooldown",
@@ -990,6 +994,9 @@
     "FarmingStart": "Start Farming",
     "FarmingStop": "Stop Farming",
     "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here."
+    "NoSearches": "Create saved searches and filter them here.",
+    "SuggestedBounties": "Suggested Bounties",
+    "Offline": "Offline",
+    "Loading": "Current Activity"
   }
 }

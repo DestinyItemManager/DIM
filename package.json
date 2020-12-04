@@ -1,10 +1,10 @@
 {
   "name": "dim",
-  "version": "6.40.0",
+  "version": "6.41.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
-    "test": "jest --verbose --coverage",
+    "test": "jest --verbose",
     "lint": "jsonsort src/locale && eslint --fix src --ext .js,.ts,.tsx && stylelint --fix \"src/**/*.scss\"",
     "lint-check": "eslint src --ext .js,.ts,.tsx --cache --cache-location $HOME/.cache/eslint.json",
     "bundle": "webpack --config ./config/webpack.js",

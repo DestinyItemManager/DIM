@@ -44,8 +44,11 @@ module.exports = (env) => {
   });
 
   let version = packageJson.version.toString();
-  if (env.beta && process.env.TRAVIS_BUILD_NUMBER) {
-    version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
+  // We start the github build number from 1,000,000 so we dont get clashes with travis build numbers.
+  const buildNumber =
+    process.env.TRAVIS_BUILD_NUMBER || parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
+  if (env.beta && buildNumber) {
+    version += `.${buildNumber}`;
   }
 
   const buildTime = Date.now();
@@ -492,7 +495,9 @@ module.exports = (env) => {
         fail_build: true,
       };
 
-      if (process.env.TRAVIS === 'true') {
+      if (process.env.CI === 'true') {
+        // These will be undefined for github actions, this is fine as long
+        // as the action only runs on a push.
         Object.assign(packOptions, {
           branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
           commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,

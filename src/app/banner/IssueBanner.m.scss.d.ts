@@ -2,9 +2,18 @@
 // Please do not change this file!
 interface CssExports {
   'banner': string;
+  'buttongroup': string;
   'container': string;
+  'gametwogive': string;
+  'goal': string;
+  'incentives': string;
+  'link': string;
   'maximized': string;
+  'mercury': string;
+  'streaming': string;
+  'thermo': string;
   'toaster': string;
+  'track': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

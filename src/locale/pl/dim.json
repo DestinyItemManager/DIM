@@ -23,6 +23,7 @@
     "ChangeFilter": "Zmień Filtr",
     "Farming": "Ostatnie przedmioty",
     "FarmingStart": "Rozpocznij farmienie",
+    "FarmingStop": "Stop Farming",
     "Loadouts": "Uzbrojenia",
     "NoQuests": "Nie śledzisz żadnych zadań",
     "NoSearches": "Utwórz zapisane wyszukiwania i filtruj je tutaj.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
     "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
+    "IsSunset": "",
     "ItemHash": "Pokazuje przedmioty z podanym hashem elementu ekwipunku. Dla zaawansowanych użytkowników.",
     "ItemId": "Pokazuje przedmiot z podanym ID elementu ekwipunku. Dla zaawansowanych użytkowników.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "SunsetAfter": "Pokazuje przedmioty w oparciu o ostatni sezon, w którym mogą osiągnąć Sezonowy Limit Mocy.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Wybierz atut",
     "ClassItem": "Przedmiot klasy",
     "ClearLocked": "Wyczyść Zablokowane",
-    "Combat": "Bojowe",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
     "Equip": "Załóż na {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
     "ModLockButton": "Wybierz modyfikacje",
+    "Other": "Other",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -396,9 +399,9 @@
       "HelpFull": "Bierze pod uwagę więcej sprzętu, ale trwa dłużej.",
       "ProcessingMode": "Tryb przetwarzania"
     },
+    "Raid": "Raid",
     "Scaled": "Skalowany",
     "SearchAMod": "Szukaj modyfikacji lub opisu",
-    "Seasonal": "Sezonowe",
     "SelectMods": "Wybierz modyfikacje",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Załóż Mistrzowskie Statystyki",
     "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
-    "BadPerk": "Atut, który \"nieco\" coś zmienia nie jest dobrym wyborem.",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj przypięte przedmioty",
     "SaveAs": "Zapisz jako",
-    "SeasonNum": "Sezon {{season}}",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
     "SelectMinStatTotal": "Minimalna suma statystyk pancerzu",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Atut Trakcja daje +1 Mobilność.",
     "UnlockItem": "Odepnij Przedmiot"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Maksymalizuj poziom Mocy",
     "MaximizeStat": "Maksymalizuj statysktykę",
     "Mods": "Modyfikacje",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
     "NoExotics": "Brak engramów do przeniesienia.",
     "NotificationMessage": "Wysyłanie uzbrojenia z 1 przedmiotem do schowka.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "EquipWithName": "Załóż na {{character}}",
-    "Expand": "Rozwiń szczegóły przedmiotu",
     "Infuse": "Nasyć",
     "ItemDetailSheet": "Pokaż szczegóły przedmiotu",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Rangi",
     "Items": "Przedmioty zadań",
     "LegacyRecord": "Ten Triumf nie będzie już dostępny do ukończenia po wydaniu Beyond Light.",
-    "LegacyTriumphs": "Starsze Triumfy",
     "Milestones": "Kamienie milowe i wyzwania",
     "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Rozmiar przedmiotu 50px będzie wyglądał najostrzej, bez rozmycia obrazu przedmiotu lub tekstu.",
     "DontForgetDupes": "Nie zapomnij, że możesz wyszukać is:dupe aby szybko znaleźć zduplikowane przedmioty, oraz możesz użyć narzędzia porównującego do oceny podobnych przedmiotów.",
     "EnableAdvancedStats": "Pokaż ocenę jakości statystyk pancerza (D1)",
+    "ExpandSingleCharacter": "Show all characters",
     "ExportSS": "Arkusze kalkulacyjne ekwipunku",
     "ExportSSHelp": "Pobierz listę CSV swoich przedmiotów, którą można łatwo przeglądać w wybranej aplikacji arkusza kalkulacyjnego.",
     "ExportSSNoStores": "Przed kliknięciem tego przycisku musisz załadować swój ekwipunek.",
@@ -748,6 +748,8 @@
     "SetSort": "Sortuj produkty według:",
     "Settings": "Ustawienia",
     "ShowNewItems": "Zaznacz nowe przedmioty czerwoną kropką",
+    "SingleCharacter": "Only show current character",
+    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "Rozmiar elementu",
     "SortByAmount": "Rozmiar stosu",
     "SortByClassType": "Wymagana klasa",
@@ -755,6 +757,7 @@
     "SortByRarity": "Rzadkość",
     "SortByRating": "Jakość pancerza (D1)",
     "SortBySeason": "Season (D2)",
+    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Rodzaj",
     "SortCustom": "Sortowanie niestandardowe",
@@ -861,7 +864,6 @@
     "Vote": "Widzisz sprzedawcę sprzedającego przedmioty bliskie twojemu poziomowi światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
   },
   "Vendors": {
-    "Catalysts": "Katalizator",
     "Collections": "Kolekcja",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",

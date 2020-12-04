@@ -23,6 +23,7 @@
     "ChangeFilter": "Cambiar Filtro",
     "Farming": "Objetos Recientes",
     "FarmingStart": "Comenzar Farmeo",
+    "FarmingStop": "Parar Farmeo",
     "Loadouts": "Equipaciones",
     "NoQuests": "No estás siguiendo ninguna aventura",
     "NoSearches": "Crear búsquedas guardadas y filtrarlas aquí.",
@@ -171,6 +172,7 @@
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InLoadout": "Muestra objetos que estén incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
+    "IsSunset": "",
     "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
     "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
     "Leveling": {
@@ -220,6 +222,7 @@
     "StatsLoadout": "Encuentra sets de objetos para equipar por el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
     "SunsetAfter": "Muestra objetos basados en la última temporada en el que pudieron alcanzar el Tope de Poder de Temporada.",
+    "Sunsets": "",
     "Tags": {
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
@@ -345,7 +348,6 @@
     "ChooseAPerk": "Elige una ventaja",
     "ClassItem": "Objeto de Clase",
     "ClearLocked": "Quitar bloqueo",
-    "Combat": "Combate",
     "ContainsVendorItems": "Esta equipación contiene objetos de vendedores",
     "Current": "Actual",
     "Equip": "Equipar al {{character}}",
@@ -389,6 +391,7 @@
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. SHIFT+CLICK para excluir objetos.",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
     "ModLockButton": "Seleccione modificadores",
+    "Other": "Otro",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -396,9 +399,9 @@
       "HelpFull": "Mira más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de procesamiento"
     },
+    "Raid": "Incursión",
     "Scaled": "Escalado",
     "SearchAMod": "Busca un modificador o una descripción",
-    "Seasonal": "De Temporada",
     "SelectMods": "Seleccione Modificadores",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -415,7 +418,6 @@
   "LoadoutBuilder": {
     "AssumeMasterwork": "Asumir Estadísticas de Obra Maestra",
     "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
-    "BadPerk": "Una ventaja que modifique \"ligeramente\" no es la mejor opción.",
     "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
@@ -449,7 +451,6 @@
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos anclados",
     "SaveAs": "Guardar como",
-    "SeasonNum": "Temporada {{season}}",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
@@ -462,7 +463,6 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
     "TierNumber": "N{{tier}}",
-    "Traction": "La ventaja Tracción proporciona +1 Movilidad.",
     "UnlockItem": "Desanclar objeto"
   },
   "Loadouts": {
@@ -508,6 +508,7 @@
     "MaximizePower": "Maximizar Poder",
     "MaximizeStat": "Maximizar Estadística",
     "Mods": "Modificadores",
+    "ModsInfo": "DIM no puede equipar modificadores, debe ser hecho dentro del juego.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
@@ -577,7 +578,6 @@
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
     "EquipWithName": "Equipar en {{character}}",
-    "Expand": "Expandir detalles del objeto",
     "Infuse": "Infundir",
     "ItemDetailSheet": "Abrir detalles del objeto",
     "LockUnlock": {
@@ -687,7 +687,6 @@
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
     "LegacyRecord": "Este Triunfo ya no estará disponible para completar después de que Más Allá de la Luz sea lanzado.",
-    "LegacyTriumphs": "Triunfos Legados",
     "Milestones": "Hazañas & Desafíos",
     "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% para el reinicio",
@@ -731,6 +730,7 @@
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe para buscar rápidamente objetos duplicados, y puedes usar la herramienta de comparación para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad de las estadísticas en la armadura (D1)",
+    "ExpandSingleCharacter": "Mostrar todos los personajes",
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que pueden ser vistos fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
     "ExportSSNoStores": "Necesitas cargar tu inventario una vez antes de pulsar este botón.",
@@ -748,6 +748,8 @@
     "SetSort": "Ordenar objetos por:",
     "Settings": "Configuración",
     "ShowNewItems": "Indica los objetos nuevos con un punto rojo",
+    "SingleCharacter": "Mostrar sólo personaje actual",
+    "SingleCharacterExplanation": "DIM ocultará todo excepto el personaje reciente más jugado. Los inventarios de esos personajes aparecerán como si fueran el depósito.",
     "SizeItem": "Tamaño de objeto",
     "SortByAmount": "Tamaño de la Pila",
     "SortByClassType": "Clase Requerida",
@@ -755,6 +757,7 @@
     "SortByRarity": "Rareza",
     "SortByRating": "Calidad de la armadura (D1)",
     "SortBySeason": "Temporada (D2)",
+    "SortBySunset": "Ha Sido Jubilada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
@@ -861,7 +864,6 @@
     "Vote": "¿Viendo un vendedor vender objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y hacer saber a la comunidad!"
   },
   "Vendors": {
-    "Catalysts": "Catalizadores",
     "Collections": "Colecciones",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
