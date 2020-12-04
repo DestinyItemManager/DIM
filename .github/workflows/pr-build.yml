@@ -26,7 +26,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
             ${{ runner.os }}-${{ env.cache-name }}-
-            ${{ runner.os }}-
 
       - name: Cache eslint
         uses: actions/cache@v2
@@ -38,7 +37,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
             ${{ runner.os }}-${{ env.cache-name }}-
-            ${{ runner.os }}-
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -54,7 +52,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
             ${{ runner.os }}-${{ env.cache-name }}-
-            ${{ runner.os }}-
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
