@@ -120,6 +120,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2821852478, // Source: Complete this weapon's associated Crucible quest.
     ],
   },
+  deepstonecrypt: {
+    itemHashes: [],
+    sourceHashes: [
+      1405897559, // Source: "Deep Stone Crypt" raid.
+    ],
+  },
   do: {
     itemHashes: [],
     sourceHashes: [
@@ -160,6 +166,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
     ],
   },
+  dsc: {
+    itemHashes: [],
+    sourceHashes: [
+      1405897559, // Source: "Deep Stone Crypt" raid.
+    ],
+  },
   edz: {
     itemHashes: [],
     sourceHashes: [
@@ -186,6 +198,15 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       4137108180, // Source: Escalation Protocol on Mars.
+    ],
+  },
+  europa: {
+    itemHashes: [],
+    sourceHashes: [
+      286427063, // Source: Fallen Empire campaign.
+      1148859274, // Source: Found exploring Europa.
+      3125456997, // Source: Europan Tour.
+      3965815470, // Source: Rare drop from elected difficulty Empire Hunts.
     ],
   },
   eververse: {

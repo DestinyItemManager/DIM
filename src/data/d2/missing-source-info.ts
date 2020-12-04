@@ -342,6 +342,7 @@ const missingSources: { [key: string]: number[] } = {
     4211218181, // Ankaa Seeker IV
     4269346472, // Binary Phoenix Bond
   ],
+  deepstonecrypt: [],
   do: [
     102368695, // Anti-Extinction Mask
     245450812, // Anti-Extinction Hood
@@ -438,6 +439,7 @@ const missingSources: { [key: string]: number[] } = {
     4122447870, // Ancient Apocalypse Gloves
     4255727106, // Ancient Apocalypse Hood
   ],
+  dsc: [],
   edz: [
     226467547, // Wildwood Robes
     321260461, // Wildwood Cloak
@@ -510,6 +512,7 @@ const missingSources: { [key: string]: number[] } = {
     3876414174, // Midnight Exigent Gauntlets
     4286845987, // Midnight Exigent Mark
   ],
+  europa: [],
   eververse: [
     138961800, // Helm of Optimacy
     163660481, // Bond of Optimacy
