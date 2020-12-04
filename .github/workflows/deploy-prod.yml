@@ -46,18 +46,6 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
             ${{ runner.os }}-
 
-      - name: Cache eslint
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-eslint
-        with:
-          path: ~/.cache
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
-            ${{ runner.os }}-
-
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
