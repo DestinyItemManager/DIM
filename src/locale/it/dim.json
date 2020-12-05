@@ -24,10 +24,13 @@
     "Farming": "Oggetti Recenti",
     "FarmingStart": "Attiva Farming",
     "FarmingStop": "Disattiva Farming",
+    "Loading": "Attività attuale",
     "Loadouts": "Loadout",
     "NoQuests": "Non stai seguendo nessuna impresa",
     "NoSearches": "Crea ricerche salvate e filtrale qui.",
-    "Pursuits": "Incarichi"
+    "Offline": "Non in linea",
+    "Pursuits": "Incarichi",
+    "SuggestedBounties": "Taglie suggerite"
   },
   "Activities": {
     "Activities": "Attività",
@@ -762,6 +765,10 @@
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome"
+  },
+  "Sockets": {
+    "InsertModButton": "Inserisci Modifica",
+    "InsertPlugError": "Impossible inserire Modifica"
   },
   "Stats": {
     "BarricadeCooldown": "Tempo di recupero Barricata",

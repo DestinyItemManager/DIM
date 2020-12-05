@@ -24,10 +24,13 @@
     "Farming": "最近のアイテム",
     "FarmingStart": "ファーミングを開始する",
     "FarmingStop": "ファーミングを停止する",
+    "Loading": "現在のアクティビティ",
     "Loadouts": "ロードアウト",
     "NoQuests": "クエストを追跡していません",
     "NoSearches": "保存された検索結果を作成し、フィルタリングする。",
-    "Pursuits": "追跡"
+    "Offline": "オフライン",
+    "Pursuits": "追跡",
+    "SuggestedBounties": "提案されたバウンティ"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -762,6 +765,10 @@
     "SortByType": "種類",
     "SortCustom": "カスタムソート",
     "SortName": "名前"
+  },
+  "Sockets": {
+    "InsertModButton": "Mod を挿入",
+    "InsertPlugError": "Mod を挿入できません"
   },
   "Stats": {
     "BarricadeCooldown": "グレネードのクールダウン",

@@ -24,10 +24,13 @@
     "Farming": "최근 아이템",
     "FarmingStart": "파밍 시작",
     "FarmingStop": "파밍 종료",
+    "Loading": "현재 활동",
     "Loadouts": "로드아웃",
     "NoQuests": "추적 중인 퀘스트 없음",
     "NoSearches": "여기서 저장된 검색 기록을 만들고 필터링하세요.",
-    "Pursuits": "목표"
+    "Offline": "오프라인",
+    "Pursuits": "목표",
+    "SuggestedBounties": "추천 현상금"
   },
   "Activities": {
     "Activities": "활동",
@@ -762,6 +765,10 @@
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름"
+  },
+  "Sockets": {
+    "InsertModButton": "개조 부품 장착",
+    "InsertPlugError": "개조 부품 장착 불가"
   },
   "Stats": {
     "BarricadeCooldown": "방벽 재사용 대기시간",

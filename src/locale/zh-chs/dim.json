@@ -23,11 +23,14 @@
     "ChangeFilter": "更改过滤器",
     "Farming": "最近项目",
     "FarmingStart": "开始肝",
-    "FarmingStop": "Stop Farming",
+    "FarmingStop": "停止肝",
+    "Loading": "当前活动",
     "Loadouts": "配装",
     "NoQuests": "您没有跟踪任何任务",
     "NoSearches": "创建保存的搜索并在这里过滤它们。",
-    "Pursuits": "任务"
+    "Offline": "离线",
+    "Pursuits": "任务",
+    "SuggestedBounties": "建议的悬赏"
   },
   "Activities": {
     "Activities": "活动",
@@ -508,7 +511,7 @@
     "MaximizePower": "最高光等配装",
     "MaximizeStat": "最高属性",
     "Mods": "模组",
-    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
+    "ModsInfo": "DIM 无法装备模组，必须在游戏中完成。",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
     "NoExotics": "没有记忆水晶可以转移.",
     "NotificationMessage": "正在将包含1件物品的配装转移到保险柜",
@@ -762,6 +765,10 @@
     "SortByType": "类型",
     "SortCustom": "自订排序",
     "SortName": "名称"
+  },
+  "Sockets": {
+    "InsertModButton": "插入模组",
+    "InsertPlugError": "无法插入模组"
   },
   "Stats": {
     "BarricadeCooldown": "屏障冷却",

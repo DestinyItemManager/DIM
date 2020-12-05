@@ -24,10 +24,13 @@
     "Farming": "Itens Recentes",
     "FarmingStart": "Iniciar Farm",
     "FarmingStop": "Parar Farm",
+    "Loading": "Atividade atual",
     "Loadouts": "Sets",
     "NoQuests": "Você não está rastreando nenhuma jornada",
     "NoSearches": "Crie pesquisas salvas e as filtre aqui.",
-    "Pursuits": "Empreitadas"
+    "Offline": "Offline",
+    "Pursuits": "Empreitadas",
+    "SuggestedBounties": "Contratos sugeridos"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -762,6 +765,10 @@
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome"
+  },
+  "Sockets": {
+    "InsertModButton": "Inserir mod",
+    "InsertPlugError": "Mod não pôde ser inserido"
   },
   "Stats": {
     "BarricadeCooldown": "Carregamento da Barricada",

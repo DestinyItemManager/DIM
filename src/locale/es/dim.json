@@ -24,10 +24,13 @@
     "Farming": "Objetos Recientes",
     "FarmingStart": "Comenzar Farmeo",
     "FarmingStop": "Parar Farmeo",
+    "Loading": "Actividad Actual",
     "Loadouts": "Equipaciones",
     "NoQuests": "No estás siguiendo ninguna aventura",
     "NoSearches": "Crear búsquedas guardadas y filtrarlas aquí.",
-    "Pursuits": "Seguidos"
+    "Offline": "Desconectado",
+    "Pursuits": "Seguidos",
+    "SuggestedBounties": "Contratos Sugeridos"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -762,6 +765,10 @@
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre"
+  },
+  "Sockets": {
+    "InsertModButton": "Insertar Modificador",
+    "InsertPlugError": "No se pudo insertar modificador"
   },
   "Stats": {
     "BarricadeCooldown": "Enfriamiento de Barricada",

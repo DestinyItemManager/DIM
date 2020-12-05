@@ -24,10 +24,13 @@
     "Farming": "Предметы",
     "FarmingStart": "Режим Фарма",
     "FarmingStop": "Stop Farming",
+    "Loading": "Current Activity",
     "Loadouts": "Наборы",
     "NoQuests": "Задания не отслеживаются",
     "NoSearches": "Create saved searches and filter them here.",
-    "Pursuits": "Контракты"
+    "Offline": "Offline",
+    "Pursuits": "Контракты",
+    "SuggestedBounties": "Suggested Bounties"
   },
   "Activities": {
     "Activities": "Активности",
@@ -762,6 +765,10 @@
     "SortByType": "Тип",
     "SortCustom": "Свой порядок",
     "SortName": "Имя"
+  },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
     "BarricadeCooldown": "Время восстановления Баррикады",
