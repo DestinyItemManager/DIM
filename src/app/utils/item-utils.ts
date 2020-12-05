@@ -216,7 +216,7 @@ function isEnabledKillTrackerSocket(socket: DimSocket) {
 
 /** Is this a kill tracker socket */
 export function isKillTrackerSocket(socket: DimSocket) {
-  return socket.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash;
+  return socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash;
 }
 
 export type KillTracker = {
