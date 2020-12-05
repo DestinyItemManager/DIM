@@ -121,6 +121,10 @@ export function getBountiesForActivity(
   bounties: VendorItem[],
   activityInfo: DestinyCharacterActivitiesComponent
 ) {
+  if (!activityInfo.currentActivityHash) {
+    return [];
+  }
+
   const activity = defs.Activity.get(activityInfo.currentActivityHash);
   const activityMode = defs.ActivityMode[activityInfo.currentActivityModeHash];
 

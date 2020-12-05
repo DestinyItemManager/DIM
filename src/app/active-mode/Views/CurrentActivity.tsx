@@ -39,9 +39,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
   }
 
   const activity =
-    (activityInfo &&
-      activityInfo.currentActivityHash > 0 &&
-      defs.Activity.get(activityInfo.currentActivityHash)) ||
+    (activityInfo?.currentActivityHash && defs.Activity.get(activityInfo.currentActivityHash)) ||
     undefined;
   const activityMode = defs.ActivityMode[activityInfo?.currentActivityModeHash ?? 0];
   const place = activity && defs.Place.get(activity.placeHash);
