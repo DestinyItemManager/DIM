@@ -14,6 +14,7 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   killTrackerObjectivesByHash,
+  killTrackerSocketTypeHash,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -213,12 +214,9 @@ function isEnabledKillTrackerSocket(socket: DimSocket) {
   return (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash;
 }
 
-/** Is this both a kill tracker socket */
+/** Is this a kill tracker socket */
 export function isKillTrackerSocket(socket: DimSocket) {
-  return (
-    socket.plugged?.plugDef?.hash === 2285418970 ||
-    (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash
-  );
+  return socket.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash;
 }
 
 export type KillTracker = {
