@@ -50,6 +50,7 @@ interface StoreProps {
   reauth: boolean;
   needsDeveloper: boolean;
   showIssueBanner: boolean;
+  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -63,6 +64,7 @@ function mapStateToProps(state: RootState): StoreProps {
     reauth: state.accounts.reauth,
     needsDeveloper: state.accounts.needsDeveloper,
     showIssueBanner: $featureFlags.issueBanner && state.dimApi.globalSettings.showIssueBanner,
+    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
@@ -79,6 +81,7 @@ function App({
   reauth,
   needsDeveloper,
   showIssueBanner,
+  isPhonePortrait,
 }: Props) {
   const [storageWorks, setStorageWorks] = useState(true);
   useEffect(() => {
@@ -205,7 +208,9 @@ function App({
         <NotificationsContainer />
         <ActivityTracker />
         <HotkeysCheatSheet />
-        {$featureFlags.issueBanner && showIssueBanner && !mobile && <IssueBanner />}
+        {$featureFlags.issueBanner && showIssueBanner && !mobile && !isPhonePortrait && (
+          <IssueBanner />
+        )}
       </ClickOutsideRoot>
     </div>
   );
