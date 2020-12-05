@@ -117,10 +117,10 @@ export default function IssueBanner() {
                       width: `${Math.min((state.donations / state.goal) * 100, 100)}%`,
                     }}
                   >
-                    <em>${state.donations}</em>
+                    <em>${state.donations.toLocaleString()}</em>
                   </div>
                 </div>
-                <div className={styles.goal}>${state.goal}</div>
+                <div className={styles.goal}>${state.goal.toLocaleString()}</div>
               </div>
               <div className={styles.buttongroup}>
                 <button className="dim-button" type="button">
