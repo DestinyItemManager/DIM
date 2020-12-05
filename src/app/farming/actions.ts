@@ -49,7 +49,7 @@ const makeRoomTypes = [
   3865314626, // Material
 ];
 
-const FARMING_REFRESH_RATE = 10_000; // Bungie.net caches results for 30 seconds - this may be too fast
+const FARMING_REFRESH_RATE = 30_000; // Bungie.net caches results for 30 seconds - this may be too fast
 
 let intervalId = 0;
 
