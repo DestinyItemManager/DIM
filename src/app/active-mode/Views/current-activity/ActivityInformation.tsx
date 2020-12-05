@@ -32,7 +32,8 @@ type Props = ProvidedProps & StoreProps;
 
 /** Find unclaimed vendor bounties based on your current activity */
 function ActivityInformation({ defs, store, activityInfo, profileInfo }: Props) {
-  const activity = defs.Activity.get(activityInfo.currentActivityHash);
+  const activity =
+    activityInfo.currentActivityHash > 0 && defs.Activity.get(activityInfo.currentActivityHash);
 
   if (!activity) {
     return null;
