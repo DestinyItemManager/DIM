@@ -1,6 +1,11 @@
 name: PR Build
 
-on: [push]
+# While this is intended for PR's we are using a push event as
+# packtracker needs to be run on every push.
+on:
+  push:
+    branches-ignore:
+      - "master"
 
 jobs:
   build:
