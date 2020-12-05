@@ -121,11 +121,8 @@ export function getBountiesForActivity(
   bounties: VendorItem[],
   activityInfo: DestinyCharacterActivitiesComponent
 ) {
-  if (!activityInfo.currentActivityHash) {
-    return [];
-  }
-
-  const activity = defs.Activity.get(activityInfo.currentActivityHash);
+  const activity =
+    activityInfo.currentActivityHash && defs.Activity.get(activityInfo.currentActivityHash);
   const activityMode = defs.ActivityMode[activityInfo.currentActivityModeHash];
 
   return bounties.filter(({ item }) => {
@@ -141,7 +138,7 @@ export function getBountiesForActivity(
       return true;
     }
 
-    const matchingDestination = info.Destination?.includes(activity?.destinationHash);
+    const matchingDestination = activity && info.Destination?.includes(activity.destinationHash);
     const matchingActivity =
       (!info.Destination && info.ActivityMode?.includes(activityMode?.hash)) ||
       activityMode?.parentHashes.some((hash) => info.ActivityMode?.includes(hash));
