@@ -9,69 +9,61 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
 
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_KEY }}
-        name: dim.rsa # optional
-        known_hosts: ${{ secrets.REMOTE_HOST }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: dim.rsa
+          known_hosts: ${{ secrets.REMOTE_HOST }}
 
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 2 # So packtracker can get the previous commit
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # So packtracker can get the previous commit
 
-    - name: Cache node_modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node_modules
-      with:
-        path: $GITHUB_WORKSPACE/node_modules
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node_modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock')}}
+            ${{ runner.os }}-${{ env.cache-name }}-
 
-    - name: Cache eslint
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-eslint
-      with:
-        path: ~/.cache
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/eslint.json') }}
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
-    - name: Install
-      uses: bahmutov/npm-install@v1
+      - name: Cache yarn
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-${{ env.cache-name }}-
 
-    - name: Test
-      run: yarn test
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
 
-    - name: Lint check
-      run: |
-        find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
-        yarn run lint-check
-
-    - name: Build and deploy
-      run: ./build/ga_build.sh
-      env:
-        PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
-        WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
-        WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
-        WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
-        DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
-        CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
-        CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_PATH: beta.destinyitemmanager.com
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Build and deploy
+        run: ./build/ga_build.sh
+        env:
+          PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PATH: beta.destinyitemmanager.com
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
