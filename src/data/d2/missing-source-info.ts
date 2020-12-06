@@ -2132,6 +2132,7 @@ const missingSources: { [key: string]: number[] } = {
     4177448933, // Channeling Wraps
   ],
   vexoffensive: [],
+  wrathborn: [],
   zavala: [
     178749005, // Vigil of Heroes
     273457849, // Vigil of Heroes
