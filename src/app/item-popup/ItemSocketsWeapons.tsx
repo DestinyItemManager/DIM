@@ -172,7 +172,7 @@ function ItemSocketsWeapons({
         </div>
       )}
       {perks &&
-        ($featureFlags.newPerks ? (
+        ($featureFlags.newPerks && !minimal ? (
           <ItemPerksList item={item} perks={perks} />
         ) : (
           <div

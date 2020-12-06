@@ -393,7 +393,7 @@ module.exports = (env) => {
         // Enable search results
         '$featureFlags.searchResults': JSON.stringify(!env.release),
         // Alternate perks display on item popup
-        '$featureFlags.newPerks': JSON.stringify(env.dev),
+        '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Incorporate mods directly into loadouts

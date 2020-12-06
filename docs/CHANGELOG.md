@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* We're trying out a new display for weapon perks, which displays the name of the active perk and shows details on click, instead of on hover. This is partly to make perks easier to understand, but also to allow for more actions on perks in the future. Let us know what you think! Animations will be added later if this design catches on.
+
 ## 6.41.1 <span className="changelog-date">(2020-12-02)</span>
 
 ## 6.41.0 <span className="changelog-date">(2020-12-02)</span>
