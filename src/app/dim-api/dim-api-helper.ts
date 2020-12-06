@@ -56,7 +56,10 @@ export async function unauthenticatedApi<T>(
     return response.json() as Promise<T>;
   }
 
-  throw new Error('Failed to call DIM API: ' + response.status);
+  const jsonResponse = await response.json();
+  throw new Error(
+    'Failed to call DIM API: [' + response.status + '] - ' + JSON.stringify(jsonResponse)
+  );
 }
 
 /**
