@@ -5,8 +5,7 @@ module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
   // We start the github build number from 1,000,000 so we dont get clashes with travis build numbers.
-  const buildNumber =
-    process.env.TRAVIS_BUILD_NUMBER || parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
+  const buildNumber = parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
 
   var betaVersion = `${pkg.version.toString()}.${buildNumber}`;
 
