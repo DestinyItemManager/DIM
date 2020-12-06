@@ -1,8 +1,13 @@
 ## Next
 
+* Farming mode now refreshes only every 30 seconds, instead of every 10 seconds, to reduce load on Bungie.net.
+* When the postmaster section is collapsed, it now shows the number of items in your postmaster so you can keep an eye on it.
+* Fixed an issue where the Game2Give donation banner could sometimes appear in the mobile layout.
+
 ### Beta Only
 
 * We're trying out a new display for weapon perks, which displays the name of the active perk and shows details on click, instead of on hover. This is partly to make perks easier to understand, but also to allow for more actions on perks in the future. Let us know what you think! Animations will be added later if this design catches on.
+* Continued improvements to Active mode, incorporating Bounty Guide and better suggested vendor bounties.
 
 ## 6.41.1 <span className="changelog-date">(2020-12-02)</span>
 
