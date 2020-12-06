@@ -14,6 +14,7 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   killTrackerObjectivesByHash,
+  killTrackerSocketTypeHash,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -204,13 +205,18 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
 /** verifies an item has kill tracker mod slot, which is returned */
 const getKillTrackerSocket = (item: DimItem): DimSocket | undefined => {
   if (item.bucket.inWeapons) {
-    return item.sockets?.allSockets.find(isKillTrackerSocket);
+    return item.sockets?.allSockets.find(isEnabledKillTrackerSocket);
   }
 };
 
 /** Is this both a kill tracker socket, and the kill tracker is enabled? */
-export function isKillTrackerSocket(socket: DimSocket) {
+function isEnabledKillTrackerSocket(socket: DimSocket) {
   return (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash;
+}
+
+/** Is this a kill tracker socket */
+export function isKillTrackerSocket(socket: DimSocket) {
+  return socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash;
 }
 
 export type KillTracker = {
