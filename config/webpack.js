@@ -45,8 +45,7 @@ module.exports = (env) => {
 
   let version = packageJson.version.toString();
   // We start the github build number from 1,000,000 so we dont get clashes with travis build numbers.
-  const buildNumber =
-    process.env.TRAVIS_BUILD_NUMBER || parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
+  const buildNumber = parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
   if (env.beta && buildNumber) {
     version += `.${buildNumber}`;
   }
@@ -356,7 +355,7 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env.name),
         $DIM_BUILD_DATE: JSON.stringify(buildTime),
-        // These are set from the Travis repo settings instead of .travis.yml
+        // These are set from the GitHub secrets
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
@@ -489,22 +488,14 @@ module.exports = (env) => {
       })
     );
 
-    if (process.env.PT_PROJECT_TOKEN) {
-      const packOptions = {
-        upload: true,
-        fail_build: true,
-      };
-
-      if (process.env.CI === 'true') {
-        // These will be undefined for github actions, this is fine as long
-        // as the action only runs on a push.
-        Object.assign(packOptions, {
-          branch: process.env.TRAVIS_PULL_REQUEST_BRANCH || process.env.TRAVIS_BRANCH,
-          commit: process.env.TRAVIS_PULL_REQUEST_SHA || process.env.TRAVIS_COMMIT,
-        });
-      }
-
-      config.plugins.push(new PacktrackerPlugin(packOptions));
+    if (process.env.CI === 'true') {
+      config.plugins.push(
+        new PacktrackerPlugin({
+          upload: true,
+          fail_build: true,
+          project_token: 'b3b16a32-bc8b-489e-a6fd-2d1b98c25704',
+        })
+      );
     }
   }
 
