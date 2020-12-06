@@ -69,7 +69,7 @@ jobs:
           REMOTE_PATH: beta.destinyitemmanager.com
 
       - name: Purge CloudFlare cache
-        run: ./build/purge-cloudflare-beta.sh
+        run: ./build/purge-cloudflare.sh
         env:
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
