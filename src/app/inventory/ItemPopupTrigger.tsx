@@ -20,7 +20,9 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
 
   const clicked = useCallback(
     (e: React.MouseEvent) => {
-      e.stopPropagation();
+      if (!$featureFlags.confetti) {
+        e.stopPropagation();
+      }
 
       dispatch(clearNewItem(item.id));
 

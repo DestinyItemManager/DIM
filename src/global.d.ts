@@ -28,6 +28,8 @@ declare const $featureFlags: {
   armor2ModPicker: boolean;
   /** Show a banner for supporting a charitable cause */
   issueBanner: boolean;
+  /** Show confetti */
+  confetti: boolean;
   /** Show the triage tab in the item popup */
   triage: boolean;
   /** Enable new mobile inspect view when dragging an item */
