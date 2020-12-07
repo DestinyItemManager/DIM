@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
