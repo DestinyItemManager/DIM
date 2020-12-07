@@ -1,5 +1,7 @@
 ## Next
 
+## 6.42.1 <span className="changelog-date">(2020-12-06)</span>
+
 ## 6.42.0 <span className="changelog-date">(2020-12-06)</span>
 
 * Farming mode now refreshes only every 30 seconds, instead of every 10 seconds, to reduce load on Bungie.net.
