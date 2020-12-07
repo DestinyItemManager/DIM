@@ -85,6 +85,19 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
+      const plugCategoryId = def.plug?.plugCategoryIdentifier ?? '';
+
+      if (def.itemSubType === 21) {
+        // Ornament Only Filtering
+        if (plugCategoryId.includes('_titan_')) {
+          return DestinyClass.Titan === store.classType;
+        } else if (plugCategoryId.includes('_hunter_')) {
+          return DestinyClass.Hunter === store.classType;
+        } else if (plugCategoryId.includes('_warlock_')) {
+          return DestinyClass.Warlock === store.classType;
+        }
+      }
+
       return def.classType === DestinyClass.Unknown || def.classType === store.classType;
     })
     // Premium reward first to match companion
