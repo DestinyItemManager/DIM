@@ -81,11 +81,11 @@ export default function IssueBanner() {
     return () => document.body.classList.remove('issue-banner-shown');
   }, [state.show]);
 
-  const metGoal = $featureFlags.confetti && state.donations >= 25000;
+  const met25kGoal = $featureFlags.confetti && state.donations >= 25000;
 
   return (
     <>
-      {!disableConfetti && metGoal && <ConfettiClick />}
+      {!disableConfetti && met25kGoal && <ConfettiClick />}
       <div
         className={clsx(styles.toaster, {
           [styles.maximized]: !isMinimized,
@@ -94,14 +94,14 @@ export default function IssueBanner() {
         {isMinimized ? (
           state.show && (
             <>
-              {metGoal && (
+              {met25kGoal && (
                 <label className={styles.confettiToggle}>
                   <input
                     checked={disableConfetti}
                     type="checkbox"
                     onClick={() => dispatch(setSetting('disableConfetti', !disableConfetti))}
                   />
-                  Disable Confetti Click
+                  Disable $25k Confetti Milestone
                 </label>
               )}
               <div
@@ -130,28 +130,20 @@ export default function IssueBanner() {
                     justifyContent: 'center',
                   }}
                 >
-                  {metGoal ? (
-                    <div>
-                      <div className={styles.thanks}>
-                        💞 <span className={styles.amazing}>THIS IS AMAZING!</span> Together we
-                        raised over {<em>${state.donations.toLocaleString()}</em>}. Thank you! 🥳🎊
+                  <div className={styles.thermo}>
+                    <div className={styles.track}>
+                      <div
+                        className={styles.mercury}
+                        style={{
+                          width: `${Math.min((state.donations / state.goal) * 100, 100)}%`,
+                        }}
+                      >
+                        <em>${state.donations.toLocaleString()}</em>
                       </div>
                     </div>
-                  ) : (
-                    <div className={styles.thermo}>
-                      <div className={styles.track}>
-                        <div
-                          className={styles.mercury}
-                          style={{
-                            width: `${Math.min((state.donations / state.goal) * 100, 100)}%`,
-                          }}
-                        >
-                          <em>${state.donations.toLocaleString()}</em>
-                        </div>
-                      </div>
-                      <div className={styles.goal}>${state.goal.toLocaleString()}</div>
-                    </div>
-                  )}
+                    <div className={styles.goal}>${state.goal.toLocaleString()}</div>
+                  </div>
+
                   <div className={styles.buttongroup}>
                     <button className="dim-button" type="button">
                       Learn More
