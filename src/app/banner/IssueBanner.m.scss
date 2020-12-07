@@ -10,7 +10,6 @@
   line-height: 24px;
   padding: 12px 24px;
   background-color: black;
-  z-index: 9999;
 }
 
 .confettiToggle {
@@ -34,7 +33,7 @@
   bottom: -1px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-content: center;
