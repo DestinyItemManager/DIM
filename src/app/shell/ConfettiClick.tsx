@@ -29,15 +29,15 @@ const useMouseClick = () => {
 };
 
 function drawShapes(ctx) {
-  const confettiType = this.confettiType || Math.floor(Math.random() * 10);
+  const confettiType = this.confettiType ?? Math.floor(Math.random() * 10);
   this.confettiType = confettiType;
 
   switch (confettiType) {
-    case 1:
+    case 0:
       return drawSolar(ctx);
-    case 2:
+    case 1:
       return drawArc(ctx);
-    case 3:
+    case 2:
       return drawVoid(ctx);
     default:
       drawStar(ctx);
