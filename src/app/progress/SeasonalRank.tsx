@@ -11,7 +11,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngrams from 'data/d2/bright-engrams.json';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -86,27 +85,19 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
-      // Ornament Filtering
-      switch (def.itemSubType === 21 && def.plug?.plugCategoryHash) {
-        case PlugCategoryHashes.ArmorSkinsTitanArms:
-        case PlugCategoryHashes.ArmorSkinsTitanChest:
-        case PlugCategoryHashes.ArmorSkinsTitanClass:
-        case PlugCategoryHashes.ArmorSkinsTitanHead:
-        case PlugCategoryHashes.ArmorSkinsTitanLegs:
+      const plugCategoryId = def.plug?.plugCategoryIdentifier ?? '';
+
+      if (def.itemSubType === 21) {
+        // Ornament Only Filtering
+        if (plugCategoryId.includes('_titan_')) {
           return DestinyClass.Titan === store.classType;
-        case PlugCategoryHashes.ArmorSkinsHunterArms:
-        case PlugCategoryHashes.ArmorSkinsHunterChest:
-        case PlugCategoryHashes.ArmorSkinsHunterClass:
-        case PlugCategoryHashes.ArmorSkinsHunterHead:
-        case PlugCategoryHashes.ArmorSkinsHunterLegs:
+        } else if (plugCategoryId.includes('_hunter_')) {
           return DestinyClass.Hunter === store.classType;
-        case PlugCategoryHashes.ArmorSkinsWarlockArms:
-        case PlugCategoryHashes.ArmorSkinsWarlockChest:
-        case PlugCategoryHashes.ArmorSkinsWarlockClass:
-        case PlugCategoryHashes.ArmorSkinsWarlockHead:
-        case PlugCategoryHashes.ArmorSkinsWarlockLegs:
+        } else if (plugCategoryId.includes('_warlock_')) {
           return DestinyClass.Warlock === store.classType;
+        }
       }
+
       return def.classType === DestinyClass.Unknown || def.classType === store.classType;
     })
     // Premium reward first to match companion
