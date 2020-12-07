@@ -209,7 +209,9 @@ function App({
         <ActivityTracker />
         <HotkeysCheatSheet />
         {$featureFlags.issueBanner && showIssueBanner && !mobile && !isPhonePortrait && (
-          <IssueBanner />
+          <div className="banner">
+            <IssueBanner />
+          </div>
         )}
       </ClickOutsideRoot>
     </div>

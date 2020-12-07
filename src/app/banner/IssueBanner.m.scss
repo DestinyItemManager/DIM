@@ -1,9 +1,8 @@
 @import '../variables.scss';
 
-:global(canvas) {
+:global(.banner > canvas) {
+  // 😬💀 library doesn't seem to have a way to add a classname to the injected canvas
   position: fixed !important;
-  top: 0;
-  left: 0;
 }
 
 .banner {
@@ -19,15 +18,6 @@
   padding: 3px 8px;
   display: flex;
   align-items: center;
-}
-
-.thanks {
-  font-size: 0.99rem;
-}
-
-.amazing {
-  font-weight: bold;
-  color: #d6272e;
 }
 
 .toaster {

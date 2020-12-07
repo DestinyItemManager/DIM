@@ -53,8 +53,9 @@ export default function ConfettiClick() {
   return (
     <Confetti
       style={{ pointerEvents: 'none', zIndex: 999999 }}
-      initialVelocityY={11}
-      initialVelocityX={5}
+      initialVelocityY={12}
+      initialVelocityX={7}
+      gravity={0.08}
       numberOfPieces={clicked ? 80 : 0}
       onConfettiComplete={(confetti) => confetti?.reset()}
       confettiSource={{ w: 0, h: 0, x, y }}
