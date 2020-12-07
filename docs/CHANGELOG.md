@@ -1,5 +1,7 @@
 ## Next
 
+## 6.42.0 <span className="changelog-date">(2020-12-06)</span>
+
 * Farming mode now refreshes only every 30 seconds, instead of every 10 seconds, to reduce load on Bungie.net.
 * When the postmaster section is collapsed, it now shows the number of items in your postmaster so you can keep an eye on it.
 * Fixed an issue where the Game2Give donation banner could sometimes appear in the mobile layout.
