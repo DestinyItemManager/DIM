@@ -29,7 +29,7 @@ const useMouseClick = () => {
 };
 
 function drawShapes(ctx) {
-  const confettiType = this.confettiType ?? Math.floor(Math.random() * 10);
+  const confettiType = this.confettiType ?? Math.floor(Math.random() * 7);
   this.confettiType = confettiType;
 
   switch (confettiType) {
@@ -53,7 +53,8 @@ export default function ConfettiClick() {
   return (
     <Confetti
       style={{ pointerEvents: 'none', zIndex: 999999 }}
-      initialVelocityY={10}
+      initialVelocityY={13}
+      initialVelocityX={8}
       numberOfPieces={clicked ? 80 : 0}
       onConfettiComplete={(confetti) => confetti?.reset()}
       confettiSource={{ w: 0, h: 0, x, y }}
