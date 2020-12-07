@@ -12,8 +12,8 @@ const useMouseClick = () => {
     const clickHandler = (event: MouseEvent) => {
       setClicked(true);
       setPosition({
-        x: event.pageX,
-        y: event.pageY,
+        x: event.clientX,
+        y: event.clientY,
       });
       window.setTimeout(() => setClicked(false), 800);
     };
@@ -29,7 +29,7 @@ const useMouseClick = () => {
 };
 
 function drawShapes(ctx) {
-  const confettiType = this.confettiType ?? Math.floor(Math.random() * 7);
+  const confettiType = this.confettiType ?? Math.floor(Math.random() * 8);
   this.confettiType = confettiType;
 
   switch (confettiType) {
@@ -40,7 +40,7 @@ function drawShapes(ctx) {
     case 2:
       return drawVoid(ctx);
     default:
-      drawStar(ctx);
+      confettiType % 3 === 0 ? drawStar(ctx) : drawDIM(ctx);
   }
 }
 
@@ -53,8 +53,8 @@ export default function ConfettiClick() {
   return (
     <Confetti
       style={{ pointerEvents: 'none', zIndex: 999999 }}
-      initialVelocityY={13}
-      initialVelocityX={6}
+      initialVelocityY={11}
+      initialVelocityX={5}
       numberOfPieces={clicked ? 80 : 0}
       onConfettiComplete={(confetti) => confetti?.reset()}
       confettiSource={{ w: 0, h: 0, x, y }}
@@ -106,6 +106,16 @@ function drawVoid(ctx) {
         c0.73,0.24,1.51,0.37,2.31,0.43c0.79,0.06,1.65,0.05,2.45-0.04c0.8-0.08,1.59-0.23,2.37-0.49c3.13-0.99,5.88-3.29,7.9-6.24
         C26.9,23.69,24.31,26.8,20.77,28.38z`)
   );
+}
+
+function drawDIM(ctx) {
+  ctx.scale(0.06, 0.06);
+  ctx.fill(
+    new Path2D(
+      `m397.926 220.152-3.065-3.068-2.642-2.641-35.557-35.552-35.554-35.557-39.247-39.248-31.864-31.863-35.557 35.555 28.858 28.857 42.256 42.256 35.554 35.55-.002.002 35.556 35.557-35.556 35.555.002.002-28.898 28.896-42.213 42.211-35.557-35.555-35.553-35.554v.002l-32.822-32.821-2.735-2.736 39.913-39.916 31.197-31.197-35.553-35.553-35.557 35.553-35.557 35.556-35.553 35.557 35.556 35.555 35.558 35.554-.004.002 35.557 35.553 35.553 35.559 35.557 35.552 35.557-35.552 35.556-35.559 35.552-35.555 35.557-35.554 35.556-35.555z`
+    )
+  );
+  ctx.fill(new Path2D(`m214.444 249.996 35.555 35.559 35.557-35.559-35.557-35.553z`));
 }
 
 function drawStar(ctx) {
