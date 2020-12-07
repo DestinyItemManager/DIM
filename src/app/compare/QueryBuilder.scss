@@ -1,0 +1,61 @@
+.selectors {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.highlighted img {
+  &.archetype {
+    background-color: black;
+    border-radius: 4px;
+  }
+  &.selectionSvg {
+    filter: invert(0);
+  }
+}
+
+.specialtyIcon {
+  height: 1.3em;
+  width: 1.3em;
+  margin-right: 0.3em;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.selectors {
+  cursor: default;
+
+  div.specialtyIcon {
+    height: 2em;
+    width: 2em;
+  }
+  img.leadingIcon {
+    height: 2em;
+    width: auto;
+    vertical-align: bottom;
+    margin: 0 0.5em;
+    // margin: 0 2px 0 0;
+    // vertical-align: middle;
+
+    &.weaponIcon {
+      height: 1.8em;
+    }
+
+    &.selectionSvg {
+      filter: invert(1);
+      height: 1.5em;
+
+      .currentlySelected & {
+        filter: invert(0);
+      }
+    }
+  }
+
+  .dim-button {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    span {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+}

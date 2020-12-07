@@ -29,7 +29,7 @@ const d2AmmoTypes = {
   special: DestinyAmmunitionType.Special,
   heavy: DestinyAmmunitionType.Heavy,
 };
-const classes = ['titan', 'hunter', 'warlock'];
+export const classes = ['titan', 'hunter', 'warlock'];
 
 export const itemCategoryHashesByName: { [key: string]: number } = {
   ...D1ItemCategoryHashes,

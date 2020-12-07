@@ -3,7 +3,6 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
-import { searchFiltersConfigSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { RootState } from 'app/store/types';
@@ -25,14 +24,12 @@ import { CompareButton, findSimilarArmors, findSimilarWeapons } from './compare-
 import './compare.scss';
 import { CompareService } from './compare.service';
 import CompareItem from './CompareItem';
-import QueryBuilderBuilder from './QueryBuilder';
 import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
 
 interface StoreProps {
   allItems: DimItem[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
-  searchFiltersConfig: ReturnType<typeof searchFiltersConfigSelector>;
 }
 
 const mapDispatchToProps = {
@@ -47,7 +44,6 @@ function mapStateToProps(state: RootState): StoreProps {
     allItems: allItemsSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
-    searchFiltersConfig: searchFiltersConfigSelector(state),
   };
 }
 
@@ -62,7 +58,6 @@ interface State {
   comparisonSets: CompareButton[];
   adjustedPlugs?: DimAdjustedPlugs;
   adjustedStats?: DimAdjustedStats;
-  query: string;
 }
 
 export interface StatInfo {
@@ -75,20 +70,6 @@ export interface StatInfo {
   getStat: StatGetter;
 }
 
-// /** A selector for a function for searching items, given the current search query. */
-// export const searchFilterSelector = createSelector(
-//   querySelector,
-//   searchFiltersConfigSelector,
-//   (query, filterFactory) => filterFactory(query)
-// );
-
-// /** A selector for all items filtered by whatever's currently in the search box. */
-// export const filteredItemsSelector = createSelector(
-//   allItemsSelector,
-//   searchFilterSelector,
-//   (allItems, searchFilter) => allItems.filter((i) => searchFilter(i))
-// );
-
 /** a DimStat with, at minimum, a statHash */
 export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
@@ -99,7 +80,6 @@ class Compare extends React.Component<Props, State> {
     comparisonSets: [],
     show: false,
     sortBetterFirst: true,
-    query: '',
   };
   private subscriptions = new Subscriptions();
 
@@ -109,19 +89,6 @@ class Compare extends React.Component<Props, State> {
     (_state: State, props: Props) => props.compareBaseStats,
     (state: State) => state.adjustedStats,
     getAllStats
-  );
-
-  private thisSheetFilteredItemsSelector = createSelector(
-    (_state: State, props: Props) => props.searchFiltersConfig,
-    (state: State, _props: Props) => state.query,
-    (_state: State, _props: Props, allItems: DimItem[]) => allItems,
-    (filterFactory, query, allItems) => {
-      const x = allItems.filter(filterFactory(query));
-      // console.log(query);
-      // console.log(allItems.length);
-      // console.log(x.length);
-      return query ? x : [];
-    }
   );
 
   componentDidMount() {
@@ -160,7 +127,7 @@ class Compare extends React.Component<Props, State> {
       comparisonItems: unsortedComparisonItems,
       sortedHash,
       highlight,
-      // comparisonSets,
+      comparisonSets,
       adjustedPlugs,
       adjustedStats,
     } = this.state;
@@ -214,11 +181,6 @@ class Compare extends React.Component<Props, State> {
         );
 
     const stats = this.getAllStatsSelector(this.state, this.props);
-    const thisSheetFilteredItems = this.thisSheetFilteredItemsSelector(
-      this.state,
-      this.props,
-      this.props.allItems
-    );
 
     const updateSocketComparePlug = ({
       item,
@@ -332,10 +294,6 @@ class Compare extends React.Component<Props, State> {
       });
     };
 
-    const exampleItem = comparisonItems.every((i) => i.hash === comparisonItems[0].hash)
-      ? comparisonItems[0]
-      : undefined;
-
     return (
       <Sheet
         onClose={this.cancel}
@@ -347,7 +305,16 @@ class Compare extends React.Component<Props, State> {
               value={compareBaseStats}
               onChange={onChange}
             />
-            <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
+            {comparisonSets.map(({ buttonLabel, items }, index) => (
+              <button
+                type="button"
+                key={index}
+                className="dim-button"
+                onClick={(e) => this.compareSimilar(e, items)}
+              >
+                {buttonLabel} {`(${items.length})`}
+              </button>
+            ))}
           </div>
         }
       >
@@ -370,7 +337,7 @@ class Compare extends React.Component<Props, State> {
               ))}
             </div>
             <div className="compare-items" onTouchStart={this.stopTouches}>
-              {thisSheetFilteredItems.map((item) => (
+              {comparisonItems.map((item) => (
                 <CompareItem
                   item={item}
                   key={item.id}
@@ -432,9 +399,6 @@ class Compare extends React.Component<Props, State> {
   private setHighlight = (highlight?: string | number) => {
     this.setState({ highlight });
   };
-  private setQuery = (query: string) => {
-    this.setState({ query });
-  };
 
   private cancel = () => {
     this.setState({
@@ -448,12 +412,12 @@ class Compare extends React.Component<Props, State> {
     CompareService.dialogOpen = false;
   };
 
-  // private compareSimilar = (e: React.MouseEvent, comparisonSetItems: DimItem[]) => {
-  //   e.preventDefault();
-  //   this.setState({
-  //     comparisonItems: comparisonSetItems,
-  //   });
-  // };
+  private compareSimilar = (e: React.MouseEvent, comparisonSetItems: DimItem[]) => {
+    e.preventDefault();
+    this.setState({
+      comparisonItems: comparisonSetItems,
+    });
+  };
 
   private sort = (sortedHash?: string | number) => {
     this.setState((prevState) => ({
