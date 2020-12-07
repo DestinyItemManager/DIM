@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-:global(.banner > canvas) {
+:global(.tempConfettiThing > canvas) {
   // 😬💀 library doesn't seem to have a way to add a classname to the injected canvas
   position: fixed !important;
 }
