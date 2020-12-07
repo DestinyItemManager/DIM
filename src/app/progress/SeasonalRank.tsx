@@ -11,6 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngrams from 'data/d2/bright-engrams.json';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -85,6 +86,26 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
+      switch (def.plug?.plugCategoryHash) {
+        case PlugCategoryHashes.ArmorSkinsTitanArms:
+        case PlugCategoryHashes.ArmorSkinsTitanChest:
+        case PlugCategoryHashes.ArmorSkinsTitanClass:
+        case PlugCategoryHashes.ArmorSkinsTitanHead:
+        case PlugCategoryHashes.ArmorSkinsTitanLegs:
+          return DestinyClass.Titan === store.classType;
+        case PlugCategoryHashes.ArmorSkinsHunterArms:
+        case PlugCategoryHashes.ArmorSkinsHunterChest:
+        case PlugCategoryHashes.ArmorSkinsHunterClass:
+        case PlugCategoryHashes.ArmorSkinsHunterHead:
+        case PlugCategoryHashes.ArmorSkinsHunterLegs:
+          return DestinyClass.Hunter === store.classType;
+        case PlugCategoryHashes.ArmorSkinsWarlockArms:
+        case PlugCategoryHashes.ArmorSkinsWarlockChest:
+        case PlugCategoryHashes.ArmorSkinsWarlockClass:
+        case PlugCategoryHashes.ArmorSkinsWarlockHead:
+        case PlugCategoryHashes.ArmorSkinsWarlockLegs:
+          return DestinyClass.Warlock === store.classType;
+      }
       return def.classType === DestinyClass.Unknown || def.classType === store.classType;
     })
     // Premium reward first to match companion
