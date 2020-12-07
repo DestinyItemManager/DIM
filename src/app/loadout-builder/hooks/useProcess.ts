@@ -46,7 +46,8 @@ export function useProcess(
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  minimumPower: number,
+  ignoreAffinity: boolean
 ) {
   const [{ result, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -61,7 +62,8 @@ export function useProcess(
     assumeMasterwork,
     statOrder,
     statFilters,
-    minimumPower
+    minimumPower,
+    ignoreAffinity
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -103,7 +105,8 @@ export function useProcess(
         assumeMasterwork,
         statOrder,
         statFilters,
-        minimumPower
+        minimumPower,
+        ignoreAffinity
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         infoLog(
@@ -154,7 +157,8 @@ function useWorkerAndCleanup(
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  minimumPower: number,
+  ignoreAffinity: boolean
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
@@ -164,6 +168,7 @@ function useWorkerAndCleanup(
     statOrder,
     statFilters,
     minimumPower,
+    ignoreAffinity,
   ]);
 
   // cleanup the worker on unmount

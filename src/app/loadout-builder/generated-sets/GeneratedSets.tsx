@@ -29,6 +29,7 @@ interface Props {
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
+  ignoreAffinity: boolean;
 }
 
 function numColumns(set: ArmorSet) {
@@ -54,6 +55,7 @@ export default function GeneratedSets({
   loadouts,
   lbDispatch,
   params,
+  ignoreAffinity,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -157,6 +159,7 @@ export default function GeneratedSets({
           lockedArmor2Mods={lockedArmor2Mods}
           loadouts={loadouts}
           params={params}
+          ignoreAffinity={ignoreAffinity}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -184,6 +187,7 @@ export default function GeneratedSets({
                   lockedArmor2Mods={lockedArmor2Mods}
                   loadouts={loadouts}
                   params={params}
+                  ignoreAffinity={ignoreAffinity}
                 />
               )}
               scrollTop={scrollTop}

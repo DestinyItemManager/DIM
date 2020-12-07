@@ -84,6 +84,7 @@ interface ProvidedProps {
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
   assumeMasterwork: boolean;
+  ignoreAffinity: boolean;
   onClose(): void;
 }
 
@@ -112,6 +113,7 @@ function CompareDrawer({
   statOrder,
   enabledStats,
   assumeMasterwork,
+  ignoreAffinity,
   onClose,
   dispatch,
 }: Props) {
@@ -154,12 +156,14 @@ function CompareDrawer({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedArmor2Mods
+    lockedArmor2Mods,
+    ignoreAffinity
   );
 
   const [loadoutAssignedMods, loadoutUnassignedMods] = assignModsToArmorSet(
     loadoutItems,
-    lockedArmor2Mods
+    lockedArmor2Mods,
+    ignoreAffinity
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {

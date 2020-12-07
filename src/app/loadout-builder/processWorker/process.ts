@@ -91,7 +91,8 @@ export function process(
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [stat in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  minimumPower: number,
+  ignoreAffinity: boolean
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -268,7 +269,8 @@ export function process(
                   generalModsPermutations,
                   otherModPermutations,
                   raidModPermutations,
-                  armor
+                  armor,
+                  ignoreAffinity
                 )
               ) {
                 continue;

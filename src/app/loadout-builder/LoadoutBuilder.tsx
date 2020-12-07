@@ -199,7 +199,8 @@ function LoadoutBuilder({
     assumeMasterwork,
     statOrder,
     statFilters,
-    minimumPower
+    minimumPower,
+    ignoreAffinity
   );
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -332,6 +333,7 @@ function LoadoutBuilder({
             lockedArmor2Mods={lockedArmor2Mods}
             loadouts={loadouts}
             params={params}
+            ignoreAffinity={ignoreAffinity}
           />
         )}
         {modPicker.open &&
@@ -369,6 +371,7 @@ function LoadoutBuilder({
               statOrder={statOrder}
               enabledStats={enabledStats}
               assumeMasterwork={assumeMasterwork}
+              ignoreAffinity={ignoreAffinity}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

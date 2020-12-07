@@ -24,7 +24,7 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
     mod.modDef.plug.energyCost.energyType === item.energy?.energyType);
 
 /**
- * Checks that the armour energy capacity is less than the maximum limit provided
+ * Checks that the armour energy capacity is less than or equal to the maximum limit provided
  */
 export const isEnergyLower = (item: DimItem, limit: number) =>
   item.energy && item.energy.energyCapacity <= limit;
@@ -37,9 +37,10 @@ export const isEnergyLower = (item: DimItem, limit: number) =>
 function assignModsForSlot(
   item: DimItem,
   mods: LockedArmor2Mod[],
-  assignments: Record<string, number[]>
+  assignments: Record<string, number[]>,
+  ignoreAffinity: boolean
 ): void {
-  if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
+  if (mods?.length && (mods.every((mod) => doEnergiesMatch(mod, item)) || ignoreAffinity)) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
   }
 }
@@ -54,7 +55,8 @@ function assignAllMods(
   generalMods: LockedArmor2Mod[],
   otherMods: readonly LockedArmor2Mod[],
   raidMods: LockedArmor2Mod[],
-  assignments: Record<string, number[]>
+  assignments: Record<string, number[]>,
+  ignoreAffinity: boolean
 ): void {
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
@@ -70,13 +72,15 @@ function assignAllMods(
     otherModPermutations,
     raidModPermutations,
     setToMatch,
+    ignoreAffinity,
     assignments
   );
 }
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
-  lockedArmor2Mods: LockedArmor2ModMap
+  lockedArmor2Mods: LockedArmor2ModMap,
+  ignoreAffinity: boolean
 ): [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] {
   const assignments: Record<string, number[]> = {};
 
@@ -91,7 +95,7 @@ export function assignModsToArmorSet(
 
     if (item) {
       const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
-      assignModsForSlot(item, lockedMods, assignments);
+      assignModsForSlot(item, lockedMods, assignments, ignoreAffinity);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));
     }
   }
@@ -102,7 +106,8 @@ export function assignModsToArmorSet(
       lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
       lockedArmor2Mods.other,
       lockedArmor2Mods.raid,
-      assignments
+      assignments,
+      ignoreAffinity
     );
   }
 

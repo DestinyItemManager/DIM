@@ -26,6 +26,7 @@ interface Props {
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
+  ignoreAffinity: boolean;
 }
 
 /**
@@ -45,6 +46,7 @@ function GeneratedSet({
   loadouts,
   lbDispatch,
   params,
+  ignoreAffinity,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -61,7 +63,8 @@ function GeneratedSet({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedArmor2Mods
+    lockedArmor2Mods,
+    ignoreAffinity
   );
 
   const canCompareLoadouts =

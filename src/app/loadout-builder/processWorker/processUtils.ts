@@ -125,6 +125,7 @@ export function canTakeAllMods(
   otherModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
   items: ProcessItem[],
+  ignoreAffinity: boolean,
   assignments?: Record<string, number[]>
 ) {
   // Sort the items like the mods are to try and get a greedy result
@@ -139,12 +140,13 @@ export function canTakeAllMods(
   );
 
   if (
-    voidItems < voidGeneralMods ||
-    voidItems < voidSeasonalMods ||
-    solarItems < solarGeneralModsMods ||
-    solarItems < solarSeasonalMods ||
-    arcItems < arcGeneralMods ||
-    arcItems < arcSeasonalMods
+    (voidItems < voidGeneralMods ||
+      voidItems < voidSeasonalMods ||
+      solarItems < solarGeneralModsMods ||
+      solarItems < solarSeasonalMods ||
+      arcItems < arcGeneralMods ||
+      arcItems < arcSeasonalMods) &&
+    !ignoreAffinity // js_TODO: This needs a look at
   ) {
     return false;
   }
@@ -160,7 +162,9 @@ export function canTakeAllMods(
       othersFit &&= Boolean(
         item.energy &&
           item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
-          (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any) &&
+          (item.energy.type === otherEnergy.type ||
+            otherEnergy.type === DestinyEnergyType.Any ||
+            ignoreAffinity) &&
           (!otherP[i] || (tag && item.compatibleModSeasons?.includes(tag)))
       );
 
@@ -183,7 +187,8 @@ export function canTakeAllMods(
           item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === generalEnergy.type ||
-              generalEnergy.type === DestinyEnergyType.Any)
+              generalEnergy.type === DestinyEnergyType.Any ||
+              ignoreAffinity)
         );
 
         if (!generalsFit) {
@@ -203,7 +208,9 @@ export function canTakeAllMods(
             item.energy &&
               item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
                 MAX_ARMOR_ENERGY_CAPACITY &&
-              (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any) &&
+              (item.energy.type === raidEnergy.type ||
+                raidEnergy.type === DestinyEnergyType.Any ||
+                ignoreAffinity) &&
               (!raidP[i] ||
                 ((!item.hasLegacyModSocket || !otherP[i]) &&
                   raidTag &&
