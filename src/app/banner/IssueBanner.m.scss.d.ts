@@ -3,6 +3,7 @@
 interface CssExports {
   'banner': string;
   'buttongroup': string;
+  'confettiToggle': string;
   'container': string;
   'gametwogive': string;
   'goal': string;
