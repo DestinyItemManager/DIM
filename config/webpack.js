@@ -400,7 +400,7 @@ module.exports = (env) => {
         // Incorporate mods directly into loadouts
         '$featureFlags.loadoutMods': JSON.stringify(!env.release),
         // Show bounty guide
-        '$featureFlags.bountyGuide': JSON.stringify(!env.release),
+        '$featureFlags.bountyGuide': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
