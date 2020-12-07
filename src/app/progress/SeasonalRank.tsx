@@ -86,7 +86,8 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
-      switch (def.plug?.plugCategoryHash) {
+      // Ornament Filtering
+      switch (def.itemSubType === 21 && def.plug?.plugCategoryHash) {
         case PlugCategoryHashes.ArmorSkinsTitanArms:
         case PlugCategoryHashes.ArmorSkinsTitanChest:
         case PlugCategoryHashes.ArmorSkinsTitanClass:
