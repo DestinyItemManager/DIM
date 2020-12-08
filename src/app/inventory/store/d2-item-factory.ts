@@ -20,6 +20,7 @@ import {
   SingleComponentResponse,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
+import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -446,6 +447,10 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = statDef;
+  }
+
+  if (extendedICH[createdItem.hash]) {
+    createdItem.itemCategoryHashes.push(extendedICH[createdItem.hash]);
   }
 
   try {
