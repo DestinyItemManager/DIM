@@ -157,11 +157,15 @@ export function canTakeAllMods(
       const item = sortedItems[i];
       const tag = otherP[i]?.tag;
       const otherEnergy = otherP[i]?.energy || defaultModEnergy;
-      othersFit &&= Boolean(
+
+      const noOtherMod = !otherP[i];
+      const otherEnergyIsValid =
         item.energy &&
-          item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
-          (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any) &&
-          (!otherP[i] || (tag && item.compatibleModSeasons?.includes(tag)))
+        item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
+        (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any);
+
+      othersFit &&= Boolean(
+        noOtherMod || (otherEnergyIsValid && tag && item.compatibleModSeasons?.includes(tag))
       );
 
       if (!othersFit) {
@@ -179,12 +183,14 @@ export function canTakeAllMods(
         const item = sortedItems[i];
         const generalEnergy = generalP[i]?.energy || defaultModEnergy;
         const otherEnergy = otherP[i]?.energy || defaultModEnergy;
-        generalsFit &&= Boolean(
+
+        const noGeneralMod = !generalP[i];
+        const generalEnergyIsValid =
           item.energy &&
-            item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
-            (item.energy.type === generalEnergy.type ||
-              generalEnergy.type === DestinyEnergyType.Any)
-        );
+          item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+          (item.energy.type === generalEnergy.type || generalEnergy.type === DestinyEnergyType.Any);
+
+        generalsFit &&= Boolean(noGeneralMod || generalEnergyIsValid);
 
         if (!generalsFit) {
           break;
@@ -199,15 +205,25 @@ export function canTakeAllMods(
           const generalEnergy = generalP[i]?.energy || defaultModEnergy;
           const otherEnergy = otherP[i]?.energy || defaultModEnergy;
           const raidEnergy = raidP[i]?.energy || defaultModEnergy;
-          raidsFit &&= Boolean(
+
+          const noRaidMod = !raidP[i];
+          const raidEnergyIsValid =
             item.energy &&
-              item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
-                MAX_ARMOR_ENERGY_CAPACITY &&
-              (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any) &&
-              (!raidP[i] ||
-                ((!item.hasLegacyModSocket || !otherP[i]) &&
-                  raidTag &&
-                  item.compatibleModSeasons?.includes(raidTag)))
+            item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
+              MAX_ARMOR_ENERGY_CAPACITY &&
+            (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any);
+
+          // Due to raid mods overlapping with legacy mods for last wish we need to ensure
+          // that if an item has a legacy mod socket then another mod is not already intended
+          // for this socket.
+          const notLegacySocketOrLegacyMod = !item.hasLegacyModSocket || !otherP[i];
+
+          raidsFit &&= Boolean(
+            noRaidMod ||
+              (raidEnergyIsValid &&
+                notLegacySocketOrLegacyMod &&
+                raidTag &&
+                item.compatibleModSeasons?.includes(raidTag))
           );
         }
 
