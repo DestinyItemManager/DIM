@@ -81,7 +81,7 @@ export default function IssueBanner() {
     return () => document.body.classList.remove('issue-banner-shown');
   }, [state.show]);
 
-  const met25kGoal = $featureFlags.confetti && state.donations >= 25000;
+  const met25kGoal = state.donations >= 25000;
 
   return (
     <>
