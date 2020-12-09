@@ -92,7 +92,7 @@ function mapStateToProps() {
       if (!terminal) {
         return emptyArray<DimItem>();
       }
-      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
       const items = allItems.filter(
         (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
       );
