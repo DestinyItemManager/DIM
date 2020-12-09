@@ -1,5 +1,8 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
@@ -13,6 +16,7 @@ import NotesArea from './NotesArea';
 
 interface ProvidedProps {
   item: DimItem;
+  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }
 
 interface StoreProps {
@@ -27,7 +31,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-function ItemDescription({ item, inventoryWishListRoll }: Props) {
+function ItemDescription({ item, inventoryWishListRoll, defs }: Props) {
   // suppressing some unnecessary information for weapons and armor,
   // to make room for all that other delicious info
   const showFlavor = !item.bucket.inWeapons && !item.bucket.inArmor;
@@ -42,7 +46,7 @@ function ItemDescription({ item, inventoryWishListRoll }: Props) {
         <>
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
-              {item.description}{' '}
+              <RichDestinyText text={item.description} defs={defs} />
               {loreLink && (
                 <ExternalLink
                   className={styles.loreLink}
