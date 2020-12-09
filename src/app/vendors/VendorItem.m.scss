@@ -58,6 +58,10 @@
   position: relative;
   margin-right: var(--item-margin);
   cursor: pointer;
+
+  :global(.item-img) {
+    object-fit: cover;
+  }
 }
 
 .unavailable {

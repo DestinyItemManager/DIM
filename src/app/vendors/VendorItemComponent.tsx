@@ -51,10 +51,16 @@ export default function VendorItemComponent({
     item.item.collectibleState !== undefined &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
+  const unavailable =
+    !item.canPurchase ||
+    !item.canBeSold ||
+    (owned &&
+      item.item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties) &&
+      !item.item.itemCategoryHashes.includes(ItemCategoryHashes.RepeatableBounties));
   return (
     <VendorItemDisplay
       item={item.item}
-      unavailable={!item.canPurchase || !item.canBeSold}
+      unavailable={unavailable}
       owned={owned}
       acquired={acquired}
       extraData={{ failureStrings: item.failureStrings, owned, acquired }}
