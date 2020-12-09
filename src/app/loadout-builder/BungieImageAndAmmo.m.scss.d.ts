@@ -2,6 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'ammo': string;
+  'ammoHeavy': string;
+  'ammoPrimary': string;
+  'ammoSpecial': string;
   'container': string;
 }
 export const cssExports: CssExports;

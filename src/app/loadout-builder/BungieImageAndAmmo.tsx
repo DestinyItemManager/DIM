@@ -1,6 +1,6 @@
+import BungieImage, { BungieImageProps } from 'app/dim-ui/BungieImage';
 import clsx from 'clsx';
 import React from 'react';
-import BungieImage, { BungieImageProps } from './BungieImage';
 import styles from './BungieImageAndAmmo.m.scss';
 
 type BungieImageAndAmmoProps = BungieImageProps & {
@@ -17,13 +17,13 @@ export default function BungieImageAndAmmo(props: BungieImageAndAmmoProps) {
   let ammoImage;
   switch (hash) {
     case 143442373:
-      ammoImage = 'ammo-primary';
+      ammoImage = styles.ammoPrimary;
       break;
     case 2620835322:
-      ammoImage = 'ammo-special';
+      ammoImage = styles.ammoSpecial;
       break;
     case 2867719094:
-      ammoImage = 'ammo-heavy';
+      ammoImage = styles.ammoHeavy;
       break;
   }
 
