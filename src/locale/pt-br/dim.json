@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
+    "ShouldNotBeInVault": "Este item pode estar em risco se ficar no Cofre. Por favor, transfira-o para um personagem imediatamente.",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },

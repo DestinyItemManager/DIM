@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "接近全满了!({{number}}/{{postmasterSize}})",
     "PostmasterFull": "全满了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "预览 {{type}} 内容",
+    "ShouldNotBeInVault": "这个物品如果留在保险库中可能有丢失风险。请将其转移给一个角色。",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
   },

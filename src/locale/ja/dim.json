@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "殆どいっぱい! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "満杯! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
+    "ShouldNotBeInVault": "このアイテムが保管庫に残っていると、危険にさらされる可能性があります。キャラクターに転送してください。",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}"
   },

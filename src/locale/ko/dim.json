@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
+    "ShouldNotBeInVault": "이 아이템은 금고에 있을 경우 위험할 수 있습니다. 캐릭터로 옮겨주세요.",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}"
   },

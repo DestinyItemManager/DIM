@@ -341,6 +341,7 @@
     "PostmasterAlmostFull": "¡Casi lleno! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Lleno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
+    "ShouldNotBeInVault": "Este objeto podría estar en riesgo si se deja en el depósito. Por favor, transfiérelo a otro personaje.",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}"
   },
