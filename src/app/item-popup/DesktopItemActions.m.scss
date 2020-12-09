@@ -11,67 +11,6 @@
   display: none;
 }
 
-.entry {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 6px 8px;
-
-  > img,
-  > :global(.app-icon) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-    height: 24px;
-    width: 24px;
-    font-size: 16px;
-    text-align: center;
-
-    .collapsed & {
-      margin-right: 0;
-    }
-  }
-  :global(.app-icon) {
-    color: #eee;
-  }
-}
-
-.itemTagSelector {
-  composes: entry;
-  padding: 6px 8px;
-
-  .collapsed & {
-    padding: 0;
-    button {
-      border-radius: 0;
-      padding: 6px 8px;
-      > div > :global(.app-icon) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        margin: 0;
-        height: 24px;
-        width: 24px;
-      }
-    }
-  }
-}
-
-.actionButton {
-  composes: entry;
-  cursor: pointer;
-
-  &:hover {
-    background: $orange;
-    color: black;
-    :global(.app-icon) {
-      color: black;
-    }
-  }
-}
-
 .collapseButton {
   display: flex;
   justify-content: flex-end;
@@ -166,4 +105,8 @@
   filter: contrast(0.5) brightness(0.5);
   cursor: default;
   pointer-events: none;
+}
+
+.vaultLabel {
+  margin-left: 8px;
 }

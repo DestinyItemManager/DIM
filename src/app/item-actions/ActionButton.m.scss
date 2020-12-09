@@ -1,0 +1,64 @@
+@import '../variables.scss';
+
+.entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 8px;
+
+  > img,
+  > :global(.app-icon) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    font-size: 16px;
+    text-align: center;
+  }
+  :global(.app-icon) {
+    color: #eee;
+  }
+}
+
+.actionButton {
+  composes: entry;
+  cursor: pointer;
+
+  @media (min-width: 541px) {
+    &:hover {
+      background: $orange;
+      color: black;
+      :global(.app-icon) {
+        color: black;
+      }
+    }
+  }
+}
+
+.label {
+  margin-left: 8px;
+}
+
+.tagSelectorLabelHidden {
+  padding: 0;
+  :global(.dim-button) {
+    border-radius: 0;
+    padding: 6px 8px;
+    > div > :global(.app-icon) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin: 0;
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+.disabled {
+  filter: contrast(0.5) brightness(0.5);
+  cursor: default;
+  pointer-events: none;
+}

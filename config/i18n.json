@@ -802,6 +802,7 @@
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
     "Effect": "Effect",
+    "FinalSeason": "(S{finalSeason})",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",

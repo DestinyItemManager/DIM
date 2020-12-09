@@ -4,6 +4,10 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import ActionButtons from 'app/item-actions/ActionButtons';
+import DesktopItemActions from 'app/item-popup/DesktopItemActions';
+import ItemActions from 'app/item-popup/ItemActions';
+import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
@@ -15,12 +19,9 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
-import DesktopItemActions from './DesktopItemActions';
 import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
-import ItemActions from './ItemActions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import styles from './ItemPopupContainer.m.scss';
-import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
 
 interface ProvidedProps {
@@ -31,7 +32,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   itemDetails: boolean;
   stores: DimStore[];
-  language: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -40,7 +40,6 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     itemDetails: settings.itemDetails,
-    language: settings.language,
   };
 }
 
@@ -65,7 +64,7 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelector }: Props) {
+function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const [currentItem, setCurrentItem] = useState<{
     item: DimItem;
@@ -121,15 +120,6 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
   // Try to find an updated version of the item!
   const item = maybeFindItem(currentItem.item, stores);
 
-  const header = (
-    <ItemPopupHeader
-      item={item}
-      key={`header${item.index}`}
-      language={language}
-      isPhonePortrait={isPhonePortrait}
-    />
-  );
-
   const body = (
     <ItemPopupBody
       item={item}
@@ -143,15 +133,23 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
   return isPhonePortrait ? (
     <Sheet
       onClose={onClose}
-      header={header}
+      header={<ItemPopupHeader item={item} />}
       sheetClassName={clsx(
         'item-popup',
         `is-${item.tier}`,
         tierClasses[item.tier],
         styles.movePopupDialog
       )}
-      footer={<ItemActions key={item.index} item={item} />}
+      footer={<ItemActions item={item} />}
     >
+      <div className={styles.mobileItemActions}>
+        <ActionButtons.Tag item={item} label={true} hideKeys={true} />
+        <ActionButtons.Lock item={item} />
+        <ActionButtons.Compare item={item} />
+        <ActionButtons.Consolidate item={item} />
+        <ActionButtons.Distribute item={item} />
+        <ActionButtons.Loadout item={item} />
+      </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
@@ -170,11 +168,11 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
         <ItemTagHotkeys item={item} />
         <div className={styles.desktopPopup}>
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-            {header}
+            {<ItemPopupHeader item={item} />}
             {body}
           </div>
           <div className={clsx(styles.desktopActions)}>
-            <DesktopItemActions key={item.index} item={item} />
+            <DesktopItemActions item={item} />
           </div>
         </div>
       </ClickOutside>

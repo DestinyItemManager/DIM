@@ -141,7 +141,7 @@ function ItemActionsDropdown({
       ),
     },
     {
-      key: 'lock',
+      key: 'lock-item',
       onSelected: () => bulkLock('lock'),
       disabled: !searchActive,
       content: (
@@ -150,9 +150,8 @@ function ItemActionsDropdown({
         </>
       ),
     },
-
     {
-      key: 'unlock',
+      key: 'unlock-item',
       onSelected: () => bulkLock('unlock'),
       disabled: !searchActive,
       content: (

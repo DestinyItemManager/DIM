@@ -32,6 +32,9 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  > div {
+    padding: 0;
+  }
 }
 
 .compare-options {
@@ -58,12 +61,6 @@
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
-
-  .comp-lock-icon .app-icon {
-    font-size: 12px;
-    margin: 0 5px 0 2px;
-    vertical-align: middle;
-  }
 
   .item {
     float: right;
@@ -102,12 +99,6 @@
   }
   .range {
     font-size: 0.9em;
-  }
-  .tagSelector {
-    flex: 1;
-    > button {
-      width: 100%;
-    }
   }
   .spacer {
     height: 46px;
