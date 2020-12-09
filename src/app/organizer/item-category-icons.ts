@@ -15,6 +15,7 @@ import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
+import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
 import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
@@ -55,6 +56,7 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.MachineGun]: machinegun,
   [ItemCategoryHashes.Sword]: sword,
   [ItemCategoryHashes.GrenadeLaunchers]: gLauncher,
+  [-ItemCategoryHashes.GrenadeLaunchers]: gLauncherFF,
   [ItemCategoryHashes.RocketLauncher]: rLauncher,
   [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
   [ItemCategoryHashes.Hunter]: hunter,

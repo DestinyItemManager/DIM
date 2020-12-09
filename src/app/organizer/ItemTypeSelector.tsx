@@ -151,6 +151,12 @@ const getD2SelectionTree = (defs: D2ManifestDefinitions): ItemCategoryTreeNode =
             terminal: true,
           },
           {
+            id: 'grenadelauncherFF',
+            itemCategoryHash: -ItemCategoryHashes.GrenadeLaunchers,
+            subCategories: [kinetic, energy],
+            terminal: true,
+          },
+          {
             id: 'rocketlauncher',
             itemCategoryHash: ItemCategoryHashes.RocketLauncher,
             terminal: true,
@@ -380,8 +386,9 @@ export default function ItemTypeSelector({
                     {itemCategoryIcons[subCategory.itemCategoryHash] && (
                       <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
                     )}
-                    {defs.ItemCategory.get(subCategory.itemCategoryHash).displayProperties?.name ||
-                      defs.ItemCategory.get(subCategory.itemCategoryHash).title}{' '}
+                    {defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).displayProperties
+                      ?.name ||
+                      defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).title}{' '}
                     <span className={styles.buttonItemCount}>
                       (
                       {
