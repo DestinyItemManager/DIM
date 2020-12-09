@@ -12,6 +12,7 @@
 ### Beta Only
 
 * Re-order sockets putting key traits first.
+* Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
 
 ## 6.42.2 <span className="changelog-date">(2020-12-06)</span>
 
