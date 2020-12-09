@@ -16,11 +16,11 @@ import NotesArea from './NotesArea';
 
 interface ProvidedProps {
   item: DimItem;
+  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }
 
 interface StoreProps {
   inventoryWishListRoll?: InventoryWishListRoll;
-  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {

@@ -1,4 +1,5 @@
 import rT from 'data/d2/objective-richTexts.ts';
+// import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
 import overload from 'destiny-icons/breakers/overload.svg';
 import pierce from 'destiny-icons/breakers/pierce.svg';
 import stagger from 'destiny-icons/breakers/stagger.svg';
