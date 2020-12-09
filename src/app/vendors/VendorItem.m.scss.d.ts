@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'acquiredIcon': string;
-  'attachedIcon': string;
-  'attachedWeaponIcon': string;
   'cost': string;
   'currency': string;
   'notEnough': string;
