@@ -72,9 +72,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <BungieImage className="item-shader" src={item.icon} width="96" height="96" />
       )}
 
-      {item.type === 'Milestone' && item.secondaryIcon && (
-        <BungieImage src={item.secondaryIcon} width="100%" />
-      )}
+      {(item.type === 'Milestone' ||
+        item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
+        item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="100%" />}
 
       <ItemDescription item={item} defs={defs} />
 

@@ -368,7 +368,7 @@ export function makeItem(
       '/img/misc/missing_icon_d2.png',
     hiddenOverlay,
     iconOverlay,
-    secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
+    secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
     notransfer: Boolean(
       itemDef.nonTransferrable ||
         item.transferStatus === TransferStatuses.NotTransferrable ||
