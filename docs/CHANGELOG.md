@@ -1,14 +1,17 @@
 ## Next
 
-* New Rich Texts added for Lost Sectors and Stasis
-* Vendor fixes (misc)
+* New Rich Texts added for Lost Sectors and Stasis.
+* Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
 
 ## 6.42.3 <span className="changelog-date">(2020-12-07)</span>
 
-* Re-order sockets putting key traits first.
 * Filter ornaments to the correct class for season pass on progress page.
-* Enable bounty guide on app.destinyitemmanager.com
+* Enable bounty guide on app.destinyitemmanager.com.
 * Spoils of Conquest vault prevention.
+
+### Beta Only
+
+* Re-order sockets putting key traits first.
 
 ## 6.42.2 <span className="changelog-date">(2020-12-06)</span>
 
