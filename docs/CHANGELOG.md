@@ -4,6 +4,7 @@
 * Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
 
 ## 6.42.3 <span className="changelog-date">(2020-12-07)</span>
+* Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
 
 * Filter ornaments to the correct class for season pass on progress page.
 * Enable bounty guide on app.destinyitemmanager.com.
