@@ -4,6 +4,14 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import {
+  CompareActionButton,
+  ConsolidateActionButton,
+  DistributeActionButton,
+  LoadoutActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemActions from 'app/item-popup/ItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
