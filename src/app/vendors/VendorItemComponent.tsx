@@ -3,8 +3,6 @@ import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -51,10 +49,16 @@ export default function VendorItemComponent({
     item.item.collectibleState !== undefined &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
+  const unavailable =
+    !item.canPurchase ||
+    !item.canBeSold ||
+    (owned &&
+      item.item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties) &&
+      !item.item.itemCategoryHashes.includes(ItemCategoryHashes.RepeatableBounties));
   return (
     <VendorItemDisplay
       item={item.item}
-      unavailable={!item.canPurchase || !item.canBeSold}
+      unavailable={unavailable}
       owned={owned}
       acquired={acquired}
       extraData={{ failureStrings: item.failureStrings, owned, acquired }}
@@ -85,21 +89,17 @@ export function VendorItemDisplay({
   extraData?: ItemPopupExtraInfo;
   children?: React.ReactNode;
 }) {
-  const acquiredIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods) ? (
-    <img src={helmetIcon} className={styles.attachedIcon} />
-  ) : item.itemCategoryHashes.includes(ItemCategoryHashes.WeaponMods) ? (
-    <img src={handCannonIcon} className={styles.attachedWeaponIcon} />
-  ) : (
-    <AppIcon className={styles.acquiredIcon} icon={faCheck} />
-  );
-
   return (
     <div
       className={clsx(styles.vendorItem, {
         [styles.unavailable]: unavailable,
       })}
     >
-      {owned ? <AppIcon className={styles.ownedIcon} icon={faCheck} /> : acquired && acquiredIcon}
+      {owned ? (
+        <AppIcon className={styles.ownedIcon} icon={faCheck} />
+      ) : (
+        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
+      )}
       <ItemPopupTrigger item={item} extraData={extraData}>
         {(ref, onClick) => (
           <ConnectedInventoryItem item={item} allowFilter={true} innerRef={ref} onClick={onClick} />

@@ -344,6 +344,7 @@
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
@@ -801,6 +802,7 @@
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
     "Effect": "Effect",
+    "FinalSeason": "(S{finalSeason})",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",

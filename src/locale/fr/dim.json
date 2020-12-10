@@ -24,10 +24,13 @@
     "Farming": "Objets récents",
     "FarmingStart": "Commencer Farming",
     "FarmingStop": "Arrêter Farming",
+    "Loading": "Activité en cours",
     "Loadouts": "Arsenaux",
     "NoQuests": "Vous ne suivez aucune quête",
     "NoSearches": "Enregistrer des recherches et les filtrer ici.",
-    "Pursuits": "Poursuites"
+    "Offline": "Hors ligne",
+    "Pursuits": "Poursuites",
+    "SuggestedBounties": "Contrats suggérés"
   },
   "Activities": {
     "Activities": "Activités",
@@ -248,7 +251,7 @@
   },
   "Header": {
     "About": "À propos de DIM",
-    "BulkTag": "Balisage de masse des objets",
+    "BulkTag": "Étiquetage de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
     "CompareMatching": "Comparer les objets",
@@ -338,6 +341,7 @@
     "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -762,6 +766,10 @@
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom"
+  },
+  "Sockets": {
+    "InsertModButton": "Insérer Mod",
+    "InsertPlugError": "Impossible d'insérer le mod"
   },
   "Stats": {
     "BarricadeCooldown": "Délai de Barricade",

@@ -16,18 +16,16 @@ export const enum ItemPopupTab {
 /** The main portion of the item popup, with pages of info (Actions, Details, Reviews) */
 export default function ItemPopupBody({
   item,
-  failureStrings,
   extraInfo,
   tab,
   onTabChanged,
 }: {
   item: DimItem;
-  failureStrings?: string[];
   extraInfo?: ItemPopupExtraInfo;
   tab: ItemPopupTab;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
-  failureStrings = Array.from(failureStrings || []);
+  const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }

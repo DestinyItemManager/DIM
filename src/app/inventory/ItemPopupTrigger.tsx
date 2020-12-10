@@ -1,5 +1,6 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import React, { useCallback, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CompareService } from '../compare/compare.service';
 import { ItemPopupExtraInfo, showItemPopup } from '../item-popup/item-popup';
 import { clearNewItem } from './actions';
@@ -16,11 +17,14 @@ interface Props {
  */
 export default function ItemPopupTrigger({ item, extraData, children }: Props): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
+  const disableConfetti = useSelector(settingsSelector).disableConfetti;
   const dispatch = useDispatch();
 
   const clicked = useCallback(
     (e: React.MouseEvent) => {
-      e.stopPropagation();
+      if (disableConfetti) {
+        e.stopPropagation();
+      }
 
       dispatch(clearNewItem(item.id));
 
@@ -32,7 +36,7 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
         return false;
       }
     },
-    [dispatch, extraData, item]
+    [dispatch, extraData, item, disableConfetti]
   );
 
   return children(ref, clicked) as JSX.Element;

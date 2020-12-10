@@ -9,6 +9,7 @@ interface CssExports {
   'desktopPopupRoot': string;
   'exotic': string;
   'legendary': string;
+  'mobileItemActions': string;
   'movePopupDialog': string;
   'popupBackground': string;
   'rare': string;

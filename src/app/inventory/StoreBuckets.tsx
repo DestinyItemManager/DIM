@@ -1,4 +1,3 @@
-import BucketLabel from 'app/inventory/BucketLabel';
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
 import React from 'react';
@@ -77,7 +76,7 @@ export function StoreBuckets({
     <div
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
     >
-      {labels && <BucketLabel bucket={bucket} />}
+      {labels && <div className="store-cell bucket-label title">{bucket.name}</div>}
       {content}
     </div>
   );

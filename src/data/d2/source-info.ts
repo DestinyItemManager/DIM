@@ -663,6 +663,30 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4122810030, // Source: Complete seasonal activities during Season of the Undying.
     ],
   },
+  wrathborn: {
+    itemHashes: [
+      197764097, // Wild Hunt Boots
+      238284968, // Wild Hunt Strides
+      251310542, // Wild Hunt Hood
+      317220729, // Wild Hunt Vestment
+      1148770067, // Wild Hunt Cloak
+      1276513983, // Wild Hunt Gloves
+      1458739906, // Wild Hunt Vest
+      2025716654, // Wild Hunt Grasps
+      2055947316, // Wild Hunt Bond
+      2279193565, // Wild Hunt Mark
+      2453357042, // Blast Battue
+      2545401128, // Wild Hunt Gauntlets
+      2776503072, // Royal Chase
+      3180809346, // Wild Hunt Greaves
+      3351935136, // Wild Hunt Plate
+      3887272785, // Wild Hunt Helm
+      4079117607, // Wild Hunt Mask
+    ],
+    sourceHashes: [
+      841568343, // Source: "Hunt for the Wrathborn" quest.
+    ],
+  },
   zavala: {
     itemHashes: [
       274843196, // Vanguard Unyielding

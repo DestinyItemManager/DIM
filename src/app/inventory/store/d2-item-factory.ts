@@ -20,6 +20,7 @@ import {
   SingleComponentResponse,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
+import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -33,6 +34,7 @@ import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
+import { isSpoilsOnCharacter } from './spoils-of-conquest';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
@@ -365,7 +367,9 @@ export function makeItem(
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
     notransfer: Boolean(
-      itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
+      itemDef.nonTransferrable ||
+        item.transferStatus === TransferStatuses.NotTransferrable ||
+        isSpoilsOnCharacter(itemDef, owner, defs)
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
@@ -443,6 +447,10 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = statDef;
+  }
+
+  if (extendedICH[createdItem.hash]) {
+    createdItem.itemCategoryHashes.push(extendedICH[createdItem.hash]);
   }
 
   try {

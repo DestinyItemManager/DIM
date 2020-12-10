@@ -1,5 +1,39 @@
 ## Next
 
+* New Rich Texts added for Lost Sectors and Stasis.
+* Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
+
+## 6.42.3 <span className="changelog-date">(2020-12-07)</span>
+* Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
+
+* Filter ornaments to the correct class for season pass on progress page.
+* Enable bounty guide on app.destinyitemmanager.com.
+* Spoils of Conquest vault prevention.
+
+### Beta Only
+
+* Re-order sockets putting key traits first.
+* Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
+
+## 6.42.2 <span className="changelog-date">(2020-12-06)</span>
+
+* Banner Tweaks
+
+## 6.42.1 <span className="changelog-date">(2020-12-06)</span>
+
+* Banner Tweaks
+
+## 6.42.0 <span className="changelog-date">(2020-12-06)</span>
+
+* Farming mode now refreshes only every 30 seconds, instead of every 10 seconds, to reduce load on Bungie.net.
+* When the postmaster section is collapsed, it now shows the number of items in your postmaster so you can keep an eye on it.
+* Fixed an issue where the Game2Give donation banner could sometimes appear in the mobile layout.
+
+### Beta Only
+
+* We're trying out a new display for weapon perks, which displays the name of the active perk and shows details on click, instead of on hover. This is partly to make perks easier to understand, but also to allow for more actions on perks in the future. Let us know what you think! Animations will be added later if this design catches on.
+* Continued improvements to Active mode, incorporating Bounty Guide and better suggested vendor bounties.
+
 ## 6.41.1 <span className="changelog-date">(2020-12-02)</span>
 
 ## 6.41.0 <span className="changelog-date">(2020-12-02)</span>

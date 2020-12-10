@@ -24,10 +24,13 @@
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
     "FarmingStop": "Stop Farming",
+    "Loading": "Current Activity",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
     "NoSearches": "Create saved searches and filter them here.",
-    "Pursuits": "Pursuits"
+    "Offline": "Offline",
+    "Pursuits": "Pursuits",
+    "SuggestedBounties": "Suggested Bounties"
   },
   "Activities": {
     "Activities": "活動",
@@ -338,6 +341,7 @@
     "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
     "PostmasterFull": "全滿了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "預覽 {{type}} 內容",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
   },
@@ -762,6 +766,10 @@
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱"
+  },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

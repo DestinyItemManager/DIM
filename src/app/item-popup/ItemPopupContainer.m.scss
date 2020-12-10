@@ -125,3 +125,16 @@
     pointer-events: auto;
   }
 }
+
+.mobileItemActions {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+  background: #111;
+  border-bottom: 1px solid #333;
+  border-top: 1px solid #333;
+  &:empty {
+    display: none;
+  }
+}

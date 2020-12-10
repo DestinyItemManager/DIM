@@ -1,0 +1,145 @@
+@import '../variables.scss';
+
+.header {
+  font-family: Helvetica;
+  font-size: 16px;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+  padding: 10px;
+
+  color: #eee;
+  a {
+    color: #eee;
+  }
+}
+
+.title {
+  @include destiny-header;
+  font-size: 25px;
+  line-height: 29px;
+  letter-spacing: -0.02em;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.longTitle {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.subtitle {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.type,
+.details {
+  display: flex;
+  align-self: flex-end;
+}
+
+.type {
+  flex: 1;
+}
+
+.breakerIcon,
+.elementIcon,
+.ammoIcon {
+  filter: drop-shadow(0px 0px 1px #222) drop-shadow(0px 0px 0px #222);
+}
+
+.breakerIcon {
+  margin: 0 5px;
+  width: 16px;
+  height: 16px;
+}
+
+.ammoIcon {
+  margin: 0 5px 2px 7px;
+  height: 15px;
+  width: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  align-self: flex-end;
+}
+
+.elementIcon {
+  height: 17px;
+  width: 17px;
+}
+
+.itemType {
+  opacity: 0.7;
+  word-break: break-word;
+}
+
+.power {
+  margin: 0 5px;
+}
+
+.powerCap {
+  color: #efe59d;
+  font-size: 12px;
+}
+
+.primary {
+  opacity: 0.9;
+}
+
+.masterwork {
+  background-image: url('../../images/masterworkHeader.png');
+  background-repeat: repeat-x;
+  background-size: cover;
+  background-position: top center;
+  &.exotic {
+    background-image: url('../../images/exoticMasterworkHeader.png');
+  }
+}
+
+.common {
+  background-color: $common;
+}
+
+.pursuit {
+  background-color: #555;
+  color: #eee;
+  a {
+    color: #eee;
+  }
+}
+
+.uncommon {
+  background-color: $uncommon;
+}
+
+.rare {
+  background-color: $rare;
+}
+
+.legendary {
+  background-color: $legendary;
+  .primary {
+    opacity: 0.8;
+  }
+}
+
+.exotic {
+  background-color: $exotic;
+  .itemType {
+    opacity: 0.9;
+  }
+}
+
+.common,
+.exotic {
+  color: #222;
+  a {
+    color: #222;
+  }
+  .powerCap {
+    color: #0009ff;
+  }
+}

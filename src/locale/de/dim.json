@@ -23,11 +23,14 @@
     "ChangeFilter": "Filter ändern",
     "Farming": "Neueste Gegenstände",
     "FarmingStart": "Farming starten",
-    "FarmingStop": "Stop Farming",
+    "FarmingStop": "Farmen beenden",
+    "Loading": "Aktuelle Aktivität",
     "Loadouts": "Ausrüstungen",
     "NoQuests": "Du verfolgst keine Quests",
     "NoSearches": "Erstelle gespeicherte Suchanfragen und filtere sie hier.",
-    "Pursuits": "Verfolgte Ziele"
+    "Offline": "Offline",
+    "Pursuits": "Verfolgte Ziele",
+    "SuggestedBounties": "Vorgeschlagene Beutezüge"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -338,6 +341,7 @@
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Voll! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -508,7 +512,7 @@
     "MaximizePower": "Power maximieren",
     "MaximizeStat": "Maximiere Stats",
     "Mods": "Mods",
-    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
+    "ModsInfo": "DIM kann keine Mods ausstatten, das muss im Spiel geschehen.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
@@ -730,7 +734,7 @@
     "DefaultItemSizeNote": "Eine Größe von 50px wird am schärfsten aussehen, ohne das Bild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Gegenstände zu finden und du kannst das Vergleichstool nutzen, um verwandte Gegenstände zu evaluieren.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
-    "ExpandSingleCharacter": "Show all characters",
+    "ExpandSingleCharacter": "Alle Charaktere anzeigen",
     "ExportSS": "Inventar Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "ExportSSNoStores": "Du musst dein Inventar einmal laden bevor du diesen Knopf drückst.",
@@ -748,8 +752,8 @@
     "SetSort": "Sortiere Gegenstände nach:",
     "Settings": "Einstellungen",
     "ShowNewItems": "Zeige neue Gegenstände mit einem roten Punkt an",
-    "SingleCharacter": "Only show current character",
-    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
+    "SingleCharacter": "Nur aktuellen Charakter anzeigen",
+    "SingleCharacterExplanation": "DIM wird alle bis auf den zuletzt gespielten Charakter ausblenden. Die Inventare anderer Charaktere werden angezeigt, als wären sie im Tresor.",
     "SizeItem": "Gegenstandsgröße",
     "SortByAmount": "Stapel Größe",
     "SortByClassType": "Benötigte Klasse",
@@ -757,11 +761,15 @@
     "SortByRarity": "Seltenheit",
     "SortByRating": "Rüstungsqualität (D1)",
     "SortBySeason": "Saison (D2)",
-    "SortBySunset": "Has Been Sunset (D2)",
+    "SortBySunset": "In Waffen-Ruhestand (D2)",
     "SortByTag": "Markierung ({{taglist}})",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name"
+  },
+  "Sockets": {
+    "InsertModButton": "Mod Einsetzen",
+    "InsertPlugError": "Konnte Mod nicht einfügen"
   },
   "Stats": {
     "BarricadeCooldown": "Abklingzeit Barrikade",

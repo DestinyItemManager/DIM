@@ -1,10 +1,22 @@
 @import '../variables.scss';
 
+:global(.tempConfettiThing > canvas) {
+  // 😬💀 library doesn't seem to have a way to add a classname to the injected canvas
+  position: fixed !important;
+}
+
 .banner {
   font-size: 24px;
   line-height: 24px;
   padding: 12px 24px;
   background-color: black;
+}
+
+.confettiToggle {
+  background-color: black;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
 }
 
 .toaster {

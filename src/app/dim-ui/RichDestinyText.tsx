@@ -1,7 +1,9 @@
 import rT from 'data/d2/objective-richTexts.ts';
+import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
 import overload from 'destiny-icons/breakers/overload.svg';
 import pierce from 'destiny-icons/breakers/pierce.svg';
 import stagger from 'destiny-icons/breakers/stagger.svg';
+import lostSector from 'destiny-icons/explore/lost_sector.svg';
 import questMarker from 'destiny-icons/explore/quest.svg';
 import lrgBlocker from 'destiny-icons/gambit/blocker_large.svg';
 import medBlocker from 'destiny-icons/gambit/blocker_medium.svg';
@@ -61,6 +63,7 @@ const baseConversionTable: {
   { unicode: '', icon: dmgArc,        objectiveHash: rT['[Arc]']                        },
   { unicode: '', icon: dmgVoid,       objectiveHash: rT['[Void]']                       },
   { unicode: '', icon: dmgSolar,      objectiveHash: rT['[Solar]']                      },
+  { unicode: '', icon: dmgStasis,     objectiveHash: rT['[Stasis]']                     },
   { unicode: '', icon: dmgKinetic,    objectiveHash: rT['[Kill]']                       },
   // Precision
   { unicode: '', icon: headshot,      objectiveHash: rT['[Headshot]']                   },
@@ -93,8 +96,9 @@ const baseConversionTable: {
   { unicode: '', icon: smlBlocker,    objectiveHash: rT['[Small Blocker]']               },
   { unicode: '', icon: medBlocker,    objectiveHash: rT['[Medium Blocker]']              },
   { unicode: '', icon: lrgBlocker,    objectiveHash: rT['[Large Blocker]']               },
-  // Quest Markers
+  // Map Markers
   { unicode: '', icon: questMarker,   objectiveHash: rT['[Quest]']                       },
+  { unicode: '', icon: lostSector,    objectiveHash: rT['[Lost Sector]']                 },
   // Breakers
   { unicode: '', icon: overload,      objectiveHash: rT['[Disruption]']                  },
   { unicode: '', icon: pierce,        objectiveHash: rT['[Shield-Piercing]']             },

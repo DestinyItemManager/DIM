@@ -74,7 +74,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <BungieImage src={item.secondaryIcon} width="100%" />
       )}
 
-      <ItemDescription item={item} />
+      <ItemDescription item={item} defs={defs} />
 
       <ItemExpiration item={item} />
 
