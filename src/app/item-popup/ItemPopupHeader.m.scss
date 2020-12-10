@@ -5,18 +5,16 @@
   font-size: 16px;
   line-height: 18px;
   letter-spacing: -0.01em;
+  padding: 10px;
 
   color: #eee;
   a {
     color: #eee;
   }
-
-  padding: 10px;
 }
 
 .title {
-  text-transform: uppercase;
-  font-weight: bold;
+  @include destiny-header;
   font-size: 25px;
   line-height: 29px;
   letter-spacing: -0.02em;

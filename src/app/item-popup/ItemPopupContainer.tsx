@@ -133,14 +133,14 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
   return isPhonePortrait ? (
     <Sheet
       onClose={onClose}
-      header={<ItemPopupHeader item={item} />}
+      header={<ItemPopupHeader item={item} key={`header${item.index}`} />}
       sheetClassName={clsx(
         'item-popup',
         `is-${item.tier}`,
         tierClasses[item.tier],
         styles.movePopupDialog
       )}
-      footer={<ItemActions item={item} />}
+      footer={<ItemActions key={item.index} item={item} />}
     >
       <div className={styles.mobileItemActions}>
         <ActionButtons.Tag item={item} label={true} hideKeys={true} />
@@ -168,7 +168,7 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         <ItemTagHotkeys item={item} />
         <div className={styles.desktopPopup}>
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-            {<ItemPopupHeader item={item} />}
+            <ItemPopupHeader item={item} key={`header${item.index}`} />
             {body}
           </div>
           <div className={clsx(styles.desktopActions)}>

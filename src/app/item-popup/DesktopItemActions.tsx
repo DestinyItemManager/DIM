@@ -88,7 +88,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     };
 
     reposition();
-    setTimeout(reposition, 0);
+    setTimeout(reposition, 10);
   });
 
   if (!itemOwner) {
