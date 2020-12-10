@@ -1,34 +1,36 @@
 import { StoreIcon } from 'app/character-tile/StoreIcon';
-import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { moveItemTo } from 'app/inventory/item-move-service';
+import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
-import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import ActionButton from 'app/item-actions/ActionButton';
+import {
+  CompareActionButton,
+  ConsolidateActionButton,
+  DistributeActionButton,
+  InfuseActionButton,
+  LoadoutActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
+import { hideItemPopup } from 'app/item-popup/item-popup';
+import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { setSetting } from 'app/settings/actions';
-import { addIcon, AppIcon, compareIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
+import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import arrowsIn from '../../images/arrows-in.png';
-import arrowsOut from '../../images/arrows-out.png';
-import d2Infuse from '../../images/d2infuse.png';
-import { showInfuse } from '../infuse/infuse';
-import { DimItem } from '../inventory/item-types';
-import { consolidate, distribute, moveItemTo } from '../inventory/move-item';
-import { DimStore } from '../inventory/store-types';
 import styles from './DesktopItemActions.m.scss';
-import { hideItemPopup } from './item-popup';
-import ItemMoveAmount from './ItemMoveAmount';
-import ItemTagSelector from './ItemTagSelector';
-import LockButton from './LockButton';
 
 type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
 
@@ -59,27 +61,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     hideItemPopup();
   };
 
-  /*
-   * Open up the dialog for infusion by passing
-   * the selected item
-   */
-  const infuse = () => {
-    showInfuse(item);
-    hideItemPopup();
-  };
-
-  const dispatchConsolidate = () => {
-    if (itemOwner) {
-      dispatch(consolidate(item, itemOwner));
-      hideItemPopup();
-    }
-  };
-
-  const dispatchDistribute = () => {
-    dispatch(distribute(item));
-    hideItemPopup();
-  };
-
   const toggleSidecar = () => {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
   };
@@ -98,10 +79,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   useLayoutEffect(() => {
     const reposition = () => {
       if (containerRef.current) {
-        let parent = containerRef.current.parentElement;
-        while (parent && !parent.classList.contains('item-popup')) {
-          parent = parent.parentElement;
-        }
+        const parent = containerRef.current.closest('.item-popup');
         const arrow = parent?.querySelector('.arrow') as HTMLDivElement;
         if (!arrow || !parent) {
           return;
@@ -121,8 +99,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     setTimeout(reposition, 10);
   });
 
-  const onAmountChanged = setAmount;
-
   if (!itemOwner) {
     return null;
   }
@@ -133,16 +109,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.maxStackSize > 1 &&
     stores.some((s) => s !== itemOwner && amountOfItem(s, item) > 0);
   const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
-
-  const openCompare = () => {
-    hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
-  };
-
-  const addToLoadout = (e) => {
-    hideItemPopup();
-    addItemToLoadout(item, e);
-  };
 
   const showCollapse =
     item.taggable ||
@@ -173,60 +139,23 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
         </div>
       )}
+
       {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
         <ItemMoveAmount
           amount={amount}
           maximum={maximum}
           maxStackSize={item.maxStackSize}
-          onAmountChanged={onAmountChanged}
+          onAmountChanged={setAmount}
         />
       )}
-      {item.taggable && (
-        <div className={styles.itemTagSelector}>
-          <ItemTagSelector item={item} hideButtonLabel={sidecarCollapsed} />
-        </div>
-      )}
-      {(item.lockable || item.trackable) && (
-        <LockButton
-          className={styles.actionButton}
-          item={item}
-          type={item.lockable ? 'lock' : 'track'}
-        >
-          <span className={styles.hideWhenCollapsed}>
-            {lockButtonTitle(item, item.lockable ? 'lock' : 'track')}
-          </span>
-        </LockButton>
-      )}
-      {item.comparable && (
-        <ActionButton onClick={openCompare}>
-          <AppIcon icon={compareIcon} />
-          <span className={styles.hideWhenCollapsed}>{t('Compare.Button')}</span>
-        </ActionButton>
-      )}
-      {canConsolidate && (
-        <ActionButton onClick={dispatchConsolidate}>
-          <img src={arrowsIn} />
-          <span className={styles.hideWhenCollapsed}>{t('MovePopup.Consolidate')}</span>
-        </ActionButton>
-      )}
-      {canDistribute && (
-        <ActionButton onClick={dispatchDistribute}>
-          <img src={arrowsOut} />
-          <span className={styles.hideWhenCollapsed}>{t('MovePopup.DistributeEvenly')}</span>
-        </ActionButton>
-      )}
-      {itemCanBeInLoadout(item) && (
-        <ActionButton onClick={addToLoadout}>
-          <AppIcon icon={addIcon} />
-          <span className={styles.hideWhenCollapsed}>{t('MovePopup.AddToLoadout')}</span>
-        </ActionButton>
-      )}
-      {item.infusionFuel && (
-        <ActionButton onClick={infuse}>
-          <img src={d2Infuse} />
-          <span className={styles.hideWhenCollapsed}>{t('MovePopup.Infuse')}</span>
-        </ActionButton>
-      )}
+
+      <TagActionButton item={item} label={!sidecarCollapsed} />
+      <LockActionButton item={item} label={!sidecarCollapsed} />
+      <CompareActionButton item={item} label={!sidecarCollapsed} />
+      <ConsolidateActionButton item={item} label={!sidecarCollapsed} />
+      <DistributeActionButton item={item} label={!sidecarCollapsed} />
+      <LoadoutActionButton item={item} label={!sidecarCollapsed} />
+      <InfuseActionButton item={item} label={!sidecarCollapsed} />
 
       {!sidecarCollapsed && (
         <>
@@ -237,7 +166,8 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
                 onClick={() => submitMoveTo(vault)}
                 title={t('MovePopup.Vault') + ' [V]'}
               >
-                <StoreIcon store={vault} /> {t('MovePopup.Vault')}
+                <StoreIcon store={vault} />{' '}
+                <span className={styles.vaultLabel}>{t('MovePopup.Vault')}</span>
               </ActionButton>
             )}
           {item.location.type === 'LostItems' ? (
@@ -273,29 +203,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
           )}
         </>
       )}
-    </div>
-  );
-}
-
-function ActionButton({
-  disabled,
-  title,
-  children,
-  onClick,
-}: {
-  title?: string;
-  disabled?: boolean;
-  children: React.ReactNode;
-  onClick: (e: React.MouseEvent) => void;
-}) {
-  return (
-    <div
-      className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
-      onClick={onClick}
-      title={title}
-      {...sharedButtonProps}
-    >
-      {children}
     </div>
   );
 }
@@ -399,16 +306,6 @@ function PullButtons({
       </div>
     </div>
   );
-}
-
-function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
-  return type === 'lock'
-    ? item.locked
-      ? t('MovePopup.LockUnlock.Locked')
-      : t('MovePopup.LockUnlock.Unlocked')
-    : item.tracked
-    ? t('MovePopup.TrackUntrack.Tracked')
-    : t('MovePopup.TrackUntrack.Untracked');
 }
 
 function canTransferToVault(itemOwnerStore: DimStore, item: DimItem): boolean {
