@@ -4,14 +4,6 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import {
-  CompareActionButton,
-  ConsolidateActionButton,
-  DistributeActionButton,
-  LoadoutActionButton,
-  LockActionButton,
-  TagActionButton,
-} from 'app/item-actions/ActionButtons';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemActions from 'app/item-popup/ItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
@@ -147,16 +139,20 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         tierClasses[item.tier],
         styles.movePopupDialog
       )}
-      footer={<ItemActions key={item.index} item={item} />}
+      footer={
+        <>
+          <div className={styles.mobileItemActions}>
+            <TagActionButton item={item} label={true} hideKeys={true} />
+            <LockActionButton item={item} />
+            <CompareActionButton item={item} />
+            <ConsolidateActionButton item={item} />
+            <DistributeActionButton item={item} />
+            <LoadoutActionButton item={item} />
+          </div>
+          <ItemActions key={item.index} item={item} />
+        </>
+      }
     >
-      <div className={styles.mobileItemActions}>
-        <TagActionButton item={item} label={true} hideKeys={true} />
-        <LockActionButton item={item} />
-        <CompareActionButton item={item} />
-        <ConsolidateActionButton item={item} />
-        <DistributeActionButton item={item} />
-        <LoadoutActionButton item={item} />
-      </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
