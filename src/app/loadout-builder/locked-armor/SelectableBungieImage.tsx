@@ -1,10 +1,10 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
-import BungieImageAndAmmo from 'app/loadout-builder/BungieImageAndAmmo';
 import { armorStatHashes } from 'app/search/search-filter-values';
 import clsx from 'clsx';
 import React from 'react';
@@ -104,7 +104,7 @@ export function SelectablePerk({
       role="button"
       tabIndex={0}
     >
-      <BungieImageAndAmmo hash={perk.hash} alt="" src={perk.displayProperties.icon} />
+      <BungieImage title={perk.displayProperties.name} src={perk.displayProperties.icon} />
       <div className={styles.perkInfo}>
         <div className={styles.perkTitle}>{perk.displayProperties.name}</div>
         <div className={styles.perkDescription}>
