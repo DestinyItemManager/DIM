@@ -4,7 +4,14 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import ActionButtons from 'app/item-actions/ActionButtons';
+import {
+  CompareActionButton,
+  ConsolidateActionButton,
+  DistributeActionButton,
+  LoadoutActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemActions from 'app/item-popup/ItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
@@ -143,12 +150,12 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
       footer={<ItemActions key={item.index} item={item} />}
     >
       <div className={styles.mobileItemActions}>
-        <ActionButtons.Tag item={item} label={true} hideKeys={true} />
-        <ActionButtons.Lock item={item} />
-        <ActionButtons.Compare item={item} />
-        <ActionButtons.Consolidate item={item} />
-        <ActionButtons.Distribute item={item} />
-        <ActionButtons.Loadout item={item} />
+        <TagActionButton item={item} label={true} hideKeys={true} />
+        <LockActionButton item={item} />
+        <CompareActionButton item={item} />
+        <ConsolidateActionButton item={item} />
+        <DistributeActionButton item={item} />
+        <LoadoutActionButton item={item} />
       </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>

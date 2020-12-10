@@ -8,7 +8,15 @@ import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
-import ActionButtons from 'app/item-actions/ActionButtons';
+import {
+  CompareActionButton,
+  ConsolidateActionButton,
+  DistributeActionButton,
+  InfuseActionButton,
+  LoadoutActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
@@ -141,13 +149,13 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         />
       )}
 
-      <ActionButtons.Tag item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Lock item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Compare item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Consolidate item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Distribute item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Loadout item={item} label={!sidecarCollapsed} />
-      <ActionButtons.Infuse item={item} label={!sidecarCollapsed} />
+      <TagActionButton item={item} label={!sidecarCollapsed} />
+      <LockActionButton item={item} label={!sidecarCollapsed} />
+      <CompareActionButton item={item} label={!sidecarCollapsed} />
+      <ConsolidateActionButton item={item} label={!sidecarCollapsed} />
+      <DistributeActionButton item={item} label={!sidecarCollapsed} />
+      <LoadoutActionButton item={item} label={!sidecarCollapsed} />
+      <InfuseActionButton item={item} label={!sidecarCollapsed} />
 
       {!sidecarCollapsed && (
         <>

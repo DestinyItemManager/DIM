@@ -1,4 +1,4 @@
-import ActionButton from 'app/item-actions/ActionButtons';
+import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -35,8 +35,8 @@ export default function CompareItem({
   return (
     <div className="compare-item">
       <div className="compare-item-header">
-        <ActionButton.Lock item={item} />
-        <ActionButton.Tag item={item} label={true} hideKeys={true} />
+        <LockActionButton item={item} />
+        <TagActionButton item={item} label={true} hideKeys={true} />
         <div className="close" onClick={() => remove(item)} />
       </div>
       <div className="item-name" onClick={() => itemClick(item)}>

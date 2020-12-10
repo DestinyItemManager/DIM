@@ -20,24 +20,12 @@ import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
 import styles from './ActionButton.m.scss';
 
-const components = {
-  Compare: CompareActionButton,
-  Consolidate: ConsolidateActionButton,
-  Distribute: DistributeActionButton,
-  Infuse: InfuseActionButton,
-  Loadout: LoadoutActionButton,
-  Lock: LockActionButton,
-  Tag: TagActionButton,
-};
-
-export default components;
-
 interface ActionButtonProps {
   item: DimItem;
   label?: boolean;
 }
 
-function CompareActionButton({ item, label }: ActionButtonProps) {
+export function CompareActionButton({ item, label }: ActionButtonProps) {
   const openCompare = () => {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
@@ -55,7 +43,7 @@ function CompareActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-function LockActionButton({ item, label }: ActionButtonProps) {
+export function LockActionButton({ item, label }: ActionButtonProps) {
   if (!item.lockable && !item.trackable) {
     return null;
   }
@@ -77,7 +65,11 @@ function LockActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-function TagActionButton({ item, label, hideKeys }: ActionButtonProps & { hideKeys?: boolean }) {
+export function TagActionButton({
+  item,
+  label,
+  hideKeys,
+}: ActionButtonProps & { hideKeys?: boolean }) {
   if (!item.taggable) {
     return null;
   }
@@ -93,7 +85,7 @@ function TagActionButton({ item, label, hideKeys }: ActionButtonProps & { hideKe
   );
 }
 
-function ConsolidateActionButton({ item, label }: ActionButtonProps) {
+export function ConsolidateActionButton({ item, label }: ActionButtonProps) {
   const stores = useSelector(sortedStoresSelector);
   const owner = getStore(stores, item.owner);
   const dispatch = useDispatch();
@@ -127,7 +119,7 @@ function ConsolidateActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-function DistributeActionButton({ item, label }: ActionButtonProps) {
+export function DistributeActionButton({ item, label }: ActionButtonProps) {
   const dispatch = useDispatch();
   const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
@@ -148,7 +140,7 @@ function DistributeActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-function InfuseActionButton({ item, label }: ActionButtonProps) {
+export function InfuseActionButton({ item, label }: ActionButtonProps) {
   if (!item.infusionFuel) {
     return null;
   }
@@ -166,7 +158,7 @@ function InfuseActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-function LoadoutActionButton({ item, label }: ActionButtonProps) {
+export function LoadoutActionButton({ item, label }: ActionButtonProps) {
   if (!itemCanBeInLoadout(item)) {
     return null;
   }
