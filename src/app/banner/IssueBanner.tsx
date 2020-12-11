@@ -138,10 +138,21 @@ export default function IssueBanner() {
                           width: `${Math.min((state.donations / state.goal) * 100, 100)}%`,
                         }}
                       >
-                        <em>${state.donations.toLocaleString()}</em>
+                        <em>
+                          {state.donations.toLocaleString(undefined, {
+                            style: 'currency',
+                            currency: 'USD',
+                          })}
+                        </em>
                       </div>
                     </div>
-                    <div className={styles.goal}>${state.goal.toLocaleString()}</div>
+                    <div className={styles.goal}>
+                      {state.goal.toLocaleString(undefined, {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 0,
+                      })}
+                    </div>
                   </div>
 
                   <div className={styles.buttongroup}>
