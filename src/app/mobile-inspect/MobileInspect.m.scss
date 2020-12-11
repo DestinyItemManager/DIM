@@ -112,3 +112,9 @@ $animationSpeed: 150ms;
   opacity: 0;
   transition: all $animationSpeed $easeOutCubic;
 }
+
+.moveLocations {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}

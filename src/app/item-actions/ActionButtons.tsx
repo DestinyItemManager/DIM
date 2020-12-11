@@ -1,4 +1,5 @@
 import { CompareService } from 'app/compare/compare.service';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
@@ -30,6 +31,8 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
   };
+
+  useHotkey('c', t('Compare.ButtonHelp'), openCompare);
 
   if (!item.comparable) {
     return null;

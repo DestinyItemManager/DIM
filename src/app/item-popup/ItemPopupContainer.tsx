@@ -12,8 +12,8 @@ import {
   LockActionButton,
   TagActionButton,
 } from 'app/item-actions/ActionButtons';
+import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
-import ItemActions from 'app/item-popup/ItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
@@ -148,19 +148,19 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         styles.movePopupDialog
       )}
       footer={
-        <>
-          <div className={styles.mobileItemActions}>
-            <TagActionButton item={item} label={true} hideKeys={true} />
-            <LockActionButton item={item} />
-            <CompareActionButton item={item} />
-            <ConsolidateActionButton item={item} />
-            <DistributeActionButton item={item} />
-            <LoadoutActionButton item={item} />
-          </div>
-          <ItemActions key={item.index} item={item} />
-        </>
+        <div className={styles.mobileMoveLocations}>
+          <ItemMoveLocations key={item.index} item={item} />
+        </div>
       }
     >
+      <div className={styles.mobileItemActions}>
+        <TagActionButton item={item} label={true} hideKeys={true} />
+        <LockActionButton item={item} />
+        <CompareActionButton item={item} />
+        <ConsolidateActionButton item={item} />
+        <DistributeActionButton item={item} />
+        <LoadoutActionButton item={item} />
+      </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (

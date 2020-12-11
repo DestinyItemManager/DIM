@@ -3,14 +3,8 @@
 interface CssExports {
   'collapseButton': string;
   'collapsed': string;
-  'disabled': string;
-  'equip': string;
   'hideWhenCollapsed': string;
   'interaction': string;
-  'move': string;
-  'moveLocationIcons': string;
-  'moveLocations': string;
-  'vaultLabel': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
