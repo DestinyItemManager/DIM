@@ -34,6 +34,8 @@
   @include phone-portrait {
     width: calc((100vw - 20px - 9 * 4px) / 7);
     height: calc((100vw - 20px - 9 * 4px) / 7);
+    max-width: 55px;
+    max-height: 55px;
   }
 
   &.mobileInspectButton {
