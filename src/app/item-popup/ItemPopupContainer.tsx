@@ -8,6 +8,7 @@ import {
   CompareActionButton,
   ConsolidateActionButton,
   DistributeActionButton,
+  InfuseActionButton,
   LoadoutActionButton,
   LockActionButton,
   TagActionButton,
@@ -160,6 +161,7 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         <ConsolidateActionButton item={item} />
         <DistributeActionButton item={item} />
         <LoadoutActionButton item={item} />
+        <InfuseActionButton item={item} />
       </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
