@@ -120,6 +120,7 @@ export default function ItemMoveLocations({
                 item={item}
                 store={vault}
                 owner={itemOwner}
+                mobileInspect={mobileInspect}
                 handleMove={() => submitMoveTo(vault)}
               />
             )}
@@ -174,11 +175,13 @@ function DropVaultButton({
   item,
   store,
   owner,
+  mobileInspect,
   handleMove,
 }: {
   item: DimItem;
   store: DimStore;
   owner: DimStore;
+  mobileInspect?: boolean;
   handleMove: () => void;
 }) {
   if (item.location.inPostmaster || !canTransferToVault(owner, item)) {
@@ -188,7 +191,9 @@ function DropVaultButton({
   return (
     <DropLocation store={store} onDrop={handleMove}>
       <div
-        className={clsx(styles.move, styles.vaultButton)}
+        className={clsx(styles.move, styles.vaultButton, {
+          [styles.mobileInspectButton]: mobileInspect,
+        })}
         onClick={handleMove}
         {...sharedButtonProps}
       >
@@ -263,6 +268,7 @@ function MoveLocations({
           [styles.equip]: equip,
           [styles.move]: !equip,
           [styles.disabled]: isDisabledCheck(store),
+          [styles.mobileInspectButton]: mobileInspect,
         })}
         title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
         onClick={handleMove}

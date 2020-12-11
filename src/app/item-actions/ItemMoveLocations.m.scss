@@ -30,16 +30,31 @@
   align-items: center;
   height: 36px;
   width: 36px;
+
+  @include phone-portrait {
+    width: calc((100vw - 20px - 9 * 4px) / 7);
+    height: calc((100vw - 20px - 9 * 4px) / 7);
+  }
+
+  &.mobileInspectButton {
+    height: 36px;
+    width: 36px;
+    margin-right: 4px;
+  }
+
   &:nth-child(n + 2) {
     margin-left: 8px;
+    @include phone-portrait {
+      margin-left: 4px;
+    }
   }
 
   img {
     position: absolute;
     top: 0;
     left: 0;
-    height: 36px;
-    width: 36px;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
   }
 
@@ -50,6 +65,13 @@
     top: 7px;
     left: 7px;
     filter: drop-shadow(1px 1px 2px black);
+
+    @include phone-portrait {
+      position: relative;
+      top: 0;
+      left: 0;
+      margin: 0;
+    }
   }
 
   &:hover {
@@ -81,9 +103,21 @@
   > * {
     display: flex;
   }
+  @include phone-portrait {
+    margin-left: 4px;
+  }
 }
 
 .vaultButton {
   align-self: flex-end;
   margin-left: 8px;
+  @include phone-portrait {
+    margin-left: 4px;
+  }
+
+  &.mobileInspectButton {
+    height: 36px;
+    width: 36px;
+    margin-left: 0px;
+  }
 }
