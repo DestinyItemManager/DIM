@@ -32,8 +32,8 @@
   width: 36px;
 
   @include phone-portrait {
-    width: calc((100vw - 20px - 9 * 4px) / 7);
-    height: calc((100vw - 20px - 9 * 4px) / 7);
+    width: calc((100vw - 40px - 5 * 5px) / 7);
+    height: calc((100vw - 40px - 5 * 5px) / 7);
     max-width: 55px;
     max-height: 55px;
   }
@@ -47,7 +47,7 @@
   &:nth-child(n + 2) {
     margin-left: 8px;
     @include phone-portrait {
-      margin-left: 4px;
+      margin-left: 5px;
     }
   }
 
@@ -105,16 +105,13 @@
   > * {
     display: flex;
   }
-  @include phone-portrait {
-    margin-left: 4px;
-  }
 }
 
 .vaultButton {
   align-self: flex-end;
   margin-left: 8px;
   @include phone-portrait {
-    margin-left: 4px;
+    margin-left: 5px;
   }
 
   &.mobileInspectButton {
