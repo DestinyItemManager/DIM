@@ -279,7 +279,7 @@ function MoveLocations({
     );
 
     return (
-      <React.Fragment key={store.key}>
+      <React.Fragment key={`${equip}-${store.id}`}>
         {!mobileInspect ? (
           button
         ) : (
