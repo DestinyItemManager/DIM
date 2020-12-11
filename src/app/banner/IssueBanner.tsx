@@ -28,6 +28,26 @@ function Link({
   );
 }
 
+const useClickDisabler = (onDisable, clicks) => {
+  const [clicked, setClicked] = useState(0);
+
+  useEffect(() => {
+    if (clicked >= clicks) {
+      onDisable();
+      setClicked(0);
+    }
+  }, [clicked, clicks, onDisable]);
+
+  useEffect(() => {
+    const handleClick = () => setClicked((c) => c + 1);
+    document.body.addEventListener('click', handleClick);
+
+    return () => {
+      document.body.removeEventListener('click', handleClick);
+    };
+  }, []);
+};
+
 /**
  * A popup we can enable to get the word out about important issues for the DIM community. Edit the body directly.
  */
@@ -40,6 +60,8 @@ export default function IssueBanner() {
     goal: 10000,
     donations: 0,
   });
+
+  useClickDisabler(() => dispatch(setSetting('disableConfetti', !disableConfetti)), 35);
 
   const openCampaign = () => {
     setIsMinimized(false);
