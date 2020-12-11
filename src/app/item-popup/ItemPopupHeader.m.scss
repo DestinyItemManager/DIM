@@ -103,6 +103,17 @@
   background-color: $common;
 }
 
+.common,
+.exotic {
+  color: #222;
+  a {
+    color: #222;
+  }
+  .powerCap {
+    color: #0009ff;
+  }
+}
+
 .pursuit {
   background-color: #555;
   color: #eee;
@@ -130,16 +141,5 @@
   background-color: $exotic;
   .itemType {
     opacity: 0.9;
-  }
-}
-
-.common,
-.exotic {
-  color: #222;
-  a {
-    color: #222;
-  }
-  .powerCap {
-    color: #0009ff;
   }
 }
