@@ -606,7 +606,7 @@
     "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "收集",

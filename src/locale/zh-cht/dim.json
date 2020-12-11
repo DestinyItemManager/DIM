@@ -606,7 +606,7 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}}{{typeName}}",
+      "Type": "{{classType}}{{typeName}}",
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
     },
     "Take": "收集",

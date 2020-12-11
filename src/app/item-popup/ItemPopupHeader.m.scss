@@ -1,10 +1,9 @@
 @import '../variables.scss';
 
 .header {
-  font-family: Helvetica;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
   padding: 10px;
 
   color: #eee;
@@ -15,18 +14,12 @@
 
 .title {
   @include destiny-header;
-  font-size: 25px;
-  line-height: 29px;
-  letter-spacing: -0.02em;
+  font-size: 21px;
+  line-height: 24px;
 
   a {
     text-decoration: none;
   }
-}
-
-.longTitle {
-  font-size: 18px;
-  line-height: 22px;
 }
 
 .subtitle {
@@ -83,6 +76,7 @@
 .powerCap {
   color: #efe59d;
   font-size: 12px;
+  line-height: 16px;
 }
 
 .primary {

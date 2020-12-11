@@ -2,7 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import ItemActions from 'app/item-popup/ItemActions';
 import ItemSockets from 'app/item-popup/ItemSockets';
-import { ItemSubHeader } from 'app/item-popup/ItemSubHeader';
+import { ItemSubHeader } from 'app/mobile-inspect/ItemSubHeader';
 import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';

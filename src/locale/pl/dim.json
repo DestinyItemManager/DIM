@@ -606,7 +606,7 @@
     "Store": "Umieść",
     "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}}{{typeName}}",
+      "Type": "{{classType}}{{typeName}}",
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
     },
     "Take": "Weź",

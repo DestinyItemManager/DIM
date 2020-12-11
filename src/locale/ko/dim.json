@@ -606,7 +606,7 @@
     "Store": "보관",
     "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "모으기",

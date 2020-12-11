@@ -32,7 +32,7 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
         [styles.pursuit]: item.pursuit,
       })}
     >
-      <div className={clsx(styles.title, { [styles.longTitle]: item.name.length >= 19 })}>
+      <div className={styles.title}>
         <ExternalLink href={destinyDBLink(item, language)}>{item.name}</ExternalLink>
       </div>
 
@@ -56,7 +56,7 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           <div className={styles.power}>{item.primStat?.value}</div>
           {item.powerCap && (
             <div className={styles.powerCap}>
-              / {item.powerCap}{' '}
+              | {item.powerCap}{' '}
               {t('Stats.FinalSeason', {
                 finalSeason: getItemPowerCapFinalSeason(item),
               })}
@@ -87,17 +87,21 @@ function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
 
 function ItemTypeName({ item }: { item: DimItem }) {
   const classType =
-    item.classType !== DestinyClass.Unknown &&
-    // These already include the class name
-    item.type !== 'ClassItem' &&
-    item.type !== 'Artifact' &&
-    item.type !== 'Class' &&
-    !item.classified &&
-    item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1);
+    (item.classType !== DestinyClass.Unknown &&
+      // These already include the class name
+      item.type !== 'ClassItem' &&
+      item.type !== 'Artifact' &&
+      item.type !== 'Class' &&
+      !item.classified &&
+      item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
+    '';
 
   return (
     <div className={styles.itemType}>
-      {classType} {item.typeName}
+      {t('MovePopup.Subtitle.Type', {
+        classType,
+        typeName: item.typeName,
+      })}
     </div>
   );
 }

@@ -606,7 +606,7 @@
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "Nehmen",

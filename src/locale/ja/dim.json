@@ -606,7 +606,7 @@
     "Store": "保存",
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}",
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
     },
     "Take": "取る",

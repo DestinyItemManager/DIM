@@ -606,7 +606,7 @@
     "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
-      "Consumable": "{{typeName}} {{classType}}",
+      "Type": "{{typeName}} {{classType}}",
       "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}"
     },
     "Take": "Prendi",

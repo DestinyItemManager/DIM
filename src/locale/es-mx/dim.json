@@ -606,7 +606,7 @@
     "Store": "Guardar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}",
       "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}"
     },
     "Take": "Toma",
