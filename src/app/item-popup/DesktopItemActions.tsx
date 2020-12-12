@@ -1,4 +1,5 @@
 import { StoreIcon } from 'app/character-tile/StoreIcon';
+import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -73,6 +74,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   useHotkey('v', t('Hotkey.Vault'), () => {
     const vault = getVault(stores)!;
     submitMoveTo(vault);
+  });
+  useHotkey('c', t('Compare.ButtonHelp'), () => {
+    hideItemPopup();
+    CompareService.addItemsToCompare([item], true);
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
