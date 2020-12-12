@@ -777,7 +777,7 @@
     "Discipline": "Discipline",
     "DodgeCooldown": "Dodge Cooldown",
     "Effect": "Effect",
-    "FinalSeason": "(S{finalSeason})",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Grenade Cooldown",
     "Intellect": "Intellect",
     "MaxGearPower": "Maximum Power of equippable gear",
