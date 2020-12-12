@@ -778,6 +778,7 @@
     "Discipline": "Dyscyplina",
     "DodgeCooldown": "Odnowienie uniku",
     "Effect": "Efekt",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Odnowienie granatu",
     "Intellect": "Intelekt",
     "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",

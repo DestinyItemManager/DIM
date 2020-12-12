@@ -778,6 +778,7 @@
     "Discipline": "Дисциплина",
     "DodgeCooldown": "Время восстановления Уклонения",
     "Effect": "Эффект",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Время восстановления Гранаты",
     "Intellect": "Интеллект",
     "MaxGearPower": "Предметы наибольшей Силы, доступные персонажу",

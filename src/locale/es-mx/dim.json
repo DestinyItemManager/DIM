@@ -778,6 +778,7 @@
     "Discipline": "Disciplina",
     "DodgeCooldown": "Enfriamiento de Esquivar",
     "Effect": "Efecto",
+    "FinalSeason": "(T{{finalSeason}})",
     "GrenadeCooldown": "Enfriamiento de Granada",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",

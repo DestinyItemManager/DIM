@@ -778,6 +778,7 @@
     "Discipline": "鍛錬",
     "DodgeCooldown": "回避のクールダウン",
     "Effect": "エフェクト",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "グレネードのクールダウン",
     "Intellect": "知性",
     "MaxGearPower": "装備可能なギアの最大出力",

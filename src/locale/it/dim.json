@@ -778,6 +778,7 @@
     "Discipline": "Disciplina",
     "DodgeCooldown": "Tempo di recupero Schivata",
     "Effect": "Effetto",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Tempo di recupero Granata",
     "Intellect": "Intelletto",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",

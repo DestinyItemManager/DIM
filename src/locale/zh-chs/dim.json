@@ -778,6 +778,7 @@
     "Discipline": "训练",
     "DodgeCooldown": "闪身冷却",
     "Effect": "效果",
+    "FinalSeason": "（S{{finalSeason}}）",
     "GrenadeCooldown": "手雷冷却",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",

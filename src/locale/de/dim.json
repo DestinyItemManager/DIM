@@ -778,6 +778,7 @@
     "Discipline": "Disziplin",
     "DodgeCooldown": "Abklingzeit Ausweichen",
     "Effect": "Effekt",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Abklingzeit Granaten",
     "Intellect": "Intellekt",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",

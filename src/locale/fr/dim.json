@@ -778,6 +778,7 @@
     "Discipline": "Discipline",
     "DodgeCooldown": "Délai Esquive",
     "Effect": "Effet",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Délai de la Grenade",
     "Intellect": "Intelligence",
     "MaxGearPower": "Puissance maximale des équipements pouvant être équipés",

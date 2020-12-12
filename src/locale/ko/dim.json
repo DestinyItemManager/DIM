@@ -778,6 +778,7 @@
     "Discipline": "규율",
     "DodgeCooldown": "회피 재사용 대기시간",
     "Effect": "효과",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "수류탄 재사용 대기시간",
     "Intellect": "지능",
     "MaxGearPower": "장착 가능한 최대 전투력",
