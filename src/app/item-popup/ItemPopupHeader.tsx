@@ -94,7 +94,7 @@ function ItemTypeName({ item }: { item: DimItem }) {
       item.type !== 'Class' &&
       !item.classified &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
-    '';
+    ' ';
 
   return (
     <div className={styles.itemType}>
