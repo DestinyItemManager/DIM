@@ -606,8 +606,8 @@
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Nehmen",
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",

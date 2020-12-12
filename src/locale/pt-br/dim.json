@@ -606,8 +606,8 @@
     "Store": "Armazenar",
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Tomar",
     "ToggleSidecar": "Expandir ou recolher ações do item",

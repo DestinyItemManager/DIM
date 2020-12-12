@@ -606,8 +606,8 @@
     "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "收集",
     "ToggleSidecar": "展开或折叠物品操作",

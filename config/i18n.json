@@ -622,8 +622,8 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Take",
     "ToggleSidecar": "Expand or collapse item actions",
@@ -801,7 +801,7 @@
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
     "Effect": "Effect",
-    "FinalSeason": "(S{finalSeason})",
+    "FinalSeason": "(S{{finalSeason}})",
     "Intellect": "Intellect",
     "MaxBasePower": "Max Power",
     "MaxGearPower": "Maximum Power of equippable gear",

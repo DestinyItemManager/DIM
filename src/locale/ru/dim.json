@@ -606,8 +606,8 @@
     "Store": "Передать",
     "StoreWithName": "Передать {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Взять",
     "ToggleSidecar": "Скрыть/Показать действия",

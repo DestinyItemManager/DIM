@@ -606,8 +606,8 @@
     "Store": "Guardar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
-      "Type": "{{classType}} {{typeName}}",
-      "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}"
+      "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Toma",
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
