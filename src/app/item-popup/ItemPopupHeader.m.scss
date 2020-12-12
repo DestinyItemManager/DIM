@@ -1,10 +1,9 @@
 @import '../variables.scss';
 
 .header {
-  font-family: Helvetica;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
   padding: 10px;
 
   color: #eee;
@@ -15,24 +14,18 @@
 
 .title {
   @include destiny-header;
-  font-size: 25px;
-  line-height: 29px;
-  letter-spacing: -0.02em;
+  font-size: 21px;
+  line-height: 24px;
 
   a {
     text-decoration: none;
   }
 }
 
-.longTitle {
-  font-size: 18px;
-  line-height: 22px;
-}
-
 .subtitle {
   display: flex;
   justify-content: space-between;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .type,
@@ -52,23 +45,24 @@
 }
 
 .breakerIcon {
-  margin: 0 5px;
-  width: 16px;
-  height: 16px;
+  margin: 1px 5px 0;
+  width: 15px;
+  height: 15px;
 }
 
 .ammoIcon {
-  margin: 0 5px 2px 7px;
-  height: 15px;
-  width: 20px;
+  margin: 0 5px 1px 7px;
+  height: 14px;
+  width: 19px;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   align-self: flex-end;
 }
 
 .elementIcon {
-  height: 17px;
-  width: 17px;
+  margin-top: 1px;
+  height: 16px;
+  width: 16px;
 }
 
 .itemType {
@@ -77,12 +71,13 @@
 }
 
 .power {
-  margin: 0 5px;
+  margin: 0 4px;
 }
 
 .powerCap {
   color: #efe59d;
   font-size: 12px;
+  line-height: 16px;
 }
 
 .primary {

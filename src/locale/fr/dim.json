@@ -606,8 +606,8 @@
     "Store": "Dépôt",
     "StoreWithName": "Déposer sur {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Réunir",
     "ToggleSidecar": "Développer ou réduire les actions d'objet",

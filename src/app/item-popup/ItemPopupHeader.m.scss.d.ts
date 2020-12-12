@@ -10,7 +10,6 @@ interface CssExports {
   'header': string;
   'itemType': string;
   'legendary': string;
-  'longTitle': string;
   'masterwork': string;
   'power': string;
   'powerCap': string;
