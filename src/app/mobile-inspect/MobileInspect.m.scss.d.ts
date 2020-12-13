@@ -14,6 +14,7 @@ interface CssExports {
   'itemImg': string;
   'locations': string;
   'mobileInspectSheet': string;
+  'moveLocations': string;
   'sheetBackground': string;
 }
 export const cssExports: CssExports;
