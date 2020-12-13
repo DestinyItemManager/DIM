@@ -99,7 +99,11 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         });
         // Log the item so it's easy to inspect item structure by clicking on an item
         if ($DIM_FLAVOR !== 'release') {
-          infoLog('clicked item', item);
+          infoLog(
+            'clicked item',
+            `https://data.destinysets.com/i/InventoryItem%3A${item.hash}`,
+            item
+          );
         }
       }
     })
