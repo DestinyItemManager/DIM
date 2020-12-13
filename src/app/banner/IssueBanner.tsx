@@ -33,6 +33,7 @@ function Link({
  */
 export default function IssueBanner() {
   const dispatch = useDispatch();
+  const [wiggle, setWiggle] = useState(false);
   const disableConfetti = useSelector(settingsSelector).disableConfetti;
   const [isMinimized, setIsMinimized] = useState(true);
   const [state, setState] = useState({
@@ -85,7 +86,7 @@ export default function IssueBanner() {
 
   return (
     <>
-      {!disableConfetti && met25kGoal && <ConfettiClick />}
+      {!disableConfetti && met25kGoal && <ConfettiClick isAnimating={setWiggle} />}
       <div
         className={clsx(styles.toaster, {
           [styles.maximized]: !isMinimized,
@@ -95,7 +96,11 @@ export default function IssueBanner() {
           state.show && (
             <>
               {met25kGoal && (
-                <label className={styles.confettiToggle}>
+                <label
+                  className={clsx(styles.confettiToggle, {
+                    [styles.wiggleElement]: wiggle,
+                  })}
+                >
                   <input
                     checked={disableConfetti}
                     type="checkbox"

@@ -11,10 +11,12 @@ interface CssExports {
   'link': string;
   'maximized': string;
   'mercury': string;
+  'pop': string;
   'streaming': string;
   'thermo': string;
   'toaster': string;
   'track': string;
+  'wiggleElement': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
