@@ -728,7 +728,7 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout, account: Destiny
       membershipId: account.membershipId,
       destinyVersion: account.destinyVersion,
     };
-    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion);
+    const profileKey = makeProfileKey(loadout.membershipId!, loadout.destinyVersion);
     const profile = ensureProfile(draft, profileKey);
     const loadouts = profile.loadouts;
     const newLoadout = convertDimLoadoutToApiLoadout(loadout);
