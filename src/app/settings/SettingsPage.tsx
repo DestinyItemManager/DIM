@@ -20,7 +20,7 @@ import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getPlatforms } from '../accounts/platforms';
 import { getDefinitions } from '../destiny2/d2-definitions';
@@ -119,6 +119,9 @@ const languageOptions = mapToOptions({
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
+// This state is outside the settings page because the settings loses its
+let languageChanged = false;
+
 function SettingsPage({
   settings,
   isPhonePortrait,
@@ -134,8 +137,6 @@ function SettingsPage({
 
   useLoadStores(currentAccount, storesLoaded);
 
-  const [languageChanged, setLanguageChanged] = useState(false);
-
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
@@ -149,12 +150,12 @@ function SettingsPage({
   };
 
   const changeLanguage = (e) => {
+    languageChanged = true;
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
       dispatch(setSetting('language', language));
     });
-    setLanguageChanged(true);
   };
 
   const resetItemSize = (e) => {
