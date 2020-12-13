@@ -3,6 +3,8 @@
 * New Rich Texts added for Lost Sectors and Stasis.
 * Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
 * Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
+* Green items can no longer mess up loadout optimizer.
+* Special-ammo grenade launchers are now distinguished from heavy grenade launchers.
 
 ## 6.42.3 <span className="changelog-date">(2020-12-07)</span>
 
