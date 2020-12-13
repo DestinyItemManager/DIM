@@ -12,7 +12,7 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   DimPlug,
@@ -230,8 +230,9 @@ function buildDefinedSocket(
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
   if (isPerk) {
-    if (socketDef.reusablePlugSetHash) {
-      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
+    const plugHash = socketDef.reusablePlugSetHash || socketDef.randomizedPlugSetHash;
+    if (plugHash) {
+      const plugSet = defs.PlugSet.get(plugHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
           const built = buildDefinedPlug(defs, reusablePlug);
@@ -260,9 +261,15 @@ function buildDefinedSocket(
     }
   }
 
+  // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
+  let plugged: DimPlug | null = null;
+  if (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits && plugOptions.length) {
+    plugged = plugOptions[0];
+  }
+
   return {
     socketIndex: index,
-    plugged: null,
+    plugged,
     plugOptions,
     curatedRoll: null,
     reusablePlugItems: [],
