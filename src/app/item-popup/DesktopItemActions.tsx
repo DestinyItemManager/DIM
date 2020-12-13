@@ -1,9 +1,11 @@
+import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { moveItemTo } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import {
   CompareActionButton,
   ConsolidateActionButton,
@@ -14,6 +16,7 @@ import {
   TagActionButton,
 } from 'app/item-actions/ActionButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { setSetting } from 'app/settings/actions';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
@@ -38,6 +41,20 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   };
 
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
+  useHotkey('p', t('Hotkey.Pull'), () => {
+    const currentChar = getCurrentStore(stores)!;
+    dispatch(moveItemTo(item, currentChar, false, item.maxStackSize));
+    hideItemPopup();
+  });
+  useHotkey('v', t('Hotkey.Vault'), () => {
+    const vault = getVault(stores)!;
+    dispatch(moveItemTo(item, vault, false, item.maxStackSize));
+    hideItemPopup();
+  });
+  useHotkey('c', t('Compare.ButtonHelp'), () => {
+    hideItemPopup();
+    CompareService.addItemsToCompare([item], true);
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {

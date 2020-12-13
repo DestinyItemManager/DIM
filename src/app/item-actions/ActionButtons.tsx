@@ -1,5 +1,4 @@
 import { CompareService } from 'app/compare/compare.service';
-import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
@@ -7,9 +6,9 @@ import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
+import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
-import LockButton from 'app/item-popup/LockButton';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -31,8 +30,6 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
     hideItemPopup();
     CompareService.addItemsToCompare([item], true);
   };
-
-  useHotkey('c', t('Compare.ButtonHelp'), openCompare);
 
   if (!item.comparable) {
     return null;

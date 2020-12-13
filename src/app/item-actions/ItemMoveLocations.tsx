@@ -1,13 +1,12 @@
 import { StoreIcon } from 'app/character-tile/StoreIcon';
 import PressTip from 'app/dim-ui/PressTip';
-import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import { moveItemTo } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
+import { amountOfItem, getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
@@ -53,15 +52,6 @@ export default function ItemMoveLocations({
     dispatch(moveItemTo(item, store, equip, moveAmount));
     hideItemPopup();
   };
-
-  useHotkey('p', t('Hotkey.Pull'), () => {
-    const currentChar = getCurrentStore(stores)!;
-    submitMoveTo(currentChar);
-  });
-  useHotkey('v', t('Hotkey.Vault'), () => {
-    const vault = getVault(stores)!;
-    submitMoveTo(vault);
-  });
 
   if (!itemOwner) {
     return null;
