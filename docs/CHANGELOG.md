@@ -1,5 +1,7 @@
 ## Next
 
+## 6.43.0 <span className="changelog-date">(2020-12-13)</span>
+
 * New Rich Texts added for Lost Sectors and Stasis.
 * Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
 * Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
