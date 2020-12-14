@@ -1,5 +1,7 @@
 ## Next
 
+## 6.43.1 <span className="changelog-date">(2020-12-13)</span>
+
 ## 6.43.0 <span className="changelog-date">(2020-12-13)</span>
 
 * New Rich Texts added for Lost Sectors and Stasis.
