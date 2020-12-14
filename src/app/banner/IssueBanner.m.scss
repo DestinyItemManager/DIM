@@ -110,3 +110,14 @@
     background-color: #c00 !important;
   }
 }
+
+.wiggleElement {
+  animation: 0.25s linear 2 alternate pop;
+  z-index: 1;
+}
+
+@keyframes pop {
+  to {
+    transform: scale(1.25);
+  }
+}

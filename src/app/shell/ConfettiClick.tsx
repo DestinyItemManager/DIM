@@ -44,11 +44,19 @@ function drawShapes(ctx) {
   }
 }
 
-export default function ConfettiClick() {
+export default function ConfettiClick({
+  isAnimating,
+}: {
+  isAnimating: (animating: boolean) => void;
+}) {
   const {
     clicked,
     position: { x, y },
   } = useMouseClick();
+
+  useEffect(() => {
+    isAnimating(clicked);
+  }, [clicked, isAnimating]);
 
   return (
     <Confetti
