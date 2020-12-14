@@ -36,8 +36,8 @@
     // margin: 0 2px 0 0;
     // vertical-align: middle;
 
-    &.weaponIcon {
-      height: 1.8em;
+    &.element {
+      height: 1.7em;
     }
 
     &.selectionSvg {
@@ -46,6 +46,13 @@
 
       .currentlySelected & {
         filter: invert(0);
+      }
+
+      &.weaponIcon {
+        height: 1.8em;
+      }
+      &.armorSlotIcon {
+        height: 1.8em;
       }
     }
   }

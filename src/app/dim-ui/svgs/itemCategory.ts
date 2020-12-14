@@ -96,7 +96,7 @@ export function getItemSvgIcon(item: DimItem) {
     const svg: string =
       weaponTypeSvgByCategoryHash[ich] ??
       // weaponSlotSvgByCategoryHash[ich] ??
-      // armorSlotSvgByCategoryHash[ich] ??
+      armorSlotSvgByCategoryHash[ich] ??
       // armorClassSvgByCategoryHash[ich] ??
       cosmeticSvgByCategoryHash[ich] ??
       consumableSvgByCategoryHash[ich];

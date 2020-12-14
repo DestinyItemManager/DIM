@@ -6,7 +6,6 @@ import Select, { Option } from 'app/dim-ui/Select';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getItemSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
-import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
@@ -37,12 +36,7 @@ const classNameToICH = {
   warlock: ItemCategoryHashes.Warlock,
 };
 
-const armorEnergyTypes = [
-  DestinyEnergyType.Any,
-  DestinyEnergyType.Arc,
-  DestinyEnergyType.Thermal,
-  DestinyEnergyType.Void,
-];
+const armorEnergyTypes = [DestinyEnergyType.Arc, DestinyEnergyType.Thermal, DestinyEnergyType.Void];
 const weaponDamageTypes = [DamageType.Kinetic, DamageType.Arc, DamageType.Thermal, DamageType.Void];
 
 const itemCategoryFilterNamesByItemCategoryHash = _.invert(itemCategoryHashesByName);
@@ -167,7 +161,11 @@ function QueryBuilderBuilder({ exampleItem, defs, allItems, onQueryChange }: Pro
           value: `name:"${exampleItem.name}"`,
           content: (
             <>
-              <BungieImage className="leadingIcon weaponIcon" src={exampleItem.icon} />{' '}
+              <BungieImage
+                loading="eager"
+                className="leadingIcon weaponIcon"
+                src={exampleItem.icon}
+              />{' '}
               <span>{exampleItem.name}</span>
             </>
           ),
@@ -184,6 +182,7 @@ export default connect<StoreProps>(mapStateToProps)(QueryBuilderBuilder);
 
 interface OptionConfig {
   key: string;
+  hideUnselectable?: boolean;
   options: Option<string | undefined>[];
   default: string | undefined;
 }
@@ -197,7 +196,7 @@ export function QueryBuilder({
   optionSets: Record<'any' | 'armor' | 'weapon', OptionConfig[]>;
   onQueryChange: (q: string) => void;
 }) {
-  const [currentMainSelection, setCurrentMainSelection] = useState(defaultMainSelection);
+  // const [currentMainSelection, setCurrentMainSelection] = useState(defaultMainSelection);
   const [currentSelections, setCurrentSelections] = useState(
     Object.values(optionSets)
       .flat()
@@ -215,26 +214,26 @@ export function QueryBuilder({
     {} as any
   );
 
-  const mainSelection = [
-    {
-      key: 'weapon',
-      value: 'weapon' as const,
-      content: <span>{t('Bucket.Weapons')}</span>,
-    },
-    {
-      key: 'armor',
-      value: 'armor' as const,
-      content: <span>{t('Bucket.Armor')}</span>,
-    },
-  ];
+  // const mainSelection = [
+  //   {
+  //     key: 'weapon',
+  //     value: 'weapon' as const,
+  //     content: <span>{t('Bucket.Weapons')}</span>,
+  //   },
+  //   {
+  //     key: 'armor',
+  //     value: 'armor' as const,
+  //     content: <span>{t('Bucket.Armor')}</span>,
+  //   },
+  // ];
 
   onQueryChange(
-    `is:${currentMainSelection} ` +
+    `is:${defaultMainSelection} ` +
       Object.entries(currentSelections)
         .filter(
           ([selectorType]) =>
             optionSetVisibility.any.includes(selectorType) ||
-            optionSetVisibility[currentMainSelection].includes(selectorType)
+            optionSetVisibility[defaultMainSelection].includes(selectorType)
         )
         .map(([_, selectorValue]) => selectorValue)
         .filter(Boolean)
@@ -243,14 +242,14 @@ export function QueryBuilder({
 
   return (
     <div className={'selectors compare-options'}>
-      <Select<'weapon' | 'armor'>
+      {/* <Select<'weapon' | 'armor'>
         key="mainSelection"
         options={mainSelection}
         value={currentMainSelection}
         onChange={(v) => setCurrentMainSelection(v === 'weapon' ? 'weapon' : 'armor')}
         hideSelected
-      />
-      {[...optionSets.any, ...optionSets[currentMainSelection]].map((os) => {
+      /> */}
+      {[...optionSets.any, ...optionSets[defaultMainSelection]].map((os) => {
         // const currentlySelected = os.options.find((o) => o.value === currentSelections[os.key])!;
         // if (!currentlySelected) {
         //   console.log(`looked for ${currentSelections[os.key]} in ${os.key}`);
@@ -290,7 +289,7 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       value: `is:${energyNamesByEnum[et.enumValue]}`,
       content: (
         <>
-          <ElementIcon className="leadingIcon" element={et} />{' '}
+          <ElementIcon className="leadingIcon element" element={et} />{' '}
           <span>{et.displayProperties.name}</span>
         </>
       ),
@@ -303,7 +302,7 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       value: `is:${damageNamesByEnum[dt.enumValue]}`,
       content: (
         <>
-          <ElementIcon className="leadingIcon" element={dt} />{' '}
+          <ElementIcon className="leadingIcon element" element={dt} />{' '}
           <span>{dt.displayProperties.name}</span>
         </>
       ),
@@ -361,7 +360,7 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       value: `is:${at.toLowerCase()}`,
       content: (
         <>
-          <img className="leadingIcon selectionSvg" src={getItemSvgIcon(example)} />{' '}
+          <img className="leadingIcon selectionSvg armorSlotIcon" src={getItemSvgIcon(example)} />{' '}
           <span>{example.typeName}</span>
         </>
       ),

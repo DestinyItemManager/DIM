@@ -1,11 +1,11 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import CheckButton from 'app/dim-ui/CheckButton';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { searchFiltersConfigSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
-import Checkbox from 'app/settings/Checkbox';
 import { RootState } from 'app/store/types';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -170,8 +170,8 @@ class Compare extends React.Component<Props, State> {
       return null;
     }
 
-    const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-      setSetting(e.target.name as any, e.target.checked);
+    const setCompareBaseStats = (val: boolean) => {
+      setSetting('compareBaseStats', val);
     };
 
     const comparisonItems = !sortedHash
@@ -341,12 +341,6 @@ class Compare extends React.Component<Props, State> {
         onClose={this.cancel}
         header={
           <div className="compare-options">
-            <Checkbox
-              label={t('Compare.CompareBaseStats')}
-              name="compareBaseStats"
-              value={compareBaseStats}
-              onChange={onChange}
-            />
             <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
           </div>
         }
@@ -368,6 +362,15 @@ class Compare extends React.Component<Props, State> {
                   {stat.displayProperties.name}
                 </div>
               ))}
+              {comparisonItems[0].bucket.inArmor && (
+                <CheckButton
+                  className={'baseStatToggle'}
+                  checked={compareBaseStats}
+                  onChange={setCompareBaseStats}
+                >
+                  {t('Compare.CompareBaseStats')}
+                </CheckButton>
+              )}
             </div>
             <div className="compare-items" onTouchStart={this.stopTouches}>
               {thisSheetFilteredItems.map((item) => (
