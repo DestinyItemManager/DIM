@@ -72,7 +72,11 @@ export default function DesktopStores({
         role="main"
         aria-label={t('Header.Inventory')}
       >
-        <HeaderShadowDiv className={'store-row store-header'}>
+        <HeaderShadowDiv
+          className={clsx('store-row', 'store-header', {
+            [styles.activeModeHeader]: activeModeEnabled,
+          })}
+        >
           {headerStores.map((store) => (
             <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
               <StoreHeading store={store} />
