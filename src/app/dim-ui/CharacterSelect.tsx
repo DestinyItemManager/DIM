@@ -179,6 +179,7 @@ function SwipableCharacterSelect({
         {stores.map((store) => (
           <div
             key={store.id}
+            style={{ width: `${100 / stores.length}%` }}
             className={clsx(styles.tile, {
               [styles.unselected]: store.id !== selectedStore.id,
             })}
