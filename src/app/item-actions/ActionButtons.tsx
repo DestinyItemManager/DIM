@@ -141,7 +141,7 @@ export function DistributeActionButton({ item, label }: ActionButtonProps) {
 }
 
 export function InfuseActionButton({ item, label }: ActionButtonProps) {
-  if (!item.infusionFuel) {
+  if (!item.infusionFuel || item.owner === 'unknown') {
     return null;
   }
 
@@ -159,7 +159,7 @@ export function InfuseActionButton({ item, label }: ActionButtonProps) {
 }
 
 export function LoadoutActionButton({ item, label }: ActionButtonProps) {
-  if (!itemCanBeInLoadout(item)) {
+  if (!itemCanBeInLoadout(item) || item.owner === 'unknown') {
     return null;
   }
   const addToLoadout = (e) => {
