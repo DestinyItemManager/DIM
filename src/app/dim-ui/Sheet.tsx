@@ -80,7 +80,7 @@ export default function Sheet({
   /** This spring is controlled via setSpring, which doesn't trigger re-render. */
   const [springProps, setSpring] = useSpring(() => ({
     // Initially transition from offscreen to on
-    from: { transform: `translateY(100vh)` },
+    from: { transform: `translateY(${window.innerHeight}px)` },
     to: { transform: `translateY(0px)` },
     config: spring,
     onRest,
