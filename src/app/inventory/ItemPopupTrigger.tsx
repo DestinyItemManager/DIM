@@ -1,6 +1,5 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import React, { useCallback, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { CompareService } from '../compare/compare.service';
 import { ItemPopupExtraInfo, showItemPopup } from '../item-popup/item-popup';
 import { clearNewItem } from './actions';
@@ -17,27 +16,19 @@ interface Props {
  */
 export default function ItemPopupTrigger({ item, extraData, children }: Props): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
-  const disableConfetti = useSelector(settingsSelector).disableConfetti;
   const dispatch = useDispatch();
 
-  const clicked = useCallback(
-    (e: React.MouseEvent) => {
-      if (disableConfetti) {
-        e.stopPropagation();
-      }
+  const clicked = useCallback(() => {
+    dispatch(clearNewItem(item.id));
 
-      dispatch(clearNewItem(item.id));
-
-      // TODO: a dispatcher based on store state?
-      if (CompareService.dialogOpen) {
-        CompareService.addItemsToCompare([item]);
-      } else {
-        showItemPopup(item, ref.current!, extraData);
-        return false;
-      }
-    },
-    [dispatch, extraData, item, disableConfetti]
-  );
+    // TODO: a dispatcher based on store state?
+    if (CompareService.dialogOpen) {
+      CompareService.addItemsToCompare([item]);
+    } else {
+      showItemPopup(item, ref.current!, extraData);
+      return false;
+    }
+  }, [dispatch, extraData, item]);
 
   return children(ref, clicked) as JSX.Element;
 }
