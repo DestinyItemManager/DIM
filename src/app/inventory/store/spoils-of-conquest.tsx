@@ -18,7 +18,7 @@ const warnSpoilsInVault = _.debounce(
       duration: 10000,
     });
   },
-  30000,
+  60000,
   {
     leading: true,
     trailing: false,
@@ -26,11 +26,13 @@ const warnSpoilsInVault = _.debounce(
 );
 
 /**
- * returns true if this is a Spoils of Conquest (3702027555) that's not in the vault
+ * returns true if this is a Spoils of Conquest (3702027555).
+ * plus, if it is, and it's in vault, throws an occasional warning to the user.
  *
- * if true, please do not transfer this item!! spoils can't safely be in the vault
+ * if the item is spoils, treat as nonTransferrable,
+ * because the API is purposely rejecting those with error DestinyItemActionForbidden: 1663
  */
-export function isSpoilsOnCharacter(
+export function isSpoils(
   itemDef: DestinyInventoryItemDefinition,
   owner: DimStore<DimItem> | undefined,
   defs: D2ManifestDefinitions
@@ -45,10 +47,8 @@ export function isSpoilsOnCharacter(
           src={spoilsDef.displayProperties.icon}
         />
       );
-    } else {
-      // it's spoils, but it's in the right place. return true to prevent transfers
-      return true;
     }
+    return true;
   }
   return false;
 }
