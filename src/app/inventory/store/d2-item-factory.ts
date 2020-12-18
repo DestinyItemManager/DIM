@@ -288,6 +288,8 @@ export function makeItem(
   const element =
     (instanceDef?.damageTypeHash !== undefined &&
       defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (itemDef.defaultDamageTypeHash !== undefined &&
+      defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
     (instanceDef?.energy?.energyTypeHash !== undefined &&
       defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
