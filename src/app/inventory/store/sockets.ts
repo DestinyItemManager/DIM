@@ -66,7 +66,7 @@ export function buildSockets(
   // get sockets from the item definition.
   if (!sockets && itemDef.sockets) {
     // If this really *should* have live sockets, but didn't...
-    if (item.itemInstanceId && socketData && !socketData[item.itemInstanceId]) {
+    if (item.itemInstanceId && item.itemInstanceId !== '0' && !socketData?.[item.itemInstanceId]) {
       return { sockets: null, missingSockets: true };
     }
     sockets = buildDefinedSockets(defs, itemDef);

@@ -114,7 +114,7 @@ function ItemSocketsWeapons({
         [styles.minimal]: minimal,
       })}
     >
-      {(archetype || (!minimal && mods.length > 0)) && (
+      {(archetype?.plugged || (!minimal && mods.length > 0)) && (
         <div className={clsx(styles.row, styles.archetype)}>
           {archetype?.plugged && (
             <>
