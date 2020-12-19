@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* We continue to experiment with the order of the list-style perk display on weapons - the most important perks tend to be on the rightmost column of the grid, so now we list the perks in right-to-left order from the original grid.
+
 ## 6.43.2 <span className="changelog-date">(2020-12-13)</span>
 
 ## 6.43.1 <span className="changelog-date">(2020-12-13)</span>
