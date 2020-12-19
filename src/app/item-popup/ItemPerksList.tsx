@@ -5,7 +5,6 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { default as React, useState } from 'react';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -15,9 +14,6 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
 import PlugTooltip from './PlugTooltip';
-
-// Reorder sockets to put frames and intrinsics first, since they're most interesting
-const plugCategoryIdentifierOrder = ['frames', 'intrinsics'];
 
 interface ProvidedProps {
   item: DimItem;
@@ -59,12 +55,7 @@ function ItemPerksList({ defs, item, perks, inventoryWishListRoll }: Props) {
     return null;
   }
 
-  const sockets = _.sortBy(
-    perks.sockets,
-    (s) =>
-      s.plugged &&
-      -plugCategoryIdentifierOrder.indexOf(s.plugged.plugDef.plug.plugCategoryIdentifier)
-  );
+  const sockets = [...perks.sockets].reverse();
 
   return (
     <div className={styles.sockets}>
