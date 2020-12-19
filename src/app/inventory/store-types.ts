@@ -71,6 +71,8 @@ export interface DimStore<Item = DimItem> {
     maxTotalPower?: DimCharacterStat;
     [hash: number]: DimCharacterStat;
   };
+  /** Did any of the items in the last inventory build fail? */
+  hadErrors: boolean;
 }
 
 /** Account-wide currency counts, e.g. glimmer */

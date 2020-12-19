@@ -119,7 +119,7 @@ export const itemTagSelectorList: TagInfo[] = [
  */
 export function cleanInfos(stores: DimStore[]): ThunkResult {
   return async (dispatch, getState) => {
-    if (!stores.length || stores.some((s) => s.items.length === 0)) {
+    if (!stores.length || stores.some((s) => s.items.length === 0 || s.hadErrors)) {
       // don't accidentally wipe out notes
       return;
     }
