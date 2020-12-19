@@ -92,6 +92,7 @@ export function makeCharacter(
     advisors: raw.character.advisors,
     isVault: false,
     items: [],
+    hadErrors: false,
   };
 
   let items: any[] = [];
@@ -149,6 +150,7 @@ export function makeVault(
     race: '',
     genderRace: '',
     stats: [],
+    hadErrors: false,
   };
 
   let items: any[] = [];
