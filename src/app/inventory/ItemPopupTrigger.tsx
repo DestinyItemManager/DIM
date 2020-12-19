@@ -18,17 +18,21 @@ export default function ItemPopupTrigger({ item, extraData, children }: Props): 
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
-  const clicked = useCallback(() => {
-    dispatch(clearNewItem(item.id));
+  const clicked = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      dispatch(clearNewItem(item.id));
 
-    // TODO: a dispatcher based on store state?
-    if (CompareService.dialogOpen) {
-      CompareService.addItemsToCompare([item]);
-    } else {
-      showItemPopup(item, ref.current!, extraData);
-      return false;
-    }
-  }, [dispatch, extraData, item]);
+      // TODO: a dispatcher based on store state?
+      if (CompareService.dialogOpen) {
+        CompareService.addItemsToCompare([item]);
+      } else {
+        showItemPopup(item, ref.current!, extraData);
+        return false;
+      }
+    },
+    [dispatch, extraData, item]
+  );
 
   return children(ref, clicked) as JSX.Element;
 }
