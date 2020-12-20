@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -55,6 +56,9 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
+      {item.missingSockets && (
+        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+      )}
       {item.sockets && (
         <ItemSockets
           item={item}
