@@ -1,5 +1,13 @@
 ## Next
 
+* Fixed a bug that could potentially erase some tags/notes if there were errors in DIM.
+* When Bungie.net is undergoing maintenance, item perks won't be shown anymore. Before, we'd show the default/collections roll, which confused people.
+* Fix the element type of items not showing in some cases.
+* Improved the sizing of sheet popups on Android when the keyboard is up.
+* You can no longer transfer Spoils of Conquest anywhere.
+* Hide action buttons on collections/vendors items.
+* Fixed character headers wrapping on non-English locales.
+
 ### Beta Only
 
 * We continue to experiment with the order of the list-style perk display on weapons - the most important perks tend to be on the rightmost column of the grid, so now we list the perks in right-to-left order from the original grid.
