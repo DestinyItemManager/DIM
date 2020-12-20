@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import XHR from 'i18next-xhr-backend';
+import HttpApi from 'i18next-http-backend';
 import de from '../locale/de/dim.json';
 import en from '../locale/dim.json';
 import esMX from '../locale/es-mx/dim.json';
@@ -44,8 +44,7 @@ export function defaultLanguage(): string {
 export function initi18n(): Promise<unknown> {
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
-    i18next.use(XHR);
-    i18next.init(
+    i18next.use(HttpApi).init(
       {
         initImmediate: true,
         debug: $DIM_FLAVOR === 'dev',

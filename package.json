@@ -174,7 +174,7 @@
     "fast-equals": "^2.0.0",
     "framer-motion": "^3.1.1",
     "i18next": "^19.0.0",
-    "i18next-xhr-backend": "^3.0.0",
+    "i18next-http-backend": "^1.0.21",
     "idb-keyval": "^3.1.0",
     "immer": "^6.0.9",
     "lodash": "^4.17.8",
