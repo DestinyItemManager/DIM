@@ -21,8 +21,7 @@ export default function Plug({
   plug,
   item,
   socketInfo,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
   className,
   hasMenu,
   isPhonePortrait,
@@ -34,8 +33,7 @@ export default function Plug({
   plug: DimPlug;
   item: DimItem;
   socketInfo: DimSocket;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   className?: string;
   hasMenu: boolean;
   isPhonePortrait: boolean;
@@ -81,13 +79,7 @@ export default function Plug({
   );
 
   const tooltip = () => (
-    <PlugTooltip
-      item={item}
-      plug={plug}
-      defs={defs}
-      wishListsEnabled={wishListsEnabled}
-      inventoryWishListRoll={inventoryWishListRoll}
-    />
+    <PlugTooltip item={item} plug={plug} defs={defs} wishlistRoll={wishlistRoll} />
   );
 
   return (
@@ -117,7 +109,7 @@ export default function Plug({
       ) : (
         contents
       )}
-      {wishListsEnabled && inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) && (
+      {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
       )}
     </div>

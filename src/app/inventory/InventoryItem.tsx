@@ -25,8 +25,7 @@ interface Props {
   notes?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
@@ -43,15 +42,14 @@ export default function InventoryItem({
   tag,
   notes,
   searchHidden,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
   ignoreSelectedPerks,
   onClick,
   onShiftClick,
   onDoubleClick,
   innerRef,
 }: Props) {
-  const uiWishListRoll = wishListsEnabled ? toUiWishListRoll(inventoryWishListRoll) : undefined;
+  const uiWishListRoll = useMemo(() => toUiWishListRoll(wishlistRoll), [wishlistRoll]);
 
   let enhancedOnClick = onClick;
   if (onShiftClick) {

@@ -80,13 +80,13 @@ export function getColumns(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
-  wishList: {
-    [key: string]: InventoryWishListRoll;
-  },
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
-  destinyVersion: DestinyVersion
+  destinyVersion: DestinyVersion,
+  wishList?: {
+    [key: string]: InventoryWishListRoll;
+  }
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 
@@ -295,7 +295,7 @@ export function getColumns(
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
-          const roll = wishList[item.id];
+          const roll = wishList?.[item.id];
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>
