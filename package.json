@@ -212,7 +212,7 @@
     "voca": "^1.4.0",
     "workbox-cacheable-response": "^5.1.1",
     "workbox-core": "^5.1.1",
-    "workbox-expiration": "5.1.1",
+    "workbox-expiration": "^5.1.1",
     "workbox-precaching": "^5.1.1",
     "workbox-routing": "^5.1.1",
     "workbox-strategies": "^5.1.1",
