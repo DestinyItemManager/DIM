@@ -1,5 +1,7 @@
 ## Next
 
+## 6.44.0 <span className="changelog-date">(2020-12-20)</span>
+
 * Fixed a bug that could potentially erase some tags/notes if there were errors in DIM.
 * When Bungie.net is undergoing maintenance, item perks won't be shown anymore. Before, we'd show the default/collections roll, which confused people.
 * Fix the element type of items not showing in some cases.
