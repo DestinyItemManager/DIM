@@ -30,7 +30,6 @@ if ($featureFlags.sentry) {
       'Bungie.net is currently experiencing difficulties.',
       /AbortError/,
       /Non-Error promise rejection/,
-      /VendorEngrams\.xyz/,
     ],
     ignoreUrls: [
       // Chrome extensions

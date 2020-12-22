@@ -10,7 +10,6 @@ import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSubscription } from 'app/utils/hooks';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
 import {
   DestinyCollectibleComponent,
   DestinyCurrenciesComponent,
@@ -58,7 +57,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
-  vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
   filterItems: ItemFilter;
 }
@@ -75,7 +73,6 @@ function mapStateToProps() {
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendorEngramDrops: state.vendorDrops.vendorDrops,
     vendors: state.vendors.vendorsByCharacter,
   });
 }
@@ -94,7 +91,6 @@ function Vendors({
   searchQuery,
   filterItems,
   profileResponse,
-  vendorEngramDrops,
   vendors,
   dispatch,
   account,
@@ -204,9 +200,7 @@ function Vendors({
             {t('Vendors.FilterToUnacquired')}
           </CheckButton>
         )}
-        {!isPhonePortrait && vendorGroups && (
-          <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
-        )}
+        {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents>
         <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
@@ -220,7 +214,6 @@ function Vendors({
                   ownedItemHashes={fullOwnedItemHashes}
                   currencyLookups={currencyLookups}
                   filtering={filterToUnacquired || searchQuery.length > 0}
-                  vendorDrops={vendorEngramDrops}
                   characterId={selectedStore.id}
                 />
               ))
@@ -240,7 +233,6 @@ function VendorGroup({
   currencyLookups,
   defs,
   filtering,
-  vendorDrops,
   characterId,
 }: {
   defs: D2ManifestDefinitions;
@@ -248,7 +240,6 @@ function VendorGroup({
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
-  vendorDrops?: VendorDrop[];
   characterId: string;
 }) {
   return (
@@ -262,7 +253,6 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
-            vendorDrops={vendorDrops}
             characterId={characterId}
           />
         </ErrorBoundary>

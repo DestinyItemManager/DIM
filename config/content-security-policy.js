@@ -34,11 +34,6 @@ module.exports = function csp(env) {
       'https://www.google-analytics.com',
       // Bungie.net API
       'https://www.bungie.net',
-      // DTR Reviews API
-      //'https://reviews-api.destinytracker.net',
-      //'https://api.tracker.gg',
-      // VendorEngrams
-      //'https://api.vendorengrams.xyz',
       // Wishlists
       'https://raw.githubusercontent.com',
       'https://gist.githubusercontent.com',

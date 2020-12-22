@@ -1,4 +1,3 @@
-import type { VendorDropsState } from 'app/vendorEngramsXyzApi/reducer';
 import type { VendorsState } from 'app/vendors/reducer';
 import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -21,7 +20,6 @@ export interface RootState {
   readonly wishLists: WishListsState;
   readonly farming: FarmingState;
   readonly manifest: ManifestState;
-  readonly vendorDrops: VendorDropsState;
   readonly vendors: VendorsState;
   readonly dimApi: DimApiState;
 }
