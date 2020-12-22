@@ -937,7 +937,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Clear Wish List",
-    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | seperated)",
+    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
     "ImportError": "Error loading wish list: {{error}}",
