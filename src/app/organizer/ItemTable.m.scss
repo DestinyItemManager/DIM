@@ -23,6 +23,7 @@ $content-cells: 5;
   }
 }
 
+$toolbarHeightWithPadding: 45px + 8px;
 .toolbar {
   grid-column: 1 / -1;
   position: sticky;
@@ -30,7 +31,7 @@ $content-cells: 5;
 
   top: $header-height;
   padding: 8px 8px !important;
-  height: 41px - 16px;
+  height: $toolbarHeightWithPadding - 8px;
 
   border-bottom: none !important;
   > div {
@@ -39,11 +40,11 @@ $content-cells: 5;
     align-items: center;
     position: sticky;
     left: 4px;
+    height: 100%;
     width: 98vw;
     @include horizontal-space-children(4px);
   }
 }
-$toolbarHeight: 41px - 16px + 8px;
 
 .guideLink {
   margin-right: 8px !important;
@@ -64,7 +65,7 @@ $toolbarHeight: 41px - 16px + 8px;
   position: sticky;
   z-index: $header-cells;
 
-  top: $header-height + $toolbarHeight;
+  top: $header-height + $toolbarHeightWithPadding;
   white-space: nowrap;
   padding-top: 4px !important;
 
@@ -109,9 +110,9 @@ $toolbarHeight: 41px - 16px + 8px;
   min-width: 20px;
   left: 0;
   position: sticky;
-  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
+  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeightWithPadding});
   &.header {
-    top: $header-height + $toolbarHeight;
+    top: $header-height + $toolbarHeightWithPadding;
   }
   z-index: $header-cells;
 }
@@ -154,9 +155,9 @@ $toolbarHeight: 41px - 16px + 8px;
   min-width: calc(var(--item-size) * 0.75);
   left: 30px;
   position: sticky;
-  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
+  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeightWithPadding});
   &.header {
-    top: $header-height + $toolbarHeight;
+    top: $header-height + $toolbarHeightWithPadding;
     padding-top: 0;
   }
   z-index: $header-cells;
