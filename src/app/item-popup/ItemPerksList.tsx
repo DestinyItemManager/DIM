@@ -21,20 +21,20 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   defs?: D2ManifestDefinitions;
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
-    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
+    wishlistRoll: inventoryWishListsSelector(state)[item.id],
     defs: state.manifest.d2Manifest,
   };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function ItemPerksList({ defs, item, perks, inventoryWishListRoll }: Props) {
+function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
   // TODO: bring back clicking perks to see stats
   // TODO: click perk to see others
   // TODO: details?
@@ -67,7 +67,7 @@ function ItemPerksList({ defs, item, perks, inventoryWishListRoll }: Props) {
               defs={defs}
               item={item}
               socket={socketInfo}
-              inventoryWishListRoll={inventoryWishListRoll}
+              wishlistRoll={wishlistRoll}
               selectedPerk={selectedPerk}
               onPerkSelected={onPerkSelected}
             />
@@ -83,14 +83,14 @@ function PerkSocket({
   defs,
   item,
   socket,
-  inventoryWishListRoll,
+  wishlistRoll,
   selectedPerk,
   onPerkSelected,
 }: {
   defs: D2ManifestDefinitions;
   item: DimItem;
   socket: DimSocket;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   selectedPerk?: { socket: DimSocket; perk: DimPlug };
   onPerkSelected(socketInfo: DimSocket, plug: DimPlug);
 }) {
@@ -103,7 +103,7 @@ function PerkSocket({
           item={item}
           socketInfo={socket}
           defs={defs}
-          inventoryWishListRoll={inventoryWishListRoll}
+          wishlistRoll={wishlistRoll}
           selectedSocket={selectedPerk?.socket === socket}
           selectedPerk={selectedPerk?.perk === plug}
           onPerkSelected={onPerkSelected}
@@ -118,7 +118,7 @@ function PerkPlug({
   item,
   plug,
   socketInfo,
-  inventoryWishListRoll,
+  wishlistRoll,
   selectedSocket,
   selectedPerk,
   onPerkSelected,
@@ -127,7 +127,7 @@ function PerkPlug({
   item: DimItem;
   plug: DimPlug;
   socketInfo: DimSocket;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   /* True, false, or undefined for "no selection" */
   // TODO: maybe use an enum
   selectedSocket: boolean;
@@ -153,7 +153,7 @@ function PerkPlug({
     >
       <div className={styles.perkIcon}>
         <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
-        {inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) && (
+        {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
           <AppIcon
             className="thumbs-up"
             icon={thumbsUpIcon}
@@ -163,13 +163,7 @@ function PerkPlug({
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>
-          <PlugTooltip
-            item={item}
-            plug={plug}
-            inventoryWishListRoll={inventoryWishListRoll}
-            wishListsEnabled={$featureFlags.wishLists}
-            defs={defs}
-          />
+          <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} defs={defs} />
         </div>
       ) : (
         selected && (

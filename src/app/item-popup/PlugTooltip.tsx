@@ -17,14 +17,12 @@ import './ItemSockets.scss';
 export default function PlugTooltip({
   plug,
   defs,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
 }: {
   item: DimItem;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
 }) {
   // TODO: show insertion costs
 
@@ -34,9 +32,8 @@ export default function PlugTooltip({
     defs.Collectible.get(plug.plugDef.collectibleHash).sourceString;
 
   const wishListTip =
-    wishListsEnabled &&
-    inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) &&
-    t('WishListRoll.BestRatedTip', { count: inventoryWishListRoll.wishListPerks.size });
+    wishlistRoll?.wishListPerks.has(plug.plugDef.hash) &&
+    t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
 
   return (
     <>

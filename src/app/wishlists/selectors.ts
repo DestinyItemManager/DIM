@@ -13,9 +13,6 @@ const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
   _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
 
-export const wishListsEnabledSelector = (state: RootState) =>
-  (wishListsSelector(state)?.wishListAndInfo?.wishListRolls?.length || 0) > 0;
-
 export const inventoryWishListsSelector = createSelector(
   allItemsSelector,
   wishListsByHashSelector,

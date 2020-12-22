@@ -1,7 +1,7 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import { isD1Item } from 'app/utils/item-utils';
-import { UiWishListRoll } from 'app/wishlists/wishlists';
+import { InventoryWishListRoll, UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -26,7 +26,7 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
 interface Props {
   item: DimItem;
   isCapped: boolean;
-  uiWishListRoll?: UiWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
 }
 
 export function hasBadge(item?: DimItem | null): boolean {
@@ -45,13 +45,15 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
+export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const savedNotes = useSelector<RootState, string | undefined>((state) =>
     getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state))
   );
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
+  const wishlistRollIcon =
+    wishlistRoll && (wishlistRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good);
 
   const hideBadge = Boolean(
     (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
@@ -84,13 +86,13 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
           {item.quality.min}%
         </div>
       )}
-      {uiWishListRoll && (
+      {wishlistRollIcon && (
         <div
           className={clsx({
-            [styles.wishlistRoll]: uiWishListRoll,
+            [styles.wishlistRoll]: wishlistRollIcon,
           })}
         >
-          <RatingIcon uiWishListRoll={uiWishListRoll} />
+          <RatingIcon uiWishListRoll={wishlistRollIcon} />
         </div>
       )}
       {item.energy ? (
