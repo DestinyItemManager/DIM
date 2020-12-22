@@ -6,6 +6,7 @@ import Stores from 'app/inventory/Stores';
 import MobileInspect from 'app/mobile-inspect/MobileInspect';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -33,7 +34,6 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-/*
 const components = [
   DestinyComponentType.ProfileInventories,
   DestinyComponentType.ProfileCurrencies,
@@ -41,12 +41,14 @@ const components = [
   DestinyComponentType.CharacterInventories,
   DestinyComponentType.CharacterEquipment,
   DestinyComponentType.ItemInstances,
-  DestinyComponentType.ItemSockets, // TODO: remove ItemSockets - currently needed for wishlist perks
+  // Without ItemSockets and ItemReusablePlugs there will be a delay before the thumbs ups.
+  // One solution could ebe to cache the wishlist info between loads.
+  DestinyComponentType.ItemSockets,
+  DestinyComponentType.ItemReusablePlugs,
 ];
-*/
 
 function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
-  useLoadStores(account, storesLoaded);
+  useLoadStores(account, storesLoaded, components);
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
