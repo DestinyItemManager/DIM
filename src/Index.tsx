@@ -5,7 +5,6 @@ import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import { loadCoreSettings } from 'app/manifest/actions';
 import store from 'app/store/store';
 import { infoLog } from 'app/utils/log';
-import { saveVendorDropsToIndexedDB } from 'app/vendorEngramsXyzApi/observers';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
@@ -30,9 +29,6 @@ if ($featureFlags.wishLists) {
   saveWishListToIndexedDB();
 }
 saveAccountsToIndexedDB();
-if ($featureFlags.vendorEngrams) {
-  saveVendorDropsToIndexedDB();
-}
 updateCSSVariables();
 
 store.dispatch(loadDimApiData());

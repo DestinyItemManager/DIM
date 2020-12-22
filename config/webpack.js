@@ -375,8 +375,6 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
-        // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(true),
         // Show the triage tab in the item popup

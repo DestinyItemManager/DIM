@@ -9,7 +9,6 @@ import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
-import { getAllVendorDrops, isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
@@ -20,7 +19,6 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import vendorEngramSvg from '../../images/engram.svg';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
@@ -28,7 +26,6 @@ import { default as SearchFilter } from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
-import styles from './Header.m.scss';
 import './header.scss';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
@@ -38,7 +35,6 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
 interface StoreProps {
   account?: DestinyAccount;
-  vendorEngramDropActive: boolean;
   isPhonePortrait: boolean;
 }
 
@@ -49,12 +45,11 @@ type Props = StoreProps & ThunkDispatchProp;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state),
-    vendorEngramDropActive: state.vendorDrops.vendorDrops.some(isDroppingHigh),
     isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
-function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: Props) {
+function Header({ account, isPhonePortrait, dispatch }: Props) {
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLAnchorElement>(null);
@@ -101,24 +96,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       });
     }
   };
-
-  const destinyVersion = account?.destinyVersion;
-
-  // Poll for vendor engrams
-  const engramRefreshTimer = useRef<number>();
-  useEffect(() => {
-    if ($featureFlags.vendorEngrams && destinyVersion === 2) {
-      setInterval(() => dispatch(getAllVendorDrops()), 5 * 60 * 1000);
-      return () => {
-        if (engramRefreshTimer.current) {
-          clearInterval(engramRefreshTimer.current);
-          engramRefreshTimer.current = 0;
-        }
-      };
-    } else {
-      return;
-    }
-  }, [destinyVersion, dispatch]);
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);
@@ -185,9 +162,6 @@ function Header({ account, vendorEngramDropActive, isPhonePortrait, dispatch }: 
       {
         to: `${path}/vendors`,
         text: t('Vendors.Vendors'),
-        badge: vendorEngramDropActive && (
-          <img src={vendorEngramSvg} className={styles.vendorEngramBadge} />
-        ),
       },
       account.destinyVersion === 2 && {
         to: `${path}/records`,

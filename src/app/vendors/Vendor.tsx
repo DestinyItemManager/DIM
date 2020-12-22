@@ -1,14 +1,9 @@
 import { XurLocation } from '@d2api/d2api-types';
-import { t } from 'app/i18next-t';
 import { VENDORS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
-import { isDroppingHigh } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
-import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import vendorEngramSvg from '../../images/engram.svg';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
@@ -26,7 +21,6 @@ export default function Vendor({
   ownedItemHashes,
   currencyLookups,
   filtering,
-  vendorDrops,
   characterId,
 }: {
   vendor: D2Vendor;
@@ -36,7 +30,6 @@ export default function Vendor({
     [itemHash: number]: number;
   };
   filtering: boolean;
-  vendorDrops?: VendorDrop[];
   characterId: string;
 }) {
   const xurLocation = useSelector((state: RootState) =>
@@ -50,17 +43,6 @@ export default function Vendor({
           (n) => n?.length
         )
       ).join(', ');
-
-  const vendorEngramDrops =
-    $featureFlags.vendorEngrams && vendorDrops
-      ? vendorDrops.filter((vd) => vd.vendorId === vendor.def.hash)
-      : [];
-
-  const dropActive = vendorEngramDrops.some(isDroppingHigh);
-
-  const vendorLinkTitle = dropActive
-    ? t('VendorEngramsXyz.DroppingHigh')
-    : t('VendorEngramsXyz.Vote');
 
   return (
     <div id={vendor.def.hash.toString()}>
@@ -76,17 +58,6 @@ export default function Vendor({
                 }
                 className={styles.icon}
               />
-              {$featureFlags.vendorEngrams && vendorEngramDrops.length > 0 && (
-                <a target="_blank" rel="noopener noreferrer" href="https://vendorengrams.xyz/">
-                  <img
-                    className={clsx(styles.xyzEngram, {
-                      [styles.xyzActiveThrob]: dropActive,
-                    })}
-                    src={vendorEngramSvg}
-                    title={vendorLinkTitle}
-                  />
-                </a>
-              )}
             </span>
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
