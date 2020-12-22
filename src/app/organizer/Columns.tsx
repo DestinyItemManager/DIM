@@ -80,13 +80,13 @@ export function getColumns(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
+  wishList: {
+    [key: string]: InventoryWishListRoll;
+  },
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
-  destinyVersion: DestinyVersion,
-  wishList?: {
-    [key: string]: InventoryWishListRoll;
-  }
+  destinyVersion: DestinyVersion
 ): ColumnDefinition[] {
   const hasWishList = !_.isEmpty(wishList);
 

@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function ItemDescription({ item, defs }: Props) {
-  const wishlistItem = useSelector(inventoryWishListsSelector)?.[item.id];
+  const wishlistItem = useSelector(inventoryWishListsSelector)[item.id];
 
   // suppressing some unnecessary information for weapons and armor,
   // to make room for all that other delicious info

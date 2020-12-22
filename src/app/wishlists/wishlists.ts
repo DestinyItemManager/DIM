@@ -38,14 +38,14 @@ let inventoryRolls: { [key: string]: InventoryWishListRoll } = {};
 export function getInventoryWishListRolls(
   allItems: DimItem[],
   rollsByHash: { [itemHash: number]: WishListRoll[] }
-): { [key: string]: InventoryWishListRoll } | undefined {
+): { [key: string]: InventoryWishListRoll } {
   if (
     !$featureFlags.wishLists ||
     _.isEmpty(rollsByHash) ||
     !allItems.length ||
     allItems[0].destinyVersion === 1
   ) {
-    return undefined;
+    return {};
   }
 
   if (previousWishListRolls !== rollsByHash) {

@@ -71,7 +71,7 @@ interface StoreProps {
   items: DimItem[];
   defs: D2ManifestDefinitions;
   itemInfos: ItemInfos;
-  wishList?: {
+  wishList: {
     [key: string]: InventoryWishListRoll;
   };
   isPhonePortrait: boolean;
@@ -196,13 +196,14 @@ function ItemTable({
         classIfAny,
         defs,
         itemInfos,
+        wishList,
         customStatTotal,
         loadouts,
         newItems,
-        destinyVersion,
-        wishList
+        destinyVersion
       ),
     [
+      wishList,
       statHashes,
       itemType,
       itemInfos,
@@ -212,7 +213,6 @@ function ItemTable({
       loadouts,
       newItems,
       destinyVersion,
-      wishList,
     ]
   );
 

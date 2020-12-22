@@ -43,7 +43,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, itemInfos, itemHashTags),
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
-    wishlistRoll: wishlistRolls?.[item.id],
+    wishlistRoll: wishlistRolls[item.id],
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
   };
 }
