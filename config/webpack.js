@@ -18,6 +18,8 @@ const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const marked = require('marked');
+const renderer = new marked.Renderer();
 const _ = require('lodash');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -261,7 +263,17 @@ module.exports = (env) => {
         },
         {
           test: /CHANGELOG\.md$/,
-          loader: 'raw-loader',
+          use: [
+            {
+              loader: 'html-loader',
+            },
+            {
+              loader: 'markdown-loader',
+              options: {
+                renderer,
+              },
+            },
+          ],
         },
       ],
 
