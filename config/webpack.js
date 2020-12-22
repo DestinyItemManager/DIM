@@ -378,7 +378,7 @@ module.exports = (env) => {
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
-        '$featureFlags.issueBanner': JSON.stringify(true),
+        '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
