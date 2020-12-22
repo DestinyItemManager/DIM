@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
-import { InventoryWishListRoll, toUiWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
@@ -49,8 +49,6 @@ export default function InventoryItem({
   onDoubleClick,
   innerRef,
 }: Props) {
-  const uiWishListRoll = useMemo(() => toUiWishListRoll(wishlistRoll), [wishlistRoll]);
-
   let enhancedOnClick = onClick;
   if (onShiftClick) {
     enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -98,7 +96,7 @@ export default function InventoryItem({
           </div>
         )}
         <ItemIcon item={item} />
-        <BadgeInfo item={item} isCapped={isCapped} uiWishListRoll={uiWishListRoll} />
+        <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
             {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
@@ -109,7 +107,7 @@ export default function InventoryItem({
         {isNew && <NewItemIndicator />}
       </>
     );
-  }, [isNew, item, notes, subclassPath, tag, uiWishListRoll]);
+  }, [isNew, item, notes, subclassPath, tag, wishlistRoll]);
 
   return (
     <div
