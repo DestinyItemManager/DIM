@@ -45,8 +45,11 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
+    // Pipe | seperated URLs
+    const wishlistUrlsToFetch = wishlistToFetch.split('|').map((url) => url.trim());
+
     // there's a source if we reached this far, but check if it's invalid
-    if (!isValidWishListUrlDomain(wishlistToFetch)) {
+    if (wishlistUrlsToFetch.some((list) => !isValidWishListUrlDomain(list))) {
       showNotification({
         type: 'warning',
         title: t('WishListRoll.Header'),
@@ -73,15 +76,20 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
-    let wishListText: string;
+    let wishListTexts: string[];
     try {
-      const wishListResponse = await fetch(wishlistToFetch);
-      if (wishListResponse.status < 200 || wishListResponse.status >= 300) {
-        throw new Error(
-          `failed fetch -- ${wishListResponse.status} ${wishListResponse.statusText}`
-        );
-      }
-      wishListText = await wishListResponse.text();
+      wishListTexts = await Promise.all(
+        wishlistUrlsToFetch.map((url) =>
+          fetch(url).then((res) => {
+            if (res.status < 200 || res.status >= 300) {
+              throw new Error(`failed fetch -- ${res.status} ${res.statusText}`);
+            }
+
+            return res.text();
+          })
+        )
+      );
+
       // if this is a new wishlist, set the setting now that we know it's fetchable
       if (newWishlistSource) {
         dispatch(setSetting('wishListSource', newWishlistSource));
@@ -96,7 +104,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
-    const wishListAndInfo = toWishList(wishListText);
+    const wishListAndInfo = toWishList(wishListTexts.join('\n'));
     wishListAndInfo.source = wishlistToFetch;
 
     const existingWishLists = wishListsSelector(getState());
