@@ -6,7 +6,6 @@ import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
-import IssueBanner from './banner/IssueBanner';
 import Developer from './developer/Developer';
 import ActivityTracker from './dim-ui/ActivityTracker';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
@@ -49,8 +48,6 @@ interface StoreProps {
   needsLogin: boolean;
   reauth: boolean;
   needsDeveloper: boolean;
-  showIssueBanner: boolean;
-  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -63,14 +60,10 @@ function mapStateToProps(state: RootState): StoreProps {
     needsLogin: state.accounts.needsLogin,
     reauth: state.accounts.reauth,
     needsDeveloper: state.accounts.needsDeveloper,
-    showIssueBanner: $featureFlags.issueBanner && state.dimApi.globalSettings.showIssueBanner,
-    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
 type Props = StoreProps;
-
-const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 function App({
   language,
@@ -80,8 +73,6 @@ function App({
   needsLogin,
   reauth,
   needsDeveloper,
-  showIssueBanner,
-  isPhonePortrait,
 }: Props) {
   const [storageWorks, setStorageWorks] = useState(true);
   useEffect(() => {
@@ -208,11 +199,6 @@ function App({
         <NotificationsContainer />
         <ActivityTracker />
         <HotkeysCheatSheet />
-        {$featureFlags.issueBanner && showIssueBanner && !mobile && !isPhonePortrait && (
-          <div className="tempConfettiThing">
-            <IssueBanner />
-          </div>
-        )}
       </ClickOutsideRoot>
     </div>
   );
