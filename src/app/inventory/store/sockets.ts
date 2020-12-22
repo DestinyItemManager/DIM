@@ -12,7 +12,7 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   DimPlug,
@@ -260,9 +260,15 @@ function buildDefinedSocket(
     }
   }
 
+  // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
+  let plugged: DimPlug | null = null;
+  if (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits && plugOptions.length) {
+    plugged = plugOptions[0];
+  }
+
   return {
     socketIndex: index,
-    plugged: null,
+    plugged,
     plugOptions,
     curatedRoll: null,
     reusablePlugItems: [],
