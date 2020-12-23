@@ -72,7 +72,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
         const top = _.clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
 
-        containerRef.current.style.transform = `translateY(${Math.round(top)}px)`;
+        // Originally this used translateY, but that caused menus to not work on Safari.
+        containerRef.current.style.marginTop = `${Math.round(top)}px`;
+
+        // TODO: also don't push it off screen
       }
     };
 
