@@ -2,7 +2,14 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
-import { AppIcon, lockIcon, moveIcon, stickyNoteIcon, tagIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  lockIcon,
+  moveIcon,
+  stickyNoteIcon,
+  tagIcon,
+  unlockedIcon,
+} from 'app/shell/icons';
 import React from 'react';
 import styles from './ItemActions.m.scss';
 
@@ -69,7 +76,7 @@ function ItemActions({
         name="unlock"
         onClick={() => onLock(false)}
       >
-        <AppIcon icon={lockIcon} /> {t('Organizer.Unlock')}
+        <AppIcon icon={unlockedIcon} /> {t('Organizer.Unlock')}
       </button>
       <Dropdown disabled={!itemsAreSelected} options={tagItems} className={styles.actionButton}>
         <AppIcon icon={tagIcon} /> {t('Organizer.BulkTag')}
