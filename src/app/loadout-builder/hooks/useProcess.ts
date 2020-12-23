@@ -73,8 +73,6 @@ export function useProcess(
 
   useEffect(() => {
     const processStart = performance.now();
-    //eslint-disable-next-line
-    console.log(`s: ${selectedStoreId}, r: ${resultStoreId}`);
 
     setState({
       processing: true,
