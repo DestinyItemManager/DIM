@@ -11,9 +11,6 @@ export interface Settings extends DimApiSettings {
 
   /** In "Single Character Mode" DIM pretends you only have one (active) character and all the other characters' items are in the vault. */
   singleCharacter: boolean;
-
-  /** Show confetti for hitting milestone */
-  disableConfetti: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -24,5 +21,4 @@ export const initialSettingsState: Settings = {
   sidecarCollapsed: false,
   activeMode: false,
   singleCharacter: false,
-  disableConfetti: false,
 };
