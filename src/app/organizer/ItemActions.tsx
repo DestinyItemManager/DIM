@@ -67,7 +67,8 @@ function ItemActions({
         name="lock"
         onClick={() => onLock(true)}
       >
-        <AppIcon icon={lockIcon} /> <span className={styles.label}>{t('Organizer.Lock')}</span>
+        <AppIcon icon={lockIcon} />
+        <span className={styles.label}>{t('Organizer.Lock')}</span>
       </button>
       <button
         type="button"
@@ -76,14 +77,16 @@ function ItemActions({
         name="unlock"
         onClick={() => onLock(false)}
       >
-        <AppIcon icon={unlockedIcon} />{' '}
+        <AppIcon icon={unlockedIcon} />
         <span className={styles.label}>{t('Organizer.Unlock')}</span>
       </button>
       <Dropdown disabled={!itemsAreSelected} options={tagItems} className={styles.actionButton}>
-        <AppIcon icon={tagIcon} /> <span className={styles.label}>{t('Organizer.BulkTag')}</span>
+        <AppIcon icon={tagIcon} />
+        <span className={styles.label}>{t('Organizer.BulkTag')}</span>
       </Dropdown>
       <Dropdown disabled={!itemsAreSelected} options={moveItems} className={styles.actionButton}>
-        <AppIcon icon={moveIcon} /> <span className={styles.label}>{t('Organizer.BulkMove')}</span>
+        <AppIcon icon={moveIcon} />
+        <span className={styles.label}>{t('Organizer.BulkMove')}</span>
       </Dropdown>
       <button
         type="button"
@@ -92,7 +95,7 @@ function ItemActions({
         name="note"
         onClick={noted}
       >
-        <AppIcon icon={stickyNoteIcon} />{' '}
+        <AppIcon icon={stickyNoteIcon} />
         <span className={styles.label}>{t('Organizer.Note')}</span>
       </button>
       <span className={styles.tip}> {t('Organizer.ShiftTip')}</span>

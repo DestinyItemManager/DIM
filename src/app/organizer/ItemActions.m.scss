@@ -7,9 +7,15 @@
   display: inline-block;
 }
 
-.tip,
-.label {
+.tip {
   @media (max-width: 1270px) {
+    display: none;
+  }
+}
+
+.label {
+  padding-left: 3px;
+  @media (max-width: 900px) {
     display: none;
   }
 }
