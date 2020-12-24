@@ -7,7 +7,8 @@
   display: inline-block;
 }
 
-.tip {
+.tip,
+.label {
   @media (max-width: 1270px) {
     display: none;
   }
