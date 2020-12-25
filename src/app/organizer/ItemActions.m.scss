@@ -12,3 +12,10 @@
     display: none;
   }
 }
+
+.label {
+  padding-left: 3px;
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
