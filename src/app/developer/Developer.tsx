@@ -173,7 +173,7 @@ export default class Developer extends React.Component<{}, State> {
       localStorage.setItem('dimApiKey', dimApiKey);
       localStorage.removeItem('dimApiToken');
       localStorage.removeItem('authorization');
-      window.location.href = `${window.location.origin}/index.html`;
+      window.location.href = window.location.origin;
     } else {
       alert('You need to fill in the whole form');
     }

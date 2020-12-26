@@ -120,80 +120,53 @@ function App({
         <PageLoading />
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-            {/* In the force-login or force-developer cases, the app can only navigate to /login or /developer */}
-            {$DIM_FLAVOR === 'dev' && needsDeveloper ? (
-              <Switch>
-                <Route path="/developer" exact>
-                  <Developer />
-                </Route>
-                <Route>
+            <Switch>
+              <Route path="/about" component={About} exact />
+              <Route path="/privacy" component={Privacy} exact />
+              <Route path="/whats-new" component={WhatsNew} exact />
+              <Route path="/login" component={Login} exact />
+              <Route path="/settings" component={SettingsPage} exact />
+              {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
+              {needsLogin ? (
+                $DIM_FLAVOR === 'dev' && needsDeveloper ? (
                   <Redirect to={'/developer'} />
-                </Route>
-              </Switch>
-            ) : needsLogin ? (
-              <Switch>
-                <Route path="/login" exact>
-                  <Login />
-                </Route>
-                <Route>
+                ) : (
                   <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
-                </Route>
-              </Switch>
-            ) : (
-              <Switch>
-                <Route path="/about" exact>
-                  <About />
-                </Route>
-                <Route path="/privacy" exact>
-                  <Privacy />
-                </Route>
-                <Route path="/whats-new" exact>
-                  <WhatsNew />
-                </Route>
-                <Route path="/login" exact>
-                  <Login />
-                </Route>
-                <Route path="/settings" exact>
-                  <SettingsPage />
-                </Route>
-                <Route path="/search-history" exact>
-                  <SearchHistory />
-                </Route>
-                <Route
-                  path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                  render={({ match }) => (
-                    <Destiny
-                      destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                      platformMembershipId={match.params.membershipId}
-                    />
-                  )}
-                />
-                {$DIM_FLAVOR === 'dev' && (
-                  <Route path="/developer" exact>
-                    <Developer />
+                )
+              ) : (
+                <>
+                  <Route path="/search-history" component={SearchHistory} exact />
+                  <Route
+                    path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                    render={({ match }) => (
+                      <Destiny
+                        destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                        platformMembershipId={match.params.membershipId}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={[
+                      '/inventory',
+                      '/progress',
+                      '/records',
+                      '/optimizer',
+                      '/organizer',
+                      '/vendors/:vendorId',
+                      '/vendors',
+                      '/record-books',
+                      '/activities',
+                    ]}
+                    exact
+                  >
+                    <AccountRedirectRoute />
                   </Route>
-                )}
-                <Route
-                  path={[
-                    '/inventory',
-                    '/progress',
-                    '/records',
-                    '/optimizer',
-                    '/organizer',
-                    '/vendors/:vendorId',
-                    '/vendors',
-                    '/record-books',
-                    '/activities',
-                  ]}
-                  exact
-                >
-                  <AccountRedirectRoute />
-                </Route>
-                <Route>
-                  <DefaultAccount />
-                </Route>
-              </Switch>
-            )}
+                  <Route>
+                    <DefaultAccount />
+                  </Route>
+                </>
+              )}
+            </Switch>
           </Suspense>
         </ErrorBoundary>
         <NotificationsContainer />
