@@ -24,13 +24,13 @@
     "Farming": "Ostatnie przedmioty",
     "FarmingStart": "Rozpocznij farmienie",
     "FarmingStop": "Zatrzymaj farmienie",
-    "Loading": "Current Activity",
+    "Loading": "Bieżąca aktywność",
     "Loadouts": "Uzbrojenia",
     "NoQuests": "Nie śledzisz żadnych zadań",
     "NoSearches": "Utwórz zapisane wyszukiwania i filtruj je tutaj.",
     "Offline": "Offline",
     "Pursuits": "Zadania",
-    "SuggestedBounties": "Suggested Bounties"
+    "SuggestedBounties": "Sugerowane Zlecenia"
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -341,7 +341,7 @@
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
+    "ShouldNotBeInVault": "Ten przedmiot może być zagrożony, jeśli pozostanie w Schowku. Proszę przenieś go na postać.",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -595,7 +595,6 @@
     "OverviewTab": "Przegląd",
     "Owned": "Ten przedmiot jest w twoim ekwipunku.",
     "OwnedMod": "Ten mod znajduje się w ekwipunku modyfikacji.",
-    "PowerCap": "",
     "PullItem": "Wyciągnij z {{bucket}} do {{store}}",
     "PullPostmaster": "Odbierz od Kuriera",
     "ReadLore": "Czytaj lore na Ishtar Collective",
@@ -607,7 +606,7 @@
     "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
-      "Type": "{{classType}}{{typeName}}"
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "Weź",
     "ToggleSidecar": "Rozwiń lub zwiń akcje przedmiotu",
@@ -938,7 +937,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy, wraz z niektórymi rollami z listy śmieci.",
     "Clear": "Wyczyść Listę Życzeń",
-    "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
+    "ExternalSource": "Opcjonalnie, podaj adresy URL dla list życzeń (oddzielone | \"pipe\")",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
     "ImportError": "Błąd ładowania listy życzeń: {{error}}",

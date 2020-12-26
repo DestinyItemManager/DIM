@@ -595,7 +595,6 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "該模組在您的模組庫存中。",
-    "PowerCap": "",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "PullPostmaster": "Pull from Postmaster",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
@@ -607,7 +606,7 @@
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
-      "Type": "{{classType}}{{typeName}}"
+      "Type": "{{classType}} {{typeName}}"
     },
     "Take": "收集",
     "ToggleSidecar": "Expand or collapse item actions",
@@ -938,7 +937,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "清除愿望清单",
-    "ExternalSource": "可選：提供願望清單的URL",
+    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportError": "Error loading wish list: {{error}}",
