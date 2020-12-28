@@ -302,14 +302,16 @@ export function getItemYear(item: DimItem) {
 }
 
 /**
- * Powerful Friends: 1484685887,
- * Charge Harvester: 2263321587,
- * Radiant Light: 2979815167
+ * This function indicates whether a mod's stat effect is active on the item.
+ *
+ * For example, powerful friends only gives its stat effect if another arc mod is
+ * slotted. This will return true if another arc mod is slotted.
  */
 export function isPlugStatActive(item: DimItem, plugHash: number, statHash: number) {
   switch (plugHash) {
-    case 2979815167:
+    case 2979815167: // Radient Light
     case 1484685887: {
+      // Powerful Friends
       // True if a second arc mod is socketed
       return item.sockets?.allSockets.some(
         (s) =>
@@ -319,6 +321,7 @@ export function isPlugStatActive(item: DimItem, plugHash: number, statHash: numb
     }
 
     case 2263321587: {
+      // Charge Harvester
       return (
         (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
         (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
