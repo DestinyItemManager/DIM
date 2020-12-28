@@ -427,7 +427,7 @@ function buildLiveStats(
   const ret: DimStat[] = [];
 
   // Sum all the conditionally inactive and active plug stats from sockets so we can calculate
-  // the value and base. The live stat includes all stats whether they are active or not.
+  // the value and base. The live stat includes all mod stats whether they are active or not.
   const inactivePlugStatValues: { [statHash: number]: number } = {};
   const activePlugStatValues: { [statHash: number]: number } = {};
   let negativeModStatFound = false;
@@ -510,12 +510,12 @@ function totalStat(stats: DimStat[]): DimStat {
   // TODO: search terms?
   let total = 0;
   let baseTotal = 0;
-  let baseIsNotWrong = true;
+  let statMayBeWrong = false;
 
   for (const stat of stats) {
     total += stat.value;
     baseTotal += stat.base;
-    baseIsNotWrong &&= Boolean(stat.statMayBeWrong);
+    statMayBeWrong ||= Boolean(stat.statMayBeWrong);
   }
 
   return {
@@ -527,7 +527,7 @@ function totalStat(stats: DimStat[]): DimStat {
     sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
-    statMayBeWrong: !baseIsNotWrong,
+    statMayBeWrong,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
