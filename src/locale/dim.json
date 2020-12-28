@@ -304,7 +304,6 @@
     "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
     "InfuseTarget": "Select item to infuse into {{name}}",
-    "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
@@ -462,7 +461,7 @@
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
@@ -578,12 +577,10 @@
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
-    "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
-    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
@@ -601,14 +598,12 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Split": "Split",
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Take",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "Track {{itemType}}",
@@ -801,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
   },
   "Vendors": {
     "Collections": "Collections",
