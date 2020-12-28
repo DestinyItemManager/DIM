@@ -22,7 +22,12 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+} from 'bungie-api-ts/destiny2';
+import { StatHashes } from 'data/d2/generated-enums';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -134,7 +139,7 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
       if (
         stat.statHash !== TOTAL_STAT_HASH &&
         stat.statHash !== CUSTOM_TOTAL_STAT_HASH &&
-        stat.baseMayBeWrong &&
+        stat.statMayBeWrong &&
         stat.displayProperties.name
       ) {
         incorrect.add(stat.displayProperties.name);
@@ -293,6 +298,36 @@ export function getItemYear(item: DimItem) {
     return year;
   } else {
     return undefined;
+  }
+}
+
+/**
+ * Powerful Friends: 1484685887,
+ * Charge Harvester: 2263321587,
+ * Radiant Light: 2979815167
+ */
+export function isPlugStatActive(item: DimItem, plugHash: number, statHash: number) {
+  switch (plugHash) {
+    case 2979815167:
+    case 1484685887: {
+      // True if a second arc mod is socketed
+      return item.sockets?.allSockets.some(
+        (s) =>
+          s.plugged?.plugDef.hash !== plugHash &&
+          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      );
+    }
+
+    case 2263321587: {
+      return (
+        (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
+        (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
+        (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
+      );
+    }
+
+    default:
+      return true;
   }
 }
 
