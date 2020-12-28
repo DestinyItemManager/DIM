@@ -1,5 +1,7 @@
 ## Next
 
+## 6.45.0 <span className="changelog-date">(2020-12-27)</span>
+
 ## 6.44.0 <span class="changelog-date">(2020-12-20)</span>
 
 * Fixed a bug that could potentially erase some tags/notes if there were errors in DIM.
