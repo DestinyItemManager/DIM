@@ -2,7 +2,7 @@
 
 * Fixed an issue where linking directly to any page would redirect to the inventory.
 
-## 6.45.0 <span className="changelog-date">(2020-12-27)</span>
+## 6.45.0 <span class="changelog-date">(2020-12-27)</span>
 
 * Faster initial page load for inventory (loading a subset of things from bungie.net api)
 * Wishlists now support multiple URLs
