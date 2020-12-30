@@ -127,42 +127,38 @@ function App({
               <Route path="/login" component={Login} exact />
               <Route path="/settings" component={SettingsPage} exact />
               {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
-              {needsLogin ? (
-                $DIM_FLAVOR === 'dev' && needsDeveloper ? (
+              {needsLogin &&
+                ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
                   <Redirect to={'/developer'} />
                 ) : (
                   <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
-                )
-              ) : (
-                <>
-                  <Route path="/search-history" component={SearchHistory} exact />
-                  <Route
-                    path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                    render={({ match }) => (
-                      <Destiny
-                        destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                        platformMembershipId={match.params.membershipId}
-                      />
-                    )}
+                ))}
+              <Route path="/search-history" component={SearchHistory} exact />
+              <Route
+                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                render={({ match }) => (
+                  <Destiny
+                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                    platformMembershipId={match.params.membershipId}
                   />
-                  <Route
-                    path={[
-                      '/inventory',
-                      '/progress',
-                      '/records',
-                      '/optimizer',
-                      '/organizer',
-                      '/vendors/:vendorId',
-                      '/vendors',
-                      '/record-books',
-                      '/activities',
-                    ]}
-                    exact
-                  >
-                    <AccountRedirectRoute />
-                  </Route>
-                </>
-              )}
+                )}
+              />
+              <Route
+                path={[
+                  '/inventory',
+                  '/progress',
+                  '/records',
+                  '/optimizer',
+                  '/organizer',
+                  '/vendors/:vendorId',
+                  '/vendors',
+                  '/record-books',
+                  '/activities',
+                ]}
+                exact
+              >
+                <AccountRedirectRoute />
+              </Route>
               <Route component={DefaultAccount} />
             </Switch>
           </Suspense>
