@@ -161,11 +161,9 @@ function App({
                   >
                     <AccountRedirectRoute />
                   </Route>
-                  <Route>
-                    <DefaultAccount />
-                  </Route>
                 </>
               )}
+              <Route component={DefaultAccount} />
             </Switch>
           </Suspense>
         </ErrorBoundary>
