@@ -1,5 +1,7 @@
 ## Next
 
+## 6.45.1 <span className="changelog-date">(2020-12-29)</span>
+
 * Fixed an issue where linking directly to any page would redirect to the inventory.
 
 ## 6.45.0 <span className="changelog-date">(2020-12-27)</span>
