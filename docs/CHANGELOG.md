@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed an issue that could harm the DIM Sync service.
+
 ## 6.45.1 <span className="changelog-date">(2020-12-29)</span>
 
 * Fixed an issue where linking directly to any page would redirect to the inventory.

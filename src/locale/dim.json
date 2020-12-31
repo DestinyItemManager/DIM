@@ -304,7 +304,6 @@
     "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
     "InfuseTarget": "Select item to infuse into {{name}}",
-    "Infusion": "Infusion Fuel Finder",
     "InfusionMaterials": "Infusion Materials",
     "NoItems": "No infusable items available.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
@@ -578,12 +577,10 @@
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
-    "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
-    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
@@ -601,14 +598,12 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Split": "Split",
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Take",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "Track {{itemType}}",
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "File is not a JSON file. It may not be a DIM backup.",
     "IndexedDBStorage": "Local Browser Storage",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "ProfileErrorTitle": "DIM Sync Error",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
-    "ServiceCallFailed": "VendorEngrams.xyz service call failed.",
-    "Vote": "Seeing a vendor selling items near your light level? Go to VendorEngrams.xyz to vote and let the community know!"
   },
   "Vendors": {
     "Collections": "Collections",
