@@ -1,5 +1,7 @@
 ## Next
 
+## 6.45.2 <span className="changelog-date">(2020-12-30)</span>
+
 * Fixed an issue that could harm the DIM Sync service.
 
 ## 6.45.1 <span className="changelog-date">(2020-12-29)</span>
