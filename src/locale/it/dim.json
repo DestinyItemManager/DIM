@@ -304,7 +304,6 @@
     "Filter": "Filtra oggetti",
     "InfuseSource": "Selezionare oggetto in cui infondere {{name}}",
     "InfuseTarget": "Selezionare oggetto da infondere in {{name}}",
-    "Infusion": "Trova oggetti per infusione",
     "InfusionMaterials": "Materiali da Infusione",
     "NoItems": "Nessun oggetto disponibile per l'infusione.",
     "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
@@ -578,12 +577,10 @@
     "All": "Tutto",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
-    "Details": "Popup",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
     "EquipWithName": "Equipaggia su {{character}}",
     "Infuse": "Infondi",
-    "ItemDetailSheet": "Apri dettagli oggetto",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
       "Locked": "Bloccato",
@@ -601,14 +598,12 @@
     "ReadLoreLink": "Leggi storia",
     "Rewards": "Ricompense:",
     "SendToVault": "Invia al Deposito",
-    "Split": "Dividi",
     "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
       "Type": "{{typeName}} {{classType}}"
     },
-    "Take": "Prendi",
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",
     "TrackUntrack": {
       "Track": "Segui {{itemType}}",
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
     "IndexedDBStorage": "Memoria del browser locale",
     "MenuTitle": "Sync & Backup",
-    "ProfileErrorBody": "Si è verificato un errore durante il caricamento dei tuoi dati su DIM Sync",
+    "ProfileErrorBody": "Abbiamo avuto un problema nel caricamento dei tuoi dati da DIM Sync. Continueremo a cercare di caricarli automaticamente.",
     "ProfileErrorTitle": "Errore DIM Sync",
-    "UpdateErrorBody": "Si è verificato un errore durante il salvataggio dei tuoi dati su DIM Sync",
+    "UpdateErrorBody": "Abbiamo avuto un problema durante il salvataggio dei tuoi dati su DIM Sync. Riproveremo automaticamente più tardi.",
     "UpdateErrorTitle": "Errore DIM Sync",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Nascondi trionfi completati",
     "RevealRedacted": "Mostra trionfi segreti"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",
-    "ServiceCallFailed": "Richiesta al servizio di VendorEngrams.xyz fallita.",
-    "Vote": "Vedi un mercante che sta vendendo oggetti vicino al tuo Livello Potere? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità!"
   },
   "Vendors": {
     "Collections": "Collezioni",

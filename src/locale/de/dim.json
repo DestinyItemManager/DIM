@@ -304,7 +304,6 @@
     "Filter": "Gegenstände filtern",
     "InfuseSource": "Gegenstand auswählen um ihn in {{name}} zu infundieren",
     "InfuseTarget": "Gegenstand zum Infundieren in {{name}} auswählen",
-    "Infusion": "Finde Infusions-Material",
     "InfusionMaterials": "Infusions-Material",
     "NoItems": "Keine infundierbaren Gegenstände verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
@@ -578,12 +577,10 @@
     "All": "Alle",
     "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
-    "Details": "Pop-up",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
     "EquipWithName": "Anlegen an {{character}}",
     "Infuse": "Infundieren",
-    "ItemDetailSheet": "Gegenstand-Details öffnen",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
       "Locked": "Gesperrt",
@@ -601,14 +598,12 @@
     "ReadLoreLink": "Lese Lore",
     "Rewards": "Belohnungen:",
     "SendToVault": "An Tresor senden",
-    "Split": "Teilen",
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Nehmen",
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",
     "TrackUntrack": {
       "Track": "{{itemType}} verfolgen",
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
     "IndexedDBStorage": "Lokaler Browser Speicher",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "Beim Laden deiner DIM Sync-Daten ist ein Problem aufgetreten",
+    "ProfileErrorBody": "Wir haben ein Problem beim Laden deiner Daten von DIM Sync. Wir versuchen weiterhin sie automatisch zu laden.",
     "ProfileErrorTitle": "DIM Sync Fehler",
-    "UpdateErrorBody": "Es gab ein Problem beim Speichern deiner Daten in DIM Sync",
+    "UpdateErrorBody": "Wir hatten ein Problem beim Speichern deiner Daten in DIM Sync. Wir versuchen es später automatisch nochmal.",
     "UpdateErrorTitle": "DIM Sync Fehler",
     "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz meldet, dass dieser Anbieter Gegenstände mit einem hohen Level anbietet.",
-    "ServiceCallFailed": "VendorEngrams.xyz Service Zugriff fehlgeschlagen.",
-    "Vote": "Siehst du einen Verkäufer, der Gegenstände in der Nähe deines Lichtlevels verkauft? Gehe zu VendorEngrams.xyz, um abzustimmen und die Community darüber zu informieren!"
   },
   "Vendors": {
     "Collections": "Sammlungen",

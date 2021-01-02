@@ -304,7 +304,6 @@
     "Filter": "Filtrar itens",
     "InfuseSource": "Selecione o item para infundir {{name}} em",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
-    "Infusion": "Buscador de Item para Infusão",
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
@@ -578,12 +577,10 @@
     "All": "Tudo",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
-    "Details": "Popup",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "EquipWithName": "Equipar em {{character}}",
     "Infuse": "Infunda",
-    "ItemDetailSheet": "Abrir detalhes do item",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
       "Locked": "Bloqueado",
@@ -601,14 +598,12 @@
     "ReadLoreLink": "Leia a história",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar para o Cofre",
-    "Split": "Dividir",
     "Store": "Armazenar",
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Tomar",
     "ToggleSidecar": "Expandir ou recolher ações do item",
     "TrackUntrack": {
       "Track": "Rastrear {{itemType}}",
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "Arquivo não é um arquivo JSON. Pode não ser um backup do DIM.",
     "IndexedDBStorage": "Armazenamento local do Navegador",
     "MenuTitle": "Sincronização e Backups",
-    "ProfileErrorBody": "Encontramos um problema enquanto carregávamos seus dados na Sincronização DIM",
+    "ProfileErrorBody": "Tivemos um problema ao carregar seus dados na Sincronização DIM. Continuaremos tentando carregá-lo automaticamente.",
     "ProfileErrorTitle": "Erro na Sincronização DIM",
-    "UpdateErrorBody": "Encontramos um problema enquanto salvávamos seus dados na Sincronização DIM",
+    "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
     "UpdateErrorTitle": "Erro na Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Ocultar triunfos concluídos",
     "RevealRedacted": "Exibir triunfos editados"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz relata que este vendedor está retornando items de poder alto.",
-    "ServiceCallFailed": "Chamada ao serviço do VendorEngrams.xyz falhou.",
-    "Vote": "Achou um vendedor com itens de poder alto? Acesse VendorEngrams.xyz para votar e avise a comunidade!"
   },
   "Vendors": {
     "Collections": "Coleções",
