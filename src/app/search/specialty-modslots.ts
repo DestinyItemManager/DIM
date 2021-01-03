@@ -90,7 +90,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'deepstonecrypt',
     compatibleModTags: ['deepstonecrypt'],
     socketTypeHashes: [1269555732],
-    compatiblePlugCategoryHashes: [1486918022],
+    compatiblePlugCategoryHashes: [1703496685],
     emptyModSocketHashes: [4055462131],
     emptyModSocketHash: 4055462131,
   },
