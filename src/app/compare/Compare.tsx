@@ -121,7 +121,8 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { compareBaseStats, setSetting } = this.props;
+    const { compareBaseStats: compareBaseStatsSetting, setSetting } = this.props;
+
     const {
       show,
       comparisonItems: unsortedComparisonItems,
@@ -131,6 +132,9 @@ class Compare extends React.Component<Props, State> {
       adjustedPlugs,
       adjustedStats,
     } = this.state;
+
+    const comparingArmor = unsortedComparisonItems[0]?.bucket.inArmor;
+    const doCompareBaseStats = Boolean(compareBaseStatsSetting && comparingArmor);
 
     if (!show || unsortedComparisonItems.length === 0) {
       CompareService.dialogOpen = false;
@@ -171,7 +175,7 @@ class Compare extends React.Component<Props, State> {
                     ? this.state.sortBetterFirst
                     : !this.state.sortBetterFirst;
 
-                const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+                const statValue = (doCompareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
                 return shouldReverse ? -statValue : statValue;
               }),
               compareBy((i) => i.index),
@@ -294,8 +298,6 @@ class Compare extends React.Component<Props, State> {
       });
     };
 
-    const comparingArmor = comparisonItems[0]?.bucket.inArmor;
-
     return (
       <Sheet
         onClose={this.cancel}
@@ -305,7 +307,7 @@ class Compare extends React.Component<Props, State> {
               <Checkbox
                 label={t('Compare.CompareBaseStats')}
                 name="compareBaseStats"
-                value={compareBaseStats}
+                value={compareBaseStatsSetting}
                 onChange={onChange}
               />
             )}
@@ -353,7 +355,7 @@ class Compare extends React.Component<Props, State> {
                   updateSocketComparePlug={updateSocketComparePlug}
                   adjustedItemPlugs={adjustedPlugs?.[item.id]}
                   adjustedItemStats={adjustedStats?.[item.id]}
-                  compareBaseStats={compareBaseStats && comparingArmor}
+                  compareBaseStats={doCompareBaseStats}
                 />
               ))}
             </div>
