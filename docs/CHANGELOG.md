@@ -1,5 +1,9 @@
 ## Next
 
+* Base stats no longer cause sort issues in the compare pane, and no longer apply to weapons.
+* Older pieces of Last Wish and Reverie Dawn armor now count as having normal Legacy mod slots.
+* Deep Stone Crypt Raid mods now show up in the Loadout Optimizer mod picker.
+
 ## 6.45.2 <span className="changelog-date">(2020-12-30)</span>
 
 * Fixed an issue that could harm the DIM Sync service.
