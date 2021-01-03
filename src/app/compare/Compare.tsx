@@ -294,17 +294,21 @@ class Compare extends React.Component<Props, State> {
       });
     };
 
+    const comparingArmor = comparisonItems[0]?.bucket.inArmor;
+
     return (
       <Sheet
         onClose={this.cancel}
         header={
           <div className="compare-options">
-            <Checkbox
-              label={t('Compare.CompareBaseStats')}
-              name="compareBaseStats"
-              value={compareBaseStats}
-              onChange={onChange}
-            />
+            {comparingArmor && (
+              <Checkbox
+                label={t('Compare.CompareBaseStats')}
+                name="compareBaseStats"
+                value={compareBaseStats}
+                onChange={onChange}
+              />
+            )}
             {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
                 type="button"
@@ -349,7 +353,7 @@ class Compare extends React.Component<Props, State> {
                   updateSocketComparePlug={updateSocketComparePlug}
                   adjustedItemPlugs={adjustedPlugs?.[item.id]}
                   adjustedItemStats={adjustedStats?.[item.id]}
-                  compareBaseStats={compareBaseStats}
+                  compareBaseStats={compareBaseStats && comparingArmor}
                 />
               ))}
             </div>
