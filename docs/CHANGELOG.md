@@ -1,5 +1,33 @@
 ## Next
 
+## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
+
+* Base stats no longer cause sort issues in the compare pane, and no longer apply to weapons.
+* Older pieces of Last Wish and Reverie Dawn armor now count as having normal Legacy mod slots.
+* Deep Stone Crypt Raid mods now show up in the Loadout Optimizer mod picker.
+
+## 6.45.2 <span className="changelog-date">(2020-12-30)</span>
+
+* Fixed an issue that could harm the DIM Sync service.
+
+## 6.45.1 <span className="changelog-date">(2020-12-29)</span>
+
+* Fixed an issue where linking directly to any page would redirect to the inventory.
+
+## 6.45.0 <span className="changelog-date">(2020-12-27)</span>
+
+* Faster initial page load for inventory (loading a subset of things from bungie.net api)
+* Wishlists now support multiple URLs
+* Collection items in records now display the intrinsic perk.
+* Fixed an issue with the item popup sidecar on safari.
+* Fixes for compare view on mobile.
+* The optimizer now clears results if a character is changed.
+* Fix typo in energycapacity organizer search
+* Clean up toolbar on organizer page on mobile.
+* Some routes can now be accessed without being logged in (Whats New, Privacy Policy, etc.)
+* What's new page is now rendered at build time instead of run-time, so it should load faster.
+* Various dependency upgrades
+
 ## 6.44.0 <span class="changelog-date">(2020-12-20)</span>
 
 * Fixed a bug that could potentially erase some tags/notes if there were errors in DIM.

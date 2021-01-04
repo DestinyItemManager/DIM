@@ -28,7 +28,6 @@ export default function CompareStat({
   const itemStat = stat.getStat(item);
   const adjustedStatValue = itemStat ? adjustedItemStats?.[itemStat.statHash] : undefined;
 
-  compareBaseStats = Boolean(compareBaseStats && item.bucket.inArmor);
   return (
     <div
       className={clsx({ highlight: stat.id === highlight })}

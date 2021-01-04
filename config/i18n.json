@@ -865,9 +865,9 @@
     "IndexedDBStorage": "Local Browser Storage",
     "MenuTitle": "Sync & Backups",
     "ProfileErrorTitle": "DIM Sync Error",
-    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "UpdateErrorTitle": "DIM Sync Error",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StoreBucket": {

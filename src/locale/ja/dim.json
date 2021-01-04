@@ -304,7 +304,6 @@
     "Filter": "アイテムをフィルタする",
     "InfuseSource": "{{name}} を融合するアイテムを選択してください",
     "InfuseTarget": "{{name}} に融合するアイテムを選択してください",
-    "Infusion": "融合対象物発掘機能",
     "InfusionMaterials": "融合材料",
     "NoItems": "融合可能なアイテムありません。",
     "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
@@ -578,12 +577,10 @@
     "All": "全て",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
     "Consolidate": "統合する",
-    "Details": "ポップアップ",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "EquipWithName": "{{character}} に装備させる",
     "Infuse": "融合",
-    "ItemDetailSheet": "アイテムの詳細を表示",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
       "Locked": "ロック",
@@ -595,21 +592,18 @@
     "OverviewTab": "概要",
     "Owned": "このアイテムはあなたの所持品にあります。",
     "OwnedMod": "このmodは修正インベントリにあります。",
-    "PowerCap": "",
     "PullItem": "{{bucket}} から{{store}} に引き出します",
     "PullPostmaster": "ポストマスターから取得",
     "ReadLore": "イシュタルコレクティブで伝承を読む",
     "ReadLoreLink": "伝承を読む",
     "Rewards": "報酬:",
     "SendToVault": "保管庫に送る",
-    "Split": "分割",
     "Store": "保存",
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "取る",
     "ToggleSidecar": "アイテムアクションを展開または折りたたむ",
     "TrackUntrack": {
       "Track": "{{itemType}} を追跡する",
@@ -841,9 +835,9 @@
     "ImportWrongFileType": "ファイルはJSONファイルではありません。DIMバックアップでない可能性があります。",
     "IndexedDBStorage": "ローカルブラウザストレージ",
     "MenuTitle": "同期とバックアップ",
-    "ProfileErrorBody": "DIM Sync データの読み込みに問題がありました。",
+    "ProfileErrorBody": "DIM Sync からデータを読み込む際に問題が発生しました。自動的に読み込みます。",
     "ProfileErrorTitle": "同期エラー",
-    "UpdateErrorBody": "あなたのデータを DIM Sync に保存する際に問題が発生しました。",
+    "UpdateErrorBody": "DIM Sync にデータを保存する際に問題が発生しました。後で自動的に再試行します。",
     "UpdateErrorTitle": "同期エラー",
     "Usage": "DIMは、このデバイスで利用可能な {{quota, humanBytes}} のうち {{usage, humanBytes}} を使用しています。これには、Bungie.netからダウンロードされたDestinyアイテムデータベースが含まれます。"
   },
@@ -866,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "完了した勝利の道のりを隠す",
     "RevealRedacted": "改定された勝利の道のりを表示する"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyzは、このベンダーが高レベルのアイテムをドロップしていることを報告します。",
-    "ServiceCallFailed": "VendorEngrams.xyzサービスコールが失敗しました。",
-    "Vote": "あなたの光のレベルに近いアイテムを売っているベンダーを見ますか？ VendorEngrams.xyzにアクセスして投票し、コミュニティに知らせてください！"
   },
   "Vendors": {
     "Collections": "コレクション",
@@ -938,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosey_voltronは、Mercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新されたコレクションで、いくつかのゴミリストロールもあります。",
     "Clear": "欲しい物リストをクリア",
-    "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定します",
+    "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定できます。(パイプ | 区切り)",
     "Header": "欲しい物リスト",
     "Import": "欲しい物リストをロードします。",
     "ImportError": "欲しい物リストのロード中にエラーが発生しました: {{error}}",

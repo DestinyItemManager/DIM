@@ -304,7 +304,6 @@
     "Filter": "아이템 필터",
     "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
     "InfuseTarget": "{{name}}에 주입할 아이템 선택",
-    "Infusion": "주입 재료 탐색기",
     "InfusionMaterials": "주입 재료",
     "NoItems": "주입할 수 있는 아이템이 존재하지 않음",
     "NoTransfer": "주입 재료 이동\n{{target}}은(는) 옮겨질 수 없습니다.",
@@ -578,12 +577,10 @@
     "All": "전체",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
     "Consolidate": "모으기",
-    "Details": "팝업",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "EquipWithName": "{{character}}에게 장착",
     "Infuse": "주입",
-    "ItemDetailSheet": "아이템 세부정보 열기",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠금",
@@ -595,21 +592,18 @@
     "OverviewTab": "개요",
     "Owned": "이 아이템은 소지품에 있습니다.",
     "OwnedMod": "이 개조 부품은 소지품의 개조 부품 항목에 있습니다.",
-    "PowerCap": "",
     "PullItem": "{{bucket}}에서 {{store}}(으)로 이동",
     "PullPostmaster": "우편 담당자에게서 가져오기",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReadLoreLink": "지식 읽기",
     "Rewards": "보상:",
     "SendToVault": "금고로 이동",
-    "Split": "분할",
     "Store": "보관",
     "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "모으기",
     "ToggleSidecar": "아이템 액션 확장 또는 축소",
     "TrackUntrack": {
       "Track": "{{itemType}} 추적",
@@ -841,9 +835,9 @@
     "ImportWrongFileType": "이 파일은 JSON 파일이 아닙니다. DIM 백업 파일이 아닐 수 있습니다.",
     "IndexedDBStorage": "로컬 브라우저 저장소",
     "MenuTitle": "동기화 & 백업",
-    "ProfileErrorBody": "DIM 동기화 데이터를 불러오는 중 문제가 발생함",
+    "ProfileErrorBody": "DIM 동기화에서 데이터를 불러오는 도중 문제가 발생하였습니다. 계속 불러오려고 시도하겠습니다.",
     "ProfileErrorTitle": "DIM 동기화 오류",
-    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 중 문제가 발생함",
+    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
     "UpdateErrorTitle": "DIM 동기화 오류",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
   },
@@ -866,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "완료한 업적 숨기기",
     "RevealRedacted": "삭제된 업적 표시"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz에서 이 상인이 높은 전투력의 아이템을 판매하는 것을 보고하였습니다.",
-    "ServiceCallFailed": "VendorEngrams.xyz 서비스 호출에 실패하였습니다.",
-    "Vote": "상인이 현재 전투력과 비슷한 아이템을 판매하는 것을 보셨나요? VendorEngrams.xyz에서 투표하셔서 커뮤니티가 알 수 있게 해주세요!"
   },
   "Vendors": {
     "Collections": "수집품",
@@ -938,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록이며 쓰레기 목록이 포함되어 있습니다.",
     "Clear": "희망 아이템 목록 비우기",
-    "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
+    "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요. (\"|\"로 구분)",
     "Header": "희망 아이템 목록",
     "Import": "희망 아이템 목록 불러오기",
     "ImportError": "희망 아이템 목록 불러오기 실패: {{error}}",

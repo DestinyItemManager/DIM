@@ -263,7 +263,7 @@ export function getColumns(
         header: t('Organizer.Columns.Energy'),
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
-        filter: (value) => `energycapacity>=:${value}`,
+        filter: (value) => `energycapacity:>=${value}`,
       },
     {
       id: 'locked',

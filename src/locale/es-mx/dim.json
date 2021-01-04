@@ -304,7 +304,6 @@
     "Filter": "Filtrar objetos",
     "InfuseSource": "Selecciona objeto para infundir {{name}} en",
     "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
-    "Infusion": "Buscador de Combustible de Infusión",
     "InfusionMaterials": "Materiales para Infusionar",
     "NoItems": "No hay objetos disponibles para infusionar.",
     "NoTransfer": "El material para infusionar\n{{target}} no puede ser movido.",
@@ -578,12 +577,10 @@
     "All": "Todo",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
-    "Details": "Ventana Emergente",
     "DistributeEvenly": "Distribuir Equitativamente",
     "Equip": "Equipa",
     "EquipWithName": "Equipar en {{character}}",
     "Infuse": "Infundir",
-    "ItemDetailSheet": "Abrir detalles del objeto",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
       "Locked": "Bloqueado",
@@ -595,21 +592,18 @@
     "OverviewTab": "Resumen",
     "Owned": "Este objeto está en tu inventario.",
     "OwnedMod": "Este modificador está en el inventario de modificadores.",
-    "PowerCap": "",
     "PullItem": "Mover de {{bucket}} a {{store}}",
     "PullPostmaster": "Sacar desde Administración",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReadLoreLink": "Leer lore",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar al depósito",
-    "Split": "Partir",
     "Store": "Guardar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Toma",
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",
@@ -841,9 +835,9 @@
     "ImportWrongFileType": "El archivo no es un archivo JSON. Podría no ser una copia de DIM.",
     "IndexedDBStorage": "Almacenamiento local del Navegador",
     "MenuTitle": "Sincronización y Copias de Seguridad",
-    "ProfileErrorBody": "Tuvimos un problema cargando tu información de Sincronización DIM",
+    "ProfileErrorBody": "Tuvimos un problema cargando tus datos desde Sincronización DIM. Seguiremos intentando cargarlos automáticamente.",
     "ProfileErrorTitle": "Error de Sincronización DIM",
-    "UpdateErrorBody": "Tuvimos un problema guardando tu información a Sincronización DIM",
+    "UpdateErrorBody": "Tuvimos un problema guardando tus datos a Sincronización DIM. Seguiremos intentándolo automáticamente más tarde.",
     "UpdateErrorTitle": "Error de Sincronización DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
@@ -866,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Ocultar triunfos completados",
     "RevealRedacted": "Revelar triunfos clasificados"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",
-    "ServiceCallFailed": "El servicio de VendorEngrams.xyz ha fallado.",
-    "Vote": "¿Ves un vendedor que vende objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y darlo a conocer a la comunidad!"
   },
   "Vendors": {
     "Collections": "Colecciones",
@@ -938,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de tiradas de listas de deseos para PVE y PVP de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
     "Clear": "Limpiar Lista de Deseos",
-    "ExternalSource": "Opcionalmente, proporciona la URL para una lista de deseos",
+    "ExternalSource": "Opcionalmente, proporciona la(s) URL(s) para una lista de deseos (tubería | separado)",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
     "ImportError": "Error cargando la lista de deseos: {{error}}",

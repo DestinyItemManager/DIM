@@ -304,7 +304,6 @@
     "Filter": "Gegenstände filtern",
     "InfuseSource": "Gegenstand auswählen um ihn in {{name}} zu infundieren",
     "InfuseTarget": "Gegenstand zum Infundieren in {{name}} auswählen",
-    "Infusion": "Finde Infusions-Material",
     "InfusionMaterials": "Infusions-Material",
     "NoItems": "Keine infundierbaren Gegenstände verfügbar.",
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
@@ -341,7 +340,7 @@
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Voll! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
+    "ShouldNotBeInVault": "Dieser Gegenstand kann in Gefahr sein, wenn er im Tresor gelassen wird. Bitte transferiere ihn auf einen Charakter.",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -437,8 +436,8 @@
     "ItemsGroupedByStatsEnergyModSlot": "Die Gegenstände sind nach Statistiken, Meisterwerken, Energietyp und Saisonmodellslot gruppiert.",
     "ItemsGroupedByStatsModSlot": "Die Gegenstände sind nach Statistiken, Meisterwerken und Saisonmodellslot gruppiert.",
     "LimitedCombos": "Du hast {{combosWithoutCaps, number}} mögliche Kombinationen, aber DIM hat nur die {{combos, number}} höchsten Kombinationen betrachtet, um den Browser vor dem Absturz zu bewahren. Wähle ein paar Perks, nutze die Suche oder zerlege alte Rüstung, um die Zahl der Kombinationen zu senken. Das Fixieren allgemeiner oder saisonaler Mods erhöht die Anzahl der Kombinationen.",
-    "LockEquipped": "Pinne ausgerüstetes",
-    "LockItem": "Anpinnen",
+    "LockEquipped": "ausgerüstete Gegenstände anpinnen",
+    "LockItem": "Gegenstand anpinnen",
     "LockPerk": "Wähle Perk",
     "NewEmptyLoadout": "Erstelle leere Ausrüstung",
     "NoBuildsFoundExoticsAndMods": "Du hast einen exotischen Gegenstand und fünf saisonale Mods gewählt.",
@@ -578,12 +577,10 @@
     "All": "Alle",
     "CantPullFromPostmaster": "Du musst auf den Turm, um dieses Element abzurufen.",
     "Consolidate": "Zusammenführen",
-    "Details": "Pop-up",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
     "EquipWithName": "Anlegen an {{character}}",
     "Infuse": "Infundieren",
-    "ItemDetailSheet": "Gegenstand-Details öffnen",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
       "Locked": "Gesperrt",
@@ -595,21 +592,18 @@
     "OverviewTab": "Übersicht",
     "Owned": "Dieser Gegenstand ist in deinem Inventar.",
     "OwnedMod": "Diese Mod ist in deinem Modifikations-Inventar.",
-    "PowerCap": "",
     "PullItem": "Ziehe von {{bucket}} nach {{store}}",
     "PullPostmaster": "Abrufen von Poststelle",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReadLoreLink": "Lese Lore",
     "Rewards": "Belohnungen:",
     "SendToVault": "An Tresor senden",
-    "Split": "Teilen",
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Nehmen",
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",
     "TrackUntrack": {
       "Track": "{{itemType}} verfolgen",
@@ -841,9 +835,9 @@
     "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
     "IndexedDBStorage": "Lokaler Browser Speicher",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "Beim Laden deiner DIM Sync-Daten ist ein Problem aufgetreten",
+    "ProfileErrorBody": "Wir haben ein Problem beim Laden deiner Daten von DIM Sync. Wir versuchen weiterhin sie automatisch zu laden.",
     "ProfileErrorTitle": "DIM Sync Fehler",
-    "UpdateErrorBody": "Es gab ein Problem beim Speichern deiner Daten in DIM Sync",
+    "UpdateErrorBody": "Wir hatten ein Problem beim Speichern deiner Daten in DIM Sync. Wir versuchen es später automatisch nochmal.",
     "UpdateErrorTitle": "DIM Sync Fehler",
     "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
   },
@@ -866,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz meldet, dass dieser Anbieter Gegenstände mit einem hohen Level anbietet.",
-    "ServiceCallFailed": "VendorEngrams.xyz Service Zugriff fehlgeschlagen.",
-    "Vote": "Siehst du einen Verkäufer, der Gegenstände in der Nähe deines Lichtlevels verkauft? Gehe zu VendorEngrams.xyz, um abzustimmen und die Community darüber zu informieren!"
   },
   "Vendors": {
     "Collections": "Sammlungen",
@@ -938,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy, zusammen mit einigen Mülllistenrolls.",
     "Clear": "Wunschliste löschen",
-    "ExternalSource": "Optional die URL für eine Wunschliste angeben",
+    "ExternalSource": "Optional die URL(s) für eine Wunschliste angeben (Pipe | getrennt)",
     "Header": "Wunschliste",
     "Import": "Wunschlisten Rolls laden",
     "ImportError": "Fehler beim Laden der Wunschliste: {{error}}",
