@@ -307,7 +307,9 @@ export function getItemYear(item: DimItem) {
  * This function indicates whether a mod's stat effect is active on the item.
  *
  * For example, powerful friends only gives its stat effect if another arc mod is
- * slotted. This will return true if another arc mod is slotted.
+ * slotted or some other item has a charged with light arc mod slotted.
+ * This will return true if another arc mod is slotted or if we can pass in the
+ * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
  *
  * If the plugHash isn't recognised then the default is to return true. This is
  * because we do not always have access whether a stat is
@@ -316,17 +318,25 @@ export function isPlugStatActive(
   item: DimItem,
   plugHash: number,
   statHash: number,
-  isConditionallyActive: boolean
-) {
+  isConditionallyActive: boolean,
+  modsOnOtherItems?: PluggableInventoryItemDefinition[]
+): boolean {
   if (!isConditionallyActive) {
     return true;
   } else if (plugHash === 2979815167 || plugHash === 1484685887) {
     // Powerful Friends & Radient Light
     // True if a second arc mod is socketed
-    return item.sockets?.allSockets.some(
-      (s) =>
-        s.plugged?.plugDef.hash !== plugHash &&
-        s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+    return Boolean(
+      item.sockets?.allSockets.some(
+        (s) =>
+          s.plugged?.plugDef.hash !== plugHash &&
+          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      ) ||
+        modsOnOtherItems?.some(
+          (plugDef) =>
+            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        )
     );
   } else if (plugHash === 2263321587) {
     // Charge Harvester
