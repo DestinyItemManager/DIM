@@ -330,7 +330,7 @@ function enhanceStatsWithPlugs(
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ) {
-  if (!createdItem.sockets) {
+  if (!createdItem.sockets?.allSockets.length) {
     return;
   }
 
