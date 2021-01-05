@@ -27,8 +27,10 @@ import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
+import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import { StatHashes } from 'data/d2/generated-enums';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
@@ -306,31 +308,37 @@ export function getItemYear(item: DimItem) {
  *
  * For example, powerful friends only gives its stat effect if another arc mod is
  * slotted. This will return true if another arc mod is slotted.
+ *
+ * If the plugHash isn't recognised then the default is to return true. This is
+ * because we do not always have access whether a stat is
  */
-export function isPlugStatActive(item: DimItem, plugHash: number, statHash: number) {
-  switch (plugHash) {
-    case 2979815167: // Radient Light
-    case 1484685887: {
-      // Powerful Friends
-      // True if a second arc mod is socketed
-      return item.sockets?.allSockets.some(
-        (s) =>
-          s.plugged?.plugDef.hash !== plugHash &&
-          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      );
-    }
-
-    case 2263321587: {
-      // Charge Harvester
-      return (
-        (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
-        (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
-        (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
-      );
-    }
-
-    default:
-      return true;
+export function isPlugStatActive(
+  item: DimItem,
+  plugHash: number,
+  statHash: number,
+  isConditionallyActive: boolean
+) {
+  if (!isConditionallyActive) {
+    return true;
+  } else if (plugHash === 2979815167 || plugHash === 1484685887) {
+    // Powerful Friends & Radient Light
+    // True if a second arc mod is socketed
+    return item.sockets?.allSockets.some(
+      (s) =>
+        s.plugged?.plugDef.hash !== plugHash &&
+        s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+    );
+  } else if (plugHash === 2263321587) {
+    // Charge Harvester
+    return (
+      (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
+      (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
+      (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
+    );
+  } else if (masterworksWithCondStats.includes(plugHash)) {
+    return adeptWeaponHashes.includes(item.hash);
+  } else {
+    return true;
   }
 }
 

@@ -28,7 +28,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
 import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
-import { DimItem, DimPlug, DimSockets, DimStat } from '../item-types';
+import { DimItem, DimPlug, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -153,26 +153,32 @@ export function buildStats(
         investmentStats.push(cStat);
       }
     }
-  } else if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
-    investmentStats = buildStatsFromMods(createdItem.sockets, defs, statGroup, statDisplays);
+  }
+
+  if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
+    investmentStats = buildClassItemStatsFromMods(createdItem, defs, statGroup, statDisplays);
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
 }
 
-function buildStatsFromMods(
-  itemSockets: DimSockets,
+/**
+ * This builds a class items stat values from its masterwork and mod sockets.
+ */
+function buildClassItemStatsFromMods(
+  item: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
 ): DimStat[] {
   const statTracker: { stat: number; value: number } | {} = {};
   const investmentStats: DimStat[] = [];
-  const modSockets = getSocketsWithPlugCategoryHash(itemSockets, ItemCategoryHashes.ArmorMods);
-  const masterworkSockets = getSocketsWithStyle(
-    itemSockets,
-    DestinySocketCategoryStyle.EnergyMeter
-  );
+  const modSockets = item.sockets
+    ? getSocketsWithPlugCategoryHash(item.sockets, ItemCategoryHashes.ArmorMods)
+    : [];
+  const masterworkSockets = item.sockets
+    ? getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter)
+    : [];
 
   for (const statHash of armorStats) {
     statTracker[statHash] = 0;
@@ -186,7 +192,19 @@ function buildStatsFromMods(
   for (const socket of modSockets) {
     if (socket?.plugged?.stats) {
       for (const statHash of armorStats) {
-        if (socket.plugged.stats[statHash]) {
+        const investmentStat = socket.plugged.plugDef.investmentStats.find(
+          (s) => s.statTypeHash === statHash
+        );
+        if (
+          socket.plugged.stats[statHash] &&
+          investmentStat &&
+          isPlugStatActive(
+            item,
+            socket.plugged.plugDef.hash,
+            investmentStat?.statTypeHash,
+            investmentStat?.isConditionallyActive
+          )
+        ) {
           statTracker[statHash] += socket.plugged.stats[statHash];
         }
       }
@@ -196,10 +214,12 @@ function buildStatsFromMods(
   for (const statHash of armorStats) {
     const hashAndValue = {
       statTypeHash: statHash,
-      value: statTracker[statHash],
+      value: _.clamp(statTracker[statHash], 0, statTracker[statHash]),
+      isConditionallyActive: false,
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
     builtStat.maximumValue = ARMOR_STAT_CAP;
+    builtStat.base = 0;
     investmentStats.push(builtStat);
   }
 
@@ -265,7 +285,9 @@ function buildInvestmentStats(
 }
 
 function buildStat(
-  itemStat: DestinyItemInvestmentStatDefinition | { statTypeHash: number; value: number },
+  itemStat:
+    | DestinyItemInvestmentStatDefinition
+    | { statTypeHash: number; value: number; isConditionallyActive: boolean },
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplays: { [key: number]: DestinyStatDisplayDefinition }
@@ -301,6 +323,7 @@ function buildStat(
     additive:
       statDef.statCategory === DestinyStatCategory.Defense &&
       statDef.aggregationType === DestinyStatAggregationType.Character,
+    isConditionallyActive: itemStat.isConditionallyActive,
   };
 }
 
@@ -330,8 +353,12 @@ function enhanceStatsWithPlugs(
         // out if the conditions are met otherwise.
         let value = perkStat.value;
         if (
-          perkStat.isConditionallyActive &&
-          !isPlugStatActive(createdItem, socket.plugged.plugDef.hash, statHash)
+          !isPlugStatActive(
+            createdItem,
+            socket.plugged.plugDef.hash,
+            statHash,
+            perkStat.isConditionallyActive
+          )
         ) {
           value = 0;
         }
@@ -427,7 +454,7 @@ function buildLiveStats(
   const ret: DimStat[] = [];
 
   // Sum all the conditionally inactive and active plug stats from sockets so we can calculate
-  // the value and base. The live stat includes all mod stats whether they are active or not.
+  // the value and base. On armour, the live stat includes all mod stats whether they are active or not.
   const inactivePlugStatValues: { [statHash: number]: number } = {};
   const activePlugStatValues: { [statHash: number]: number } = {};
   let negativeModStatFound = false;
@@ -437,8 +464,7 @@ function buildLiveStats(
       for (const { isConditionallyActive, statTypeHash } of plugged.plugDef.investmentStats || []) {
         const plugStat = plugged.stats?.[statTypeHash] ?? 0;
         if (
-          isConditionallyActive &&
-          !isPlugStatActive(createdItem, plugged.plugDef.hash, statTypeHash)
+          !isPlugStatActive(createdItem, plugged.plugDef.hash, statTypeHash, isConditionallyActive)
         ) {
           inactivePlugStatValues[statTypeHash] =
             (inactivePlugStatValues[statTypeHash] ?? 0) + plugStat;
@@ -499,6 +525,7 @@ function buildLiveStats(
       bar,
       smallerIsBetter,
       additive: statDef.aggregationType === DestinyStatAggregationType.Character,
+      isConditionallyActive: false,
     });
   }
 
@@ -532,6 +559,7 @@ function totalStat(stats: DimStat[]): DimStat {
     bar: false,
     smallerIsBetter: false,
     additive: false,
+    isConditionallyActive: false,
   };
 }
 
@@ -565,6 +593,7 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     bar: false,
     smallerIsBetter: false,
     additive: false,
+    isConditionallyActive: false,
   };
 }
 

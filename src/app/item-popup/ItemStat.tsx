@@ -264,7 +264,15 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
     (socket) =>
       socket.plugged?.stats &&
       String(stat.statHash) in socket.plugged.stats &&
-      isPlugStatActive(item, socket.plugged.plugDef.hash, stat.statHash)
+      isPlugStatActive(
+        item,
+        socket.plugged.plugDef.hash,
+        stat.statHash,
+        Boolean(
+          socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
+            ?.isConditionallyActive
+        )
+      )
   );
 
   return _.sumBy(modSockets, (socket) => socket.plugged!.stats![stat.statHash]);
@@ -285,7 +293,17 @@ function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[], ite
       ? _.sumBy(
           armorStatHashes,
           (armorStatHash) =>
-            ((!item || isPlugStatActive(item, socket.plugged!.plugDef.hash, armorStatHash)) &&
+            ((!item ||
+              isPlugStatActive(
+                item,
+                socket.plugged!.plugDef.hash,
+                armorStatHash,
+                Boolean(
+                  socket.plugged?.plugDef.investmentStats.find(
+                    (s) => s.statTypeHash === armorStatHash
+                  )?.isConditionallyActive
+                )
+              )) &&
               socket.plugged!.stats![armorStatHash]) ||
             0
         )
