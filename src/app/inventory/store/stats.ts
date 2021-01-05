@@ -117,21 +117,16 @@ export function buildStats(
 
   // We only use the raw "investment" stats to calculate all item stats.
   let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
-  let investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
 
   // Include the contributions from perks and mods
-  enhanceStatsWithPlugs(
-    itemDef,
-    investmentStats,
-    investmentStatsByHash,
-    createdItem,
-    defs,
-    statGroup,
-    statDisplays
-  );
+  enhanceStatsWithPlugs(itemDef, investmentStats, createdItem, defs, statGroup, statDisplays);
 
   // For Armor, we always replace the previous stats with live stats, even if they were already created
-  if ((!investmentStats.length || createdItem.bucket.inArmor) && stats?.[createdItem.id]) {
+  if (
+    (!investmentStats.length || createdItem.bucket.inArmor) &&
+    stats?.[createdItem.id] &&
+    createdItem.type !== 'ClassItem'
+  ) {
     // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
     investmentStats = buildLiveStats(
       stats[createdItem.id],
@@ -141,7 +136,6 @@ export function buildStats(
       statGroup,
       statDisplays
     );
-    investmentStatsByHash = _.keyBy(investmentStats, (s) => s.statHash);
 
     if (createdItem.bucket.inArmor) {
       // Add the "Total" stat for armor
@@ -155,6 +149,7 @@ export function buildStats(
     }
   }
 
+  // Always build class item stats directly from the mods as we know the base stat values.
   if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
     investmentStats = buildClassItemStatsFromMods(createdItem, defs, statGroup, statDisplays);
   }
@@ -330,7 +325,6 @@ function buildStat(
 function enhanceStatsWithPlugs(
   itemDef: DestinyInventoryItemDefinition,
   stats: DimStat[], // mutated
-  statsByHash: { [k: number]: DimStat }, // mutated
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
@@ -341,6 +335,7 @@ function enhanceStatsWithPlugs(
   }
 
   const modifiedStats = new Set<number>();
+  const statsByHash = _.keyBy(stats, (s) => s.statHash);
 
   // Add the chosen plugs' investment stats to the item's base investment stats
   for (const socket of createdItem.sockets.allSockets) {
@@ -348,10 +343,7 @@ function enhanceStatsWithPlugs(
       for (const perkStat of socket.plugged.plugDef.investmentStats) {
         const statHash = perkStat.statTypeHash;
         const itemStat = statsByHash[statHash];
-        // TODO: we should check the final computed stat against the result including and not including
-        // conditinally active stats, and only include them if it lines up. There's not a way to figure
-        // out if the conditions are met otherwise.
-        let value = perkStat.value;
+        const value = perkStat.value;
         if (
           !isPlugStatActive(
             createdItem,
@@ -360,7 +352,7 @@ function enhanceStatsWithPlugs(
             perkStat.isConditionallyActive
           )
         ) {
-          value = 0;
+          continue;
         }
 
         if (itemStat) {
@@ -572,12 +564,17 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     return undefined;
   }
 
-  // TODO: for loop
   // Custom stat is always base stat
-  stats = stats.filter((s) => customStatDef.includes(s.statHash));
-  const total = _.sumBy(stats, (s) => s.base);
-  const baseTotal = total;
-  const statMayBeWrong = stats.some((stat) => stat.statMayBeWrong);
+  let total = 0;
+  let statMayBeWrong = false;
+
+  for (const stat of stats) {
+    if (customStatDef.includes(stat.statHash)) {
+      total += stat.base;
+      statMayBeWrong ||= Boolean(stat.statMayBeWrong);
+    }
+  }
+
   return {
     investmentValue: total,
     statHash: CUSTOM_TOTAL_STAT_HASH,
@@ -587,7 +584,7 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     } as any) as DestinyDisplayPropertiesDefinition,
     sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
-    base: baseTotal,
+    base: total,
     statMayBeWrong,
     maximumValue: 100,
     bar: false,
