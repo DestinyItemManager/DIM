@@ -14,20 +14,19 @@ export function getSeason(item: DimItem): number {
   }
   // iconOverlay has precedence for season
   const overlay = item.iconOverlay || item.hiddenOverlay;
-  if (overlay) {
-    return Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash];
-  }
 
-  return D2CalculatedSeason;
+  return overlay
+    ? Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash]
+    : D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
 export function getEvent(item: DimItem) {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
-  const nonOverlay = item.source
+  const D2EventBackup = item.source
     ? D2SourcesToEvent[item.source] || D2Events[item.hash]
     : D2Events[item.hash];
 
-  return overlay ? Number(D2EventFromOverlay[overlay]) || nonOverlay : nonOverlay;
+  return overlay ? Number(D2EventFromOverlay[overlay]) || D2EventBackup : D2EventBackup;
 }
