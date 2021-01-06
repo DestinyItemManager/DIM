@@ -2,8 +2,8 @@ import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { moveItemTo } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
+import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
 import {

@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
+  executeMoveItem,
   getSimilarItem,
-  moveItemTo,
   MoveReservations,
 } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
@@ -309,12 +309,16 @@ function applyLoadoutItems(
               amountNeeded -= amountToMove;
               totalAmount += amountToMove;
 
-              await dispatch(moveItemTo(sourceItem, store, false, amountToMove, loadoutItemIds));
+              await dispatch(
+                executeMoveItem(sourceItem, store, false, amountToMove, loadoutItemIds)
+              );
             }
           }
         } else {
           // Pass in the list of items that shouldn't be moved away
-          await dispatch(moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds));
+          await dispatch(
+            executeMoveItem(item, store, pseudoItem.equipped, item.amount, loadoutItemIds)
+          );
         }
 
         scope.successfulItems.push(item);
@@ -446,7 +450,14 @@ export function clearItemsOffCharacter(
               );
             }
             await dispatch(
-              moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+              executeMoveItem(
+                item,
+                otherStoresWithSpace[0],
+                false,
+                item.amount,
+                items,
+                reservations
+              )
             );
             continue;
           } else if (vaultSpaceLeft === 0) {
@@ -467,7 +478,7 @@ export function clearItemsOffCharacter(
             getStore(stores, item.owner)!.name
           );
         }
-        await dispatch(moveItemTo(item, vault, false, item.amount, items, reservations));
+        await dispatch(executeMoveItem(item, vault, false, item.amount, items, reservations));
       } catch (e) {
         if (e.code === 'no-space') {
           outOfSpaceWarning(store);
