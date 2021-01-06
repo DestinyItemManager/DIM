@@ -180,6 +180,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
             case PlatformErrorCodes.RefreshTokenNotYetValid:
             case PlatformErrorCodes.AccessTokenHasExpired:
             case PlatformErrorCodes.AuthorizationCodeInvalid:
+            case PlatformErrorCodes.AuthorizationRecordExpired:
               throw new FatalTokenError(
                 'Refresh token expired or not valid, platform error ' + data.ErrorCode
               );
