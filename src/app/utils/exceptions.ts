@@ -28,6 +28,7 @@ if ($featureFlags.sentry) {
       'Waiting due to HTTP 503',
       'Bungie.net was too slow to respond.',
       'Bungie.net is currently experiencing difficulties.',
+      /Failed to fetch/,
       /AbortError/,
       /Non-Error promise rejection/,
     ],
