@@ -10,7 +10,6 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { useWhatChanged } from 'app/utils/useWhatChanged';
 import clsx from 'clsx';
 import pursuitsInfo from 'data/d2/pursuits.json';
 import grenade from 'destiny-icons/weapons/grenade.svg';
@@ -66,14 +65,6 @@ export default function BountyGuide({
 }) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
-  useWhatChanged('BountyGuide', {
-    store,
-    bounties,
-    defs,
-    selectedFilters,
-    onSelectedFiltersChanged,
-  });
-
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
     e.stopPropagation();
     try {
@@ -81,7 +72,7 @@ export default function BountyGuide({
         filterItems: (item) =>
           item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
         prompt: t('MovePopup.PullItem', {
-          bucket: defs.ItemCategory.get(itemCategory).displayProperties.name,
+          bucket: defs.ItemCategory.get(itemCategory)?.displayProperties.name,
           store: store.name,
         }),
       });
