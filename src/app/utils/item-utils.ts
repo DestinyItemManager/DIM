@@ -15,6 +15,7 @@ import {
   energyNamesByEnum,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
+  modsWithConditionalStats,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -311,8 +312,7 @@ export function getItemYear(item: DimItem) {
  * This will return true if another arc mod is slotted or if we can pass in the
  * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
  *
- * If the plugHash isn't recognised then the default is to return true. This is
- * because we do not always have access whether a stat is
+ * If the plugHash isn't recognised then the default is to return true.
  */
 export function isPlugStatActive(
   item: DimItem,
@@ -323,9 +323,12 @@ export function isPlugStatActive(
 ): boolean {
   if (!isConditionallyActive) {
     return true;
-  } else if (plugHash === 2979815167 || plugHash === 1484685887) {
-    // Powerful Friends & Radient Light
-    // True if a second arc mod is socketed
+  } else if (
+    plugHash === modsWithConditionalStats.powerfulFriends ||
+    plugHash === modsWithConditionalStats.radiantLight
+  ) {
+    // Powerful Friends & Radiant Light
+    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
     return Boolean(
       item.sockets?.allSockets.some(
         (s) =>
@@ -338,7 +341,7 @@ export function isPlugStatActive(
             plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
         )
     );
-  } else if (plugHash === 2263321587) {
+  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
     // Charge Harvester
     return (
       (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||

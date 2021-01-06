@@ -209,7 +209,7 @@ function buildClassItemStatsFromMods(
   for (const statHash of armorStats) {
     const hashAndValue = {
       statTypeHash: statHash,
-      value: _.clamp(statTracker[statHash], 0, statTracker[statHash]),
+      value: Math.max(0, statTracker[statHash]),
       isConditionallyActive: false,
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
