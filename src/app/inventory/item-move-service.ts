@@ -114,6 +114,9 @@ function updateItemModel(
   };
 }
 
+/**
+ * Finds an item similar to "item" which can be equipped on the item's owner in order to move "item".
+ */
 export function getSimilarItem(
   stores: DimStore[],
   item: DimItem,
@@ -121,6 +124,8 @@ export function getSimilarItem(
   excludeExotic = false
 ): DimItem | null {
   const target = getStore(stores, item.owner)!;
+
+  // Try each store, preferring getting something from the same character, then vault, then any other character
   const sortedStores = _.sortBy(stores, (store) => {
     if (target.id === store.id) {
       return 0;
