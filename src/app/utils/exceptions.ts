@@ -40,7 +40,7 @@ if ($featureFlags.sentry) {
     ],
     attachStackTrace: true,
     beforeSend: function (event, hint) {
-      if (hint.originalException.errorCode) {
+      if (hint.originalException?.errorCode) {
         event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
       }
       return event;
