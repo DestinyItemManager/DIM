@@ -10,8 +10,6 @@ module.exports = function csp(env) {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
-      // Include a snippet of inline scripts
-      "'report-sample'",
       'https://www.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
