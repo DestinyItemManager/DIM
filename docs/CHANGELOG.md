@@ -1,4 +1,5 @@
 ## Next
+* Show a star icon for finishers rather than a lock icon.
 
 ## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
 
