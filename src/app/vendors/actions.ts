@@ -28,7 +28,8 @@ export function loadAllVendors(
     // Only load at most once per 30 seconds
     if (
       !force &&
-      Date.now() - (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded.getTime() || 0) <
+      Date.now() -
+        (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded?.getTime() || 0) <
         30 * 1000
     ) {
       return;

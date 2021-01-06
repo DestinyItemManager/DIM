@@ -11,8 +11,8 @@ import * as actions from './actions';
 export interface VendorsState {
   vendorsByCharacter: {
     [characterId: string]: {
-      vendorsResponse: DestinyVendorsResponse;
-      lastLoaded: Date;
+      vendorsResponse?: DestinyVendorsResponse;
+      lastLoaded?: Date;
       error?: Error;
     };
   };
