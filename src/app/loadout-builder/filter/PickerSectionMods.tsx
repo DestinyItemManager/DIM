@@ -56,7 +56,7 @@ export default function PickerSectionMods({
         lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
         (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
           locked.some((l) => l.modDef.plug.energyCost?.energyType === modEnergyType) || // Matches some other enery
-          locked?.every(
+          locked.every(
             (l) =>
               (l.modDef.plug.energyCost?.energyType || DestinyEnergyType.Any) ===
               DestinyEnergyType.Any
@@ -83,7 +83,7 @@ export default function PickerSectionMods({
                 key={item.modDef.hash}
                 defs={defs}
                 selected={Boolean(
-                  locked?.some((lockedItem) => lockedItem.modDef.hash === item.modDef.hash)
+                  locked.some((lockedItem) => lockedItem.modDef.hash === item.modDef.hash)
                 )}
                 mod={item}
                 selectable={isModSelectable(item)}
