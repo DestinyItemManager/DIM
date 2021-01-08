@@ -34,8 +34,10 @@ export default function PickerSectionMods({
     return null;
   }
   const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
-  const isNotGeneralOrOther =
-    category !== ModPickerCategories.general && category !== ModPickerCategories.other;
+  const isNotGeneralOrOtherOrRaid =
+    category !== ModPickerCategories.general &&
+    category !== ModPickerCategories.other &&
+    category !== ModPickerCategories.raid;
   const allLockedAreAnyEnergy = locked?.every(
     (locked) =>
       !locked.modDef.plug.energyCost ||
@@ -47,7 +49,7 @@ export default function PickerSectionMods({
     if (
       locked &&
       (locked.length >= maximumSelectable ||
-        (isNotGeneralOrOther && lockedModCost + itemEnergyCost > MAX_ARMOR_ENERGY_CAPACITY))
+        (isNotGeneralOrOtherOrRaid && lockedModCost + itemEnergyCost > MAX_ARMOR_ENERGY_CAPACITY))
     ) {
       return true;
     }
