@@ -28,6 +28,7 @@ if ($featureFlags.sentry) {
       'Waiting due to HTTP 503',
       'Bungie.net was too slow to respond.',
       'Bungie.net is currently experiencing difficulties.',
+      /Failed to fetch/,
       /AbortError/,
       /Non-Error promise rejection/,
     ],
@@ -39,7 +40,7 @@ if ($featureFlags.sentry) {
     ],
     attachStackTrace: true,
     beforeSend: function (event, hint) {
-      if (hint.originalException.errorCode) {
+      if (hint.originalException?.errorCode) {
         event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
       }
       return event;

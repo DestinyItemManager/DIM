@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
-import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
+import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
 import { TagValue } from './dim-item-info';
@@ -99,7 +99,9 @@ export default function InventoryItem({
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
-            {item.locked && <AppIcon className={styles.icon} icon={lockIcon} />}
+            {item.locked && (
+              <AppIcon className={styles.icon} icon={item.lockable ? lockIcon : starIcon} />
+            )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}
             {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>

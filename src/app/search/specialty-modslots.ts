@@ -42,6 +42,8 @@ export const combatCompatiblePlugCategoryHashes = [
 ];
 
 const legacySocketTypeHashes = [
+  1540673283, // an outlaw-looking one, that's on S11 LW/Reverie,
+  // but in-game it has the same compatibility as any other legacy slot
   3873071636, // forge
   1936582325, // dawn
   4127539203, // undying
@@ -88,7 +90,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'deepstonecrypt',
     compatibleModTags: ['deepstonecrypt'],
     socketTypeHashes: [1269555732],
-    compatiblePlugCategoryHashes: [1486918022],
+    compatiblePlugCategoryHashes: [1703496685],
     emptyModSocketHashes: [4055462131],
     emptyModSocketHash: 4055462131,
   },
@@ -100,23 +102,11 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHashes: [2493100093],
     emptyModSocketHash: 2493100093,
   },
-  {
-    slotTag: 'reveriedawn',
-    compatibleModTags: [...legacyCompatibleTags, 'reveriedawn'],
-    socketTypeHashes: [1540673283],
-    compatiblePlugCategoryHashes: [
-      ...legacyCompatiblePlugCategoryHashes,
-      2149155760, // riven's curse/transcendant blessing
-    ],
-    emptyModSocketHashes: [3625698764],
-    emptyModSocketHash: 3625698764,
-  },
 ];
 
 export default modSocketMetadata;
 
 export const modTypeTagByPlugCategoryHash = {
-  2149155760: 'reveriedawn',
   13646368: 'lastwish',
   1081029832: 'nightmare',
   1486918022: 'gardenofsalvation',

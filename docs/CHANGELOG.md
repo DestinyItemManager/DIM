@@ -1,4 +1,11 @@
 ## Next
+* Show a star icon for finishers rather than a lock icon.
+
+## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
+
+* Base stats no longer cause sort issues in the compare pane, and no longer apply to weapons.
+* Older pieces of Last Wish and Reverie Dawn armor now count as having normal Legacy mod slots.
+* Deep Stone Crypt Raid mods now show up in the Loadout Optimizer mod picker.
 
 ## 6.45.2 <span className="changelog-date">(2020-12-30)</span>
 
@@ -8,7 +15,7 @@
 
 * Fixed an issue where linking directly to any page would redirect to the inventory.
 
-## 6.45.0 <span className="changelog-date">(2020-12-27)</span>
+## 6.45.0 <span class="changelog-date">(2020-12-27)</span>
 
 * Faster initial page load for inventory (loading a subset of things from bungie.net api)
 * Wishlists now support multiple URLs
