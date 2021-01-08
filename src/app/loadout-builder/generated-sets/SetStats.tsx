@@ -49,7 +49,7 @@ function SetStats({
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        {items.some((item) => item.stats?.some((stat) => stat.baseMayBeWrong)) && (
+        {items.some((item) => item.stats?.some((stat) => stat.statMayBeWrong)) && (
           <PressTip
             elementType="span"
             tooltip={t('LoadoutBuilder.StatIncorrectWarning', {

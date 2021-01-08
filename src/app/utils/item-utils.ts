@@ -15,6 +15,7 @@ import {
   energyNamesByEnum,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
+  modsWithConditionalStats,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -22,8 +23,15 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+} from 'bungie-api-ts/destiny2';
+import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
+import { StatHashes } from 'data/d2/generated-enums';
 import powerCapToSeason from 'data/d2/lightcap-to-season.json';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
@@ -134,7 +142,7 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
       if (
         stat.statHash !== TOTAL_STAT_HASH &&
         stat.statHash !== CUSTOM_TOTAL_STAT_HASH &&
-        stat.baseMayBeWrong &&
+        stat.statMayBeWrong &&
         stat.displayProperties.name
       ) {
         incorrect.add(stat.displayProperties.name);
@@ -293,6 +301,57 @@ export function getItemYear(item: DimItem) {
     return year;
   } else {
     return undefined;
+  }
+}
+
+/**
+ * This function indicates whether a mod's stat effect is active on the item.
+ *
+ * For example, powerful friends only gives its stat effect if another arc mod is
+ * slotted or some other item has a charged with light arc mod slotted.
+ * This will return true if another arc mod is slotted or if we can pass in the
+ * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
+ *
+ * If the plugHash isn't recognised then the default is to return true.
+ */
+export function isPlugStatActive(
+  item: DimItem,
+  plugHash: number,
+  statHash: number,
+  isConditionallyActive: boolean,
+  modsOnOtherItems?: PluggableInventoryItemDefinition[]
+): boolean {
+  if (!isConditionallyActive) {
+    return true;
+  } else if (
+    plugHash === modsWithConditionalStats.powerfulFriends ||
+    plugHash === modsWithConditionalStats.radiantLight
+  ) {
+    // Powerful Friends & Radiant Light
+    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
+    return Boolean(
+      item.sockets?.allSockets.some(
+        (s) =>
+          s.plugged?.plugDef.hash !== plugHash &&
+          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      ) ||
+        modsOnOtherItems?.some(
+          (plugDef) =>
+            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        )
+    );
+  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
+    // Charge Harvester
+    return (
+      (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
+      (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
+      (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
+    );
+  } else if (masterworksWithCondStats.includes(plugHash)) {
+    return adeptWeaponHashes.includes(item.hash);
+  } else {
+    return true;
   }
 }
 
