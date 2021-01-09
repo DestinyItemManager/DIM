@@ -15,8 +15,6 @@ jobs:
           node-version: 14.x
 
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2 # So packtracker can get the previous commit
 
       - name: Cache node_modules
         uses: actions/cache@v2

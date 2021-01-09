@@ -30,7 +30,6 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 2 # So packtracker can get the previous commit
           # Use the dim-release-bot token rather than the default
           token: ${{ secrets.GH_TOKEN }}
 

@@ -22,8 +22,6 @@ jobs:
           known_hosts: ${{ secrets.REMOTE_HOST }}
 
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2 # So packtracker can get the previous commit
 
       - name: Cache node_modules
         uses: actions/cache@v2
