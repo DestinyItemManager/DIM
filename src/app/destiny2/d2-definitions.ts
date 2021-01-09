@@ -167,7 +167,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
-          if (!dbEntry) {
+          if (!dbEntry && tableShort !== 'Record') {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
             reportException(

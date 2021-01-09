@@ -22,8 +22,6 @@ declare const $featureFlags: {
   respectDNT: boolean;
   /** Community-curated wish lists */
   wishLists: boolean;
-  /** Enable vendorengrams.xyz integration */
-  vendorEngrams: boolean;
   /** Enable the Armor 2 Mod Picker */
   armor2ModPicker: boolean;
   /** Show a banner for supporting a charitable cause */

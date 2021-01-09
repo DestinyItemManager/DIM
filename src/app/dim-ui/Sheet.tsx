@@ -1,7 +1,7 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
@@ -52,10 +52,6 @@ export default function Sheet({
   const dragging = useRef(false);
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
 
-  const windowHeight = window.innerHeight;
-  const headerHeight = useMemo(() => document.getElementById('header')!.clientHeight, []);
-  const maxHeight = windowHeight - headerHeight - 16 - 44;
-
   const sheetContents = useRef<HTMLDivElement | null>(null);
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
@@ -84,7 +80,7 @@ export default function Sheet({
   /** This spring is controlled via setSpring, which doesn't trigger re-render. */
   const [springProps, setSpring] = useSpring(() => ({
     // Initially transition from offscreen to on
-    from: { transform: `translateY(${windowHeight}px)` },
+    from: { transform: `translateY(${window.innerHeight}px)` },
     to: { transform: `translateY(0px)` },
     config: spring,
     onRest,
@@ -153,7 +149,7 @@ export default function Sheet({
   return (
     <animated.div
       {...bindDrag()}
-      style={{ ...springProps, maxHeight, touchAction: 'none' }}
+      style={{ ...springProps, touchAction: 'none' }}
       className={clsx('sheet', sheetClassName)}
       ref={sheet}
       role="dialog"
@@ -169,7 +165,6 @@ export default function Sheet({
 
       <div
         className="sheet-container"
-        style={{ maxHeight }}
         onMouseDown={dragHandleDown}
         onMouseUp={dragHandleUp}
         onTouchStart={dragHandleDown}

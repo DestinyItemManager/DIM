@@ -1,4 +1,6 @@
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import D2Events from 'data/d2/events.json';
 import D2SeasonBackup from 'data/d2/seasons_backup.json';
 import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
@@ -12,18 +14,19 @@ export function getSeason(item: DimItem): number {
   }
   // iconOverlay has precedence for season
   const overlay = item.iconOverlay || item.hiddenOverlay;
-  if (overlay) {
-    return Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash];
-  }
 
-  return D2CalculatedSeason;
+  return overlay
+    ? Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash]
+    : D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
 export function getEvent(item: DimItem) {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
-  if (overlay) {
-    return Number(D2EventFromOverlay[overlay]);
-  }
+  const D2EventBackup = item.source
+    ? D2SourcesToEvent[item.source] || D2Events[item.hash]
+    : D2Events[item.hash];
+
+  return overlay ? Number(D2EventFromOverlay[overlay]) || D2EventBackup : D2EventBackup;
 }

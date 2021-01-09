@@ -304,7 +304,6 @@
     "Filter": "过滤物品",
     "InfuseSource": "选择要灌注入{{name}} 的物品",
     "InfuseTarget": "选择需要灌注至{{name}} 的物品：",
-    "Infusion": "灌注选择器",
     "InfusionMaterials": "灌注材料",
     "NoItems": "没有可用于灌注的物品.",
     "NoTransfer": "移动灌注材料\n{{target}} 无法移动.",
@@ -462,7 +461,7 @@
     "SelectPerks": "选择特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
-    "StatIncorrectWarning": "为了获得准确结果，请移除所有具有负面或有条件的属性的模组。\n\n由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
@@ -578,12 +577,10 @@
     "All": "全部",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
-    "Details": "弹出窗口",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "EquipWithName": "装备到 {{character}}",
     "Infuse": "灌注",
-    "ItemDetailSheet": "打开物品详细信息",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
       "Locked": "已锁定",
@@ -595,21 +592,18 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "该模组在您的模组库存中。",
-    "PowerCap": "",
     "PullItem": "从{{bucket}} 移到{{store}}",
     "PullPostmaster": "从邮政官处取回物品",
     "ReadLore": "在Ishtar Collective阅读背景故事",
     "ReadLoreLink": "阅读传奇故事",
     "Rewards": "奖励：",
     "SendToVault": "发送到保险库",
-    "Split": "拆分",
     "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "收集",
     "ToggleSidecar": "展开或折叠物品操作",
     "TrackUntrack": {
       "Track": "跟踪{{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "训练",
     "DodgeCooldown": "闪身冷却",
     "Effect": "效果",
+    "FinalSeason": "（S{{finalSeason}}）",
     "GrenadeCooldown": "手雷冷却",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",
@@ -801,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "总计",
-    "TotalIncorrectWarning": "由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。"
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "档案不是json档案。它可能不是dim备份。",
     "IndexedDBStorage": "本地浏览器存储",
     "MenuTitle": "同步和备份",
-    "ProfileErrorBody": "加载你的 DIM 同步数据时出现问题",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "ProfileErrorTitle": "DIM 同步错误",
-    "UpdateErrorBody": "保存你的数据到 DIM 同步时出现问题",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "DIM 同步错误",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "隐藏已完成的成就",
     "RevealRedacted": "显示隐藏的成就"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz 提示这位商贩掉落高光等物品。",
-    "ServiceCallFailed": "VendorEngrams.xyz 服务调用失败。",
-    "Vote": "看到商贩销售平光装备？去 VendorEngrams.xyz 投票让其他玩家知道这件事吧!"
   },
   "Vendors": {
     "Collections": "收藏品",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron 是来自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 愿望清单特性表，也包含一些垃圾特性表，并会自动更新。",
     "Clear": "清除愿望清单",
-    "ExternalSource": "可选：提供愿望清单的 URL",
+    "ExternalSource": "也可提供愿望清单的 URL（使用“|”竖线分隔多个）",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
     "ImportError": "加载愿望清单时出错：{{error}}",

@@ -263,7 +263,7 @@ export function getColumns(
         header: t('Organizer.Columns.Energy'),
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
-        filter: (value) => `energycapacity>=:${value}`,
+        filter: (value) => `energycapacity:>=${value}`,
       },
     {
       id: 'locked',
@@ -295,7 +295,7 @@ export function getColumns(
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
-          const roll = wishList[item.id];
+          const roll = wishList?.[item.id];
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>

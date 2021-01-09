@@ -123,10 +123,10 @@ export function loadGlobalSettings(): ThunkResult {
 
 /**
  * Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
- * Double the wait time, starting with 10 seconds, until we reach 5 minutes.
+ * Double the wait time, starting with 30 seconds, until we reach 5 minutes.
  */
 function getBackoffWaitTime(backoff: number) {
-  return Math.min(5 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 5000);
+  return Math.min(5 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 15000);
 }
 
 // Backoff multiplier
@@ -299,7 +299,7 @@ export function flushUpdates(): ThunkResult<any> {
 
         // Wait, with exponential backoff
         flushUpdatesBackoff++;
-        const waitTime = getBackoffWaitTime(getProfileBackoff);
+        const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
         infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 

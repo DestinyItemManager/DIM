@@ -304,7 +304,6 @@
     "Filter": "Filter items",
     "InfuseSource": "選擇要灌注入{{name}} 的物品",
     "InfuseTarget": "選擇需要灌注至{{name}} 的物品：",
-    "Infusion": "灌注選擇器",
     "InfusionMaterials": "灌注材料",
     "NoItems": "沒有可用於灌注的物品.",
     "NoTransfer": "移動灌注材料\n{{target}} 無法移動.",
@@ -462,7 +461,7 @@
     "SelectPerks": "選擇特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "設置一套最低光等的整體配裝(非單件物品壓低光等)",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
@@ -578,12 +577,10 @@
     "All": "All",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
-    "Details": "Popup",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "EquipWithName": "Equip to {{character}}",
     "Infuse": "灌注",
-    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
       "Locked": "Locked",
@@ -595,21 +592,18 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "該模組在您的模組庫存中。",
-    "PowerCap": "",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "PullPostmaster": "Pull from Postmaster",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReadLoreLink": "Read lore",
     "Rewards": "獎勵：",
     "SendToVault": "Send to Vault",
-    "Split": "拆分",
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}}{{typeName}}",
-      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
+      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "收集",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "跟蹤{{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "訓練",
     "DodgeCooldown": "Dodge Cooldown",
     "Effect": "Effect",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Grenade Cooldown",
     "Intellect": "智力",
     "MaxGearPower": "當前裝備最大光等",
@@ -801,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "總計",
-    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "檔案不是json檔案。它可能不是dim備份。",
     "IndexedDBStorage": "本地流覽器存儲",
     "MenuTitle": "同步和備份",
-    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "ProfileErrorTitle": "同步錯誤",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "同步錯誤",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz 提示這位商販掉落高光等物品。",
-    "ServiceCallFailed": "VendorEngrams.xyz 服務調用失敗。",
-    "Vote": "看到商販銷售平光裝備？去VendorEngrams.xyz 投票讓其他玩家知道這件事吧!"
   },
   "Vendors": {
     "Collections": "收藏品",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "清除愿望清单",
-    "ExternalSource": "可選：提供願望清單的URL",
+    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportError": "Error loading wish list: {{error}}",

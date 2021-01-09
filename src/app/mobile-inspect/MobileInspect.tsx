@@ -1,8 +1,8 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
-import ItemActions from 'app/item-popup/ItemActions';
+import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import ItemSockets from 'app/item-popup/ItemSockets';
-import { ItemSubHeader } from 'app/item-popup/ItemSubHeader';
+import { ItemSubHeader } from 'app/mobile-inspect/ItemSubHeader';
 import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
@@ -58,8 +58,8 @@ export default function MobileInspect() {
                     {item.sockets && <ItemSockets item={item} minimal={true} />}
                   </div>
                   {inspectType === Inspect.showMoveLocations && (
-                    <div className={styles.inspectRow}>
-                      <ItemActions key={item.index} item={item} mobileInspect={true} />
+                    <div className={styles.moveLocations}>
+                      <ItemMoveLocations key={item.index} item={item} mobileInspect={true} />
                     </div>
                   )}
                 </div>

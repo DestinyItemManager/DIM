@@ -10,8 +10,6 @@ module.exports = function csp(env) {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
-      // Include a snippet of inline scripts
-      "'report-sample'",
       'https://www.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
@@ -34,11 +32,6 @@ module.exports = function csp(env) {
       'https://www.google-analytics.com',
       // Bungie.net API
       'https://www.bungie.net',
-      // DTR Reviews API
-      //'https://reviews-api.destinytracker.net',
-      //'https://api.tracker.gg',
-      // VendorEngrams
-      //'https://api.vendorengrams.xyz',
       // Wishlists
       'https://raw.githubusercontent.com',
       'https://gist.githubusercontent.com',
@@ -46,8 +39,6 @@ module.exports = function csp(env) {
       'https://api.destinyitemmanager.com',
       // Xur location
       'paracausal.science',
-      // Game2Give
-      'https://www.helpmakemiracles.org',
     ],
     imgSrc: [
       SELF,

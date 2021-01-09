@@ -27,7 +27,7 @@ export function ItemSubHeader({ item }: { item: DimItem }) {
     <>
       {light
         ? t('MovePopup.Subtitle.Gear', subtitleData)
-        : t('MovePopup.Subtitle.Consumable', subtitleData)}
+        : t('MovePopup.Subtitle.Type', subtitleData)}
     </>
   );
 }

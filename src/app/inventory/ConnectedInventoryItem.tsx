@@ -3,7 +3,7 @@ import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { searchFilterSelector } from '../search/search-filter';
-import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
+import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';
@@ -27,9 +27,8 @@ interface StoreProps {
   isNew: boolean;
   tag?: TagValue;
   notes?: boolean;
+  wishlistRoll?: InventoryWishListRoll;
   searchHidden?: boolean;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -38,14 +37,14 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const settings = settingsSelector(state);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
+  const wishlistRolls = inventoryWishListsSelector(state);
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag: getTag(item, itemInfos, itemHashTags),
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
+    wishlistRoll: wishlistRolls[item.id],
     searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
-    wishListsEnabled: wishListsEnabledSelector(state),
-    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
   };
 }
 
@@ -61,12 +60,11 @@ function ConnectedInventoryItem({
   isNew,
   tag,
   notes,
+  wishlistRoll,
   onClick,
   onShiftClick,
   onDoubleClick,
   searchHidden,
-  inventoryWishListRoll,
-  wishListsEnabled,
   ignoreSelectedPerks,
   innerRef,
 }: Props) {
@@ -77,12 +75,11 @@ function ConnectedInventoryItem({
       isNew={isNew}
       tag={tag}
       notes={notes}
+      wishlistRoll={wishlistRoll}
       onClick={onClick}
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
-      wishListsEnabled={wishListsEnabled}
-      inventoryWishListRoll={inventoryWishListRoll}
       ignoreSelectedPerks={ignoreSelectedPerks}
       innerRef={innerRef}
     />

@@ -304,7 +304,6 @@
     "Filter": "Filtrar itens",
     "InfuseSource": "Selecione o item para infundir {{name}} em",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
-    "Infusion": "Buscador de Item para Infusão",
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
     "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
@@ -462,7 +461,7 @@
     "SelectPerks": "Selecionar perks",
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
-    "StatIncorrectWarning": "Por favor, remova quaisquer mods com atributos de efeitos negativos ou condicionais para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
+    "StatIncorrectWarning": "Por favor, remova quaisquer mods com efeitos negativos em atributos para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
@@ -578,12 +577,10 @@
     "All": "Tudo",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
-    "Details": "Popup",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "EquipWithName": "Equipar em {{character}}",
     "Infuse": "Infunda",
-    "ItemDetailSheet": "Abrir detalhes do item",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
       "Locked": "Bloqueado",
@@ -595,21 +592,18 @@
     "OverviewTab": "Visão geral",
     "Owned": "Este item está em seu inventário.",
     "OwnedMod": "Este mod está na parte de modificações do seu inventário.",
-    "PowerCap": "",
     "PullItem": "Mover de {{bucket}} para {{store}}",
     "PullPostmaster": "Resgatar do Chefe do Correio",
     "ReadLore": "Leia a história no Ishtar Collective (somente em inglês)",
     "ReadLoreLink": "Leia a história",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar para o Cofre",
-    "Split": "Dividir",
     "Store": "Armazenar",
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Tomar",
     "ToggleSidecar": "Expandir ou recolher ações do item",
     "TrackUntrack": {
       "Track": "Rastrear {{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "Disciplina",
     "DodgeCooldown": "Carregamento da Esquiva",
     "Effect": "Efeito",
+    "FinalSeason": "(T{{finalSeason}})",
     "GrenadeCooldown": "Carregamento da Granada",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder máximo de itens equipáveis",
@@ -801,7 +796,7 @@
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
+    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "Arquivo não é um arquivo JSON. Pode não ser um backup do DIM.",
     "IndexedDBStorage": "Armazenamento local do Navegador",
     "MenuTitle": "Sincronização e Backups",
-    "ProfileErrorBody": "Encontramos um problema enquanto carregávamos seus dados na Sincronização DIM",
+    "ProfileErrorBody": "Tivemos um problema ao carregar seus dados na Sincronização DIM. Continuaremos tentando carregá-lo automaticamente.",
     "ProfileErrorTitle": "Erro na Sincronização DIM",
-    "UpdateErrorBody": "Encontramos um problema enquanto salvávamos seus dados na Sincronização DIM",
+    "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
     "UpdateErrorTitle": "Erro na Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Ocultar triunfos concluídos",
     "RevealRedacted": "Exibir triunfos editados"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz relata que este vendedor está retornando items de poder alto.",
-    "ServiceCallFailed": "Chamada ao serviço do VendorEngrams.xyz falhou.",
-    "Vote": "Achou um vendedor com itens de poder alto? Acesse VendorEngrams.xyz para votar e avise a comunidade!"
   },
   "Vendors": {
     "Collections": "Coleções",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy, juntamente com algumas listas de baixo valor.",
     "Clear": "Limpar Lista de Desejos",
-    "ExternalSource": "Opcionalmente, forneça a URL para uma lista de desejos",
+    "ExternalSource": "Opcionalmente, forneça uma ou mais URLs contendo uma lista de desejos (separados por \"|\")",
     "Header": "Lista de Desejos",
     "Import": "Carregar valores da Lista de Desejos",
     "ImportError": "Erro ao carregar a Lista de Desejos: {{error}}",

@@ -14,7 +14,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
+import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
@@ -78,10 +78,7 @@ export default function SocketDetailsSelectedPlug({
 
       const currentModValue = currentPlug?.stats?.[stat.statTypeHash] || 0;
 
-      // TODO: we should check the final computed stat against the result including and not including
-      // conditinally active stats, and only include them if it lines up. There's not a way to figure
-      // out if the conditions are met otherwise.
-      if (stat.isConditionallyActive) {
+      if (!isPlugStatActive(item, plug.hash, stat.statTypeHash, stat.isConditionallyActive)) {
         return null;
       }
       let modValue = stat.value;

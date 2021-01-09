@@ -8,7 +8,7 @@ import { statsMs } from 'app/inventory/store/stats';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/filters';
 import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
-import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
+import { getPossiblyIncorrectStats, isPlugStatActive } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -163,7 +163,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
                 {` + ${totalDetails.totalMasterworkValue}`}
               </span>
             )}
-            {stat.baseMayBeWrong && (
+            {stat.statMayBeWrong && (
               <PressTip
                 elementType="span"
                 tooltip={t('Stats.TotalIncorrectWarning', {
@@ -261,7 +261,18 @@ function getNonReuseableModSockets(item: DimItem) {
  */
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter(
-    (socket) => socket.plugged!.stats && String(stat.statHash) in socket.plugged!.stats
+    (socket) =>
+      socket.plugged?.stats &&
+      String(stat.statHash) in socket.plugged.stats &&
+      isPlugStatActive(
+        item,
+        socket.plugged.plugDef.hash,
+        stat.statHash,
+        Boolean(
+          socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
+            ?.isConditionallyActive
+        )
+      )
   );
 
   return _.sumBy(modSockets, (socket) => socket.plugged!.stats![stat.statHash]);
@@ -273,11 +284,29 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
 
 /**
  * Sums up all the armor statistics from the plug in the socket.
+ * If the item is passed in we check the conditionally applied status of the stats.
+ * This is needed for conditional stats on mods such as powerful friends.
  */
-function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
+function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[], item?: DimItem) {
   return _.sumBy(sockets, (socket) =>
     socket.plugged?.stats
-      ? _.sumBy(armorStatHashes, (armorStatHash) => socket.plugged!.stats![armorStatHash] || 0)
+      ? _.sumBy(
+          armorStatHashes,
+          (armorStatHash) =>
+            ((!item ||
+              isPlugStatActive(
+                item,
+                socket.plugged!.plugDef.hash,
+                armorStatHash,
+                Boolean(
+                  socket.plugged?.plugDef.investmentStats.find(
+                    (s) => s.statTypeHash === armorStatHash
+                  )?.isConditionallyActive
+                )
+              )) &&
+              socket.plugged!.stats![armorStatHash]) ||
+            0
+        )
       : 0
   );
 }
@@ -285,7 +314,7 @@ function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[]) {
 function breakDownTotalValue(baseValue: number, item: DimItem, masterworkSockets: DimSocket[]) {
   const modSockets = getNonReuseableModSockets(item);
   // Armor 1.0 doesn't increase stats when masterworked
-  const totalModsValue = getSumOfArmorStats(modSockets, armorStats);
+  const totalModsValue = getSumOfArmorStats(modSockets, armorStats, item);
   const totalMasterworkValue = masterworkSockets
     ? getSumOfArmorStats(masterworkSockets, armorStats)
     : 0;

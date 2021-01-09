@@ -6,9 +6,9 @@ import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
+import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
-import LockButton from 'app/item-popup/LockButton';
 import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -141,7 +141,7 @@ export function DistributeActionButton({ item, label }: ActionButtonProps) {
 }
 
 export function InfuseActionButton({ item, label }: ActionButtonProps) {
-  if (!item.infusionFuel) {
+  if (!item.infusionFuel || item.owner === 'unknown') {
     return null;
   }
 
@@ -159,7 +159,7 @@ export function InfuseActionButton({ item, label }: ActionButtonProps) {
 }
 
 export function LoadoutActionButton({ item, label }: ActionButtonProps) {
-  if (!itemCanBeInLoadout(item)) {
+  if (!itemCanBeInLoadout(item) || item.owner === 'unknown') {
     return null;
   }
   const addToLoadout = (e) => {

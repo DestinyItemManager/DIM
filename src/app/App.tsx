@@ -6,7 +6,6 @@ import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
-import IssueBanner from './banner/IssueBanner';
 import Developer from './developer/Developer';
 import ActivityTracker from './dim-ui/ActivityTracker';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
@@ -49,8 +48,6 @@ interface StoreProps {
   needsLogin: boolean;
   reauth: boolean;
   needsDeveloper: boolean;
-  showIssueBanner: boolean;
-  isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -63,14 +60,10 @@ function mapStateToProps(state: RootState): StoreProps {
     needsLogin: state.accounts.needsLogin,
     reauth: state.accounts.reauth,
     needsDeveloper: state.accounts.needsDeveloper,
-    showIssueBanner: $featureFlags.issueBanner && state.dimApi.globalSettings.showIssueBanner,
-    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
 type Props = StoreProps;
-
-const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 function App({
   language,
@@ -80,8 +73,6 @@ function App({
   needsLogin,
   reauth,
   needsDeveloper,
-  showIssueBanner,
-  isPhonePortrait,
 }: Props) {
   const [storageWorks, setStorageWorks] = useState(true);
   useEffect(() => {
@@ -129,90 +120,52 @@ function App({
         <PageLoading />
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-            {/* In the force-login or force-developer cases, the app can only navigate to /login or /developer */}
-            {$DIM_FLAVOR === 'dev' && needsDeveloper ? (
-              <Switch>
-                <Route path="/developer" exact>
-                  <Developer />
-                </Route>
-                <Route>
+            <Switch>
+              <Route path="/about" component={About} exact />
+              <Route path="/privacy" component={Privacy} exact />
+              <Route path="/whats-new" component={WhatsNew} exact />
+              <Route path="/login" component={Login} exact />
+              <Route path="/settings" component={SettingsPage} exact />
+              {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
+              {needsLogin &&
+                ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
                   <Redirect to={'/developer'} />
-                </Route>
-              </Switch>
-            ) : needsLogin ? (
-              <Switch>
-                <Route path="/login" exact>
-                  <Login />
-                </Route>
-                <Route>
+                ) : (
                   <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
-                </Route>
-              </Switch>
-            ) : (
-              <Switch>
-                <Route path="/about" exact>
-                  <About />
-                </Route>
-                <Route path="/privacy" exact>
-                  <Privacy />
-                </Route>
-                <Route path="/whats-new" exact>
-                  <WhatsNew />
-                </Route>
-                <Route path="/login" exact>
-                  <Login />
-                </Route>
-                <Route path="/settings" exact>
-                  <SettingsPage />
-                </Route>
-                <Route path="/search-history" exact>
-                  <SearchHistory />
-                </Route>
-                <Route
-                  path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                  render={({ match }) => (
-                    <Destiny
-                      destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                      platformMembershipId={match.params.membershipId}
-                    />
-                  )}
-                />
-                {$DIM_FLAVOR === 'dev' && (
-                  <Route path="/developer" exact>
-                    <Developer />
-                  </Route>
+                ))}
+              <Route path="/search-history" component={SearchHistory} exact />
+              <Route
+                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+                render={({ match }) => (
+                  <Destiny
+                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                    platformMembershipId={match.params.membershipId}
+                  />
                 )}
-                <Route
-                  path={[
-                    '/inventory',
-                    '/progress',
-                    '/records',
-                    '/optimizer',
-                    '/organizer',
-                    '/vendors/:vendorId',
-                    '/vendors',
-                    '/record-books',
-                    '/activities',
-                  ]}
-                  exact
-                >
-                  <AccountRedirectRoute />
-                </Route>
-                <Route>
-                  <DefaultAccount />
-                </Route>
-              </Switch>
-            )}
+              />
+              <Route
+                path={[
+                  '/inventory',
+                  '/progress',
+                  '/records',
+                  '/optimizer',
+                  '/organizer',
+                  '/vendors/:vendorId',
+                  '/vendors',
+                  '/record-books',
+                  '/activities',
+                ]}
+                exact
+              >
+                <AccountRedirectRoute />
+              </Route>
+              <Route component={DefaultAccount} />
+            </Switch>
           </Suspense>
         </ErrorBoundary>
         <NotificationsContainer />
         <ActivityTracker />
         <HotkeysCheatSheet />
-        {$featureFlags.issueBanner && showIssueBanner && !mobile && !isPhonePortrait && (
-          <div className="tempConfettiThing">
-            <IssueBanner />
-          </div>
-        )}
       </ClickOutsideRoot>
     </div>
   );

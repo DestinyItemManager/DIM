@@ -281,3 +281,9 @@ export const breakerTypes = {
 export const powerCapPlugSetHash = 573;
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
+
+export const modsWithConditionalStats = {
+  powerfulFriends: 1484685887,
+  radiantLight: 2979815167,
+  chargeHarvester: 2263321587,
+} as const;

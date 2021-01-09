@@ -34,7 +34,7 @@ import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
-import { isSpoilsOnCharacter } from './spoils-of-conquest';
+import { isSpoils } from './spoils-of-conquest';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
@@ -288,6 +288,8 @@ export function makeItem(
   const element =
     (instanceDef?.damageTypeHash !== undefined &&
       defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (itemDef.defaultDamageTypeHash !== undefined &&
+      defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
     (instanceDef?.energy?.energyTypeHash !== undefined &&
       defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
@@ -369,7 +371,7 @@ export function makeItem(
     notransfer: Boolean(
       itemDef.nonTransferrable ||
         item.transferStatus === TransferStatuses.NotTransferrable ||
-        isSpoilsOnCharacter(itemDef, owner, defs)
+        isSpoils(itemDef, owner, defs)
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack

@@ -4,7 +4,6 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
@@ -20,10 +19,8 @@ import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getPlatforms } from '../accounts/platforms';
-import { getDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -119,6 +116,9 @@ const languageOptions = mapToOptions({
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
+// This state is outside the settings page because the settings loses its
+let languageChanged = false;
+
 function SettingsPage({
   settings,
   isPhonePortrait,
@@ -127,14 +127,7 @@ function SettingsPage({
   currentAccount,
   dispatch,
 }: Props) {
-  useEffect(() => {
-    dispatch(getDefinitions());
-    dispatch(getPlatforms());
-  }, [dispatch]);
-
   useLoadStores(currentAccount, storesLoaded);
-
-  const [languageChanged, setLanguageChanged] = useState(false);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
@@ -149,12 +142,12 @@ function SettingsPage({
   };
 
   const changeLanguage = (e) => {
+    languageChanged = true;
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
       dispatch(setSetting('language', language));
     });
-    setLanguageChanged(true);
   };
 
   const resetItemSize = (e) => {
@@ -237,14 +230,12 @@ function SettingsPage({
     { id: 'spreadsheets', title: t('Settings.Data') },
   ]);
 
-  if (!storesLoaded) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
-
-  const uniqChars = _.uniqBy(
-    stores.filter((s) => !s.isVault),
-    (s) => s.classType
-  );
+  const uniqChars =
+    stores &&
+    _.uniqBy(
+      stores.filter((s) => !s.isVault),
+      (s) => s.classType
+    );
 
   return (
     <PageWithMenu>

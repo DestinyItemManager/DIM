@@ -18,6 +18,8 @@ const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const marked = require('marked');
+const renderer = new marked.Renderer();
 const _ = require('lodash');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -261,7 +263,17 @@ module.exports = (env) => {
         },
         {
           test: /CHANGELOG\.md$/,
-          loader: 'raw-loader',
+          use: [
+            {
+              loader: 'html-loader',
+            },
+            {
+              loader: 'markdown-loader',
+              options: {
+                renderer,
+              },
+            },
+          ],
         },
       ],
 
@@ -375,10 +387,8 @@ module.exports = (env) => {
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
-        // Enable vendorengrams.xyz integration
-        '$featureFlags.vendorEngrams': JSON.stringify(false),
         // Show a banner for supporting a charitable cause
-        '$featureFlags.issueBanner': JSON.stringify(true),
+        '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect

@@ -17,7 +17,7 @@ export default class ItemMoveAmount extends React.Component<Props> {
     const { maximum, amount, maxStackSize } = this.props;
 
     return (
-      <div>
+      <div className="move-amount-container">
         <div className="move-amount" onTouchStart={this.stopTouchPropagation}>
           <input
             name="amount"

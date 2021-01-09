@@ -129,6 +129,7 @@ function processStore(
 
   return processItems(store, rawItems, defs, buckets).then((items) => {
     store.items = items;
+    store.hadErrors = rawItems.length !== items.length;
     return store;
   });
 }

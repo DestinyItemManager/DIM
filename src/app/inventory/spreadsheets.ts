@@ -322,7 +322,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
     }
     if (item.destinyVersion === 2) {
-      row['Armor2.0'] = Boolean(item.energy);
+      row['Armor2.0'] = Boolean(item.energy) && item.bucket.inArmor;
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;

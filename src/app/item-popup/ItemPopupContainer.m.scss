@@ -129,6 +129,8 @@
 .mobileItemActions {
   padding: 5px 0;
   display: flex;
+  position: sticky;
+  top: 0;
   justify-content: space-between;
   z-index: 1;
   background: #111;
@@ -137,4 +139,10 @@
   &:empty {
     display: none;
   }
+}
+
+.mobileMoveLocations {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }

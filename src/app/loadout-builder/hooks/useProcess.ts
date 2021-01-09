@@ -27,6 +27,7 @@ import { someModHasEnergyRequirement } from '../utils';
 
 interface ProcessState {
   processing: boolean;
+  resultStoreId?: string;
   result: {
     sets: ArmorSet[];
     combos: number;
@@ -40,6 +41,7 @@ interface ProcessState {
  * Hook to process all the stat groups for LO in a web worker.
  */
 export function useProcess(
+  selectedStoreId: string | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedArmor2ModMap: LockedArmor2ModMap,
@@ -48,8 +50,9 @@ export function useProcess(
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
   minimumPower: number
 ) {
-  const [{ result, processing, currentCleanup }, setState] = useState({
+  const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState({
     processing: false,
+    resultStoreId: selectedStoreId,
     result: null,
     currentCleanup: null,
   } as ProcessState);
@@ -71,7 +74,12 @@ export function useProcess(
   useEffect(() => {
     const processStart = performance.now();
 
-    setState({ processing: true, result, currentCleanup: cleanup });
+    setState({
+      processing: true,
+      resultStoreId: selectedStoreId,
+      result: selectedStoreId === resultStoreId ? result : null,
+      currentCleanup: cleanup,
+    });
 
     const processItems: ProcessItemsByBucket = {};
     const itemsById: { [id: string]: DimItem[] } = {};
@@ -112,7 +120,8 @@ export function useProcess(
         );
         const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
 
-        setState({
+        setState((oldState) => ({
+          ...oldState,
           processing: false,
           result: {
             sets: hydratedSets,
@@ -121,7 +130,7 @@ export function useProcess(
             statRanges,
           },
           currentCleanup: null,
-        });
+        }));
 
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
       });

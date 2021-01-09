@@ -8,16 +8,16 @@ import {
   CompareActionButton,
   ConsolidateActionButton,
   DistributeActionButton,
+  InfuseActionButton,
   LoadoutActionButton,
   LockActionButton,
   TagActionButton,
 } from 'app/item-actions/ActionButtons';
+import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
-import ItemActions from 'app/item-popup/ItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
 import { useSubscription } from 'app/utils/hooks';
-import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
@@ -99,8 +99,11 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         });
         // Log the item so it's easy to inspect item structure by clicking on an item
         if ($DIM_FLAVOR !== 'release') {
-          infoLog('clicked item', item);
-          infoLog('clicked item', getSpecialtySocketMetadatas(item));
+          infoLog(
+            'clicked item',
+            `https://data.destinysets.com/i/InventoryItem%3A${item.hash}`,
+            item
+          );
         }
       }
     })
@@ -150,19 +153,20 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         styles.movePopupDialog
       )}
       footer={
-        <>
-          <div className={styles.mobileItemActions}>
-            <TagActionButton item={item} label={true} hideKeys={true} />
-            <LockActionButton item={item} />
-            <CompareActionButton item={item} />
-            <ConsolidateActionButton item={item} />
-            <DistributeActionButton item={item} />
-            <LoadoutActionButton item={item} />
-          </div>
-          <ItemActions key={item.index} item={item} />
-        </>
+        <div className={styles.mobileMoveLocations}>
+          <ItemMoveLocations key={item.index} item={item} />
+        </div>
       }
     >
+      <div className={styles.mobileItemActions}>
+        <TagActionButton item={item} label={true} hideKeys={true} />
+        <LockActionButton item={item} />
+        <CompareActionButton item={item} />
+        <ConsolidateActionButton item={item} />
+        <DistributeActionButton item={item} />
+        <LoadoutActionButton item={item} />
+        <InfuseActionButton item={item} />
+      </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (

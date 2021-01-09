@@ -114,6 +114,9 @@ function updateItemModel(
   };
 }
 
+/**
+ * Finds an item similar to "item" which can be equipped on the item's owner in order to move "item".
+ */
 export function getSimilarItem(
   stores: DimStore[],
   item: DimItem,
@@ -121,6 +124,8 @@ export function getSimilarItem(
   excludeExotic = false
 ): DimItem | null {
   const target = getStore(stores, item.owner)!;
+
+  // Try each store, preferring getting something from the same character, then vault, then any other character
   const sortedStores = _.sortBy(stores, (store) => {
     if (target.id === store.id) {
       return 0;
@@ -235,7 +240,7 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
               return Promise.resolve(similarItem);
             } else {
               // If we need to get the similar item from elsewhere, do that first
-              return dispatch(moveItemTo(similarItem, store, true)).then(() => similarItem);
+              return dispatch(executeMoveItem(similarItem, store, true)).then(() => similarItem);
             }
           }
         }
@@ -283,7 +288,7 @@ function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> 
     }
 
     const ownerStore = getStore(stores, item.owner)!;
-    await dispatch(moveItemTo(similarItem, ownerStore, true));
+    await dispatch(executeMoveItem(similarItem, ownerStore, true));
     return item;
   };
 }
@@ -751,7 +756,7 @@ function canMoveToStore(
         // Make one move and start over!
         try {
           await dispatch(
-            moveItemTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+            executeMoveItem(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
           );
           return dispatch(canMoveToStore(item, store, amount, options));
         } catch (e) {
@@ -824,7 +829,11 @@ function isValidTransfer(
 let lastTimeCurrentStoreWasReallyFull = 0;
 
 /**
- * Move item to target store, optionally equipping it.
+ * Move item to target store, optionally equipping it. This is the "low level" smart move, which will move items out of
+ * the way if necessary, but it doesn't have error/progress notification or any of that. Use the functions in `move-item.ts` for
+ * user-initiated moves, while this function is meant for implementing things that move items such as those user-initiated functions,
+ * loadout apply, etc.
+ *
  * @param item the item to move.
  * @param target the store to move it to.
  * @param equip true to equip the item, false to leave it unequipped.
@@ -833,7 +842,7 @@ let lastTimeCurrentStoreWasReallyFull = 0;
  * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
  * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
  */
-export function moveItemTo(
+export function executeMoveItem(
   item: DimItem,
   target: DimStore,
   equip = false,
@@ -888,7 +897,7 @@ export function moveItemTo(
       if (source.id === target.id || item.bucket.accountWide) {
         item = await dispatch(moveToStore(item, target, equip, amount));
       } else {
-        item = await dispatch(moveItemTo(item, source, equip, amount, excludes, reservations));
+        item = await dispatch(executeMoveItem(item, source, equip, amount, excludes, reservations));
         target = getStore(getStores(), target.id)!;
         source = getStore(getStores(), item.owner)!;
       }

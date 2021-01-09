@@ -723,9 +723,12 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
 
 function updateLoadout(state: DimApiState, loadout: DimLoadout, account: DestinyAccount) {
   return produce(state, (draft) => {
-    loadout.membershipId = account.membershipId;
-    loadout.destinyVersion = account.destinyVersion;
-    const profileKey = makeProfileKey(loadout.membershipId, loadout.destinyVersion);
+    loadout = {
+      ...loadout,
+      membershipId: account.membershipId,
+      destinyVersion: account.destinyVersion,
+    };
+    const profileKey = makeProfileKey(loadout.membershipId!, loadout.destinyVersion);
     const profile = ensureProfile(draft, profileKey);
     const loadouts = profile.loadouts;
     const newLoadout = convertDimLoadoutToApiLoadout(loadout);

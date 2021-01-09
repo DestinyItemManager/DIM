@@ -11,7 +11,6 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -107,9 +106,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useEffect(() => {
     if ($featureFlags.wishLists && isD2) {
       dispatch(fetchWishList());
-    }
-    if ($featureFlags.vendorEngrams && isD2) {
-      dispatch(loadVendorDropsFromIndexedDB());
     }
   }, [dispatch, isD2]);
 

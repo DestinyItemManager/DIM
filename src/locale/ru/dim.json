@@ -304,7 +304,6 @@
     "Filter": "Поиск/Фильтр",
     "InfuseSource": "Выберите что улучшить за счёт {{name}}",
     "InfuseTarget": "Выберите чем пожертвовать для улучшения {{name}}",
-    "Infusion": "Доступные варианты Синтеза",
     "InfusionMaterials": "Материалы для Синтеза",
     "NoItems": "Нет предметов для синтеза.",
     "NoTransfer": "Перемещение расходников синтеза\n {{target}} не удается переместить.",
@@ -462,7 +461,7 @@
     "SelectPerks": "Добавить к Обязательным",
     "SelectPower": "Минимум Силы",
     "SelectPowerDescription": "Уровень Силы предлагаемых Наборов (не отдельных предметов) будет больше указанного значения.",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",
@@ -578,12 +577,10 @@
     "All": "Все",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
-    "Details": "Подсказка",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "EquipWithName": "Надеть на {{character}}",
     "Infuse": "Синтез",
-    "ItemDetailSheet": "Открыть описание",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
       "Locked": "Заблокировано",
@@ -595,21 +592,18 @@
     "OverviewTab": "Обзор",
     "Owned": "Предмет есть в инвентаре.",
     "OwnedMod": "Этот мод находится в вашем инвентаре модификаций.",
-    "PowerCap": "",
     "PullItem": "Перемещаем из {{bucket}} в {{store}}:",
     "PullPostmaster": "Забираем у Почтмейстера",
     "ReadLore": "Читать лор на портале Ishtar Collective",
     "ReadLoreLink": "История",
     "Rewards": "Награды:",
     "SendToVault": "В Хранилище",
-    "Split": "Делить",
     "Store": "Передать",
     "StoreWithName": "Передать {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Взять",
     "ToggleSidecar": "Скрыть/Показать действия",
     "TrackUntrack": {
       "Track": "Отслеживать {{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "Дисциплина",
     "DodgeCooldown": "Время восстановления Уклонения",
     "Effect": "Эффект",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Время восстановления Гранаты",
     "Intellect": "Интеллект",
     "MaxGearPower": "Предметы наибольшей Силы, доступные персонажу",
@@ -801,7 +796,7 @@
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Сумма",
-    "TotalIncorrectWarning": "Модификаторы с отрицательными значениями характеристик или условиями их изменения не дают определить базовые значения {{stats}}. Ограничение кроется в данных отправляемых сервисами Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "JSON не распознан. Скорее всего это не Резервная копия DIM.",
     "IndexedDBStorage": "Локальное Хранилище Браузера",
     "MenuTitle": "Резервные копии и DIM Sync",
-    "ProfileErrorBody": "Не удалось загрузить данные из DIM Sync",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "ProfileErrorTitle": "Ошибка DIM Sync",
-    "UpdateErrorBody": "Не удалось сохранить данные в DIM Sync",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "Ошибка DIM Sync",
     "Usage": "Лоакльные Данные: занято {{usage, humanBytes}} из {{quota, humanBytes}} доступного места. В сохраненные данные входят Базы предметов Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Скрыть выполненные триумфы",
     "RevealRedacted": "Измененные Триумфы"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz сообщает, что этот вендор даёт предметы мощных энграмм.",
-    "ServiceCallFailed": "Не удалось возобновить работу сервиса VendorEngrams.xyz.",
-    "Vote": "Видите вендора, продающего предметы, близкие к вашему уровню силы? Перейдите на VendorEngrams.xyz, чтобы проголосовать и сообщить об этом сообществу игроков!"
   },
   "Vendors": {
     "Collections": "Коллекция",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron автоматически обновляемый Wish List с коллекцией ПвЕ и ПвП роллов от Mercules904 and pandapaxxy, а также некоторых Мусорных роллов.",
     "Clear": "Очистить Wish List",
-    "ExternalSource": "Или, укажите ссылку на источник данных Wish List",
+    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "Wish List",
     "Import": "Добавить роллов Wish List",
     "ImportError": "Ошибка загрузки Wish List: {{error}}",

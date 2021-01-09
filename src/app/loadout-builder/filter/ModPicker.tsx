@@ -50,6 +50,14 @@ const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => l.modDef.displayProperties.name)
 );
 
+function isGeneralOrOtherOrRaid(category: ModPickerCategory) {
+  return (
+    category === ModPickerCategories.general ||
+    category === ModPickerCategories.other ||
+    category === ModPickerCategories.raid
+  );
+}
+
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
@@ -280,9 +288,6 @@ function ModPicker({
     return rtn;
   }, [queryFilteredMods]);
 
-  const isGeneralOrSeasonal = (category: ModPickerCategory) =>
-    category === ModPickerCategories.general || category === ModPickerCategories.other;
-
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
@@ -323,8 +328,8 @@ function ModPicker({
           splitByItemTypeDisplayName={
             category === ModPickerCategories.other || category === ModPickerCategories.raid
           }
-          maximumSelectable={isGeneralOrSeasonal(category) ? 5 : 2}
-          energyMustMatch={!isGeneralOrSeasonal(category)}
+          maximumSelectable={isGeneralOrOtherOrRaid(category) ? 5 : 2}
+          energyMustMatch={!isGeneralOrOtherOrRaid(category)}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

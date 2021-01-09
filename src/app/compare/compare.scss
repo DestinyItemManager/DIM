@@ -51,6 +51,7 @@
   flex: 1;
   white-space: nowrap;
   overflow-x: scroll;
+  touch-action: pan-x;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

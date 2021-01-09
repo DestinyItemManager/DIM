@@ -304,7 +304,6 @@
     "Filter": "Filtrar objetos",
     "InfuseSource": "Selecciona objeto para infundir {{name}} en",
     "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
-    "Infusion": "Buscador de Combustible de Infusión",
     "InfusionMaterials": "Materiales para infundir",
     "NoItems": "No hay objetos disponibles para infundir.",
     "NoTransfer": "El material para infundir\n{{target}} no puede ser movido.",
@@ -462,7 +461,7 @@
     "SelectPerks": "Seleccionar Ventajas",
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
-    "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimine cualquier modificador con efectos de estadísticas negativas o condicionales.\n\nDebido a modificadores con modificadores de estadísticas o efectos de estado condicionales, DIM no puede determinar el valor base de {{stats}} en algunos objetos incluídos. Esto es una limitación de la información enviada por Bungie.net.",
+    "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimine cualquier modificador con efectos de estado negativos.\n\nDebido a modificadores con modificadores de estadísticas negativos, DIM no puede determinar el valor base o el valor de las {{stats}} en algunos objetos incluidos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
@@ -578,12 +577,10 @@
     "All": "Todo",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
-    "Details": "Emergente",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
     "EquipWithName": "Equipar en {{character}}",
     "Infuse": "Infundir",
-    "ItemDetailSheet": "Abrir detalles del objeto",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
       "Locked": "Bloqueado",
@@ -595,21 +592,18 @@
     "OverviewTab": "Resumen",
     "Owned": "Este objeto está en tu inventario.",
     "OwnedMod": "Este modificador está en el inventario de modificadores.",
-    "PowerCap": "",
     "PullItem": "Traer de {{bucket}} a {{store}}",
     "PullPostmaster": "Traer desde Administración",
     "ReadLore": "Lee historia en Ishtar Collective",
     "ReadLoreLink": "Leer historia",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar al depósito",
-    "Split": "Dividir",
     "Store": "Almacenar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}"
+      "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Tomar",
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "Disciplina",
     "DodgeCooldown": "Enfriamiento de Esquivar",
     "Effect": "Efecto",
+    "FinalSeason": "(T{{finalSeason}})",
     "GrenadeCooldown": "Enfriamiento de Granada",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",
@@ -801,7 +796,7 @@
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Debido a modificadores con efectos de estado condicionales o negativos, DIM no puede determinar el valor base de {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
+    "TotalIncorrectWarning": "Debido a modificadores con efectos de estadística negativos, DIM no puede determinar el valor base o el valor de las {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "El archivo no es un archivo JSON. Podría no ser una copia de DIM.",
     "IndexedDBStorage": "Almacenamiento local del navegador",
     "MenuTitle": "Sincronización y Copias de Seguridad",
-    "ProfileErrorBody": "Tuvimos un problema cargando tu información de Sincronización DIM",
+    "ProfileErrorBody": "Tuvimos un problema cargando tus datos desde Sincronización DIM. Seguiremos intentando cargarlos automáticamente.",
     "ProfileErrorTitle": "Error de Sincronización DIM",
-    "UpdateErrorBody": "Tuvimos un problema guardando tu información a Sincronización DIM",
+    "UpdateErrorBody": "Tuvimos un problema guardando tus datos a Sincronización DIM. Seguiremos intentándolo automáticamente más tarde.",
     "UpdateErrorTitle": "Error de Sincronización DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Ocultar triunfos completados",
     "RevealRedacted": "Revelar triunfos clasificados"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz informa que este vendedor está soltando objetos de alto nivel.",
-    "ServiceCallFailed": "La llamada al servicio de VendorEngrams.xyz falló.",
-    "Vote": "¿Viendo un vendedor vender objetos cerca de tu nivel de luz? ¡Ve a VendorEngrams.xyz para votar y hacer saber a la comunidad!"
   },
   "Vendors": {
     "Collections": "Colecciones",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
     "Clear": "Limpiar Lista de Deseos",
-    "ExternalSource": "Opcionalmente, proporcione la URL para una lista de deseos",
+    "ExternalSource": "Opcionalmente, proporcione la(s) URL(s) para una lista de deseos (tubería | separado)",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
     "ImportError": "Error cargando la lista de deseos: {{error}}",

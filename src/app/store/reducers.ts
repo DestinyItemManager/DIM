@@ -1,5 +1,4 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { vendorDrops } from 'app/vendorEngramsXyzApi/reducer';
 import { vendors } from 'app/vendors/reducer';
 import { combineReducers, Reducer } from 'redux';
 import { accounts } from '../accounts/reducer';
@@ -21,7 +20,6 @@ const reducer: Reducer<RootState> = (state, action) => {
     wishLists,
     farming,
     manifest,
-    vendorDrops,
     vendors,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,

@@ -1,13 +1,11 @@
-import { StoreIcon } from 'app/character-tile/StoreIcon';
+import { CompareService } from 'app/compare/compare.service';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { moveItemTo } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
+import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
-import ActionButton from 'app/item-actions/ActionButton';
 import {
   CompareActionButton,
   ConsolidateActionButton,
@@ -17,22 +15,16 @@ import {
   LockActionButton,
   TagActionButton,
 } from 'app/item-actions/ActionButtons';
+import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
-import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { setSetting } from 'app/settings/actions';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useLayoutEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
-
-type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
 
 const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
 
@@ -40,26 +32,9 @@ const sharedButtonProps = { role: 'button', tabIndex: -1 };
 
 export default function DesktopItemActions({ item }: { item: DimItem }) {
   const stores = useSelector(sortedStoresSelector);
-  const vault = getVault(stores);
+  const dispatch = useDispatch();
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
-  // barring a user selection, default to moving the whole stack of this item
-  const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
-  const dispatch = useThunkDispatch();
-
-  // If the item can't be transferred (or is unique) don't show the move amount slider
-  const maximum = useMemo(
-    () =>
-      !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-        ? 1
-        : amountOfItem(itemOwner, item),
-    [itemOwner, item]
-  );
-
-  const submitMoveTo = (store: DimStore, equip = false, moveAmount = amount) => {
-    dispatch(moveItemTo(item, store, equip, moveAmount));
-    hideItemPopup();
-  };
 
   const toggleSidecar = () => {
     dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
@@ -68,11 +43,17 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
     const currentChar = getCurrentStore(stores)!;
-    submitMoveTo(currentChar);
+    dispatch(moveItemTo(item, currentChar, false, item.maxStackSize));
+    hideItemPopup();
   });
   useHotkey('v', t('Hotkey.Vault'), () => {
     const vault = getVault(stores)!;
-    submitMoveTo(vault);
+    dispatch(moveItemTo(item, vault, false, item.maxStackSize));
+    hideItemPopup();
+  });
+  useHotkey('c', t('Compare.ButtonHelp'), () => {
+    hideItemPopup();
+    CompareService.addItemsToCompare([item], true);
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,7 +72,10 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
         const top = _.clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
 
-        containerRef.current.style.transform = `translateY(${Math.round(top)}px)`;
+        // Originally this used translateY, but that caused menus to not work on Safari.
+        containerRef.current.style.marginTop = `${Math.round(top)}px`;
+
+        // TODO: also don't push it off screen
       }
     };
 
@@ -121,9 +105,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     item.equipment ||
     item.infusionFuel;
 
-  const canEquip = stores.filter((store) => itemCanBeEquippedBy(item, store));
-  const canStore = stores.filter((store) => canShowStore(store, itemOwner, item));
-
   return (
     <div
       className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
@@ -140,15 +121,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         </div>
       )}
 
-      {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
-        <ItemMoveAmount
-          amount={amount}
-          maximum={maximum}
-          maxStackSize={item.maxStackSize}
-          onAmountChanged={setAmount}
-        />
-      )}
-
       <TagActionButton item={item} label={!sidecarCollapsed} />
       <LockActionButton item={item} label={!sidecarCollapsed} />
       <CompareActionButton item={item} label={!sidecarCollapsed} />
@@ -157,232 +129,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
       <LoadoutActionButton item={item} label={!sidecarCollapsed} />
       <InfuseActionButton item={item} label={!sidecarCollapsed} />
 
-      {!sidecarCollapsed && (
-        <>
-          {vault && // there must be a vault
-            !item.location.inPostmaster && // PM items have an alternate vault button
-            canTransferToVault(itemOwner, item) && (
-              <ActionButton
-                onClick={() => submitMoveTo(vault)}
-                title={t('MovePopup.Vault') + ' [V]'}
-              >
-                <StoreIcon store={vault} />{' '}
-                <span className={styles.vaultLabel}>{t('MovePopup.Vault')}</span>
-              </ActionButton>
-            )}
-          {item.location.type === 'LostItems' ? (
-            canBePulledFromPostmaster(item, itemOwner, stores) && (
-              <PullButtons
-                item={item}
-                itemOwner={itemOwner}
-                submitMoveTo={submitMoveTo}
-                vault={vault}
-              />
-            )
-          ) : (
-            <>
-              <MoveLocations
-                label={t('MovePopup.Equip')}
-                stores={stores}
-                applicableStores={canEquip}
-                equip={true}
-                isDisplayedCheck={(store) => itemCanBeEquippedBy(item, store)}
-                isDisabledCheck={(store) => item.owner === store.id && item.equipped}
-                submitMoveTo={submitMoveTo}
-              />
-              <MoveLocations
-                label={t('MovePopup.Store')}
-                shortcutKey=" [P]"
-                stores={stores}
-                applicableStores={canStore}
-                isDisplayedCheck={(store) => canShowStore(store, itemOwner, item)}
-                isDisabledCheck={(store) => !storeButtonEnabled(store, itemOwner, item)}
-                submitMoveTo={submitMoveTo}
-              />
-            </>
-          )}
-        </>
-      )}
+      {!sidecarCollapsed && <ItemMoveLocations item={item} splitVault={true} />}
     </div>
   );
-}
-
-function MoveLocations({
-  label,
-  shortcutKey,
-  stores,
-  applicableStores,
-  equip,
-  isDisabledCheck,
-  isDisplayedCheck,
-  submitMoveTo,
-}: {
-  label: string;
-  shortcutKey?: string;
-  stores: DimStore[];
-  applicableStores: DimStore[];
-  equip?: boolean;
-  /** is run on each store to decide whether its button is clickable */
-  isDisabledCheck: (store: DimStore) => boolean;
-  /** is run on each store to decide whether its button appears */
-  isDisplayedCheck: (store: DimStore) => boolean;
-  submitMoveTo: MoveSubmit;
-}) {
-  if (!applicableStores.length) {
-    return null;
-  }
-
-  return (
-    <div className={styles.moveLocations}>
-      {label}
-      <div className={styles.moveLocationIcons}>
-        {stores.map((store) => (
-          <React.Fragment key={store.id}>
-            {isDisplayedCheck(store) && (
-              <div
-                className={clsx({
-                  [styles.equip]: equip,
-                  [styles.move]: !equip,
-                  [styles.disabled]: isDisabledCheck(store),
-                })}
-                title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
-                onClick={() => submitMoveTo(store, equip)}
-                {...sharedButtonProps}
-              >
-                <StoreIcon store={store} useBackground={true} />
-              </div>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PullButtons({
-  item,
-  itemOwner,
-  submitMoveTo,
-  vault,
-}: {
-  item: DimItem;
-  itemOwner: DimStore<DimItem>;
-  submitMoveTo: MoveSubmit;
-  vault?: DimStore<DimItem>;
-}) {
-  const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
-  const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
-
-  return (
-    <div className={styles.moveLocations}>
-      {t('MovePopup.PullPostmaster')}
-      <div className={styles.moveLocationIcons}>
-        {showAmounts && (
-          <div
-            className={styles.move}
-            onClick={() => submitMoveTo(itemOwner, false, 1)}
-            {...sharedButtonProps}
-          >
-            <StoreIcon store={itemOwner} useBackground={true} label="1" />
-          </div>
-        )}
-        <div
-          className={styles.move}
-          onClick={() => submitMoveTo(itemOwner, false, item.amount)}
-          {...sharedButtonProps}
-        >
-          <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
-        </div>
-
-        {canTransferToVault(itemOwner, item) && (
-          <div
-            className={styles.move}
-            onClick={() => submitMoveTo(vault!, false, item.amount)}
-            {...sharedButtonProps}
-          >
-            <StoreIcon store={vault!} label={moveAllLabel} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function canTransferToVault(itemOwnerStore: DimStore, item: DimItem): boolean {
-  if (
-    // item isn't in a store????
-    !itemOwnerStore ||
-    // Can't vault a vaulted item.
-    itemOwnerStore.isVault ||
-    // Can't move this item away from the current itemStore
-    item.notransfer ||
-    // moot point because it can't be claimed from the postmaster
-    (item.location.inPostmaster && !item.canPullFromPostmaster)
-  ) {
-    return false;
-  }
-  return true;
-}
-
-function storeButtonEnabled(
-  buttonStore: DimStore,
-  itemOwnerStore: DimStore,
-  item: DimItem
-): boolean {
-  const store = itemOwnerStore;
-
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-    return item.canPullFromPostmaster;
-  } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
-    if (item.equipped && store.id === buttonStore.id) {
-      return true;
-    }
-  } else if (store.id !== buttonStore.id || item.equipped) {
-    // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean {
-  const store = itemOwnerStore;
-
-  // Can't store into a vault
-  if (buttonStore.isVault || !store) {
-    return false;
-  }
-
-  // Don't show "Store" for finishers, seasonal artifacts, or clan banners
-  if (
-    item.location.capacity === 1 ||
-    item.location.hash === BucketHashes.SeasonalArtifact ||
-    item.location.hash === BucketHashes.Finishers
-  ) {
-    return false;
-  }
-
-  // Can pull items from the postmaster.
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-    return item.canPullFromPostmaster;
-  } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
-    if (item.equipped && store.id === buttonStore.id) {
-      return true;
-    }
-  } else {
-    // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  return false;
 }

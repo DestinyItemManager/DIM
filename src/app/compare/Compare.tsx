@@ -154,7 +154,8 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { compareBaseStats, setSetting } = this.props;
+    const { compareBaseStats: compareBaseStatsSetting, setSetting } = this.props;
+
     const {
       show,
       comparisonItems: unsortedComparisonItems,
@@ -164,6 +165,9 @@ class Compare extends React.Component<Props, State> {
       adjustedPlugs,
       adjustedStats,
     } = this.state;
+
+    const comparingArmor = unsortedComparisonItems[0]?.bucket.inArmor;
+    const doCompareBaseStats = Boolean(compareBaseStatsSetting && comparingArmor);
 
     if (!show || unsortedComparisonItems.length === 0) {
       CompareService.dialogOpen = false;
@@ -204,7 +208,7 @@ class Compare extends React.Component<Props, State> {
                     ? this.state.sortBetterFirst
                     : !this.state.sortBetterFirst;
 
-                const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+                const statValue = (doCompareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
                 return shouldReverse ? -statValue : statValue;
               }),
               compareBy((i) => i.index),
@@ -214,6 +218,7 @@ class Compare extends React.Component<Props, State> {
         );
 
     const stats = this.getAllStatsSelector(this.state, this.props);
+    // <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
     const thisSheetFilteredItems = this.thisSheetFilteredItemsSelector(
       this.state,
       this.props,
@@ -341,7 +346,25 @@ class Compare extends React.Component<Props, State> {
         onClose={this.cancel}
         header={
           <div className="compare-options">
+            {/* {comparingArmor && (
+              <Checkbox
+                label={t('Compare.CompareBaseStats')}
+                name="compareBaseStats"
+                value={compareBaseStatsSetting}
+                onChange={onChange}
+              />
+            )} */}
             <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
+            {/* {comparisonSets.map(({ buttonLabel, items }, index) => (
+              <button
+                type="button"
+                key={index}
+                className="dim-button"
+                onClick={(e) => this.compareSimilar(e, items)}
+              >
+                {buttonLabel} {`(${items.length})`}
+              </button>
+            ))} */}
           </div>
         }
       >
@@ -362,17 +385,17 @@ class Compare extends React.Component<Props, State> {
                   {stat.displayProperties.name}
                 </div>
               ))}
-              {comparisonItems[0].bucket.inArmor && (
+              {comparingArmor && (
                 <CheckButton
                   className={'baseStatToggle'}
-                  checked={compareBaseStats}
+                  checked={doCompareBaseStats}
                   onChange={setCompareBaseStats}
                 >
                   {t('Compare.CompareBaseStats')}
                 </CheckButton>
               )}
             </div>
-            <div className="compare-items" onTouchStart={this.stopTouches}>
+            <div className="compare-items">
               {thisSheetFilteredItems.map((item) => (
                 <CompareItem
                   item={item}
@@ -385,7 +408,7 @@ class Compare extends React.Component<Props, State> {
                   updateSocketComparePlug={updateSocketComparePlug}
                   adjustedItemPlugs={adjustedPlugs?.[item.id]}
                   adjustedItemStats={adjustedStats?.[item.id]}
-                  compareBaseStats={compareBaseStats}
+                  compareBaseStats={doCompareBaseStats}
                 />
               ))}
             </div>
@@ -423,13 +446,6 @@ class Compare extends React.Component<Props, State> {
     });
 
     return updatedStats;
-  };
-
-  // prevent touches from bubbling which blocks scrolling
-  private stopTouches = (e: React.TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   };
 
   private setHighlight = (highlight?: string | number) => {

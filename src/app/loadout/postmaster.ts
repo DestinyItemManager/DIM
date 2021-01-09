@@ -12,7 +12,7 @@ import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { moveItemTo, MoveReservations } from '../inventory/item-move-service';
+import { executeMoveItem, MoveReservations } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -157,7 +157,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         }
 
         try {
-          await dispatch(moveItemTo(item, store, false, amount));
+          await dispatch(executeMoveItem(item, store, false, amount));
           succeeded++;
         } catch (e) {
           // TODO: collect errors
@@ -199,12 +199,12 @@ function moveItemsToVault(store: DimStore, items: DimItem[]): ThunkResult {
 
         if (otherStoresWithSpace.length) {
           await dispatch(
-            moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+            executeMoveItem(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
           );
           continue;
         }
       }
-      await dispatch(moveItemTo(item, vault, false, item.amount, items, reservations));
+      await dispatch(executeMoveItem(item, vault, false, item.amount, items, reservations));
     }
   };
 }

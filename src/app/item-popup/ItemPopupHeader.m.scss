@@ -1,12 +1,12 @@
 @import '../variables.scss';
 
 .header {
-  font-family: Helvetica;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
   padding: 10px;
 
+  background-color: #555;
   color: #eee;
   a {
     color: #eee;
@@ -15,18 +15,12 @@
 
 .title {
   @include destiny-header;
-  font-size: 25px;
-  line-height: 29px;
-  letter-spacing: -0.02em;
+  font-size: 21px;
+  line-height: 24px;
 
   a {
     text-decoration: none;
   }
-}
-
-.longTitle {
-  font-size: 18px;
-  line-height: 22px;
 }
 
 .subtitle {
@@ -39,36 +33,36 @@
 .details {
   display: flex;
   align-self: flex-end;
+  align-items: center;
 }
 
 .type {
   flex: 1;
 }
 
-.breakerIcon,
-.elementIcon,
-.ammoIcon {
-  filter: drop-shadow(0px 0px 1px #222) drop-shadow(0px 0px 0px #222);
+.rare,
+.common,
+.exotic {
+  .elementIcon {
+    filter: drop-shadow(0px 0px 1px #222) drop-shadow(0px 0px 0px #222);
+  }
 }
 
 .breakerIcon {
-  margin: 0 5px;
-  width: 16px;
-  height: 16px;
+  margin: 0 4px;
+  width: 15px;
+  height: 15px;
 }
 
 .ammoIcon {
-  margin: 0 5px 2px 7px;
-  height: 15px;
-  width: 20px;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  align-self: flex-end;
+  margin: 0 2px 0 6px;
+  height: 14px;
+  width: 19px;
 }
 
 .elementIcon {
-  height: 17px;
-  width: 17px;
+  height: 16px;
+  width: 16px;
 }
 
 .itemType {
@@ -77,12 +71,14 @@
 }
 
 .power {
-  margin: 0 5px;
+  margin: 0 4px 0 2px;
 }
 
 .powerCap {
   color: #efe59d;
   font-size: 12px;
+  line-height: 16px;
+  align-self: flex-start;
 }
 
 .primary {
@@ -101,6 +97,17 @@
 
 .common {
   background-color: $common;
+}
+
+.common,
+.exotic {
+  color: #222;
+  a {
+    color: #222;
+  }
+  .powerCap {
+    color: #0009ff;
+  }
 }
 
 .pursuit {
@@ -130,16 +137,5 @@
   background-color: $exotic;
   .itemType {
     opacity: 0.9;
-  }
-}
-
-.common,
-.exotic {
-  color: #222;
-  a {
-    color: #222;
-  }
-  .powerCap {
-    color: #0009ff;
   }
 }

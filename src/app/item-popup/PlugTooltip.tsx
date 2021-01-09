@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { statAllowList } from 'app/inventory/store/stats';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { emptySpecialtySocketHashes } from 'app/utils/item-utils';
+import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
@@ -15,16 +15,15 @@ import './ItemSockets.scss';
 
 // TODO: Connect this to redux
 export default function PlugTooltip({
+  item,
   plug,
   defs,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
 }: {
   item: DimItem;
   plug: DimPlug;
   defs?: D2ManifestDefinitions;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
 }) {
   // TODO: show insertion costs
 
@@ -34,9 +33,8 @@ export default function PlugTooltip({
     defs.Collectible.get(plug.plugDef.collectibleHash).sourceString;
 
   const wishListTip =
-    wishListsEnabled &&
-    inventoryWishListRoll?.wishListPerks.has(plug.plugDef.hash) &&
-    t('WishListRoll.BestRatedTip', { count: inventoryWishListRoll.wishListPerks.size });
+    wishlistRoll?.wishListPerks.has(plug.plugDef.hash) &&
+    t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
 
   return (
     <>
@@ -65,16 +63,26 @@ export default function PlugTooltip({
       {defs && Boolean(plug?.plugDef?.investmentStats?.length) && (
         <div className="plug-stats">
           {plug.stats &&
-            _.sortBy(Object.keys(plug.stats), (h) =>
-              statAllowList.indexOf(parseInt(h, 10))
-            ).map((statHash) => (
-              <StatValue
-                key={statHash + '_'}
-                statHash={parseInt(statHash, 10)}
-                value={plug.stats![statHash]}
-                defs={defs}
-              />
-            ))}
+            _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10)))
+              .filter((statHash) =>
+                isPlugStatActive(
+                  item,
+                  plug.plugDef.hash,
+                  Number(statHash),
+                  Boolean(
+                    plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+                      ?.isConditionallyActive
+                  )
+                )
+              )
+              .map((statHash) => (
+                <StatValue
+                  key={statHash + '_'}
+                  statHash={parseInt(statHash, 10)}
+                  value={plug.stats![statHash]}
+                  defs={defs}
+                />
+              ))}
         </div>
       )}
       {defs && plug.plugObjectives.length > 0 && (

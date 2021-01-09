@@ -24,13 +24,13 @@
     "Farming": "Ostatnie przedmioty",
     "FarmingStart": "Rozpocznij farmienie",
     "FarmingStop": "Zatrzymaj farmienie",
-    "Loading": "Current Activity",
+    "Loading": "Bieżąca aktywność",
     "Loadouts": "Uzbrojenia",
     "NoQuests": "Nie śledzisz żadnych zadań",
     "NoSearches": "Utwórz zapisane wyszukiwania i filtruj je tutaj.",
     "Offline": "Offline",
     "Pursuits": "Zadania",
-    "SuggestedBounties": "Suggested Bounties"
+    "SuggestedBounties": "Sugerowane Zlecenia"
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -304,7 +304,6 @@
     "Filter": "Filtruj przedmioty",
     "InfuseSource": "Wybierz przedmiot do nasycenia używając {{name}}",
     "InfuseTarget": "Wybierz przedmiot do nasycenia {{name}}",
-    "Infusion": "Poszukiwacz Paliwa do Nasycenia",
     "InfusionMaterials": "Materiały do Nasycenia",
     "NoItems": "Brak przedmiotów do użycia w nasyceniu.",
     "NoTransfer": "Przenoszenie materiału do nasycenia\n {{target}} nie może być przeniesiony.",
@@ -341,7 +340,7 @@
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
+    "ShouldNotBeInVault": "Ten przedmiot może być zagrożony, jeśli pozostanie w Schowku. Proszę przenieś go na postać.",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -462,7 +461,7 @@
     "SelectPerks": "Wybierz Atuty",
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
-    "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi lub warunkowymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk lub efektami warunkowymi, DIM nie może określić wartości bazowej {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
+    "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk, DIM nie może określić wartości bazowej lub wartości {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
@@ -578,12 +577,10 @@
     "All": "Wszystkie",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
     "Consolidate": "Połącz",
-    "Details": "Wyskakujące okno",
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "EquipWithName": "Załóż na {{character}}",
     "Infuse": "Nasyć",
-    "ItemDetailSheet": "Pokaż szczegóły przedmiotu",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
       "Locked": "Zablokowane",
@@ -595,21 +592,18 @@
     "OverviewTab": "Przegląd",
     "Owned": "Ten przedmiot jest w twoim ekwipunku.",
     "OwnedMod": "Ten mod znajduje się w ekwipunku modyfikacji.",
-    "PowerCap": "",
     "PullItem": "Wyciągnij z {{bucket}} do {{store}}",
     "PullPostmaster": "Odbierz od Kuriera",
     "ReadLore": "Czytaj lore na Ishtar Collective",
     "ReadLoreLink": "Czytaj fabułę",
     "Rewards": "Nagrody:",
     "SendToVault": "Wyślij do schowka",
-    "Split": "Podziel",
     "Store": "Umieść",
     "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}}{{typeName}}",
-      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
+      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "Weź",
     "ToggleSidecar": "Rozwiń lub zwiń akcje przedmiotu",
     "TrackUntrack": {
       "Track": "Śledź {{itemType}}",
@@ -778,6 +772,7 @@
     "Discipline": "Dyscyplina",
     "DodgeCooldown": "Odnowienie uniku",
     "Effect": "Efekt",
+    "FinalSeason": "(S{{finalSeason}})",
     "GrenadeCooldown": "Odnowienie granatu",
     "Intellect": "Intelekt",
     "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",
@@ -801,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Łącznie",
-    "TotalIncorrectWarning": "Ze względu na modyfikacje z negatywnymi lub warunkowymi efektami statystyk, DIM nie może określić wartości bazowej {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
+    "TotalIncorrectWarning": "Ze względu na modyfikacje z negatywnymi efektami statystyk, DIM nie może określić wartości bazowej lub wartości {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -840,9 +835,9 @@
     "ImportWrongFileType": "Plik nie jest plikiem JSON. To może nie być kopia zapasowa DIM.",
     "IndexedDBStorage": "Lokalna pamięć przeglądarki",
     "MenuTitle": "Synchronizacja i kopie zapasowe",
-    "ProfileErrorBody": "Wystąpił problem podczas ładowania danych synchronizacji DIM",
+    "ProfileErrorBody": "Wystąpił problem podczas ładowania Twoich danych z DIM Sync. Będziemy starali się je ładować automatycznie.",
     "ProfileErrorTitle": "Błąd synchronizacji DIM",
-    "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do synchronizacji DIM",
+    "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Automatycznie spróbujemy ponownie później.",
     "UpdateErrorTitle": "Błąd synchronizacji DIM",
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
   },
@@ -865,11 +860,6 @@
   "Triumphs": {
     "HideCompleted": "Ukryj ukończone triumfy",
     "RevealRedacted": "Ujawnij zredagowane triumfy"
-  },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz informuje, że ten sprzedawca upuszcza przedmioty wysokiego poziomu.",
-    "ServiceCallFailed": "Połączenie usługowe VendorEngrams.xyz nie powiodło się.",
-    "Vote": "Widzisz sprzedawcę sprzedającego przedmioty bliskie twojemu poziomowi światła? Przejdź do VendorEngrams.xyz, aby zagłosować i poinformować społeczność!"
   },
   "Vendors": {
     "Collections": "Kolekcja",
@@ -937,7 +927,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy, wraz z niektórymi rollami z listy śmieci.",
     "Clear": "Wyczyść Listę Życzeń",
-    "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
+    "ExternalSource": "Opcjonalnie, podaj adresy URL dla list życzeń (oddzielone | \"pipe\")",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
     "ImportError": "Błąd ładowania listy życzeń: {{error}}",

@@ -1,14 +1,14 @@
 import { BehaviorSubject, combineLatest, empty, from, of, timer } from 'rxjs';
 import { catchError, distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { reportException } from './utils/exceptions';
-import { errorLog, infoLog } from './utils/log';
+import { errorLog, infoLog, warnLog } from './utils/log';
 
 /**
  * A function that will attempt to update the service worker in place.
  * It will return a promise for when the update is complete.
  * If service workers are not enabled or installed, this is a no-op.
  */
-let updateServiceWorker = () => Promise.resolve();
+let updateServiceWorker = () => Promise.resolve(false);
 
 /** Whether a new service worker has been installed */
 const serviceWorkerUpdated$ = new BehaviorSubject(false);
@@ -21,12 +21,10 @@ const serviceWorkerUpdated$ = new BehaviorSubject(false);
 const serverVersionChanged$ = timer(10 * 1000, 15 * 60 * 1000).pipe(
   // Fetch but swallow errors
   switchMap(() => from(getServerVersion()).pipe(catchError((_err) => empty()))),
-  map(isNewVersion),
+  map((version) => isNewVersion(version, $DIM_VERSION)),
   distinctUntilChanged(),
   // At this point the value of the observable will flip to true once and only once
-  switchMap((needsUpdate) =>
-    needsUpdate ? from(updateServiceWorker().then(() => true)) : of(false)
-  ),
+  switchMap((needsUpdate) => (needsUpdate ? from(updateServiceWorker()) : of(false))),
   shareReplay()
 );
 
@@ -113,13 +111,15 @@ export default function registerServiceWorker() {
                 errorLog('SW', 'Unable to update service worker.', err);
                 reportException('service-worker', err);
               }
+              return false;
             })
             .then(() => {
               if (registration.waiting) {
                 infoLog('SW', 'New content is available; please refresh. (from update)');
-                serviceWorkerUpdated$.next(true);
+                return true;
               } else {
                 infoLog('SW', 'Updated, but theres not a new worker waiting');
+                return false;
               }
             });
         };
@@ -141,23 +141,39 @@ async function getServerVersion() {
     if (!data.version) {
       throw new Error('No version property');
     }
+    infoLog('SW', 'Got server version', data);
     return data.version as string;
   } else {
     throw response;
   }
 }
 
-function isNewVersion(version: string) {
+export function isNewVersion(version: string, currentVersion: string) {
   const parts = version.split('.');
-  const currentVersionParts = $DIM_VERSION.split('.');
+  const currentVersionParts = currentVersion.split('.');
+
+  let newerAvailable = false;
+  let olderAvailable = false;
 
   for (let i = 0; i < parts.length && i < currentVersionParts.length; i++) {
-    if (parseInt(parts[i], 10) > parseInt(currentVersionParts[i], 10)) {
-      return true;
+    const versionSegment = parseInt(parts[i], 10);
+    const currentVersionSegment = parseInt(currentVersionParts[i], 10);
+    if (versionSegment > currentVersionSegment) {
+      newerAvailable = true;
+      break;
+    } else if (versionSegment < currentVersionSegment) {
+      olderAvailable = true;
+      break;
     }
   }
 
-  return false;
+  if (olderAvailable) {
+    warnLog('SW', 'Server version ', version, ' is older than current version ', currentVersion);
+  } else if (newerAvailable) {
+    infoLog('SW', 'Found newer version on server, attempting to update');
+  }
+
+  return newerAvailable;
 }
 
 /**

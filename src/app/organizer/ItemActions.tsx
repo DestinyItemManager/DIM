@@ -2,7 +2,14 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
-import { AppIcon, lockIcon, moveIcon, stickyNoteIcon, tagIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  lockIcon,
+  moveIcon,
+  stickyNoteIcon,
+  tagIcon,
+  unlockedIcon,
+} from 'app/shell/icons';
 import React from 'react';
 import styles from './ItemActions.m.scss';
 
@@ -60,7 +67,8 @@ function ItemActions({
         name="lock"
         onClick={() => onLock(true)}
       >
-        <AppIcon icon={lockIcon} /> {t('Organizer.Lock')}
+        <AppIcon icon={lockIcon} />
+        <span className={styles.label}>{t('Organizer.Lock')}</span>
       </button>
       <button
         type="button"
@@ -69,13 +77,16 @@ function ItemActions({
         name="unlock"
         onClick={() => onLock(false)}
       >
-        <AppIcon icon={lockIcon} /> {t('Organizer.Unlock')}
+        <AppIcon icon={unlockedIcon} />
+        <span className={styles.label}>{t('Organizer.Unlock')}</span>
       </button>
       <Dropdown disabled={!itemsAreSelected} options={tagItems} className={styles.actionButton}>
-        <AppIcon icon={tagIcon} /> {t('Organizer.BulkTag')}
+        <AppIcon icon={tagIcon} />
+        <span className={styles.label}>{t('Organizer.BulkTag')}</span>
       </Dropdown>
       <Dropdown disabled={!itemsAreSelected} options={moveItems} className={styles.actionButton}>
-        <AppIcon icon={moveIcon} /> {t('Organizer.BulkMove')}
+        <AppIcon icon={moveIcon} />
+        <span className={styles.label}>{t('Organizer.BulkMove')}</span>
       </Dropdown>
       <button
         type="button"
@@ -84,7 +95,8 @@ function ItemActions({
         name="note"
         onClick={noted}
       >
-        <AppIcon icon={stickyNoteIcon} /> {t('Organizer.Note')}
+        <AppIcon icon={stickyNoteIcon} />
+        <span className={styles.label}>{t('Organizer.Note')}</span>
       </button>
       <span className={styles.tip}> {t('Organizer.ShiftTip')}</span>
     </div>

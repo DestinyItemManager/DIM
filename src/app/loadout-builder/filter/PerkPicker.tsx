@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
-import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
+import BungieImage from 'app/dim-ui/BungieImage';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -300,9 +300,8 @@ function LockedItemIcon({
     case 'perk':
       return (
         <span onClick={onClick}>
-          <BungieImageAndAmmo
+          <BungieImage
             className={styles.selectedPerk}
-            hash={lockedItem.perk.hash}
             title={lockedItem.perk.displayProperties.name}
             src={lockedItem.perk.displayProperties.icon}
           />
