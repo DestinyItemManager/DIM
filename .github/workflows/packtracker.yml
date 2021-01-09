@@ -41,5 +41,5 @@ jobs:
       - name: report webpack stats
         uses: packtracker/report@2.3.0
         env:
-          PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+          PT_PROJECT_TOKEN: b3b16a32-bc8b-489e-a6fd-2d1b98c25704
           WEBPACK_CONFIG_PATH: ./config/webpack.js
