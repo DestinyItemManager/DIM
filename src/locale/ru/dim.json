@@ -461,7 +461,7 @@
     "SelectPerks": "Добавить к Обязательным",
     "SelectPower": "Минимум Силы",
     "SelectPowerDescription": "Уровень Силы предлагаемых Наборов (не отдельных предметов) будет больше указанного значения.",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",
@@ -796,7 +796,7 @@
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Сумма",
-    "TotalIncorrectWarning": "Модификаторы с отрицательными значениями характеристик или условиями их изменения не дают определить базовые значения {{stats}}. Ограничение кроется в данных отправляемых сервисами Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

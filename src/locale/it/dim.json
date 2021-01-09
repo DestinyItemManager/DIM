@@ -461,7 +461,7 @@
     "SelectPerks": "Seleziona Perks",
     "SelectPower": "Potere Minimo",
     "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
-    "StatIncorrectWarning": "Per ottenere risultati accurati, rimuovi qualsiasi Modifica con valori di statistiche negativi o condizionali.\n\nA causa delle Modifiche con valori negativi oppure condizionali, DIM non può determinare il valore base di {{stats}} su alcuni degli oggetti selezionati. Questo è un limite delle informazioni inviate da Bungie.net.",
+    "StatIncorrectWarning": "Per ottenere risultati accurati, rimuovi qualsiasi Modifica con effetti negativi sulle statistiche.\n\nA causa delle Modifiche con valori negativi, DIM non può determinare il valore di base o il valore di {{stats}} su alcuni oggetti inclusi. È un limite delle informazioni inviate da Bungie.net.",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Totale",
-    "TotalIncorrectWarning": "A causa delle Modifiche con valori negativi oppure condizionali, DIM non può determinare il valore base di {{stats}}. Questo è un limite delle informazioni inviate da Bungie.net."
+    "TotalIncorrectWarning": "A causa delle Modifiche con effetti negativi sulle statistiche, DIM non può determinare il valore base o il valore di {{stats}}. Questo è un limite delle informazioni inviate da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

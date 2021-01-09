@@ -461,7 +461,7 @@
     "SelectPerks": "Seleccionar Perks",
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
-    "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimina cualquier modificador con efectos de estadísticas negativas o condicionales.\n\nDebido a modificadores con modificadores de estadísticas o efectos de estado condicionales, DIM no puede determinar el valor base de {{stats}} en algunos objetos incluídos. Esto es una limitación de la información enviada por Bungie.net.",
+    "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimina cualquier modificador con efectos de estado negativos.\n\nDebido a mods con modificadores de estadísticas negativas, DIM no puede determinar el valor base o el valor de las {{stats}} en algunos de los objetos incluidos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Debido a modificadores con efectos de estado condicionales o negativos, DIM no puede determinar el valor base de {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
+    "TotalIncorrectWarning": "Debido a mods con efectos de estadística negativos, DIM no puede determinar el valor base o el valor de las {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -835,9 +835,9 @@
     "ImportWrongFileType": "El archivo no es un archivo JSON. Podría no ser una copia de DIM.",
     "IndexedDBStorage": "Almacenamiento local del Navegador",
     "MenuTitle": "Sincronización y Copias de Seguridad",
-    "ProfileErrorBody": "Tuvimos un problema cargando tus datos desde Sincronización DIM. Seguiremos intentando cargarlos automáticamente.",
+    "ProfileErrorBody": "Tuvimos un problema al cargar tus datos de DIM Sync. Seguiremos intentando cargarlos automáticamente.",
     "ProfileErrorTitle": "Error de Sincronización DIM",
-    "UpdateErrorBody": "Tuvimos un problema guardando tus datos a Sincronización DIM. Seguiremos intentándolo automáticamente más tarde.",
+    "UpdateErrorBody": "Tuvimos un problema al guardar tus datos en DIM Sync. Intentaremos de nuevo automáticamente más tarde.",
     "UpdateErrorTitle": "Error de Sincronización DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },

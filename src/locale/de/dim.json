@@ -461,7 +461,7 @@
     "SelectPerks": "Wähle Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Legt ein minimales Powerlevel für die gesamte Ausrüstung fest (nicht einzelne Stücke)",
-    "StatIncorrectWarning": "Um genaue Ergebnisse zu erhalten, entferne bitte alle Mods mit negativen oder bedingten Statistik-Effekten.\n\nAufgrund von Mods mit negativen Statistik-Modifikatoren oder bedingten Statistik-Effekten, DIM kann den Basiswert von {{stats}} bei einigen enthaltenen Gegenständen nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen.",
+    "StatIncorrectWarning": "Um genaue Ergebnisse zu erhalten, entferne bitte alle Mods mit negativen Statistik-Effekten.\n\nAufgrund von Mods mit negativen Statistik-Modifikatoren, kann DIM den Grundwert von {{stats}} bei einigen enthaltenen Gegenständen nicht bestimmen. Dies ist eine Einschränkung der, durch Bungie.net, übermittelten Informationen.",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
     "TheseModsCouldNotBeAssigned": "Diese Mods konnten der bestehenden Ausrüstung nicht zugewiesen werden.",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Gesamt",
-    "TotalIncorrectWarning": "Aufgrund von Mods mit negativen oder bedingten statistischen Effekten, kann DIM den Basiswert von {{stats}} nicht bestimmen. Dies ist eine Einschränkung der von Bungie.net übermittelten Informationen."
+    "TotalIncorrectWarning": "Aufgrund von Mods mit negativen Effekten, kann DIM den Grundwert, oder den Wert von {{stats}} nicht bestimmen. Dies ist eine Einschränkung der, durch Bungie.net, übermittelten Informationen."
   },
   "Storage": {
     "ApiPermissionPrompt": {

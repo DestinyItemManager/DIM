@@ -461,7 +461,7 @@
     "SelectPerks": "특성 선택",
     "SelectPower": "최소 파워",
     "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
-    "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치 감소나 상황에 따른 능력치 변화가 있는 모든 개조 부품을 제거하십시오.\n\n능력치 감소나 상황에 따른 능력치 변화가 있는 개조 부품으로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
+    "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.\n\n개조 부품의 능력치 페널티로 인하여 DIM에서 일부 아이템의 {{stats}} 능력치의 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
@@ -584,7 +584,7 @@
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠금",
-      "Unlock": "{{itemType}} 잠금 해제하기",
+      "Unlock": "{{itemType}} 잠금 해제",
       "Unlocked": "잠금 해제됨"
     },
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
@@ -796,7 +796,7 @@
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
     "Total": "총",
-    "TotalIncorrectWarning": "능력치 감소나 상황에 따른 능력치 변화가 있는 개조 부품으로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
+    "TotalIncorrectWarning": "개조 부품의 능력치 페널티로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
   },
   "Storage": {
     "ApiPermissionPrompt": {
