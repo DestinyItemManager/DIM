@@ -4,7 +4,10 @@ import { defaultLanguage } from 'app/i18n';
 export interface Settings extends DimApiSettings {
   /** Selected columns for the Vault Organizer */
   readonly organizerColumnsGhost: string[];
+  /** whether to ignore mods/masterwork/etc for compare pane stats */
   compareBaseStats: boolean;
+  /** whether to use the filter builder for the compare pane */
+  compareUsingFilter: boolean;
   /** Item popup sidecar collapsed just shows icon and no character locations */
   sidecarCollapsed: boolean;
   activeMode: boolean;
@@ -17,7 +20,8 @@ export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
   organizerColumnsGhost: ['icon', 'name', 'locked', 'tag', 'perks', 'notes'],
-  compareBaseStats: false,
+  compareBaseStats: true,
+  compareUsingFilter: false,
   sidecarCollapsed: false,
   activeMode: false,
   singleCharacter: false,

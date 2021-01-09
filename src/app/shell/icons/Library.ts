@@ -26,6 +26,7 @@ const faCopy = 'fas fa-copy';
 const faDownload = 'fas fa-file-export';
 const faEnvelope = 'fas fa-envelope';
 const faEraser = 'fas fa-eraser';
+const faHandPointer = 'fas fa-hand-pointer';
 const faLevelUpAlt = 'fas fa-level-up-alt';
 const faLock = 'fas fa-lock';
 const faUnlock = 'fas fa-unlock';
@@ -125,6 +126,7 @@ export {
   faEllipsisV as kebabIcon,
   faEnvelope as sendIcon,
   faEraser as clearIcon,
+  faHandPointer as pickIcon,
   faLevelUpAlt as levellingIcon,
   faLock as lockIcon,
   faUnlock as unlockedIcon,

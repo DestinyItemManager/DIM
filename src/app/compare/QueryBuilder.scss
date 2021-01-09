@@ -28,11 +28,14 @@
     height: 2em;
     width: 2em;
   }
+  span.leadingIcon,
+  img.leadingIcon {
+    margin-right: 0.5em;
+  }
   img.leadingIcon {
     height: 2em;
     width: auto;
     vertical-align: bottom;
-    margin: 0 0.5em;
     // margin: 0 2px 0 0;
     // vertical-align: middle;
 
@@ -65,4 +68,8 @@
       padding-bottom: 5px;
     }
   }
+}
+
+.compareSelectionModeSwitcher {
+  margin-right: 7px;
 }

@@ -1,11 +1,13 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { itemPop } from 'app/dim-ui/scroll';
+import Select from 'app/dim-ui/Select';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { searchFiltersConfigSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
+import { AppIcon, pickIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -32,6 +34,7 @@ interface StoreProps {
   allItems: DimItem[];
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
+  compareUsingFilter: boolean;
   searchFiltersConfig: ReturnType<typeof searchFiltersConfigSelector>;
 }
 
@@ -43,10 +46,12 @@ type DispatchProps = typeof mapDispatchToProps;
 type Props = StoreProps & RouteComponentProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
+  const { compareBaseStats, compareUsingFilter } = settingsSelector(state);
   return {
     allItems: allItemsSelector(state),
     defs: state.manifest.d2Manifest,
-    compareBaseStats: settingsSelector(state).compareBaseStats,
+    compareBaseStats,
+    compareUsingFilter,
     searchFiltersConfig: searchFiltersConfigSelector(state),
   };
 }
@@ -92,6 +97,29 @@ export interface StatInfo {
 /** a DimStat with, at minimum, a statHash */
 export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
+
+const compareModes = [
+  {
+    key: 'choose',
+    value: false,
+    content: (
+      <>
+        <AppIcon icon={pickIcon} className="leadingIcon" />
+        <span>Choose Items</span>
+      </>
+    ),
+  },
+  {
+    key: 'filter',
+    value: true,
+    content: (
+      <>
+        <AppIcon icon={searchIcon} className="leadingIcon" />
+        <span>Filter Items</span>
+      </>
+    ),
+  },
+];
 
 class Compare extends React.Component<Props, State> {
   state: State = {
@@ -154,7 +182,11 @@ class Compare extends React.Component<Props, State> {
   }
 
   render() {
-    const { compareBaseStats: compareBaseStatsSetting, setSetting } = this.props;
+    const {
+      compareBaseStats: compareBaseStatsSetting,
+      compareUsingFilter,
+      setSetting,
+    } = this.props;
 
     const {
       show,
@@ -176,6 +208,9 @@ class Compare extends React.Component<Props, State> {
 
     const setCompareBaseStats = (val: boolean) => {
       setSetting('compareBaseStats', val);
+    };
+    const setCompareUsingFilter = (val: boolean) => {
+      setSetting('compareUsingFilter', val);
     };
 
     const comparisonItems = !sortedHash
@@ -354,6 +389,16 @@ class Compare extends React.Component<Props, State> {
                 onChange={onChange}
               />
             )} */}
+            <Select
+              key={'os.key'}
+              options={compareModes}
+              value={compareUsingFilter}
+              onChange={(val) => setCompareUsingFilter(val!)}
+              hideSelected
+              className="compareSelectionModeSwitcher"
+            >
+              <AppIcon icon={compareUsingFilter ? searchIcon : pickIcon} />
+            </Select>
             <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
             {/* {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
