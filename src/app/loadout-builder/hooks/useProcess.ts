@@ -214,7 +214,9 @@ function groupItems(
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statType of statOrder) {
-        statValues.push(statsByHash[statHashes[statType]].base);
+        if (statsByHash[statHashes[statType]]) {
+          statValues.push(statsByHash[statHashes[statType]].base);
+        }
       }
     }
 
