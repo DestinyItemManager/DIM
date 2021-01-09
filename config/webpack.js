@@ -21,7 +21,6 @@ const svgToMiniDataURI = require('mini-svg-data-uri');
 const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
-const mkcert;
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
