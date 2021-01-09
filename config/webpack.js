@@ -33,7 +33,7 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (env.dev && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+  if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
