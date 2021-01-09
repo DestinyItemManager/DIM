@@ -504,7 +504,7 @@ module.exports = (env) => {
           upload: true,
           fail_build: true,
           project_token: 'b3b16a32-bc8b-489e-a6fd-2d1b98c25704',
-          // Only needs to be set on pull_request events it is pulled from git otherwise
+          // Only needs to be set on pull_request events, it is pulled from git otherwise
           branch: process.env.CI_HEAD_REF, // Comes from https://github.com/FranzDiebold/github-env-vars-action
           commit: process.env.GITHUB_SHA,
         })
