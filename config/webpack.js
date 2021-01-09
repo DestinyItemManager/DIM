@@ -21,6 +21,7 @@ const svgToMiniDataURI = require('mini-svg-data-uri');
 const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
+const mkcert;
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -33,7 +34,7 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem')) {
+  if (env.dev && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
@@ -74,18 +75,20 @@ module.exports = (env) => {
     },
 
     // Dev server
-    devServer: {
-      host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-      stats: 'errors-only',
-      https: {
-        key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-        cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
-      },
-      historyApiFallback: true,
-      hot: true,
-      hotOnly: true,
-      liveReload: false,
-    },
+    devServer: env.dev
+      ? {
+          host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+          stats: 'errors-only',
+          https: {
+            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+          },
+          historyApiFallback: true,
+          hot: true,
+          hotOnly: true,
+          liveReload: false,
+        }
+      : undefined,
 
     // Bail and fail hard on first error
     bail: !env.dev,
