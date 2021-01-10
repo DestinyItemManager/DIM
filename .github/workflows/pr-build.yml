@@ -71,21 +71,10 @@ jobs:
       - name: Get ENV Vars
         uses: FranzDiebold/github-env-vars-action@v2
 
-      - name: Get commit SHA For opened action
-        if: github.event.action == 'opened'
-        run: echo "PT_COMMIT=$(echo $(git log -2 --pretty | grep 'commit ' | tail -1 | sed 's/commit //g'))"
-
-      - name: Get commit SHA For synchronize action
-        if: github.event.action == 'synchronize'
-        run: echo "PT_COMMIT=${{github.event.after}}"
-
-      - name: Get commit SHA For reopened action
-        if: github.event.action == 'reopened'
-        run: echo "PT_COMMIT=$(echo $(git log -2 --pretty | grep 'commit ' | tail -1 | sed 's/commit //g'))"
-
       # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn run build-beta
         env:
           PT_BRANCH: ${{ env.CI_HEAD_REF }}
+          PT_COMMIT: ${{ github.event.pull_request.head.sha}}
           GH_CONTEXT: ${{ toJSON(github) }}
