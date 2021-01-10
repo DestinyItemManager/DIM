@@ -22,7 +22,7 @@ import {
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './QueryBuilder.scss';
 
@@ -188,14 +188,27 @@ export function QueryBuilder({
         {}
       )
   );
-
   const optionSetVisibility = Object.entries(optionSets).reduce<
-    Record<'any' | 'armor' | 'weapon', string>
-  >(
-    (acc, [showForThis, options]) => ({ ...acc, [showForThis]: options.map((o) => o.key) }),
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
-    {} as any
-  );
+    Record<'any' | 'armor' | 'weapon', string[]>
+  >((acc, [showForThis, options]) => ({ ...acc, [showForThis]: options.map((o) => o.key) }), {
+    any: [],
+    armor: [],
+    weapon: [],
+  });
+  useEffect(() => {
+    onQueryChange(
+      `is:${defaultMainSelection} ` +
+        Object.entries(currentSelections)
+          .filter(
+            ([selectorType]) =>
+              optionSetVisibility.any.includes(selectorType) ||
+              optionSetVisibility[defaultMainSelection].includes(selectorType)
+          )
+          .map(([_, selectorValue]) => selectorValue)
+          .filter(Boolean)
+          .join(' ')
+    );
+  }, [currentSelections, defaultMainSelection, onQueryChange, optionSetVisibility]);
 
   // const mainSelection = [
   //   {
@@ -209,19 +222,6 @@ export function QueryBuilder({
   //     content: <span>{t('Bucket.Armor')}</span>,
   //   },
   // ];
-
-  onQueryChange(
-    `is:${defaultMainSelection} ` +
-      Object.entries(currentSelections)
-        .filter(
-          ([selectorType]) =>
-            optionSetVisibility.any.includes(selectorType) ||
-            optionSetVisibility[defaultMainSelection].includes(selectorType)
-        )
-        .map(([_, selectorValue]) => selectorValue)
-        .filter(Boolean)
-        .join(' ')
-  );
 
   return (
     <div className={'selectors compare-options'}>
@@ -366,7 +366,7 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
     (i) => i.typeName
   ).map((i) => ({
     key: i.typeName,
-    value: `is:${generateItemTypeQuery(i)}`,
+    value: generateItemTypeQuery(i),
     content: (
       <>
         <img className="leadingIcon selectionSvg" src={getItemSvgIcon(i)} />{' '}

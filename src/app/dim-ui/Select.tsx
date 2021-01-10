@@ -67,6 +67,7 @@ export default function Select<T>({
   });
 
   if (!selectedItem) {
+    console.log({ items, value });
     throw new Error('value must correspond to one of the provided options');
   }
 

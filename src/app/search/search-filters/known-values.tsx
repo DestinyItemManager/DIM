@@ -105,7 +105,6 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: damageTypeNames,
     description: tl('Filter.DamageType'),
     filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
-    queryGenerator: generateDamageQuery,
   },
   {
     keywords: Object.values(D2Categories)
