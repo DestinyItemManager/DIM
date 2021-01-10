@@ -501,6 +501,7 @@ module.exports = (env) => {
     );
 
     if (process.env.CI === 'true') {
+      // Random comment to trigger a build
       console.log(process.env.PT_BRANCH);
       console.log(process.env.PT_COMMIT);
       console.log(process.env.PT_PRIOR_COMMIT);
