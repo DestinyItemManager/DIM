@@ -74,4 +74,5 @@ jobs:
         env:
           PT_BRANCH: ${{ github.event.pull_request.head.ref }}
           PT_COMMIT: ${{ github.event.pull_request.head.sha }}
+          PT_PRIOR_COMMIT:  ${{ github.event.before }}
           GH_CONTEXT: ${{ toJSON(github) }}
