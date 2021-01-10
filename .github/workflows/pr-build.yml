@@ -3,9 +3,8 @@ name: PR Build
 # While this is intended for PR's we are using a push event as
 # packtracker needs to be run on every push.
 on:
-  push:
-    branches-ignore:
-      - "master"
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -69,11 +68,10 @@ jobs:
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
           yarn run lint-check
 
+      # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn run build-beta
         env:
-          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
-          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
-          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
-          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          PT_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PT_COMMIT: ${{ github.event.pull_request.head.sha }}
+          GH_CONTEXT: ${{ toJSON(github) }}
