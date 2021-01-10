@@ -505,6 +505,7 @@ module.exports = (env) => {
       console.log(process.env.PT_BRANCH);
       console.log(process.env.PT_COMMIT);
       console.log(process.env.PT_PRIOR_COMMIT);
+      console.log(process.env.GH_CONTEXT);
 
       config.plugins.push(
         new PacktrackerPlugin({

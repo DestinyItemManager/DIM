@@ -78,3 +78,4 @@ jobs:
           PT_BRANCH: ${{ env.CI_HEAD_REF }}
           PT_COMMIT: ${{ github.event.after }}
           PT_PRIOR_COMMIT:  ${{ github.event.before }}
+          GH_CONTEXT: ${{ toJSON(github) }}
