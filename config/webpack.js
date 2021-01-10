@@ -501,6 +501,7 @@ module.exports = (env) => {
     );
 
     if (process.env.CI === 'true') {
+      // comment to test sync action
       console.log(process.env.PT_BRANCH);
       console.log(process.env.PT_COMMIT);
       console.log(process.env.GH_CONTEXT);
