@@ -5,15 +5,16 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import Select, { Option } from 'app/dim-ui/Select';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getItemSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+import { generateArchetypeQuery, getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { damageNamesByEnum, energyNamesByEnum } from 'app/search/d2-known-values';
-import { classes, itemCategoryHashesByName } from 'app/search/search-filters/known-values';
+import { classes, generateDamageQuery } from 'app/search/search-filters/known-values';
 import { RootState } from 'app/store/types';
 import {
-  getItemDamageShortName,
+  generateItemTypeQuery,
+  generateSpecialtySocketQuery,
   getItemSpecialtyModSlotDisplayNames,
   getSpecialtySocketMetadatas,
 } from 'app/utils/item-utils';
@@ -39,8 +40,6 @@ const classNameToICH = {
 const armorEnergyTypes = [DestinyEnergyType.Arc, DestinyEnergyType.Thermal, DestinyEnergyType.Void];
 const weaponDamageTypes = [DamageType.Kinetic, DamageType.Arc, DamageType.Thermal, DamageType.Void];
 
-const itemCategoryFilterNamesByItemCategoryHash = _.invert(itemCategoryHashesByName);
-
 interface ProvidedProps {
   exampleItem?: DimItem;
   onQueryChange: (q: string) => void;
@@ -64,32 +63,16 @@ function QueryBuilderBuilder({ exampleItem, defs, allItems, onQueryChange }: Pro
   const defaultMainSelection = exampleItem?.bucket.inWeapons ? 'weapon' : 'armor';
 
   const defaults: NodeJS.Dict<string> = {};
-  defaults.energy = `is:${
-    (exampleItem?.bucket.inArmor && getItemDamageShortName(exampleItem)) || 'arc'
-  }`;
 
-  defaults.dmg = `is:${
-    (exampleItem?.bucket.inWeapons && getItemDamageShortName(exampleItem)) || 'arc'
-  }`;
+  const elementQuery = (exampleItem && generateDamageQuery(exampleItem)) ?? 'is:arc';
+  defaults[exampleItem?.bucket.inArmor ? 'energy' : 'dmg'] = elementQuery;
 
-  const defaultCategoryHash = exampleItem?.itemCategoryHashes.slice(-1)[0];
-
-  defaults.weaponType = `is:${
-    (defaultCategoryHash && itemCategoryFilterNamesByItemCategoryHash[defaultCategoryHash]) ||
-    'autorifle'
-  }`; // you're not allowed to not select a weapon type
+  defaults.weaponType = generateItemTypeQuery(exampleItem) ?? 'is:autorifle';
 
   const exampleArchetype = exampleItem && getWeaponArchetype(exampleItem)?.displayProperties.name;
   defaults.archetype = exampleArchetype && `perk:"${exampleArchetype}"`;
 
-  const exampleSpecialtySlots = exampleItem && getSpecialtySocketMetadatas(exampleItem);
-
-  defaults.specialty =
-    (exampleSpecialtySlots &&
-      (exampleSpecialtySlots.length === 1
-        ? `modslot:${exampleSpecialtySlots[0].slotTag}`
-        : `(${exampleSpecialtySlots.map((m) => `modslot:${m.slotTag}`).join(' ')})`)) ||
-    'modslot:combatstyle';
+  defaults.specialty = generateSpecialtySocketQuery(exampleItem) ?? 'modslot:combatstyle';
 
   defaults.armorSlot = `is:${
     (exampleItem?.bucket.inArmor && exampleItem.type.toLowerCase()) || 'helmet'
@@ -315,7 +298,7 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
     const weaponArchetype = getWeaponArchetype(i)!;
     return {
       key: weaponArchetype.displayProperties.name,
-      value: `perk:"${weaponArchetype.displayProperties.name}"`,
+      value: generateArchetypeQuery(i),
       content: (
         <>
           <BungieImage
@@ -327,30 +310,26 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       ),
     };
   });
-  const specialtySlotCombos: Option<string>[] = _.uniqBy(
-    allItems.filter((i) => getSpecialtySocketMetadatas(i)),
-    (i) =>
-      getSpecialtySocketMetadatas(i)
-        ?.map((m) => m.slotTag)
-        .join()
-  ).map((i) => {
-    const specialtySlots = getSpecialtySocketMetadatas(i)!;
-
-    const key =
-      specialtySlots.length === 1
-        ? `modslot:${specialtySlots[0].slotTag}`
-        : `(${specialtySlots.map((m) => `modslot:${m.slotTag}`).join(' ')})`;
-    return {
-      key,
-      value: key,
-      content: (
-        <>
-          <SpecialtyModSlotIcon className="specialtyIcon" item={i} />{' '}
-          <span>{getItemSpecialtyModSlotDisplayNames(i, defs)?.join(' + ')}</span>
-        </>
-      ),
-    };
-  });
+  const specialtySlotCombos: Option<string>[] = _.uniqBy(allItems, (i) =>
+    getSpecialtySocketMetadatas(i) // unique by modslot combination
+      ?.map((m) => m.slotTag)
+      .sort()
+      .join()
+  )
+    .filter((i) => getSpecialtySocketMetadatas(i)) // ignore items with no specialty socket
+    .map((i) => {
+      const key = generateSpecialtySocketQuery(i)!; // already filtered out things that would return undefined
+      return {
+        key,
+        value: key,
+        content: (
+          <>
+            <SpecialtyModSlotIcon className="specialtyIcon" item={i} />{' '}
+            <span>{getItemSpecialtyModSlotDisplayNames(i, defs)?.join(' + ')}</span>
+          </>
+        ),
+      };
+    });
 
   const armorSlots: Option<string>[] = D2Categories.Armor.map((at) => {
     const example = allItems.find((i) => i.type.toLowerCase() === at.toLowerCase())!;
@@ -385,19 +364,16 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       (i) => i.comparable && i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)
     ),
     (i) => i.typeName
-  ).map((i) => {
-    const primaryCategoryHash = i.itemCategoryHashes.slice(-1)[0];
-    return {
-      key: i.typeName,
-      value: `is:${itemCategoryFilterNamesByItemCategoryHash[primaryCategoryHash]}`,
-      content: (
-        <>
-          <img className="leadingIcon selectionSvg" src={getItemSvgIcon(i)} />{' '}
-          <span>{i.typeName}</span>
-        </>
-      ),
-    };
-  });
+  ).map((i) => ({
+    key: i.typeName,
+    value: `is:${generateItemTypeQuery(i)}`,
+    content: (
+      <>
+        <img className="leadingIcon selectionSvg" src={getItemSvgIcon(i)} />{' '}
+        <span>{i.typeName}</span>
+      </>
+    ),
+  }));
 
   return {
     energy: energyOptions,

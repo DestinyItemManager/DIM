@@ -19,6 +19,7 @@ import {
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
+import { itemCategoryHashesByName } from 'app/search/search-filters/known-values';
 import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
@@ -35,9 +36,23 @@ import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
+/** an item's final itemCategoryHash represents its most specific category */
+export const getItemPrimaryCategoryHash = (item?: DimItem): number | undefined =>
+  item?.itemCategoryHashes.slice(-1)[0];
+
+/** an item's final itemCategoryHash represents its most specific category */
+export const generateItemTypeQuery = (item?: DimItem): string | undefined => {
+  const defaultCategoryHash = getItemPrimaryCategoryHash(item);
+  for (const itemCategoryName in itemCategoryHashesByName) {
+    if (itemCategoryHashesByName[itemCategoryName] === defaultCategoryHash) {
+      return `is:${itemCategoryName}`;
+    }
+  }
+};
+
 // damage is a mess!
 // this function supports turning a destiny DamageType or EnergyType into a known english name
-// mainly for most css purposes and the filter names
+// mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.energy
@@ -71,8 +86,8 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 );
 
 /** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
-  if (item.bucket.inArmor) {
+export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+  if (item?.bucket.inArmor) {
     const specialtySockets = item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
@@ -83,10 +98,19 @@ export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
 };
 
 /** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] | undefined =>
+export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
     .filter(Boolean);
+
+export const generateSpecialtySocketQuery = (item?: DimItem) => {
+  const exampleSpecialtySlots = getSpecialtySocketMetadatas(item);
+  if (exampleSpecialtySlots) {
+    return exampleSpecialtySlots.length === 1
+      ? `modslot:${exampleSpecialtySlots[0].slotTag}`
+      : `(${exampleSpecialtySlots.map((m) => `modslot:${m.slotTag}`).join(' ')})`;
+  }
+};
 
 /**
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known

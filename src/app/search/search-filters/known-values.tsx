@@ -159,5 +159,7 @@ export default knownValuesFilters;
 
 export function generateDamageQuery(item: DimItem) {
   const dmg = getItemDamageShortName(item);
-  return dmg && `is:${dmg}`;
+  if (dmg) {
+    return `is:${dmg}`;
+  }
 }

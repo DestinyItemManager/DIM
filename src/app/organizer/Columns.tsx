@@ -28,6 +28,7 @@ import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { Loadout } from 'app/loadout/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
+import { generateDamageQuery } from 'app/search/search-filters/known-values';
 import { getColor, percent } from 'app/shell/filters';
 import {
   AppIcon,
@@ -406,7 +407,7 @@ export function getColumns(
             src={item.breakerType!.displayProperties.icon}
           />
         ),
-      filter: (_, item) => `is:${getItemDamageShortName(item)}`,
+      filter: (_, item) => generateDamageQuery(item),
     },
     {
       id: 'perks',
