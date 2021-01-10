@@ -17,9 +17,6 @@ export type StatTypes =
   | 'Intellect'
   | 'Strength';
 
-// todo: and this?
-export type BurnTypes = 'arc' | 'solar' | 'void';
-
 export interface MinMax {
   min: number;
   max: number;
