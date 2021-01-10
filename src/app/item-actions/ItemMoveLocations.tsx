@@ -308,7 +308,7 @@ function PullButtons({
   const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
 
   return (
-    <div className={styles.moveLocations}>
+    <div className={clsx(styles.moveLocations, styles.moveLocationPadding)}>
       {t('MovePopup.PullPostmaster')}
       <div className={styles.moveLocationIcons}>
         {showAmounts && (
