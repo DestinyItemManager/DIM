@@ -5,7 +5,7 @@ import Select from 'app/dim-ui/Select';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
-import { searchFiltersConfigSelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { AppIcon, pickIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
@@ -35,7 +35,7 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
   compareUsingFilter: boolean;
-  searchFiltersConfig: ReturnType<typeof searchFiltersConfigSelector>;
+  filterFactory: ReturnType<typeof filterFactorySelector>;
 }
 
 const mapDispatchToProps = {
@@ -52,7 +52,7 @@ function mapStateToProps(state: RootState): StoreProps {
     defs: state.manifest.d2Manifest,
     compareBaseStats,
     compareUsingFilter,
-    searchFiltersConfig: searchFiltersConfigSelector(state),
+    filterFactory: filterFactorySelector(state),
   };
 }
 
@@ -79,20 +79,6 @@ export interface StatInfo {
   lowerBetter: boolean;
   getStat: StatGetter;
 }
-
-// /** A selector for a function for searching items, given the current search query. */
-// export const searchFilterSelector = createSelector(
-//   querySelector,
-//   searchFiltersConfigSelector,
-//   (query, filterFactory) => filterFactory(query)
-// );
-
-// /** A selector for all items filtered by whatever's currently in the search box. */
-// export const filteredItemsSelector = createSelector(
-//   allItemsSelector,
-//   searchFilterSelector,
-//   (allItems, searchFilter) => allItems.filter((i) => searchFilter(i))
-// );
 
 /** a DimStat with, at minimum, a statHash */
 export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
@@ -133,23 +119,25 @@ class Compare extends React.Component<Props, State> {
 
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
-    (state: State) => state.comparisonItems,
+    (state: State, props: Props) => {
+      if (props.compareUsingFilter) {
+        const filteredItems = this.compareSheetFilteredItemsSelector(state, props);
+        if (filteredItems.length) {
+          return filteredItems;
+        }
+      }
+      return state.comparisonItems;
+    },
     (_state: State, props: Props) => props.compareBaseStats,
     (state: State) => state.adjustedStats,
     getAllStats
   );
 
-  private thisSheetFilteredItemsSelector = createSelector(
-    (_state: State, props: Props) => props.searchFiltersConfig,
+  private compareSheetFilteredItemsSelector = createSelector(
+    (_state: State, props: Props) => props.filterFactory,
     (state: State, _props: Props) => state.query,
-    (_state: State, _props: Props, allItems: DimItem[]) => allItems,
-    (filterFactory, query, allItems) => {
-      const x = allItems.filter(filterFactory(query));
-      // console.log(query);
-      // console.log(allItems.length);
-      // console.log(x.length);
-      return query ? x : [];
-    }
+    (_state: State, props: Props) => props.allItems,
+    (filterFactory, query, allItems) => (query ? allItems.filter(filterFactory(query)) : [])
   );
 
   componentDidMount() {
@@ -213,52 +201,52 @@ class Compare extends React.Component<Props, State> {
       setSetting('compareUsingFilter', val);
     };
 
-    const comparisonItems = !sortedHash
-      ? unsortedComparisonItems
-      : Array.from(unsortedComparisonItems).sort(
-          reverseComparator(
-            chainComparator(
-              compareBy((item: DimItem) => {
-                const stat =
-                  item.primStat && sortedHash === item.primStat.statHash
-                    ? (item.primStat as MinimalStat)
-                    : sortedHash === 'EnergyCapacity'
-                    ? {
-                        value: item.energy?.energyCapacity || 0,
-                        base: undefined,
-                      }
-                    : sortedHash === 'PowerCap'
-                    ? {
-                        value: item.powerCap || 99999999,
-                        base: undefined,
-                      }
-                    : (item.stats || []).find((s) => s.statHash === sortedHash);
+    const comparisonItems = Array.from(
+      compareUsingFilter
+        ? this.compareSheetFilteredItemsSelector(this.state, this.props)
+        : unsortedComparisonItems
+    );
 
-                if (!stat) {
-                  return -1;
-                }
+    if (sortedHash) {
+      comparisonItems.sort(
+        reverseComparator(
+          chainComparator(
+            compareBy((item: DimItem) => {
+              const stat =
+                item.primStat && sortedHash === item.primStat.statHash
+                  ? (item.primStat as MinimalStat)
+                  : sortedHash === 'EnergyCapacity'
+                  ? {
+                      value: item.energy?.energyCapacity || 0,
+                      base: undefined,
+                    }
+                  : sortedHash === 'PowerCap'
+                  ? {
+                      value: item.powerCap || 99999999,
+                      base: undefined,
+                    }
+                  : (item.stats || []).find((s) => s.statHash === sortedHash);
 
-                const shouldReverse =
-                  isDimStat(stat) && stat.smallerIsBetter
-                    ? this.state.sortBetterFirst
-                    : !this.state.sortBetterFirst;
+              if (!stat) {
+                return -1;
+              }
 
-                const statValue = (doCompareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
-                return shouldReverse ? -statValue : statValue;
-              }),
-              compareBy((i) => i.index),
-              compareBy((i) => i.name)
-            )
+              const shouldReverse =
+                isDimStat(stat) && stat.smallerIsBetter
+                  ? this.state.sortBetterFirst
+                  : !this.state.sortBetterFirst;
+
+              const statValue = (doCompareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+              return shouldReverse ? -statValue : statValue;
+            }),
+            compareBy((i) => i.index),
+            compareBy((i) => i.name)
           )
-        );
+        )
+      );
+    }
 
     const stats = this.getAllStatsSelector(this.state, this.props);
-    // <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
-    const thisSheetFilteredItems = this.thisSheetFilteredItemsSelector(
-      this.state,
-      this.props,
-      this.props.allItems
-    );
 
     const updateSocketComparePlug = ({
       item,
@@ -427,7 +415,8 @@ class Compare extends React.Component<Props, State> {
                   onMouseOver={() => this.setHighlight(stat.id)}
                   onClick={() => this.sort(stat.id)}
                 >
-                  {stat.displayProperties.name}
+                  {stat.displayProperties.name}{' '}
+                  {stat.id === sortedHash && (this.state.sortBetterFirst ? '>' : '<')}
                 </div>
               ))}
               {comparingArmor && (
@@ -441,7 +430,7 @@ class Compare extends React.Component<Props, State> {
               )}
             </div>
             <div className="compare-items">
-              {thisSheetFilteredItems.map((item) => (
+              {comparisonItems.map((item) => (
                 <CompareItem
                   item={item}
                   key={item.id}

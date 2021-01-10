@@ -72,7 +72,11 @@
 
 .compareSelectionModeSwitcher {
   margin-right: 7px;
+  cursor: default;
   .app-icon {
     margin-top: 2px;
+  }
+  button {
+    cursor: pointer;
   }
 }
