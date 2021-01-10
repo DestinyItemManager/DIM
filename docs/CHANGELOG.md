@@ -1,5 +1,6 @@
 ## Next
 * Show a star icon for finishers rather than a lock icon.
+* Correctly show conditional stats on mods and weapons where possible.
 
 ## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
 

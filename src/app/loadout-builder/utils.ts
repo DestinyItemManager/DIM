@@ -304,10 +304,9 @@ export function getLockedModStats(
   const lockedModStats: { [statHash: number]: number } = {};
   if (lockedArmor2Mods) {
     for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.modDef.investmentStats) {
-        lockedModStats[stat.statTypeHash] ||= 0;
-        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
-        lockedModStats[stat.statTypeHash] += stat.value;
+      for (const stat of Object.values(lockedMod.modDef.stats?.stats || {})) {
+        lockedModStats[stat.statHash] ||= 0;
+        lockedModStats[stat.statHash] += stat.value;
       }
     }
   }
