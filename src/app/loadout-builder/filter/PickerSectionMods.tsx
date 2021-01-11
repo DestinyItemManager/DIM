@@ -34,9 +34,11 @@ export default function PickerSectionMods({
   }
   const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
   const isSlotSpecificCategory =
-    category !== ModPickerCategories.general &&
-    category !== ModPickerCategories.other &&
-    category !== ModPickerCategories.raid;
+    category === ModPickerCategories.helmet ||
+    category === ModPickerCategories.gauntlets ||
+    category === ModPickerCategories.chest ||
+    category === ModPickerCategories.leg ||
+    category === ModPickerCategories.classitem;
 
   const splitByItemTypeDisplayName =
     category === ModPickerCategories.other || category === ModPickerCategories.raid;
