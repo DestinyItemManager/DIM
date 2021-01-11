@@ -40,7 +40,7 @@
 
 .menuItem {
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
+  align-items: flex-start;
   padding: 6px 9px 6px 9px;
 
   @include phone-portrait {
@@ -64,6 +64,7 @@
 .menuItemIcon {
   font-size: 12px !important;
   margin-right: 6px;
+  margin-top: 5px;
   color: #999;
 }
 
@@ -71,6 +72,11 @@
   white-space: normal;
   padding: 1px 0;
   overflow: hidden;
+  max-height: 4em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .menuItemHelp {
@@ -91,7 +97,8 @@
 .deleteIcon {
   composes: resetButton from '../dim-ui/common.m.scss';
   font-size: 10px !important;
-  margin-left: 6px;
+  margin-top: 4px;
+  color: #999;
   color: #999;
   padding: 0 2px;
   cursor: pointer;
@@ -112,6 +119,7 @@
 }
 
 .keyHelp {
+  margin-top: 2px;
   .highlightedItem & {
     color: #222;
     border-color: #222;
