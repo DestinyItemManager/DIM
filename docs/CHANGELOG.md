@@ -1,5 +1,7 @@
 ## Next
 
+## 6.47.1 <span class="changelog-date">(2021-01-11)</span>
+
 * Fix a bug that could crash loadout optimizer.
 
 ## 6.47.0 <span class="changelog-date">(2021-01-10)</span>
