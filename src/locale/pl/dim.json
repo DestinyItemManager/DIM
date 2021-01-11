@@ -461,7 +461,7 @@
     "SelectPerks": "Wybierz Atuty",
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
-    "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi lub warunkowymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk lub efektami warunkowymi, DIM nie może określić wartości bazowej {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
+    "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk, DIM nie może określić wartości bazowej lub wartości {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Łącznie",
-    "TotalIncorrectWarning": "Ze względu na modyfikacje z negatywnymi lub warunkowymi efektami statystyk, DIM nie może określić wartości bazowej {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
+    "TotalIncorrectWarning": "Ze względu na modyfikacje z negatywnymi efektami statystyk, DIM nie może określić wartości bazowej lub wartości {{stats}}. Jest to ograniczenie informacji wysyłanych przez Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

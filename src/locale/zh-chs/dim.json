@@ -461,7 +461,7 @@
     "SelectPerks": "选择特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
-    "StatIncorrectWarning": "为了获得准确结果，请移除所有具有负面或有条件的属性的模组。\n\n由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "总计",
-    "TotalIncorrectWarning": "由于Bungie.net发送信息的限制，若模组具有负面或有条件的属性，DIM将无法确定{{stats}}的基础值。"
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

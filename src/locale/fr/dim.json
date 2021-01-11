@@ -461,7 +461,7 @@
     "SelectPerks": "Sélectionner des attributs",
     "SelectPower": "Puissance minimum",
     "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'arsenal (pas les pièces individuelles)",
-    "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs ou conditionnels.\n\nÀ cause de modificateurs de statistiques négatifs ou conditionnels, DIM ne peut pas déterminer la valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
@@ -796,7 +796,7 @@
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "À cause de mods aux effets négatifs ou conditionels, DIM ne peut pas déterminer la valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

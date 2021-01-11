@@ -461,7 +461,7 @@
     "SelectPerks": "Selecionar perks",
     "SelectPower": "Poder Mínimo",
     "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
-    "StatIncorrectWarning": "Por favor, remova quaisquer mods com atributos de efeitos negativos ou condicionais para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
+    "StatIncorrectWarning": "Por favor, remova quaisquer mods com efeitos negativos em atributos para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
@@ -796,7 +796,7 @@
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos ou condicionais, DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
+    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {

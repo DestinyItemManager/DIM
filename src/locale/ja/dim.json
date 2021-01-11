@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "あなたの項目を変更するのには DIM を承認するのに運命 2 コンパニオン アプリケーションを使用してください。",
+    "ConfirmDescription": "Destiny2コンパニオンアプリを使用してDIMを承認してから、アイテムを変更をしてください。",
     "ConfirmTitle": "操作を確認"
   },
   "Accounts": {
@@ -461,7 +461,7 @@
     "SelectPerks": "パークを選択",
     "SelectPower": "最小パワー",
     "SelectPowerDescription": "ロードアウト全体の最小パワーレベルを設定します。",
-    "StatIncorrectWarning": "正確な結果を得るには、ステータスペナルティまたは変動性の属性があるパーツを外してください。\n\nステータスペナルティまたは変動性の属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。",
+    "StatIncorrectWarning": "正確な結果を得るには、ステータスペナルティの属性があるパーツを外してください。\n\nステータスペナルティの属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TheseModsCouldNotBeAssigned": "これらの mod は、既存のロードアウトに割り当てることができませんでした。",
@@ -796,7 +796,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "合計",
-    "TotalIncorrectWarning": "ステータスペナルティまたは変動性の属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。"
+    "TotalIncorrectWarning": "ステータスペナルティの属性があるパーツがあるため、DIMは一部の項目に対して {{stats}} の基準値を決定できません。 これは、Bungie.netから提供される情報の制限によって発生する事象です。"
   },
   "Storage": {
     "ApiPermissionPrompt": {

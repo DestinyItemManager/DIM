@@ -186,7 +186,7 @@ function loadStoresData(
             'd2-stores',
             'Vault or character inventory was missing - bailing in order to avoid corruption'
           );
-          throw new Error(t('BungieService.Difficulties'));
+          throw new Error(t('BungieService.MissingInventory'));
         }
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
