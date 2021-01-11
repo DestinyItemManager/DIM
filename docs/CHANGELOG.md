@@ -1,5 +1,7 @@
 ## Next
 
+* Fix a bug that could crash loadout optimizer.
+
 ## 6.47.0 <span class="changelog-date">(2021-01-10)</span>
 
 * Show a star icon for favorited finishers rather than a lock icon.
