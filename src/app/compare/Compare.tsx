@@ -338,7 +338,8 @@ class Compare extends React.Component<Props, State> {
                   onMouseOver={() => this.setHighlight(stat.id)}
                   onClick={() => this.sort(stat.id)}
                 >
-                  {stat.displayProperties.name}
+                  {stat.displayProperties.name}{' '}
+                  {stat.id === sortedHash && (this.state.sortBetterFirst ? '>' : '<')}
                 </div>
               ))}
             </div>
