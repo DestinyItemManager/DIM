@@ -1,5 +1,7 @@
 ## Next
 
+## 6.47.0 <span class="changelog-date">(2021-01-10)</span>
+
 * Show a star icon for favorited finishers rather than a lock icon.
 * Search history truncates huge searches to three lines and aligns the icons and delete button to the first line.
 * Added indicators in the Compare view to show which stat we are sorting by, and in which direction.
