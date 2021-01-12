@@ -7,10 +7,43 @@ import { canTakeAllMods, generateModPermutations } from './processWorker/process
 import { ProcessItem } from './processWorker/types';
 import {
   bucketsToCategories,
+  knownModPlugCategoryHashes,
   LockableBucketHashes,
   LockedArmor2Mod,
   LockedArmor2ModMap,
+  raidPlugCategoryHashes,
 } from './types';
+
+/**
+ * Gets a flat list of all the mods that fit into the raid item socket.
+ */
+export function getRaidMods(lockedArmor2ModMap: LockedArmor2ModMap) {
+  let raidMods: LockedArmor2Mod[] = [];
+
+  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
+    if (mods && raidPlugCategoryHashes.includes(Number(plugCategoryHash))) {
+      raidMods = raidMods.concat(mods);
+    }
+  }
+
+  return raidMods;
+}
+
+/**
+ * Gets a flat list of all the mods which don't fit into general, slot specific or raid
+ * sockets. This should be combat and legacy mods.
+ */
+export function getOtherMods(lockedArmor2ModMap: LockedArmor2ModMap) {
+  let otherMods: LockedArmor2Mod[] = [];
+
+  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
+    if (mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHash))) {
+      otherMods = otherMods.concat(mods);
+    }
+  }
+
+  return otherMods;
+}
 
 /**
  * Checks that:
@@ -30,8 +63,8 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
  */
 function assignModsForSlot(
   item: DimItem,
-  mods: LockedArmor2Mod[],
-  assignments: Record<string, number[]>
+  assignments: Record<string, number[]>,
+  mods?: LockedArmor2Mod[]
 ): void {
   if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
@@ -85,22 +118,25 @@ export function assignModsToArmorSet(
 
     if (item) {
       const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
-      assignModsForSlot(item, lockedMods, assignments);
+      assignModsForSlot(item, assignments, lockedMods);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));
     }
   }
 
-  if (lockedArmor2Mods.other || lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
-    assignAllMods(
-      processItems,
-      lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-      lockedArmor2Mods.other,
-      lockedArmor2Mods.raid,
-      assignments
-    );
+  const generalMods = lockedArmor2Mods[armor2PlugCategoryHashesByName.general] || [];
+  const otherMods = getOtherMods(lockedArmor2Mods);
+  const raidMods = getRaidMods(lockedArmor2Mods);
+
+  if (otherMods.length || raidMods.length || generalMods.length) {
+    assignAllMods(processItems, generalMods, otherMods, raidMods, assignments);
   }
 
-  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
+  const modsByHash = _.groupBy(
+    Object.values(lockedArmor2Mods)
+      .flat()
+      .filter((x: LockedArmor2Mod | undefined): x is LockedArmor2Mod => Boolean(x)),
+    (mod) => mod.modDef.hash
+  );
   const assignedMods = _.mapValues(assignments, (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())
@@ -109,7 +145,9 @@ export function assignModsToArmorSet(
   const assigned = Object.values(assignedMods).flat();
   const unassignedMods = Object.values(lockedArmor2Mods)
     .flat()
-    .filter((unassign) => !assigned.some((assign) => assign.key === unassign.key));
+    .filter((unassign): unassign is LockedArmor2Mod =>
+      Boolean(unassign && !assigned.some((assign) => assign.key === unassign.key))
+    );
 
   return [assignedMods, unassignedMods];
 }

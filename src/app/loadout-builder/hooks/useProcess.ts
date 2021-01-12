@@ -1,9 +1,11 @@
 import { DimItem } from 'app/inventory/item-types';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
+import { getOtherMods, getRaidMods } from '../mod-utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -19,7 +21,6 @@ import {
   LockedMap,
   MinMax,
   MinMaxIgnored,
-  ModPickerCategories,
   statHashes,
   StatTypes,
 } from '../types';
@@ -98,8 +99,9 @@ export function useProcess(
       }
     }
 
-    const lockedProcessMods = _.mapValues(lockedArmor2ModMap, (mods) =>
-      mods.map((mod) => mapArmor2ModToProcessMod(mod))
+    const lockedProcessMods = _.mapValues(
+      lockedArmor2ModMap,
+      (mods) => mods?.map((mod) => mapArmor2ModToProcessMod(mod)) || []
     );
 
     const workerStart = performance.now();
@@ -220,15 +222,23 @@ function groupItems(
 
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
-    if (lockedArmor2ModMap.other.length) {
+    const generalMods = lockedArmor2ModMap[armor2PlugCategoryHashesByName.general];
+    const otherMods = getOtherMods(lockedArmor2ModMap);
+    const raidMods = getRaidMods(lockedArmor2ModMap);
+
+    // TODO creating otherMods and doing these checks could be pulled out so it is only run once
+    // for all armour buckets.
+    if (otherMods.length || raidMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)
         ?.map((metadata) => metadata.slotTag)
         .join(',')}`;
     }
 
+    // We don't need to worry about slot specific energy as items are already filtered for that.
     if (
-      someModHasEnergyRequirement(lockedArmor2ModMap.other) ||
-      someModHasEnergyRequirement(lockedArmor2ModMap[ModPickerCategories.general])
+      someModHasEnergyRequirement(otherMods) ||
+      someModHasEnergyRequirement(raidMods) ||
+      (generalMods && someModHasEnergyRequirement(generalMods))
     ) {
       groupId += `${item.energy?.energyType}`;
     }

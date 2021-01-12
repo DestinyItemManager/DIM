@@ -35,7 +35,14 @@ import { useProcess } from './hooks/useProcess';
 import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
-import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
+import {
+  ItemsByBucket,
+  LockedArmor2Mod,
+  statHashes,
+  statHashToType,
+  statKeys,
+  StatTypes,
+} from './types';
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
@@ -205,6 +212,7 @@ function LoadoutBuilder({
       ),
       mods: Object.values(lockedArmor2Mods)
         .flat()
+        .filter((x: LockedArmor2Mod | undefined): x is LockedArmor2Mod => Boolean(x))
         .map((m) => m.modDef.hash),
       query: searchQuery,
       assumeMasterworked: assumeMasterwork,

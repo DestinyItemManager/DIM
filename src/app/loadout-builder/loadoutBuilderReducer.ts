@@ -8,7 +8,6 @@ import {
   LockedItemType,
   LockedMap,
   MinMaxIgnored,
-  ModPickerCategories,
   StatTypes,
 } from './types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
@@ -70,16 +69,7 @@ const lbStateInit = ({
       Intellect: { min: 0, max: 10, ignored: false },
       Strength: { min: 0, max: 10, ignored: false },
     },
-    lockedArmor2Mods: {
-      [ModPickerCategories.general]: [],
-      [ModPickerCategories.helmet]: [],
-      [ModPickerCategories.gauntlets]: [],
-      [ModPickerCategories.chest]: [],
-      [ModPickerCategories.leg]: [],
-      [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.other]: [],
-      [ModPickerCategories.raid]: [],
-    },
+    lockedArmor2Mods: {},
     minimumPower: 750,
     selectedStoreId: selectedStoreId,
     modPicker: {

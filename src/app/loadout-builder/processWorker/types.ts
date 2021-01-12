@@ -1,5 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ModPickerCategory, StatTypes } from '../types';
+import { StatTypes } from '../types';
 
 export interface ProcessPlug {
   stats: {
@@ -76,6 +76,7 @@ interface ProcessStat {
 
 export interface ProcessMod {
   hash: number;
+  plugCategoryHash: number;
   energy?: {
     type: DestinyEnergyType;
     /** The energy cost of the mod. */
@@ -87,5 +88,5 @@ export interface ProcessMod {
 }
 
 export type LockedArmor2ProcessMods = {
-  [T in ModPickerCategory]: ProcessMod[];
+  [plugCategoryHash: number]: ProcessMod[];
 };
