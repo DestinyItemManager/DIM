@@ -4,7 +4,12 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
-import { LockedArmor2Mod, ModPickerCategories, ModPickerCategory } from '../types';
+import {
+  knownModPlugCategoryHashes,
+  LockedArmor2Mod,
+  raidPlugCategoryHashes,
+  slotSpecificPlugCategoryHashes,
+} from '../types';
 import styles from './PickerSection.m.scss';
 
 /** Slot specific mods can have at most 2 mods. */
@@ -17,7 +22,7 @@ export default function PickerSectionMods({
   mods,
   locked,
   title,
-  category,
+  plugCategoryHashes,
   onModSelected,
   onModRemoved,
 }: {
@@ -25,7 +30,7 @@ export default function PickerSectionMods({
   mods: readonly LockedArmor2Mod[];
   locked: readonly LockedArmor2Mod[];
   title: string;
-  category: ModPickerCategory;
+  plugCategoryHashes: number[];
   onModSelected(mod: LockedArmor2Mod);
   onModRemoved(mod: LockedArmor2Mod);
 }) {
@@ -33,15 +38,15 @@ export default function PickerSectionMods({
     return null;
   }
   const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
-  const isSlotSpecificCategory =
-    category === ModPickerCategories.helmet ||
-    category === ModPickerCategories.gauntlets ||
-    category === ModPickerCategories.chest ||
-    category === ModPickerCategories.leg ||
-    category === ModPickerCategories.classitem;
+  const isSlotSpecificCategory = Boolean(
+    _.intersection(slotSpecificPlugCategoryHashes, plugCategoryHashes).length
+  );
 
-  const splitByItemTypeDisplayName =
-    category === ModPickerCategories.other || category === ModPickerCategories.raid;
+  // Has a raid mod plug category hash or no known hashes, this case is combat and legacy.
+  const splitByItemTypeDisplayName = Boolean(
+    _.intersection(raidPlugCategoryHashes, plugCategoryHashes).length ||
+      !_.intersection(knownModPlugCategoryHashes, plugCategoryHashes).length
+  );
 
   /**
    * Figures out whether you should be able to select a mod. Different rules apply for slot specific
@@ -74,7 +79,7 @@ export default function PickerSectionMods({
     : { nogroup: mods };
 
   return (
-    <div className={styles.bucket} id={`mod-picker-section-${category}`}>
+    <div className={styles.bucket} id={`mod-picker-section-${plugCategoryHashes.join('-')}`}>
       <div className={styles.header}>{title}</div>
       {Object.entries(modGroups).map(([subTitle, mods]) => (
         <div key={subTitle}>

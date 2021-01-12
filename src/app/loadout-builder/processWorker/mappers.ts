@@ -4,7 +4,15 @@ import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
-import { ArmorSet, LockedArmor2Mod, LockedArmor2ModMap, statHashToType, StatTypes } from '../types';
+import {
+  ArmorSet,
+  knownModPlugCategoryHashes,
+  LockedArmor2Mod,
+  LockedArmor2ModMap,
+  raidPlugCategoryHashes,
+  statHashToType,
+  StatTypes,
+} from '../types';
 import { ProcessArmorSet, ProcessItem, ProcessMod, ProcessSocket, ProcessSockets } from './types';
 
 function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
@@ -31,7 +39,10 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     investmentStats: mod.modDef.investmentStats,
   };
 
-  if (mod.category === 'other' || mod.category === 'raid') {
+  if (
+    raidPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
+    !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
+  ) {
     processMod.tag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
   }
 

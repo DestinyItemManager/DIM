@@ -141,12 +141,13 @@ function LockArmorAndPerks({
     }
   };
 
-  const onArmor2ModClicked = (item: LockedArmor2Mod) => {
+  const onArmor2ModClicked = (mod: LockedArmor2Mod) => {
+    const plugCategoryHash = mod.modDef.plug.plugCategoryHash;
     lbDispatch({
       type: 'lockedArmor2ModsChanged',
       lockedArmor2Mods: {
         ...lockedArmor2Mods,
-        [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
+        [plugCategoryHash]: lockedArmor2Mods[plugCategoryHash]?.filter((ex) => ex.key !== mod.key),
       },
     });
   };

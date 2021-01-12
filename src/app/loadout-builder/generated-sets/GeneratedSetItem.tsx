@@ -9,7 +9,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { matchLockedItem } from '../preProcessFilter';
-import { LockedArmor2Mod, LockedItemType, ModPickerCategory, StatTypes } from '../types';
+import { LockedArmor2Mod, LockedItemType, raidPlugCategoryHashes, StatTypes } from '../types';
 import { armor2ModPlugCategoriesTitles, generateMixesFromPerks } from '../utils';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
@@ -82,18 +82,21 @@ export default function GeneratedSetItem({
     }
   }
 
-  const onSocketClick = (
-    plugDef: PluggableInventoryItemDefinition,
-    category?: ModPickerCategory
-  ) => {
-    if (category) {
+  const onSocketClick = (plugDef: PluggableInventoryItemDefinition) => {
+    const { plugCategoryHash } = plugDef.plug;
+    const initialQuery =
+      t(armor2ModPlugCategoriesTitles[plugCategoryHash]) ||
+      (raidPlugCategoryHashes.includes(plugCategoryHash) &&
+        t(armor2ModPlugCategoriesTitles.raid)) ||
+      t(armor2ModPlugCategoriesTitles.other);
+
+    if (initialQuery) {
       // TODO this will currently show legacy mods if you click a combat
-      const initialQuery = t(armor2ModPlugCategoriesTitles[category]);
       lbDispatch({
         type: 'openModPicker',
         initialQuery,
         filterLegacy:
-          category === 'other' &&
+          initialQuery === t(armor2ModPlugCategoriesTitles.other) &&
           combatCompatiblePlugCategoryHashes.includes(plugDef.plug.plugCategoryHash),
       });
     } else {

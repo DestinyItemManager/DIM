@@ -92,7 +92,6 @@ export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
   modDef: PluggableInventoryItemDefinition;
-  category: ModPickerCategory;
 }
 
 export type LockedArmor2ModMap = {

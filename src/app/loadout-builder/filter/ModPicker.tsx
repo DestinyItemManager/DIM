@@ -10,6 +10,7 @@ import {
 } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -25,17 +26,8 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import {
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
-  ModPickerCategories,
-  ModPickerCategory,
-} from '../types';
-import {
-  armor2ModPlugCategoriesTitles,
-  getModPickerCategoryFromPlugCategoryHash,
-  isLoadoutBuilderItem,
-} from '../utils';
+import { LockedArmor2Mod, LockedArmor2ModMap, raidPlugCategoryHashes } from '../types';
+import { armor2ModPlugCategoriesTitles, isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
@@ -131,11 +123,7 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const category = getModPickerCategoryFromPlugCategoryHash(def.plug.plugCategoryHash);
-
-            if (category) {
-              transformedMods.push({ modDef: def, category });
-            }
+            transformedMods.push({ modDef: def });
           }
         }
 
@@ -181,9 +169,10 @@ function ModPicker({
 
   const onModSelected = useCallback(
     (mod: LockedArmor2Mod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
       setLockedArmor2ModsInternal((oldState) => ({
         ...oldState,
-        [mod.category]: [...oldState[mod.category], { ...mod, key: modKey++ }],
+        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod, key: modKey++ }],
       }));
     },
     [setLockedArmor2ModsInternal]
@@ -191,17 +180,17 @@ function ModPicker({
 
   const onModRemoved = useCallback(
     (mod: LockedArmor2Mod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
       setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[mod.category].findIndex(
-          (li) => li.modDef.hash === mod.modDef.hash
-        );
+        const firstIndex =
+          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) || -1;
 
         if (firstIndex >= 0) {
-          const newState = [...oldState[mod.category]];
+          const newState = [...(oldState[plugCategoryHash] || [])];
           newState.splice(firstIndex, 1);
           return {
             ...oldState,
-            [mod.category]: newState,
+            [plugCategoryHash]: newState,
           };
         }
 
@@ -220,16 +209,11 @@ function ModPicker({
     onClose();
   };
 
-  const scrollToBucket = (categoryOrSeasonal: number | string) => {
-    const elementId = `mod-picker-section-${categoryOrSeasonal}`;
+  const scrollToBucket = (plugCategoryHashes: number[]) => {
+    const elementId = `mod-picker-section-${plugCategoryHashes.join('-')}`;
     const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };
-
-  const order = Object.values(ModPickerCategories).map((category) => ({
-    category,
-    translatedName: t(armor2ModPlugCategoriesTitles[category]),
-  }));
 
   const queryFilteredMods = useMemo(() => {
     // Only some languages effectively use the \b regex word boundary
@@ -247,7 +231,6 @@ function ModPicker({
             (regexp.test(mod.modDef.displayProperties.name) ||
               regexp.test(mod.modDef.displayProperties.description) ||
               regexp.test(mod.modDef.itemTypeDisplayName) ||
-              regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
               mod.modDef.perks.some((perk) => {
                 const perkDef = defs.SandboxPerk.get(perk.perkHash);
                 return (
@@ -262,19 +245,62 @@ function ModPicker({
   }, [language, query, mods, defs.SandboxPerk, filterLegacy]);
 
   const modsByCategory = useMemo(() => {
-    const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
-      [ModPickerCategories.general]: [],
-      [ModPickerCategories.helmet]: [],
-      [ModPickerCategories.gauntlets]: [],
-      [ModPickerCategories.chest]: [],
-      [ModPickerCategories.leg]: [],
-      [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.other]: [],
-      [ModPickerCategories.raid]: [],
+    const otherMods: { mods: LockedArmor2Mod[]; plugCategoryHashes: number[]; title: string } = {
+      mods: [],
+      plugCategoryHashes: [],
+      title: t(armor2ModPlugCategoriesTitles.other),
     };
 
+    const rtn: { mods: LockedArmor2Mod[]; plugCategoryHashes: number[]; title: string }[] = [
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.general],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.general]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.helmet],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.helmet]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.gauntlets],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.gauntlets]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.chest],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.chest]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.leg],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.leg]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: [armor2PlugCategoryHashesByName.classitem],
+        title: t(armor2ModPlugCategoriesTitles[armor2PlugCategoryHashesByName.classitem]),
+      },
+      {
+        mods: [],
+        plugCategoryHashes: raidPlugCategoryHashes,
+        title: t(armor2ModPlugCategoriesTitles.raid),
+      },
+      otherMods, // build hashes as we go
+    ];
+
     for (const mod of queryFilteredMods) {
-      rtn[mod.category].push(mod);
+      const group = rtn.find((group) =>
+        group.plugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)
+      );
+
+      if (group) {
+        group.mods.push(mod);
+      } else {
+        otherMods.mods.push(mod);
+        otherMods.plugCategoryHashes.push(mod.modDef.plug.plugCategoryHash);
+      }
     }
 
     return rtn;
@@ -284,7 +310,7 @@ function ModPicker({
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
-          categoryOrder={order}
+          groupOrder={modsByCategory}
           lockedArmor2Mods={lockedArmor2ModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
@@ -298,7 +324,7 @@ function ModPicker({
       onClose={onClose}
       header={
         <ModPickerHeader
-          categoryOrder={order}
+          groupOrder={modsByCategory}
           query={query}
           scrollToBucket={scrollToBucket}
           onSearchChange={(e) => setQuery(e.currentTarget.value)}
@@ -309,14 +335,17 @@ function ModPicker({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {Object.values(ModPickerCategories).map((category) => (
+      {modsByCategory.map(({ mods, plugCategoryHashes, title }) => (
         <PickerSectionMods
-          key={category}
-          mods={modsByCategory[category]}
+          key={plugCategoryHashes.join('-')}
+          mods={mods}
           defs={defs}
-          locked={lockedArmor2ModsInternal[category]}
-          title={t(armor2ModPlugCategoriesTitles[category])}
-          category={category}
+          locked={Object.entries(lockedArmor2ModsInternal)
+            .filter(([plugCategoryHash]) => plugCategoryHashes.includes(Number(plugCategoryHash)))
+            .flatMap(([_, mods]) => mods)
+            .filter((mod): mod is LockedArmor2Mod => Boolean(mod))}
+          title={title}
+          plugCategoryHashes={plugCategoryHashes}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

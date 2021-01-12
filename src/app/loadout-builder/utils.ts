@@ -1,9 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import {
-  combatCompatiblePlugCategoryHashes,
-  legacyCompatiblePlugCategoryHashes,
-} from 'app/search/specialty-modslots';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -12,16 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import {
-  isModPickerCategory,
-  LockedArmor2Mod,
-  LockedItemType,
-  ModPickerCategories,
-  ModPickerCategory,
-  raidPlugs,
-  StatTypes,
-  statValues,
-} from './types';
+import { LockedArmor2Mod, LockedItemType, StatTypes, statValues } from './types';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -327,34 +315,12 @@ export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
 }
 
 export const armor2ModPlugCategoriesTitles = {
-  [ModPickerCategories.general]: tl('LB.General'),
-  [ModPickerCategories.helmet]: tl('LB.Helmet'),
-  [ModPickerCategories.gauntlets]: tl('LB.Gauntlets'),
-  [ModPickerCategories.chest]: tl('LB.Chest'),
-  [ModPickerCategories.leg]: tl('LB.Legs'),
-  [ModPickerCategories.classitem]: tl('LB.ClassItem'),
-  [ModPickerCategories.other]: tl('LB.Other'),
-  [ModPickerCategories.raid]: tl('LB.Raid'),
-};
-
-/** Returns the relevant mod picker category from the plug category hash.
- *
- * For raid mods, while they will fit into legacy sockets, they have their
- * own category so expect 'raid' rather than 'other'.
- *
- * Legacy and combat mod hashes will return 'other'.
- */
-export function getModPickerCategoryFromPlugCategoryHash(
-  plugCategoryHash: number
-): ModPickerCategory | undefined {
-  if (isModPickerCategory(plugCategoryHash)) {
-    return plugCategoryHash;
-  } else if (raidPlugs.includes(plugCategoryHash)) {
-    return ModPickerCategories.raid;
-  } else if (
-    legacyCompatiblePlugCategoryHashes.includes(plugCategoryHash) ||
-    combatCompatiblePlugCategoryHashes.includes(plugCategoryHash)
-  ) {
-    return ModPickerCategories.other;
-  }
-}
+  [armor2PlugCategoryHashesByName.general]: tl('LB.General'),
+  [armor2PlugCategoryHashesByName.helmet]: tl('LB.Helmet'),
+  [armor2PlugCategoryHashesByName.gauntlets]: tl('LB.Gauntlets'),
+  [armor2PlugCategoryHashesByName.chest]: tl('LB.Chest'),
+  [armor2PlugCategoryHashesByName.leg]: tl('LB.Legs'),
+  [armor2PlugCategoryHashesByName.classitem]: tl('LB.ClassItem'),
+  other: tl('LB.Other'),
+  raid: tl('LB.Raid'),
+} as const;

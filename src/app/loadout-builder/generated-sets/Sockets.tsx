@@ -4,8 +4,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { LockedArmor2Mod, ModPickerCategory } from '../types';
-import { getModPickerCategoryFromPlugCategoryHash } from '../utils';
+import { LockedArmor2Mod } from '../types';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -18,16 +17,11 @@ const undesireablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
 ];
 
-interface PlugAndCategory {
-  plugDef: PluggableInventoryItemDefinition;
-  category?: ModPickerCategory;
-}
-
 interface Props {
   item: DimItem;
   lockedMods?: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
-  onSocketClick?(plugDef: PluggableInventoryItemDefinition, category?: ModPickerCategory): void;
+  onSocketClick?(plugDef: PluggableInventoryItemDefinition): void;
 }
 
 function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
@@ -35,7 +29,7 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
     return null;
   }
 
-  const modsAndPerks: PlugAndCategory[] = [];
+  const modsAndPerks: PluggableInventoryItemDefinition[] = [];
   const modsToUse = lockedMods ? [...lockedMods] : [];
 
   for (const socket of item.sockets?.allSockets || []) {
@@ -61,23 +55,20 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      modsAndPerks.push({
-        plugDef: toSave,
-        category: getModPickerCategoryFromPlugCategoryHash(toSave.plug.plugCategoryHash),
-      });
+      modsAndPerks.push(toSave);
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map(({ plugDef, category }, index) => (
+        {modsAndPerks.map((plugDef, index) => (
           <Mod
             key={index}
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={onSocketClick ? () => onSocketClick?.(plugDef, category) : undefined}
+            onClick={onSocketClick ? () => onSocketClick?.(plugDef) : undefined}
           />
         ))}
       </div>
