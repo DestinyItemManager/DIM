@@ -21,7 +21,7 @@ interface Props {
   item: DimItem;
   lockedMods?: LockedArmor2Mod[];
   defs: D2ManifestDefinitions;
-  onSocketClick?(plugDef: PluggableInventoryItemDefinition): void;
+  onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
 }
 
 function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
@@ -29,7 +29,7 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
     return null;
   }
 
-  const modsAndPerks: PluggableInventoryItemDefinition[] = [];
+  const modsAndWhitelist: { plugDef: PluggableInventoryItemDefinition; whitelist: number[] }[] = [];
   const modsToUse = lockedMods ? [...lockedMods] : [];
 
   for (const socket of item.sockets?.allSockets || []) {
@@ -55,20 +55,23 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
       isPluggableItem(toSave) &&
       !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
     ) {
-      modsAndPerks.push(toSave);
+      modsAndWhitelist.push({
+        plugDef: toSave,
+        whitelist: socketType.plugWhitelist.map((plug) => plug.categoryHash),
+      });
     }
   }
 
   return (
     <>
       <div className={styles.lockedItems}>
-        {modsAndPerks.map((plugDef, index) => (
+        {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
           <Mod
             key={index}
             gridColumn={(index % 2) + 1}
             plugDef={plugDef}
             defs={defs}
-            onClick={onSocketClick ? () => onSocketClick?.(plugDef) : undefined}
+            onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
           />
         ))}
       </div>

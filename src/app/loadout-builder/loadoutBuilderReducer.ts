@@ -21,7 +21,6 @@ export interface LoadoutBuilderState {
   modPicker: {
     open: boolean;
     initialQuery?: string;
-    filterLegacy?: boolean;
   };
   perkPicker: {
     open: boolean;
@@ -89,7 +88,7 @@ export type LoadoutBuilderAction =
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
-  | { type: 'openModPicker'; initialQuery?: string; filterLegacy?: boolean }
+  | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
   | { type: 'closePerkPicker' }
@@ -153,7 +152,6 @@ function lbStateReducer(
         modPicker: {
           open: true,
           initialQuery: action.initialQuery,
-          filterLegacy: action.filterLegacy,
         },
       };
     case 'closeModPicker':
