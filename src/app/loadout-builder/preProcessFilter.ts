@@ -61,7 +61,7 @@ export function filterItems(
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter((item) => {
         //TODO Remove this missing stats stuff once we know what is causing it.
-        const missingStats = [];
+        const missingStats: number[] = [];
         const result = // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
@@ -81,9 +81,10 @@ export function filterItems(
         if (missingStats.length) {
           reportException(
             'LB:preProcessFilter',
-            new Error(`${item.name} is missing stats ${missingStats.join(', ')}`, {
+            new Error(`${item.name} is missing stats ${missingStats.join(', ')}`),
+            {
               itemHash: item.hash,
-            })
+            }
           );
         }
 
