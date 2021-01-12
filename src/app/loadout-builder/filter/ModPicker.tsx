@@ -34,7 +34,6 @@ import PickerSectionMods from './PickerSectionMods';
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
 
-// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => l.modDef.plug.energyCost?.energyType),
   compareBy((l) => l.modDef.plug.energyCost?.energyCost),
