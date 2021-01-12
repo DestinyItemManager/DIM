@@ -16,19 +16,19 @@ export function SelectableArmor2Mod({
   mod,
   defs,
   selected,
-  unselectable,
+  selectable,
   onModSelected,
   onModRemoved,
 }: {
   mod: LockedArmor2Mod;
   defs: D2ManifestDefinitions;
   selected: boolean;
-  unselectable: boolean;
+  selectable: boolean;
   onModSelected(mod: LockedArmor2Mod): void;
   onModRemoved(mod: LockedArmor2Mod): void;
 }) {
   const handleClick = () => {
-    !unselectable && onModSelected(mod);
+    selectable && onModSelected(mod);
   };
 
   return (
@@ -36,7 +36,7 @@ export function SelectableArmor2Mod({
       <div
         className={clsx(styles.perk, {
           [styles.lockedPerk]: selected,
-          [styles.unselectable]: unselectable,
+          [styles.unselectable]: !selectable,
         })}
         onClick={handleClick}
         role="button"
@@ -77,28 +77,28 @@ export function SelectablePerk({
   bucket,
   defs,
   selected,
-  unselectable,
+  selectable,
   onLockedPerk,
 }: {
   perk: PluggableInventoryItemDefinition;
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
   selected: boolean;
-  unselectable: boolean;
+  selectable: boolean;
   onLockedPerk(perk: LockedItemType): void;
 }) {
   const sandboxPerk = Boolean(perk.perks?.length) && defs.SandboxPerk.get(perk.perks[0].perkHash);
 
   const handleClick = (e) => {
     e.preventDefault();
-    onLockedPerk({ type: 'perk', perk, bucket });
+    selectable && onLockedPerk({ type: 'perk', perk, bucket });
   };
 
   return (
     <div
       className={clsx(styles.perk, {
         [styles.lockedPerk]: selected,
-        [styles.unselectable]: unselectable,
+        [styles.unselectable]: !selectable,
       })}
       onClick={handleClick}
       role="button"

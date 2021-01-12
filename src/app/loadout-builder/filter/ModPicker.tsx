@@ -50,14 +50,6 @@ const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => l.modDef.displayProperties.name)
 );
 
-function isGeneralOrOtherOrRaid(category: ModPickerCategory) {
-  return (
-    category === ModPickerCategories.general ||
-    category === ModPickerCategories.other ||
-    category === ModPickerCategories.raid
-  );
-}
-
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
@@ -325,11 +317,6 @@ function ModPicker({
           locked={lockedArmor2ModsInternal[category]}
           title={t(armor2ModPlugCategoriesTitles[category])}
           category={category}
-          splitByItemTypeDisplayName={
-            category === ModPickerCategories.other || category === ModPickerCategories.raid
-          }
-          maximumSelectable={isGeneralOrOtherOrRaid(category) ? 5 : 2}
-          energyMustMatch={!isGeneralOrOtherOrRaid(category)}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />
