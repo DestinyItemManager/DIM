@@ -68,11 +68,21 @@ jobs:
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
           yarn run lint-check
 
+
+      - name: Generate Packtracker ENV vars
+        env:
+            BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        run: |
+          echo "PT_BRANCH=$BRANCH_NAME" >> $GITHUB_ENV;
+          echo "PT_COMMIT=$(git rev-parse $BRANCH_NAME)" >> $GITHUB_ENV;
+          echo "PT_AUTHOR=$(git log --format="%aE" -n 1 $BRANCH_NAME)" >> $GITHUB_ENV;
+          echo "PT_MESSAGE=$(git log --format="%B" -n 1 $BRANCH_NAME)" >> $GITHUB_ENV;
+          echo "PT_COMMIT=$(git rev-parse $BRANCH_NAME)" >> $GITHUB_ENV;
+          echo "PT_COMMITTED_AT=$(git log --format="%ct" -n 1 $BRANCH_NAME)" >> $GITHUB_ENV;
+          echo "PT_PRIOR_COMMIT=$(git rev-parse $BRANCH_NAME^)" >> $GITHUB_ENV;
+
+
+
       # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn run build-beta
-        env:
-          PT_BRANCH: ${{ github.event.pull_request.head.ref }}
-          PT_COMMIT: ${{ github.event.pull_request.head.sha }}
-          PT_PRIOR_COMMIT:  ${{ github.event.before }}
-          GH_CONTEXT: ${{ toJSON(github) }}

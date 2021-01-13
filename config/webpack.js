@@ -501,6 +501,14 @@ module.exports = (env) => {
     );
 
     if (process.env.CI === 'true') {
+      console.log(process.env.PT_BRANCH);
+      console.log(process.env.PT_COMMIT);
+      console.log(process.env.PT_AUTHOR);
+      console.log(process.env.PT_MESSAGE);
+      console.log(process.env.PT_COMMIT);
+      console.log(process.env.PT_COMMITTED_AT);
+      console.log(process.env.PT_PRIOR_COMMIT);
+
       config.plugins.push(
         new PacktrackerPlugin({
           upload: true,
