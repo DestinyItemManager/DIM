@@ -81,7 +81,6 @@ jobs:
           echo "PT_COMMIT=$COMMIT_SHA" >> $GITHUB_ENV;
           echo "PT_AUTHOR=$(git log --format="%aE" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
           echo "PT_MESSAGE=$(git log --format="%B" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
-          echo "PT_COMMIT=$(git rev-parse $COMMIT_SHA)" >> $GITHUB_ENV;
           echo "PT_COMMITTED_AT=$(git log --format="%ct" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
           echo "PT_PRIOR_COMMIT=$PRIOR_COMMIT" >> $GITHUB_ENV;
 

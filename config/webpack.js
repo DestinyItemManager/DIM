@@ -505,7 +505,6 @@ module.exports = (env) => {
       console.log(process.env.PT_COMMIT);
       console.log(process.env.PT_AUTHOR);
       console.log(process.env.PT_MESSAGE);
-      console.log(process.env.PT_COMMIT);
       console.log(process.env.PT_COMMITTED_AT);
       console.log(process.env.PT_PRIOR_COMMIT);
 
