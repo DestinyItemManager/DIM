@@ -72,7 +72,8 @@ jobs:
       - name: Generate Packtracker ENV vars
         env:
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-            COMMIT_SHA: ${{ github.event.pull_request.head.ref }}
+            COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+            PRIOR_COMMIT:  ${{ github.event.before }}
         shell: bash
         run: |
           echo "$(git log --all --decorate --oneline --graph -n 10)";
@@ -82,7 +83,7 @@ jobs:
           echo "PT_MESSAGE=$(git log --format="%B" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
           echo "PT_COMMIT=$(git rev-parse $COMMIT_SHA)" >> $GITHUB_ENV;
           echo "PT_COMMITTED_AT=$(git log --format="%ct" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
-          echo "PT_PRIOR_COMMIT=$(git rev-parse $COMMIT_SHA^)" >> $GITHUB_ENV;
+          echo "PT_PRIOR_COMMIT=$PRIOR_COMMIT" >> $GITHUB_ENV;
 
 
 
