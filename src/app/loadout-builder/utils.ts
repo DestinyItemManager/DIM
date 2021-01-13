@@ -296,26 +296,6 @@ function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
 }
 
 /**
- * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
- */
-export function getLockedModStats(
-  lockedArmor2Mods: readonly LockedArmor2Mod[]
-): { [statHash: number]: number } {
-  const lockedModStats: { [statHash: number]: number } = {};
-  if (lockedArmor2Mods) {
-    for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.modDef.investmentStats) {
-        lockedModStats[stat.statTypeHash] ||= 0;
-        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
-        lockedModStats[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
-
-  return lockedModStats;
-}
-
-/**
  * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
