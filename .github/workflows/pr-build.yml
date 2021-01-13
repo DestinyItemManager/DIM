@@ -72,7 +72,9 @@ jobs:
       - name: Generate Packtracker ENV vars
         env:
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        shell: bash
         run: |
+          git --version;
           echo "PT_BRANCH=$BRANCH_NAME" >> $GITHUB_ENV;
           echo "PT_COMMIT=$(git rev-parse $BRANCH_NAME)" >> $GITHUB_ENV;
           echo "PT_AUTHOR=$(git log --format="%aE" -n 1 $BRANCH_NAME)" >> $GITHUB_ENV;
