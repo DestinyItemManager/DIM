@@ -81,8 +81,8 @@ export function filterItems(
         if (missingStats.length) {
           reportException(
             'LB:preProcessFilter',
-            new Error(`${item.name} is missing stats ${missingStats.join(', ')}`, {
-              itemHash: item.hash,
+            new Error(`${item.name} is missing stats ${missingStats.join(',')}`, {
+              itemHash: item.itemHash,
             })
           );
         }
