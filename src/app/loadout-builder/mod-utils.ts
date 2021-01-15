@@ -3,7 +3,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
-import { canTakeAllMods, generateModPermutations } from './processWorker/processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
   bucketsToCategories,
@@ -13,37 +13,6 @@ import {
   LockedArmor2ModMap,
   raidPlugCategoryHashes,
 } from './types';
-
-/**
- * Gets a flat list of all the mods that fit into the raid item socket.
- */
-export function getRaidMods(lockedArmor2ModMap: LockedArmor2ModMap) {
-  let raidMods: LockedArmor2Mod[] = [];
-
-  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
-    if (mods && raidPlugCategoryHashes.includes(Number(plugCategoryHash))) {
-      raidMods = raidMods.concat(mods);
-    }
-  }
-
-  return raidMods;
-}
-
-/**
- * Gets a flat list of all the mods which don't fit into general, slot specific or raid
- * sockets. This should be combat and legacy mods.
- */
-export function getOtherMods(lockedArmor2ModMap: LockedArmor2ModMap) {
-  let otherMods: LockedArmor2Mod[] = [];
-
-  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
-    if (mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHash))) {
-      otherMods = otherMods.concat(mods);
-    }
-  }
-
-  return otherMods;
-}
 
 /**
  * Checks that:
@@ -76,13 +45,33 @@ function assignModsForSlot(
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
-function assignAllMods(
+function assignSlotIndependantMods(
   setToMatch: ProcessItem[],
-  generalMods: LockedArmor2Mod[],
-  otherMods: readonly LockedArmor2Mod[],
-  raidMods: LockedArmor2Mod[],
+  lockedArmor2Mods: LockedArmor2ModMap,
   assignments: Record<string, number[]>
 ): void {
+  let generalMods: LockedArmor2Mod[] = [];
+  let otherMods: LockedArmor2Mod[] = [];
+  let raidMods: LockedArmor2Mod[] = [];
+
+  for (const [plugCategoryHashString, mods] of Object.entries(lockedArmor2Mods)) {
+    const plugCategoryHash = Number(plugCategoryHashString);
+
+    if (!mods) {
+      continue;
+    } else if (plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      generalMods = mods;
+    } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
+      raidMods = raidMods.concat(mods);
+    } else if (!knownModPlugCategoryHashes.includes(plugCategoryHash)) {
+      otherMods = otherMods.concat(mods);
+    }
+  }
+
+  if (!generalMods || !otherMods || !raidMods) {
+    return;
+  }
+
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
   const otherProcessMods = otherMods.map(mapArmor2ModToProcessMod);
@@ -92,7 +81,7 @@ function assignAllMods(
   const otherModPermutations = generateModPermutations(otherProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
-  canTakeAllMods(
+  canTakeSlotIndependantMods(
     generalModPermutations,
     otherModPermutations,
     raidModPermutations,
@@ -123,13 +112,7 @@ export function assignModsToArmorSet(
     }
   }
 
-  const generalMods = lockedArmor2Mods[armor2PlugCategoryHashesByName.general] || [];
-  const otherMods = getOtherMods(lockedArmor2Mods);
-  const raidMods = getRaidMods(lockedArmor2Mods);
-
-  if (otherMods.length || raidMods.length || generalMods.length) {
-    assignAllMods(processItems, generalMods, otherMods, raidMods, assignments);
-  }
+  assignSlotIndependantMods(processItems, lockedArmor2Mods, assignments);
 
   const modsByHash = _.groupBy(
     Object.values(lockedArmor2Mods)

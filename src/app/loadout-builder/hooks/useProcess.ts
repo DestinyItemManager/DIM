@@ -1,11 +1,13 @@
 import { DimItem } from 'app/inventory/item-types';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashes,
+  armor2PlugCategoryHashesByName,
+} from 'app/search/d2-known-values';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import { getOtherMods, getRaidMods } from '../mod-utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -17,6 +19,7 @@ import {
   ArmorSet,
   bucketsToCategories,
   ItemsByBucket,
+  LockedArmor2Mod,
   LockedArmor2ModMap,
   LockedMap,
   MinMax,
@@ -82,14 +85,30 @@ export function useProcess(
       currentCleanup: cleanup,
     });
 
+    const generalMods = lockedArmor2ModMap[armor2PlugCategoryHashesByName.general] || [];
+    const raidCombatAndLegacyMods = Object.entries(
+      lockedArmor2ModMap
+    ).flatMap(([plugCategoryHash, mods]) =>
+      !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
+    );
+
     const processItems: ProcessItemsByBucket = {};
     const itemsById: { [id: string]: DimItem[] } = {};
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
-      const groupedItems = groupItems(items, lockedArmor2ModMap, statOrder, assumeMasterwork);
+
+      const groupedItems = groupItems(
+        items,
+        statOrder,
+        assumeMasterwork,
+        generalMods,
+        raidCombatAndLegacyMods
+      );
+
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
+
         if (item) {
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
@@ -206,9 +225,10 @@ function createWorker() {
  */
 function groupItems(
   items: readonly DimItem[],
-  lockedArmor2ModMap: LockedArmor2ModMap,
   statOrder: StatTypes[],
-  assumeMasterwork: boolean
+  assumeMasterwork: boolean,
+  generalMods: LockedArmor2Mod[],
+  raidCombatAndLegacyMods: LockedArmor2Mod[]
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
@@ -222,13 +242,7 @@ function groupItems(
 
     let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
 
-    const generalMods = lockedArmor2ModMap[armor2PlugCategoryHashesByName.general];
-    const otherMods = getOtherMods(lockedArmor2ModMap);
-    const raidMods = getRaidMods(lockedArmor2ModMap);
-
-    // TODO creating otherMods and doing these checks could be pulled out so it is only run once
-    // for all armour buckets.
-    if (otherMods.length || raidMods.length) {
+    if (raidCombatAndLegacyMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)
         ?.map((metadata) => metadata.slotTag)
         .join(',')}`;
@@ -236,9 +250,8 @@ function groupItems(
 
     // We don't need to worry about slot specific energy as items are already filtered for that.
     if (
-      someModHasEnergyRequirement(otherMods) ||
-      someModHasEnergyRequirement(raidMods) ||
-      (generalMods && someModHasEnergyRequirement(generalMods))
+      someModHasEnergyRequirement(raidCombatAndLegacyMods) ||
+      someModHasEnergyRequirement(generalMods)
     ) {
       groupId += `${item.energy?.energyType}`;
     }

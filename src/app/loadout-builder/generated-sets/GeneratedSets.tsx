@@ -5,13 +5,15 @@ import { t } from 'app/i18next-t';
 import { Loadout } from 'app/loadout/loadout-types';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashes,
+  armor2PlugCategoryHashesByName,
+} from 'app/search/d2-known-values';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { getOtherMods, getRaidMods } from '../mod-utils';
 import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
 import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';
@@ -107,15 +109,18 @@ export default function GeneratedSets({
 
   let groupingDescription;
 
-  const generalMods = lockedArmor2Mods[armor2PlugCategoryHashesByName.general];
-  const otherMods = getOtherMods(lockedArmor2Mods);
-  const raidMods = getRaidMods(lockedArmor2Mods);
+  const generalMods = lockedArmor2Mods[armor2PlugCategoryHashesByName.general] || [];
+  const raidCombatAndLegacyMods = Object.entries(
+    lockedArmor2Mods
+  ).flatMap(([plugCategoryHash, mods]) =>
+    !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
+  );
 
-  if (someModHasEnergyRequirement([...otherMods, ...raidMods])) {
+  if (someModHasEnergyRequirement(raidCombatAndLegacyMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
-  } else if (otherMods.length || raidMods.length) {
+  } else if (raidCombatAndLegacyMods.length) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
-  } else if (generalMods && someModHasEnergyRequirement(generalMods)) {
+  } else if (someModHasEnergyRequirement(generalMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
   } else {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStats');

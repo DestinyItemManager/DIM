@@ -73,7 +73,7 @@ export const armor2PlugCategoryHashesByName = {
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
 } as const;
 
-// Hardcoded to ensure ordering.
+/** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
 export const armor2PlugCategoryHashes: number[] = [
   armor2PlugCategoryHashesByName.general,
   armor2PlugCategoryHashesByName.helmet,

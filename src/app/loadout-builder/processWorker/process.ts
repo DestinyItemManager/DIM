@@ -12,7 +12,7 @@ import {
   StatTypes,
 } from '../types';
 import { statTier } from '../utils';
-import { canTakeAllMods, generateModPermutations } from './processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
@@ -284,7 +284,7 @@ export function process(
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
                 (otherMods.length || raidMods.length || generalMods.length) &&
-                !canTakeAllMods(
+                !canTakeSlotIndependantMods(
                   generalModsPermutations,
                   otherModPermutations,
                   raidModPermutations,
