@@ -178,7 +178,7 @@ function ModPicker({
       const { plugCategoryHash } = mod.modDef.plug;
       setLockedArmor2ModsInternal((oldState) => {
         const firstIndex =
-          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) || -1;
+          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) ?? -1;
 
         if (firstIndex >= 0) {
           const newState = [...(oldState[plugCategoryHash] || [])];
