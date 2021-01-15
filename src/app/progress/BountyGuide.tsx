@@ -72,7 +72,9 @@ export default function BountyGuide({
         filterItems: (item) =>
           item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
         prompt: t('MovePopup.PullItem', {
-          bucket: defs.ItemCategory.get(itemCategory)?.displayProperties.name,
+          bucket:
+            defs.ItemCategory.get(itemCategory) &&
+            defs.ItemCategory.get(itemCategory).displayProperties.name,
           store: store.name,
         }),
       });
