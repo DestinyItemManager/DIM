@@ -64,30 +64,6 @@ export const raidPlugs = [
 
 export const raidSockets = [1444083081, 1764679361, 1269555732] as const;
 
-export const ModPickerCategories = {
-  ...armor2PlugCategoryHashesByName,
-  /** This encompases combat and legacy mods as they "share" a socket position on armour */
-  other: 'other',
-  raid: 'raid',
-} as const;
-export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
-
-/**
- * Checks whether the passed in value is a ModPickerCategory.
- */
-export function isModPickerCategory(value: unknown): value is ModPickerCategory {
-  return (
-    value === ModPickerCategories.general ||
-    value === ModPickerCategories.helmet ||
-    value === ModPickerCategories.gauntlets ||
-    value === ModPickerCategories.chest ||
-    value === ModPickerCategories.leg ||
-    value === ModPickerCategories.classitem ||
-    value === ModPickerCategories.other ||
-    value === ModPickerCategories.raid
-  );
-}
-
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
