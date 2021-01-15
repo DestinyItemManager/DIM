@@ -18,9 +18,6 @@ export type StatTypes =
   | 'Intellect'
   | 'Strength';
 
-// todo: and this?
-export type BurnTypes = 'arc' | 'solar' | 'void';
-
 export interface MinMax {
   min: number;
   max: number;
@@ -55,14 +52,6 @@ export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
 export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
-
-export const raidPlugs = [
-  PlugCategoryHashes.EnhancementsSeasonOutlaw,
-  PlugCategoryHashes.EnhancementsRaidGarden,
-  PlugCategoryHashes.EnhancementsRaidDescent,
-] as const;
-
-export const raidSockets = [1444083081, 1764679361, 1269555732] as const;
 
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
@@ -121,6 +110,7 @@ export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.classitem,
 ];
 
+// TODO generate this somehow so we dont need to maintain it
 export const raidPlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
   PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation

@@ -89,7 +89,7 @@ export function useProcess(
     const raidCombatAndLegacyMods = Object.entries(
       lockedArmor2ModMap
     ).flatMap(([plugCategoryHash, mods]) =>
-      !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
+      mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
     const processItems: ProcessItemsByBucket = {};

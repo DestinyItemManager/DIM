@@ -1,6 +1,4 @@
-import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -284,26 +282,6 @@ function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
 }
 
 /**
- * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
- */
-export function getLockedModStats(
-  lockedArmor2Mods: readonly LockedArmor2Mod[]
-): { [statHash: number]: number } {
-  const lockedModStats: { [statHash: number]: number } = {};
-  if (lockedArmor2Mods) {
-    for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.modDef.investmentStats) {
-        lockedModStats[stat.statTypeHash] ||= 0;
-        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
-        lockedModStats[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
-
-  return lockedModStats;
-}
-
-/**
  * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
@@ -313,14 +291,3 @@ export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
       !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
   );
 }
-
-export const armor2ModPlugCategoriesTitles = {
-  [armor2PlugCategoryHashesByName.general]: tl('LB.General'),
-  [armor2PlugCategoryHashesByName.helmet]: tl('LB.Helmet'),
-  [armor2PlugCategoryHashesByName.gauntlets]: tl('LB.Gauntlets'),
-  [armor2PlugCategoryHashesByName.chest]: tl('LB.Chest'),
-  [armor2PlugCategoryHashesByName.leg]: tl('LB.Legs'),
-  [armor2PlugCategoryHashesByName.classitem]: tl('LB.ClassItem'),
-  other: tl('LB.Other'),
-  raid: tl('LB.Raid'),
-} as const;
