@@ -56,9 +56,8 @@ export default function PickerSectionMods({
   } else if (_.intersection(raidPlugCategoryHashes, plugCategoryHashes).length) {
     associatedLockedMods = raidPlugCategoryHashes.flatMap((hash) => locked[hash] || []);
   } else {
-    associatedLockedMods = Object.entries(locked).flatMap(
-      ([plugCategoryHash, mods]) =>
-        (!knownModPlugCategoryHashes.includes(Number(plugCategoryHash)) && mods) || []
+    associatedLockedMods = Object.entries(locked).flatMap(([plugCategoryHash, mods]) =>
+      mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
   }
 
