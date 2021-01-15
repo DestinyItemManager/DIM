@@ -1,5 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashesByName,
+  MAX_ARMOR_ENERGY_CAPACITY,
+} from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -7,6 +10,7 @@ import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import {
   knownModPlugCategoryHashes,
   LockedArmor2Mod,
+  LockedArmor2ModMap,
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from '../types';
@@ -28,7 +32,7 @@ export default function PickerSectionMods({
 }: {
   defs: D2ManifestDefinitions;
   mods: readonly LockedArmor2Mod[];
-  locked: readonly LockedArmor2Mod[];
+  locked: LockedArmor2ModMap;
   title: string;
   plugCategoryHashes: number[];
   onModSelected(mod: LockedArmor2Mod);
@@ -37,16 +41,32 @@ export default function PickerSectionMods({
   if (!mods.length) {
     return null;
   }
-  const lockedModCost = _.sumBy(locked, (l) => l.modDef.plug.energyCost?.energyCost || 0);
+
   const isSlotSpecificCategory = Boolean(
     _.intersection(slotSpecificPlugCategoryHashes, plugCategoryHashes).length
   );
 
-  // Has a raid mod plug category hash or no known hashes, this case is combat and legacy.
-  const splitByItemTypeDisplayName = Boolean(
-    _.intersection(raidPlugCategoryHashes, plugCategoryHashes).length ||
-      !_.intersection(knownModPlugCategoryHashes, plugCategoryHashes).length
-  );
+  let associatedLockedMods: LockedArmor2Mod[] = [];
+
+  if (
+    isSlotSpecificCategory ||
+    plugCategoryHashes.includes(armor2PlugCategoryHashesByName.general)
+  ) {
+    associatedLockedMods = plugCategoryHashes.flatMap((hash) => locked[hash] || []);
+  } else if (_.intersection(raidPlugCategoryHashes, plugCategoryHashes).length) {
+    associatedLockedMods = raidPlugCategoryHashes.flatMap((hash) => locked[hash] || []);
+  } else {
+    associatedLockedMods = Object.entries(locked).flatMap(
+      ([plugCategoryHash, mods]) =>
+        (!knownModPlugCategoryHashes.includes(Number(plugCategoryHash)) && mods) || []
+    );
+  }
+
+  // We only care about this for slot specific mods and it is used in isModSelectable. It is calculated here
+  // so it is only done once per render.
+  const lockedModCost = isSlotSpecificCategory
+    ? _.sumBy(associatedLockedMods, (l) => l.modDef.plug.energyCost?.energyCost || 0)
+    : 0;
 
   /**
    * Figures out whether you should be able to select a mod. Different rules apply for slot specific
@@ -59,48 +79,41 @@ export default function PickerSectionMods({
       const modEnergyType = mod.modDef.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
       return (
-        locked.length < MAX_SLOT_SPECIFIC_MODS &&
+        associatedLockedMods.length < MAX_SLOT_SPECIFIC_MODS &&
         lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
         (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
-          locked.some((l) => l.modDef.plug.energyCost?.energyType === modEnergyType) || // Matches some other enery
-          locked.every(
+          associatedLockedMods.some(
+            (l) => l.modDef.plug.energyCost?.energyType === modEnergyType
+          ) || // Matches some other enery
+          associatedLockedMods.every(
             (l) =>
               (l.modDef.plug.energyCost?.energyType || DestinyEnergyType.Any) ===
               DestinyEnergyType.Any
           )) // If every thing else is Any we are good
       );
     } else {
-      return locked.length < MAX_SLOT_INDEPENDENT_MODS;
+      return associatedLockedMods.length < MAX_SLOT_INDEPENDENT_MODS;
     }
   };
-
-  const modGroups = splitByItemTypeDisplayName
-    ? _.groupBy(mods, (mod) => mod.modDef.itemTypeDisplayName)
-    : { nogroup: mods };
 
   return (
     <div className={styles.bucket} id={`mod-picker-section-${plugCategoryHashes.join('-')}`}>
       <div className={styles.header}>{title}</div>
-      {Object.entries(modGroups).map(([subTitle, mods]) => (
-        <div key={subTitle}>
-          {subTitle !== 'nogroup' && <div className={styles.subheader}>{subTitle}</div>}
-          <div className={styles.items}>
-            {mods.map((item) => (
-              <SelectableArmor2Mod
-                key={item.modDef.hash}
-                defs={defs}
-                selected={Boolean(
-                  locked.some((lockedItem) => lockedItem.modDef.hash === item.modDef.hash)
-                )}
-                mod={item}
-                selectable={isModSelectable(item)}
-                onModSelected={onModSelected}
-                onModRemoved={onModRemoved}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+      <div className={styles.items}>
+        {mods.map((item) => (
+          <SelectableArmor2Mod
+            key={item.modDef.hash}
+            defs={defs}
+            selected={Boolean(
+              associatedLockedMods.some((lockedItem) => lockedItem.modDef.hash === item.modDef.hash)
+            )}
+            mod={item}
+            selectable={isModSelectable(item)}
+            onModSelected={onModSelected}
+            onModRemoved={onModRemoved}
+          />
+        ))}
+      </div>
     </div>
   );
 }
