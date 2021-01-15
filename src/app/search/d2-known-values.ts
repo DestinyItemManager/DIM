@@ -74,14 +74,7 @@ export const armor2PlugCategoryHashesByName = {
 } as const;
 
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
-export const armor2PlugCategoryHashes: number[] = [
-  armor2PlugCategoryHashesByName.general,
-  armor2PlugCategoryHashesByName.helmet,
-  armor2PlugCategoryHashesByName.gauntlets,
-  armor2PlugCategoryHashesByName.chest,
-  armor2PlugCategoryHashesByName.leg,
-  armor2PlugCategoryHashesByName.classitem,
-];
+export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
 export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
   74070459: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[38912240] "Crucible Tracker"
