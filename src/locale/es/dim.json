@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero esa destinación ya cuenta con ese objeto y solo se permite uno.",
     "ItemUniquenessExplanation_male": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero esa destinación ya cuenta con ese objeto y solo se permite uno.",
     "Maintenance": "Los servidores de Bungie.net se encuentran caídos por mantenimiento.",
+    "MissingInventory": "Bungie.net no devolvió tu inventario, posiblemente porque tus configuraciones de privacidad lo impiden.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
     "NoAccount": "No se encontró ninguna cuenta de Destiny. ¿Tienes seleccionada la plataforma correcta?",
     "NoAccountForPlatform": "Fallo encontrando una cuenta de Destiny para ti en {{platform}}.",

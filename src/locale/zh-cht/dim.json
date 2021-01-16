@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "ItemUniquenessExplanation_male": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "Maintenance": "Bungie.net伺服器停機維護中.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
     "NetworkError": "網路錯誤 - {{status}}{{statusText}}",
     "NoAccount": "No Destiny account was found. Do you have the right platform selected?",
     "NoAccountForPlatform": "在{{platform}} 上沒有找到Destiny帳戶.",

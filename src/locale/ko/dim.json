@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
+    "MissingInventory": "Bungie.net에서 소지품을 반환하지 않았으며, 개인 정보 보호 설정에 의해 차단되었을 수 있습니다.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
     "NoAccountForPlatform": "{{platform}}에서 데스티니 계정을 찾지 못했습니다.",

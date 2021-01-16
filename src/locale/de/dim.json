@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
     "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
     "NoAccount": "Kein Destiny Konto gefunden. Hast du die richtige Plattform ausgewählt?",
     "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny Account für dich finden.",

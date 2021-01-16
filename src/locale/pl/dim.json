@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Próbowałeś przenieść '{{name}}' {{type}} na swoją {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "ItemUniquenessExplanation_male": "Próbowałeś przenieść '{{name}}' {{type}} na swojego {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "Maintenance": "Serwery Bungie.net są wyłączone w celu przeprowadzenia konserwacji.",
+    "MissingInventory": "Bungie.net nie zwrócił twojego ekwipunku, prawdopodobnie dlatego, że uniemożliwiają to ustawienia prywatności.",
     "NetworkError": "Błąd sieci - {{status}}{{statusText}}",
     "NoAccount": "Nie znaleziono konta Destiny. Czy wybrałeś poprawną platformę?",
     "NoAccountForPlatform": "Nie znaleziono konta Destiny na platformie {{platform}}.",

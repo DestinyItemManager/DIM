@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
     "NetworkError": "Erreur Réseau - {{status}} {{statusText}}",
     "NoAccount": "Aucun compte Destiny n'a été trouvé. Avez-vous sélectionné la bonne plateforme?",
     "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",

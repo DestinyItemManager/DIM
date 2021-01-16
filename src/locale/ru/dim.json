@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_male": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "Maintenance": "Сервера Bungie.net отключены для техобслуживания.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
     "NetworkError": "Сетевая ошибка - {{status}} {{statusText}}",
     "NoAccount": "Аккаунт Destiny не найден. Вы выбрали правильную платформу?",
     "NoAccountForPlatform": "Не удалось найти ваш аккаунт Destiny на {{platform}}.",

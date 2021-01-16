@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
     "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
+    "MissingInventory": "Bungie.net non ha inviato il tuo inventario, forse perché le tue impostazioni sulla privacy lo impediscono.",
     "NetworkError": "Errore Network - {{status}} {{statusText}}",
     "NoAccount": "Non è stato trovato alcun account di Destiny. Sei sicuro di aver selezionato la piattaforma corretta?",
     "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {{platform}}.",
