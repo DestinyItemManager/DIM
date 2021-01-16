@@ -1,6 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
-import { reportException } from 'app/utils/exceptions';
 import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -59,37 +58,18 @@ export function filterItems(
     const lockedMods = lockedArmor2ModMap[bucketsToCategories[bucket]];
 
     if (filteredItems[bucket]) {
-      filteredItems[bucket] = filteredItems[bucket].filter((item) => {
-        //TODO Remove this missing stats stuff once we know what is causing it.
-        const missingStats: number[] = [];
-        const result = // handle locked items and mods cases
+      filteredItems[bucket] = filteredItems[bucket].filter(
+        (item) =>
+          // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
           // Filter out items that don't contain all the armour stats as they will break things.
-          statValues.every((statHash) => {
-            const hashStat = item.stats?.some((stat) => stat.statHash === statHash);
-            if (!hashStat) {
-              missingStats.push(statHash);
-            }
-            return hashStat;
-          }) &&
+          statValues.every((statHash) => item.stats?.some((stat) => stat.statHash === statHash)) &&
           // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
           (bucket === LockableBuckets.classitem ||
             locked?.length ||
-            getTotalBaseStatsWithMasterwork(item, assumeMasterwork) >= minimumStatTotal);
-
-        if (missingStats.length) {
-          reportException(
-            'LB:preProcessFilter',
-            new Error(`${item.name} is missing stats ${missingStats.join(', ')}`),
-            {
-              itemHash: item.hash,
-            }
-          );
-        }
-
-        return result;
-      });
+            getTotalBaseStatsWithMasterwork(item, assumeMasterwork) >= minimumStatTotal)
+      );
     }
   });
 
