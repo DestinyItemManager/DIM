@@ -68,13 +68,12 @@ export default function BountyGuide({
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
     e.stopPropagation();
     try {
+      const bucket = defs.ItemCategory.get(itemCategory)?.displayProperties.name;
       const { item } = await showItemPicker({
         filterItems: (item) =>
           item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
         prompt: t('MovePopup.PullItem', {
-          bucket:
-            defs.ItemCategory.get(itemCategory) &&
-            defs.ItemCategory.get(itemCategory).displayProperties.name,
+          bucket,
           store: store.name,
         }),
       });
