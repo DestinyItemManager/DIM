@@ -73,6 +73,7 @@ export const armor2PlugCategoryHashesByName = {
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
 } as const;
 
+/** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
 export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {

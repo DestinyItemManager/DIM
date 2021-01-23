@@ -1,5 +1,6 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
+  armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   armorBuckets,
   D2ArmorStatHashByName,
@@ -16,9 +17,6 @@ export type StatTypes =
   | 'Discipline'
   | 'Intellect'
   | 'Strength';
-
-// todo: and this?
-export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {
   min: number;
@@ -55,47 +53,14 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export const raidPlugs = [
-  PlugCategoryHashes.EnhancementsSeasonOutlaw,
-  PlugCategoryHashes.EnhancementsRaidGarden,
-  PlugCategoryHashes.EnhancementsRaidDescent,
-] as const;
-
-export const raidSockets = [1444083081, 1764679361, 1269555732] as const;
-
-export const ModPickerCategories = {
-  ...armor2PlugCategoryHashesByName,
-  /** This encompases combat and legacy mods as they "share" a socket position on armour */
-  other: 'other',
-  raid: 'raid',
-} as const;
-export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
-
-/**
- * Checks whether the passed in value is a ModPickerCategory.
- */
-export function isModPickerCategory(value: unknown): value is ModPickerCategory {
-  return (
-    value === ModPickerCategories.general ||
-    value === ModPickerCategories.helmet ||
-    value === ModPickerCategories.gauntlets ||
-    value === ModPickerCategories.chest ||
-    value === ModPickerCategories.leg ||
-    value === ModPickerCategories.classitem ||
-    value === ModPickerCategories.other ||
-    value === ModPickerCategories.raid
-  );
-}
-
 export interface LockedArmor2Mod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
   modDef: PluggableInventoryItemDefinition;
-  category: ModPickerCategory;
 }
 
 export type LockedArmor2ModMap = {
-  [T in ModPickerCategory]: LockedArmor2Mod[];
+  [plugCategoryHash: number]: LockedArmor2Mod[] | undefined;
 };
 
 /**
@@ -136,6 +101,23 @@ export const bucketsToCategories = {
   [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
   [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
 };
+
+export const slotSpecificPlugCategoryHashes = [
+  armor2PlugCategoryHashesByName.helmet,
+  armor2PlugCategoryHashesByName.gauntlets,
+  armor2PlugCategoryHashesByName.chest,
+  armor2PlugCategoryHashesByName.leg,
+  armor2PlugCategoryHashesByName.classitem,
+];
+
+// TODO generate this somehow so we dont need to maintain it
+export const raidPlugCategoryHashes = [
+  PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
+  PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
+  PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
+];
+
+export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
 
 // to-do: deduplicate this and use D2ArmorStatHashByName instead
 export const statHashes: { [type in StatTypes]: number } = {

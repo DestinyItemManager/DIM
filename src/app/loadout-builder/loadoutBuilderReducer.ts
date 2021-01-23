@@ -8,7 +8,6 @@ import {
   LockedItemType,
   LockedMap,
   MinMaxIgnored,
-  ModPickerCategories,
   StatTypes,
 } from './types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
@@ -22,7 +21,6 @@ export interface LoadoutBuilderState {
   modPicker: {
     open: boolean;
     initialQuery?: string;
-    filterLegacy?: boolean;
   };
   perkPicker: {
     open: boolean;
@@ -70,16 +68,7 @@ const lbStateInit = ({
       Intellect: { min: 0, max: 10, ignored: false },
       Strength: { min: 0, max: 10, ignored: false },
     },
-    lockedArmor2Mods: {
-      [ModPickerCategories.general]: [],
-      [ModPickerCategories.helmet]: [],
-      [ModPickerCategories.gauntlets]: [],
-      [ModPickerCategories.chest]: [],
-      [ModPickerCategories.leg]: [],
-      [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.other]: [],
-      [ModPickerCategories.raid]: [],
-    },
+    lockedArmor2Mods: {},
     minimumPower: 750,
     selectedStoreId: selectedStoreId,
     modPicker: {
@@ -99,7 +88,7 @@ export type LoadoutBuilderAction =
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
-  | { type: 'openModPicker'; initialQuery?: string; filterLegacy?: boolean }
+  | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
   | { type: 'closePerkPicker' }
@@ -163,7 +152,6 @@ function lbStateReducer(
         modPicker: {
           open: true,
           initialQuery: action.initialQuery,
-          filterLegacy: action.filterLegacy,
         },
       };
     case 'closeModPicker':

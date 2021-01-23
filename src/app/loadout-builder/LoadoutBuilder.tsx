@@ -203,9 +203,9 @@ function LoadoutBuilder({
           return stat;
         })
       ),
-      mods: Object.values(lockedArmor2Mods)
-        .flat()
-        .map((m) => m.modDef.hash),
+      mods: Object.values(lockedArmor2Mods).flatMap(
+        (mods) => mods?.map((m) => m.modDef.hash) || []
+      ),
       query: searchQuery,
       assumeMasterworked: assumeMasterwork,
     }),
@@ -316,7 +316,6 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
-              filterLegacy={modPicker.filterLegacy}
               lbDispatch={lbDispatch}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,

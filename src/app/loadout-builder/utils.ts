@@ -1,9 +1,4 @@
-import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import {
-  combatCompatiblePlugCategoryHashes,
-  legacyCompatiblePlugCategoryHashes,
-} from 'app/search/specialty-modslots';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -12,16 +7,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import {
-  isModPickerCategory,
-  LockedArmor2Mod,
-  LockedItemType,
-  ModPickerCategories,
-  ModPickerCategory,
-  raidPlugs,
-  StatTypes,
-  statValues,
-} from './types';
+import { LockedArmor2Mod, LockedItemType, StatTypes, statValues } from './types';
 
 /**
  * Plug item hashes that should be excluded from the list of selectable perks.
@@ -296,26 +282,6 @@ function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
 }
 
 /**
- * Get the stats totals attributed to locked mods. Note that these are stats from mods in a single bucket, head, arms, ect.
- */
-export function getLockedModStats(
-  lockedArmor2Mods: readonly LockedArmor2Mod[]
-): { [statHash: number]: number } {
-  const lockedModStats: { [statHash: number]: number } = {};
-  if (lockedArmor2Mods) {
-    for (const lockedMod of lockedArmor2Mods) {
-      for (const stat of lockedMod.modDef.investmentStats) {
-        lockedModStats[stat.statTypeHash] ||= 0;
-        // TODO This is no longer accurate, see https://github.com/DestinyItemManager/DIM/wiki/DIM's-New-Stat-Calculations
-        lockedModStats[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
-
-  return lockedModStats;
-}
-
-/**
  * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
@@ -324,37 +290,4 @@ export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
     (mod) =>
       !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
   );
-}
-
-export const armor2ModPlugCategoriesTitles = {
-  [ModPickerCategories.general]: tl('LB.General'),
-  [ModPickerCategories.helmet]: tl('LB.Helmet'),
-  [ModPickerCategories.gauntlets]: tl('LB.Gauntlets'),
-  [ModPickerCategories.chest]: tl('LB.Chest'),
-  [ModPickerCategories.leg]: tl('LB.Legs'),
-  [ModPickerCategories.classitem]: tl('LB.ClassItem'),
-  [ModPickerCategories.other]: tl('LB.Other'),
-  [ModPickerCategories.raid]: tl('LB.Raid'),
-};
-
-/** Returns the relevant mod picker category from the plug category hash.
- *
- * For raid mods, while they will fit into legacy sockets, they have their
- * own category so expect 'raid' rather than 'other'.
- *
- * Legacy and combat mod hashes will return 'other'.
- */
-export function getModPickerCategoryFromPlugCategoryHash(
-  plugCategoryHash: number
-): ModPickerCategory | undefined {
-  if (isModPickerCategory(plugCategoryHash)) {
-    return plugCategoryHash;
-  } else if (raidPlugs.includes(plugCategoryHash)) {
-    return ModPickerCategories.raid;
-  } else if (
-    legacyCompatiblePlugCategoryHashes.includes(plugCategoryHash) ||
-    combatCompatiblePlugCategoryHashes.includes(plugCategoryHash)
-  ) {
-    return ModPickerCategories.other;
-  }
 }

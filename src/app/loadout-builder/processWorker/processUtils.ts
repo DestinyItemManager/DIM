@@ -120,7 +120,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */
-export function canTakeAllMods(
+export function canTakeSlotIndependantMods(
   generalModPermutations: (ProcessMod | null)[][],
   otherModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
