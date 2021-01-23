@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
     "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
-    "MissingInventory": "Bungie.net non ha inviato il tuo inventario, forse perché le tue impostazioni sulla privacy lo impediscono.",
+    "MissingInventory": "Bungie.net non ha restituito il tuo inventario, forse perché le tue impostazioni di privacy lo impediscono. Prova ad effettuare nuovamente l'accesso.",
     "NetworkError": "Errore Network - {{status}} {{statusText}}",
     "NoAccount": "Non è stato trovato alcun account di Destiny. Sei sicuro di aver selezionato la piattaforma corretta?",
     "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {{platform}}.",
@@ -347,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
-    "Chest": "Torace",
     "ChooseAMod": "Scegli le tue Modifiche",
     "ChooseAPerk": "Scegli un perk",
-    "ClassItem": "Oggetto di classe",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
@@ -358,9 +356,6 @@
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "FilterSets": "Filtra i set",
-    "Gauntlets": "Braccia",
-    "General": "Generale",
-    "Helmet": "Casco",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -382,7 +377,6 @@
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
     "LB": "Ottimizzatore Loadout",
-    "Legs": "Gambe",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
@@ -395,7 +389,6 @@
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
     "ModLockButton": "Seleziona Modifiche",
-    "Other": "Altro",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -403,7 +396,6 @@
       "HelpFull": "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo.",
       "ProcessingMode": "Procedura"
     },
-    "Raid": "Raid",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica o descrizione",
     "SelectMods": "Seleziona Modifiche",

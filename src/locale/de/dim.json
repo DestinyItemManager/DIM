@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
-    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
+    "MissingInventory": "Bungie.net hat dein Inventar nicht zurückgegeben, möglicherweise weil deine Privatsphäre-Einstellungen es verhindern. Versuche dich auszuloggen und dich wieder einzuloggen.",
     "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
     "NoAccount": "Kein Destiny Konto gefunden. Hast du die richtige Plattform ausgewählt?",
     "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
@@ -347,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
-    "Chest": "Brust",
     "ChooseAMod": "Wähle deine Mods",
     "ChooseAPerk": "Wähle einen Perk",
-    "ClassItem": "Klassengegenstand",
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Diese Ausrüstung enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
@@ -358,9 +356,6 @@
     "Exclude": "Ignorierte Gegenstände",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld), um Sets ohne diesen Gegenstand zu generieren.",
     "FilterSets": "Sets filtern",
-    "Gauntlets": "Handschuhe",
-    "General": "Allgemein",
-    "Helmet": "Helm",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
       "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen der Ausrüstung angezeigt werden.",
@@ -382,7 +377,6 @@
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
     "LB": "Ausrüstungs-Optimierer",
-    "Legs": "Beine",
     "LightMode": {
       "HelpCurrent": "Berechnet Ausrüstung mit dem aktuellen Verteidigungswert.",
       "HelpScaled": "Berechnet Ausrüstung als ob alle Gegenstände 350 Verteidigung hätten.",
@@ -395,7 +389,6 @@
     "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um es in der Ausrüstung zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
     "Missing2": "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
     "ModLockButton": "Mods auswählen",
-    "Other": "Andere",
     "ProcessingMode": {
       "Fast": "Schnell",
       "Full": "Vollständig",
@@ -403,7 +396,6 @@
       "HelpFull": "Bezieht mehr Ausrüstung ein, braucht dafür länger.",
       "ProcessingMode": "Berechnung"
     },
-    "Raid": "Raid",
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod oder Beschreibung",
     "SelectMods": "Mods auswählen",
