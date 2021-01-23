@@ -26,7 +26,12 @@ export default function ItemPopupBody({
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
-  if (!item.canPullFromPostmaster && item.location.inPostmaster) {
+  const engramBucketHash = 375726501;
+  const isNotTransferable =
+    (item.notransfer && !item.isEngram) || (item.notransfer && !item.canPullFromPostmaster);
+  const isEngramCollected = item.location.hash === engramBucketHash;
+
+  if ((isNotTransferable && item.location.inPostmaster) || isEngramCollected) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 

@@ -110,6 +110,9 @@ function DraggableInventoryItem({
   const [touchActive, setTouchActive] = useState(false);
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
+  const isNotTransferable =
+    (item.notransfer && !item.isEngram) || (item.notransfer && !item.canPullFromPostmaster);
+  const itemTransferStyle = 'item-untransferable';
 
   const resetTouch = () => {
     setTouchActive(false);
@@ -162,9 +165,14 @@ function DraggableInventoryItem({
       onTouchMove={onTouch}
       onTouchEnd={onTouch}
       onTouchCancel={onTouch}
-      className={clsx('item-drag-container', `item-type-${item.type}`, {
-        'touch-active': touchActive,
-      })}
+      className={clsx(
+        'item-drag-container',
+        `item-type-${item.type}`,
+        isNotTransferable ? `${itemTransferStyle}` : null,
+        {
+          'touch-active': touchActive,
+        }
+      )}
     >
       {children}
     </div>
