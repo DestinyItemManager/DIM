@@ -51,6 +51,19 @@ if ($featureFlags.sentry) {
     ],
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
+    integrations: [
+      new Sentry.Integrations.BrowserTracing({
+        tracingOrigins: ['localhost', 'api.destinyitemmanager.com', 'www.bungie.net', /^\//],
+        beforeNavigate: (context) => ({
+          ...context,
+          // We could use the React-Router integration but it's annoying
+          name: location.pathname
+            .replace(/\\d+\d(1|2)\//g, '/profileMembershipId/d\1/')
+            .replace(/\/vendors\/\d+/g, '/vendors/vendorId'),
+        }),
+      }),
+    ],
+    tracesSampleRate: 0.01, // Performance traces at 1%
     beforeSend: function (event, hint) {
       const e = hint?.originalException;
       const underlyingError = e instanceof DimError ? e.error : undefined;
