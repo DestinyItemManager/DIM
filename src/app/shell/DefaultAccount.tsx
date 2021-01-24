@@ -1,7 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { accountsLoadedSelector, currentAccountSelector } from 'app/accounts/selectors';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
@@ -14,7 +13,7 @@ import ErrorPanel from './ErrorPanel';
 interface StoreProps {
   activeAccount?: DestinyAccount;
   accountsLoaded: boolean;
-  accountsError?: DimError;
+  accountsError?: Error;
 }
 
 function mapStateToProps(state: RootState): StoreProps {

@@ -87,7 +87,7 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
             reportException(
-              `hashLookupFailureD1: ${table}[${id}]`,
+              `hashLookupFailureD1`,
               new Error(`hashLookupFailureD1: ${table}[${id}]`),
               {
                 requestingEntryInfo,

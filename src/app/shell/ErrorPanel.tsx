@@ -1,6 +1,7 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import { DimError } from 'app/utils/dim-error';
 import React from 'react';
 import { AppIcon, helpIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
@@ -55,13 +56,29 @@ export default function ErrorPanel({
   showReload,
 }: {
   title?: string;
-  error?: DimError;
+  error?: Error | DimError;
   fallbackMessage?: string;
   showTwitters?: boolean;
   showReload?: boolean;
   children?: React.ReactNode;
 }) {
-  const hasBungieErrorCode = error?.code && error.code > 0;
+  const underlyingError = error instanceof DimError ? error.error : undefined;
+
+  let code: string | number | undefined = error instanceof DimError ? error.code : undefined;
+  if (underlyingError) {
+    if (underlyingError instanceof BungieError) {
+      code = underlyingError.code;
+    } else if (underlyingError instanceof HttpStatusError) {
+      code = underlyingError.status;
+    }
+  }
+
+  const name = underlyingError?.name || error?.name;
+  const message = error?.message || fallbackMessage;
+
+  const ourFault = !(
+    underlyingError instanceof BungieError || underlyingError instanceof HttpStatusError
+  );
 
   return (
     <div>
@@ -69,19 +86,20 @@ export default function ErrorPanel({
         <h2>
           {title || t('ErrorBoundary.Title')}
 
-          {error && hasBungieErrorCode ? (
-            <span className={styles.errorCode}>Error {error.code}</span>
-          ) : (
-            error && <span className={styles.errorCode}>{error.name}</span>
+          {error && (
+            <span className={styles.errorCode}>
+              {name}
+              {code && ' '}
+              {code}
+            </span>
           )}
         </h2>
         <p>
-          {error ? error.message : fallbackMessage}{' '}
-          {hasBungieErrorCode && t('ErrorPanel.Description')}
+          {message} {underlyingError instanceof BungieError && t('ErrorPanel.Description')}
         </p>
         {children}
         <div className={styles.twitterLinks}>
-          {hasBungieErrorCode && (
+          {!ourFault && (
             <ExternalLink href={bungieHelpLink} className="dim-button">
               <AppIcon icon={twitterIcon} /> @BungieHelp
             </ExternalLink>

@@ -1,5 +1,4 @@
 import { t } from 'app/i18next-t';
-import { PlatformErrorCodes } from 'bungie-api-ts/user';
 
 /**
  * An internal error that captures more error info for reporting.
@@ -24,16 +23,7 @@ export class DimError extends Error {
     return this;
   }
 
-  // TODO: more factories, string formatting
   // TODO: handle specially in exceptions.ts
-  // TODO: print an error in logs when sentry is off
   // TODO: show sentry report dialog if there's an option in this class
-  //
-}
-
-/** Generate an error with a bit more info */
-export function dimError(message: string, errorCode: PlatformErrorCodes): DimError {
-  const error: DimError = new Error(message);
-  error.code = errorCode;
-  return error;
+  // TODO: optional help link
 }

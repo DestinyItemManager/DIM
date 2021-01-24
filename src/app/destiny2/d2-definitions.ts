@@ -167,18 +167,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
-          if (!dbEntry && tableShort !== 'Record') {
+          if (!dbEntry && tableShort !== 'Record' && tableShort !== 'ItemCategory') {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
-            reportException(
-              `hashLookupFailure: ${table}[${id}]`,
-              new Error(`hashLookupFailure: ${table}[${id}]`),
-              {
-                requestingEntryInfo,
-                failedHash: id,
-                failedComponent: table,
-              }
-            );
+            reportException(`hashLookupFailure`, new Error(`hashLookupFailure: ${table}[${id}]`), {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            });
           }
           return dbEntry;
         },

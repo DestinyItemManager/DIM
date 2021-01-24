@@ -1,57 +1,100 @@
-import _ from 'lodash';
+import type { BrowserOptions, Scope } from '@sentry/browser';
+import { BungieError } from 'app/bungie-api/http-client';
+import { getToken } from 'app/bungie-api/oauth-tokens';
+import { defaultLanguage } from 'app/i18n';
+import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { DimError } from './dim-error';
+import { errorLog } from './log';
+
+// TODO: rename this file "sentry"
 
 /** Sentry.io exception reporting */
-export let reportException: (name: string, e: Error, errorInfo?: {}) => void = _.noop;
+export let reportException = (name: string, e: Error, errorInfo?: {}) => {
+  errorLog(
+    'exception',
+    name,
+    e,
+    errorInfo,
+    e instanceof DimError && e.code,
+    e instanceof DimError && e.error
+  );
+};
+
+// DIM error codes to ignore and not report. This works regardless of language.
+const ignoreDimErrors: (string | PlatformErrorCodes)[] = [
+  'BungieService.SlowResponse',
+  'BungieService.Difficulties',
+  'BungieService.Throttled',
+  'BungieService.Maintenance',
+  'BungieService.NotConnected',
+  'BungieService.NotConnectedOrBlocked',
+  PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation,
+];
 
 if ($featureFlags.sentry) {
   // The require instead of import helps us trim this from the production bundle
   const Sentry = require('@sentry/browser');
-  Sentry.init({
+
+  const options: BrowserOptions = {
     dsn: 'https://1367619d45da481b8148dd345c1a1330@sentry.io/279673',
     release: $DIM_VERSION,
     environment: $DIM_FLAVOR,
     ignoreErrors: [
-      'QuotaExceededError',
-      'Time out during communication with the game servers.',
-      'Bungie.net servers are down for maintenance.',
-      "This action is forbidden at your character's current location.",
-      "An unexpected error has occurred on Bungie's servers",
-      /Destiny tracker service call failed\./,
-      'Appel au service de Destiny tracker échoué.',
-      /You may not be connected to the internet/,
-      'Software caused connection abort',
-      'Refresh token invalid, clearing auth tokens & going to login',
-      'cannot be equipped because the exotic',
-      'No auth token exists, redirect to login',
-      'Circuit breaker open',
+      /QuotaExceededError/,
       'HTTP 503 returned',
       'Waiting due to HTTP 503',
-      'Bungie.net was too slow to respond.',
-      'Bungie.net is currently experiencing difficulties.',
+      /FatalTokenError/,
       /Failed to fetch/,
       /AbortError/,
       /Non-Error promise rejection/,
     ],
-    ignoreUrls: [
-      // Chrome extensions
-      /extensions\//i,
-      /^chrome:\/\//i,
-      /^moz-extension:\/\//i,
-    ],
-    attachStackTrace: true,
+    sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
+    attachStacktrace: true,
     beforeSend: function (event, hint) {
-      if (hint.originalException?.errorCode) {
-        event.fingerprint = ['{{ default }}', String(hint.originalException.errorCode)];
+      const e = hint?.originalException;
+      const underlyingError = e instanceof DimError ? e.error : undefined;
+
+      const code =
+        underlyingError instanceof BungieError
+          ? underlyingError.code
+          : e instanceof DimError
+          ? e.code
+          : undefined;
+      if (code && ignoreDimErrors.includes(code)) {
+        return null; // drop report
       }
+
+      if (e instanceof DimError) {
+        // Replace the (localized) message with our code
+        event.message = e.code;
+
+        // TODO: it might be neat to be able to pass attachments here too - such as the entire profile response!
+      }
+
+      // TODO: we can edit the fingerprint here to make things map to the same error, or map to different errors!
+
       return event;
     },
-  });
+  };
+
+  Sentry.init(options);
+
+  // Set user ID (membership ID) to help debug and to better count affected users
+  const token = getToken();
+  if (token?.bungieMembershipId) {
+    Sentry.setUser({ id: token.bungieMembershipId });
+  }
+  // Capture locale
+  Sentry.setTag('lang', defaultLanguage());
 
   reportException = (name: string, e: Error, errorInfo?: {}) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Sentry.showReportDialog();
-    Sentry.withScope((scope) => {
+    Sentry.withScope((scope: Scope) => {
       scope.setTag('context', name);
+      if (e instanceof DimError) {
+        scope.setExtras({ underlyingError: e.error });
+      }
       if (errorInfo) {
         scope.setExtras(errorInfo);
       }
