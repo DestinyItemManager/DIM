@@ -1,6 +1,7 @@
 import type { BrowserOptions, Scope } from '@sentry/browser';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import { HashLookupFailure } from 'app/destiny2/definitions';
 import { defaultLanguage } from 'app/i18n';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DimError } from './dim-error';
@@ -63,15 +64,16 @@ if ($featureFlags.sentry) {
       if (code && ignoreDimErrors.includes(code)) {
         return null; // drop report
       }
-
+      if (e instanceof HashLookupFailure) {
+        // Add the ID to the fingerprint so we don't collapse different errors
+        event.fingerprint = ['{{ default }}', String(e.table), String(e.id)];
+      }
       if (e instanceof DimError) {
         // Replace the (localized) message with our code
         event.message = e.code;
 
         // TODO: it might be neat to be able to pass attachments here too - such as the entire profile response!
       }
-
-      // TODO: we can edit the fingerprint here to make things map to the same error, or map to different errors!
 
       return event;
     },

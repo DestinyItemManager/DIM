@@ -1,6 +1,6 @@
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
-import { ManifestDefinitions } from '../destiny2/definitions';
+import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
 
@@ -86,15 +86,11 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
           if (!dbEntry) {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
-            reportException(
-              `hashLookupFailureD1`,
-              new Error(`hashLookupFailureD1: ${table}[${id}]`),
-              {
-                requestingEntryInfo,
-                failedHash: id,
-                failedComponent: table,
-              }
-            );
+            reportException(`hashLookupFailureD1`, new HashLookupFailure(table, id), {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            });
           }
           return dbEntry;
         },

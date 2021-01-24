@@ -141,7 +141,6 @@ async function getServerVersion() {
     if (!data.version) {
       throw new Error('No version property');
     }
-    infoLog('SW', 'Got server version', data);
     return data.version as string;
   } else {
     throw response;
