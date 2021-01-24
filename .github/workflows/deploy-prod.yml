@@ -78,3 +78,8 @@ jobs:
           # Use the dim-release-bot token rather than the default
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
+
+      - name: Publish Sentry release
+        run: ./build/sentry-release-prod.sh
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
