@@ -34,7 +34,7 @@ const ignoreDimErrors: (string | PlatformErrorCodes)[] = [
 
 if ($featureFlags.sentry) {
   // The require instead of import helps us trim this from the production bundle
-  const Sentry = require('@sentry/browser');
+  const Sentry = require('@sentry/react');
 
   const options: BrowserOptions = {
     dsn: 'https://1367619d45da481b8148dd345c1a1330@sentry.io/279673',
@@ -78,6 +78,9 @@ if ($featureFlags.sentry) {
       return event;
     },
   };
+
+  // TODO: There's a redux integration but I'm worried it'd be too much trouble to trim out all the stuff we wouldn't want to report (by default it sends the whole action & state.
+  // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/redux/
 
   Sentry.init(options);
 

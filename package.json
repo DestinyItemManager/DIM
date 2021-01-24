@@ -162,6 +162,7 @@
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@popperjs/core": "^2.2.1",
     "@sentry/browser": "^5.0.3",
+    "@sentry/react": "^6.0.1",
     "body-scroll-lock": "^3.1.5",
     "bungie-api-ts": "^4.5.0",
     "caniuse-lite": ">=1.0.30000843",
