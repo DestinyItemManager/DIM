@@ -27,8 +27,7 @@ export default function ItemPopupBody({
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
-  const isNotTransferable =
-    (item.notransfer && !item.isEngram) || (item.notransfer && !item.canPullFromPostmaster);
+  const isNotTransferable = item.notransfer && (!item.isEngram || !item.canPullFromPostmaster);
   const isEngramCollected = item.location.hash === BucketHashes.Engrams;
 
   if ((isNotTransferable && item.location.inPostmaster) || isEngramCollected) {

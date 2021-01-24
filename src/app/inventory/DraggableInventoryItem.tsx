@@ -110,8 +110,7 @@ function DraggableInventoryItem({
   const [touchActive, setTouchActive] = useState(false);
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
-  const isNotTransferable =
-    (item.notransfer && !item.isEngram) || (item.notransfer && !item.canPullFromPostmaster);
+  const isNotTransferable = item.notransfer && (!item.isEngram || !item.canPullFromPostmaster);
   const itemTransferStyle = 'item-untransferable';
 
   const resetTouch = () => {
