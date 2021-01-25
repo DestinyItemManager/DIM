@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { ItemTriage } from 'app/item-triage/ItemTriage';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
@@ -26,7 +27,10 @@ export default function ItemPopupBody({
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
-  if (!item.canPullFromPostmaster && item.location.inPostmaster) {
+  const isNotTransferable = item.notransfer && (!item.isEngram || !item.canPullFromPostmaster);
+  const isEngramCollected = item.location.hash === BucketHashes.Engrams;
+
+  if ((isNotTransferable && item.location.inPostmaster) || isEngramCollected) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 
