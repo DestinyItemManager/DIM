@@ -5,10 +5,6 @@ interface CssExports {
   'menuContent': string;
   'page': string;
   'processing': string;
-  'processingEnter': string;
-  'processingEnterActive': string;
-  'processingExit': string;
-  'processingExitActive': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
