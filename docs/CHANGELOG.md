@@ -1,8 +1,17 @@
 ## Next
 
+* Loadout Optimizer shows "half tiers" (0.5) to help you see where a 5-point mod might bump you up a tier. Note that this does not suggest we're displaying a new 0.1 precision for tiers - we are specifically rounding down to half-tiers now instead of full tiers.
+* Items in the Postmaster which cannot be pulled are shown faded out.
+
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
 
+* Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
+* Disabled weapon mods no longer contribute to stats.
+* Automatic updates for the latest patch.
+
 ## 6.48.0 <span class="changelog-date">(2021-01-17)</span>
+
+* Allow clicking through the loading screen to get to the troubleshooting link.
 
 ## 6.47.1 <span class="changelog-date">(2021-01-11)</span>
 
