@@ -1,5 +1,4 @@
-import type { BrowserOptions } from '@sentry/browser';
-import Sentry from '@sentry/react';
+import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
@@ -52,7 +51,8 @@ if ($featureFlags.sentry) {
     attachStacktrace: true,
     integrations: [
       new Integrations.BrowserTracing({
-        tracingOrigins: ['localhost', 'api.destinyitemmanager.com', 'www.bungie.net', /^\//],
+        // TODO: add tracing to bungie.net client manually - it can't handle the automatic sentry trace header
+        tracingOrigins: ['localhost', 'api.destinyitemmanager.com', /^\//],
         beforeNavigate: (context) => ({
           ...context,
           // We could use the React-Router integration but it's annoying
@@ -94,28 +94,28 @@ if ($featureFlags.sentry) {
   // TODO: There's a redux integration but I'm worried it'd be too much trouble to trim out all the stuff we wouldn't want to report (by default it sends the whole action & state.
   // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/redux/
 
-  Sentry.init(options);
+  init(options);
 
   // Set user ID (membership ID) to help debug and to better count affected users
   const token = getToken();
   if (token?.bungieMembershipId) {
-    Sentry.setUser({ id: token.bungieMembershipId });
+    setUser({ id: token.bungieMembershipId });
   }
   // Capture locale
-  Sentry.setTag('lang', defaultLanguage());
+  setTag('lang', defaultLanguage());
 
   reportException = (name: string, e: Error, errorInfo?: {}) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Sentry.showReportDialog();
-    Sentry.withScope((scope) => {
-      scope.setTag('context', name);
+    withScope((scope) => {
+      setTag('context', name);
       if (e instanceof DimError) {
         scope.setExtras({ underlyingError: e.error });
       }
       if (errorInfo) {
         scope.setExtras(errorInfo);
       }
-      Sentry.captureException(e);
+      captureException(e);
     });
   };
 }

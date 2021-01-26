@@ -32,6 +32,8 @@ module.exports = function csp(env) {
       'https://www.google-analytics.com',
       // Bungie.net API
       'https://www.bungie.net',
+      // Sentry
+      'https://sentry.io/api/279673/',
       // Wishlists
       'https://raw.githubusercontent.com',
       'https://gist.githubusercontent.com',
@@ -74,11 +76,10 @@ module.exports = function csp(env) {
     manifestSrc: SELF,
   };
 
-  // Turn on reporting to sentry.io on beta only
+  // Turn on CSP reporting to sentry.io on beta only
   if (env === 'beta') {
     baseCSP.reportUri =
       'https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330';
-    baseCSP.connectSrc.push('https://sentry.io/api/279673/store/');
   }
 
   return builder({

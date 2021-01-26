@@ -138,6 +138,8 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
 }
 
+const allTables = [...eagerTables, ...lazyTables];
+
 /**
  * Manifest database definitions. This returns a promise for an
  * object that has a property named after each of the tables listed
@@ -149,7 +151,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
-    const db = await dispatch(getManifest([...eagerTables, ...lazyTables]));
+    const db = await dispatch(getManifest(allTables));
     existingManifest = getState().manifest.d2Manifest;
     if (existingManifest) {
       return existingManifest;
