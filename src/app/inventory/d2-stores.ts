@@ -4,6 +4,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
@@ -186,7 +187,7 @@ function loadStoresData(
             'd2-stores',
             'Vault or character inventory was missing - bailing in order to avoid corruption'
           );
-          throw new Error(t('BungieService.MissingInventory'));
+          throw new DimError('BungieService.MissingInventory');
         }
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);

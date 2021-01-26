@@ -2,6 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
@@ -10,7 +11,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
   equipItems as d1EquipItems,
@@ -498,11 +498,10 @@ function chooseMoveAsideItem(
 
   // if there are no candidates at all, fail
   if (moveAsideCandidates.length === 0) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   // Find any stackable that could be combined with another stack
@@ -618,11 +617,10 @@ function chooseMoveAsideItem(
   }
 
   if (!moveAsideCandidate) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   return moveAsideCandidate;
@@ -672,9 +670,7 @@ function canMoveToStore(
 
     // You can't move more than the max stack of a unique stack item.
     if (item.uniqueStack && amountOfItem(store, item) + amount > item.maxStackSize) {
-      const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
-      error.code = 'no-space';
-      throw error;
+      throw new DimError('no-space', t('ItemService.StackFull', { name: item.name }));
     }
 
     const stores = storesSelector(getState());
@@ -738,7 +734,8 @@ function canMoveToStore(
             : ''
           : moveAsideItem.type;
 
-        const error: DimError = new Error(
+        throw new DimError(
+          'no-space',
           moveAsideTarget.isVault
             ? t('ItemService.BucketFull.Vault', {
                 itemtype,
@@ -750,8 +747,6 @@ function canMoveToStore(
                 context: moveAsideTarget.genderName,
               })
         );
-        error.code = 'no-space';
-        throw error;
       } else {
         // Make one move and start over!
         try {
@@ -797,9 +792,7 @@ function canEquip(item: DimItem, store: DimStore): void {
             level: item.equipRequiredLevel,
           });
 
-    const error: DimError = new Error(message);
-    error.code = 'wrong-level';
-    throw error;
+    throw new DimError('wrong-level', message);
   }
 }
 

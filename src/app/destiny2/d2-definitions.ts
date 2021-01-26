@@ -41,7 +41,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
-import { ManifestDefinitions } from './definitions';
+import { HashLookupFailure, ManifestDefinitions } from './definitions';
 
 const lazyTables = [
   'InventoryItem',
@@ -167,18 +167,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
-          if (!dbEntry && tableShort !== 'Record') {
+          if (!dbEntry && tableShort !== 'Record' && tableShort !== 'ItemCategory') {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
-            reportException(
-              `hashLookupFailure: ${table}[${id}]`,
-              new Error(`hashLookupFailure: ${table}[${id}]`),
-              {
-                requestingEntryInfo,
-                failedHash: id,
-                failedComponent: table,
-              }
-            );
+            reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            });
           }
           return dbEntry;
         },

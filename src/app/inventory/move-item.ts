@@ -1,8 +1,8 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
@@ -144,9 +144,7 @@ export function moveItemTo(
         try {
           moveAmount = await showMoveAmountPopup(item, store, maximum);
         } catch (e) {
-          const error: DimError = new Error('move-canceled');
-          error.code = 'move-canceled';
-          throw error;
+          throw new DimError('move-canceled', 'Move canceled'); // not shown to user
         }
       }
 
