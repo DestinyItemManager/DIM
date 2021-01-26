@@ -182,10 +182,13 @@ export function moveItemTo(
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
-        e.code !== 'wrong-level' &&
-        e.code !== 'no-space' &&
-        e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+        e instanceof DimError &&
+        (e.code === 'wrong-level' ||
+          e.code === 'no-space' ||
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
       ) {
+        // don't report
+      } else {
         reportException('moveItem', e);
       }
     }

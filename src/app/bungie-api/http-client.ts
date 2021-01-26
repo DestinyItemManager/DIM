@@ -191,18 +191,20 @@ export function responsivelyThrottleHttpClient(
       timesThrottled = Math.floor(timesThrottled / 2);
       return result;
     } catch (e) {
-      switch ((e as BungieError).code) {
-        case PlatformErrorCodes.ThrottleLimitExceededMinutes:
-        case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
-        case PlatformErrorCodes.ThrottleLimitExceededSeconds:
-        case PlatformErrorCodes.DestinyThrottledByGameServer:
-        case PlatformErrorCodes.PerApplicationThrottleExceeded:
-        case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
-        case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
-        case PlatformErrorCodes.PerUserThrottleExceeded:
-        case PlatformErrorCodes.SystemDisabled:
-          timesThrottled++;
-          break;
+      if (e instanceof BungieError) {
+        switch (e.code) {
+          case PlatformErrorCodes.ThrottleLimitExceededMinutes:
+          case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
+          case PlatformErrorCodes.ThrottleLimitExceededSeconds:
+          case PlatformErrorCodes.DestinyThrottledByGameServer:
+          case PlatformErrorCodes.PerApplicationThrottleExceeded:
+          case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
+          case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
+          case PlatformErrorCodes.PerUserThrottleExceeded:
+          case PlatformErrorCodes.SystemDisabled:
+            timesThrottled++;
+            break;
+        }
       }
       throw e;
     }

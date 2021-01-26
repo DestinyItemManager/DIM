@@ -8,6 +8,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -162,7 +163,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         } catch (e) {
           // TODO: collect errors
           errorLog('postmaster', `Error pulling ${item.name} from postmaster`, e);
-          if (e.code === 'no-space') {
+          if (e instanceof DimError && e.code === 'no-space') {
             showNoSpaceError(e);
           } else {
             errorNotification(e.message);

@@ -337,10 +337,16 @@ function moveToStore(
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
       // Not sure why this happens - maybe out of sync game state?
-      if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
+      if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem
+      ) {
         await dispatch(dequipItem(item));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
-      } else if (e.code === PlatformErrorCodes.DestinyItemNotFound) {
+      } else if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound
+      ) {
         // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
         // reload the profile or load just that item, but API caching means we aren't guaranteed to
         // get the current view. So instead, we just pretend the move succeeded.
@@ -862,15 +868,17 @@ export function executeMoveItem(
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount));
       } catch (e) {
-        if (e.code === PlatformErrorCodes.DestinyNoRoomInDestination) {
+        if (
+          e instanceof DimError &&
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyNoRoomInDestination
+        ) {
           warnLog(
             'move',
             'Tried blindly moving',
             item.name,
             'to',
             target.name,
-            'but the bucket is really full',
-            e.code
+            'but the bucket is really full'
           );
           lastTimeCurrentStoreWasReallyFull = Date.now();
         } else {
