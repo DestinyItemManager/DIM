@@ -10,8 +10,8 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 export class DimError extends Error {
   // A non-localized string to help identify/categorize errors for DIM developers. Usually the localization key of the message.
   code?: string;
-  // The error that caused this error, if there is one
-  error?: Error;
+  // The error that caused this error, if there is one. Naming it 'cause' makes it automatically chain in Sentry.
+  cause?: Error;
 
   /** Pass in just a message key to set the message to the localized version of that key, or override with the second parameter. */
   constructor(messageKey: string, message?: string) {
@@ -21,7 +21,7 @@ export class DimError extends Error {
   }
 
   public withError(error: Error): DimError {
-    this.error = error;
+    this.cause = error;
     return this;
   }
 
@@ -29,7 +29,7 @@ export class DimError extends Error {
    * If this error is a Bungie API error, return its platform code.
    */
   public bungieErrorCode(): PlatformErrorCodes | undefined {
-    return this.error instanceof BungieError ? this.error.code : undefined;
+    return this.cause instanceof BungieError ? this.cause.code : undefined;
   }
 
   // TODO: handle specially in exceptions.ts

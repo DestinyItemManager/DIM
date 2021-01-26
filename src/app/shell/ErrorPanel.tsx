@@ -62,7 +62,7 @@ export default function ErrorPanel({
   showReload?: boolean;
   children?: React.ReactNode;
 }) {
-  const underlyingError = error instanceof DimError ? error.error : undefined;
+  const underlyingError = error instanceof DimError ? error.cause : undefined;
 
   let code: string | number | undefined = error instanceof DimError ? error.code : undefined;
   if (underlyingError) {

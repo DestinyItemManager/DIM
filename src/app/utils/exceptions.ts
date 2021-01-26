@@ -1,5 +1,5 @@
 import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -18,7 +18,7 @@ export let reportException = (name: string, e: Error, errorInfo?: {}) => {
     e,
     errorInfo,
     e instanceof DimError && e.code,
-    e instanceof DimError && e.error
+    e instanceof DimError && e.cause
   );
 };
 
@@ -50,7 +50,7 @@ if ($featureFlags.sentry) {
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [
-      new Integrations.BrowserTracing({
+      new TracingIntegrations.BrowserTracing({
         // TODO: add tracing to bungie.net client manually - it can't handle the automatic sentry trace header
         tracingOrigins: ['localhost', 'api.destinyitemmanager.com', /^\//],
         beforeNavigate: (context) => ({
@@ -65,7 +65,7 @@ if ($featureFlags.sentry) {
     tracesSampleRate: 0.01, // Performance traces at 1%
     beforeSend: function (event, hint) {
       const e = hint?.originalException;
-      const underlyingError = e instanceof DimError ? e.error : undefined;
+      const underlyingError = e instanceof DimError ? e.cause : undefined;
 
       const code =
         underlyingError instanceof BungieError
@@ -83,8 +83,16 @@ if ($featureFlags.sentry) {
       if (e instanceof DimError) {
         // Replace the (localized) message with our code
         event.message = e.code;
-
         // TODO: it might be neat to be able to pass attachments here too - such as the entire profile response!
+
+        // Do deeper surgery to overwrite the localized message with the code
+        if (event.exception?.values) {
+          for (const ex of event.exception?.values) {
+            if (ex.value === e.message) {
+              ex.value = e.code;
+            }
+          }
+        }
       }
 
       return event;
@@ -110,7 +118,7 @@ if ($featureFlags.sentry) {
     withScope((scope) => {
       setTag('context', name);
       if (e instanceof DimError) {
-        scope.setExtras({ underlyingError: e.error });
+        scope.setExtras({ cause: e.cause });
       }
       if (errorInfo) {
         scope.setExtras(errorInfo);
