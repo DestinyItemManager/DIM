@@ -1,4 +1,6 @@
-import type { BrowserOptions, Scope } from '@sentry/browser';
+import type { BrowserOptions } from '@sentry/browser';
+import Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -33,9 +35,6 @@ const ignoreDimErrors: (string | PlatformErrorCodes)[] = [
 ];
 
 if ($featureFlags.sentry) {
-  // The require instead of import helps us trim this from the production bundle
-  const Sentry = require('@sentry/react');
-
   const options: BrowserOptions = {
     dsn: 'https://1367619d45da481b8148dd345c1a1330@sentry.io/279673',
     release: $DIM_VERSION,
@@ -52,8 +51,7 @@ if ($featureFlags.sentry) {
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [
-      /*
-      new Sentry.Integrations.BrowserTracing({
+      new Integrations.BrowserTracing({
         tracingOrigins: ['localhost', 'api.destinyitemmanager.com', 'www.bungie.net', /^\//],
         beforeNavigate: (context) => ({
           ...context,
@@ -63,7 +61,6 @@ if ($featureFlags.sentry) {
             .replace(/\/vendors\/\d+/g, '/vendors/vendorId'),
         }),
       }),
-      */
     ],
     tracesSampleRate: 0.01, // Performance traces at 1%
     beforeSend: function (event, hint) {
@@ -110,7 +107,7 @@ if ($featureFlags.sentry) {
   reportException = (name: string, e: Error, errorInfo?: {}) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Sentry.showReportDialog();
-    Sentry.withScope((scope: Scope) => {
+    Sentry.withScope((scope) => {
       scope.setTag('context', name);
       if (e instanceof DimError) {
         scope.setExtras({ underlyingError: e.error });
