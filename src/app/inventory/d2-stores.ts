@@ -1,3 +1,4 @@
+import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
@@ -160,6 +161,10 @@ function loadStoresData(
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
+      const transaction = startTransaction({ name: 'loadStoresD2' });
+      // set the transaction on the scope so it picks up any errors
+      getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+
       resetItemIndexGenerator();
 
       // TODO: if we've already loaded profile recently, don't load it again
@@ -255,6 +260,8 @@ function loadStoresData(
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
         return undefined;
+      } finally {
+        transaction.finish();
       }
     })();
     loadingTracker.addPromise(promise);

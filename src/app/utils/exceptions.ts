@@ -58,7 +58,8 @@ if ($featureFlags.sentry) {
           // We could use the React-Router integration but it's annoying
           name: location.pathname
             .replace(/\/\d+\/d(1|2)\//g, '/profileMembershipId/d$1/')
-            .replace(/\/vendors\/\d+/g, '/vendors/vendorId'),
+            .replace(/\/vendors\/\d+/g, '/vendors/vendorId')
+            .replace(/index\.html/, ''),
         }),
       }),
     ],
@@ -119,6 +120,10 @@ if ($featureFlags.sentry) {
       setTag('context', name);
       if (e instanceof DimError) {
         scope.setExtras({ cause: e.cause });
+        scope.setTag('code', e.code);
+        if (e.cause instanceof BungieError) {
+          scope.setTag('bungieErrorCode', e.code);
+        }
       }
       if (errorInfo) {
         scope.setExtras(errorInfo);

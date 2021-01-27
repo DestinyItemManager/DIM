@@ -1,3 +1,4 @@
+import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -110,6 +111,10 @@ export function moveItemTo(
   chooseAmount = false
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    const transaction = startTransaction({ name: 'moveItemTo' });
+    // set the transaction on the scope so it picks up any errors
+    getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+
     hideItemPopup();
     if (
       item.location.inPostmaster
@@ -191,6 +196,8 @@ export function moveItemTo(
       } else {
         reportException('moveItem', e);
       }
+    } finally {
+      transaction.finish();
     }
 
     return item;

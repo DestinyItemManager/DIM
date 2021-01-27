@@ -17,6 +17,7 @@ import {
   createHttpClient,
   HttpStatusError,
   responsivelyThrottleHttpClient,
+  sentryTraceHttpClient,
 } from './http-client';
 import { rateLimitedFetch } from './rate-limiter';
 
@@ -69,10 +70,12 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts*/
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(
-      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-      API_KEY,
-      false
+    sentryTraceHttpClient(
+      createHttpClient(
+        createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
+        API_KEY,
+        false
+      )
     ),
     logThrottle
   )
