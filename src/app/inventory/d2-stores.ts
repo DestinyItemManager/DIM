@@ -202,6 +202,9 @@ function loadStoresData(
           profileInfo.characterCollectibles
         );
 
+        const processSpan = transaction.startChild({
+          op: 'processItems',
+        });
         const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
 
         const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
@@ -214,6 +217,7 @@ function loadStoresData(
             lastPlayedDate
           )
         );
+        processSpan.finish();
 
         const stores = [...characters, vault];
 
@@ -241,9 +245,13 @@ function loadStoresData(
           .style.setProperty('--num-characters', String(stores.length - 1));
         stopTimer();
 
+        const stateSpan = transaction.startChild({
+          op: 'updateInventoryState',
+        });
         const stopStateTimer = timer('Inventory state update');
         dispatch(update({ stores, profileResponse: profileInfo, currencies }));
         stopStateTimer();
+        stateSpan.finish();
 
         return stores;
       } catch (e) {

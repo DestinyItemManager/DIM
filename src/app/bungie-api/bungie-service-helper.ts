@@ -54,14 +54,16 @@ const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
 /** used for most Bungie API requests */
 export const authenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(
-      createFetchWithNonStoppingTimeout(
-        rateLimitedFetch(fetchWithBungieOAuth),
-        TIMEOUT,
-        notifyTimeout
-      ),
-      API_KEY,
-      true
+    sentryTraceHttpClient(
+      createHttpClient(
+        createFetchWithNonStoppingTimeout(
+          rateLimitedFetch(fetchWithBungieOAuth),
+          TIMEOUT,
+          notifyTimeout
+        ),
+        API_KEY,
+        true
+      )
     ),
     logThrottle
   )
