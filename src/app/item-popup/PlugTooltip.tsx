@@ -36,6 +36,22 @@ export default function PlugTooltip({
     wishlistRoll?.wishListPerks.has(plug.plugDef.hash) &&
     t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
 
+  const visibleStats = plug.stats
+    ? _.sortBy(Object.keys(plug.stats), (h) =>
+        statAllowList.indexOf(parseInt(h, 10))
+      ).filter((statHash) =>
+        isPlugStatActive(
+          item,
+          plug.plugDef.hash,
+          Number(statHash),
+          Boolean(
+            plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+              ?.isConditionallyActive
+          )
+        )
+      )
+    : [];
+
   return (
     <>
       <h2>{plug.plugDef.displayProperties.name}</h2>
@@ -60,29 +76,16 @@ export default function PlugTooltip({
         ))
       )}
       {sourceString && <div className="plug-source">{sourceString}</div>}
-      {defs && Boolean(plug?.plugDef?.investmentStats?.length) && (
+      {defs && visibleStats.length > 0 && (
         <div className="plug-stats">
-          {plug.stats &&
-            _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10)))
-              .filter((statHash) =>
-                isPlugStatActive(
-                  item,
-                  plug.plugDef.hash,
-                  Number(statHash),
-                  Boolean(
-                    plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-                      ?.isConditionallyActive
-                  )
-                )
-              )
-              .map((statHash) => (
-                <StatValue
-                  key={statHash + '_'}
-                  statHash={parseInt(statHash, 10)}
-                  value={plug.stats![statHash]}
-                  defs={defs}
-                />
-              ))}
+          {visibleStats.map((statHash) => (
+            <StatValue
+              key={statHash}
+              statHash={parseInt(statHash, 10)}
+              value={plug.stats![statHash]}
+              defs={defs}
+            />
+          ))}
         </div>
       )}
       {defs && plug.plugObjectives.length > 0 && (
@@ -112,9 +115,6 @@ export function StatValue({
   statHash: number;
   defs: D2ManifestDefinitions;
 }) {
-  if (value === 0) {
-    return null;
-  }
   const statDef = defs.Stat.get(statHash);
   if (!statDef || !statDef.displayProperties.name) {
     return null;
