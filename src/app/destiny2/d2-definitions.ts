@@ -1,6 +1,7 @@
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
 import {
+  AllDestinyManifestComponents,
   DestinyActivityDefinition,
   DestinyActivityModeDefinition,
   DestinyActivityModifierDefinition,
@@ -156,6 +157,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
+    enhanceDBWithFakeEntries(db);
     const defs = {
       isDestiny1: () => false,
       isDestiny2: () => true,
@@ -169,7 +171,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
-          if (!dbEntry && tableShort !== 'Record' && tableShort !== 'ItemCategory') {
+          if (!dbEntry && tableShort !== 'Record') {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
             reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
@@ -193,5 +195,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
 
     dispatch(setD2Manifest(defs as D2ManifestDefinitions));
     return defs as D2ManifestDefinitions;
+  };
+}
+
+/** This adds fake entries to the DB for places where we've had to make stuff up. */
+function enhanceDBWithFakeEntries(db: AllDestinyManifestComponents) {
+  // We made up an item category for special grenade launchers. For now they can just be a copy
+  // of the regular "Grenade Launcher" category but we could patch in localized descriptions if we wanted.
+  db.DestinyItemCategoryDefinition[-153950757] = {
+    ...db.DestinyItemCategoryDefinition[153950757],
   };
 }
