@@ -15,11 +15,11 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
@@ -223,8 +223,6 @@ function LoadoutBuilder({
     sets,
   ]);
 
-  const loadingNodeRef = useRef<HTMLDivElement>(null);
-
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -274,25 +272,20 @@ function LoadoutBuilder({
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
-        <TransitionGroup component={null}>
+        <AnimatePresence>
           {processing && (
-            <CSSTransition
-              nodeRef={loadingNodeRef}
-              classNames={{
-                enter: styles.processingEnter,
-                enterActive: styles.processingEnterActive,
-                exit: styles.processingExit,
-                exitActive: styles.processingExitActive,
-              }}
-              timeout={{ enter: 500, exit: 500 }}
+            <motion.div
+              className={styles.processing}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ ease: 'easeInOut', duration: 0.5 }}
             >
-              <div className={styles.processing} ref={loadingNodeRef}>
-                <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
-                <AppIcon icon={refreshIcon} spinning={true} />
-              </div>
-            </CSSTransition>
+              <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
+              <AppIcon icon={refreshIcon} spinning={true} />
+            </motion.div>
           )}
-        </TransitionGroup>
+        </AnimatePresence>
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
