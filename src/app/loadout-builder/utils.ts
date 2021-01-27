@@ -216,12 +216,8 @@ export function isLoadoutBuilderItem(item: DimItem) {
   return item.bucket.inArmor;
 }
 
-/**
- * Calculate stat tier values, this gives stat tiers in half tier increments so mods with a stat value of 5 can
- * be identified for use.
- */
 export function statTier(stat: number) {
-  return _.clamp(Math.floor(stat / 5) / 2, 0, 10);
+  return _.clamp(Math.floor(stat / 10), 0, 10);
 }
 
 /**
