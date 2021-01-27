@@ -231,7 +231,10 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
             const similarItem = getSimilarItem(getStores(), otherExotic);
             if (!similarItem) {
               return Promise.reject(
-                new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
+                new DimError(
+                  'ItemService.Deequip',
+                  t('ItemService.Deequip', { itemname: otherExotic.name })
+                )
               );
             }
             const target = getStore(getStores(), similarItem.owner)!;
@@ -284,7 +287,7 @@ function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> 
     const stores = storesSelector(getState());
     const similarItem = getSimilarItem(stores, item, [], excludeExotic);
     if (!similarItem) {
-      throw new Error(t('ItemService.Deequip', { itemname: item.name }));
+      throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
 
     const ownerStore = getStore(stores, item.owner)!;
@@ -788,7 +791,7 @@ function canEquip(item: DimItem, store: DimStore): void {
   if (itemCanBeEquippedBy(item, store)) {
     return;
   } else if (item.classified) {
-    throw new Error(t('ItemService.Classified'));
+    throw new DimError('ItemService.Classified');
   } else {
     const message =
       item.classType === DestinyClass.Unknown

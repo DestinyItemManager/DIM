@@ -79,9 +79,10 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
         loadoutPromise.then((scope) => {
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
-              throw new Error(t('Loadouts.AppliedError'));
+              throw new DimError('Loadouts.AppliedError');
             } else {
-              throw new Error(
+              throw new DimError(
+                'Loadouts.AppliedWarn',
                 t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
               );
             }

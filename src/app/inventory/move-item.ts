@@ -121,7 +121,7 @@ export function moveItemTo(
         ? !item.canPullFromPostmaster
         : item.notransfer && item.owner !== store.id
     ) {
-      throw new Error(t('Help.CannotMove'));
+      throw new DimError('Help.CannotMove');
     }
 
     if (item.owner === store.id && !item.location.inPostmaster) {
