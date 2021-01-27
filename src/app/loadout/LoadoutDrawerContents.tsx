@@ -41,6 +41,7 @@ const loadoutTypes = [
   'Ship',
   'Ships',
   'Vehicle',
+  'Inventory',
   'Horn',
 ];
 
@@ -93,6 +94,10 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
+  function doFillLoadoutFromInventory(e: React.MouseEvent) {
+    e.preventDefault();
+    fillLoadoutFromInventory(loadout, itemsByBucket, stores, add);
+  }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
@@ -112,6 +117,9 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
+          <a className="dim-button loadout-add" onClick={doFillLoadoutFromInventory}>
+            <AppIcon icon={addIcon} /> {t('Add Unequipped Items')}
+          </a>
           {typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
@@ -148,7 +156,6 @@ async function pickLoadoutItem(
   add: (item: DimItem, e?: MouseEvent) => void
 ) {
   const loadoutClassType = loadout?.classType;
-
   function loadoutHasItem(item: DimItem) {
     return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
@@ -192,6 +199,41 @@ function fillLoadoutFromEquipped(
 
   const items = dimStore.items.filter(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+  );
+
+  for (const item of items) {
+    if (
+      !itemsByBucket[item.bucket.hash] ||
+      !itemsByBucket[item.bucket.hash].some((i) => i.equipped)
+    ) {
+      add(item, undefined, true);
+    } else {
+      infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
+    }
+  }
+}
+
+function fillLoadoutFromInventory(
+  loadout: Loadout,
+  itemsByBucket: { [bucketId: string]: DimItem[] },
+  stores: DimStore[],
+  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
+) {
+  if (!loadout) {
+    return;
+  }
+
+  // TODO: need to know which character "launched" the builder
+  const dimStore =
+    (loadout.classType !== DestinyClass.Unknown &&
+      stores.find((s) => s.classType === loadout.classType)) ||
+    getCurrentStore(stores)!;
+  //select items that are in inventory
+  const items = dimStore.items.filter(
+    (item) =>
+      item.bucket.type !== 'Class' && //probably a better way to do this but makes sure it isn't a class
+      itemCanBeInLoadout(item) &&
+      fromEquippedTypes.includes(item.type)
   );
 
   for (const item of items) {
