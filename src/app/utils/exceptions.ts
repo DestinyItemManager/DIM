@@ -57,7 +57,7 @@ if ($featureFlags.sentry) {
           ...context,
           // We could use the React-Router integration but it's annoying
           name: location.pathname
-            .replace(/\/\d+\/d(1|2)\//g, '/profileMembershipId/d$1/')
+            .replace(/\/\d+\/d(1|2)/g, '/profileMembershipId/d$1')
             .replace(/\/vendors\/\d+/g, '/vendors/vendorId')
             .replace(/index\.html/, ''),
         }),
@@ -110,6 +110,7 @@ if ($featureFlags.sentry) {
   if (token?.bungieMembershipId) {
     setUser({ id: token.bungieMembershipId });
   }
+
   // Capture locale
   setTag('lang', defaultLanguage());
 
