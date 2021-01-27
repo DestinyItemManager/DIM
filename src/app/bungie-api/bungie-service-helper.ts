@@ -17,6 +17,7 @@ import {
   createHttpClient,
   HttpStatusError,
   responsivelyThrottleHttpClient,
+  sentryTraceHttpClient,
 } from './http-client';
 import { rateLimitedFetch } from './rate-limiter';
 
@@ -69,10 +70,12 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts*/
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(
-      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-      API_KEY,
-      false
+    sentryTraceHttpClient(
+      createHttpClient(
+        createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
+        API_KEY,
+        false
+      )
     ),
     logThrottle
   )
@@ -104,23 +107,23 @@ export function handleErrors(error: Error) {
 
   if (error instanceof SyntaxError) {
     errorLog('bungie api', 'Error parsing Bungie.net response', error);
-    throw new Error(t('BungieService.Difficulties'));
+    throw new DimError('BungieService.Difficulties').withError(error);
   }
 
   if (error instanceof TypeError) {
-    throw new Error(
-      navigator.onLine ? t('BungieService.NotConnectedOrBlocked') : t('BungieService.NotConnected')
-    );
+    throw (navigator.onLine
+      ? new DimError('BungieService.NotConnectedOrBlocked')
+      : new DimError('BungieService.NotConnected')
+    ).withError(error);
   }
 
   if (error instanceof HttpStatusError) {
     // "I don't think they exist" --Westley, The Princess Bride (1987)
     if (error.status === -1) {
-      throw new Error(
-        navigator.onLine
-          ? t('BungieService.NotConnectedOrBlocked')
-          : t('BungieService.NotConnected')
-      );
+      throw (navigator.onLine
+        ? new DimError('BungieService.NotConnectedOrBlocked')
+        : new DimError('BungieService.NotConnected')
+      ).withError(error);
     }
 
     // Token expired and other auth maladies
@@ -211,7 +214,7 @@ export function handleErrors(error: Error) {
 
   // Any other error
   errorLog('bungie api', 'No response data:', error);
-  throw new DimError(t('BungieService.Difficulties')).withError(error);
+  throw new DimError('BungieService.Difficulties').withError(error);
 }
 
 // Handle "DestinyUniquenessViolation" (1648)
