@@ -2,6 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
@@ -10,7 +11,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
   equipItems as d1EquipItems,
@@ -231,7 +231,10 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
             const similarItem = getSimilarItem(getStores(), otherExotic);
             if (!similarItem) {
               return Promise.reject(
-                new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
+                new DimError(
+                  'ItemService.Deequip',
+                  t('ItemService.Deequip', { itemname: otherExotic.name })
+                )
               );
             }
             const target = getStore(getStores(), similarItem.owner)!;
@@ -284,7 +287,7 @@ function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> 
     const stores = storesSelector(getState());
     const similarItem = getSimilarItem(stores, item, [], excludeExotic);
     if (!similarItem) {
-      throw new Error(t('ItemService.Deequip', { itemname: item.name }));
+      throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
 
     const ownerStore = getStore(stores, item.owner)!;
@@ -337,10 +340,16 @@ function moveToStore(
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
       // Not sure why this happens - maybe out of sync game state?
-      if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
+      if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem
+      ) {
         await dispatch(dequipItem(item));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
-      } else if (e.code === PlatformErrorCodes.DestinyItemNotFound) {
+      } else if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound
+      ) {
         // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
         // reload the profile or load just that item, but API caching means we aren't guaranteed to
         // get the current view. So instead, we just pretend the move succeeded.
@@ -498,11 +507,10 @@ function chooseMoveAsideItem(
 
   // if there are no candidates at all, fail
   if (moveAsideCandidates.length === 0) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   // Find any stackable that could be combined with another stack
@@ -618,11 +626,10 @@ function chooseMoveAsideItem(
   }
 
   if (!moveAsideCandidate) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   return moveAsideCandidate;
@@ -672,9 +679,7 @@ function canMoveToStore(
 
     // You can't move more than the max stack of a unique stack item.
     if (item.uniqueStack && amountOfItem(store, item) + amount > item.maxStackSize) {
-      const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
-      error.code = 'no-space';
-      throw error;
+      throw new DimError('no-space', t('ItemService.StackFull', { name: item.name }));
     }
 
     const stores = storesSelector(getState());
@@ -738,7 +743,8 @@ function canMoveToStore(
             : ''
           : moveAsideItem.type;
 
-        const error: DimError = new Error(
+        throw new DimError(
+          'no-space',
           moveAsideTarget.isVault
             ? t('ItemService.BucketFull.Vault', {
                 itemtype,
@@ -750,8 +756,6 @@ function canMoveToStore(
                 context: moveAsideTarget.genderName,
               })
         );
-        error.code = 'no-space';
-        throw error;
       } else {
         // Make one move and start over!
         try {
@@ -787,7 +791,7 @@ function canEquip(item: DimItem, store: DimStore): void {
   if (itemCanBeEquippedBy(item, store)) {
     return;
   } else if (item.classified) {
-    throw new Error(t('ItemService.Classified'));
+    throw new DimError('ItemService.Classified');
   } else {
     const message =
       item.classType === DestinyClass.Unknown
@@ -797,9 +801,7 @@ function canEquip(item: DimItem, store: DimStore): void {
             level: item.equipRequiredLevel,
           });
 
-    const error: DimError = new Error(message);
-    error.code = 'wrong-level';
-    throw error;
+    throw new DimError('wrong-level', message);
   }
 }
 
@@ -869,15 +871,17 @@ export function executeMoveItem(
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount));
       } catch (e) {
-        if (e.code === PlatformErrorCodes.DestinyNoRoomInDestination) {
+        if (
+          e instanceof DimError &&
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyNoRoomInDestination
+        ) {
           warnLog(
             'move',
             'Tried blindly moving',
             item.name,
             'to',
             target.name,
-            'but the bucket is really full',
-            e.code
+            'but the bucket is really full'
           );
           lastTimeCurrentStoreWasReallyFull = Date.now();
         } else {

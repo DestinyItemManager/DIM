@@ -2,15 +2,24 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { infoLog } from '../../utils/log';
-import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import {
+  knownModPlugCategoryHashes,
+  LockableBuckets,
+  MinMax,
+  MinMaxIgnored,
+  raidPlugCategoryHashes,
+  statHashes,
+  StatTypes,
+} from '../types';
 import { statTier } from '../utils';
-import { canTakeAllMods, generateModPermutations } from './processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
   LockedArmor2ProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessMod,
 } from './types';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -177,12 +186,25 @@ export function process(
     statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
   }
 
-  const generalModsPermutations = generateModPermutations(
-    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
-  );
-  const otherModPermutations = generateModPermutations(lockedArmor2ModMap.other);
+  let generalMods: ProcessMod[] = [];
+  let otherMods: ProcessMod[] = [];
+  let raidMods: ProcessMod[] = [];
 
-  const raidModPermutations = generateModPermutations(lockedArmor2ModMap.raid);
+  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
+    const pch = Number(plugCategoryHash);
+    if (pch === armor2PlugCategoryHashesByName.general) {
+      generalMods = generalMods.concat(mods);
+    } else if (raidPlugCategoryHashes.includes(pch)) {
+      raidMods = raidMods.concat(mods);
+    } else if (!knownModPlugCategoryHashes.includes(pch)) {
+      otherMods = otherMods.concat(mods);
+    }
+  }
+
+  const generalModsPermutations = generateModPermutations(generalMods);
+  const otherModPermutations = generateModPermutations(otherMods);
+
+  const raidModPermutations = generateModPermutations(raidMods);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -261,10 +283,8 @@ export function process(
 
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                (lockedArmor2ModMap.other.length ||
-                  lockedArmor2ModMap.raid.length ||
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
-                !canTakeAllMods(
+                (otherMods.length || raidMods.length || generalMods.length) &&
+                !canTakeSlotIndependantMods(
                   generalModsPermutations,
                   otherModPermutations,
                   raidModPermutations,

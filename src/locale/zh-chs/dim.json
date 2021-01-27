@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_male": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "Maintenance": "Bungie.net服务器停机维护中.",
-    "MissingInventory": "Bungie.net 没有返回你的物品栏，可能是因为你的隐私设置阻止了它。",
+    "MissingInventory": "Bungie.net 没有返回你的物品栏，可能是因为你的隐私设置阻止了它。请尝试重新登录。",
     "NetworkError": "网络错误 - {{status}}{{statusText}}",
     "NoAccount": "没有找到任何关联的 Destiny 帐户，请确保您选择了正确的平台。",
     "NoAccountForPlatform": "在{{platform}} 上没有找到Destiny帐户.",
@@ -347,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "高级选项",
-    "Chest": "胸部护甲",
     "ChooseAMod": "选择你的模组",
     "ChooseAPerk": "选择一个特性",
-    "ClassItem": "职业物品",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -358,9 +356,6 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
     "FilterSets": "组合过滤",
-    "Gauntlets": "臂铠",
-    "General": "杂项",
-    "Helmet": "头部护甲",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
       "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示.",
@@ -382,7 +377,6 @@
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
     "LB": "配装优化器",
-    "Legs": "腿部护甲",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",
       "HelpScaled": "计算使所有角色都都拥有350防御.",
@@ -395,7 +389,6 @@
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
     "ModLockButton": "选择模组",
-    "Other": "其他",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -403,7 +396,6 @@
       "HelpFull": "查看更多装备，但是需要更长时间。",
       "ProcessingMode": "处理模式"
     },
-    "Raid": "突袭",
     "Scaled": "缩放",
     "SearchAMod": "搜索模组或描述",
     "SelectMods": "选择模组",

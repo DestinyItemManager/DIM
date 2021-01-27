@@ -1,3 +1,4 @@
+import { withProfiler } from '@sentry/react';
 import { MouseTransition, TouchTransition } from 'dnd-multi-backend';
 import React from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -8,6 +9,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import store from './store/store';
+
+// Wrap App with Sentry profiling
+const WrappedApp = $featureFlags.sentry ? withProfiler(App) : App;
 
 function Root() {
   const options = {
@@ -20,7 +24,7 @@ function Root() {
     <Router>
       <Provider store={store}>
         <DndProvider options={options}>
-          <App />
+          <WrappedApp />
         </DndProvider>
       </Provider>
     </Router>

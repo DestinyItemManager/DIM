@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero esa destinación ya cuenta con ese objeto y solo se permite uno.",
     "ItemUniquenessExplanation_male": "Intentaste mover el '{{name}}' {{type}} a tu {{character}} pero esa destinación ya cuenta con ese objeto y solo se permite uno.",
     "Maintenance": "Los servidores de Bungie.net se encuentran caídos por mantenimiento.",
-    "MissingInventory": "Bungie.net no devolvió tu inventario, posiblemente porque tus configuraciones de privacidad lo impiden.",
+    "MissingInventory": "Bungie.net no devolvió tu inventario, posiblemente porque tu configuración de privacidad lo impide. Intenta cerrar y volver a iniciar sesión.",
     "NetworkError": "Error de red - {{status}} {{statusText}}",
     "NoAccount": "No se encontró ninguna cuenta de Destiny. ¿Tienes seleccionada la plataforma correcta?",
     "NoAccountForPlatform": "Fallo encontrando una cuenta de Destiny para ti en {{platform}}.",
@@ -347,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
-    "Chest": "Pecho",
     "ChooseAMod": "Elige tus modificadores",
     "ChooseAPerk": "Elige una ventaja",
-    "ClassItem": "Objeto de Clase",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Esta equipación contiene objetos de vendedores",
     "Current": "Actual",
@@ -358,9 +356,6 @@
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "SHIFT+CLICK en un objeto (o arrástralo y suéltalo en esta caja) para crear un conjunto sin equipo específico.",
     "FilterSets": "Conjuntos de filtros",
-    "Gauntlets": "Guantes",
-    "General": "General",
-    "Helmet": "Casco",
     "Help": {
       "And": "Armaduras con todas éstas ventajas serán usadas (\"y\")",
       "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
@@ -382,7 +377,6 @@
     "HideAllConfigs": "Ocultar todas las configuraciones",
     "HideConfigs": "Ocultar configuraciones",
     "LB": "Optimizador de Equipaciones",
-    "Legs": "Piernas",
     "LightMode": {
       "HelpCurrent": "Calcula las equipaciones con los niveles de defensa actuales.",
       "HelpScaled": "Calcula lás equipaciones como si todos los objetos tuvieran 350 de defensa.",
@@ -395,7 +389,6 @@
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. SHIFT+CLICK para excluir objetos.",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
     "ModLockButton": "Seleccione modificadores",
-    "Other": "Otro",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -403,7 +396,6 @@
       "HelpFull": "Mira más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de procesamiento"
     },
-    "Raid": "Incursión",
     "Scaled": "Escalado",
     "SearchAMod": "Busca un modificador o una descripción",
     "SelectMods": "Seleccione Modificadores",

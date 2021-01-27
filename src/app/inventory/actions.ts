@@ -1,5 +1,4 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
 import {
@@ -44,7 +43,7 @@ export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterI
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
-export const error = createAction('inventory/ERROR')<DimError>();
+export const error = createAction('inventory/ERROR')<Error>();
 
 /**
  * An item has moved (or equipped/dequipped)

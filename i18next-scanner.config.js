@@ -6,7 +6,7 @@ module.exports = {
     removeUnusedKeys: true,
     sort: true,
     func: {
-      list: ['t', 'i18next.t', 'tl'],
+      list: ['t', 'i18next.t', 'tl', 'DimError'],
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     lngs: ['en'],

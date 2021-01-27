@@ -24,6 +24,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import copy from 'fast-copy';
@@ -78,9 +79,10 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
         loadoutPromise.then((scope) => {
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
-              throw new Error(t('Loadouts.AppliedError'));
+              throw new DimError('Loadouts.AppliedError');
             } else {
-              throw new Error(
+              throw new DimError(
+                'Loadouts.AppliedWarn',
                 t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
               );
             }
@@ -480,7 +482,7 @@ export function clearItemsOffCharacter(
         }
         await dispatch(executeMoveItem(item, vault, false, item.amount, items, reservations));
       } catch (e) {
-        if (e.code === 'no-space') {
+        if (e instanceof DimError && e.code === 'no-space') {
           outOfSpaceWarning(store);
         } else {
           showNotification({ type: 'error', title: item.name, body: e.message });

@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import LoadoutBucketDropTarget from '../locked-armor/LoadoutBucketDropTarget';
 import {
+  knownModPlugCategoryHashes,
   LockableBuckets,
   LockedArmor2Mod,
   LockedArmor2ModMap,
@@ -23,7 +24,6 @@ import {
   LockedItemType,
   LockedMap,
   LockedPerk,
-  ModPickerCategories,
 } from '../types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
 import styles from './LockArmorAndPerks.m.scss';
@@ -141,12 +141,13 @@ function LockArmorAndPerks({
     }
   };
 
-  const onArmor2ModClicked = (item: LockedArmor2Mod) => {
+  const onArmor2ModClicked = (mod: LockedArmor2Mod) => {
+    const plugCategoryHash = mod.modDef.plug.plugCategoryHash;
     lbDispatch({
       type: 'lockedArmor2ModsChanged',
       lockedArmor2Mods: {
         ...lockedArmor2Mods,
-        [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
+        [plugCategoryHash]: lockedArmor2Mods[plugCategoryHash]?.filter((ex) => ex.key !== mod.key),
       },
     });
   };
@@ -174,10 +175,15 @@ function LockArmorAndPerks({
     _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
-  const modOrder = Object.values(ModPickerCategories);
-  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
-    .flatMap((category) => lockedArmor2Mods[category])
-    .filter(Boolean);
+  let flatLockedArmor2Mods: LockedArmor2Mod[] = knownModPlugCategoryHashes.flatMap(
+    (plugCategoryHash) => lockedArmor2Mods[plugCategoryHash] || []
+  );
+
+  for (const [plugCategoryHashAsString, mods] of Object.entries(lockedArmor2Mods)) {
+    if (mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHashAsString))) {
+      flatLockedArmor2Mods = flatLockedArmor2Mods.concat(mods);
+    }
+  }
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
