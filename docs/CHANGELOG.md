@@ -1,6 +1,5 @@
 ## Next
 
-* Loadout Optimizer shows "half tiers" (0.5) to help you see where a 5-point mod might bump you up a tier. Note that this does not suggest we're displaying a new 0.1 precision for tiers - we are specifically rounding down to half-tiers now instead of full tiers.
 * Items in the Postmaster which cannot be pulled are shown faded out.
 
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
