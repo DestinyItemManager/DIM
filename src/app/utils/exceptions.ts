@@ -51,7 +51,7 @@ if ($featureFlags.sentry) {
     attachStacktrace: true,
     integrations: [
       new TracingIntegrations.BrowserTracing({
-        // TODO: add tracing to bungie.net client manually - it can't handle the automatic sentry trace header
+        // We add tracing to bungie.net client manually - it can't handle the automatic sentry trace header
         tracingOrigins: ['localhost', 'api.destinyitemmanager.com', /^\//],
         beforeNavigate: (context) => ({
           ...context,
@@ -94,6 +94,24 @@ if ($featureFlags.sentry) {
             }
           }
         }
+
+        event.tags = {
+          ...event.tags,
+          code: e.code,
+        };
+        if (underlyingError instanceof BungieError) {
+          event.tags = {
+            ...event.tags,
+            bungieErrorCode: underlyingError.code,
+          };
+        }
+
+        if (underlyingError) {
+          event.extra = {
+            ...event.extra,
+            cause: underlyingError,
+          };
+        }
       }
 
       return event;
@@ -119,13 +137,6 @@ if ($featureFlags.sentry) {
     // Sentry.showReportDialog();
     withScope((scope) => {
       setTag('context', name);
-      if (e instanceof DimError) {
-        scope.setExtras({ cause: e.cause });
-        scope.setTag('code', e.code);
-        if (e.cause instanceof BungieError) {
-          scope.setTag('bungieErrorCode', e.code);
-        }
-      }
       if (errorInfo) {
         scope.setExtras(errorInfo);
       }
