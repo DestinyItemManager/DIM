@@ -63,4 +63,4 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Titan]: titan,
   [ItemCategoryHashes.Warlock]: warlock,
   [ItemCategoryHashes.Ghost]: ghost,
-} as const;
+};

@@ -1,4 +1,3 @@
-import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -6,6 +5,7 @@ import Select, { Option } from 'app/dim-ui/Select';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getItemSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { generateArchetypeQuery, getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
@@ -21,15 +21,23 @@ import {
 // import { damageTypeNames } from 'app/search/search-filter-values';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import legs from 'destiny-icons/armor_types/boots.svg';
+import chest from 'destiny-icons/armor_types/chest.svg';
+import classItem from 'destiny-icons/armor_types/class.svg';
+import gauntlets from 'destiny-icons/armor_types/gloves.svg';
+import helmet from 'destiny-icons/armor_types/helmet.svg';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './QueryBuilder.scss';
 
-// const notArmor = ['kinetic', 'stasis'];
-// const armorElements = damageTypeNames.filter((d) => !notArmor.includes(d));
-
-// const damageNames = damageNamesByEnum
+const armorSlotDisplayInfo = [
+  [helmet, 'LB.Helmet', 'helmet'],
+  [gauntlets, 'LB.Gauntlets', 'gauntlets'],
+  [chest, 'LB.Chest', 'chest'],
+  [legs, 'LB.Legs', 'leg'],
+  [classItem, 'LB.ClassItem', 'classitem'],
+];
 
 const classNameToICH = {
   hunter: ItemCategoryHashes.Hunter,
@@ -60,6 +68,7 @@ function mapStateToProps() {
 type Props = ProvidedProps & StoreProps;
 
 function QueryBuilderBuilder({ exampleItem, defs, allItems, onQueryChange }: Props) {
+  // console.log({ exampleItem });
   const defaultMainSelection = exampleItem?.bucket.inWeapons ? 'weapon' : 'armor';
 
   const defaults: NodeJS.Dict<string> = {};
@@ -72,15 +81,15 @@ function QueryBuilderBuilder({ exampleItem, defs, allItems, onQueryChange }: Pro
   const exampleArchetype = exampleItem && getWeaponArchetype(exampleItem)?.displayProperties.name;
   defaults.archetype = exampleArchetype && `perk:"${exampleArchetype}"`;
 
-  defaults.specialty = generateSpecialtySocketQuery(exampleItem) ?? 'modslot:combatstyle';
+  defaults.specialty = generateSpecialtySocketQuery(exampleItem);
 
-  defaults.armorSlot = `is:${
-    (exampleItem?.bucket.inArmor && exampleItem.type.toLowerCase()) || 'helmet'
-  }`;
-  defaults.classname = `is:${
-    (exampleItem?.bucket.inArmor && classes[exampleItem.classType]) || 'hunter'
-  }`;
+  const exampleArmorSlot = exampleItem?.bucket.inArmor && exampleItem.type.toLowerCase();
+  defaults.armorSlot = `is:${exampleArmorSlot || 'helmet'}`;
 
+  const exampleClassname = exampleItem?.bucket.inArmor && classes[exampleItem.classType];
+  defaults.classname = `is:${exampleClassname || 'hunter'}`;
+  // console.log(exampleItem);
+  // console.log(defaults);
   const {
     energy,
     dmg,
@@ -158,6 +167,7 @@ function QueryBuilderBuilder({ exampleItem, defs, allItems, onQueryChange }: Pro
     });
   }
 
+  // console.log(optionSets);
   return <QueryBuilder {...{ onQueryChange, defaultMainSelection, optionSets }} />;
 }
 
@@ -188,6 +198,7 @@ export function QueryBuilder({
         {}
       )
   );
+
   const optionSetVisibility = Object.entries(optionSets).reduce<
     Record<'any' | 'armor' | 'weapon', string[]>
   >((acc, [showForThis, options]) => ({ ...acc, [showForThis]: options.map((o) => o.key) }), {
@@ -195,20 +206,47 @@ export function QueryBuilder({
     armor: [],
     weapon: [],
   });
-  useEffect(() => {
-    onQueryChange(
+
+  // do the state update, plus send the query string upstream
+  const changeSelection = (n: typeof currentSelections) => {
+    // console.log('running changeSelection');
+    const newSelections = { ...currentSelections, ...n };
+    const newQuery =
       `is:${defaultMainSelection} ` +
-        Object.entries(currentSelections)
-          .filter(
-            ([selectorType]) =>
-              optionSetVisibility.any.includes(selectorType) ||
-              optionSetVisibility[defaultMainSelection].includes(selectorType)
-          )
-          .map(([_, selectorValue]) => selectorValue)
-          .filter(Boolean)
-          .join(' ')
-    );
-  }, [currentSelections, defaultMainSelection, onQueryChange, optionSetVisibility]);
+      Object.entries(newSelections)
+        .filter(
+          ([selectorType]) =>
+            optionSetVisibility.any.includes(selectorType) ||
+            optionSetVisibility[defaultMainSelection].includes(selectorType)
+        )
+        .map(([_, selectorValue]) => selectorValue)
+        .filter(Boolean)
+        .join(' ');
+    console.log(newQuery);
+    onQueryChange(newQuery);
+    if (Object.keys(n).length) {
+      setCurrentSelections((c) => ({ ...c, ...n }));
+    }
+  };
+
+  useEffect(() => {
+    changeSelection({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+  // useEffect(() => {
+  //   onQueryChange(
+  //     `is:${defaultMainSelection} ` +
+  //       Object.entries(currentSelections)
+  //         .filter(
+  //           ([selectorType]) =>
+  //             optionSetVisibility.any.includes(selectorType) ||
+  //             optionSetVisibility[defaultMainSelection].includes(selectorType)
+  //         )
+  //         .map(([_, selectorValue]) => selectorValue)
+  //         .filter(Boolean)
+  //         .join(' ')
+  //   );
+  // }, [currentSelections, defaultMainSelection, onQueryChange, optionSetVisibility]);
 
   // const mainSelection = [
   //   {
@@ -232,23 +270,21 @@ export function QueryBuilder({
         onChange={(v) => setCurrentMainSelection(v === 'weapon' ? 'weapon' : 'armor')}
         hideSelected
       /> */}
-      {[...optionSets.any, ...optionSets[defaultMainSelection]].map((os) => {
+      {[...optionSets.any, ...optionSets[defaultMainSelection]].map((os) => (
         // const currentlySelected = os.options.find((o) => o.value === currentSelections[os.key])!;
         // if (!currentlySelected) {
         //   console.log(`looked for ${currentSelections[os.key]} in ${os.key}`);
         //   console.log(os.options);
         // }
-        const changeSelection = (v: any) => setCurrentSelections((c) => ({ ...c, [os.key]: v }));
-        return (
-          <Select
-            key={os.key}
-            options={os.options}
-            value={currentSelections[os.key]}
-            onChange={changeSelection}
-            hideSelected
-          />
-        );
-      })}
+
+        <Select
+          key={os.key}
+          options={os.options}
+          value={currentSelections[os.key]}
+          onChange={(v) => changeSelection({ [os.key]: v })}
+          hideSelected
+        />
+      ))}
 
       <br />
       {/* {Object.entries(currentSelections)
@@ -331,20 +367,16 @@ function generateOptionSets(defs: D2ManifestDefinitions, allItems: DimItem[]) {
       };
     });
 
-  const armorSlots: Option<string>[] = D2Categories.Armor.map((at) => {
-    const example = allItems.find((i) => i.type.toLowerCase() === at.toLowerCase())!;
-
-    return {
-      key: at,
-      value: `is:${at.toLowerCase()}`,
-      content: (
-        <>
-          <img className="leadingIcon selectionSvg armorSlotIcon" src={getItemSvgIcon(example)} />{' '}
-          <span>{example.typeName}</span>
-        </>
-      ),
-    };
-  });
+  const armorSlots: Option<string>[] = armorSlotDisplayInfo.map(([icon, i18nKey, searchTerm]) => ({
+    key: i18nKey,
+    value: `is:${searchTerm}`,
+    content: (
+      <>
+        <img className="leadingIcon selectionSvg armorSlotIcon" src={icon} />{' '}
+        <span>{t(i18nKey)}</span>
+      </>
+    ),
+  }));
   const classnames: Option<string>[] = classes.map((className) => ({
     key: className,
     value: `is:${className.toLowerCase()}`,

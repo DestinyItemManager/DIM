@@ -60,7 +60,7 @@ function mapStateToProps(state: RootState): StoreProps {
 // TODO: maybe have a holder/state component and a connected display component
 interface State {
   show: boolean;
-  comparisonItems: DimItem[];
+  chosenItems: DimItem[];
   highlight?: string | number;
   sortedHash?: string | number;
   sortBetterFirst: boolean;
@@ -109,7 +109,7 @@ const compareModes = [
 
 class Compare extends React.Component<Props, State> {
   state: State = {
-    comparisonItems: [],
+    chosenItems: [],
     comparisonSets: [],
     show: false,
     sortBetterFirst: true,
@@ -126,7 +126,7 @@ class Compare extends React.Component<Props, State> {
           return filteredItems;
         }
       }
-      return state.comparisonItems;
+      return state.chosenItems;
     },
     (_state: State, props: Props) => props.compareBaseStats,
     (state: State) => state.adjustedStats,
@@ -178,7 +178,7 @@ class Compare extends React.Component<Props, State> {
 
     const {
       show,
-      comparisonItems: unsortedComparisonItems,
+      chosenItems,
       sortedHash,
       highlight,
       // comparisonSets,
@@ -186,10 +186,10 @@ class Compare extends React.Component<Props, State> {
       adjustedStats,
     } = this.state;
 
-    const comparingArmor = unsortedComparisonItems[0]?.bucket.inArmor;
+    const comparingArmor = chosenItems[0]?.bucket.inArmor;
     const doCompareBaseStats = Boolean(compareBaseStatsSetting && comparingArmor);
 
-    if (!show || unsortedComparisonItems.length === 0) {
+    if (!show || chosenItems.length === 0) {
       CompareService.dialogOpen = false;
       return null;
     }
@@ -204,7 +204,7 @@ class Compare extends React.Component<Props, State> {
     const comparisonItems = Array.from(
       compareUsingFilter
         ? this.compareSheetFilteredItemsSelector(this.state, this.props)
-        : unsortedComparisonItems
+        : chosenItems
     );
 
     if (sortedHash) {
@@ -360,9 +360,11 @@ class Compare extends React.Component<Props, State> {
       });
     };
 
-    const exampleItem = comparisonItems.every((i) => i.hash === comparisonItems[0].hash)
-      ? comparisonItems[0]
+    const exampleItem = chosenItems.every((i) => i.name === chosenItems[0].name)
+      ? chosenItems[0]
       : undefined;
+
+    // console.log({ exampleItem, comparisonItems });
 
     return (
       <Sheet
@@ -387,7 +389,9 @@ class Compare extends React.Component<Props, State> {
             >
               <AppIcon icon={compareUsingFilter ? searchIcon : pickIcon} />
             </Select>
-            <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
+            {compareUsingFilter && (
+              <QueryBuilderBuilder onQueryChange={this.setQuery} {...{ exampleItem }} />
+            )}
             {/* {comparisonSets.map(({ buttonLabel, items }, index) => (
               <button
                 type="button"
@@ -492,7 +496,7 @@ class Compare extends React.Component<Props, State> {
   private cancel = () => {
     this.setState({
       show: false,
-      comparisonItems: [],
+      chosenItems: [],
       highlight: undefined,
       sortedHash: undefined,
       adjustedPlugs: undefined,
@@ -527,27 +531,27 @@ class Compare extends React.Component<Props, State> {
       return;
     }
 
-    const { comparisonItems } = this.state;
-    if (comparisonItems.length && exampleItem.typeName !== comparisonItems[0].typeName) {
+    const { chosenItems } = this.state;
+    if (chosenItems.length && exampleItem.typeName !== chosenItems[0].typeName) {
       showNotification({
         type: 'warning',
         title: exampleItem.name,
         body:
-          comparisonItems[0].classType && exampleItem.classType !== comparisonItems[0].classType
-            ? t('Compare.Error.Class', { class: comparisonItems[0].classTypeNameLocalized })
-            : t('Compare.Error.Archetype', { type: comparisonItems[0].typeName }),
+          chosenItems[0].classType && exampleItem.classType !== chosenItems[0].classType
+            ? t('Compare.Error.Class', { class: chosenItems[0].classTypeNameLocalized })
+            : t('Compare.Error.Archetype', { type: chosenItems[0].typeName }),
       });
       return;
     }
 
     // if there are existing comparisonItems, we're adding this one in
-    if (comparisonItems.length) {
+    if (chosenItems.length) {
       // but not if it's already being compared
-      if (comparisonItems.some((i) => i.id === exampleItem.id)) {
+      if (chosenItems.some((i) => i.id === exampleItem.id)) {
         return;
       }
 
-      this.setState({ comparisonItems: [...comparisonItems, ...additionalItems] });
+      this.setState({ chosenItems: [...chosenItems, ...additionalItems] });
     }
 
     // else,this is a fresh comparison sheet spawn, so let's generate comparisonSets
@@ -562,61 +566,61 @@ class Compare extends React.Component<Props, State> {
       // if this was spawned from an item, and not from a search,
       // DIM tries to be helpful by including a starter comparison of dupes
       if (additionalItems.length === 1 && showSomeDupes) {
-        const comparisonItems = comparisonSets[0]?.items ?? additionalItems;
+        const chosenItems = comparisonSets[0]?.items ?? additionalItems;
         this.setState({
           comparisonSets,
-          comparisonItems,
+          chosenItems,
         });
       }
       // otherwise, compare only the items we were asked to compare
       else {
-        this.setState({ comparisonSets, comparisonItems: [...additionalItems] });
+        this.setState({ comparisonSets, chosenItems: [...additionalItems] });
       }
     }
   };
 
   private remove = (item: DimItem) => {
-    const { comparisonItems } = this.state;
+    const { chosenItems } = this.state;
 
-    if (comparisonItems.length <= 1) {
+    if (chosenItems.length <= 1) {
       this.cancel();
     } else {
-      this.setState({ comparisonItems: comparisonItems.filter((c) => c.id !== item.id) });
+      this.setState({ chosenItems: chosenItems.filter((c) => c.id !== item.id) });
     }
   };
 
-  private findSimilarArmors = (comparisonItems: DimItem[]) => {
-    const exampleItem = comparisonItems[0];
+  private findSimilarArmors = (chosenItems: DimItem[]) => {
+    const exampleItem = chosenItems[0];
     return findSimilarArmors(this.props.defs!, this.props.allItems, exampleItem);
   };
 
-  private findSimilarWeapons = (comparisonItems: DimItem[]) => {
-    const exampleItem = comparisonItems[0];
+  private findSimilarWeapons = (chosenItems: DimItem[]) => {
+    const exampleItem = chosenItems[0];
     return findSimilarWeapons(this.props.allItems, exampleItem);
   };
 }
 
 function getAllStats(
-  comparisonItems: DimItem[],
+  chosenItems: DimItem[],
   compareBaseStats: boolean,
   adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
 ) {
-  const firstComparison = comparisonItems[0];
-  compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
+  const exampleItem = chosenItems[0];
+  compareBaseStats = Boolean(compareBaseStats && exampleItem.bucket.inArmor);
   const stats: StatInfo[] = [];
 
-  if (firstComparison.primStat) {
+  if (exampleItem.primStat) {
     stats.push(
       makeFakeStat(
-        firstComparison.primStat.statHash,
-        firstComparison.primStat.stat.displayProperties,
+        exampleItem.primStat.statHash,
+        exampleItem.primStat.stat.displayProperties,
         (item: DimItem) => item.primStat || undefined
       )
     );
   }
   if (
-    firstComparison.destinyVersion === 2 &&
-    (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
+    exampleItem.destinyVersion === 2 &&
+    (exampleItem.bucket.inArmor || exampleItem.bucket.inWeapons)
   ) {
     stats.push(
       makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
@@ -627,7 +631,7 @@ function getAllStats(
     );
   }
 
-  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
+  if (exampleItem.destinyVersion === 2 && exampleItem.bucket.inArmor) {
     stats.push(
       makeFakeStat(
         'EnergyCapacity',
@@ -646,7 +650,7 @@ function getAllStats(
   // Todo: map of stat id => stat object
   // add 'em up
   const statsByHash: { [statHash: string]: StatInfo } = {};
-  for (const item of comparisonItems) {
+  for (const item of chosenItems) {
     if (item.stats) {
       for (const stat of item.stats) {
         let statInfo = statsByHash[stat.statHash];
@@ -670,7 +674,7 @@ function getAllStats(
   }
 
   for (const stat of stats) {
-    for (const item of comparisonItems) {
+    for (const item of chosenItems) {
       const itemStat = stat.getStat(item);
       const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
