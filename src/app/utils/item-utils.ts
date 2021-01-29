@@ -37,7 +37,7 @@ import { objectifyArray } from './util';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType or EnergyType into a known english name
-// mainly for most css purposes and the filter names
+// mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.energy
@@ -70,17 +70,20 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
   (modMetadata) => modMetadata.emptyModSocketHash
 );
 
-/** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
-  if (item.bucket.inArmor) {
-    return item.sockets?.allSockets.filter((socket) =>
+/** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
+export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+  if (item?.bucket.inArmor) {
+    const specialtySockets = item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
+    if (specialtySockets?.length) {
+      return specialtySockets;
+    }
   }
 };
 
-/** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] | undefined =>
+/** returns ModMetadatas if the item has one or more specialty mod slots */
+export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
     .filter(Boolean);
@@ -92,9 +95,7 @@ export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): strin
   modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
- * this always returns a string for easy printing purposes
- *
- * `''` if not found, so you can let it stay blank or `||` it
+ * returns, if there are any, the localized names of an item's specialty slots
  */
 export const getItemSpecialtyModSlotDisplayNames = (
   item: DimItem,

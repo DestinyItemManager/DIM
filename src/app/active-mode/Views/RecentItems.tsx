@@ -6,7 +6,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { allItemsSelector } from 'app/inventory/selectors';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
-import { searchFiltersConfigSelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/search-filter';
 import { setSearchQuery } from 'app/shell/actions';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import _ from 'lodash';
@@ -16,7 +16,7 @@ import styles from './RecentItems.m.scss';
 
 export default function RecentItems() {
   const allItems = useSelector(allItemsSelector);
-  const filters = useSelector(searchFiltersConfigSelector);
+  const filters = useSelector(filterFactorySelector);
   const savedSearches = useSelector(recentSearchesSelector).filter(({ saved }) => saved);
   const [query, setQuery] = useState<string>(savedSearches?.[0]?.query);
   const options: Option[] = savedSearches.map(({ query }) => ({

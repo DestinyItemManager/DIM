@@ -20,7 +20,7 @@ import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
-import { searchFiltersConfigSelector } from '../search/search-filter';
+import { filterFactorySelector } from '../search/search-filter';
 import { setSetting } from '../settings/actions';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -52,7 +52,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     allItems: allItemsSelector(state),
     currentStore: currentStoreSelector(state)!,
-    filters: searchFiltersConfigSelector(state),
+    filters: filterFactorySelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
     isPhonePortrait: state.shell.isPhonePortrait,
   };
