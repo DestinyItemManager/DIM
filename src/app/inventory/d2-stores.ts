@@ -202,7 +202,7 @@ function loadStoresData(
           profileInfo.characterCollectibles
         );
 
-        const processSpan = transaction.startChild({
+        const processSpan = transaction?.startChild({
           op: 'processItems',
         });
         const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
@@ -217,7 +217,7 @@ function loadStoresData(
             lastPlayedDate
           )
         );
-        processSpan.finish();
+        processSpan?.finish();
 
         const stores = [...characters, vault];
 
@@ -245,13 +245,13 @@ function loadStoresData(
           .style.setProperty('--num-characters', String(stores.length - 1));
         stopTimer();
 
-        const stateSpan = transaction.startChild({
+        const stateSpan = transaction?.startChild({
           op: 'updateInventoryState',
         });
         const stopStateTimer = timer('Inventory state update');
         dispatch(update({ stores, profileResponse: profileInfo, currencies }));
         stopStateTimer();
-        stateSpan.finish();
+        stateSpan?.finish();
 
         return stores;
       } catch (e) {
@@ -269,7 +269,7 @@ function loadStoresData(
         // just make this never fail.
         return undefined;
       } finally {
-        transaction.finish();
+        transaction?.finish();
       }
     })();
     loadingTracker.addPromise(promise);
