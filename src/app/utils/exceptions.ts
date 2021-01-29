@@ -63,7 +63,7 @@ if ($featureFlags.sentry) {
         }),
       }),
     ],
-    tracesSampleRate: 0.01, // Performance traces at 1%
+    tracesSampleRate: 0.001, // Performance traces at 0.1%
     beforeSend: function (event, hint) {
       const e = hint?.originalException;
       const underlyingError = e instanceof DimError ? e.cause : undefined;
