@@ -93,6 +93,10 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
+  function doFillLoadoutFromInventory(e: React.MouseEvent) {
+    e.preventDefault();
+    fillLoadoutfromInventory(loadout, stores, add);
+  }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
@@ -112,6 +116,10 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
+          <a className="dim-button loadout-add" onClick={doFillLoadoutFromInventory}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddInventoryItems')}
+          </a>
+
           {typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
@@ -202,6 +210,31 @@ function fillLoadoutFromEquipped(
       add(item, undefined, true);
     } else {
       infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
+    }
+  }
+}
+
+async function fillLoadoutfromInventory(
+  loadout: Loadout,
+  stores: DimStore[],
+  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
+) {
+  if (!loadout) {
+    return;
+  }
+  const dimStore =
+    (loadout.classType !== DestinyClass.Unknown &&
+      stores.find((s) => s.classType === loadout.classType)) ||
+    getCurrentStore(stores)!;
+
+  const items = dimStore.items.filter(
+    (item) => itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+  );
+
+  for (const item of items) {
+    if (item.bucket.sort === 'Armor' || item.bucket.sort === 'Weapons') {
+      // filter only weapons and armor, delete to add all items currently in characters inventory
+      add(item, undefined, true);
     }
   }
 }
