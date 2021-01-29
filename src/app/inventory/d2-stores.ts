@@ -1,9 +1,11 @@
+import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
@@ -159,6 +161,10 @@ function loadStoresData(
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
+      const transaction = startTransaction({ name: 'loadStoresD2' });
+      // set the transaction on the scope so it picks up any errors
+      getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+
       resetItemIndexGenerator();
 
       // TODO: if we've already loaded profile recently, don't load it again
@@ -186,7 +192,7 @@ function loadStoresData(
             'd2-stores',
             'Vault or character inventory was missing - bailing in order to avoid corruption'
           );
-          throw new Error(t('BungieService.MissingInventory'));
+          throw new DimError('BungieService.MissingInventory');
         }
 
         const lastPlayedDate = findLastPlayedDate(profileInfo);
@@ -196,6 +202,9 @@ function loadStoresData(
           profileInfo.characterCollectibles
         );
 
+        const processSpan = transaction?.startChild({
+          op: 'processItems',
+        });
         const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
 
         const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
@@ -208,6 +217,7 @@ function loadStoresData(
             lastPlayedDate
           )
         );
+        processSpan?.finish();
 
         const stores = [...characters, vault];
 
@@ -235,9 +245,13 @@ function loadStoresData(
           .style.setProperty('--num-characters', String(stores.length - 1));
         stopTimer();
 
+        const stateSpan = transaction?.startChild({
+          op: 'updateInventoryState',
+        });
         const stopStateTimer = timer('Inventory state update');
         dispatch(update({ stores, profileResponse: profileInfo, currencies }));
         stopStateTimer();
+        stateSpan?.finish();
 
         return stores;
       } catch (e) {
@@ -254,6 +268,8 @@ function loadStoresData(
         // around that with some rxjs operators, but it's easier to
         // just make this never fail.
         return undefined;
+      } finally {
+        transaction?.finish();
       }
     })();
     loadingTracker.addPromise(promise);

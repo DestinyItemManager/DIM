@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
     "NetworkError": "Erreur Réseau - {{status}} {{statusText}}",
     "NoAccount": "Aucun compte Destiny n'a été trouvé. Avez-vous sélectionné la bonne plateforme?",
     "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",
@@ -346,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
-    "Chest": "Torse",
     "ChooseAMod": "Choisissez vos mods",
     "ChooseAPerk": "Choisissez un attribut",
-    "ClassItem": "Objet de Classe",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Cet arsenal contient des objets de marchand",
     "Current": "Actuel",
@@ -357,9 +356,6 @@
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
     "FilterSets": "Filtrer les sets",
-    "Gauntlets": "Gantelets",
-    "General": "Général",
-    "Helmet": "Casque",
     "Help": {
       "And": "L'armure avec tout ces attributs sera utilisé (\"et\")",
       "ChangeNodes": "Changer les attributs d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque arsenal.",
@@ -381,7 +377,6 @@
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
     "LB": "Optimiseur D'Arsenal",
-    "Legs": "Jambières",
     "LightMode": {
       "HelpCurrent": "Calcule les arsenaux aux niveaux de défense actuels.",
       "HelpScaled": "Calcule les arsenaux comme si tous les objets avaient 350 de défense.",
@@ -394,7 +389,6 @@
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
     "ModLockButton": "Sélectionner les mods",
-    "Other": "Autre",
     "ProcessingMode": {
       "Fast": "Rapide",
       "Full": "Complet",
@@ -402,7 +396,6 @@
       "HelpFull": "Se concentre sur plus d'équipements, mais prend plus de temps.",
       "ProcessingMode": "Mode de processing"
     },
-    "Raid": "Raid",
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un mod ou une description",
     "SelectMods": "Sélectionner les Mods",

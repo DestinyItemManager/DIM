@@ -85,7 +85,7 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
   (modMetadata) => modMetadata.emptyModSocketHash
 );
 
-/** verifies an item is d2 armor and has a specialty mod slot, which is returned */
+/** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
 export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
   if (item?.bucket.inArmor) {
     const specialtySockets = item.sockets?.allSockets.filter((socket) =>
@@ -97,7 +97,7 @@ export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => 
   }
 };
 
-/** returns ModMetadata if the item has a specialty mod slot */
+/** returns ModMetadatas if the item has one or more specialty mod slots */
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
@@ -119,9 +119,7 @@ export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): strin
   modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
- * this always returns a string for easy printing purposes
- *
- * `''` if not found, so you can let it stay blank or `||` it
+ * returns, if there are any, the localized names of an item's specialty slots
  */
 export const getItemSpecialtyModSlotDisplayNames = (
   item: DimItem,

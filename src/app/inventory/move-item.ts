@@ -1,8 +1,9 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
@@ -110,13 +111,17 @@ export function moveItemTo(
   chooseAmount = false
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    const transaction = startTransaction({ name: 'moveItemTo' });
+    // set the transaction on the scope so it picks up any errors
+    getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+
     hideItemPopup();
     if (
       item.location.inPostmaster
         ? !item.canPullFromPostmaster
         : item.notransfer && item.owner !== store.id
     ) {
-      throw new Error(t('Help.CannotMove'));
+      throw new DimError('Help.CannotMove');
     }
 
     if (item.owner === store.id && !item.location.inPostmaster) {
@@ -144,9 +149,7 @@ export function moveItemTo(
         try {
           moveAmount = await showMoveAmountPopup(item, store, maximum);
         } catch (e) {
-          const error: DimError = new Error('move-canceled');
-          error.code = 'move-canceled';
-          throw error;
+          throw new DimError('move-canceled', 'Move canceled'); // not shown to user
         }
       }
 
@@ -184,12 +187,17 @@ export function moveItemTo(
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
-        e.code !== 'wrong-level' &&
-        e.code !== 'no-space' &&
-        e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+        e instanceof DimError &&
+        (e.code === 'wrong-level' ||
+          e.code === 'no-space' ||
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
       ) {
+        // don't report
+      } else {
         reportException('moveItem', e);
       }
+    } finally {
+      transaction.finish();
     }
 
     return item;

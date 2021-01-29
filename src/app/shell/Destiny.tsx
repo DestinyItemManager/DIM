@@ -2,7 +2,6 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import Compare from 'app/compare/Compare';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -69,7 +68,7 @@ interface ProvidedProps {
 interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
-  profileError?: DimError;
+  profileError?: Error;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {

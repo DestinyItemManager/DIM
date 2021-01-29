@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
+    "MissingInventory": "Bungie.net에서 소지품을 반환하지 않았으며, 개인 정보 보호 설정에 의해 차단되었을 수 있습니다. 로그아웃 후 다시 로그인해 보십시오.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
     "NoAccountForPlatform": "{{platform}}에서 데스티니 계정을 찾지 못했습니다.",
@@ -346,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
-    "Chest": "가슴",
     "ChooseAMod": "개조 부품 선택",
     "ChooseAPerk": "특성 선택",
-    "ClassItem": "직업 아이템",
     "ClearLocked": "잠금 해제",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
@@ -357,9 +356,6 @@
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
     "FilterSets": "필터 조합",
-    "Gauntlets": "건틀릿",
-    "General": "일반",
-    "Helmet": "헬멧",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
       "ChangeNodes": "로드아웃을 생성하려면 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
@@ -381,7 +377,6 @@
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
     "LB": "로드아웃 최적화",
-    "Legs": "다리",
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
       "HelpScaled": "모든 장비가 350 방어라는 가정 하에 로드아웃 계산",
@@ -394,7 +389,6 @@
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
     "ModLockButton": "개조 부품 선택",
-    "Other": "기타",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
@@ -402,7 +396,6 @@
       "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림",
       "ProcessingMode": "처리 모드"
     },
-    "Raid": "레이드",
     "Scaled": "확대 됨",
     "SearchAMod": "개조 부품이나 설명 검색",
     "SelectMods": "개조 부품 선택",

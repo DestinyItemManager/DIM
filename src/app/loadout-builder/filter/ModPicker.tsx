@@ -1,7 +1,6 @@
 import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
-import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   allItemsSelector,
@@ -12,7 +11,6 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -25,17 +23,8 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import {
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
-  ModPickerCategories,
-  ModPickerCategory,
-} from '../types';
-import {
-  armor2ModPlugCategoriesTitles,
-  getModPickerCategoryFromPlugCategoryHash,
-  isLoadoutBuilderItem,
-} from '../utils';
+import { knownModPlugCategoryHashes, LockedArmor2Mod, LockedArmor2ModMap } from '../types';
+import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
@@ -50,19 +39,10 @@ const sortMods = chainComparator<LockedArmor2Mod>(
   compareBy((l) => l.modDef.displayProperties.name)
 );
 
-function isGeneralOrOtherOrRaid(category: ModPickerCategory) {
-  return (
-    category === ModPickerCategories.general ||
-    category === ModPickerCategories.other ||
-    category === ModPickerCategories.raid
-  );
-}
-
 interface ProvidedProps {
   lockedArmor2Mods: LockedArmor2ModMap;
   classType: DestinyClass;
   initialQuery?: string;
-  filterLegacy?: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -139,11 +119,7 @@ function mapStateToProps() {
             isArmor2Mod(def) &&
             def.plug.insertionMaterialRequirementHash !== 0
           ) {
-            const category = getModPickerCategoryFromPlugCategoryHash(def.plug.plugCategoryHash);
-
-            if (category) {
-              transformedMods.push({ modDef: def, category });
-            }
+            transformedMods.push({ modDef: def });
           }
         }
 
@@ -173,7 +149,6 @@ function ModPicker({
   isPhonePortrait,
   lockedArmor2Mods,
   initialQuery,
-  filterLegacy,
   lbDispatch,
   onClose,
 }: Props) {
@@ -189,9 +164,10 @@ function ModPicker({
 
   const onModSelected = useCallback(
     (mod: LockedArmor2Mod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
       setLockedArmor2ModsInternal((oldState) => ({
         ...oldState,
-        [mod.category]: [...oldState[mod.category], { ...mod, key: modKey++ }],
+        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod, key: modKey++ }],
       }));
     },
     [setLockedArmor2ModsInternal]
@@ -199,17 +175,17 @@ function ModPicker({
 
   const onModRemoved = useCallback(
     (mod: LockedArmor2Mod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
       setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[mod.category].findIndex(
-          (li) => li.modDef.hash === mod.modDef.hash
-        );
+        const firstIndex =
+          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) ?? -1;
 
         if (firstIndex >= 0) {
-          const newState = [...oldState[mod.category]];
+          const newState = [...(oldState[plugCategoryHash] || [])];
           newState.splice(firstIndex, 1);
           return {
             ...oldState,
-            [mod.category]: newState,
+            [plugCategoryHash]: newState,
           };
         }
 
@@ -228,16 +204,11 @@ function ModPicker({
     onClose();
   };
 
-  const scrollToBucket = (categoryOrSeasonal: number | string) => {
-    const elementId = `mod-picker-section-${categoryOrSeasonal}`;
+  const scrollToBucket = (plugCategoryHashes: number[]) => {
+    const elementId = `mod-picker-section-${plugCategoryHashes.join('-')}`;
     const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };
-
-  const order = Object.values(ModPickerCategories).map((category) => ({
-    category,
-    translatedName: t(armor2ModPlugCategoriesTitles[category]),
-  }));
 
   const queryFilteredMods = useMemo(() => {
     // Only some languages effectively use the \b regex word boundary
@@ -247,52 +218,72 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            // TODO I am not thrilled about this filter legacy thing but it will stop
-            // legacy mods being shown when you click on a combat mod socket. Lets aim to
-            // get proper search in here at some point.
-            (!filterLegacy ||
-              combatCompatiblePlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
-            (regexp.test(mod.modDef.displayProperties.name) ||
-              regexp.test(mod.modDef.displayProperties.description) ||
-              regexp.test(mod.modDef.itemTypeDisplayName) ||
-              regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
-              mod.modDef.perks.some((perk) => {
-                const perkDef = defs.SandboxPerk.get(perk.perkHash);
-                return (
-                  perkDef &&
-                  (regexp.test(perkDef.displayProperties.name) ||
-                    regexp.test(perkDef.displayProperties.description) ||
-                    regexp.test(perk.requirementDisplayString))
-                );
-              }))
+            regexp.test(mod.modDef.displayProperties.name) ||
+            regexp.test(mod.modDef.displayProperties.description) ||
+            regexp.test(mod.modDef.itemTypeDisplayName) ||
+            (query.startsWith('plugCategoryHash:in:') &&
+              query.includes(`${mod.modDef.plug.plugCategoryHash}`)) ||
+            mod.modDef.perks.some((perk) => {
+              const perkDef = defs.SandboxPerk.get(perk.perkHash);
+              return (
+                perkDef &&
+                (regexp.test(perkDef.displayProperties.name) ||
+                  regexp.test(perkDef.displayProperties.description) ||
+                  regexp.test(perk.requirementDisplayString))
+              );
+            })
         )
       : mods;
-  }, [language, query, mods, defs.SandboxPerk, filterLegacy]);
+  }, [language, query, mods, defs.SandboxPerk]);
 
-  const modsByCategory = useMemo(() => {
-    const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
-      [ModPickerCategories.general]: [],
-      [ModPickerCategories.helmet]: [],
-      [ModPickerCategories.gauntlets]: [],
-      [ModPickerCategories.chest]: [],
-      [ModPickerCategories.leg]: [],
-      [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.other]: [],
-      [ModPickerCategories.raid]: [],
-    };
+  // Group mods by itemTypeDisplayName as there are two hashes for charged with light mods
+  const groupedModsByItemTypeDisplayName: {
+    [title: string]: { title: string; mods: LockedArmor2Mod[]; plugCategoryHashes: number[] };
+  } = {};
 
-    for (const mod of queryFilteredMods) {
-      rtn[mod.category].push(mod);
+  // We use this to sort the final groups so that it goes general, helmet, ..., classitem, raid, others.
+  const groupHeaderOrder = [...knownModPlugCategoryHashes];
+
+  for (const mod of queryFilteredMods) {
+    const title = mod.modDef.itemTypeDisplayName
+      .replaceAll(/armor/gi, '')
+      .replaceAll(/mod/gi, '')
+      .trim();
+    if (!groupedModsByItemTypeDisplayName[title]) {
+      groupedModsByItemTypeDisplayName[title] = {
+        title,
+        mods: [mod],
+        plugCategoryHashes: [mod.modDef.plug.plugCategoryHash],
+      };
+    } else {
+      groupedModsByItemTypeDisplayName[title].mods.push(mod);
+      if (
+        !groupedModsByItemTypeDisplayName[title].plugCategoryHashes.includes(
+          mod.modDef.plug.plugCategoryHash
+        )
+      ) {
+        groupedModsByItemTypeDisplayName[title].plugCategoryHashes.push(
+          mod.modDef.plug.plugCategoryHash
+        );
+      }
     }
 
-    return rtn;
-  }, [queryFilteredMods]);
+    if (!groupHeaderOrder.includes(mod.modDef.plug.plugCategoryHash)) {
+      groupHeaderOrder.push(mod.modDef.plug.plugCategoryHash);
+    }
+  }
+
+  const groupedMods = Object.values(groupedModsByItemTypeDisplayName).sort(
+    (groupA, groupB) =>
+      groupHeaderOrder.indexOf(groupA.plugCategoryHashes[0]) -
+      groupHeaderOrder.indexOf(groupB.plugCategoryHashes[0])
+  );
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
-          categoryOrder={order}
+          groupOrder={groupedMods}
           lockedArmor2Mods={lockedArmor2ModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
@@ -306,7 +297,7 @@ function ModPicker({
       onClose={onClose}
       header={
         <ModPickerHeader
-          categoryOrder={order}
+          groupOrder={groupedMods}
           query={query}
           scrollToBucket={scrollToBucket}
           onSearchChange={(e) => setQuery(e.currentTarget.value)}
@@ -317,19 +308,14 @@ function ModPicker({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {Object.values(ModPickerCategories).map((category) => (
+      {groupedMods.map(({ mods, plugCategoryHashes, title }) => (
         <PickerSectionMods
-          key={category}
-          mods={modsByCategory[category]}
+          key={plugCategoryHashes.join('-')}
+          mods={mods}
           defs={defs}
-          locked={lockedArmor2ModsInternal[category]}
-          title={t(armor2ModPlugCategoriesTitles[category])}
-          category={category}
-          splitByItemTypeDisplayName={
-            category === ModPickerCategories.other || category === ModPickerCategories.raid
-          }
-          maximumSelectable={isGeneralOrOtherOrRaid(category) ? 5 : 2}
-          energyMustMatch={!isGeneralOrOtherOrRaid(category)}
+          locked={lockedArmor2ModsInternal}
+          title={title}
+          plugCategoryHashes={plugCategoryHashes}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

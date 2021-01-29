@@ -63,6 +63,8 @@ export function filterItems(
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
+          // Filter out items that don't contain all the armour stats as they will break things.
+          statValues.every((statHash) => item.stats?.some((stat) => stat.statHash === statHash)) &&
           // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
           (bucket === LockableBuckets.classitem ||
             locked?.length ||

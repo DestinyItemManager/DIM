@@ -1,5 +1,33 @@
 ## Next
-* Show a star icon for finishers rather than a lock icon.
+
+* Items in the Postmaster which cannot be pulled are shown faded out.
+
+## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
+
+* Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
+* Disabled weapon mods no longer contribute to stats.
+* Automatic updates for the latest patch.
+
+## 6.48.0 <span class="changelog-date">(2021-01-17)</span>
+
+* Allow clicking through the loading screen to get to the troubleshooting link.
+
+## 6.47.1 <span class="changelog-date">(2021-01-11)</span>
+
+* Fix a bug that could crash loadout optimizer.
+
+## 6.47.0 <span class="changelog-date">(2021-01-10)</span>
+
+* Show a star icon for favorited finishers rather than a lock icon.
+* Search history truncates huge searches to three lines and aligns the icons and delete button to the first line.
+* Added indicators in the Compare view to show which stat we are sorting by, and in which direction.
+* Fix visuals on the pull from postmaster buttons.
+* Loadout Optimizer now allows selecting up to 5 raid mods, not just 2.
+* Armor mods with conditional stats, like Powerful Friends and Radiant Light, now correctly take into account the conditions that cause their stats to be applied. This only works within a single piece of armor - for example, it will work if you have Powerful Friends and another Arc mod is socketed into that piece of armor, but will not yet correctly identify that the stats should be enabled when you have another Arc Charged With Light mod on *another* piece of armor.
+* Masterworked Adept weapons should show all their stat bonuses.
+* Fix a bug where using the move buttons instead of drag and drop wouldn't show item move progress popups or error popups.
+* The most recent Steam Overlay browser version shouldn't be reported as not supported anymore. Keep in mind we can't really debug any problems that happen in the Steam Overlay.
+* Fixed some event-specific searches, such as source:dawning.
 
 ## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
 

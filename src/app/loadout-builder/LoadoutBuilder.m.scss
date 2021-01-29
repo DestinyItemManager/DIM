@@ -45,7 +45,6 @@
   position: fixed;
   top: $header-height;
   left: 50%;
-  transform: translateX(-50%);
 
   white-space: nowrap;
   z-index: 10;
@@ -59,24 +58,7 @@
   }
 
   @include phone-portrait {
+    left: 0;
     width: 100%;
   }
-}
-
-.processingEnter {
-  transform: opacity;
-}
-
-.processingEnter.processingEnterActive {
-  transform: translateY(-0) translateX(-50%);
-  transition: transform 200ms $easeOutCubic;
-}
-
-.processingExit {
-  transform: translateY(-0) translateX(-50%);
-}
-
-.processingExit.processingExitActive {
-  transform: translateY(-250px) translateX(-50%);
-  transition: transform 200ms $easeInCubic;
 }

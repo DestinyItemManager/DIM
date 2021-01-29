@@ -164,7 +164,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       if (data?.error === 'server_error') {
         if (data.error_description === 'SystemDisabled') {
           throw new Error(t('BungieService.Maintenance'));
-        } else {
+        } else if (data.error_description !== 'AuthorizationRecordExpired') {
           throw new Error(
             `Unknown error getting response token: ${data.error}, ${data.error_description}`
           );

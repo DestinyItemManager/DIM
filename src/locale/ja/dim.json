@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "Maintenance": "Bungie.net サーバーがメンテナンス中。",
+    "MissingInventory": "Bungie.net は保管庫の情報を返しませんでした。もしかしたら、あなたのプライバシー設定がそれを妨げているからかもしれません。ログアウトして再度ログインしてください。",
     "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
     "NoAccount": "Destiny のアカウントが見つかりません。正しいプラットフォームが選択されているかご確認ください。",
     "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
@@ -346,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
-    "Chest": "チェスト",
     "ChooseAMod": "Modを選択してください",
     "ChooseAPerk": "パークを選択してください",
-    "ClassItem": "クラスアイテム",
     "ClearLocked": "ロックを解除",
     "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
     "Current": "現在",
@@ -357,9 +356,6 @@
     "Exclude": "省かれたアイテム",
     "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック(またはこのバケットにドラッグアンドドロップ) します。",
     "FilterSets": "フィルターセット",
-    "Gauntlets": "ガントレット",
-    "General": "全般",
-    "Helmet": "ヘルメット",
     "Help": {
       "And": "これのパークをすべて装備した防具が使用されます (\"and\")",
       "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
@@ -381,7 +377,6 @@
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
     "LB": "ロードアウト最適化",
-    "Legs": "レッグ",
     "LightMode": {
       "HelpCurrent": "現在の防衛レベルでの負荷を計算します。",
       "HelpScaled": "すべてのアイテムが350防御であるかのように負荷を計算します。",
@@ -394,7 +389,6 @@
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
     "ModLockButton": "Modを選んでください",
-    "Other": "その他",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -402,7 +396,6 @@
       "HelpFull": "装備が多く見つかりますが、時間がかかります。",
       "ProcessingMode": "処理モード"
     },
-    "Raid": "レイド",
     "Scaled": "縮尺",
     "SearchAMod": "改造パーツ名や説明で検索する",
     "SelectMods": "Modを選んでください",

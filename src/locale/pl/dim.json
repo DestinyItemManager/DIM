@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "Próbowałeś przenieść '{{name}}' {{type}} na swoją {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "ItemUniquenessExplanation_male": "Próbowałeś przenieść '{{name}}' {{type}} na swojego {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "Maintenance": "Serwery Bungie.net są wyłączone w celu przeprowadzenia konserwacji.",
+    "MissingInventory": "Bungie.net nie zwrócił twojego ekwipunku, prawdopodobnie dlatego, że uniemożliwiają to ustawienia prywatności. Spróbuj się wylogować i zalogować.",
     "NetworkError": "Błąd sieci - {{status}}{{statusText}}",
     "NoAccount": "Nie znaleziono konta Destiny. Czy wybrałeś poprawną platformę?",
     "NoAccountForPlatform": "Nie znaleziono konta Destiny na platformie {{platform}}.",
@@ -346,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
-    "Chest": "Tors",
     "ChooseAMod": "Wybierz swoje modyfikacje",
     "ChooseAPerk": "Wybierz atut",
-    "ClassItem": "Przedmiot klasy",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
@@ -357,9 +356,6 @@
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
     "FilterSets": "Zestawy filtrów",
-    "Gauntlets": "Rękawice",
-    "General": "Ogólne",
-    "Helmet": "Hełm",
     "Help": {
       "And": "Pancerz z każdym z tych atutów będzie użyty (\"and\")",
       "ChangeNodes": "Zmień węzły Intelektu, Dyscypliny lub Siły w grze na to, co jest pokazane aby utworzyć każde uzbrojenie.",
@@ -381,7 +377,6 @@
     "HideAllConfigs": "Ukryj wszystkie konfiguracje",
     "HideConfigs": "Ukryj konfiguracje",
     "LB": "Optymalizator Uzbrojenia",
-    "Legs": "Nogi",
     "LightMode": {
       "HelpCurrent": "Kalkuluje uzbrojenia na obecnych poziomach obrony.",
       "HelpScaled": "Kalkuluje uzbrojenia jak gdyby wszystkie przedmioty miały 350 obrony.",
@@ -394,7 +389,6 @@
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
     "ModLockButton": "Wybierz modyfikacje",
-    "Other": "Inne",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -402,7 +396,6 @@
       "HelpFull": "Bierze pod uwagę więcej sprzętu, ale trwa dłużej.",
       "ProcessingMode": "Tryb przetwarzania"
     },
-    "Raid": "Najazd",
     "Scaled": "Skalowany",
     "SearchAMod": "Szukaj modyfikacji lub opisu",
     "SelectMods": "Wybierz modyfikacje",

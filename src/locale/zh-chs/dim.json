@@ -63,6 +63,7 @@
     "ItemUniquenessExplanation_female": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "ItemUniquenessExplanation_male": "您试图移动{{type}} “{{name}}” 到您的{{character}} 上，但是目标角色已经拥有一个该物品。",
     "Maintenance": "Bungie.net服务器停机维护中.",
+    "MissingInventory": "Bungie.net 没有返回你的物品栏，可能是因为你的隐私设置阻止了它。请尝试重新登录。",
     "NetworkError": "网络错误 - {{status}}{{statusText}}",
     "NoAccount": "没有找到任何关联的 Destiny 帐户，请确保您选择了正确的平台。",
     "NoAccountForPlatform": "在{{platform}} 上没有找到Destiny帐户.",
@@ -346,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "高级选项",
-    "Chest": "胸部护甲",
     "ChooseAMod": "选择你的模组",
     "ChooseAPerk": "选择一个特性",
-    "ClassItem": "职业物品",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -357,9 +356,6 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
     "FilterSets": "组合过滤",
-    "Gauntlets": "臂铠",
-    "General": "杂项",
-    "Helmet": "头部护甲",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
       "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示.",
@@ -381,7 +377,6 @@
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
     "LB": "配装优化器",
-    "Legs": "腿部护甲",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",
       "HelpScaled": "计算使所有角色都都拥有350防御.",
@@ -394,7 +389,6 @@
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
     "ModLockButton": "选择模组",
-    "Other": "其他",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -402,7 +396,6 @@
       "HelpFull": "查看更多装备，但是需要更长时间。",
       "ProcessingMode": "处理模式"
     },
-    "Raid": "突袭",
     "Scaled": "缩放",
     "SearchAMod": "搜索模组或描述",
     "SelectMods": "选择模组",
@@ -461,7 +454,7 @@
     "SelectPerks": "选择特性",
     "SelectPower": "最小光等",
     "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "为了获得精确结果，请移除任何带有属性惩罚的模组。\n\n鉴于有属性惩罚的模组，DIM 无法为一些包含的物品确定基础数值或 {{stats}} 的数值。这是因为 Bungie.net 的数据限制。",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
@@ -796,7 +789,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "总计",
-    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "因为 Bungie.net 的数据限制，鉴于有属性惩罚的模组，DIM 无法确定基础数值或 {{stats}} 的数值。"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -835,9 +828,9 @@
     "ImportWrongFileType": "档案不是json档案。它可能不是dim备份。",
     "IndexedDBStorage": "本地浏览器存储",
     "MenuTitle": "同步和备份",
-    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
+    "ProfileErrorBody": "从 DIM 同步加载你的数据时出错。我们会自动重试。",
     "ProfileErrorTitle": "DIM 同步错误",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
+    "UpdateErrorBody": "保存你的数据到 DIM 同步时出错。我们稍后会自动重试。",
     "UpdateErrorTitle": "DIM 同步错误",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },

@@ -3,13 +3,15 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './processWorker/mappers';
-import { canTakeAllMods, generateModPermutations } from './processWorker/processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './processWorker/processUtils';
 import { ProcessItem } from './processWorker/types';
 import {
   bucketsToCategories,
+  knownModPlugCategoryHashes,
   LockableBucketHashes,
   LockedArmor2Mod,
   LockedArmor2ModMap,
+  raidPlugCategoryHashes,
 } from './types';
 
 /**
@@ -30,8 +32,8 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
  */
 function assignModsForSlot(
   item: DimItem,
-  mods: LockedArmor2Mod[],
-  assignments: Record<string, number[]>
+  assignments: Record<string, number[]>,
+  mods?: LockedArmor2Mod[]
 ): void {
   if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
@@ -43,13 +45,33 @@ function assignModsForSlot(
  *
  * assignments is mutated in this function as it tracks assigned mods for a particular armour set
  */
-function assignAllMods(
+function assignSlotIndependantMods(
   setToMatch: ProcessItem[],
-  generalMods: LockedArmor2Mod[],
-  otherMods: readonly LockedArmor2Mod[],
-  raidMods: LockedArmor2Mod[],
+  lockedArmor2Mods: LockedArmor2ModMap,
   assignments: Record<string, number[]>
 ): void {
+  let generalMods: LockedArmor2Mod[] = [];
+  let otherMods: LockedArmor2Mod[] = [];
+  let raidMods: LockedArmor2Mod[] = [];
+
+  for (const [plugCategoryHashString, mods] of Object.entries(lockedArmor2Mods)) {
+    const plugCategoryHash = Number(plugCategoryHashString);
+
+    if (!mods) {
+      continue;
+    } else if (plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      generalMods = mods;
+    } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
+      raidMods = raidMods.concat(mods);
+    } else if (!knownModPlugCategoryHashes.includes(plugCategoryHash)) {
+      otherMods = otherMods.concat(mods);
+    }
+  }
+
+  if (!generalMods || !otherMods || !raidMods) {
+    return;
+  }
+
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
   const otherProcessMods = otherMods.map(mapArmor2ModToProcessMod);
@@ -59,7 +81,7 @@ function assignAllMods(
   const otherModPermutations = generateModPermutations(otherProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
-  canTakeAllMods(
+  canTakeSlotIndependantMods(
     generalModPermutations,
     otherModPermutations,
     raidModPermutations,
@@ -85,22 +107,19 @@ export function assignModsToArmorSet(
 
     if (item) {
       const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
-      assignModsForSlot(item, lockedMods, assignments);
+      assignModsForSlot(item, assignments, lockedMods);
       processItems.push(mapDimItemToProcessItem(item, lockedMods));
     }
   }
 
-  if (lockedArmor2Mods.other || lockedArmor2Mods[armor2PlugCategoryHashesByName.general].length) {
-    assignAllMods(
-      processItems,
-      lockedArmor2Mods[armor2PlugCategoryHashesByName.general],
-      lockedArmor2Mods.other,
-      lockedArmor2Mods.raid,
-      assignments
-    );
-  }
+  assignSlotIndependantMods(processItems, lockedArmor2Mods, assignments);
 
-  const modsByHash = _.groupBy(Object.values(lockedArmor2Mods).flat(), (mod) => mod.modDef.hash);
+  const modsByHash = _.groupBy(
+    Object.values(lockedArmor2Mods)
+      .flat()
+      .filter((x: LockedArmor2Mod | undefined): x is LockedArmor2Mod => Boolean(x)),
+    (mod) => mod.modDef.hash
+  );
   const assignedMods = _.mapValues(assignments, (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())
@@ -109,7 +128,9 @@ export function assignModsToArmorSet(
   const assigned = Object.values(assignedMods).flat();
   const unassignedMods = Object.values(lockedArmor2Mods)
     .flat()
-    .filter((unassign) => !assigned.some((assign) => assign.key === unassign.key));
+    .filter((unassign): unassign is LockedArmor2Mod =>
+      Boolean(unassign && !assigned.some((assign) => assign.key === unassign.key))
+    );
 
   return [assignedMods, unassignedMods];
 }

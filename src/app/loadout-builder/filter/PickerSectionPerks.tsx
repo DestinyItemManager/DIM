@@ -37,7 +37,7 @@ export default function PerksForBucket({
             defs={defs}
             bucket={bucket}
             selected={Boolean(locked?.some((p) => p.type === 'perk' && p.perk.hash === perk.hash))}
-            unselectable={Boolean(filterInfo.filteredPerks && !filterInfo.filteredPerks.has(perk))}
+            selectable={Boolean(!filterInfo.filteredPerks || filterInfo.filteredPerks.has(perk))}
             perk={perk}
             onLockedPerk={onPerkSelected}
           />

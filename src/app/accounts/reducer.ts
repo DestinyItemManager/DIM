@@ -1,5 +1,4 @@
 import { API_KEY as BUNGIE_API_KEY } from 'app/bungie-api/bungie-api-utils';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { hasValidAuthTokens } from 'app/bungie-api/oauth-tokens';
 import { API_KEY as DIM_API_KEY } from 'app/dim-api/dim-api-helper';
 import { deepEqual } from 'fast-equals';
@@ -15,7 +14,7 @@ export interface AccountsState {
   readonly loaded: boolean;
   readonly loadedFromIDB: boolean;
 
-  readonly accountsError?: DimError;
+  readonly accountsError?: Error;
 
   /** Do we need the user to log in? */
   readonly needsLogin: boolean;

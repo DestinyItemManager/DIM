@@ -6,9 +6,10 @@ import {
 } from '../../utils/item-utils';
 import {
   ArmorSet,
+  knownModPlugCategoryHashes,
   LockedArmor2Mod,
   LockedArmor2ModMap,
-  ModPickerCategories,
+  raidPlugCategoryHashes,
   statHashToType,
   StatTypes,
 } from '../types';
@@ -30,6 +31,7 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
 export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.modDef.hash,
+    plugCategoryHash: mod.modDef.plug.plugCategoryHash,
     energy: mod.modDef.plug.energyCost && {
       type: mod.modDef.plug.energyCost.energyType,
       val: mod.modDef.plug.energyCost.energyCost,
@@ -37,7 +39,10 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
     investmentStats: mod.modDef.investmentStats,
   };
 
-  if (mod.category === 'other' || mod.category === 'raid') {
+  if (
+    raidPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
+    !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
+  ) {
     processMod.tag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
   }
 
@@ -59,8 +64,8 @@ export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
     Strength: 0,
   };
 
-  for (const category of Object.values(ModPickerCategories)) {
-    for (const mod of lockedArmor2Mods[category]) {
+  for (const mods of Object.values(lockedArmor2Mods)) {
+    for (const mod of mods || []) {
       for (const stat of mod.modDef.investmentStats) {
         const statType = statHashToType[stat.statTypeHash];
         if (statType) {
@@ -85,7 +90,7 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
 
 export function mapDimItemToProcessItem(
   dimItem: DimItem,
-  modsForSlot: LockedArmor2Mod[]
+  modsForSlot?: LockedArmor2Mod[]
 ): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
@@ -100,8 +105,10 @@ export function mapDimItemToProcessItem(
   }
 
   const modMetadatas = getSpecialtySocketMetadatas(dimItem);
-  const costInitial =
-    dimItem.energy && _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0);
+  const modsCost = modsForSlot
+    ? _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0)
+    : 0;
+  const costInitial = dimItem.energy ? modsCost : null;
   return {
     bucketHash: bucket.hash,
     id,

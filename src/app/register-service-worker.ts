@@ -1,3 +1,4 @@
+import { getCurrentHub } from '@sentry/browser';
 import { BehaviorSubject, combineLatest, empty, from, of, timer } from 'rxjs';
 import { catchError, distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { reportException } from './utils/exceptions';
@@ -116,6 +117,15 @@ export default function registerServiceWorker() {
             .then(() => {
               if (registration.waiting) {
                 infoLog('SW', 'New content is available; please refresh. (from update)');
+
+                if ($featureFlags.sentry) {
+                  // Disable Sentry error logging if this user is on an older version
+                  const sentryOptions = getCurrentHub()?.getClient()?.getOptions();
+                  if (sentryOptions) {
+                    sentryOptions.enabled = false;
+                  }
+                }
+
                 return true;
               } else {
                 infoLog('SW', 'Updated, but theres not a new worker waiting');
@@ -141,7 +151,6 @@ async function getServerVersion() {
     if (!data.version) {
       throw new Error('No version property');
     }
-    infoLog('SW', 'Got server version', data);
     return data.version as string;
   } else {
     throw response;

@@ -1,19 +1,23 @@
 import { t } from 'app/i18next-t';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import React, { ChangeEvent } from 'react';
-import { ModPickerCategory } from '../types';
 import styles from './ModPickerHeader.m.scss';
 
 interface Props {
-  categoryOrder?: { category: ModPickerCategory; translatedName: string }[];
+  groupOrder: { plugCategoryHashes: number[]; title: string }[];
   isPhonePortrait: boolean;
   query: string;
   onSearchChange(event: ChangeEvent<HTMLInputElement>): void;
-  scrollToBucket(bucketOrSeasonal: number | string): void;
+  scrollToBucket(plugCategoryHashes: number[]): void;
 }
 
-function ModPickerHeader(props: Props) {
-  const { categoryOrder, isPhonePortrait, query, onSearchChange, scrollToBucket } = props;
+function ModPickerHeader({
+  groupOrder,
+  isPhonePortrait,
+  query,
+  onSearchChange,
+  scrollToBucket,
+}: Props) {
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
@@ -39,13 +43,13 @@ function ModPickerHeader(props: Props) {
         </div>
       </div>
       <div className={styles.tabs}>
-        {categoryOrder?.map((category) => (
+        {groupOrder?.map(({ plugCategoryHashes, title }) => (
           <div
-            key={category.category}
+            key={title}
             className={styles.tab}
-            onClick={() => scrollToBucket(category.category)}
+            onClick={() => scrollToBucket(plugCategoryHashes)}
           >
-            {category.translatedName}
+            {title}
           </div>
         ))}
       </div>

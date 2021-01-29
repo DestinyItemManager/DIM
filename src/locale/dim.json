@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "ItemUniquenessExplanation_male": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "Maintenance": "Bungie.net servers are down for maintenance.",
-    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
     "NetworkError": "Network error - {{status}} {{statusText}}",
     "NoAccount": "No Destiny account was found. Do you have the right platform selected?",
     "NoAccountForPlatform": "Failed to find a Destiny account for you on {{platform}}.",
@@ -347,10 +347,8 @@
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
-    "Chest": "Chest",
     "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "Choose a perk",
-    "ClassItem": "Class Item",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
@@ -358,9 +356,6 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "FilterSets": "Filter sets",
-    "Gauntlets": "Gauntlets",
-    "General": "General",
-    "Helmet": "Helmet",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
       "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
@@ -382,7 +377,6 @@
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
     "LB": "Loadout Optimizer",
-    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Calculates loadouts at current defense levels.",
       "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
@@ -395,7 +389,6 @@
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
     "ModLockButton": "Select mods",
-    "Other": "Other",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -403,7 +396,6 @@
       "HelpFull": "Looks at more gear, but takes longer.",
       "ProcessingMode": "Processing mode"
     },
-    "Raid": "Raid",
     "Scaled": "Scaled",
     "SearchAMod": "Search a mod or description",
     "SelectMods": "Select Mods",
