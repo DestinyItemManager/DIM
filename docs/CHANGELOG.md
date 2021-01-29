@@ -1,6 +1,7 @@
 ## Next
 
 * Items in the Postmaster which cannot be pulled are shown faded out.
+* Search filters that operate on power levels now accept the keywords "hardcap" and "softcap" to refer to the current season's power limits. e.g "power:>=softcap"
 
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
 

@@ -1,11 +1,12 @@
 import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import { FilterDefinition } from '../filter-types';
 import { generateSuggestionsForFilter } from '../search-utils';
 
-const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
+const rangeStringRegex = /^([<=>]{0,2})(\d+|hardcap|softcap)$/;
 
-export function rangeStringToComparator(rangeString?: string) {
+export function rangeStringToComparator(rangeString?: string, powerKeywords = false) {
   if (!rangeString) {
     throw new Error('Missing range comparison');
   }
@@ -15,7 +16,13 @@ export function rangeStringToComparator(rangeString?: string) {
   }
 
   const [, operator, comparisonValueString] = matchedRangeString;
-  const comparisonValue = parseFloat(comparisonValueString);
+  let comparisonValue = parseFloat(comparisonValueString);
+  /* t('Filter.PowerKeywords') */
+  if (powerKeywords && comparisonValueString === 'hardcap') {
+    comparisonValue = D2SeasonInfo[D2CalculatedSeason].maxPower;
+  } else if (powerKeywords && comparisonValueString === 'softcap') {
+    comparisonValue = D2SeasonInfo[D2CalculatedSeason].softCap;
+  }
 
   switch (operator) {
     case '=':
@@ -48,7 +55,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     description: tl('Filter.PowerLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
-      const compareTo = rangeStringToComparator(filterValue);
+      const compareTo = rangeStringToComparator(filterValue, true);
       return (item) => item.primStat && compareTo(item.primStat.value);
     },
   },
@@ -76,7 +83,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const compareTo = rangeStringToComparator(filterValue);
+      const compareTo = rangeStringToComparator(filterValue, true);
       return (item) =>
         // anything with no powerCap has no known limit, so treat it like it's 99999999
         compareTo(item.powerCap ?? 99999999);
