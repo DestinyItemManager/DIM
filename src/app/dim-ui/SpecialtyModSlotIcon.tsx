@@ -45,7 +45,7 @@ function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
               })}
               style={bungieBackgroundStyleAdvanced(
                 emptySlotItem.displayProperties.icon,
-                'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
+                'linear-gradient(#000b, #000b)', // forced dark background to help w/ visibility
                 2
               )}
             />

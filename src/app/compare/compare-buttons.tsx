@@ -27,14 +27,16 @@ export function findSimilarArmors(
 ): CompareButton[] {
   const exampleItemElementIcon = <ElementIcon key={exampleItem.id} element={exampleItem.element} />;
   const exampleItemModSlotMetadatas = getSpecialtySocketMetadatas(exampleItem);
-  const specialtyModSlotName =
-    (defs && getItemSpecialtyModSlotDisplayNames(exampleItem, defs)) ?? '';
+  const specialtyModSlotNames = defs && getItemSpecialtyModSlotDisplayNames(exampleItem, defs);
 
   // helper functions for filtering items
   const matchesExample = (key: keyof DimItem) => (item: DimItem) => item[key] === exampleItem[key];
   const matchingModSlot = (item: DimItem) => {
     const m = getSpecialtySocketMetadatas(item);
-    return m?.some((n) => exampleItemModSlotMetadatas?.includes(n));
+    return (
+      exampleItemModSlotMetadatas?.length === m?.length &&
+      m?.every((n) => exampleItemModSlotMetadatas?.includes(n))
+    );
   };
   const hasEnergy = (item: DimItem) => Boolean(item.energy);
 
@@ -59,7 +61,7 @@ export function findSimilarArmors(
 
     // above but also the same seasonal mod slot, if it has one
     {
-      buttonLabel: [specialtyModSlotName].join(' + '),
+      buttonLabel: specialtyModSlotNames?.join(' + '),
       items:
         hasEnergy(exampleItem) && exampleItemModSlotMetadatas
           ? allArmors.filter(hasEnergy).filter(matchingModSlot)
@@ -75,7 +77,7 @@ export function findSimilarArmors(
     },
     // above but also the same seasonal mod slot, if it has one
     {
-      buttonLabel: [exampleItemElementIcon, specialtyModSlotName],
+      buttonLabel: [exampleItemElementIcon, specialtyModSlotNames?.join(' + ')],
       items:
         hasEnergy(exampleItem) && exampleItemModSlotMetadatas
           ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
