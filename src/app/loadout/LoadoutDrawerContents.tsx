@@ -41,6 +41,7 @@ const loadoutTypes = [
   'Ship',
   'Ships',
   'Vehicle',
+  'Inventory',
   'Horn',
 ];
 
@@ -156,7 +157,6 @@ async function pickLoadoutItem(
   add: (item: DimItem, e?: MouseEvent) => void
 ) {
   const loadoutClassType = loadout?.classType;
-
   function loadoutHasItem(item: DimItem) {
     return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
