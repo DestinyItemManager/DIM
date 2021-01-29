@@ -95,9 +95,7 @@ export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): strin
   modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
- * this always returns a string for easy printing purposes
- *
- * `''` if not found, so you can let it stay blank or `||` it
+ * returns, if there are any, the localized names of an item's specialty slots
  */
 export const getItemSpecialtyModSlotDisplayNames = (
   item: DimItem,
