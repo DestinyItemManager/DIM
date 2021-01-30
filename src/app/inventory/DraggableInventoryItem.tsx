@@ -1,16 +1,20 @@
 import { CompareService } from 'app/compare/compare.service';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
+import { useSelector } from 'react-redux';
 import { BehaviorSubject } from 'rxjs';
 import store from '../store/store';
 import { stackableDrag } from './actions';
 import { showDragGhost } from './drag-ghost-item';
 import { DimItem } from './item-types';
+import { sortedStoresSelector } from './selectors';
+import { getStore } from './stores-helpers';
 
 interface ExternalProps {
   item: DimItem;
@@ -110,7 +114,14 @@ function DraggableInventoryItem({
   const [touchActive, setTouchActive] = useState(false);
   const longPressed = useRef<boolean>(false);
   const timer = useRef<number>(0);
-  const isNotTransferable = item.notransfer && (!item.isEngram || !item.canPullFromPostmaster);
+  const stores = useSelector(sortedStoresSelector);
+  const store = getStore(stores, item.owner);
+
+  if (!store) {
+    return null;
+  }
+
+  const isTransferable = canBePulledFromPostmaster(item, store, stores);
   const itemTransferStyle = 'item-untransferable';
 
   const resetTouch = () => {
@@ -167,7 +178,7 @@ function DraggableInventoryItem({
       className={clsx(
         'item-drag-container',
         `item-type-${item.type}`,
-        isNotTransferable ? `${itemTransferStyle}` : null,
+        !isTransferable ? `${itemTransferStyle}` : null,
         {
           'touch-active': touchActive,
         }

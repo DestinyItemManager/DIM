@@ -1,8 +1,12 @@
 import { t } from 'app/i18next-t';
+import { sortedStoresSelector } from 'app/inventory/selectors';
+import { getStore } from 'app/inventory/stores-helpers';
 import { ItemTriage } from 'app/item-triage/ItemTriage';
+import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -27,10 +31,17 @@ export default function ItemPopupBody({
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
-  const isNotTransferable = item.notransfer && (!item.isEngram || !item.canPullFromPostmaster);
   const isEngramCollected = item.location.hash === BucketHashes.Engrams;
+  const stores = useSelector(sortedStoresSelector);
+  const store = getStore(stores, item.owner);
 
-  if ((isNotTransferable && item.location.inPostmaster) || isEngramCollected) {
+  if (!store) {
+    return null;
+  }
+
+  const isTransferable = canBePulledFromPostmaster(item, store, stores);
+
+  if (!isTransferable || isEngramCollected) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 
