@@ -41,7 +41,6 @@ const loadoutTypes = [
   'Ship',
   'Ships',
   'Vehicle',
-  'Inventory',
   'Horn',
 ];
 
