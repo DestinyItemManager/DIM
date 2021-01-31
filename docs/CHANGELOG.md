@@ -1,7 +1,5 @@
 ## Next
 
-* Items in the Postmaster which cannot be pulled are shown faded out.
-
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
 
 * Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
