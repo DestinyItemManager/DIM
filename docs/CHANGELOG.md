@@ -1,5 +1,10 @@
 ## Next
 
+* Some emblem stats have better formatting now.
+* Perks which would grant a bonus in a stat, but which grant zero points due to how stats work, now show +0 instead of just not showing the stat.
+* Bounty guide for special grenade launchers now shows a label and not just an icon.
+* Fixed some issues with Loadout Optimizer on mobile.
+
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
 
 * Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
