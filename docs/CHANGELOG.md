@@ -1,5 +1,7 @@
 ## Next
 
+## 6.50.0 <span class="changelog-date">(2021-01-31)</span>
+
 * Some emblem stats have better formatting now.
 * Perks which would grant a bonus in a stat, but which grant zero points due to how stats work, now show +0 instead of just not showing the stat.
 * Bounty guide for special grenade launchers now shows a label and not just an icon.
