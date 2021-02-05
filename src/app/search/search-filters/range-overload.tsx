@@ -139,6 +139,11 @@ const overloadedRangeFilters: FilterDefinition[] = [
     format: 'rangeoverload',
     suggestions: powerLevelKeywords,
     filter: ({ filterValue }) => {
+      if (filterValue === 'atlimit') {
+        return (item) =>
+          Boolean(item.primStat && item.powerCap && item.primStat.value === item.powerCap);
+      }
+
       filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => item.primStat && compareTo(item.primStat.value);
