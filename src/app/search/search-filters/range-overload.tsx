@@ -179,8 +179,5 @@ function replaceSeasonTagWithNumber(s: string) {
  * use only on simple filter values where there's not other letters
  */
 function replacePowerLevelKeyword(s: string) {
-  return s.replace(
-    new RegExp(powerLevelKeywords.join('|'), 'i'),
-    (tag) => powerLevelByKeyword[tag]
-  );
+  return s.replace(new RegExp(powerLevelKeywords.join('|')), (tag) => powerLevelByKeyword[tag]);
 }
