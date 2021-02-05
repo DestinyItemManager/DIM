@@ -2,7 +2,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition, FilterDeprecation } from '../filter-types';
@@ -27,6 +27,16 @@ const sunsetSeasonTagNames = Object.entries(seasonTagToNumber)
   .filter(([_, num]) => num > 11)
   .map(([tag]) => tag)
   .reverse();
+
+// shortcuts for power numbers
+const powerLevelByKeyword = {
+  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
+  // powerfulcap: D2SeasonInfo[D2CalculatedSeason].?????,
+  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].maxPower,
+};
+const powerLevelKeywords = Object.keys(powerLevelByKeyword);
+// TO DATE, things cannot cap at anything but pinnacle limits
+const powerCapKeywords = ['pinnaclecap'];
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word
 
@@ -123,6 +133,31 @@ const overloadedRangeFilters: FilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: ['light', 'power'],
+    description: tl('Filter.PowerLevel'),
+    format: 'rangeoverload',
+    suggestions: powerLevelKeywords,
+    filter: ({ filterValue }) => {
+      filterValue = replacePowerLevelKeyword(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) => item.primStat && compareTo(item.primStat.value);
+    },
+  },
+  {
+    keywords: 'powerlimit',
+    description: tl('Filter.PowerLimit'),
+    format: 'rangeoverload',
+    suggestions: powerCapKeywords,
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      filterValue = replacePowerLevelKeyword(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) =>
+        // anything with no powerCap has no known limit, so treat it like it's 99999999
+        compareTo(item.powerCap ?? 99999999);
+    },
+  },
 ];
 
 export default overloadedRangeFilters;
@@ -136,4 +171,16 @@ export default overloadedRangeFilters;
  */
 function replaceSeasonTagWithNumber(s: string) {
   return s.replace(/[a-z]+$/i, (tag) => seasonTagToNumber[tag]);
+}
+
+/**
+ * replaces a word with a corresponding power level
+ *
+ * use only on simple filter values where there's not other letters
+ */
+function replacePowerLevelKeyword(s: string) {
+  return s.replace(
+    new RegExp(powerLevelKeywords.join('|'), 'i'),
+    (tag) => powerLevelByKeyword[tag]
+  );
 }
