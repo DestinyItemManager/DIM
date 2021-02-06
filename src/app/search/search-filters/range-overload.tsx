@@ -173,11 +173,12 @@ function replaceSeasonTagWithNumber(s: string) {
   return s.replace(/[a-z]+$/i, (tag) => seasonTagToNumber[tag]);
 }
 
+const powerKeywordMatcher = new RegExp(powerLevelKeywords.join('|'));
 /**
  * replaces a word with a corresponding power level
  *
  * use only on simple filter values where there's not other letters
  */
 function replacePowerLevelKeyword(s: string) {
-  return s.replace(new RegExp(powerLevelKeywords.join('|')), (tag) => powerLevelByKeyword[tag]);
+  return s.replace(powerKeywordMatcher, (tag) => powerLevelByKeyword[tag]);
 }
