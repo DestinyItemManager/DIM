@@ -1,5 +1,7 @@
 ## Next
 
+## 6.51.0 <span class="changelog-date">(2021-02-07)</span>
+
 ## 6.50.0 <span class="changelog-date">(2021-01-31)</span>
 
 * Some emblem stats have better formatting now.
