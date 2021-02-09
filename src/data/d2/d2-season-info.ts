@@ -172,6 +172,19 @@ export const D2SeasonInfo = {
     resetTime: '17:00:00Z',
     numWeeks: 12,
   },
+  13: {
+    DLCName: '',
+    seasonName: 'Season of the Chosen',
+    seasonTag: 'chosen',
+    season: 13,
+    year: 4,
+    maxLevel: 50,
+    maxPower: 1310,
+    softCap: 1250,
+    releaseDate: '2021-02-09',
+    resetTime: '17:00:00Z',
+    numWeeks: 13,
+  },
 } as Record<
   number,
   {
