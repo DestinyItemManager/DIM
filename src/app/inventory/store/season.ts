@@ -1,6 +1,7 @@
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import D2SeasonFromSource from 'data/d2/season-to-source.json';
 import D2Season from 'data/d2/seasons.json';
 import D2SeasonBackup from 'data/d2/seasons_backup.json';
@@ -17,6 +18,16 @@ export function getSeason(item: DimItem): number {
   if (item.classified) {
     return D2CalculatedSeason;
   }
+
+  if (
+    item.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
+    item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) ||
+    item.itemCategoryHashes.includes(ItemCategoryHashes.Dummies) ||
+    item.itemCategoryHashes.length === 0
+  ) {
+    return -1;
+  }
+
   // iconOverlay has precedence for season
   const overlay = item.iconOverlay || item.hiddenOverlay;
 
