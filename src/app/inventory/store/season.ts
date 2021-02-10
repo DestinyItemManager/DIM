@@ -1,6 +1,7 @@
 import { D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
+import D2Season from 'data/d2/seasons.json';
 import D2SeasonBackup from 'data/d2/seasons_backup.json';
 import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
@@ -17,7 +18,7 @@ export function getSeason(item: DimItem): number {
 
   return overlay
     ? Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash]
-    : D2CalculatedSeason;
+    : D2Season[item.hash] || D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
