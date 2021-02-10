@@ -1,5 +1,7 @@
 ## Next
 
+## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
+
 * Updates for Season of the Chosen
 
 ## 6.51.0 <span class="changelog-date">(2021-02-07)</span>
