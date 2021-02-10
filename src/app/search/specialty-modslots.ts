@@ -44,7 +44,8 @@ export const combatCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsElemental, // 5 deprecated weapon-specific super regen mods
 ];
 
-// there's a single one-to-many relationship here, but it's most accurate to call it a
+// EnhancementsSeasonV500 has a one-to-many relationship here,
+// but it's most accurate to call the category "combat" not "elemental well"
 export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
   [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
