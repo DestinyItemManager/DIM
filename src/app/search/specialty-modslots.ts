@@ -1,3 +1,5 @@
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+
 export interface ModSocketMetadata {
   /** we use these two to match with search filters (modslot) */
   slotTag: string;
@@ -21,25 +23,38 @@ const legacyCompatibleTags = [
   'lastwish',
 ];
 
+/** The plug categories that will fit in "legacy" sockets */
 export const legacyCompatiblePlugCategoryHashes = [
-  1081029832, // nightmare
-  13646368, // taken/lw
-  1486918022, // garden
-  208760563, // dawn cwl
-  2712224971, // opulent
-  426869514, // warmind
-  443647229, // arrivals cwl
-  65589297, // fallen/forge
+  PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
+  PlugCategoryHashes.EnhancementsSeasonOutlaw, // taken/lw
+  PlugCategoryHashes.EnhancementsRaidGarden,
+  PlugCategoryHashes.EnhancementsSeasonV470, // dawn cwl
+  PlugCategoryHashes.EnhancementsSeasonOpulence, // opulent
+  PlugCategoryHashes.EnhancementsSeasonV480, // warmind
+  PlugCategoryHashes.EnhancementsSeasonV490, // arrivals cwl
+  PlugCategoryHashes.EnhancementsSeasonForge, // fallen
 ];
 
-/** The plugs that will fit in combat sockets */
+/** The plug categories that will fit in combat sockets */
 export const combatCompatiblePlugCategoryHashes = [
-  208760563,
-  393461403,
-  426869514,
-  443647229,
-  991069377,
+  PlugCategoryHashes.EnhancementsSeasonV470, // dawn cwl
+  PlugCategoryHashes.EnhancementsSeasonV500, // elemental well, but technically any "combat" mods
+  PlugCategoryHashes.EnhancementsSeasonV480, // warmind cell
+  PlugCategoryHashes.EnhancementsSeasonV490, // s11 charged with light
+  PlugCategoryHashes.EnhancementsElemental, // 5 deprecated weapon-specific super regen mods
 ];
+
+// there's a single one-to-many relationship here, but it's most accurate to call it a
+export const modTypeTagByPlugCategoryHash = {
+  [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
+  [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
+  [PlugCategoryHashes.EnhancementsRaidGarden]: 'gardenofsalvation',
+  [PlugCategoryHashes.EnhancementsSeasonV470]: 'chargedwithlight',
+  [PlugCategoryHashes.EnhancementsSeasonV480]: 'warmindcell',
+  [PlugCategoryHashes.EnhancementsSeasonV490]: 'chargedwithlight',
+  [PlugCategoryHashes.EnhancementsRaidDescent]: 'deepstonecrypt',
+  [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
+};
 
 const legacySocketTypeHashes = [
   1540673283, // an outlaw-looking one, that's on S11 LW/Reverie,
@@ -74,7 +89,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'lastwish',
     compatibleModTags: ['lastwish'],
     socketTypeHashes: [1444083081],
-    compatiblePlugCategoryHashes: [13646368],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonOutlaw],
     emptyModSocketHashes: [1679876242],
     emptyModSocketHash: 1679876242, // ARGH, this is the wrong image in the game/manifest
   },
@@ -82,7 +97,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'gardenofsalvation',
     compatibleModTags: ['gardenofsalvation'],
     socketTypeHashes: [1764679361],
-    compatiblePlugCategoryHashes: [1486918022],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidGarden],
     emptyModSocketHashes: [706611068],
     emptyModSocketHash: 706611068,
   },
@@ -90,13 +105,13 @@ const modSocketMetadata: ModSocketMetadata[] = [
     slotTag: 'deepstonecrypt',
     compatibleModTags: ['deepstonecrypt'],
     socketTypeHashes: [1269555732],
-    compatiblePlugCategoryHashes: [1703496685],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidDescent],
     emptyModSocketHashes: [4055462131],
     emptyModSocketHash: 4055462131,
   },
   {
     slotTag: 'combatstyle',
-    compatibleModTags: ['chargedwithlight', 'warmindcell'],
+    compatibleModTags: ['chargedwithlight', 'warmindcell', 'elementalwell'],
     socketTypeHashes: [2955889001],
     compatiblePlugCategoryHashes: combatCompatiblePlugCategoryHashes,
     emptyModSocketHashes: [2493100093],
@@ -105,13 +120,3 @@ const modSocketMetadata: ModSocketMetadata[] = [
 ];
 
 export default modSocketMetadata;
-
-export const modTypeTagByPlugCategoryHash = {
-  13646368: 'lastwish',
-  1081029832: 'nightmare',
-  1486918022: 'gardenofsalvation',
-  208760563: 'chargedwithlight',
-  426869514: 'warmindcell',
-  443647229: 'chargedwithlight',
-  1703496685: 'deepstonecrypt',
-};
