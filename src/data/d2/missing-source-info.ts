@@ -270,6 +270,7 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1245115841, // Wing Theorem
     1299272338, // Ankaa Seeker IV
+    1402766122, // Retrofuturist
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
@@ -362,19 +363,34 @@ const missingSources: { [key: string]: number[] } = {
   ],
   dreaming: [
     99549082, // Reverie Dawn Helm
+    185695659, // Reverie Dawn Hood
+    188778964, // Reverie Dawn Boots
+    344548395, // Reverie Dawn Strides
     934704429, // Reverie Dawn Plate
     998096007, // Reverie Dawn Hood
     1452333832, // Reverie Dawn Boots
+    1593474975, // Reverie Dawn Hauberk
+    1705856569, // Reverie Dawn Grasps
     1903023095, // Reverie Dawn Grasps
     1928769139, // Reverie Dawn Bond
+    1980768298, // Reverie Dawn Mark
     2336820707, // Reverie Dawn Gauntlets
     2467635521, // Reverie Dawn Hauberk
+    2503434573, // Reverie Dawn Gauntlets
     2704876322, // Reverie Dawn Tabard
+    2761343386, // Reverie Dawn Gloves
+    2824453288, // Reverie Dawn Casque
+    2859583726, // Reverie Dawn Tabard
     2889063206, // Reverie Dawn Casque
+    3174233615, // Reverie Dawn Greaves
     3239662350, // Reverie Dawn Gloves
     3250140572, // Reverie Dawn Cloak
+    3306564654, // Reverie Dawn Cloak
     3343583008, // Reverie Dawn Mark
+    3602032567, // Reverie Dawn Bond
     3711557785, // Reverie Dawn Strides
+    4070309619, // Reverie Dawn Plate
+    4097166900, // Reverie Dawn Helm
     4257800469, // Reverie Dawn Greaves
   ],
   drifter: [
@@ -1155,16 +1171,22 @@ const missingSources: { [key: string]: number[] } = {
   ],
   legendaryengram: [
     24598504, // Red Moon Phantom Vest
+    56010517, // Insight Unyielding Gauntlets
     73720713, // High-Minded Complex
     107232578, // Tangled Web Gauntlets
     130772858, // Tangled Web Vest
     133227345, // Kerak Type 2
     144651852, // Prodigal Mask
+    178467806, // Terra Concord Helm
+    195370644, // Insight Vikti Boots
     215674186, // Errant Knight 1.0
     265279665, // Clandestine Maneuvers
     282139107, // Philomath Robes
     339438127, // High-Minded Complex
+    343027757, // Mimetic Savior Helm
     362404956, // Terra Concord Plate
+    382653773, // Icarus Drifter Legs
+    391377141, // Cloak of Five Full Moons
     432525353, // Red Moon Phantom Mask
     433294875, // Devastation Complex
     474076509, // Errant Knight 1.0
@@ -1176,6 +1198,7 @@ const missingSources: { [key: string]: number[] } = {
     548907748, // Devastation Complex
     553373026, // Tangled Web Hood
     597618504, // Insight Vikti Hood
+    616641643, // Insight Vikti Hood
     623912054, // Kerak Type 2
     629469344, // Heiro Camo
     629482101, // Dead End Cure 2.1
@@ -1186,6 +1209,7 @@ const missingSources: { [key: string]: number[] } = {
     695071581, // Tesseract Trace IV
     737010724, // Thorium Holt Bond
     760584029, // Philomath Gloves
+    825561686, // Tesseract Trace IV
     836969671, // Insight Unyielding Greaves
     854373147, // Insight Unyielding Plate
     875215126, // Prodigal Mark
@@ -1193,8 +1217,10 @@ const missingSources: { [key: string]: number[] } = {
     881579413, // Terra Concord Helm
     974507844, // Insight Rover Grips
     983115833, // Terra Concord Plate
+    995693468, // Mimetic Savior Gauntlets
     1006824129, // Terra Concord Greaves
     1028913028, // Tesseract Trace IV
+    1047593364, // Thorium Holt Bond
     1063507982, // Terra Concord Greaves
     1088960547, // Prodigal Greaves
     1091190365, // Kerak Type 2
@@ -1202,49 +1228,67 @@ const missingSources: { [key: string]: number[] } = {
     1127029635, // Insight Rover Boots
     1148805553, // Thorium Holt Boots
     1153347999, // Icarus Drifter Cape
+    1162508660, // Tesseract Trace IV
     1195298951, // Be Thy Champion
     1196270212, // Philomath Cover
     1213841242, // Red Moon Phantom Steps
     1257810769, // Prodigal Gauntlets
+    1291141296, // Red Moon Phantom Grips
+    1292840125, // Tesseract Trace IV
     1293868684, // Insight Unyielding Helm
     1295776817, // Insight Rover Grips
     1301696822, // Mimetic Savior Greaves
     1330542168, // Tangled Web Bond
     1348658294, // Clandestine Maneuvers
     1367655773, // Tangled Web Boots
+    1395001913, // Red Moon Phantom Mask
     1399263478, // Icarus Drifter Vest
-    1425077417, // Mimetic Savior Bond
+    1425077417, // Mimetic Savior Mark
+    1507837170, // Icarus Drifter Mask
     1513486336, // Road Complex AA1
+    1539437665, // Thorium Holt Boots
     1548943654, // Tesseract Trace IV
+    1571425240, // Red Moon Phantom Vest
+    1591836417, // Insight Rover Grips
+    1592984110, // Thorium Holt Hood
     1598372079, // Retro-Grade TG2
     1648238545, // Terra Concord Mark
+    1649776522, // Red Moon Phantom Steps
     1655109893, // Tesseract Trace IV
+    1708233065, // Terra Concord Plate
     1726695877, // Cloak of Five Full Moons
     1728789982, // Thorium Holt Hood
     1740873035, // Icarus Drifter Grips
     1742735530, // Road Complex AA1
     1761136389, // Errant Knight 1.0
     1772639961, // Hodiocentrist Bond
+    1794052784, // Insight Rover Mask
     1810399711, // Philomath Bond
+    1843231752, // Icarus Drifter Cape
     1854024004, // Be Thy Cipher
     1861032455, // A Cloak Called Home
     1865671934, // Devastation Complex
     1892576458, // Devastation Complex
     1893349933, // Tesseract Trace IV
     1904199788, // Mark of the Unassailable
+    1906338633, // Hodiocentrist Bond
     1920259123, // Tesseract Trace IV
+    1932613595, // Icarus Drifter Grips
     1954457094, // Road Complex AA1
+    1992809894, // Clandestine Maneuvers
     2020589887, // Road Complex AA1
     2026285619, // Errant Knight 1.0
     2038956436, // Kerak Type 2
     2085574015, // Terra Concord Fists
     2092750352, // Tangled Web Strides
+    2098166903, // Insight Unyielding Greaves
     2112821379, // Insight Unyielding Helm
     2148295091, // Tangled Web Helm
     2151378428, // Tangled Web Greaves
     2173858802, // Prodigal Cloak
     2193432605, // Mimetic Savior Helm
     2205604183, // Dead End Cure 2.1
+    2294753710, // Insight Vikti Robes
     2297281780, // Terra Concord Mark
     2298664693, // Insight Rover Mask
     2332398934, // Kerak Type 2
@@ -1265,6 +1309,8 @@ const missingSources: { [key: string]: number[] } = {
     2562555736, // Icarus Drifter Cape
     2567710435, // Icarus Drifter Mask
     2581516944, // Hodiocentrist Bond
+    2612848247, // Synaptic Construct
+    2618290591, // Thorium Holt Gloves
     2629014079, // Anti-Hero Victory
     2674524165, // Tangled Web Robes
     2713755753, // Kerak Type 2
@@ -1276,19 +1322,27 @@ const missingSources: { [key: string]: number[] } = {
     2838060329, // Heiro Camo
     2845530750, // Retro-Grade Mark
     2905153902, // Insight Rover Boots
+    2996100508, // Insight Unyielding Helm
+    3008933410, // Anti-Hero Victory
     3018268196, // Insight Vikti Boots
+    3022399012, // Terra Concord Mark
     3024860521, // Retro-Grade TG2
     3051359899, // Errant Knight 1.0
     3061780015, // Tangled Web Mask
     3084633087, // Philomath Boots
+    3086681971, // Insight Rover Boots
     3087552232, // Heiro Camo
+    3145637173, // Icarus Drifter Vest
     3166972772, // Errant Knight 1.0
     3198691833, // Prodigal Bond
     3207244009, // Mark of the Unassailable
+    3233866074, // Insight Vikti Gloves
     3239215026, // Icarus Drifter Grips
     3250360146, // Insight Unyielding Gauntlets
     3257088093, // Icarus Drifter Legs
+    3277373711, // Terra Concord Fists
     3299386902, // Insight Unyielding Plate
+    3314301316, // Mimetic Savior Plate
     3316802363, // Retro-Grade TG2
     3386676796, // Prodigal Gloves
     3434158555, // Prodigal Vest
@@ -1299,6 +1353,7 @@ const missingSources: { [key: string]: number[] } = {
     3527995388, // Dead End Cure 2.1
     3536492583, // Kerak Type 2
     3593916933, // Prodigal Grasps
+    3603834073, // Thorium Holt Robes
     3611199822, // Synaptic Construct
     3619376218, // Heiro Camo
     3651598572, // Insight Unyielding Greaves
@@ -1306,19 +1361,25 @@ const missingSources: { [key: string]: number[] } = {
     3691737472, // Prodigal Helm
     3717812073, // Thorium Holt Robes
     3852389988, // Terra Concord Fists
+    3893450673, // Terra Concord Greaves
     3899739148, // Philomath Boots
     3906537733, // Icarus Drifter Vest
     3920228039, // Synaptic Construct
     3979056138, // Insight Vikti Gloves
     3988753671, // Prodigal Cuirass
+    4050339372, // Tesseract Trace IV
+    4058028249, // Mimetic Savior Mark
     4064910796, // Icarus Drifter Legs
     4074193483, // Tangled Web Cloak
     4079913195, // Dead End Cure 2.1
     4097652774, // Tangled Web Plate
     4146408011, // Tangled Web Gloves
+    4159457751, // Insight Rover Vest
     4166246718, // Insight Vikti Robes
+    4227656459, // Insight Unyielding Plate
     4239920089, // Insight Vikti Gloves
     4273043916, // Kerak Type 2
+    4293588774, // Mimetic Savior Greaves
   ],
   leviathan: [
     64543268, // Boots of the Emperor's Minister
@@ -1458,7 +1519,23 @@ const missingSources: { [key: string]: number[] } = {
     4240041208, // Kairos Function Boots
     4252342556, // Kairos Function Cloak
   ],
-  moon: [],
+  moon: [
+    193805725, // Dreambane Cloak
+    272413517, // Dreambane Helm
+    310888006, // Dreambane Greaves
+    377813570, // Dreambane Strides
+    659922705, // Dreambane Cowl
+    682780965, // Dreambane Gloves
+    883769696, // Dreambane Vest
+    925079356, // Dreambane Gauntlets
+    1030110631, // Dreambane Boots
+    1528483180, // Dreambane Hood
+    2048903186, // Dreambane Bond
+    2568538788, // Dreambane Plate
+    3312368889, // Dreambane Mark
+    3571441640, // Dreambane Grips
+    3692187003, // Dreambane Robes
+  ],
   nessus: [
     192377242, // Exodus Down Strides
     472691604, // Exodus Down Vest
@@ -1850,6 +1927,7 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1245115841, // Wing Theorem
     1299272338, // Ankaa Seeker IV
+    1402766122, // Retrofuturist
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
@@ -2017,6 +2095,7 @@ const missingSources: { [key: string]: number[] } = {
     3469164235, // The Took Offense
     3499839403, // Vigil of Heroes
     3500775049, // Vigil of Heroes
+    3514096004, // Eternal Blazon
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
     3631862279, // Vigil of Heroes
@@ -2195,6 +2274,7 @@ const missingSources: { [key: string]: number[] } = {
     3469164235, // The Took Offense
     3499839403, // Vigil of Heroes
     3500775049, // Vigil of Heroes
+    3514096004, // Eternal Blazon
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
     3631862279, // Vigil of Heroes
