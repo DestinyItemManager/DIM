@@ -117,8 +117,8 @@ function mapStateToProps() {
           if (
             isPluggableItem(def) &&
             isArmor2Mod(def) &&
-            // Filters our mods that are deprecated.
-            def.plug.insertionMaterialRequirementHash !== 0 &&
+            // Filters out mods that are deprecated.
+            (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
             // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
             // My investigation showed that only classified items had this being undefined.
             def.itemTypeDisplayName !== undefined
