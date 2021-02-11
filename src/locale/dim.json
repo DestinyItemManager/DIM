@@ -55,6 +55,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",
@@ -161,7 +162,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
-    "DupeCount": "Items that have the specificied number of duplicates.",
+    "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
@@ -936,5 +937,8 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  }
+  },
+  "move-canceled": "Move canceled",
+  "no-space": "",
+  "wrong-level": ""
 }
