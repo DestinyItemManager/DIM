@@ -1,5 +1,4 @@
 import styles from 'app/active-mode/Views/PursuitsView.m.scss';
-import { toRecord } from 'app/collections/presentation-nodes';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -11,6 +10,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import Pursuit from 'app/progress/Pursuit';
 import { sortPursuits } from 'app/progress/Pursuits';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
+import { toRecord } from 'app/records/presentation-nodes';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';

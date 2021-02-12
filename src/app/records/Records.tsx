@@ -71,9 +71,9 @@ function mapStateToProps() {
 }
 
 /**
- * The collections screen that shows items you can get back from the vault, like emblems and exotics.
+ * The records screen shows account-wide things like Triumphs and Collections.
  */
-function Collections({
+function Records({
   account,
   buckets,
   ownedItemHashes,
@@ -220,4 +220,4 @@ function Collections({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(Collections);
+export default connect<StoreProps>(mapStateToProps)(Records);

@@ -1,8 +1,8 @@
-import MetricBanner from 'app/collections/MetricBanner';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { ObjectiveValue } from 'app/progress/Objective';
+import MetricBanner from 'app/records/MetricBanner';
 import React from 'react';
 import styles from './EmblemPreview.m.scss';
 
