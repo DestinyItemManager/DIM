@@ -110,7 +110,10 @@ function Records({
 
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
+  const seasonalChallengesHash = destiny2CoreSettings?.seasonalChallengesPresentationNodeHash || 0;
+
   const profileHashes = _.compact([
+    seasonalChallengesHash,
     recordsRootHash,
     sealsRootHash,
     collectionsRootHash,
