@@ -2,6 +2,18 @@
 
 * Items in the Postmaster which cannot be pulled are shown faded out.
 * Search filters that operate on power levels now accept the keywords "hardcap" and "softcap" to refer to the current season's power limits. e.g "power:>=softcap"
+## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
+
+* Updates for Season of the Chosen
+
+## 6.51.0 <span class="changelog-date">(2021-02-07)</span>
+
+## 6.50.0 <span class="changelog-date">(2021-01-31)</span>
+
+* Some emblem stats have better formatting now.
+* Perks which would grant a bonus in a stat, but which grant zero points due to how stats work, now show +0 instead of just not showing the stat.
+* Bounty guide for special grenade launchers now shows a label and not just an icon.
+* Fixed some issues with Loadout Optimizer on mobile.
 
 ## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
 

@@ -1,32 +1,41 @@
+import { infoLog } from 'app/utils/log';
+import { dedupePromise } from 'app/utils/util';
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
-import { Token, Tokens } from './oauth-tokens';
+import { setToken, Token, Tokens } from './oauth-tokens';
 
 // all these api url params don't match our variable naming conventions
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
-export function getAccessTokenFromRefreshToken(refreshToken: Token): Promise<Tokens> {
-  const body = new URLSearchParams({
-    grant_type: 'refresh_token',
-    refresh_token: refreshToken.value,
-    client_id: oauthClientId(),
-    client_secret: oauthClientSecret(),
-  });
-  // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
-  // ↑ we return fetch wrapped in an extra Promise.resolve so it has proper followup methods
-  return Promise.resolve(
-    fetch(TOKEN_URL, {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-      .then((response) => (response.ok ? response.json() : Promise.reject(response)))
-      .then(handleAccessToken)
-  );
-}
+export const getAccessTokenFromRefreshToken = dedupePromise(
+  (refreshToken: Token): Promise<Tokens> => {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken.value,
+      client_id: oauthClientId(),
+      client_secret: oauthClientSecret(),
+    });
+    // https://github.com/zloirock/core-js/issues/178#issuecomment-192081350
+    // ↑ we return fetch wrapped in an extra Promise.resolve so it has proper followup methods
+    return Promise.resolve(
+      fetch(TOKEN_URL, {
+        method: 'POST',
+        body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+        .then((response) => (response.ok ? response.json() : Promise.reject(response)))
+        .then(handleAccessToken)
+        .then((token) => {
+          setToken(token);
+          infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
+          return token;
+        })
+    );
+  }
+);
 
 export function getAccessTokenFromCode(code: string): Promise<Tokens> {
   const body = new URLSearchParams({

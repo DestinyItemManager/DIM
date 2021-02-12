@@ -118,6 +118,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
+      2915991372, // Source: Crucible
+      3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
   },
   deepstonecrypt: {
@@ -302,6 +304,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2448092902, // Rusted Iron
     ],
     sourceHashes: [
+      561111210, // Source: Iron Banner Salvager's Salvo Armament
       1027607603, // Source: Complete this reward's associated Iron Banner quest.
       1312894505, // Source: Iron Banner.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
@@ -409,6 +412,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
+      1749037998, // Source: Nightfall: The Ordeal
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
       2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing Nightfall: The Ordeal on Master difficulty.
@@ -419,6 +423,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
+      3528789901, // Source: Season of the Chosen Nightfall: The Ordeal Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4208190159, // Source: Complete a Nightfall strike.
@@ -527,6 +532,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
+      2915991372, // Source: Crucible
+      3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
   },
   shipwright: {
@@ -559,6 +566,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
       1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
@@ -704,6 +712,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
       1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.

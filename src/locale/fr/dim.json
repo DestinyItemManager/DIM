@@ -63,7 +63,7 @@
     "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
     "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
-    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
+    "MissingInventory": "Bungie.net n'a pas renvoyé votre inventaire, vos paramètres de vie privée peuvent l'en empêcher. Essayez de vous déconnecter puis de vous reconnecter.",
     "NetworkError": "Erreur Réseau - {{status}} {{statusText}}",
     "NoAccount": "Aucun compte Destiny n'a été trouvé. Avez-vous sélectionné la bonne plateforme?",
     "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",
@@ -341,7 +341,7 @@
     "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
+    "ShouldNotBeInVault": "Cet objet peut être en danger s'il est laissé dans le Coffre. Veuillez le transférer vers un personnage.",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -454,7 +454,7 @@
     "SelectPerks": "Sélectionner des attributs",
     "SelectPower": "Puissance minimum",
     "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'arsenal (pas les pièces individuelles)",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs.\n\nÀ cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur ou la valeur de base de {{stats}} de certains objets inclus. C'est une limitation des informations envoyées par Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
@@ -789,7 +789,7 @@
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "À cause de mods aux effets négatifs, DIM ne peut pas déterminer la valeur ou valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -828,9 +828,9 @@
     "ImportWrongFileType": "Ce fichier n'est pas un fichier JSON. Il pourrait ne pas être une sauvegarde DIM.",
     "IndexedDBStorage": "Stockage local du navigateur",
     "MenuTitle": "Synchronisation & sauvegardes",
-    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
+    "ProfileErrorBody": "Nous avons rencontré un problème lors du chargement de vos données depuis DIM Sync. Nous allons continuer à essayer de les charger automatiquement.",
     "ProfileErrorTitle": "Erreur de synchronisation DIM",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
+    "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
     "UpdateErrorTitle": "Erreur de synchronisation DIM",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
   },
@@ -920,7 +920,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron est une liste de souhaits et d'objets à éviter JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement.",
     "Clear": "Effacer la liste de souhaits",
-    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
+    "ExternalSource": "Optionnel, fournisses le(s) URL(s) pour une liste de souhaits (séparé par des barres verticales |)",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
     "ImportError": "Erreur lors du chargement de la liste de souhaits : {{error}}",

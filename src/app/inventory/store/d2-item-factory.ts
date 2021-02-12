@@ -452,7 +452,10 @@ export function makeItem(
   }
 
   if (extendedICH[createdItem.hash]) {
-    createdItem.itemCategoryHashes.push(extendedICH[createdItem.hash]);
+    createdItem.itemCategoryHashes = [
+      ...createdItem.itemCategoryHashes,
+      extendedICH[createdItem.hash],
+    ];
   }
 
   try {
