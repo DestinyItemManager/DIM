@@ -1,7 +1,7 @@
 ## Next
 
-* Items in the Postmaster which cannot be pulled are shown faded out.
-* Search filters that operate on power levels now accept the keywords "hardcap" and "softcap" to refer to the current season's power limits. e.g "power:>=softcap"
+* Search filters that operate on power levels now accept the keywords "pinnaclecap" and "softcap" to refer to the current season's power limits. e.g "power:>=softcap"
+
 ## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
 
 * Updates for Season of the Chosen
