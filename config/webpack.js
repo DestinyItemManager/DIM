@@ -33,7 +33,7 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (env.dev && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
@@ -43,6 +43,9 @@ module.exports = (env) => {
   ['release', 'beta', 'dev'].forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
+    if (env[e]) {
+      env.name = e;
+    }
   });
 
   let version = packageJson.version.toString();
