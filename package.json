@@ -161,7 +161,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@popperjs/core": "^2.2.1",
-    "@sentry/browser": "^5.0.3",
+    "@sentry/browser": "^6.1.0",
     "@sentry/react": "^6.0.1",
     "@sentry/tracing": "^6.0.1",
     "body-scroll-lock": "^3.1.5",
