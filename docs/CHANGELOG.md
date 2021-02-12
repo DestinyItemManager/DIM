@@ -1,5 +1,7 @@
 ## Next
 
+* Confirm before pulling all items from Postmaster.
+
 ## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
 
 * Updates for Season of the Chosen
