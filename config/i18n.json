@@ -196,7 +196,7 @@
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
-    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
+    "PowerKeywords": "Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
