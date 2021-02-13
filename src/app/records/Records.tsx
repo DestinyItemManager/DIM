@@ -71,9 +71,9 @@ function mapStateToProps() {
 }
 
 /**
- * The collections screen that shows items you can get back from the vault, like emblems and exotics.
+ * The records screen shows account-wide things like Triumphs and Collections.
  */
-function Collections({
+function Records({
   account,
   buckets,
   ownedItemHashes,
@@ -110,7 +110,10 @@ function Collections({
 
   const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
+  const seasonalChallengesHash = destiny2CoreSettings?.seasonalChallengesPresentationNodeHash || 0;
+
   const profileHashes = _.compact([
+    seasonalChallengesHash,
     recordsRootHash,
     sealsRootHash,
     collectionsRootHash,
@@ -220,4 +223,4 @@ function Collections({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(Collections);
+export default connect<StoreProps>(mapStateToProps)(Records);

@@ -56,9 +56,7 @@ const Organizer = React.lazy(
 const Activities = React.lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
-const Collections = React.lazy(
-  () => import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
-);
+const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -217,7 +215,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           )}
           {account.destinyVersion === 2 && (
             <Route path={`${path}/records`} exact>
-              <Collections account={account} />
+              <Records account={account} />
             </Route>
           )}
           <Route path={`${path}/optimizer`} exact>

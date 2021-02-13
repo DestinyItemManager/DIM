@@ -1,7 +1,7 @@
-import { searchDisplayProperties, toRecord } from 'app/collections/presentation-nodes';
-import Record from 'app/collections/Record';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
+import Record from 'app/records/Record';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';

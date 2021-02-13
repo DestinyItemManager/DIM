@@ -4,6 +4,7 @@
   * `powerlimit:pinnaclecap` will show items with a power limit that matches this season's limit on all items.
   * `sunsetsin:next` will show the same items: items whose power limit won't reach next season's limit on all items.
 * Confirm before pulling all items from Postmaster.
+* Added Seasonal Challenges to the Records page. You can track as many of these as you want in DIM and the tracked ones will show up in the Progress page.
 
 ## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
 
