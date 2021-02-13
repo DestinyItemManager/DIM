@@ -55,6 +55,7 @@
     "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM にはこの操作を行なう権限がありません。",
     "DestinyLegacyPlatform": "Bungieのサービスには現在、Destiny 1を最後の世代のコンソールでプレイした場合、DIMがDestiny 2アカウントの情報をロードできないというバグがあります。 Bungieは近いうちにこれを修正するでしょう。",
     "DevVersion": "DIMの開発バージョンを使用していますか?Chrome拡張機能にBungie.netを登録する必要があります。",
     "Difficulties": "Bungie.netは現在、問題に直面しています。",
@@ -161,7 +162,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "再発行を含み、重複するアイテムを表示。",
-    "DupeCount": "特定の数の重複を持つアイテム",
+    "DupeCount": "指定された数の重複があるアイテム。",
     "DupeLower": "再発行を含め、最高パワーが重複しない重複アイテム。",
     "Energy": "エネルギー容量 (Armor 2.0) を持つアイテムを表示。",
     "Engrams": "エングラムを表示",
@@ -207,8 +208,9 @@
     "Perk": "アイテムの名前や説明に含まれるフィルターのテキストに、パークやmodが部分的に一致しているアイテムを表示します。引用符を使ってフレーズ全体を検索します。",
     "PerkName": "パークやmodの中で、フィルターのテキストと部分的に一致するものがある場合に、その名前のみを表示します。引用符を使ってフレーズ全体を検索します。",
     "Postmaster": "現在ポストマスターにあるアイテム",
-    "PowerLevel": "パワーレベルに応じたアイテムを表示。",
-    "PowerLimit": "融合可能な最大パワーレベルに基づき、アイテムを表示しています。",
+    "PowerKeywords": "現在のシーズンのパワー制限を参照するには、数値の代わりにハードキャップまたはソフトキャップキーワードを使用してください。",
+    "PowerLevel": "パワーレベルに基づいてアイテムを表示します。 $t(Filter.PowerKeywords)",
+    "PowerLimit": "注入可能な最大パワーレベルに基づいてアイテムを表示します。$t(Filter.PowerKeywords)",
     "PowerfulReward": "強力な報酬を生み出す追跡を表示。",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
     "RandomRoll": "ランダムロールでドロップされた項目を表示します。",
@@ -517,6 +519,8 @@
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "OpenInOptimizer": "ロードアウトオプティマイザーで開く",
     "PullFromPostmaster": "ポストマスターからのアイテムの取得",
+    "PullFromPostmasterConfirm": "ポストマスターから {{count}} つのアイテムを取り出しましたか? DIM は、アイテムを保管庫や他のキャラクターに移動することで、キャラクターのスペースを作ることができます。",
+    "PullFromPostmasterConfirm_plural": "ポストマスターから {{count}} つのアイテムを取り出しましたか? DIM は、アイテムを保管庫や他のキャラクターに移動することで、キャラクターのスペースを作ることができます。",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
     "PullFromPostmasterNotification": "1つのポストマスターアイテムを{{store}} に引き出します。",
     "PullFromPostmasterNotification_female": "1つのポストマスターアイテムを{{store}} に引き出します。",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (標準)",
     "VoltronDescription": "voltronはMercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新コレクションです。デフォルトでこれを発送します。",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
-  }
+  },
+  "move-canceled": "移動をキャンセルしました",
+  "no-space": "",
+  "wrong-level": ""
 }

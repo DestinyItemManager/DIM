@@ -55,6 +55,7 @@
     "Title": "Un messaggio da Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM non è autorizzato ad effettuare questa operazione.",
     "DestinyLegacyPlatform": "I servizi di Bungie al momento hanno un bug che impedisce a DIM di caricare le informazioni del tuo account di Destiny 2 se hai giocato a Destiny 1 su una console di vecchia generazione. Bungie lo risolverà presto, ma fino ad allora, dovrai giocare Destiny 1 su una console della generazione attuale per accedere ai tuoi dati.",
     "DevVersion": "Stai utilizzando una versione di DIM per sviluppatori? Devi registrare la tua estensione per Chrome su Bungie.net.",
     "Difficulties": "Bungie.net sta avendo dei problemi al momento.",
@@ -73,7 +74,7 @@
     "Slow": "Bungie.net è rallentato in questo momento",
     "SlowDetails": "Bungie.net sta impiegando molto tempo per inviarci le tue informazioni. Questo può succedere quando molti giocatori sono in gioco contemporaneamente, oppure Bungie.net sta avendo problemi. Potresti anche avere problemi di connessione. Continueremo ad attendere una risposta.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
-    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste che DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -207,8 +208,9 @@
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
     "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
-    "PowerLevel": "Mostra gli oggetti in base al loro livello di Potere.",
-    "PowerLimit": "Mostra gli oggetti basandosi sul massimo livello di potere al quale possono essere infusi.",
+    "PowerKeywords": "Utilizza le parole chiave \"softcap\" o \"hardcap\" invece di un numero per riferirti ai livelli limite della stagione corrente.",
+    "PowerLevel": "Mostra gli oggetti in base al loro livello Potere. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Mostra gli oggetti basandosi sul livello Potere massimo al quale possono essere infusi. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Mostra gli incarichi che portano ad una ricompensa potente.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
     "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
     "OpenInOptimizer": "Apri in Ottimizzatore Loadout",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
+    "PullFromPostmasterConfirm": "Ritirare {{count}} oggetto dall'Amministratrice? DIM potrebbe fargli spazio spostando un altro oggetto nel deposito o su un altro personaggio.",
+    "PullFromPostmasterConfirm_plural": "Ritirare {{count}} oggetti dall'Amministratrice? DIM potrebbe fargli spazio spostando altri oggetti nel deposito o su un altro personaggio.",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
     "PullFromPostmasterNotification": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
-  }
+  },
+  "move-canceled": "Spostamento annullato",
+  "no-space": "",
+  "wrong-level": ""
 }

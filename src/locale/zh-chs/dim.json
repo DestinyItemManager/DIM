@@ -55,6 +55,7 @@
     "Title": "一则来自Bungie的信息:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM 没有权限执行此操作。",
     "DestinyLegacyPlatform": "目前Bungie的服务出现了一个Bug，如果您在上一代主机上游玩过Destiny1，那么DIM将无法载入您的Destiny2帐号资讯。Bungie将很快修复这个Bug。但是，直到Bug修复完成前，您必须在目前世代主机上游玩Destiny1以便DIM能读取您的帐号资讯。",
     "DevVersion": "您是否正在运行DIM的开发版本？您必须先将您的Chrome扩展与Bungie.net关联。",
     "Difficulties": "Bungie.net目前存在问题。",
@@ -207,8 +208,9 @@
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "Postmaster": "目前在邮政官处的物品.",
-    "PowerLevel": "根据能量等级显示物品.",
-    "PowerLimit": "按照可融合到的最大能量等级显示物品。",
+    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
+    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "显示提供强力奖励的追猎目标。",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
     "RandomRoll": "显示可以随机特性掉落的物品",
@@ -517,6 +519,8 @@
     "OnlyItems": "只有可装备物品,材料和消耗品才可以加载.",
     "OpenInOptimizer": "在配装优化器中打开",
     "PullFromPostmaster": "从邮政官处取回物品",
+    "PullFromPostmasterConfirm": "从邮政官拉取 {{count}} 个物品吗？DIM 可能会把你角色的一个物品移到保险库或另一角色来腾出空间。",
+    "PullFromPostmasterConfirm_plural": "从邮政官拉取 {{count}} 个物品吗？DIM 可能会把你角色的物品移到保险库或其他角色来腾出空间。",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
     "PullFromPostmasterNotification": "正在从邮政官处取回1项物品至{{store}}.",
     "PullFromPostmasterNotification_female": "正在从邮政官处取回1项物品至{{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron（默认）",
     "VoltronDescription": "voltron 是来自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",
     "WishListNotes": "愿望清单备注:{{notes}}"
-  }
+  },
+  "move-canceled": "移动已取消",
+  "no-space": "",
+  "wrong-level": ""
 }

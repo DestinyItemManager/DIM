@@ -55,6 +55,7 @@
     "Title": "Un message de Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM n'a pas la permission d'effectuer cette action.",
     "DestinyLegacyPlatform": "Les services Bungie ont actuellement un bug empêchant DIM de charger les informations pour votre compte Destiny 2 si vous avez joué à Destiny 1 sur une console d'ancienne génération. Bungie corrigera bientôt ce bug, mais en attendant vous devez jouer à Destiny 1 sur une console de génération actuelle pour pouvoir accéder à vos informations.",
     "DevVersion": "Est-ce une version de développement de DIM ? Vous devez enregistrer votre extension chrome avec Bungie.net.",
     "Difficulties": "Bungie.net connaît actuellement des difficultés.",
@@ -207,8 +208,9 @@
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "Postmaster": "Objets actuellement au commis des postes.",
-    "PowerLevel": "Affiche les objets en fonction leur niveau de puissance.",
-    "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés.",
+    "PowerKeywords": "Utilisez le mot-clé hardcap ou softcap au lieu d'un nombre pour référer aux limites de puissance de la saison actuelle.",
+    "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Affiche les poursuites qui produisent une récompense puissante.",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
     "RandomRoll": "Affiche les objets qui s'obtiennent avec des compétences aléatoires.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Seuls les objets équipables, matériaux et consommables peuvent être ajoutés à un arsenal.",
     "OpenInOptimizer": "Ouvrir dans L'Optimiseur D'Arsenal",
     "PullFromPostmaster": "Collecter le commis des postes",
+    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
+    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Impossible de récupérer du commis des postes: {{error}}.",
     "PullFromPostmasterNotification": "Récupération de 1 objet du commis des postes vers {{store}}.",
     "PullFromPostmasterNotification_female": "Récupération de 1 objet du commis des postes vers {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (par défaut)",
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement. Elle est activé par défaut.",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
-  }
+  },
+  "move-canceled": "Déplacement annulé",
+  "no-space": "",
+  "wrong-level": ""
 }

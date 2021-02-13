@@ -55,6 +55,7 @@
     "Title": "Wiadomość od Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM nie ma uprawnień do wykonania tej czynności.",
     "DestinyLegacyPlatform": "Usługi Bungie posiadają błąd, który uniemożliwia DIM odczytywać informacji z twojego konta Destiny 2 jeśli grałeś w Destiny 1 na konsoli poprzedniej generacji. Bungie wkrótce to naprawi, ale do tego czasu musisz grać Destiny 1 na konsoli obecnej generacji aby mieć dostęp do swoich informacji.",
     "DevVersion": "Czy korzystasz z wersji developerskiej DIM? Musisz zarejestrować swoje rozszerzenie na Bungie.net.",
     "Difficulties": "Bungie.net obecnie ma problemy.",
@@ -207,8 +208,9 @@
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
     "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
-    "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy.",
-    "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone.",
+    "PowerKeywords": "Użyj słowa kluczowego hardcap lub softcap, zamiast liczby, aby odnieść się do limitów mocy bieżącego sezonu.",
+    "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Pokazuje zadania, które dają potężne nagrody.",
     "Quality": "Pokazuje przedmioty na podstawie ich zsumowanego odsetku jakości statystyki. '{{percentage}}' to alias do '{{quality}}'.",
     "RandomRoll": "Pokazuje przedmioty, które wypadają z losowymi rollami.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Tylko przedmioty, które można założyć, materiały i przedmioty konsumpcyjne można dodać do uzbrojenia.",
     "OpenInOptimizer": "Otwórz w optymalizatorze uzbrojenia",
     "PullFromPostmaster": "Odbierz Kuriera",
+    "PullFromPostmasterConfirm": "Zebrać {{count}} przedmiot od Kuriera? DIM może zrobić miejsce na twojej postaci, przenosząc przedmiot do sejfu lub innej postaci.",
+    "PullFromPostmasterConfirm_plural": "Zebrać {{count}} przedmiotów od Kuriera? DIM może zrobić miejsce na twojej postaci, przenosząc przedmioty do sejfu lub innych postaci.",
     "PullFromPostmasterError": "Nie można odebrać Kuriera: {{error}}.",
     "PullFromPostmasterNotification": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
     "PullFromPostmasterNotification_female": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (domyślna)",
     "VoltronDescription": "voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy. Domyślnie zawarte w aplikacji.",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
-  }
+  },
+  "move-canceled": "Anulowano przenoszenie",
+  "no-space": "",
+  "wrong-level": ""
 }

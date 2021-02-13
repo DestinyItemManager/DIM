@@ -55,6 +55,7 @@
     "Title": "Сообщение от Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете версию DIM для разработчиков? Вы должны зарегистрироваться в расширении для браузера Chrome через Bungie.Net.",
     "Difficulties": "Bungie.net сейчас испытывает некоторые трудности при использовании.",
@@ -161,7 +162,7 @@
     "DamageType": "По типу стихии.",
     "Description": "Описание",
     "Dupe": "Одинаковые, Включая перевыпуски разных сезонов",
-    "DupeCount": "Одинаковые, по количеству экземпляров.",
+    "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Одинаковые, Включая перевыпуски разных сезонов, Без экземпляров с наибольшей Силой.",
     "Energy": "Броню с Энергией (Броню 2.0).",
     "Engrams": "Энграммы.",
@@ -207,8 +208,9 @@
     "Perk": "С бонусом или модификатором содержащим введенный после фильтра текст в названии или описании. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "PerkName": "С бонусом или модификатором содержащим введенный после фильтра текст Только В Названии. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "Postmaster": "У Почтмейстера.",
-    "PowerLevel": "По уровню Силы.",
-    "PowerLimit": "По Максимальному уровню Силы.",
+    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
+    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "(!) Временно сломан.",
     "Quality": "По общей сумме процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
     "RandomRoll": "Со случайными бонусами.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Только надеваемые предметы, материалы и расходные материалы могут быть добавлены к набору.",
     "OpenInOptimizer": "Открыть в Конструкторе Наборов",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
+    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
+    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Невозможно забрать у Почтмейстера: {{error}}.",
     "PullFromPostmasterNotification": "Получение 1 предмета почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_female": "Получение 1 предмета почтмейстера в {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (стандартный)",
     "VoltronDescription": "voltron автоматически обновляемый Wish List с коллекцией ПвЕ и ПвП роллов от Mercules904 и pandapaxxy. DIM использует этот Wish List по умолчанию.",
     "WishListNotes": "Заметки Wish List: {{notes}}"
-  }
+  },
+  "move-canceled": "Move canceled",
+  "no-space": "",
+  "wrong-level": ""
 }

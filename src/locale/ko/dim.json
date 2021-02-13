@@ -55,6 +55,7 @@
     "Title": "Bungie로부터의 메시지:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM이 이 작업을 수행할 권한이 없습니다.",
     "DestinyLegacyPlatform": "Bungie의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. Bungie가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
     "DevVersion": "DIM의 개발 버전을 실행 중이신가요? Bungie.net에 크롬 확장 프로그램을 등록하셔야 합니다.",
     "Difficulties": "현재 Bungie.net에 문제가 있습니다.",
@@ -207,8 +208,9 @@
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
-    "PowerLevel": "전투력 레벨에 따른 아이템 검색",
-    "PowerLimit": "최대로 주입할 수 있는 전투력에 따른 아이템 표시",
+    "PowerKeywords": "현재 시즌의 전투력 제한 값 대신 hardcap이나 softcap 단어를 사용합니다.",
+    "PowerLevel": "전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
+    "PowerLimit": "최대로 주입할 수 있는 전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
     "PowerfulReward": "강력한 보상을 주는 목표 표시",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성 아이템 표시",
@@ -517,6 +519,8 @@
     "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소모품들만이 로드아웃에 추가될 수 있습니다.",
     "OpenInOptimizer": "로드아웃 최적화에서 열기",
     "PullFromPostmaster": "우편 담당자에게서 수령",
+    "PullFromPostmasterConfirm": "우편 담당자에게서 {{count}}개의 아이템을 가져오시겠습니까? DIM이 캐릭터의 소지품에 공간을 만들기 위해 아이템을 금고나 다른 캐릭터로 옮길 수 있습니다.",
+    "PullFromPostmasterConfirm_plural": "우편 담당자에게서 {{count}}개의 아이템을 가져오시겠습니까? DIM이 캐릭터의 소지품에 공간을 만들기 위해 아이템을 금고나 다른 캐릭터로 옮길 수 있습니다.",
     "PullFromPostmasterError": "우편 담당자로부터 가져올 수 없습니다: {{error}}",
     "PullFromPostmasterNotification": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_female": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (기본값)",
     "VoltronDescription": "voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
-  }
+  },
+  "move-canceled": "이동 취소됨",
+  "no-space": "",
+  "wrong-level": ""
 }

@@ -55,6 +55,7 @@
     "Title": "Mensaje de Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM no tiene permiso para realizar esta acción.",
     "DestinyLegacyPlatform": "Actualmente, los servicios de Bungie tienen un bug que impide que DIM pueda cargar tu perfil de tu cuenta de Destiny 2 si has jugado Destiny 1 en una consola old-gen. Bungie arreglará esto pronto, pero hasta entonces debes jugar Destiny 1 en una consola de generación actual para poder acceder a tu perfil.",
     "DevVersion": "¿Estás ejecutando una versión en desarrollo de DIM? Debes registrar tu extensión de Chrome con Bungie.net.",
     "Difficulties": "Bungie.net está experiementando dificultades actualmente.",
@@ -207,8 +208,9 @@
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
     "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
     "Postmaster": "Objetos que están actualmente en la Administración.",
-    "PowerLevel": "Muestra objetos basados en su nivel de poder.",
-    "PowerLimit": "Muestra objetos basados en el máximo nivel de poder en el que pueden ser infundidos.",
+    "PowerKeywords": "Usa la palabra \"hardcap\" o \"softcap\" en vez de un número para referirte a los límites de poder de la temporada actual.",
+    "PowerLevel": "Muesta objetos basados en su nivel de poder. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Muestra objetos basados en el poder nivel máximo de poder en el que pueden ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Muestra aventuras que tengan una recompensa poderosa.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad total de su estadística. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
     "RandomRoll": "Muestra objetos que suelten tiradas aleatorias.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Solo objetos equipables, materiales y consumibles pueden añadirse a una configuración.",
     "OpenInOptimizer": "Abrir en el Optimizador de Equipaciones",
     "PullFromPostmaster": "Recoger de Administración",
+    "PullFromPostmasterConfirm": "¿Traer {{count}} objeto de Administración? DIM podría hacer espacio en tu personaje moviendo un objeto al depósito o a otro personaje.",
+    "PullFromPostmasterConfirm_plural": "¿Traer {{count}} objetos de Administración? DIM podría hacer espacio en tu personaje moviendo objetos al depósito o a otros personajes.",
     "PullFromPostmasterError": "No se pudo extraer de Administración: {{error}}.",
     "PullFromPostmasterNotification": "Extrayendo 1 objeto de Administración a {{store}}.",
     "PullFromPostmasterNotification_female": "Extrayendo 1 objeto de Administración a {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (por defecto)",
     "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
-  }
+  },
+  "move-canceled": "Movimiento cancelado",
+  "no-space": "",
+  "wrong-level": ""
 }

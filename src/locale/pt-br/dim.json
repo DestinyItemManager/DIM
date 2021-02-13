@@ -55,6 +55,7 @@
     "Title": "Uma mensagem da Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM não tem permissão para realizar esta ação.",
     "DestinyLegacyPlatform": "Os serviços da Bungie tem atualmente um bug que impede que o DIM carregue informação da sua conta de Destiny 2 se você jogou o Destiny 1 em um console de última geração. A Bungie irá corrigir isso em breve, mas até lá, você deve jogar Destiny 1 em um console de geração atual para ser capaz de acessar a sua informação.",
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "Bungie.net está enfrentando dificuldades no momento.",
@@ -161,7 +162,7 @@
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
-    "DupeCount": "Itens que tenham um número específico de duplicatas.",
+    "DupeCount": "Itens que tenham o número especificado de duplicatas.",
     "DupeLower": "Itens duplicados, incluindo revisões, que não possuem o maior poder entre eles.",
     "Energy": "Exibe itens que possuem capacidade de energia (Armaduras 2.0).",
     "Engrams": "Mostrar engramas.",
@@ -207,8 +208,9 @@
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
     "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
-    "PowerLevel": "Exibe itens baseando-se em seu nível de poder.",
-    "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos.",
+    "PowerKeywords": "Use hardcap ou softcap como palavra-chave ao invés de um número para se referir aos limites de poder da temporada atual.",
+    "PowerLevel": "Exibe itens baseados em seu nível de poder. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Exibe buscas que produzem uma recompensa poderosa.",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
     "RandomRoll": "Mostra itens que caem com valores aleatórios.",
@@ -517,6 +519,8 @@
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "OpenInOptimizer": "Abrir no Otimizador de Set",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
+    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
+    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
     "PullFromPostmasterNotification": "Movido um item do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterNotification_female": "Movido um item do Chefe do Correio para sua {{store}}.",
@@ -936,5 +940,8 @@
     "Voltron": "voltron (padrão)",
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
-  }
+  },
+  "move-canceled": "Mover cancelado",
+  "no-space": "",
+  "wrong-level": ""
 }
