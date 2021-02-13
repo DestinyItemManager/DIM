@@ -30,9 +30,10 @@ const sunsetSeasonTagNames = Object.entries(seasonTagToNumber)
 
 // shortcuts for power numbers
 const powerLevelByKeyword = {
+  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
   softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
-  // powerfulcap: D2SeasonInfo[D2CalculatedSeason].?????,
-  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].maxPower,
+  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
+  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
 };
 const powerLevelKeywords = Object.keys(powerLevelByKeyword);
 // TO DATE, things cannot cap at anything but pinnacle limits
