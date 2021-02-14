@@ -15,6 +15,7 @@ import {
   DestinyMilestoneRewardEntry,
   DestinyMilestoneType,
   DestinyObjectiveProgress,
+  DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
