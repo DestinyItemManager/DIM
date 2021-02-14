@@ -3,7 +3,6 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import {
   DimPresentationNode,
   DimRecord,
@@ -13,7 +12,6 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyPresentationNodeDefinition, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import { recordToPursuitItem } from './milestone-items';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
@@ -42,25 +40,27 @@ export default function SeasonalChallenges({
 }: {
   seasonalChallengesPresentationNode: DestinyPresentationNodeDefinition;
   store: DimStore;
-  defs?: D2ManifestDefinitions;
+  defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
 }) {
-  const coreSettings = useSelector(destiny2CoreSettingsSelector);
-
-  if (!defs || !coreSettings || !coreSettings.seasonalChallengesPresentationNodeHash) {
-    return null;
-  }
   const nodeTree = toPresentationNodeTree(
     defs,
     buckets,
     profileResponse,
-    coreSettings.seasonalChallengesPresentationNodeHash
+    seasonalChallengesPresentationNode.hash
   );
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];
 
-  const pursuits = allRecords.map((r) => recordToPursuitItem(r, buckets, store));
+  const pursuits = allRecords.map((r) =>
+    recordToPursuitItem(
+      r,
+      buckets,
+      store,
+      seasonalChallengesPresentationNode.displayProperties.name
+    )
+  );
 
   return (
     <section id="seasonal-challenges">

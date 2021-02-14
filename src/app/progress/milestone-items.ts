@@ -362,12 +362,17 @@ function milestoneTypeName(milestoneType: DestinyMilestoneType) {
   return t('Milestone.Unknown');
 }
 
-export function recordToPursuitItem(record: DimRecord, buckets: InventoryBuckets, store: DimStore) {
+export function recordToPursuitItem(
+  record: DimRecord,
+  buckets: InventoryBuckets,
+  store: DimStore,
+  typeName: string
+) {
   const dimItem = makeFakePursuitItem(
     buckets,
     record.recordDef.displayProperties,
     record.recordDef.hash,
-    record.recordDef.displayProperties.name,
+    typeName,
     store
   );
 
