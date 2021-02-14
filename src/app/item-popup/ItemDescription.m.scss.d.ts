@@ -3,6 +3,7 @@
 interface CssExports {
   'description': string;
   'descriptionTools': string;
+  'flavorText': string;
   'loreLink': string;
   'officialDescription': string;
   'wishListLabel': string;
