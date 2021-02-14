@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { DimRecord } from 'app/records/presentation-nodes';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -359,4 +360,39 @@ function milestoneTypeName(milestoneType: DestinyMilestoneType) {
       return t('Milestone.OneTime');
   }
   return t('Milestone.Unknown');
+}
+
+export function recordToPursuitItem(record: DimRecord, buckets: InventoryBuckets, store: DimStore) {
+  const dimItem = makeFakePursuitItem(
+    buckets,
+    record.recordDef.displayProperties,
+    record.recordDef.hash,
+    record.recordDef.displayProperties.name,
+    store
+  );
+
+  if (record.recordComponent.objectives) {
+    dimItem.objectives = record.recordComponent.objectives;
+
+    const length = dimItem.objectives.length;
+    dimItem.percentComplete = _.sumBy(dimItem.objectives, (objective) => {
+      if (objective.completionValue) {
+        return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  dimItem.pursuit = {
+    suppressExpirationWhenObjectivesComplete: false,
+    modifierHashes: [],
+    rewards: [],
+  };
+
+  if (record.recordDef.rewardItems) {
+    dimItem.pursuit.rewards = record.recordDef.rewardItems;
+  }
+
+  return dimItem;
 }

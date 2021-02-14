@@ -11,7 +11,7 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import pursuitsInfo from 'data/d2/pursuits.json';
+import pursuitsInfoFile from 'data/d2/pursuits.json';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
@@ -55,6 +55,7 @@ export default function BountyGuide({
   selectedFilters,
   onSelectedFiltersChanged,
   skipTypes,
+  pursuitsInfo = pursuitsInfoFile,
 }: {
   store: DimStore;
   bounties: DimItem[];
@@ -62,6 +63,7 @@ export default function BountyGuide({
   selectedFilters: BountyFilter[];
   onSelectedFiltersChanged(filters: BountyFilter[]): void;
   skipTypes?: DefType[]; // Filter to show only specific bounty types
+  pursuitsInfo?: any;
 }) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
@@ -156,7 +158,7 @@ export default function BountyGuide({
                 // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
                 [styles.synergy]:
                   selectedFilters.length > 0 &&
-                  bounties.some((i) => matchBountyFilters(i, selectedFilters)),
+                  bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
               })}
               onClick={(e) => onClickPill(e, type, value)}
             >
@@ -251,7 +253,7 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
 /**
  * Returns true if the filter list is empty, or if the item matches *any* of the provided filters ("or").
  */
-export function matchBountyFilters(item: DimItem, filters: BountyFilter[]) {
+export function matchBountyFilters(item: DimItem, filters: BountyFilter[], pursuitsInfo: any) {
   if (filters.length === 0) {
     return true;
   }
