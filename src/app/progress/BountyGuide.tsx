@@ -253,7 +253,11 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
 /**
  * Returns true if the filter list is empty, or if the item matches *any* of the provided filters ("or").
  */
-export function matchBountyFilters(item: DimItem, filters: BountyFilter[], pursuitsInfo: any) {
+export function matchBountyFilters(
+  item: DimItem,
+  filters: BountyFilter[],
+  pursuitsInfo: any = pursuitsInfoFile
+) {
   if (filters.length === 0) {
     return true;
   }

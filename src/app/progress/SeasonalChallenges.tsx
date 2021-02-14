@@ -9,7 +9,11 @@ import {
   toPresentationNodeTree,
 } from 'app/records/presentation-nodes';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { DestinyPresentationNodeDefinition, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import {
+  DestinyPresentationNodeDefinition,
+  DestinyProfileResponse,
+  DestinyRecordState,
+} from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import React, { useState } from 'react';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
@@ -53,14 +57,21 @@ export default function SeasonalChallenges({
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];
 
-  const pursuits = allRecords.map((r) =>
-    recordToPursuitItem(
-      r,
-      buckets,
-      store,
-      seasonalChallengesPresentationNode.displayProperties.name
-    )
-  );
+  const pursuits = allRecords
+    .filter((r) => {
+      // Don't show records that have been redeemed
+      const state = r.recordComponent.state;
+      const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
+      return !acquired;
+    })
+    .map((r) =>
+      recordToPursuitItem(
+        r,
+        buckets,
+        store,
+        seasonalChallengesPresentationNode.displayProperties.name
+      )
+    );
 
   return (
     <section id="seasonal-challenges">

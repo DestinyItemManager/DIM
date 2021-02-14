@@ -389,6 +389,10 @@ export function recordToPursuitItem(
     });
   }
 
+  const state = record.recordComponent.state;
+  const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
+  dimItem.complete = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
+
   dimItem.pursuit = {
     suppressExpirationWhenObjectivesComplete: false,
     modifierHashes: [],
