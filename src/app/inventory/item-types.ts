@@ -13,6 +13,7 @@ import {
   DestinyItemQualityBlockDefinition,
   DestinyItemQuantity,
   DestinyItemSocketEntryDefinition,
+  DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
@@ -196,6 +197,8 @@ export interface DimItem {
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
   collectibleState?: DestinyCollectibleState;
+  /** Extra tooltips to show in the item popup */
+  tooltipNotifications?: DestinyItemTooltipNotification[];
 }
 
 /**
@@ -414,4 +417,6 @@ export interface DimPursuit {
   expiredInActivityMessage?: string;
   /** Modifiers active in this quest */
   modifierHashes: number[];
+  questStepNum?: number;
+  questStepsTotal?: number;
 }

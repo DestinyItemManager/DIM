@@ -6,6 +6,7 @@ import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
 import {
+  DestinyItemQuantity,
   DestinyObjectiveProgress,
   DestinyRecordComponent,
   DestinyRecordDefinition,
@@ -42,6 +43,7 @@ interface RecordInterval {
   score: number;
   percentCompleted: number;
   isRedeemed: boolean;
+  rewards: DestinyItemQuantity[];
 }
 
 const overrideIcons = Object.keys(catalystIcons).map(Number);
@@ -144,6 +146,10 @@ export default function Record({
             .objective,
         ]
       : recordComponent.objectives;
+  const rewards =
+    intervals.length > 0
+      ? intervals[Math.min(recordComponent.intervalsRedeemedCount, intervals.length - 1)].rewards
+      : recordDef.rewardItems;
   const showObjectives =
     !obscured &&
     objectives &&
@@ -196,12 +202,10 @@ export default function Record({
             <ExternalLink href={loreLink}>{t('MovePopup.ReadLore')}</ExternalLink>
           </div>
         )}
-        {recordDef.rewardItems?.length > 0 &&
+        {rewards &&
           !acquired &&
           !obscured &&
-          recordDef.rewardItems.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} defs={defs} />
-          ))}
+          rewards.map((reward) => <Reward key={reward.itemHash} reward={reward} defs={defs} />)}
         {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
         {(!acquired || trackedInDim) && (
           <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
@@ -225,6 +229,7 @@ function getIntervals(
 ): RecordInterval[] {
   const intervalDefinitions = definition?.intervalInfo?.intervalObjectives || [];
   const intervalObjectives = record?.intervalObjectives || [];
+  const intervalRewards = definition?.intervalInfo?.intervalRewards || [];
   if (intervalDefinitions.length !== intervalObjectives.length) {
     return [];
   }
@@ -235,6 +240,7 @@ function getIntervals(
   for (let i = 0; i < intervalDefinitions.length; i++) {
     const def = intervalDefinitions[i];
     const data = intervalObjectives[i];
+    const rewards = intervalRewards[i].intervalRewardItems;
 
     intervals.push({
       objective: data,
@@ -249,6 +255,7 @@ function getIntervals(
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1,
+      rewards,
     });
 
     isPrevIntervalComplete = data.complete;

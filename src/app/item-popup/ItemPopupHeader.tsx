@@ -62,6 +62,14 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
               })}
             </div>
           )}
+          {item.pursuit?.questStepNum && (
+            <div className={styles.itemType}>
+              {t('MovePopup.Subtitle.QuestProgress', {
+                questStepNum: item.pursuit.questStepNum,
+                questStepsTotal: item.pursuit.questStepsTotal,
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
