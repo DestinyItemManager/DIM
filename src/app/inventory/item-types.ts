@@ -417,4 +417,6 @@ export interface DimPursuit {
   expiredInActivityMessage?: string;
   /** Modifiers active in this quest */
   modifierHashes: number[];
+  questStepNum?: number;
+  questStepsTotal?: number;
 }

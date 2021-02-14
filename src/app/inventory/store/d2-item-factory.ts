@@ -653,4 +653,15 @@ function buildPursuitInfo(
       rewards,
     };
   }
+  if (
+    createdItem.pursuit &&
+    createdItem.bucket.hash === BucketHashes.Quests &&
+    itemDef.setData?.itemList
+  ) {
+    createdItem.pursuit = {
+      ...createdItem.pursuit,
+      questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
+      questStepsTotal: itemDef.setData.itemList.length,
+    };
+  }
 }

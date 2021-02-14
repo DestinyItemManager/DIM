@@ -627,7 +627,8 @@
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-      "Type": "{{classType}} {{typeName}}"
+      "Type": "{{classType}} {{typeName}}",
+      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}"
     },
     "Take": "Take",
     "ToggleSidecar": "Expand or collapse item actions",
