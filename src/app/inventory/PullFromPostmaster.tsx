@@ -20,10 +20,6 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   }
 
   const onClick = () => {
-    if (!confirm(t('Loadouts.PullFromPostmasterConfirm', { count: numPullablePostmasterItems }))) {
-      return;
-    }
-
     queueAction(async () => {
       setWorking(true);
       try {
