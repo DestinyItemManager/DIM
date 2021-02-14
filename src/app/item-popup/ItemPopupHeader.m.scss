@@ -110,20 +110,20 @@
   }
 }
 
-.pursuit {
-  background-color: #555;
-  color: #eee;
-  a {
-    color: #eee;
-  }
-}
-
 .uncommon {
   background-color: $uncommon;
 }
 
 .rare {
   background-color: $rare;
+}
+
+.pursuit {
+  background-color: #333;
+  color: #eee;
+  a {
+    color: #eee;
+  }
 }
 
 .legendary {
