@@ -543,8 +543,6 @@
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "OpenInOptimizer": "Open in Loadout Optimizer",
     "PullFromPostmaster": "Collect Postmaster",
-    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
-    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_male": "Pulling 1 Postmaster item to {{store}}.",
