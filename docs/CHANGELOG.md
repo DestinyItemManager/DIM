@@ -7,6 +7,7 @@
 * Added Seasonal Challenges to the Records page. You can track as many of these as you want in DIM and the tracked ones will show up in the Progress page.
 * Quests that expire after a certain season now show that info in the item popup.
 * Quests show which step number on the questline they are.
+* Triumphs that provide rewards for completing a part of the triumph now show that reward.
 
 ## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
 
