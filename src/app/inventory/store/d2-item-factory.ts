@@ -606,7 +606,7 @@ export function makeItem(
   // Some items have multiple tooltips, but the item.tooltipNotificationIndexes property that
   // should tell us which to show is missing: https://github.com/Bungie-net/api/issues/1419
   if (
-    itemDef.tooltipNotifications.length === 1 &&
+    itemDef.tooltipNotifications?.length === 1 &&
     itemDef.tooltipNotifications[0].displayString.length
   ) {
     createdItem.tooltipNotifications = itemDef.tooltipNotifications
