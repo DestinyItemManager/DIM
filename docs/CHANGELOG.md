@@ -1,5 +1,8 @@
 ## Next
 
+* Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.
+* Bulk tagging in the Organizer no longer shows an "undo" popup. We expect you know what you're doing there!
+
 ## 6.52.0 <span class="changelog-date">(2021-02-14)</span>
 
 * Search filters that operate on power levels now accept the keywords "pinnaclecap", "powerfulcap", "softcap", and "powerfloor" to refer to the current season's power limits. e.g "power:>=softcap"
