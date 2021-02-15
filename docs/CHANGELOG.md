@@ -1,5 +1,7 @@
 ## Next
 
+## 6.52.0 <span class="changelog-date">(2021-02-14)</span>
+
 * Search filters that operate on power levels now accept the keywords "pinnaclecap", "powerfulcap", "softcap", and "powerfloor" to refer to the current season's power limits. e.g "power:>=softcap"
   * `powerlimit:pinnaclecap` will show items with a power limit that matches this season's limit on all items.
   * `sunsetsin:next` will show the same items: items whose power limit won't reach next season's limit on all items.
