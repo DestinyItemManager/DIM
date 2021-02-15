@@ -14,7 +14,11 @@ import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 /**
  * Bulk tag items, with an undo button in a notification.
  */
-export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue): ThunkResult {
+export function bulkTagItems(
+  itemsToBeTagged: DimItem[],
+  selectedTag: TagValue,
+  notification = true
+): ThunkResult {
   return async (dispatch, getState) => {
     const appliedTagInfo = tagConfig[selectedTag];
     const itemInfos = itemInfosSelector(getState());
@@ -49,54 +53,56 @@ export function bulkTagItems(itemsToBeTagged: DimItem[], selectedTag: TagValue):
       }
     }
 
-    showNotification({
-      type: 'success',
-      duration: 30000,
-      title: t('Header.BulkTag'),
-      body: (
-        <>
-          {selectedTag === 'clear'
-            ? t('Filter.BulkClear', {
-                count: itemsToBeTagged.length,
-              })
-            : t('Filter.BulkTag', {
-                count: itemsToBeTagged.length,
-                tag: t(appliedTagInfo.label),
-              })}
-          <NotificationButton
-            onClick={async () => {
-              if (instanced.length) {
-                dispatch(
-                  setItemTagsBulk(
-                    instanced.map((item) => ({
-                      itemId: item.id,
-                      tag: previousState.get(item),
-                    }))
-                  )
-                );
-              }
-              if (nonInstanced.length) {
-                for (const item of nonInstanced) {
+    if (notification) {
+      showNotification({
+        type: 'success',
+        duration: 30000,
+        title: t('Header.BulkTag'),
+        body: (
+          <>
+            {selectedTag === 'clear'
+              ? t('Filter.BulkClear', {
+                  count: itemsToBeTagged.length,
+                })
+              : t('Filter.BulkTag', {
+                  count: itemsToBeTagged.length,
+                  tag: t(appliedTagInfo.label),
+                })}
+            <NotificationButton
+              onClick={async () => {
+                if (instanced.length) {
                   dispatch(
-                    setItemHashTag({
-                      itemHash: item.hash,
-                      tag: previousState.get(item),
-                    })
+                    setItemTagsBulk(
+                      instanced.map((item) => ({
+                        itemId: item.id,
+                        tag: previousState.get(item),
+                      }))
+                    )
                   );
                 }
-              }
-              showNotification({
-                type: 'success',
-                title: t('Header.BulkTag'),
-                body: t('Filter.BulkRevert', { count: itemsToBeTagged.length }),
-              });
-            }}
-          >
-            <AppIcon icon={undoIcon} /> {t('Filter.Undo')}
-          </NotificationButton>
-        </>
-      ),
-    });
+                if (nonInstanced.length) {
+                  for (const item of nonInstanced) {
+                    dispatch(
+                      setItemHashTag({
+                        itemHash: item.hash,
+                        tag: previousState.get(item),
+                      })
+                    );
+                  }
+                }
+                showNotification({
+                  type: 'success',
+                  title: t('Header.BulkTag'),
+                  body: t('Filter.BulkRevert', { count: itemsToBeTagged.length }),
+                });
+              }}
+            >
+              <AppIcon icon={undoIcon} /> {t('Filter.Undo')}
+            </NotificationButton>
+          </>
+        ),
+      });
+    }
   };
 }
 
