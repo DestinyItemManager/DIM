@@ -1,8 +1,10 @@
+import { CanceledError } from 'app/utils/cancel';
 import clsx from 'clsx';
 import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Notification.scss';
-import { Notify } from './notifications';
+import NotificationButton from './NotificationButton';
+import { NotificationError, Notify } from './notifications';
 
 interface Props extends MotionProps {
   notification: Notify;
@@ -12,7 +14,7 @@ interface Props extends MotionProps {
 export default function Notification({ notification, onClose, ...animation }: Props) {
   const [mouseover, setMouseover] = useState(false);
   const [success, setSuccess] = useState<boolean | undefined>();
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<NotificationError | undefined>();
 
   const timer = useRef(0);
 
@@ -22,7 +24,9 @@ export default function Notification({ notification, onClose, ...animation }: Pr
       timer.current = 0;
     }
     if (!error && !success && notification.promise) {
-      notification.promise.then(() => setSuccess(true)).catch(setError);
+      notification.promise
+        .then(() => setSuccess(true))
+        .catch((e) => (e instanceof CanceledError ? setSuccess(true) : setError(e)));
     } else if (notification.duration) {
       timer.current = window.setTimeout(
         () => {
@@ -80,6 +84,12 @@ export default function Notification({ notification, onClose, ...animation }: Pr
         duration: notification.duration / 1000 - 0.3,
       };
 
+  // A NotificationError can override a lot of properties
+  const title = error?.title || notification.title;
+  const body = error?.body || error?.message || notification.body;
+  const icon = error?.icon || notification.icon;
+  const trailer = error?.trailer || notification.trailer;
+
   return (
     <motion.div
       className="notification"
@@ -97,18 +107,15 @@ export default function Notification({ notification, onClose, ...animation }: Pr
         )}
       >
         <div className="notification-contents">
-          {notification.icon && <div className="notification-icon">{notification.icon}</div>}
+          {icon && <div className="notification-icon">{icon}</div>}
           <div className="notification-details">
-            <div className="notification-title">{notification.title}</div>
-            {error ? (
-              <div className="notification-body">{error.message}</div>
-            ) : (
-              notification.body && <div className="notification-body">{notification.body}</div>
+            <div className="notification-title">{title}</div>
+            {body && <div className="notification-body">{body}</div>}
+            {!error && notification.onCancel && (
+              <NotificationButton onClick={notification.onCancel}>Cancel</NotificationButton>
             )}
           </div>
-          {notification.trailer && (
-            <div className="notification-trailer">{notification.trailer}</div>
-          )}
+          {trailer && <div className="notification-trailer">{trailer}</div>}
         </div>
         {(success || error || !notification.promise) &&
           typeof notification.duration === 'number' && (

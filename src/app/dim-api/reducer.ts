@@ -779,6 +779,9 @@ function setTag(
 
   if (tag) {
     if (existingTag) {
+      if (existingTag.tag === tag) {
+        return; // nothing to do
+      }
       existingTag.tag = tag;
     } else {
       tags[itemId] = {
@@ -787,9 +790,13 @@ function setTag(
       };
     }
   } else {
-    delete existingTag?.tag;
-    if (!existingTag?.tag && !existingTag?.notes) {
-      delete tags[itemId];
+    if (existingTag?.tag) {
+      delete existingTag.tag;
+      if (!existingTag.notes) {
+        delete tags[itemId];
+      }
+    } else {
+      return; // nothing to do
     }
   }
 
