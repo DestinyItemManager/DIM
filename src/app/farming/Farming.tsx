@@ -61,16 +61,12 @@ function Farming({ store, makeRoomForItems, dispatch }: Props) {
                 <p>
                   {makeRoomForItems
                     ? t('FarmingMode.Desc', {
-                        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-                        store: store && store.name,
-                        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-                        context: store && store.genderName,
+                        store: store.name,
+                        context: store.genderName,
                       })
                     : t('FarmingMode.MakeRoom.Desc', {
-                        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-                        store: store && store.name,
-                        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-                        context: store && store.genderName,
+                        store: store.name,
+                        context: store.genderName,
                       })}
                 </p>
                 <p>
