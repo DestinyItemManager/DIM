@@ -614,6 +614,8 @@ export const enum PlugCategoryHashes {
   V500ShipsEventsDawningExoticShip0Engines = 3754191634,
   V510NewBow0Masterwork = 2855954680,
   V510NewBow0Skins = 2920760650,
+  V510NewScoutRifle0Masterwork = 67646897,
+  V510NewScoutRifle0Skins = 392596597,
   V510PursuitGrenadeLauncher0Skins = 3928246899,
   VehiclesModSpeed = 821963863,
   WarlockStasisClassAbilities = 1960796738,
