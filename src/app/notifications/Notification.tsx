@@ -6,6 +6,8 @@ import './Notification.scss';
 import NotificationButton from './NotificationButton';
 import { NotificationError, Notify } from './notifications';
 
+const showErrorDuration = 5000;
+
 interface Props extends MotionProps {
   notification: Notify;
   onClose(notification: Notify): void;
@@ -27,14 +29,14 @@ export default function Notification({ notification, onClose, ...animation }: Pr
       notification.promise
         .then(() => setSuccess(true))
         .catch((e) => (e instanceof CanceledError ? setSuccess(true) : setError(e)));
-    } else if (notification.duration) {
+    } else if (notification.duration || error) {
       timer.current = window.setTimeout(
         () => {
           if (!mouseover) {
             onClose(notification);
           }
         },
-        error ? 5000 : notification.duration
+        error ? showErrorDuration : notification.duration
       );
     } else {
       window.setTimeout(() => onClose(notification), 0);
@@ -81,7 +83,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     : {
         type: 'tween',
         ease: 'linear',
-        duration: notification.duration / 1000 - 0.3,
+        duration: (error ? showErrorDuration : notification.duration) / 1000 - 0.3,
       };
 
   // A NotificationError can override a lot of properties
