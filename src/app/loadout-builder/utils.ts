@@ -251,7 +251,11 @@ export function generateMixesFromPerks(
               const existingMix = mixes[mixIndex];
               const optionStat = statValues.map((statHash, index) => {
                 const currentPlugValue =
-                  (socket.plugged?.stats && socket.plugged.stats[statHash]) ?? 0;
+                  (socket.plugged?.enabled &&
+                    socket.plugged?.stats &&
+                    socket.plugged.stats[statHash]) ||
+                  0;
+                0;
                 const optionPlugValue = plug.stats?.[statHash] || 0;
                 return existingMix[index] - currentPlugValue + optionPlugValue;
               });
