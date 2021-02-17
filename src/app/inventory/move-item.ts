@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
+import { CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
@@ -15,7 +16,7 @@ import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
-import { executeMoveItem as moveTo } from './item-move-service';
+import { executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
@@ -71,17 +72,15 @@ export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
 export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: store.name,
-        }),
-      });
+    const { item } = await showItemPicker({
+      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket: bucket.name,
+        store: store.name,
+      }),
+    });
 
-      await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    await dispatch(moveItemTo(item, store));
   };
 }
 
@@ -171,10 +170,14 @@ export function moveItemTo(
       // in time.
       updateManualMoveTimestamp(item);
 
+      const [cancelToken, cancel] = withCancel();
+
       const movePromise = queueAction(() =>
-        loadingTracker.addPromise(dispatch(moveTo(item, store, equip, moveAmount)))
+        loadingTracker.addPromise(
+          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount, cancelToken }))
+        )
       );
-      showNotification(moveItemNotification(item, store, movePromise));
+      showNotification(moveItemNotification(item, store, movePromise, cancel));
 
       item = await movePromise;
 
@@ -184,6 +187,10 @@ export function moveItemTo(
         dispatch(updateCharacters());
       }
     } catch (e) {
+      if (e instanceof CanceledError) {
+        return item;
+      }
+
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
@@ -225,7 +232,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
-                await dispatch(moveTo(item, vault, false, amount));
+                await dispatch(executeMoveItem(item, vault, { equip: false, amount }));
               }
             }
 
@@ -237,7 +244,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
-                await dispatch(moveTo(item, store, false, amount));
+                await dispatch(executeMoveItem(item, store, { equip: false, amount }));
               }
             }
             const data = { name: actionableItem.name, store: store.name };
@@ -320,7 +327,9 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           async function applyMoves(moves: Move[]) {
             for (const move of moves) {
               const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
-              await dispatch(moveTo(item, move.target, false, move.amount));
+              await dispatch(
+                executeMoveItem(item, move.target, { equip: false, amount: move.amount })
+              );
             }
           }
 
