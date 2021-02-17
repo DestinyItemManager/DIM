@@ -68,13 +68,14 @@ function StatTooltip({ stat, characterClass }: Props) {
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
         <div>{`${stat.value}/100`}</div>
       </div>
-      {abilityTranslation && statEffects ? (
+      {$featureFlags.abilityCooldowns && abilityTranslation && statEffects ? (
         <div className={styles.values}>
           <div className={styles.label}>{t(abilityTranslation)}</div>
           <div className={styles.value}>{`${statEffects.values[tier]}${statEffects.units}`}</div>
         </div>
       ) : null}
-      {classAbilityTranslation &&
+      {$featureFlags.abilityCooldowns &&
+      classAbilityTranslation &&
       classAbilityEffects &&
       isClassAbilityStat(stat.hash, characterClass) ? (
         <div className={styles.values}>

@@ -22,8 +22,6 @@ declare const $featureFlags: {
   respectDNT: boolean;
   /** Community-curated wish lists */
   wishLists: boolean;
-  /** Enable the Armor 2 Mod Picker */
-  armor2ModPicker: boolean;
   /** Show a banner for supporting a charitable cause */
   issueBanner: boolean;
   /** Show confetti */
@@ -46,6 +44,8 @@ declare const $featureFlags: {
   loadoutMods: boolean;
   /** Show bounty guide */
   bountyGuide: boolean;
+  /** Whether ability cooldowns are shown in stats tooltips */
+  abilityCooldowns: boolean;
 };
 
 declare namespace React {
