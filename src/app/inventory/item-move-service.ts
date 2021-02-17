@@ -2,6 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
+import { CancelToken, neverCanceled } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
@@ -217,7 +218,11 @@ function searchForSimilarItem(
 /**
  * Bulk equip items. Only use for multiple equips at once.
  */
-export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimItem[]> {
+export function equipItems(
+  store: DimStore,
+  items: DimItem[],
+  cancelToken: CancelToken = neverCanceled
+): ThunkResult<DimItem[]> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
@@ -243,7 +248,9 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
               return Promise.resolve(similarItem);
             } else {
               // If we need to get the similar item from elsewhere, do that first
-              return dispatch(executeMoveItem(similarItem, store, true)).then(() => similarItem);
+              return dispatch(
+                executeMoveItem(similarItem, store, { equip: true, cancelToken })
+              ).then(() => similarItem);
             }
           }
         }
@@ -257,10 +264,11 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
       return [];
     }
     if (items.length === 1) {
-      const equippedItem = await dispatch(equipItem(items[0]));
+      const equippedItem = await dispatch(equipItem(items[0], cancelToken));
       return [equippedItem];
     }
 
+    cancelToken.checkCanceled();
     const equippedItems = await equipItemsApi(items[0])(
       currentAccountSelector(getState())!,
       store,
@@ -270,19 +278,24 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
   };
 }
 
-function equipItem(item: DimItem): ThunkResult<DimItem> {
+function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), item.owner)!;
     if ($featureFlags.debugMoves) {
       infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
     }
+    cancelToken.checkCanceled();
     await equipApi(item)(currentAccountSelector(getState())!, item);
     return dispatch(updateItemModel(item, store, store, true));
   };
 }
 
 /** De-equip an item, which really means find another item to equip in its place. */
-function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> {
+function dequipItem(
+  item: DimItem,
+  excludeExotic = false,
+  cancelToken: CancelToken = neverCanceled
+): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
     const similarItem = getSimilarItem(stores, item, [], excludeExotic);
@@ -291,19 +304,24 @@ function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> 
     }
 
     const ownerStore = getStore(stores, item.owner)!;
-    await dispatch(executeMoveItem(similarItem, ownerStore, true));
+    await dispatch(executeMoveItem(similarItem, ownerStore, { equip: true, cancelToken }));
     return item;
   };
 }
 
-function moveToVault(item: DimItem, amount: number = item.amount): ThunkResult<DimItem> {
+function moveToVault(
+  item: DimItem,
+  cancelToken: CancelToken,
+  amount: number = item.amount
+): ThunkResult<DimItem> {
   return async (dispatch, getState) =>
-    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, false, amount));
+    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, cancelToken, false, amount));
 }
 
 function moveToStore(
   item: DimItem,
   store: DimStore,
+  cancelToken: CancelToken,
   equip = false,
   amount: number = item.amount
 ): ThunkResult<DimItem> {
@@ -336,6 +354,8 @@ function moveToStore(
         ? item.locked
         : undefined;
 
+    cancelToken.checkCanceled();
+
     try {
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
@@ -360,7 +380,10 @@ function moveToStore(
     }
     const source = getStore(getStores(), item.owner)!;
     const newItem = dispatch(updateItemModel(item, source, store, false, amount));
-    item = newItem.owner !== 'vault' && equip ? await dispatch(equipItem(newItem)) : newItem;
+    item =
+      newItem.owner !== 'vault' && equip
+        ? await dispatch(equipItem(newItem, cancelToken))
+        : newItem;
 
     if (overrideLockState !== undefined) {
       // Run this async, without waiting for the result
@@ -652,13 +675,14 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    excludes?: Pick<DimItem, 'id' | 'hash'>[];
-    reservations?: MoveReservations;
+    excludes: Pick<DimItem, 'id' | 'hash'>[];
+    reservations: MoveReservations;
     numRetries?: number;
-  } = {}
+    cancelToken: CancelToken;
+  }
 ): ThunkResult<boolean> {
   return async (dispatch, getState) => {
-    const { excludes = [], reservations = {}, numRetries = 0 } = options;
+    const { excludes = [], reservations = {}, numRetries = 0, cancelToken } = options;
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
@@ -760,7 +784,14 @@ function canMoveToStore(
         // Make one move and start over!
         try {
           await dispatch(
-            executeMoveItem(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+            executeMoveItem(moveAsideItem, moveAsideTarget, {
+              equip: false,
+              amount: moveAsideItem.amount,
+              excludes,
+              // TODO: is this right?
+              reservations: {},
+              cancelToken,
+            })
           );
           return dispatch(canMoveToStore(item, store, amount, options));
         } catch (e) {
@@ -814,8 +845,9 @@ function isValidTransfer(
   store: DimStore,
   item: DimItem,
   amount: number,
-  excludes?: Pick<DimItem, 'id' | 'hash'>[],
-  reservations?: MoveReservations
+  excludes: Pick<DimItem, 'id' | 'hash'>[],
+  reservations: MoveReservations,
+  cancelToken: CancelToken
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     if (equip) {
@@ -824,7 +856,7 @@ function isValidTransfer(
         await dispatch(canEquipExotic(item, store)); // throws
       }
     }
-    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations }));
+    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations, cancelToken }));
   };
 }
 
@@ -847,10 +879,19 @@ let lastTimeCurrentStoreWasReallyFull = 0;
 export function executeMoveItem(
   item: DimItem,
   target: DimStore,
-  equip = false,
-  amount: number = item.amount || 1,
-  excludes?: Pick<DimItem, 'id' | 'hash'>[],
-  reservations?: MoveReservations
+  {
+    equip = false,
+    amount = item.amount || 1,
+    excludes = [],
+    reservations = {},
+    cancelToken = neverCanceled,
+  }: {
+    equip?: boolean;
+    amount?: number;
+    excludes?: Pick<DimItem, 'id' | 'hash'>[];
+    reservations?: MoveReservations;
+    cancelToken?: CancelToken;
+  }
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -869,7 +910,7 @@ export function executeMoveItem(
     if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
-        return await dispatch(moveToStore(item, target, equip, amount));
+        return await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       } catch (e) {
         if (
           e instanceof DimError &&
@@ -890,7 +931,9 @@ export function executeMoveItem(
       }
     }
 
-    await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations));
+    await dispatch(
+      isValidTransfer(equip, target, item, amount, excludes, reservations, cancelToken)
+    );
 
     // Replace the target store - isValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
@@ -899,9 +942,11 @@ export function executeMoveItem(
     // Get from postmaster first
     if (item.location.inPostmaster) {
       if (source.id === target.id || item.bucket.accountWide) {
-        item = await dispatch(moveToStore(item, target, equip, amount));
+        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       } else {
-        item = await dispatch(executeMoveItem(item, source, equip, amount, excludes, reservations));
+        item = await dispatch(
+          executeMoveItem(item, source, { equip, amount, excludes, reservations, cancelToken })
+        );
         target = getStore(getStores(), target.id)!;
         source = getStore(getStores(), item.owner)!;
       }
@@ -914,11 +959,11 @@ export function executeMoveItem(
         if (item.equipped) {
           item = await dispatch(dequipItem(item));
         }
-        item = await dispatch(moveToVault(item, amount));
-        item = await dispatch(moveToStore(item, target, equip, amount));
+        item = await dispatch(moveToVault(item, cancelToken, amount));
+        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       }
       if (equip && !item.equipped) {
-        item = await dispatch(equipItem(item));
+        item = await dispatch(equipItem(item, cancelToken));
       } else if (!equip && item.equipped) {
         item = await dispatch(dequipItem(item));
       }
@@ -930,7 +975,7 @@ export function executeMoveItem(
       if (item.equipped) {
         item = await dispatch(dequipItem(item));
       }
-      item = await dispatch(moveToStore(item, target, equip, amount));
+      item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
     }
     return item;
   };

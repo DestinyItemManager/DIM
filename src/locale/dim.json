@@ -135,7 +135,7 @@
       "MakeRoom": "Make room to pick up items by moving equipment",
       "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
     },
-    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
+    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Stop": "Stop"
   },
@@ -208,7 +208,6 @@
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
     "Postmaster": "Items that are currently in the Postmaster.",
-    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
+    "NoSpace": "You're out of space in the vault and any other characters.",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
     "NotificationMessage_female": "Equipping loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Equipping loadout with {{count}} items to {{store}}",
@@ -520,6 +520,7 @@
     "OpenInOptimizer": "Open in Loadout Optimizer",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
+    "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Pulling {{count}} Postmaster items to {{store}}.",

@@ -8,6 +8,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
+import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -24,6 +25,9 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
       findItemsByBucket(store, bucket.hash)
     );
     const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
+
+    const [cancelToken, cancel] = withCancel();
+
     // If any category is full, we'll move enough aside
     const itemsToMove: DimItem[] = [];
     _.forIn(postmasterItemCountsByType, (count, bucket) => {
@@ -56,7 +60,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
       }
     });
     try {
-      await dispatch(moveItemsToVault(store, itemsToMove));
+      await dispatch(moveItemsToVault(store, itemsToMove, cancelToken));
       showNotification({
         type: 'success',
         title: t('Loadouts.MakeRoom'),
@@ -66,14 +70,17 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
           store: store.name,
           context: store.genderName,
         }),
+        onCancel: cancel,
       });
     } catch (e) {
-      showNotification({
-        type: 'error',
-        title: t('Loadouts.MakeRoom'),
-        body: t('Loadouts.MakeRoomError', { error: e.message }),
-      });
-      throw e;
+      if (!(e instanceof CanceledError)) {
+        showNotification({
+          type: 'error',
+          title: t('Loadouts.MakeRoom'),
+          body: t('Loadouts.MakeRoomError', { error: e.message }),
+        });
+        throw e;
+      }
     }
   };
 }
@@ -120,7 +127,7 @@ const showNoSpaceError = _.throttle(
     showNotification({
       type: 'error',
       title: t('Loadouts.PullFromPostmasterPopupTitle'),
-      body: t('Loadouts.PullFromPostmasterError', { error: e.message }),
+      body: t('Loadouts.NoSpace', { error: e.message }),
     }),
   1000,
   { leading: true, trailing: false }
@@ -141,6 +148,8 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
       });
     });
 
+    const [cancelToken, cancel] = withCancel();
+
     const promise = (async () => {
       let succeeded = 0;
 
@@ -158,29 +167,51 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         }
 
         try {
-          await dispatch(executeMoveItem(item, store, false, amount));
+          await dispatch(executeMoveItem(item, store, { equip: false, amount, cancelToken }));
           succeeded++;
         } catch (e) {
-          // TODO: collect errors
+          if (e instanceof CanceledError) {
+            return false;
+          }
+          // TODO: collect and summarize errors?
           errorLog('postmaster', `Error pulling ${item.name} from postmaster`, e);
           if (e instanceof DimError && e.code === 'no-space') {
-            showNoSpaceError(e);
+            if (items.length === 1) {
+              // Transform the notification into an error
+              throw new Error(t('Loadouts.NoSpace', { error: e.message }));
+            } else {
+              // Show the error separately and continue
+              showNoSpaceError(e);
+            }
           } else {
-            errorNotification(e.message);
+            if (items.length === 1) {
+              // Transform the notification into an error
+              throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
+            } else {
+              // Show the error separately and continue
+              errorNotification(e.message);
+            }
           }
         }
       }
-      return succeeded;
+
+      if (!succeeded) {
+        throw new Error(t('Loadouts.PullFromPostmasterGeneralError'));
+      }
     })();
 
-    showNotification(postmasterNotification(items.length, store, promise));
+    showNotification(postmasterNotification(items.length, store, promise, cancel));
 
     await promise;
   };
 }
 
 // cribbed from D1FarmingService, but modified
-function moveItemsToVault(store: DimStore, items: DimItem[]): ThunkResult {
+function moveItemsToVault(
+  store: DimStore,
+  items: DimItem[],
+  cancelToken: CancelToken
+): ThunkResult {
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {};
     // reserve space for all move-asides
@@ -200,12 +231,26 @@ function moveItemsToVault(store: DimStore, items: DimItem[]): ThunkResult {
 
         if (otherStoresWithSpace.length) {
           await dispatch(
-            executeMoveItem(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+            executeMoveItem(item, otherStoresWithSpace[0], {
+              equip: false,
+              amount: item.amount,
+              excludes: items,
+              reservations,
+              cancelToken,
+            })
           );
           continue;
         }
       }
-      await dispatch(executeMoveItem(item, vault, false, item.amount, items, reservations));
+      await dispatch(
+        executeMoveItem(item, vault, {
+          equip: false,
+          amount: item.amount,
+          excludes: items,
+          reservations,
+          cancelToken,
+        })
+      );
     }
   };
 }
