@@ -140,7 +140,6 @@ export function hydrateArmorSet(
 
   return {
     armor,
-    statChoices: processed.statChoices,
     stats: processed.stats,
     maxPower: processed.maxPower,
   };
