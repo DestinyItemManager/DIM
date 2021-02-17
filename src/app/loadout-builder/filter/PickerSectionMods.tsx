@@ -96,7 +96,7 @@ export default function PickerSectionMods({
   };
 
   return (
-    <div className={styles.bucket} id={`mod-picker-section-${plugCategoryHashes.join('-')}`}>
+    <div className={styles.bucket}>
       <div className={styles.header}>{title}</div>
       <div className={styles.items}>
         {mods.map((item) => (

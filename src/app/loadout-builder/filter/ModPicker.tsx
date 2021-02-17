@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import {
   allItemsSelector,
@@ -11,6 +12,7 @@ import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
+import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -26,7 +28,6 @@ import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { knownModPlugCategoryHashes, LockedArmor2Mod, LockedArmor2ModMap } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
-import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
@@ -208,12 +209,6 @@ function ModPicker({
     onClose();
   };
 
-  const scrollToBucket = (plugCategoryHashes: number[]) => {
-    const elementId = `mod-picker-section-${plugCategoryHashes.join('-')}`;
-    const elem = document.getElementById(elementId)!;
-    elem?.scrollIntoView();
-  };
-
   const queryFilteredMods = useMemo(() => {
     // Only some languages effectively use the \b regex word boundary
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -283,6 +278,9 @@ function ModPicker({
       groupHeaderOrder.indexOf(groupB.plugCategoryHashes[0])
   );
 
+  const autoFocus =
+    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
@@ -300,13 +298,26 @@ function ModPicker({
     <Sheet
       onClose={onClose}
       header={
-        <ModPickerHeader
-          groupOrder={groupedMods}
-          query={query}
-          scrollToBucket={scrollToBucket}
-          onSearchChange={(e) => setQuery(e.currentTarget.value)}
-          isPhonePortrait={isPhonePortrait}
-        />
+        <div>
+          <h1>{t('LB.ChooseAMod')}</h1>
+          <div className="item-picker-search">
+            <div className="search-filter" role="search">
+              <AppIcon icon={searchIcon} className="search-bar-icon" />
+              <input
+                className="filter-input"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoFocus={autoFocus}
+                placeholder={t('LB.SearchAMod')}
+                type="text"
+                name="filter"
+                value={query}
+                onChange={(e) => setQuery(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+        </div>
       }
       footer={footer}
       sheetClassName="item-picker"
