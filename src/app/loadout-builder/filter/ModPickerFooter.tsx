@@ -2,17 +2,17 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import React from 'react';
-import { LockedArmor2Mod, LockedArmor2ModMap } from '../types';
-import LockedArmor2ModIcon from './LockedArmor2ModIcon';
+import { LockedMod, LockedModMap } from '../types';
+import LockedModIcon from './LockedModIcon';
 import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
   groupOrder: { plugCategoryHashes: number[] }[];
   isPhonePortrait: boolean;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
-  onModSelected(item: LockedArmor2Mod): void;
+  onModSelected(item: LockedMod): void;
 }
 
 function ModPickerFooter({
@@ -40,7 +40,7 @@ function ModPickerFooter({
               pch in lockedArmor2Mods && (
                 <React.Fragment key={pch}>
                   {lockedArmor2Mods[pch]?.map((lockedItem) => (
-                    <LockedArmor2ModIcon
+                    <LockedModIcon
                       key={lockedItem.key}
                       item={lockedItem}
                       defs={defs}

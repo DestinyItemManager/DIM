@@ -4,13 +4,12 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { Dispatch, useMemo } from 'react';
+import React, { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { matchLockedItem } from '../preProcessFilter';
-import { LockedArmor2Mod, LockedItemType, StatTypes } from '../types';
-import { generateMixesFromPerks } from '../utils';
+import { LockedItemType, LockedMod } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
 
@@ -22,42 +21,20 @@ export default function GeneratedSetItem({
   item,
   locked,
   defs,
-  statValues,
   itemOptions,
-  statOrder,
   lockedMods,
   lbDispatch,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
   defs: D2ManifestDefinitions;
-  statValues: number[];
   itemOptions: DimItem[];
-  statOrder: StatTypes[];
-  lockedMods: LockedArmor2Mod[];
+  lockedMods: LockedMod[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const altPerks = useMemo(() => generateMixesFromPerks(item, statValues, statOrder), [
-    item,
-    statValues,
-    statOrder,
-  ]);
-
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
   const removeLockedItem = (item: LockedItemType) =>
     lbDispatch({ type: 'removeItemFromLockedMap', item });
-
-  const classesByHash = altPerks.reduce(
-    (memo, perk) => ({ ...memo, [perk.plugDef.hash]: styles.altPerk }),
-    {}
-  );
-  if (locked) {
-    for (const lockedItem of locked) {
-      if (lockedItem.type === 'perk') {
-        classesByHash[lockedItem.perk.hash] = styles.selectedPerk;
-      }
-    }
-  }
 
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));

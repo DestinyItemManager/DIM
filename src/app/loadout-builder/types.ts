@@ -53,14 +53,14 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export interface LockedArmor2Mod {
+export interface LockedMod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
   modDef: PluggableInventoryItemDefinition;
 }
 
-export type LockedArmor2ModMap = {
-  [plugCategoryHash: number]: LockedArmor2Mod[] | undefined;
+export type LockedModMap = {
+  [plugCategoryHash: number]: LockedMod[] | undefined;
 };
 
 /**

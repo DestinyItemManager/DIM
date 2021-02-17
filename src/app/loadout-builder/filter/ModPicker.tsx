@@ -23,7 +23,7 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { knownModPlugCategoryHashes, LockedArmor2Mod, LockedArmor2ModMap } from '../types';
+import { knownModPlugCategoryHashes, LockedMod, LockedModMap } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerHeader from './ModPickerHeader';
@@ -33,14 +33,14 @@ import PickerSectionMods from './PickerSectionMods';
 let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<LockedArmor2Mod>(
+const sortMods = chainComparator<LockedMod>(
   compareBy((l) => l.modDef.plug.energyCost?.energyType),
   compareBy((l) => l.modDef.plug.energyCost?.energyCost),
   compareBy((l) => l.modDef.displayProperties.name)
 );
 
 interface ProvidedProps {
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   classType: DestinyClass;
   initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -52,7 +52,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: LockedArmor2Mod[];
+  mods: LockedMod[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -109,7 +109,7 @@ function mapStateToProps() {
           }
         }
 
-        const transformedMods: LockedArmor2Mod[] = [];
+        const transformedMods: LockedMod[] = [];
 
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
@@ -157,7 +157,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
+  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -167,20 +167,20 @@ function ModPicker({
   }, [isPhonePortrait, filterInput]);
 
   const onModSelected = useCallback(
-    (mod: LockedArmor2Mod) => {
+    (mod: LockedMod) => {
       const { plugCategoryHash } = mod.modDef.plug;
-      setLockedArmor2ModsInternal((oldState) => ({
+      setLockedModsInternal((oldState) => ({
         ...oldState,
         [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod, key: modKey++ }],
       }));
     },
-    [setLockedArmor2ModsInternal]
+    [setLockedModsInternal]
   );
 
   const onModRemoved = useCallback(
-    (mod: LockedArmor2Mod) => {
+    (mod: LockedMod) => {
       const { plugCategoryHash } = mod.modDef.plug;
-      setLockedArmor2ModsInternal((oldState) => {
+      setLockedModsInternal((oldState) => {
         const firstIndex =
           oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) ?? -1;
 
@@ -196,7 +196,7 @@ function ModPicker({
         return oldState;
       });
     },
-    [setLockedArmor2ModsInternal]
+    [setLockedModsInternal]
   );
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
@@ -242,7 +242,7 @@ function ModPicker({
 
   // Group mods by itemTypeDisplayName as there are two hashes for charged with light mods
   const groupedModsByItemTypeDisplayName: {
-    [title: string]: { title: string; mods: LockedArmor2Mod[]; plugCategoryHashes: number[] };
+    [title: string]: { title: string; mods: LockedMod[]; plugCategoryHashes: number[] };
   } = {};
 
   // We use this to sort the final groups so that it goes general, helmet, ..., classitem, raid, others.

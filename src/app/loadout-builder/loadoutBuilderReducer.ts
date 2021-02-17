@@ -4,9 +4,9 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { useReducer } from 'react';
 import {
   ArmorSet,
-  LockedArmor2ModMap,
   LockedItemType,
   LockedMap,
+  LockedModMap,
   MinMaxIgnored,
   StatTypes,
 } from './types';
@@ -14,7 +14,7 @@ import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
@@ -87,7 +87,7 @@ export type LoadoutBuilderAction =
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedArmor2ModMap }
+  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedModMap }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }

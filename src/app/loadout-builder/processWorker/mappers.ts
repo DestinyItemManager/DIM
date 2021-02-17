@@ -7,8 +7,8 @@ import {
 import {
   ArmorSet,
   knownModPlugCategoryHashes,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
+  LockedMod,
+  LockedModMap,
   raidPlugCategoryHashes,
   statHashToType,
   StatTypes,
@@ -28,7 +28,7 @@ function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
   };
 }
 
-export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
+export function mapArmor2ModToProcessMod(mod: LockedMod): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.modDef.hash,
     plugCategoryHash: mod.modDef.plug.plugCategoryHash,
@@ -54,7 +54,7 @@ export function mapArmor2ModToProcessMod(mod: LockedArmor2Mod): ProcessMod {
  * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
  */
-export function getTotalModStatChanges(lockedArmor2Mods: LockedArmor2ModMap) {
+export function getTotalModStatChanges(lockedArmor2Mods: LockedModMap) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -88,10 +88,7 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
   };
 }
 
-export function mapDimItemToProcessItem(
-  dimItem: DimItem,
-  modsForSlot?: LockedArmor2Mod[]
-): ProcessItem {
+export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMod[]): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};

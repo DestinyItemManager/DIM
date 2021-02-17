@@ -1,34 +1,15 @@
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
-  DestinyItemSubType,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { LockedArmor2Mod, LockedItemType, StatTypes, statValues } from './types';
+import { LockedItemType, LockedMod, statValues } from './types';
 
 /**
- * Plug item hashes that should be excluded from the list of selectable perks.
- */
-const unwantedSockets = new Set([
-  PlugCategoryHashes.Mods, // Mobility, Restorative, and Resilience perks
-  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance4, // Void damage resistance
-  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance2, // Arc damage resistance
-  PlugCategoryHashes.V400PlugsArmorMasterworksStatResistance3, // Solar damage resistance
-  PlugCategoryHashes.Shader,
-  PlugCategoryHashes.ArmorSkinsEmpty, // Ornaments
-  PlugCategoryHashes.PlugsMasterworksArmorDefault, // Empty masterwork slot
-]);
-const unwantedCategories = new Set([
-  ItemCategoryHashes.ArmorModsOrnaments,
-  ItemCategoryHashes.ArmorModsGlowEffects,
-  ItemCategoryHashes.GhostModsProjections,
-]);
-
-/**
- *  Filter out plugs that we don't want to show in the perk picker.
+ *  Filter out plugs that we don't want to show in the perk picker. We only want exotic perks.
  */
 export function filterPlugs(socket: DimSocket) {
   if (!socket.plugged) {
@@ -40,62 +21,10 @@ export function filterPlugs(socket: DimSocket) {
     return false;
   }
 
-  // Armor 2.0 mods
-  if (socket.plugged.plugDef.collectibleHash) {
-    return false;
-  }
-
-  if (
-    plugItem.itemSubType === DestinyItemSubType.Ornament ||
-    plugItem.itemSubType === DestinyItemSubType.Shader
-  ) {
-    return false;
-  }
-
-  // Remove unwanted sockets by category hash
-  if (
-    unwantedSockets.has(plugItem.plug.plugCategoryHash) ||
-    plugItem.itemCategoryHashes?.some((h) => unwantedCategories.has(h))
-  ) {
-    return false;
-  }
-
-  // Remove Archetype/Inherit perk
-  if (
+  return (
     plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-    plugItem.inventory!.tierType !== TierType.Exotic // keep exotics
-  ) {
-    return false;
-  }
-
-  // Remove empty mod slots
-  if (
-    plugItem.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsUniversal &&
-    plugItem.inventory!.tierType === TierType.Basic
-  ) {
-    return false;
-  }
-
-  // Remove masterwork mods and energy mods
-  if (plugItem.plug.plugCategoryIdentifier.match(/masterworks/)) {
-    return false;
-  }
-
-  // Remove empty sockets, which are common tier
-  if (plugItem.inventory!.tierType === TierType.Common) {
-    return false;
-  }
-
-  // Only real mods
-  if (
-    !socket.isPerk &&
-    (plugItem.inventory!.bucketTypeHash !== BucketHashes.Modifications ||
-      !plugItem.inventory!.recoveryBucketTypeHash)
-  ) {
-    return false;
-  }
-
-  return true;
+    plugItem.inventory!.tierType === TierType.Exotic
+  );
 }
 
 /**
@@ -210,10 +139,14 @@ export function getFilteredPerksAndPlugSets(
   return { filteredPlugSetHashes, filteredPerks };
 }
 
-/** Whether this item is eligible for being in loadout builder */
+/** Whether this item is eligible for being in loadout builder. Now only armour 2.0 and only items that have all the stats. */
 export function isLoadoutBuilderItem(item: DimItem) {
   // Armor and Ghosts
-  return item.bucket.inArmor;
+  return (
+    item.bucket.inArmor &&
+    item.energy &&
+    statValues.every((statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash))
+  );
 }
 
 export function statTier(stat: number) {
@@ -221,71 +154,10 @@ export function statTier(stat: number) {
 }
 
 /**
- * This figures out which perks need to be selected on specific armor 1.0 items to achieve the desired stat mix.
- * process#generateMixesFromPerksOrStats uses a very similar algorithm to generate the stat mixes initially so the
- * two should be kept in sync if this changes.
- */
-export function generateMixesFromPerks(
-  item: DimItem,
-  chosenValues: number[],
-  statOrder: StatTypes[]
-): DimPlug[] {
-  const stats = item.stats;
-
-  if (!stats || stats.length < 3) {
-    return [];
-  }
-
-  const mixes: number[][] = [getOrderedStatValues(item, statOrder)];
-
-  const altPerks: (DimPlug[] | null)[] = [null];
-
-  if (stats && item.sockets && !item.energy) {
-    for (const socket of item.sockets.allSockets) {
-      if (socket.plugOptions.length > 1) {
-        for (const plug of socket.plugOptions) {
-          if (plug !== socket.plugged && plug.stats) {
-            // Stats without the currently selected plug, with the optional plug
-            const mixNum = mixes.length;
-            for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
-              const existingMix = mixes[mixIndex];
-              const optionStat = statValues.map((statHash, index) => {
-                const currentPlugValue =
-                  (socket.plugged?.stats && socket.plugged.stats[statHash]) ?? 0;
-                const optionPlugValue = plug.stats?.[statHash] || 0;
-                return existingMix[index] - currentPlugValue + optionPlugValue;
-              });
-
-              const existingMixAlts = altPerks[mixIndex];
-              const plugs = existingMixAlts ? [...existingMixAlts, plug] : [plug];
-              altPerks.push(plugs);
-              if (plugs && optionStat.every((val, index) => val === chosenValues[index])) {
-                return plugs;
-              }
-              mixes.push(optionStat);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return [];
-}
-
-/**
- * This gets stat values for an item ordered by the statOrder array.
- */
-function getOrderedStatValues(item: DimItem, statOrder: StatTypes[]) {
-  const stats = _.keyBy(item.stats, (stat) => stat.statHash);
-  return statOrder.map((statHash) => stats[statHash]?.value || 0);
-}
-
-/**
- * Checks to see if some mod in a collection of LockedArmor2Mod or LockedMod,
+ * Checks to see if some mod in a collection of LockedMod or LockedMod,
  * has an elemental (non-Any) energy requirement
  */
-export function someModHasEnergyRequirement(mods: LockedArmor2Mod[]) {
+export function someModHasEnergyRequirement(mods: LockedMod[]) {
   return mods.some(
     (mod) =>
       !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any

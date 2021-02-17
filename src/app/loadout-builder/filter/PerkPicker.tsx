@@ -71,7 +71,7 @@ function mapStateToProps() {
         if (!perks[item.bucket.hash]) {
           perks[item.bucket.hash] = [];
         }
-        // build the filtered unique perks item picker
+        // get all the exotic perks
         item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
           socket.plugOptions.forEach((option) => {
             perks[item.bucket.hash].push(option.plugDef);
@@ -151,45 +151,9 @@ function PerkPicker({
     onClose();
   };
 
-  const scrollToBucket = (bucketId: number) => {
-    const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
-    elem?.scrollIntoView();
-  };
-
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
-  const header = (
-    <div>
-      <h1>{t('LB.ChooseAPerk')}</h1>
-      <div className="item-picker-search">
-        <div className="search-filter" role="search">
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            autoFocus={autoFocus}
-            placeholder="Search perk name and description"
-            type="text"
-            name="filter"
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
-        </div>
-      </div>
-      <div className={styles.tabs}>
-        {order.map((bucketId) => (
-          <div key={bucketId} className={styles.tab} onClick={() => scrollToBucket(bucketId)}>
-            <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
-            {buckets.byHash[bucketId].name}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   // Only some languages effectively use the \b regex word boundary
   const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -262,7 +226,28 @@ function PerkPicker({
   return (
     <Sheet
       onClose={onClose}
-      header={header}
+      header={
+        <div>
+          <h1>{t('LB.ChooseAPerk')}</h1>
+          <div className="item-picker-search">
+            <div className="search-filter" role="search">
+              <AppIcon icon={searchIcon} className="search-bar-icon" />
+              <input
+                className="filter-input"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoFocus={autoFocus}
+                placeholder="Search perk name and description"
+                type="text"
+                name="filter"
+                value={query}
+                onChange={(e) => setQuery(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+        </div>
+      }
       footer={footer}
       sheetClassName="item-picker"
       freezeInitialHeight={true}
