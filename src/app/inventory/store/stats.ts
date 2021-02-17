@@ -185,7 +185,7 @@ function buildClassItemStatsFromMods(
   }
 
   for (const socket of modSockets) {
-    if (socket.plugged?.enabled && socket?.plugged?.stats) {
+    if (socket.plugged?.enabled && socket.plugged.stats) {
       for (const statHash of armorStats) {
         const investmentStat = socket.plugged.plugDef.investmentStats.find(
           (s) => s.statTypeHash === statHash
