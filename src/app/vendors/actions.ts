@@ -1,5 +1,4 @@
 import { XurLocation, XurLocationResponse } from '@d2api/d2api-types';
-import { currentXur } from '@d2api/date';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
@@ -42,7 +41,6 @@ export function loadAllVendors(
 
       // If xur is a vendor, load their location
       if (
-        currentXur().start &&
         vendorsResponse.vendors.data &&
         Object.values(vendorsResponse.vendors.data).some((v) => v.vendorHash === VENDORS.XUR)
       ) {

@@ -1,3 +1,4 @@
+import { currentXur } from '@d2api/date';
 import CheckButton from 'app/dim-ui/CheckButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -180,6 +181,19 @@ function Vendors({
   }
   if (vendorGroups && searchQuery.length) {
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+  }
+
+  if (
+    currentXur().start === undefined &&
+    vendorGroups &&
+    Object.values(vendorGroups).some((v) => v.def.hash === 3227191227)
+  ) {
+    const index = vendorGroups
+      .map(function (v) {
+        return v.def.hash;
+      })
+      .indexOf(3227191227);
+    delete vendorGroups[index];
   }
 
   const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
