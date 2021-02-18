@@ -15,7 +15,7 @@ import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
-  LockedArmor2ProcessMods,
+  LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
@@ -96,7 +96,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   modStatTotals: { [stat in StatTypes]: number },
-  lockedArmor2ModMap: LockedArmor2ProcessMods,
+  lockedModMap: LockedProcessMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [stat in StatTypes]: MinMaxIgnored },
@@ -183,14 +183,14 @@ export function process(
   const statsCache: Record<string, number[]> = {};
 
   for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
-    statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
+    statsCache[item.id] = getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatValues);
   }
 
   let generalMods: ProcessMod[] = [];
   let otherMods: ProcessMod[] = [];
   let raidMods: ProcessMod[] = [];
 
-  for (const [plugCategoryHash, mods] of Object.entries(lockedArmor2ModMap)) {
+  for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
     const pch = Number(plugCategoryHash);
     if (pch === armor2PlugCategoryHashesByName.general) {
       generalMods = generalMods.concat(mods);
@@ -344,51 +344,6 @@ export function process(
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
-}
-
-const emptyStats: number[] = new Array(_.size(statHashes)).fill(0);
-
-/**
- * Generate all possible stat mixes this item can contribute from different perk options,
- * expressed as comma-separated strings in the same order as statHashes.
- */
-function getStatMix(item: ProcessItem, assumeMasterwork: boolean, orderedStatValues: number[]) {
-  const stats = item.stats;
-
-  if (!stats) {
-    return emptyStats;
-  }
-
-  const mixes: number[][] = [getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatValues)];
-
-  if (stats && item.sockets && item.energy) {
-    for (const socket of item.sockets.sockets) {
-      if (socket.plugOptions.length > 1) {
-        for (const plug of socket.plugOptions) {
-          if (plug !== socket.plug && plug.stats) {
-            // Stats without the currently selected plug, with the optional plug
-            const mixNum = mixes.length;
-            for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
-              const existingMix = mixes[mixIndex];
-              const optionStat = orderedStatValues.map((statHash, index) => {
-                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
-                const optionPlugValue = plug.stats?.[statHash] || 0;
-                return existingMix[index] - currentPlugValue + optionPlugValue;
-              });
-
-              mixes.push(optionStat);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if (mixes.length === 1) {
-    return mixes[0];
-  }
-  // return the mix with the higest total stat
-  return _.sortBy((mix) => _.sum(mix))[0];
 }
 
 /**

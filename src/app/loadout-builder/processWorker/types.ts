@@ -87,6 +87,6 @@ export interface ProcessMod {
   tag?: string;
 }
 
-export type LockedArmor2ProcessMods = {
+export type LockedProcessMods = {
   [plugCategoryHash: number]: ProcessMod[];
 };

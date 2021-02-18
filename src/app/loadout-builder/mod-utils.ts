@@ -9,8 +9,8 @@ import {
   bucketsToCategories,
   knownModPlugCategoryHashes,
   LockableBucketHashes,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
+  LockedMod,
+  LockedModMap,
   raidPlugCategoryHashes,
 } from './types';
 
@@ -19,7 +19,7 @@ import {
  *   1. The armour piece is Armour 2.0
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
-export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
+export const doEnergiesMatch = (mod: LockedMod, item: DimItem) =>
   item.energy &&
   (!mod.modDef.plug.energyCost ||
     mod.modDef.plug.energyCost.energyType === DestinyEnergyType.Any ||
@@ -33,7 +33,7 @@ export const doEnergiesMatch = (mod: LockedArmor2Mod, item: DimItem) =>
 function assignModsForSlot(
   item: DimItem,
   assignments: Record<string, number[]>,
-  mods?: LockedArmor2Mod[]
+  mods?: LockedMod[]
 ): void {
   if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.modDef.hash)];
@@ -47,12 +47,12 @@ function assignModsForSlot(
  */
 function assignSlotIndependantMods(
   setToMatch: ProcessItem[],
-  lockedArmor2Mods: LockedArmor2ModMap,
+  lockedArmor2Mods: LockedModMap,
   assignments: Record<string, number[]>
 ): void {
-  let generalMods: LockedArmor2Mod[] = [];
-  let otherMods: LockedArmor2Mod[] = [];
-  let raidMods: LockedArmor2Mod[] = [];
+  let generalMods: LockedMod[] = [];
+  let otherMods: LockedMod[] = [];
+  let raidMods: LockedMod[] = [];
 
   for (const [plugCategoryHashString, mods] of Object.entries(lockedArmor2Mods)) {
     const plugCategoryHash = Number(plugCategoryHashString);
@@ -92,8 +92,8 @@ function assignSlotIndependantMods(
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
-  lockedArmor2Mods: LockedArmor2ModMap
-): [Record<string, LockedArmor2Mod[]>, LockedArmor2Mod[]] {
+  lockedArmor2Mods: LockedModMap
+): [Record<string, LockedMod[]>, LockedMod[]] {
   const assignments: Record<string, number[]> = {};
 
   for (const item of setToMatch) {
@@ -117,18 +117,16 @@ export function assignModsToArmorSet(
   const modsByHash = _.groupBy(
     Object.values(lockedArmor2Mods)
       .flat()
-      .filter((x: LockedArmor2Mod | undefined): x is LockedArmor2Mod => Boolean(x)),
+      .filter((x: LockedMod | undefined): x is LockedMod => Boolean(x)),
     (mod) => mod.modDef.hash
   );
   const assignedMods = _.mapValues(assignments, (modHashes) =>
-    modHashes
-      .map((modHash) => modsByHash[modHash].pop())
-      .filter((x): x is LockedArmor2Mod => Boolean(x))
+    modHashes.map((modHash) => modsByHash[modHash].pop()).filter((x): x is LockedMod => Boolean(x))
   );
   const assigned = Object.values(assignedMods).flat();
   const unassignedMods = Object.values(lockedArmor2Mods)
     .flat()
-    .filter((unassign): unassign is LockedArmor2Mod =>
+    .filter((unassign): unassign is LockedMod =>
       Boolean(unassign && !assigned.some((assign) => assign.key === unassign.key))
     );
 

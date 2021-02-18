@@ -4,7 +4,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { LockedArmor2Mod } from '../types';
+import { LockedMod } from '../types';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -19,7 +19,7 @@ const undesireablePlugs = [
 
 interface Props {
   item: DimItem;
-  lockedMods?: LockedArmor2Mod[];
+  lockedMods?: LockedMod[];
   defs: D2ManifestDefinitions;
   onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
 }

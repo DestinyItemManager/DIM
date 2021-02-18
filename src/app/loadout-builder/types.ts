@@ -53,14 +53,14 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export interface LockedArmor2Mod {
+export interface LockedMod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
   key?: number;
   modDef: PluggableInventoryItemDefinition;
 }
 
-export type LockedArmor2ModMap = {
-  [plugCategoryHash: number]: LockedArmor2Mod[] | undefined;
+export type LockedModMap = {
+  [plugCategoryHash: number]: LockedMod[] | undefined;
 };
 
 /**
@@ -71,8 +71,6 @@ export interface ArmorSet {
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  readonly statChoices: readonly number[][];
   /** The maximum power loadout possible in this stat mix. */
   readonly maxPower: number;
 }

@@ -10,10 +10,10 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import ClosableContainer from '../ClosableContainer';
-import { LockedArmor2Mod, LockedItemType } from '../types';
+import { LockedItemType, LockedMod } from '../types';
 import styles from './SelectableBungieImage.m.scss';
 
-export function SelectableArmor2Mod({
+export function SelectableMod({
   mod,
   defs,
   selected,
@@ -21,12 +21,12 @@ export function SelectableArmor2Mod({
   onModSelected,
   onModRemoved,
 }: {
-  mod: LockedArmor2Mod;
+  mod: LockedMod;
   defs: D2ManifestDefinitions;
   selected: boolean;
   selectable: boolean;
-  onModSelected(mod: LockedArmor2Mod): void;
-  onModRemoved(mod: LockedArmor2Mod): void;
+  onModSelected(mod: LockedMod): void;
+  onModRemoved(mod: LockedMod): void;
 }) {
   const handleClick = () => {
     selectable && onModSelected(mod);

@@ -19,9 +19,9 @@ import {
   ArmorSet,
   bucketsToCategories,
   ItemsByBucket,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
   LockedMap,
+  LockedMod,
+  LockedModMap,
   MinMax,
   MinMaxIgnored,
   statHashes,
@@ -48,7 +48,7 @@ export function useProcess(
   selectedStoreId: string | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedArmor2ModMap: LockedArmor2ModMap,
+  lockedModMap: LockedModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
@@ -64,7 +64,7 @@ export function useProcess(
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
-    lockedArmor2ModMap,
+    lockedModMap,
     assumeMasterwork,
     statOrder,
     statFilters,
@@ -85,9 +85,9 @@ export function useProcess(
       currentCleanup: cleanup,
     });
 
-    const generalMods = lockedArmor2ModMap[armor2PlugCategoryHashesByName.general] || [];
+    const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
     const raidCombatAndLegacyMods = Object.entries(
-      lockedArmor2ModMap
+      lockedModMap
     ).flatMap(([plugCategoryHash, mods]) =>
       mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
@@ -111,7 +111,7 @@ export function useProcess(
 
         if (item) {
           processItems[key].push(
-            mapDimItemToProcessItem(item, lockedArmor2ModMap[bucketsToCategories[item.bucket.hash]])
+            mapDimItemToProcessItem(item, lockedModMap[bucketsToCategories[item.bucket.hash]])
           );
           itemsById[item.id] = group;
         }
@@ -119,7 +119,7 @@ export function useProcess(
     }
 
     const lockedProcessMods = _.mapValues(
-      lockedArmor2ModMap,
+      lockedModMap,
       (mods) => mods?.map((mod) => mapArmor2ModToProcessMod(mod)) || []
     );
 
@@ -127,7 +127,7 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedArmor2ModMap),
+        getTotalModStatChanges(lockedModMap),
         lockedProcessMods,
         assumeMasterwork,
         statOrder,
@@ -160,7 +160,7 @@ export function useProcess(
   }, [
     filteredItems,
     lockedItems,
-    lockedArmor2ModMap,
+    lockedModMap,
     assumeMasterwork,
     statOrder,
     statFilters,
@@ -180,7 +180,7 @@ export function useProcess(
 function useWorkerAndCleanup(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedArmor2ModMap: LockedArmor2ModMap,
+  lockedModMap: LockedModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored },
@@ -189,7 +189,7 @@ function useWorkerAndCleanup(
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
     lockedItems,
-    lockedArmor2ModMap,
+    lockedModMap,
     assumeMasterwork,
     statOrder,
     statFilters,
@@ -227,8 +227,8 @@ function groupItems(
   items: readonly DimItem[],
   statOrder: StatTypes[],
   assumeMasterwork: boolean,
-  generalMods: LockedArmor2Mod[],
-  raidCombatAndLegacyMods: LockedArmor2Mod[]
+  generalMods: LockedMod[],
+  raidCombatAndLegacyMods: LockedMod[]
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];

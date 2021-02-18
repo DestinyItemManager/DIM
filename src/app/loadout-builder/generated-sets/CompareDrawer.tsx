@@ -19,7 +19,7 @@ import { getTotalModStatChanges } from '../processWorker/mappers';
 import {
   ArmorSet,
   LockableBucketHashes,
-  LockedArmor2ModMap,
+  LockedModMap,
   statHashes,
   statKeys,
   StatTypes,
@@ -78,7 +78,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   defs: D2ManifestDefinitions;
   classType: DestinyClass;
   statOrder: StatTypes[];

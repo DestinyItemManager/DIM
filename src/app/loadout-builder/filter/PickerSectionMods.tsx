@@ -6,15 +6,15 @@ import {
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
-import { SelectableArmor2Mod } from '../locked-armor/SelectableBungieImage';
 import {
   knownModPlugCategoryHashes,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
+  LockedMod,
+  LockedModMap,
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from '../types';
 import styles from './PickerSection.m.scss';
+import { SelectableMod } from './SelectableBungieImage';
 
 /** Slot specific mods can have at most 2 mods. */
 const MAX_SLOT_SPECIFIC_MODS = 2;
@@ -31,12 +31,12 @@ export default function PickerSectionMods({
   onModRemoved,
 }: {
   defs: D2ManifestDefinitions;
-  mods: readonly LockedArmor2Mod[];
-  locked: LockedArmor2ModMap;
+  mods: readonly LockedMod[];
+  locked: LockedModMap;
   title: string;
   plugCategoryHashes: number[];
-  onModSelected(mod: LockedArmor2Mod);
-  onModRemoved(mod: LockedArmor2Mod);
+  onModSelected(mod: LockedMod);
+  onModRemoved(mod: LockedMod);
 }) {
   if (!mods.length) {
     return null;
@@ -46,7 +46,7 @@ export default function PickerSectionMods({
     _.intersection(slotSpecificPlugCategoryHashes, plugCategoryHashes).length
   );
 
-  let associatedLockedMods: LockedArmor2Mod[] = [];
+  let associatedLockedMods: LockedMod[] = [];
 
   if (
     isSlotSpecificCategory ||
@@ -71,7 +71,7 @@ export default function PickerSectionMods({
    * Figures out whether you should be able to select a mod. Different rules apply for slot specific
    * mods to raid/combat/legacy.
    */
-  const isModSelectable = (mod: LockedArmor2Mod) => {
+  const isModSelectable = (mod: LockedMod) => {
     if (isSlotSpecificCategory) {
       // Traction has no energy type so its basically Any energy and 0 cost
       const modCost = mod.modDef.plug.energyCost?.energyCost || 0;
@@ -100,7 +100,7 @@ export default function PickerSectionMods({
       <div className={styles.header}>{title}</div>
       <div className={styles.items}>
         {mods.map((item) => (
-          <SelectableArmor2Mod
+          <SelectableMod
             key={item.modDef.hash}
             defs={defs}
             selected={Boolean(

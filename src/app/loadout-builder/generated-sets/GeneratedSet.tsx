@@ -7,7 +7,7 @@ import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -22,7 +22,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -87,7 +87,7 @@ function GeneratedSet({
         />
       </div>
       <div className={styles.items}>
-        {set.armor.map((items, index) => (
+        {set.armor.map((items) => (
           <GeneratedSetItem
             key={items[0].index}
             item={items[0]}
@@ -95,9 +95,7 @@ function GeneratedSet({
             itemOptions={items}
             locked={lockedMap[items[0].bucket.hash]}
             lbDispatch={lbDispatch}
-            statValues={set.statChoices[index]}
             lockedMods={assignedMods[items[0].id]}
-            statOrder={statOrder}
           />
         ))}
         <GeneratedSetButtons

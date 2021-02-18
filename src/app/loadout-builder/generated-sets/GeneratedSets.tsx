@@ -14,7 +14,7 @@ import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } fr
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
@@ -29,7 +29,7 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
