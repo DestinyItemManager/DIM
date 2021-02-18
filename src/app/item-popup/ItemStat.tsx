@@ -262,6 +262,7 @@ function getNonReuseableModSockets(item: DimItem) {
 function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter(
     (socket) =>
+      socket.plugged?.enabled &&
       socket.plugged?.stats &&
       String(stat.statHash) in socket.plugged.stats &&
       isPlugStatActive(

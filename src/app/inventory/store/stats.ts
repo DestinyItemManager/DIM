@@ -185,7 +185,7 @@ function buildClassItemStatsFromMods(
   }
 
   for (const socket of modSockets) {
-    if (socket?.plugged?.stats) {
+    if (socket.plugged?.enabled && socket.plugged.stats) {
       for (const statHash of armorStats) {
         const investmentStat = socket.plugged.plugDef.investmentStats.find(
           (s) => s.statTypeHash === statHash
@@ -452,7 +452,7 @@ function buildLiveStats(
   let negativeModStatFound = false;
 
   for (const { plugged } of createdItem.sockets?.allSockets || []) {
-    if (plugged) {
+    if (plugged?.enabled) {
       for (const { isConditionallyActive, statTypeHash } of plugged.plugDef.investmentStats || []) {
         const plugStat = plugged.stats?.[statTypeHash] ?? 0;
         if (
