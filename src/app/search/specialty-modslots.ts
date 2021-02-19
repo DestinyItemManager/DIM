@@ -54,7 +54,7 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsSeasonV480]: 'warmindcell',
   [PlugCategoryHashes.EnhancementsSeasonV490]: 'chargedwithlight',
   [PlugCategoryHashes.EnhancementsRaidDescent]: 'deepstonecrypt',
-  [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
+  [PlugCategoryHashes.EnhancementsSeasonV500]: 'elementalwell',
 };
 
 const legacySocketTypeHashes = [
