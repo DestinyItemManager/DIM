@@ -244,10 +244,11 @@ function ModPicker({
   const groupHeaderOrder = [...knownModPlugCategoryHashes];
 
   for (const mod of queryFilteredMods) {
-    const title = mod.modDef.itemTypeDisplayName
-      .replaceAll(/armor/gi, '')
-      .replaceAll(/mod/gi, '')
-      .trim();
+    const title =
+      language === 'en'
+        ? mod.modDef.itemTypeDisplayName.replaceAll(/armor/gi, '').replaceAll(/mod/gi, '').trim()
+        : mod.modDef.itemTypeDisplayName;
+
     if (!groupedModsByItemTypeDisplayName[title]) {
       groupedModsByItemTypeDisplayName[title] = {
         title,
