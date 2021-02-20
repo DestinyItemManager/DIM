@@ -48,7 +48,7 @@
     "Progress": "Progreso",
     "Reputation": "Reputación",
     "Unknown": "Desconocido",
-    "Vault": "Bóveda",
+    "Vault": "Depósito",
     "Weapons": "Armas"
   },
   "BungieAlert": {
@@ -121,8 +121,8 @@
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
-    "D2Desc": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
-    "D2Desc_female": "DIM está impidiendo que los objetos se vayan al correo al asegurarse de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos a la bóveda para hacer espacio.",
+    "D2Desc": "DIM está impidiendo que los objetos se vayan a la Administración para asegurar de que siempre haya un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos al depósito para hacer espacio.",
+    "D2Desc_female": "DIM está impidiendo que los objetos se vayan a la Administración para asegurar de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos al depósito para hacer espacio.",
     "D2Desc_male": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
     "Desc": "DIM está moviendo Engramas y Lumen desde {{store}} al deposito y deja un espacio por tipo de objeto para prevenir que cualquier cosa se vaya al Administrador.",
     "Desc_female": "DIM está moviendo Engramas y Lumen desde {{store}} al deposito y deja un espacio por tipo de objeto para prevenir que cualquier cosa se vaya al Administrador.",
@@ -135,7 +135,7 @@
       "MakeRoom": "Mueva equipamiento para hacer espacio para recolectar objetos",
       "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en la bóveda para engramas."
     },
-    "OutOfRoom": "Ya no hay espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
+    "OutOfRoom": "Estás sin espacio para mover objetos fuera de {{character}}. ¡Es hora de tirar la basura!",
     "OutOfRoomTitle": "Sin espacio",
     "Stop": "Detener"
   },
@@ -208,9 +208,8 @@
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
     "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
     "Postmaster": "Objetos que están actualmente en la administración.",
-    "PowerKeywords": "Usa la palabra \"hardcap\" o \"softcap\" en vez de un número para referirte a los límites de poder de la temporada actual.",
-    "PowerLevel": "Muesta objetos basados en su nivel de poder. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Muestra objetos basados en el poder nivel máximo de poder en el que pueden ser infundidos. $t(Filter.PowerKeywords)",
+    "PowerLevel": "Muestra objetos basados en su nivel de poder. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Muestra objetos basados en el nivel máximo de poder al que se pueden infundir. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Muestra aventuras que tengan una recompensa poderosa.",
     "Quality": "Muestra objetos basado en el porcentaje de calidad de su estadística total. '{{percentage}}' es un sobrenombre de '{{quality}}'.",
     "RandomRoll": "Muestra objetos que sueltan rolls aleatorios.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM no puede equipar mods, debe hacerse dentro del juego.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
+    "NoSpace": "Estas sin espacio en el depósito y en cualquier otro personaje.",
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
     "NotificationMessage_female": "Equipando equipación con 1 objeto a {{store}}",
     "NotificationMessage_female_plural": "Equipando equipación con {{count}} objetos a {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Solo objetos equipables, materiales, y consumibles pueden añadirse a un equipamiento.",
     "OpenInOptimizer": "Abrir en el Optimizador de Equipaciones",
     "PullFromPostmaster": "Recoger de la Administración",
-    "PullFromPostmasterConfirm": "¿Traer {{count}} objeto de Administración? DIM podría hacer espacio en tu personaje moviendo un objeto al depósito o a otro personaje.",
-    "PullFromPostmasterConfirm_plural": "¿Traer {{count}} objetos de Administración? DIM podría hacer espacio en tu personaje moviendo objetos al depósito o a otros personajes.",
     "PullFromPostmasterError": "Imposible retirar de la Administración: {{error}}.",
+    "PullFromPostmasterGeneralError": "No se pudo extraer todos los elementos de la Administración.",
     "PullFromPostmasterNotification": "Extrayendo 1 objeto de la Administración a {{store}}.",
     "PullFromPostmasterNotification_female": "Extrayendo 1 objeto de la Administración a {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Extrayendo {{count}} objetos de la Adminstración a {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
+      "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
@@ -609,7 +609,7 @@
       "Untracked": "Sin Seguimiento"
     },
     "TriageTab": "Triaje",
-    "Vault": "Bóveda"
+    "Vault": "Depósito"
   },
   "Notes": {
     "Error": "¡Error! Máximo 120 caracteres por notas.",

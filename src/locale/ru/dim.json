@@ -135,7 +135,7 @@
       "MakeRoom": "Освобождать место для лута путём перемещения снаряжения",
       "Tooltip": "Если включено, DIM переместит оружие и броню, чтобы освободить место в Хранилище для Энграмм."
     },
-    "OutOfRoom": "Не хватает свободного места, чтобы переместить предметы с {{character}}. Самое время дешифровать несколько Энграмм и почистить всё от мусора!",
+    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "Недостаточно свободного места",
     "Stop": "Остановить"
   },
@@ -208,7 +208,6 @@
     "Perk": "С бонусом или модификатором содержащим введенный после фильтра текст в названии или описании. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "PerkName": "С бонусом или модификатором содержащим введенный после фильтра текст Только В Названии. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "Postmaster": "У Почтмейстера.",
-    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "(!) Временно сломан.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM не может устанавливать модификаторы, сделайте это в игре.",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
+    "NoSpace": "You're out of space in the vault and any other characters.",
     "NotificationMessage": "Отправка сняряжения с одним предметом в хранилище.",
     "NotificationMessage_female": "Экипировка снаряжения с одним предметом для {{store}}",
     "NotificationMessage_female_plural": "Экипировка снаряжения с {{count}} предметами для {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Только надеваемые предметы, материалы и расходные материалы могут быть добавлены к набору.",
     "OpenInOptimizer": "Открыть в Конструкторе Наборов",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
-    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
-    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Невозможно забрать у Почтмейстера: {{error}}.",
+    "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterNotification": "Получение 1 предмета почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_female": "Получение 1 предмета почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Получение {{count}} предметов почтмейстера в {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Передать {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Скрыть/Показать действия",

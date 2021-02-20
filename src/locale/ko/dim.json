@@ -135,7 +135,7 @@
       "MakeRoom": "장비를 이동시켜 아이템을 얻을 공간을 확보",
       "Tooltip": "체크하면 DIM이 금고 내 엔그램의 공간 확보를 위해서 무기와 방어구를 옮길 것입니다."
     },
-    "OutOfRoom": "{{character}}에게서 아이템을 이동할 공간이 없습니다. 엔그램을 해독하고 쓰레기를 청소할 때가 됐습니다!",
+    "OutOfRoom": "{{character}}에게서 아이템을 이동할 공간이 없습니다. 쓰레기를 청소할 때가 됐습니다!",
     "OutOfRoomTitle": "공간 부족",
     "Stop": "중지"
   },
@@ -208,7 +208,6 @@
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
-    "PowerKeywords": "현재 시즌의 전투력 제한 값 대신 hardcap이나 softcap 단어를 사용합니다.",
     "PowerLevel": "전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
     "PowerLimit": "최대로 주입할 수 있는 전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
     "PowerfulReward": "강력한 보상을 주는 목표 표시",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM에서 개조 부품을 장착할 수 없으며, 반드시 게임 내에서 해야 됩니다.",
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
+    "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
     "NotificationMessage": "1개의 아이템이 포함된 로드아웃을 금고로 이동하였습니다.",
     "NotificationMessage_female": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 장착하였습니다.",
     "NotificationMessage_female_plural": "{{count}}개의 아이템이 포함된 로드아웃을 {{store}}에게 장착하였습니다.",
@@ -519,9 +519,8 @@
     "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소모품들만이 로드아웃에 추가될 수 있습니다.",
     "OpenInOptimizer": "로드아웃 최적화에서 열기",
     "PullFromPostmaster": "우편 담당자에게서 수령",
-    "PullFromPostmasterConfirm": "우편 담당자에게서 {{count}}개의 아이템을 가져오시겠습니까? DIM이 캐릭터의 소지품에 공간을 만들기 위해 아이템을 금고나 다른 캐릭터로 옮길 수 있습니다.",
-    "PullFromPostmasterConfirm_plural": "우편 담당자에게서 {{count}}개의 아이템을 가져오시겠습니까? DIM이 캐릭터의 소지품에 공간을 만들기 위해 아이템을 금고나 다른 캐릭터로 옮길 수 있습니다.",
     "PullFromPostmasterError": "우편 담당자로부터 가져올 수 없습니다: {{error}}",
+    "PullFromPostmasterGeneralError": "우편 담당자에게서 모든 아이템을 가져올 수 없습니다.",
     "PullFromPostmasterNotification": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_female": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_female_plural": "{{count}}개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
@@ -599,6 +598,7 @@
     "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "아이템 액션 확장 또는 축소",
@@ -722,7 +722,7 @@
     "CsvImport": "CSV 가져오기",
     "CustomStatDesc": "방어구 능력치를 선택하면 아이템 팝업, 정리 도구, 비교에서 표시되는 사용자 정의 총합을 만들 수 있습니다. stat:custom:>=30로 검색하세요.",
     "Data": "스프레드시트",
-    "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
+    "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트가 흐려지지 않고 가장 선명하게 보입니다.",
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
     "ExpandSingleCharacter": "모든 캐릭터 표시",

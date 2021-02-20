@@ -135,7 +135,7 @@
       "MakeRoom": "Haz espacio para coger objetos moviendo el equipamiento",
       "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en el depósito para Engramas."
     },
-    "OutOfRoom": "Te has quedado sin espacio para mover objetos fuera de tu {{character}}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
+    "OutOfRoom": "Te has quedado sin espacio para mover objetos fuera de tu {{character}}. ¡Es momento de limpiar la basura!",
     "OutOfRoomTitle": "Sin espacio",
     "Stop": "Detener"
   },
@@ -208,7 +208,6 @@
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
     "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
     "Postmaster": "Objetos que están actualmente en la Administración.",
-    "PowerKeywords": "Usa la palabra \"hardcap\" o \"softcap\" en vez de un número para referirte a los límites de poder de la temporada actual.",
     "PowerLevel": "Muesta objetos basados en su nivel de poder. $t(Filter.PowerKeywords)",
     "PowerLimit": "Muestra objetos basados en el poder nivel máximo de poder en el que pueden ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Muestra aventuras que tengan una recompensa poderosa.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM no puede equipar modificadores, debe ser hecho dentro del juego.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
+    "NoSpace": "Te has quedado sin espacio en tu depósito o cualquiera de tus personajes.",
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
     "NotificationMessage_female": "Equipando equipación con 1 objeto a {{store}}",
     "NotificationMessage_female_plural": "Equipando equipación con {{count}} objetos a {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Solo objetos equipables, materiales y consumibles pueden añadirse a una configuración.",
     "OpenInOptimizer": "Abrir en el Optimizador de Equipaciones",
     "PullFromPostmaster": "Recoger de Administración",
-    "PullFromPostmasterConfirm": "¿Traer {{count}} objeto de Administración? DIM podría hacer espacio en tu personaje moviendo un objeto al depósito o a otro personaje.",
-    "PullFromPostmasterConfirm_plural": "¿Traer {{count}} objetos de Administración? DIM podría hacer espacio en tu personaje moviendo objetos al depósito o a otros personajes.",
     "PullFromPostmasterError": "No se pudo extraer de Administración: {{error}}.",
+    "PullFromPostmasterGeneralError": "No se pueden extraer todos los objetos de Administración.",
     "PullFromPostmasterNotification": "Extrayendo 1 objeto de Administración a {{store}}.",
     "PullFromPostmasterNotification_female": "Extrayendo 1 objeto de Administración a {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Extrayendo {{count}} objetos de Administración a {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
       "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
+      "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",

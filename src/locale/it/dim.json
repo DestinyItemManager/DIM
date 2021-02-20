@@ -135,7 +135,7 @@
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
-    "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
+    "OutOfRoom": "Non hai più spazio per spostare oggetti da {{character}}. È il momento di fare pulizia!",
     "OutOfRoomTitle": "Spazio esaurito",
     "Stop": "Stop"
   },
@@ -208,7 +208,6 @@
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
     "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
-    "PowerKeywords": "Utilizza le parole chiave \"softcap\" o \"hardcap\" invece di un numero per riferirti ai livelli limite della stagione corrente.",
     "PowerLevel": "Mostra gli oggetti in base al loro livello Potere. $t(Filter.PowerKeywords)",
     "PowerLimit": "Mostra gli oggetti basandosi sul livello Potere massimo al quale possono essere infusi. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Mostra gli incarichi che portano ad una ricompensa potente.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
+    "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
     "NotificationMessage_female": "Equipaggiamento loadout di 1 oggetto su {{store}}",
     "NotificationMessage_female_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
     "OpenInOptimizer": "Apri in Ottimizzatore Loadout",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
-    "PullFromPostmasterConfirm": "Ritirare {{count}} oggetto dall'Amministratrice? DIM potrebbe fargli spazio spostando un altro oggetto nel deposito o su un altro personaggio.",
-    "PullFromPostmasterConfirm_plural": "Ritirare {{count}} oggetti dall'Amministratrice? DIM potrebbe fargli spazio spostando altri oggetti nel deposito o su un altro personaggio.",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
+    "PullFromPostmasterGeneralError": "Impossibile spostare tutti gli oggetti dall'Amministratrice.",
     "PullFromPostmasterNotification": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
+      "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",

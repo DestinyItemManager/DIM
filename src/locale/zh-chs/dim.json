@@ -135,7 +135,7 @@
       "MakeRoom": "移动装备腾出空间以便拾取物品",
       "Tooltip": "如果勾选，DIM将在保险库中移动武器和防具来给记忆水晶腾出空间。"
     },
-    "OutOfRoom": "您的{{character}} 角色已经没有空间了。是时候来解锁一些记忆水晶和清理一些不必要的物品！",
+    "OutOfRoom": "你的空间不足，无法再为{{character}}腾出空间了。该清理垃圾装备了！",
     "OutOfRoomTitle": "空间不足",
     "Stop": "停止"
   },
@@ -208,9 +208,8 @@
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "Postmaster": "目前在邮政官处的物品.",
-    "PowerKeywords": "Use the hardcap or softcap keyword instead of a number to refer to the current season's power limits.",
-    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
+    "PowerLevel": "按能量等级显示物品。$t(Filter.PowerKeywords)",
+    "PowerLimit": "按可被灌注达到的最高能量等级显示物品。$t(Filter.PowerKeywords)",
     "PowerfulReward": "显示提供强力奖励的追猎目标。",
     "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
     "RandomRoll": "显示可以随机特性掉落的物品",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM 无法装备模组，必须在游戏中完成。",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
     "NoExotics": "没有记忆水晶可以转移.",
+    "NoSpace": "你的保险库和其他角色均已满。",
     "NotificationMessage": "正在将包含1件物品的配装转移到保险柜",
     "NotificationMessage_female": "正在为{{store}} 穿戴1件物品的配装",
     "NotificationMessage_female_plural": "正在为{{store}} 穿戴{{count}} 件物品的配装",
@@ -519,9 +519,8 @@
     "OnlyItems": "只有可装备物品,材料和消耗品才可以加载.",
     "OpenInOptimizer": "在配装优化器中打开",
     "PullFromPostmaster": "从邮政官处取回物品",
-    "PullFromPostmasterConfirm": "从邮政官拉取 {{count}} 个物品吗？DIM 可能会把你角色的一个物品移到保险库或另一角色来腾出空间。",
-    "PullFromPostmasterConfirm_plural": "从邮政官拉取 {{count}} 个物品吗？DIM 可能会把你角色的物品移到保险库或其他角色来腾出空间。",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
+    "PullFromPostmasterGeneralError": "无法从邮政官拉取所有物品。",
     "PullFromPostmasterNotification": "正在从邮政官处取回1项物品至{{store}}.",
     "PullFromPostmasterNotification_female": "正在从邮政官处取回1项物品至{{store}}.",
     "PullFromPostmasterNotification_female_plural": "正在从邮政官处取回{{count}} 项物品至{{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "展开或折叠物品操作",

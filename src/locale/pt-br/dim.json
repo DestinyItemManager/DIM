@@ -135,7 +135,7 @@
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
-    "OutOfRoom": "Você está sem espaço para mover itens do {{character}}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
+    "OutOfRoom": "Você está sem espaço para mover itens de {{character}}. Hora de limpar o lixo!",
     "OutOfRoomTitle": "Sem espaço",
     "Stop": "Parar"
   },
@@ -208,7 +208,6 @@
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
     "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
-    "PowerKeywords": "Use hardcap ou softcap como palavra-chave ao invés de um número para se referir aos limites de poder da temporada atual.",
     "PowerLevel": "Exibe itens baseados em seu nível de poder. $t(Filter.PowerKeywords)",
     "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Exibe buscas que produzem uma recompensa poderosa.",
@@ -509,6 +508,7 @@
     "ModsInfo": "Mods devem ser equipados diretamente no jogo, uma vez que o DIM não pode de fazer isso.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
+    "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
     "NotificationMessage": "Enviando set com um item para o cofre.",
     "NotificationMessage_female": "Equipando set com um item em sua {{store}}",
     "NotificationMessage_female_plural": "Equipando set com {{count}} itens em sua {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "OpenInOptimizer": "Abrir no Otimizador de Set",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
-    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
-    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
+    "PullFromPostmasterGeneralError": "Não foi possível puxar todos os itens do Chefe do Correio.",
     "PullFromPostmasterNotification": "Movido um item do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterNotification_female": "Movido um item do Chefe do Correio para sua {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Movido {{count}} itens do Chefe do Correio para sua {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Etapa {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Expandir ou recolher ações do item",

@@ -135,7 +135,7 @@
       "MakeRoom": "Schaffe Platz, durch Verschieben von Ausrüstung, um Gegenstände aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
-    "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
+    "OutOfRoom": "Du hast keinen Platz, um Items weg von {{character}} zu verschieben. Es ist Zeit den Müll wegzuschmeißen!",
     "OutOfRoomTitle": "Kein Platz mehr",
     "Stop": "Halt"
   },
@@ -208,7 +208,6 @@
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
-    "PowerKeywords": "Verwende das Hardcap oder Softcap Stichwort statt einer Zahl, um auf das Powerlevel der aktuellen Saison zu verweisen.",
     "PowerLevel": "Zeigt Gegenstände basierend auf ihrem Powerlevel an. $t(Filter.PowerKeywords)",
     "PowerLimit": "Zeigt Gegenstände basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Zeigt Jagden welche eine mächtige Belohnung hervorbringen.",
@@ -509,6 +508,7 @@
     "ModsInfo": "DIM kann keine Mods ausstatten, das muss im Spiel geschehen.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
+    "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
     "NotificationMessage_female": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
     "NotificationMessage_female_plural": "Übertrage Ausrüstung mit {{count}} Gegenständen auf {{store}}",
@@ -519,9 +519,8 @@
     "OnlyItems": "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchs-Gegenstände zu einer Ausrüstung hinzugefügt werden.",
     "OpenInOptimizer": "Im Ausrüstungs-Optimierer öffnen",
     "PullFromPostmaster": "Poststelle einsammeln",
-    "PullFromPostmasterConfirm": "Pull {{count}} item from the Postmaster? DIM may make space on your character by moving an item to the vault or another character.",
-    "PullFromPostmasterConfirm_plural": "Pull {{count}} items from the Postmaster? DIM may make space on your character by moving items to the vault or other characters.",
     "PullFromPostmasterError": "Abrufen von Poststelle nicht möglich: {{error}}.",
+    "PullFromPostmasterGeneralError": "Nicht in der Lage, alle Elemente aus der Poststelle zu ziehen.",
     "PullFromPostmasterNotification": "Übertrage 1 Poststellen Gegenstand auf {{store}}.",
     "PullFromPostmasterNotification_female": "Hole 1 Poststellen Item für {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Hole {{count}} Poststellen Items für {{store}}.",
@@ -599,6 +598,7 @@
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Schritt {{questStepNum}} von {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",
