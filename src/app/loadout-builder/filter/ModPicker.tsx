@@ -1,4 +1,3 @@
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
@@ -10,9 +9,10 @@ import {
 } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
+import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -25,36 +25,25 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import {
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
-  ModPickerCategories,
-  ModPickerCategory,
-} from '../types';
-import {
-  armor2ModPlugCategoriesTitles,
-  getModPickerCategoryFromPlugCategoryHash,
-  isLoadoutBuilderItem,
-} from '../utils';
+import { knownModPlugCategoryHashes, LockedMod, LockedModMap } from '../types';
+import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
-import ModPickerHeader from './ModPickerHeader';
 import PickerSectionMods from './PickerSectionMods';
 
 /** Used for generating the key attribute of the lockedArmor2Mods */
 let modKey = 0;
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<LockedArmor2Mod>(
+const sortMods = chainComparator<LockedMod>(
   compareBy((l) => l.modDef.plug.energyCost?.energyType),
   compareBy((l) => l.modDef.plug.energyCost?.energyCost),
   compareBy((l) => l.modDef.displayProperties.name)
 );
 
 interface ProvidedProps {
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   classType: DestinyClass;
   initialQuery?: string;
-  filterLegacy?: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -64,7 +53,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: LockedArmor2Mod[];
+  mods: LockedMod[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -121,7 +110,7 @@ function mapStateToProps() {
           }
         }
 
-        const transformedMods: LockedArmor2Mod[] = [];
+        const transformedMods: LockedMod[] = [];
 
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
@@ -129,13 +118,13 @@ function mapStateToProps() {
           if (
             isPluggableItem(def) &&
             isArmor2Mod(def) &&
-            def.plug.insertionMaterialRequirementHash !== 0
+            // Filters out mods that are deprecated.
+            (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
+            // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
+            // My investigation showed that only classified items had this being undefined.
+            def.itemTypeDisplayName !== undefined
           ) {
-            const category = getModPickerCategoryFromPlugCategoryHash(def.plug.plugCategoryHash);
-
-            if (category) {
-              transformedMods.push({ modDef: def, category });
-            }
+            transformedMods.push({ modDef: def });
           }
         }
 
@@ -165,12 +154,11 @@ function ModPicker({
   isPhonePortrait,
   lockedArmor2Mods,
   initialQuery,
-  filterLegacy,
   lbDispatch,
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedArmor2ModsInternal, setLockedArmor2ModsInternal] = useState(copy(lockedArmor2Mods));
+  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(copy(lockedArmor2Mods));
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -180,35 +168,36 @@ function ModPicker({
   }, [isPhonePortrait, filterInput]);
 
   const onModSelected = useCallback(
-    (mod: LockedArmor2Mod) => {
-      setLockedArmor2ModsInternal((oldState) => ({
+    (mod: LockedMod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
+      setLockedModsInternal((oldState) => ({
         ...oldState,
-        [mod.category]: [...oldState[mod.category], { ...mod, key: modKey++ }],
+        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod, key: modKey++ }],
       }));
     },
-    [setLockedArmor2ModsInternal]
+    [setLockedModsInternal]
   );
 
   const onModRemoved = useCallback(
-    (mod: LockedArmor2Mod) => {
-      setLockedArmor2ModsInternal((oldState) => {
-        const firstIndex = oldState[mod.category].findIndex(
-          (li) => li.modDef.hash === mod.modDef.hash
-        );
+    (mod: LockedMod) => {
+      const { plugCategoryHash } = mod.modDef.plug;
+      setLockedModsInternal((oldState) => {
+        const firstIndex =
+          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) ?? -1;
 
         if (firstIndex >= 0) {
-          const newState = [...oldState[mod.category]];
+          const newState = [...(oldState[plugCategoryHash] || [])];
           newState.splice(firstIndex, 1);
           return {
             ...oldState,
-            [mod.category]: newState,
+            [plugCategoryHash]: newState,
           };
         }
 
         return oldState;
       });
     },
-    [setLockedArmor2ModsInternal]
+    [setLockedModsInternal]
   );
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
@@ -220,17 +209,6 @@ function ModPicker({
     onClose();
   };
 
-  const scrollToBucket = (categoryOrSeasonal: number | string) => {
-    const elementId = `mod-picker-section-${categoryOrSeasonal}`;
-    const elem = document.getElementById(elementId)!;
-    elem?.scrollIntoView();
-  };
-
-  const order = Object.values(ModPickerCategories).map((category) => ({
-    category,
-    translatedName: t(armor2ModPlugCategoriesTitles[category]),
-  }));
-
   const queryFilteredMods = useMemo(() => {
     // Only some languages effectively use the \b regex word boundary
     const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -239,52 +217,76 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            // TODO I am not thrilled about this filter legacy thing but it will stop
-            // legacy mods being shown when you click on a combat mod socket. Lets aim to
-            // get proper search in here at some point.
-            (!filterLegacy ||
-              combatCompatiblePlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)) &&
-            (regexp.test(mod.modDef.displayProperties.name) ||
-              regexp.test(mod.modDef.displayProperties.description) ||
-              regexp.test(mod.modDef.itemTypeDisplayName) ||
-              regexp.test(t(armor2ModPlugCategoriesTitles[mod.category])) ||
-              mod.modDef.perks.some((perk) => {
-                const perkDef = defs.SandboxPerk.get(perk.perkHash);
-                return (
-                  perkDef &&
-                  (regexp.test(perkDef.displayProperties.name) ||
-                    regexp.test(perkDef.displayProperties.description) ||
-                    regexp.test(perk.requirementDisplayString))
-                );
-              }))
+            regexp.test(mod.modDef.displayProperties.name) ||
+            regexp.test(mod.modDef.displayProperties.description) ||
+            regexp.test(mod.modDef.itemTypeDisplayName) ||
+            (query.startsWith('plugCategoryHash:in:') &&
+              query.includes(`${mod.modDef.plug.plugCategoryHash}`)) ||
+            mod.modDef.perks.some((perk) => {
+              const perkDef = defs.SandboxPerk.get(perk.perkHash);
+              return (
+                perkDef &&
+                (regexp.test(perkDef.displayProperties.name) ||
+                  regexp.test(perkDef.displayProperties.description) ||
+                  regexp.test(perk.requirementDisplayString))
+              );
+            })
         )
       : mods;
-  }, [language, query, mods, defs.SandboxPerk, filterLegacy]);
+  }, [language, query, mods, defs.SandboxPerk]);
 
-  const modsByCategory = useMemo(() => {
-    const rtn: { [T in ModPickerCategory]: LockedArmor2Mod[] } = {
-      [ModPickerCategories.general]: [],
-      [ModPickerCategories.helmet]: [],
-      [ModPickerCategories.gauntlets]: [],
-      [ModPickerCategories.chest]: [],
-      [ModPickerCategories.leg]: [],
-      [ModPickerCategories.classitem]: [],
-      [ModPickerCategories.other]: [],
-      [ModPickerCategories.raid]: [],
-    };
+  // Group mods by itemTypeDisplayName as there are two hashes for charged with light mods
+  const groupedModsByItemTypeDisplayName: {
+    [title: string]: { title: string; mods: LockedMod[]; plugCategoryHashes: number[] };
+  } = {};
 
-    for (const mod of queryFilteredMods) {
-      rtn[mod.category].push(mod);
+  // We use this to sort the final groups so that it goes general, helmet, ..., classitem, raid, others.
+  const groupHeaderOrder = [...knownModPlugCategoryHashes];
+
+  for (const mod of queryFilteredMods) {
+    const title =
+      language === 'en'
+        ? mod.modDef.itemTypeDisplayName.replaceAll(/armor/gi, '').replaceAll(/mod/gi, '').trim()
+        : mod.modDef.itemTypeDisplayName;
+
+    if (!groupedModsByItemTypeDisplayName[title]) {
+      groupedModsByItemTypeDisplayName[title] = {
+        title,
+        mods: [mod],
+        plugCategoryHashes: [mod.modDef.plug.plugCategoryHash],
+      };
+    } else {
+      groupedModsByItemTypeDisplayName[title].mods.push(mod);
+      if (
+        !groupedModsByItemTypeDisplayName[title].plugCategoryHashes.includes(
+          mod.modDef.plug.plugCategoryHash
+        )
+      ) {
+        groupedModsByItemTypeDisplayName[title].plugCategoryHashes.push(
+          mod.modDef.plug.plugCategoryHash
+        );
+      }
     }
 
-    return rtn;
-  }, [queryFilteredMods]);
+    if (!groupHeaderOrder.includes(mod.modDef.plug.plugCategoryHash)) {
+      groupHeaderOrder.push(mod.modDef.plug.plugCategoryHash);
+    }
+  }
+
+  const groupedMods = Object.values(groupedModsByItemTypeDisplayName).sort(
+    (groupA, groupB) =>
+      groupHeaderOrder.indexOf(groupA.plugCategoryHashes[0]) -
+      groupHeaderOrder.indexOf(groupB.plugCategoryHashes[0])
+  );
+
+  const autoFocus =
+    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
-          categoryOrder={order}
+          groupOrder={groupedMods}
           lockedArmor2Mods={lockedArmor2ModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
@@ -297,26 +299,39 @@ function ModPicker({
     <Sheet
       onClose={onClose}
       header={
-        <ModPickerHeader
-          categoryOrder={order}
-          query={query}
-          scrollToBucket={scrollToBucket}
-          onSearchChange={(e) => setQuery(e.currentTarget.value)}
-          isPhonePortrait={isPhonePortrait}
-        />
+        <div>
+          <h1>{t('LB.ChooseAMod')}</h1>
+          <div className="item-picker-search">
+            <div className="search-filter" role="search">
+              <AppIcon icon={searchIcon} className="search-bar-icon" />
+              <input
+                className="filter-input"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoFocus={autoFocus}
+                placeholder={t('LB.SearchAMod')}
+                type="text"
+                name="filter"
+                value={query}
+                onChange={(e) => setQuery(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+        </div>
       }
       footer={footer}
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {Object.values(ModPickerCategories).map((category) => (
+      {groupedMods.map(({ mods, plugCategoryHashes, title }) => (
         <PickerSectionMods
-          key={category}
-          mods={modsByCategory[category]}
+          key={plugCategoryHashes.join('-')}
+          mods={mods}
           defs={defs}
-          locked={lockedArmor2ModsInternal[category]}
-          title={t(armor2ModPlugCategoriesTitles[category])}
-          category={category}
+          locked={lockedArmor2ModsInternal}
+          title={title}
+          plugCategoryHashes={plugCategoryHashes}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

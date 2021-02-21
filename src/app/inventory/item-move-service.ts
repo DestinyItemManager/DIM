@@ -2,6 +2,8 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
+import { CancelToken, neverCanceled } from 'app/utils/cancel';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
@@ -10,7 +12,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { DimError } from '../bungie-api/bungie-service-helper';
 import {
   equip as d1equip,
   equipItems as d1EquipItems,
@@ -217,7 +218,11 @@ function searchForSimilarItem(
 /**
  * Bulk equip items. Only use for multiple equips at once.
  */
-export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimItem[]> {
+export function equipItems(
+  store: DimStore,
+  items: DimItem[],
+  cancelToken: CancelToken = neverCanceled
+): ThunkResult<DimItem[]> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
@@ -231,7 +236,10 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
             const similarItem = getSimilarItem(getStores(), otherExotic);
             if (!similarItem) {
               return Promise.reject(
-                new Error(t('ItemService.Deequip', { itemname: otherExotic.name }))
+                new DimError(
+                  'ItemService.Deequip',
+                  t('ItemService.Deequip', { itemname: otherExotic.name })
+                )
               );
             }
             const target = getStore(getStores(), similarItem.owner)!;
@@ -240,7 +248,9 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
               return Promise.resolve(similarItem);
             } else {
               // If we need to get the similar item from elsewhere, do that first
-              return dispatch(executeMoveItem(similarItem, store, true)).then(() => similarItem);
+              return dispatch(
+                executeMoveItem(similarItem, store, { equip: true, cancelToken })
+              ).then(() => similarItem);
             }
           }
         }
@@ -254,10 +264,11 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
       return [];
     }
     if (items.length === 1) {
-      const equippedItem = await dispatch(equipItem(items[0]));
+      const equippedItem = await dispatch(equipItem(items[0], cancelToken));
       return [equippedItem];
     }
 
+    cancelToken.checkCanceled();
     const equippedItems = await equipItemsApi(items[0])(
       currentAccountSelector(getState())!,
       store,
@@ -267,40 +278,50 @@ export function equipItems(store: DimStore, items: DimItem[]): ThunkResult<DimIt
   };
 }
 
-function equipItem(item: DimItem): ThunkResult<DimItem> {
+function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), item.owner)!;
     if ($featureFlags.debugMoves) {
       infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
     }
+    cancelToken.checkCanceled();
     await equipApi(item)(currentAccountSelector(getState())!, item);
     return dispatch(updateItemModel(item, store, store, true));
   };
 }
 
 /** De-equip an item, which really means find another item to equip in its place. */
-function dequipItem(item: DimItem, excludeExotic = false): ThunkResult<DimItem> {
+function dequipItem(
+  item: DimItem,
+  excludeExotic = false,
+  cancelToken: CancelToken = neverCanceled
+): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
     const similarItem = getSimilarItem(stores, item, [], excludeExotic);
     if (!similarItem) {
-      throw new Error(t('ItemService.Deequip', { itemname: item.name }));
+      throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
 
     const ownerStore = getStore(stores, item.owner)!;
-    await dispatch(executeMoveItem(similarItem, ownerStore, true));
+    await dispatch(executeMoveItem(similarItem, ownerStore, { equip: true, cancelToken }));
     return item;
   };
 }
 
-function moveToVault(item: DimItem, amount: number = item.amount): ThunkResult<DimItem> {
+function moveToVault(
+  item: DimItem,
+  cancelToken: CancelToken,
+  amount: number = item.amount
+): ThunkResult<DimItem> {
   return async (dispatch, getState) =>
-    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, false, amount));
+    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, cancelToken, false, amount));
 }
 
 function moveToStore(
   item: DimItem,
   store: DimStore,
+  cancelToken: CancelToken,
   equip = false,
   amount: number = item.amount
 ): ThunkResult<DimItem> {
@@ -333,14 +354,22 @@ function moveToStore(
         ? item.locked
         : undefined;
 
+    cancelToken.checkCanceled();
+
     try {
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
       // Not sure why this happens - maybe out of sync game state?
-      if (e.code === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem) {
+      if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem
+      ) {
         await dispatch(dequipItem(item));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
-      } else if (e.code === PlatformErrorCodes.DestinyItemNotFound) {
+      } else if (
+        e instanceof DimError &&
+        e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound
+      ) {
         // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
         // reload the profile or load just that item, but API caching means we aren't guaranteed to
         // get the current view. So instead, we just pretend the move succeeded.
@@ -351,7 +380,10 @@ function moveToStore(
     }
     const source = getStore(getStores(), item.owner)!;
     const newItem = dispatch(updateItemModel(item, source, store, false, amount));
-    item = newItem.owner !== 'vault' && equip ? await dispatch(equipItem(newItem)) : newItem;
+    item =
+      newItem.owner !== 'vault' && equip
+        ? await dispatch(equipItem(newItem, cancelToken))
+        : newItem;
 
     if (overrideLockState !== undefined) {
       // Run this async, without waiting for the result
@@ -498,11 +530,10 @@ function chooseMoveAsideItem(
 
   // if there are no candidates at all, fail
   if (moveAsideCandidates.length === 0) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   // Find any stackable that could be combined with another stack
@@ -618,11 +649,10 @@ function chooseMoveAsideItem(
   }
 
   if (!moveAsideCandidate) {
-    const e: DimError = new Error(
+    throw new DimError(
+      'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
     );
-    e.code = 'no-space';
-    throw e;
   }
 
   return moveAsideCandidate;
@@ -645,13 +675,14 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    excludes?: Pick<DimItem, 'id' | 'hash'>[];
-    reservations?: MoveReservations;
+    excludes: Pick<DimItem, 'id' | 'hash'>[];
+    reservations: MoveReservations;
     numRetries?: number;
-  } = {}
+    cancelToken: CancelToken;
+  }
 ): ThunkResult<boolean> {
   return async (dispatch, getState) => {
-    const { excludes = [], reservations = {}, numRetries = 0 } = options;
+    const { excludes = [], reservations = {}, numRetries = 0, cancelToken } = options;
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
@@ -672,9 +703,7 @@ function canMoveToStore(
 
     // You can't move more than the max stack of a unique stack item.
     if (item.uniqueStack && amountOfItem(store, item) + amount > item.maxStackSize) {
-      const error: DimError = new Error(t('ItemService.StackFull', { name: item.name }));
-      error.code = 'no-space';
-      throw error;
+      throw new DimError('no-space', t('ItemService.StackFull', { name: item.name }));
     }
 
     const stores = storesSelector(getState());
@@ -738,7 +767,8 @@ function canMoveToStore(
             : ''
           : moveAsideItem.type;
 
-        const error: DimError = new Error(
+        throw new DimError(
+          'no-space',
           moveAsideTarget.isVault
             ? t('ItemService.BucketFull.Vault', {
                 itemtype,
@@ -750,13 +780,18 @@ function canMoveToStore(
                 context: moveAsideTarget.genderName,
               })
         );
-        error.code = 'no-space';
-        throw error;
       } else {
         // Make one move and start over!
         try {
           await dispatch(
-            executeMoveItem(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+            executeMoveItem(moveAsideItem, moveAsideTarget, {
+              equip: false,
+              amount: moveAsideItem.amount,
+              excludes,
+              // TODO: is this right?
+              reservations: {},
+              cancelToken,
+            })
           );
           return dispatch(canMoveToStore(item, store, amount, options));
         } catch (e) {
@@ -787,7 +822,7 @@ function canEquip(item: DimItem, store: DimStore): void {
   if (itemCanBeEquippedBy(item, store)) {
     return;
   } else if (item.classified) {
-    throw new Error(t('ItemService.Classified'));
+    throw new DimError('ItemService.Classified');
   } else {
     const message =
       item.classType === DestinyClass.Unknown
@@ -797,9 +832,7 @@ function canEquip(item: DimItem, store: DimStore): void {
             level: item.equipRequiredLevel,
           });
 
-    const error: DimError = new Error(message);
-    error.code = 'wrong-level';
-    throw error;
+    throw new DimError('wrong-level', message);
   }
 }
 
@@ -812,8 +845,9 @@ function isValidTransfer(
   store: DimStore,
   item: DimItem,
   amount: number,
-  excludes?: Pick<DimItem, 'id' | 'hash'>[],
-  reservations?: MoveReservations
+  excludes: Pick<DimItem, 'id' | 'hash'>[],
+  reservations: MoveReservations,
+  cancelToken: CancelToken
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     if (equip) {
@@ -822,7 +856,7 @@ function isValidTransfer(
         await dispatch(canEquipExotic(item, store)); // throws
       }
     }
-    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations }));
+    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations, cancelToken }));
   };
 }
 
@@ -845,10 +879,19 @@ let lastTimeCurrentStoreWasReallyFull = 0;
 export function executeMoveItem(
   item: DimItem,
   target: DimStore,
-  equip = false,
-  amount: number = item.amount || 1,
-  excludes?: Pick<DimItem, 'id' | 'hash'>[],
-  reservations?: MoveReservations
+  {
+    equip = false,
+    amount = item.amount || 1,
+    excludes = [],
+    reservations = {},
+    cancelToken = neverCanceled,
+  }: {
+    equip?: boolean;
+    amount?: number;
+    excludes?: Pick<DimItem, 'id' | 'hash'>[];
+    reservations?: MoveReservations;
+    cancelToken?: CancelToken;
+  }
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -867,17 +910,19 @@ export function executeMoveItem(
     if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
-        return await dispatch(moveToStore(item, target, equip, amount));
+        return await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       } catch (e) {
-        if (e.code === PlatformErrorCodes.DestinyNoRoomInDestination) {
+        if (
+          e instanceof DimError &&
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyNoRoomInDestination
+        ) {
           warnLog(
             'move',
             'Tried blindly moving',
             item.name,
             'to',
             target.name,
-            'but the bucket is really full',
-            e.code
+            'but the bucket is really full'
           );
           lastTimeCurrentStoreWasReallyFull = Date.now();
         } else {
@@ -886,7 +931,9 @@ export function executeMoveItem(
       }
     }
 
-    await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations));
+    await dispatch(
+      isValidTransfer(equip, target, item, amount, excludes, reservations, cancelToken)
+    );
 
     // Replace the target store - isValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
@@ -895,9 +942,11 @@ export function executeMoveItem(
     // Get from postmaster first
     if (item.location.inPostmaster) {
       if (source.id === target.id || item.bucket.accountWide) {
-        item = await dispatch(moveToStore(item, target, equip, amount));
+        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       } else {
-        item = await dispatch(executeMoveItem(item, source, equip, amount, excludes, reservations));
+        item = await dispatch(
+          executeMoveItem(item, source, { equip, amount, excludes, reservations, cancelToken })
+        );
         target = getStore(getStores(), target.id)!;
         source = getStore(getStores(), item.owner)!;
       }
@@ -910,11 +959,11 @@ export function executeMoveItem(
         if (item.equipped) {
           item = await dispatch(dequipItem(item));
         }
-        item = await dispatch(moveToVault(item, amount));
-        item = await dispatch(moveToStore(item, target, equip, amount));
+        item = await dispatch(moveToVault(item, cancelToken, amount));
+        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
       }
       if (equip && !item.equipped) {
-        item = await dispatch(equipItem(item));
+        item = await dispatch(equipItem(item, cancelToken));
       } else if (!equip && item.equipped) {
         item = await dispatch(dequipItem(item));
       }
@@ -926,7 +975,7 @@ export function executeMoveItem(
       if (item.equipped) {
         item = await dispatch(dequipItem(item));
       }
-      item = await dispatch(moveToStore(item, target, equip, amount));
+      item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
     }
     return item;
   };

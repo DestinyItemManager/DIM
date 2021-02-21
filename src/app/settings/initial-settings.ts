@@ -4,6 +4,7 @@ import { defaultLanguage } from 'app/i18n';
 export interface Settings extends DimApiSettings {
   /** Selected columns for the Vault Organizer */
   readonly organizerColumnsGhost: string[];
+  /** whether to ignore mods/masterwork/etc for compare pane stats */
   compareBaseStats: boolean;
   /** Item popup sidecar collapsed just shows icon and no character locations */
   sidecarCollapsed: boolean;

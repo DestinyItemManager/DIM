@@ -55,6 +55,7 @@
     "Title": "Сообщение от Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете версию DIM для разработчиков? Вы должны зарегистрироваться в расширении для браузера Chrome через Bungie.Net.",
     "Difficulties": "Bungie.net сейчас испытывает некоторые трудности при использовании.",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_male": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "Maintenance": "Сервера Bungie.net отключены для техобслуживания.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
     "NetworkError": "Сетевая ошибка - {{status}} {{statusText}}",
     "NoAccount": "Аккаунт Destiny не найден. Вы выбрали правильную платформу?",
     "NoAccountForPlatform": "Не удалось найти ваш аккаунт Destiny на {{platform}}.",
@@ -133,7 +135,7 @@
       "MakeRoom": "Освобождать место для лута путём перемещения снаряжения",
       "Tooltip": "Если включено, DIM переместит оружие и броню, чтобы освободить место в Хранилище для Энграмм."
     },
-    "OutOfRoom": "Не хватает свободного места, чтобы переместить предметы с {{character}}. Самое время дешифровать несколько Энграмм и почистить всё от мусора!",
+    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "Недостаточно свободного места",
     "Stop": "Остановить"
   },
@@ -160,7 +162,7 @@
     "DamageType": "По типу стихии.",
     "Description": "Описание",
     "Dupe": "Одинаковые, Включая перевыпуски разных сезонов",
-    "DupeCount": "Одинаковые, по количеству экземпляров.",
+    "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Одинаковые, Включая перевыпуски разных сезонов, Без экземпляров с наибольшей Силой.",
     "Energy": "Броню с Энергией (Броню 2.0).",
     "Engrams": "Энграммы.",
@@ -206,8 +208,8 @@
     "Perk": "С бонусом или модификатором содержащим введенный после фильтра текст в названии или описании. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "PerkName": "С бонусом или модификатором содержащим введенный после фильтра текст Только В Названии. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "Postmaster": "У Почтмейстера.",
-    "PowerLevel": "По уровню Силы.",
-    "PowerLimit": "По Максимальному уровню Силы.",
+    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "(!) Временно сломан.",
     "Quality": "По общей сумме процентов характеристик. '{{percentage}}' означает '{{quality}}'.",
     "RandomRoll": "Со случайными бонусами.",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
-    "Chest": "Нагрудник",
     "ChooseAMod": "Выберите Модификаторы",
     "ChooseAPerk": "Выберите Бонус",
-    "ClassItem": "Классовый предмет",
     "ClearLocked": "Очистить Обязательное",
     "ContainsVendorItems": "Этот Набор содержит предметы вендоров",
     "Current": "Текущий",
@@ -357,9 +357,6 @@
     "Exclude": "Игнорируемые предметы",
     "ExcludeHelp": "[Shift]+[ЛКМ] по предмету (или перетащите его в этот список), добавляет его к Игнорируемым. Ни одного Игнорируемого предмета нет ни в одном сгенерированном наборе.",
     "FilterSets": "Наборы фильтров",
-    "Gauntlets": "Рукавицы",
-    "General": "Основное",
-    "Helmet": "Шлем",
     "Help": {
       "And": "Наборы генерируются из предметов со Всеми Обязательными Бонусами  (\"и\").",
       "ChangeNodes": "Изменяет характеристики Intellect, Discipline, или Strength в игре на отображаемые, чтобы создать каждый набор.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
     "LB": "Конструктор Наборов",
-    "Legs": "Броня для ног",
     "LightMode": {
       "HelpCurrent": "Рассчитать Наборы на текущих уровнях брони.",
       "HelpScaled": "Рассчитать наборы, как будто у всех предметов 350 защиты.",
@@ -394,7 +390,6 @@
     "LockedHelp": "Добавьте предмет к Обязательным перетащив в этот список. Список предлагаемых Наборов сократится до содержащих Обязательные предметы. [Shift]+[ЛКМ] по Обязательному предмету уберёт его из списка.",
     "Missing2": "Отсутствуют редкие, легендарные или экзотические предметы, чтобы собрать полный набор!",
     "ModLockButton": "Модификаторы",
-    "Other": "Другое",
     "ProcessingMode": {
       "Fast": "Быстрый",
       "Full": "Полный",
@@ -402,7 +397,6 @@
       "HelpFull": "Проверяет больше вещей, но занимает больше времени.",
       "ProcessingMode": "Режим обработки"
     },
-    "Raid": "Рейд",
     "Scaled": "Масштабированный",
     "SearchAMod": "Текстовый поиск",
     "SelectMods": "Добавить",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIM не может устанавливать модификаторы, сделайте это в игре.",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
+    "NoSpace": "You're out of space in the vault and any other characters.",
     "NotificationMessage": "Отправка сняряжения с одним предметом в хранилище.",
     "NotificationMessage_female": "Экипировка снаряжения с одним предметом для {{store}}",
     "NotificationMessage_female_plural": "Экипировка снаряжения с {{count}} предметами для {{store}}",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Открыть в Конструкторе Наборов",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
     "PullFromPostmasterError": "Невозможно забрать у Почтмейстера: {{error}}.",
+    "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterNotification": "Получение 1 предмета почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_female": "Получение 1 предмета почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Получение {{count}} предметов почтмейстера в {{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Передать {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Скрыть/Показать действия",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (стандартный)",
     "VoltronDescription": "voltron автоматически обновляемый Wish List с коллекцией ПвЕ и ПвП роллов от Mercules904 и pandapaxxy. DIM использует этот Wish List по умолчанию.",
     "WishListNotes": "Заметки Wish List: {{notes}}"
-  }
+  },
+  "move-canceled": "Move canceled",
+  "no-space": "",
+  "wrong-level": ""
 }

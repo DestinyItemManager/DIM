@@ -115,6 +115,10 @@
 }
 
 .quest-expiration {
+  .app-icon {
+    margin-right: 4px;
+  }
+
   &.expires-soon {
     color: #c74141;
   }

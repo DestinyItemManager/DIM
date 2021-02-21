@@ -452,7 +452,10 @@ export function makeItem(
   }
 
   if (extendedICH[createdItem.hash]) {
-    createdItem.itemCategoryHashes.push(extendedICH[createdItem.hash]);
+    createdItem.itemCategoryHashes = [
+      ...createdItem.itemCategoryHashes,
+      extendedICH[createdItem.hash],
+    ];
   }
 
   try {
@@ -594,12 +597,29 @@ export function makeItem(
     reportException('Quest', e, { itemHash: item.itemHash });
   }
 
-  // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = createdItem.primStat.value;
   }
 
   createdItem.index = createItemIndex(createdItem);
+
+  // Some items have multiple tooltips, but the item.tooltipNotificationIndexes property that
+  // should tell us which to show is missing: https://github.com/Bungie-net/api/issues/1419
+  if (
+    itemDef.tooltipNotifications?.length === 1 &&
+    itemDef.tooltipNotifications[0].displayString.length
+  ) {
+    createdItem.tooltipNotifications = itemDef.tooltipNotifications
+      .filter((t) =>
+        // displayString is never actually set in the definitions, so we hijack it to set our own. If this contains
+        // numbers it's probably a seasonal expiration notice. All the other tooltips are kind of junk right now.
+        /\d+/.test(t.displayString)
+      )
+      .map((t) => ({
+        displayString: t.displayString,
+        displayStyle: 'seasonal-expiration',
+      }));
+  }
 
   return createdItem;
 }
@@ -631,6 +651,17 @@ function buildPursuitInfo(
       modifierHashes: [],
       ...createdItem.pursuit,
       rewards,
+    };
+  }
+  if (
+    createdItem.pursuit &&
+    createdItem.bucket.hash === BucketHashes.Quests &&
+    itemDef.setData?.itemList
+  ) {
+    createdItem.pursuit = {
+      ...createdItem.pursuit,
+      questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
+      questStepsTotal: itemDef.setData.itemList.length,
     };
   }
 }

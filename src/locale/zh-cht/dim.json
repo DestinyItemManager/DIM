@@ -55,6 +55,7 @@
     "Title": "一則來自Bungie的資訊:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "目前Bungie的服務出現了一個Bug，如果您在上一代主機上遊玩過Destiny1，那麼DIM將無法載入您的Destiny2帳號資訊。Bungie將很快修復這個Bug。但是，直到Bug修復完成前，您必須在目前世代主機上遊玩Destiny1以便DIM能讀取您的帳號資訊。",
     "DevVersion": "您是否正在運行DIM的開發版本？您必須先將您的Chrome擴展與Bungie.net關聯。",
     "Difficulties": "Bungie.net目前存在問題。",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "ItemUniquenessExplanation_male": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "Maintenance": "Bungie.net伺服器停機維護中.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
     "NetworkError": "網路錯誤 - {{status}}{{statusText}}",
     "NoAccount": "No Destiny account was found. Do you have the right platform selected?",
     "NoAccountForPlatform": "在{{platform}} 上沒有找到Destiny帳戶.",
@@ -133,7 +135,7 @@
       "MakeRoom": "移動裝備騰出空間以便拾取物品",
       "Tooltip": "如果勾選，DIM將在保險庫中移動武器和防具來給記憶水晶騰出空間。"
     },
-    "OutOfRoom": "您的{{character}} 角色已經沒有空間了。是時候來解鎖一些記憶水晶和清理一些不必要的物品！",
+    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "空間不足",
     "Stop": "停止"
   },
@@ -160,7 +162,7 @@
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "Shows duplicate items, including reissues",
-    "DupeCount": "Items that have the specificied number of duplicates.",
+    "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "顯示記憶水晶.",
@@ -206,8 +208,8 @@
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
     "Postmaster": "目前在郵政官處的物品.",
-    "PowerLevel": "Shows items based on their power level.",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
+    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
     "RandomRoll": "顯示可以隨機特性掉落的物品",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "高級選項",
-    "Chest": "Chest",
     "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "Choose a perk",
-    "ClassItem": "Class Item",
     "ClearLocked": "清除鎖定",
     "ContainsVendorItems": "該配裝包含商販物品.",
     "Current": "當前",
@@ -357,9 +357,6 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
     "FilterSets": "組合過濾",
-    "Gauntlets": "Gauntlets",
-    "General": "General",
-    "Helmet": "头盔",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
       "ChangeNodes": "如要創建一個配裝,請改變智力,訓練和力量的比例,如圖所示.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "隱藏所有配置",
     "HideConfigs": "隱藏配置",
     "LB": "配裝優化器",
-    "Legs": "腿部",
     "LightMode": {
       "HelpCurrent": "計算當前防禦等級.",
       "HelpScaled": "計算使所有角色都都擁有350防禦.",
@@ -394,7 +390,6 @@
     "LockedHelp": "拖放物品到選擇框中用以創建一個套裝組.使用Shift +按一下可移除物品.",
     "Missing2": "缺少稀有,傳奇,或異域物品用來打造套裝!",
     "ModLockButton": "Select mods",
-    "Other": "Other",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -402,7 +397,6 @@
       "HelpFull": "查看更多裝備，但是需要更長時間。",
       "ProcessingMode": "處理模式"
     },
-    "Raid": "Raid",
     "Scaled": "縮放",
     "SearchAMod": "Search a mod or description",
     "SelectMods": "Select Mods",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
     "NoExotics": "沒有記憶水晶可以轉移.",
+    "NoSpace": "You're out of space in the vault and any other characters.",
     "NotificationMessage": "正在將包含1件物品的配裝轉移到保險櫃",
     "NotificationMessage_female": "正在為{{store}} 穿戴1件物品的配裝",
     "NotificationMessage_female_plural": "正在為{{store}} 穿戴{{count}} 件物品的配裝",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Open in Loadout Optimizer",
     "PullFromPostmaster": "從郵政官處取回物品",
     "PullFromPostmasterError": "無法從郵政官處取回物品:{{error}}.",
+    "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterNotification": "正在從郵政官處取回1項物品至{{store}}.",
     "PullFromPostmasterNotification_female": "正在從郵政官處取回1項物品至{{store}}.",
     "PullFromPostmasterNotification_female_plural": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
+      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Expand or collapse item actions",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "願望清單備註:{{notes}}"
-  }
+  },
+  "move-canceled": "Move canceled",
+  "no-space": "",
+  "wrong-level": ""
 }

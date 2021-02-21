@@ -55,6 +55,7 @@
     "Title": "Bungieからのメッセージです。"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM にはこの操作を行なう権限がありません。",
     "DestinyLegacyPlatform": "Bungieのサービスには現在、Destiny 1を最後の世代のコンソールでプレイした場合、DIMがDestiny 2アカウントの情報をロードできないというバグがあります。 Bungieは近いうちにこれを修正するでしょう。",
     "DevVersion": "DIMの開発バージョンを使用していますか?Chrome拡張機能にBungie.netを登録する必要があります。",
     "Difficulties": "Bungie.netは現在、問題に直面しています。",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
     "Maintenance": "Bungie.net サーバーがメンテナンス中。",
+    "MissingInventory": "Bungie.net は保管庫の情報を返しませんでした。もしかしたら、あなたのプライバシー設定がそれを妨げているからかもしれません。ログアウトして再度ログインしてください。",
     "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
     "NoAccount": "Destiny のアカウントが見つかりません。正しいプラットフォームが選択されているかご確認ください。",
     "NoAccountForPlatform": "{{platform}} でのデスティニーアカウントが見つかりません。",
@@ -133,7 +135,7 @@
       "MakeRoom": "装備を動かしてアイテムを拾うためのスペースを確保する",
       "Tooltip": "チェックをオンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
     },
-    "OutOfRoom": "{{character}} からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
+    "OutOfRoom": "{{character}} からアイテムを移動するには空きスペースがありません。ゴミ箱を片付ける時です!",
     "OutOfRoomTitle": "スペースありません。",
     "Stop": "停止"
   },
@@ -160,7 +162,7 @@
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "再発行を含み、重複するアイテムを表示。",
-    "DupeCount": "特定の数の重複を持つアイテム",
+    "DupeCount": "指定された数の重複があるアイテム。",
     "DupeLower": "再発行を含め、最高パワーが重複しない重複アイテム。",
     "Energy": "エネルギー容量 (Armor 2.0) を持つアイテムを表示。",
     "Engrams": "エングラムを表示",
@@ -206,8 +208,8 @@
     "Perk": "アイテムの名前や説明に含まれるフィルターのテキストに、パークやmodが部分的に一致しているアイテムを表示します。引用符を使ってフレーズ全体を検索します。",
     "PerkName": "パークやmodの中で、フィルターのテキストと部分的に一致するものがある場合に、その名前のみを表示します。引用符を使ってフレーズ全体を検索します。",
     "Postmaster": "現在ポストマスターにあるアイテム",
-    "PowerLevel": "パワーレベルに応じたアイテムを表示。",
-    "PowerLimit": "融合可能な最大パワーレベルに基づき、アイテムを表示しています。",
+    "PowerLevel": "パワーレベル $t(Filter.PowerKeywords) に基づいてアイテムを表示します。",
+    "PowerLimit": "融合可能な最大パワーレベル $t(Filter.PowerKeywords) に基づいてアイテムを表示します。",
     "PowerfulReward": "強力な報酬を生み出す追跡を表示。",
     "Quality": "アイテムステータスの品質により表示。'{{percentage}}'と'{{quality}}'は同じことです。",
     "RandomRoll": "ランダムロールでドロップされた項目を表示します。",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
-    "Chest": "チェスト",
     "ChooseAMod": "Modを選択してください",
     "ChooseAPerk": "パークを選択してください",
-    "ClassItem": "クラスアイテム",
     "ClearLocked": "ロックを解除",
     "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
     "Current": "現在",
@@ -357,9 +357,6 @@
     "Exclude": "省かれたアイテム",
     "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック(またはこのバケットにドラッグアンドドロップ) します。",
     "FilterSets": "フィルターセット",
-    "Gauntlets": "ガントレット",
-    "General": "全般",
-    "Helmet": "ヘルメット",
     "Help": {
       "And": "これのパークをすべて装備した防具が使用されます (\"and\")",
       "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
     "LB": "ロードアウト最適化",
-    "Legs": "レッグ",
     "LightMode": {
       "HelpCurrent": "現在の防衛レベルでの負荷を計算します。",
       "HelpScaled": "すべてのアイテムが350防御であるかのように負荷を計算します。",
@@ -394,7 +390,6 @@
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
     "ModLockButton": "Modを選んでください",
-    "Other": "その他",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -402,7 +397,6 @@
       "HelpFull": "装備が多く見つかりますが、時間がかかります。",
       "ProcessingMode": "処理モード"
     },
-    "Raid": "レイド",
     "Scaled": "縮尺",
     "SearchAMod": "改造パーツ名や説明で検索する",
     "SelectMods": "Modを選んでください",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIMはMODを装備できません。ゲーム内で行う必要があります。",
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
     "NoExotics": "エングラムは転送できません。",
+    "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
     "NotificationMessage": "1つのアイテムを含むロードアウトを保管庫に送信します。",
     "NotificationMessage_female": "{{store}} に1つのアイテムのロードアウトを装備",
     "NotificationMessage_female_plural": "{{count}} 個のアイテムを{{store}} のロードアウトに装備する。",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "ロードアウトオプティマイザーで開く",
     "PullFromPostmaster": "ポストマスターからのアイテムの取得",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
+    "PullFromPostmasterGeneralError": "ポストマスターからすべてのアイテムを取得できません。",
     "PullFromPostmasterNotification": "1つのポストマスターアイテムを{{store}} に引き出します。",
     "PullFromPostmasterNotification_female": "1つのポストマスターアイテムを{{store}} に引き出します。",
     "PullFromPostmasterNotification_female_plural": "{{count}} ポストマスターアイテムを{{store}} に引き出します。",
@@ -602,6 +598,7 @@
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "{{questStepNum}} / {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "アイテムアクションを展開または折りたたむ",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (標準)",
     "VoltronDescription": "voltronはMercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新コレクションです。デフォルトでこれを発送します。",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
-  }
+  },
+  "move-canceled": "移動をキャンセルしました",
+  "no-space": "",
+  "wrong-level": ""
 }

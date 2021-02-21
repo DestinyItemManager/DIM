@@ -33,7 +33,7 @@ const packageJson = require('../package.json');
 const splash = require('../icons/splash.json');
 
 module.exports = (env) => {
-  if (env.dev && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
@@ -43,6 +43,9 @@ module.exports = (env) => {
   ['release', 'beta', 'dev'].forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
+    if (env[e]) {
+      env.name = e;
+    }
   });
 
   let version = packageJson.version.toString();
@@ -383,8 +386,8 @@ module.exports = (env) => {
         '$featureFlags.debugMoves': JSON.stringify(!env.release),
         // Debug Service Worker
         '$featureFlags.debugSW': JSON.stringify(!env.release),
-        // Send exception reports to Sentry.io on beta only
-        '$featureFlags.sentry': JSON.stringify(env.beta),
+        // Send exception reports to Sentry.io on beta/prod only
+        '$featureFlags.sentry': JSON.stringify(!env.dev),
         // Respect the "do not track" header
         '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
@@ -411,6 +414,8 @@ module.exports = (env) => {
         '$featureFlags.loadoutMods': JSON.stringify(!env.release),
         // Show bounty guide
         '$featureFlags.bountyGuide': JSON.stringify(true),
+        // Ability cooldowns in stats tooltips
+        '$featureFlags.abilityCooldowns': JSON.stringify(env.dev),
       }),
 
       new LodashModuleReplacementPlugin({

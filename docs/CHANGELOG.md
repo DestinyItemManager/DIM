@@ -1,5 +1,42 @@
 ## Next
 
+* Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.
+* Bulk tagging in the Organizer no longer shows an "undo" popup. We expect you know what you're doing there!
+
+## 6.52.0 <span class="changelog-date">(2021-02-14)</span>
+
+* Search filters that operate on power levels now accept the keywords "pinnaclecap", "powerfulcap", "softcap", and "powerfloor" to refer to the current season's power limits. e.g "power:>=softcap"
+  * `powerlimit:pinnaclecap` will show items with a power limit that matches this season's limit on all items.
+  * `sunsetsin:next` will show the same items: items whose power limit won't reach next season's limit on all items.
+* Confirm before pulling all items from Postmaster.
+* Added Seasonal Challenges to the Records page. You can track as many of these as you want in DIM and the tracked ones will show up in the Progress page.
+* Quests that expire after a certain season now show that info in the item popup.
+* Quests show which step number on the questline they are.
+* Triumphs that provide rewards for completing a part of the triumph now show that reward.
+
+## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
+
+* Updates for Season of the Chosen
+
+## 6.51.0 <span class="changelog-date">(2021-02-07)</span>
+
+## 6.50.0 <span class="changelog-date">(2021-01-31)</span>
+
+* Some emblem stats have better formatting now.
+* Perks which would grant a bonus in a stat, but which grant zero points due to how stats work, now show +0 instead of just not showing the stat.
+* Bounty guide for special grenade launchers now shows a label and not just an icon.
+* Fixed some issues with Loadout Optimizer on mobile.
+
+## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
+
+* Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
+* Disabled weapon mods no longer contribute to stats.
+* Automatic updates for the latest patch.
+
+## 6.48.0 <span class="changelog-date">(2021-01-17)</span>
+
+* Allow clicking through the loading screen to get to the troubleshooting link.
+
 ## 6.47.1 <span class="changelog-date">(2021-01-11)</span>
 
 * Fix a bug that could crash loadout optimizer.

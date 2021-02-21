@@ -13,6 +13,7 @@
   bottom: 0;
   overflow: hidden;
   z-index: 100;
+  pointer-events: none;
 }
 
 $square-size: 40px;

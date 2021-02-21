@@ -7,12 +7,13 @@ import { StatValue } from 'app/item-popup/PlugTooltip';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { armorStatHashes } from 'app/search/search-filter-values';
 import clsx from 'clsx';
+import _ from 'lodash';
 import React from 'react';
 import ClosableContainer from '../ClosableContainer';
-import { LockedArmor2Mod, LockedItemType } from '../types';
+import { LockedItemType, LockedMod } from '../types';
 import styles from './SelectableBungieImage.m.scss';
 
-export function SelectableArmor2Mod({
+export function SelectableMod({
   mod,
   defs,
   selected,
@@ -20,12 +21,12 @@ export function SelectableArmor2Mod({
   onModSelected,
   onModRemoved,
 }: {
-  mod: LockedArmor2Mod;
+  mod: LockedMod;
   defs: D2ManifestDefinitions;
   selected: boolean;
   selectable: boolean;
-  onModSelected(mod: LockedArmor2Mod): void;
-  onModRemoved(mod: LockedArmor2Mod): void;
+  onModSelected(mod: LockedMod): void;
+  onModRemoved(mod: LockedMod): void;
 }) {
   const handleClick = () => {
     selectable && onModSelected(mod);
@@ -45,7 +46,10 @@ export function SelectableArmor2Mod({
         <SocketDetailsMod className={styles.iconContainer} itemDef={mod.modDef} defs={defs} />
         <div className={styles.perkInfo}>
           <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
-          {mod.modDef.perks.map((perk) => (
+          {_.uniqBy(
+            mod.modDef.perks,
+            (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
+          ).map((perk) => (
             <div key={perk.perkHash}>
               <RichDestinyText
                 text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}

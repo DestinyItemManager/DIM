@@ -49,7 +49,7 @@ export default function ItemDescription({ item, defs }: Props) {
             </div>
           )}
           {Boolean(item.displaySource?.length) && (
-            <div className={styles.officialDescription}>{item.displaySource}</div>
+            <div className={styles.flavorText}>{item.displaySource}</div>
           )}
         </>
       )}

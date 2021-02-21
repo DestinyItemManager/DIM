@@ -2,7 +2,6 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import Compare from 'app/compare/Compare';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -57,9 +56,7 @@ const Organizer = React.lazy(
 const Activities = React.lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
-const Collections = React.lazy(
-  () => import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
-);
+const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -69,7 +66,7 @@ interface ProvidedProps {
 interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
-  profileError?: DimError;
+  profileError?: Error;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -218,7 +215,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           )}
           {account.destinyVersion === 2 && (
             <Route path={`${path}/records`} exact>
-              <Collections account={account} />
+              <Records account={account} />
             </Route>
           )}
           <Route path={`${path}/optimizer`} exact>

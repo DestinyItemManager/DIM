@@ -55,6 +55,7 @@
     "Title": "Wiadomość od Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM nie ma uprawnień do wykonania tej czynności.",
     "DestinyLegacyPlatform": "Usługi Bungie posiadają błąd, który uniemożliwia DIM odczytywać informacji z twojego konta Destiny 2 jeśli grałeś w Destiny 1 na konsoli poprzedniej generacji. Bungie wkrótce to naprawi, ale do tego czasu musisz grać Destiny 1 na konsoli obecnej generacji aby mieć dostęp do swoich informacji.",
     "DevVersion": "Czy korzystasz z wersji developerskiej DIM? Musisz zarejestrować swoje rozszerzenie na Bungie.net.",
     "Difficulties": "Bungie.net obecnie ma problemy.",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "Próbowałeś przenieść '{{name}}' {{type}} na swoją {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "ItemUniquenessExplanation_male": "Próbowałeś przenieść '{{name}}' {{type}} na swojego {{character}} ale ten cel już posiada ten przedmiot i może mieć tylko jeden.",
     "Maintenance": "Serwery Bungie.net są wyłączone w celu przeprowadzenia konserwacji.",
+    "MissingInventory": "Bungie.net nie zwrócił twojego ekwipunku, prawdopodobnie dlatego, że uniemożliwiają to ustawienia prywatności. Spróbuj się wylogować i zalogować.",
     "NetworkError": "Błąd sieci - {{status}}{{statusText}}",
     "NoAccount": "Nie znaleziono konta Destiny. Czy wybrałeś poprawną platformę?",
     "NoAccountForPlatform": "Nie znaleziono konta Destiny na platformie {{platform}}.",
@@ -133,7 +135,7 @@
       "MakeRoom": "Zrób miejsce do podnoszenia przedmiotów przenosząc wyposażenie",
       "Tooltip": "Jeśli zaznaczone, DIM przeniesie broń i wyposażenie tak by zrobić miejsce w schowku na engramy."
     },
-    "OutOfRoom": "Brakuje Ci miejsca na przeniesienie przedmiotów z {{character}}. Czas odszyfrować niektóre engramy i usunąć śmieci!",
+    "OutOfRoom": "Brakuje Ci miejsca na przeniesienie przedmiotów z {{character}}. Czas usunąć śmieci!",
     "OutOfRoomTitle": "Brak wolnego miejsca",
     "Stop": "Zatrzymaj"
   },
@@ -195,7 +197,7 @@
     "ModSlot": "Pokazuje pancerz z określonym gniazdem sezonowym.",
     "Mods": {
       "Y2": "Pokazuje przedmioty z dołączoną modyfikacją roku 2.",
-      "Y3": "Pokazuje przedmioty z dowolnymi wybranymi modyfikacjami Pancerzu 2.0."
+      "Y3": "Pokazuje przedmioty z dowolnymi wybranymi modyfikacjami Pancerza 2.0."
     },
     "NamedStat": "Pokazuje pancerz zawierający punkty w podanej statystyce.",
     "Negate": "Aby negować wyszukiwanie, poprzedź wyszukiwane hasło znakiem minusa lub słowem \"not\", na przykład \"{{notexample}}\" lub \"{{notexample2}}\".",
@@ -206,8 +208,8 @@
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
     "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
-    "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy.",
-    "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone.",
+    "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Pokazuje zadania, które dają potężne nagrody.",
     "Quality": "Pokazuje przedmioty na podstawie ich zsumowanego odsetku jakości statystyki. '{{percentage}}' to alias do '{{quality}}'.",
     "RandomRoll": "Pokazuje przedmioty, które wypadają z losowymi rollami.",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
-    "Chest": "Tors",
     "ChooseAMod": "Wybierz swoje modyfikacje",
     "ChooseAPerk": "Wybierz atut",
-    "ClassItem": "Przedmiot klasy",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
@@ -357,9 +357,6 @@
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
     "FilterSets": "Zestawy filtrów",
-    "Gauntlets": "Rękawice",
-    "General": "Ogólne",
-    "Helmet": "Hełm",
     "Help": {
       "And": "Pancerz z każdym z tych atutów będzie użyty (\"and\")",
       "ChangeNodes": "Zmień węzły Intelektu, Dyscypliny lub Siły w grze na to, co jest pokazane aby utworzyć każde uzbrojenie.",
@@ -369,8 +366,8 @@
       "HigherTiers": "Wyższe Poziomy są lepsze",
       "Intellect": "Intelekt przyspiesza czas odnowienia Superzdolności",
       "Lock": "Zablokuj zestaw atutów klikając na zablokowane wiaderko i wybierając atuty",
-      "MultiPerk": "Aby użyć pancerzu z wieloma atutami razem shift + kliknij na pożądane atuty",
-      "NoPerk": "Jeśli atut się nie pojawi oznacza to, że nie posiadasz pancerzu z tym atutem",
+      "MultiPerk": "Aby użyć pancerza z wieloma atutami razem shift + kliknij na pożądane atuty",
+      "NoPerk": "Jeśli atut się nie pojawi oznacza to, że nie posiadasz pancerza z tym atutem",
       "Or": "Pancerz z dowolnym z tych atutów będzie użyty (\"or\")",
       "ShiftClick": "Shift kliknij na przedmiot aby tworzyć zestawy bez tego sprzętu",
       "StatsIncrease": "W miarę wzrostu poziomu obrony przedmiotu, statystki na tym przedmiocie (int/dis/str) także rosną.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "Ukryj wszystkie konfiguracje",
     "HideConfigs": "Ukryj konfiguracje",
     "LB": "Optymalizator Uzbrojenia",
-    "Legs": "Nogi",
     "LightMode": {
       "HelpCurrent": "Kalkuluje uzbrojenia na obecnych poziomach obrony.",
       "HelpScaled": "Kalkuluje uzbrojenia jak gdyby wszystkie przedmioty miały 350 obrony.",
@@ -394,7 +390,6 @@
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
     "ModLockButton": "Wybierz modyfikacje",
-    "Other": "Inne",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -402,7 +397,6 @@
       "HelpFull": "Bierze pod uwagę więcej sprzętu, ale trwa dłużej.",
       "ProcessingMode": "Tryb przetwarzania"
     },
-    "Raid": "Najazd",
     "Scaled": "Skalowany",
     "SearchAMod": "Szukaj modyfikacji lub opisu",
     "SelectMods": "Wybierz modyfikacje",
@@ -419,7 +413,7 @@
     "Vendors": "Wczytywanie sprzedawców Destiny..."
   },
   "LoadoutBuilder": {
-    "AssumeMasterwork": "Załóż Mistrzowskie Statystyki",
+    "AssumeMasterwork": "Przyjmij Mistrzowskie Statystyki",
     "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
@@ -449,15 +443,15 @@
     "NumCombinations": "{{count, number}} kombinacja",
     "NumCombinations_plural": "{{count, number}} kombinacji",
     "OptimizerExplanation": "Wybierz statystyki, które chcesz i ich kolejność priorytetu, a następnie wybierz które modyfikacje chcesz użyć.",
-    "OptimizerExplanationArmour2Mods": "Zmiany statystyk z wyposażonego Pancerzu 2.0 są w miarę możliwości wykluczane i dodawane po ich wybraniu.",
+    "OptimizerExplanationArmour2Mods": "Zmiany statystyk z wyposażonego Pancerza 2.0 są w miarę możliwości wykluczane i dodawane po ich wybraniu.",
     "OptimizerSet": "Zestaw optymalizatora",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj przypięte przedmioty",
     "SaveAs": "Zapisz jako",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
-    "SelectMinStatTotal": "Minimalna suma statystyk pancerzu",
-    "SelectMinStatTotalDescription": "Ustawia minimalną sumę statystyk dla pojedynczego elementu pancerzu (z pominięciem przedmiotów klasy).",
+    "SelectMinStatTotal": "Minimalna suma statystyk pancerza",
+    "SelectMinStatTotalDescription": "Ustawia minimalną sumę statystyk dla pojedynczego elementu pancerza (z pominięciem przedmiotów klasy).",
     "SelectPerks": "Wybierz Atuty",
     "SelectPower": "Minimalna Moc",
     "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIM nie może zakładać modyfikacji, musi to być zrobione w grze.",
     "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
     "NoExotics": "Brak engramów do przeniesienia.",
+    "NoSpace": "Nie masz miejsca w schowku ani na każdej innej postaci.",
     "NotificationMessage": "Wysyłanie uzbrojenia z 1 przedmiotem do schowka.",
     "NotificationMessage_female": "Wyposażanie uzbrojenia z 1 przedmiotem na {{store}}",
     "NotificationMessage_female_plural": "Wyposażanie uzbrojenia z {{count}} przedmiotami na {{store}}",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Otwórz w optymalizatorze uzbrojenia",
     "PullFromPostmaster": "Odbierz Kuriera",
     "PullFromPostmasterError": "Nie można odebrać Kuriera: {{error}}.",
+    "PullFromPostmasterGeneralError": "Nie można zebrać wszystkich przedmiotów od Kuriera.",
     "PullFromPostmasterNotification": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
     "PullFromPostmasterNotification_female": "Zbieranie 1 przedmiotu od Kuriera do {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Umieść na {{character}}",
     "Subtitle": {
       "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
+      "QuestProgress": "Krok {{questStepNum}} z {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Rozwiń lub zwiń akcje przedmiotu",
@@ -689,7 +686,7 @@
     "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
     "Progress": "Postęp",
-    "QueryFilteredTrackedTriumphs": "Żaden z Twoich śledzonych triumfów nie pasował do wyszukiwania",
+    "QueryFilteredTrackedTriumphs": "Żaden z Twoich śledzonych triumfów nie pasował do wyszukania",
     "QuestExpired": "Wygasło",
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (domyślna)",
     "VoltronDescription": "voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy. Domyślnie zawarte w aplikacji.",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
-  }
+  },
+  "move-canceled": "Anulowano przenoszenie",
+  "no-space": "",
+  "wrong-level": ""
 }

@@ -4,16 +4,7 @@ import store from 'app/store/store';
 import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
-import {
-  getToken,
-  hasTokenExpired,
-  removeAccessToken,
-  removeToken,
-  setToken,
-  Tokens,
-} from './oauth-tokens';
-
-let cache: Promise<Tokens> | null = null;
+import { getToken, hasTokenExpired, removeAccessToken, removeToken, Tokens } from './oauth-tokens';
 
 /**
  * A wrapper around "fetch" that implements Bungie's OAuth scheme. This either
@@ -100,7 +91,7 @@ export class FatalTokenError extends Error {
 }
 
 export async function getActiveToken(): Promise<Tokens> {
-  let token = getToken();
+  const token = getToken();
   if (!token) {
     removeToken();
     goToLoginPage();
@@ -121,14 +112,9 @@ export async function getActiveToken(): Promise<Tokens> {
   }
 
   try {
-    token = await (cache || getAccessTokenFromRefreshToken(token.refreshToken!));
-    setToken(token);
-    infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
-    return token;
+    return await getAccessTokenFromRefreshToken(token.refreshToken!);
   } catch (e) {
     return await handleRefreshTokenError(e);
-  } finally {
-    cache = null;
   }
 }
 
@@ -164,7 +150,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       if (data?.error === 'server_error') {
         if (data.error_description === 'SystemDisabled') {
           throw new Error(t('BungieService.Maintenance'));
-        } else {
+        } else if (data.error_description !== 'AuthorizationRecordExpired') {
           throw new Error(
             `Unknown error getting response token: ${data.error}, ${data.error_description}`
           );

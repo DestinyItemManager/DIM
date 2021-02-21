@@ -10,6 +10,7 @@ import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo } from 'app/utils/item-utils';
+import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
@@ -19,7 +20,7 @@ import { connect, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, faCheck } from '../shell/icons';
+import { AppIcon, faCheck, faClock } from '../shell/icons';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -75,8 +76,6 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
       )}
 
       <ItemDescription item={item} defs={defs} />
-
-      <ItemExpiration item={item} />
 
       {!item.stats && Boolean(item.collectibleHash) && isD2Manifest(defs) && (
         <div className="item-details">
@@ -203,6 +202,20 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           </div>
         )
       )}
+
+      <ItemExpiration item={item} />
+
+      {item.tooltipNotifications?.map((tip) => (
+        <div
+          key={tip.displayString}
+          className={clsx('quest-expiration item-details', {
+            'seasonal-expiration': tip.displayStyle === 'seasonal-expiration',
+          })}
+        >
+          {tip.displayStyle === 'seasonal-expiration' && <AppIcon icon={faClock} />}
+          {tip.displayString}
+        </div>
+      ))}
     </div>
   );
 }

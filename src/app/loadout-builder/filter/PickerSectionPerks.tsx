@@ -2,15 +2,15 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
-import { SelectablePerk } from '../locked-armor/SelectableBungieImage';
 import { LockedItemType } from '../types';
 import { getFilteredPerksAndPlugSets } from '../utils';
 import styles from './PickerSection.m.scss';
+import { SelectablePerk } from './SelectableBungieImage';
 
 /**
  * A list of selectable perks for a bucket (chest, helmet, etc) for use in PerkPicker.
  */
-export default function PerksForBucket({
+export default function PickerSectionPerks({
   bucket,
   defs,
   perks,
@@ -28,7 +28,7 @@ export default function PerksForBucket({
   const filterInfo = getFilteredPerksAndPlugSets(locked, items);
 
   return (
-    <div className={styles.bucket} id={`perk-bucket-${bucket.hash}`}>
+    <div className={styles.bucket}>
       <div className={styles.header}>{bucket.name}</div>
       <div className={styles.items}>
         {perks.map((perk) => (

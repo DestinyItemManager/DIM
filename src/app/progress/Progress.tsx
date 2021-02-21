@@ -13,26 +13,29 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';
 import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import '../collections/PresentationNode.scss';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
+import '../records/PresentationNode.scss';
 import Milestones from './Milestones';
 import './progress.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
+import SeasonalChallenges from './SeasonalChallenges';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import { TrackedTriumphs } from './TrackedTriumphs';
 
@@ -50,6 +53,7 @@ interface StoreProps {
   trackedTriumphs: number[];
   searchFilter?: ItemFilter;
   allItems: DimItem[];
+  coreSettings?: Destiny2CoreSettings;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -65,6 +69,7 @@ function mapStateToProps(state: RootState): StoreProps {
     searchFilter: searchFilterSelector(state),
     trackedTriumphs: trackedTriumphsSelector(state),
     allItems: allItemsSelector(state),
+    coreSettings: destiny2CoreSettingsSelector(state),
   };
 }
 
@@ -78,6 +83,7 @@ function Progress({
   searchQuery,
   trackedTriumphs,
   allItems,
+  coreSettings,
 }: Props) {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
@@ -119,10 +125,22 @@ function Progress({
   const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
   const solsticeArmor = solsticeOfHeroesArmor(allItems, selectedStore);
 
+  const seasonalChallengesPresentationNode =
+    coreSettings?.seasonalChallengesPresentationNodeHash &&
+    defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
+
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     ...(solsticeArmor.length ? [{ id: 'solstice', title: solsticeTitle }] : []),
     { id: 'milestones', title: t('Progress.Milestones') },
+    ...(seasonalChallengesPresentationNode
+      ? [
+          {
+            id: 'seasonal-challenges',
+            title: seasonalChallengesPresentationNode.displayProperties.name,
+          },
+        ]
+      : []),
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
@@ -183,6 +201,18 @@ function Progress({
                   </div>
                 </CollapsibleTitle>
               </section>
+
+              {seasonalChallengesPresentationNode && (
+                <ErrorBoundary name="SeasonalChallenges">
+                  <SeasonalChallenges
+                    seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
+                    store={selectedStore}
+                    defs={defs}
+                    buckets={buckets}
+                    profileResponse={profileInfo}
+                  />
+                </ErrorBoundary>
+              )}
 
               <ErrorBoundary name="Pursuits">
                 <Pursuits store={selectedStore} defs={defs} />

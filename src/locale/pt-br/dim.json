@@ -55,6 +55,7 @@
     "Title": "Uma mensagem da Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM não tem permissão para realizar esta ação.",
     "DestinyLegacyPlatform": "Os serviços da Bungie tem atualmente um bug que impede que o DIM carregue informação da sua conta de Destiny 2 se você jogou o Destiny 1 em um console de última geração. A Bungie irá corrigir isso em breve, mas até lá, você deve jogar Destiny 1 em um console de geração atual para ser capaz de acessar a sua informação.",
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "Bungie.net está enfrentando dificuldades no momento.",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para sua {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
+    "MissingInventory": "Não foi possível receber seu inventário da Bungie.net, possivelmente devido às suas configurações de privacidade. Tente desconectar sua conta e autenticar-se novamente.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
     "NoAccount": "Nenhuma conta de Destiny encontrada. Você escolheu a plataforma certa?",
     "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {{platform}}.",
@@ -133,7 +135,7 @@
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
-    "OutOfRoom": "Você está sem espaço para mover itens do {{character}}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
+    "OutOfRoom": "Você está sem espaço para mover itens de {{character}}. Hora de limpar o lixo!",
     "OutOfRoomTitle": "Sem espaço",
     "Stop": "Parar"
   },
@@ -160,7 +162,7 @@
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
-    "DupeCount": "Itens que tenham um número específico de duplicatas.",
+    "DupeCount": "Itens que tenham o número especificado de duplicatas.",
     "DupeLower": "Itens duplicados, incluindo revisões, que não possuem o maior poder entre eles.",
     "Energy": "Exibe itens que possuem capacidade de energia (Armaduras 2.0).",
     "Engrams": "Mostrar engramas.",
@@ -206,8 +208,8 @@
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
     "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
-    "PowerLevel": "Exibe itens baseando-se em seu nível de poder.",
-    "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos.",
+    "PowerLevel": "Exibe itens baseados em seu nível de poder. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Exibe buscas que produzem uma recompensa poderosa.",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
     "RandomRoll": "Mostra itens que caem com valores aleatórios.",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "Opções avançadas",
-    "Chest": "Torso",
     "ChooseAMod": "Escolha seus mods",
     "ChooseAPerk": "Escolha um perk",
-    "ClassItem": "Item de classe",
     "ClearLocked": "Limpar itens travados",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
@@ -357,9 +357,6 @@
     "Exclude": "Itens ignorados",
     "ExcludeHelp": "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
     "FilterSets": "Filtrar atributos",
-    "Gauntlets": "Manoplas",
-    "General": "Geral",
-    "Helmet": "Capacete",
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
       "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "Ocultar todas as configurações",
     "HideConfigs": "Ocultar configurações",
     "LB": "Otimizador de Set",
-    "Legs": "Pernas",
     "LightMode": {
       "HelpCurrent": "Calcular set com os níveis de defesa atuais.",
       "HelpScaled": "Calcular set como se todo os itens fossem 350 de defesa.",
@@ -394,7 +390,6 @@
     "LockedHelp": "Arraste e solte itens para construir sets com itens específicos. SHIFT+Clique para excluir.",
     "Missing2": "Faltam itens raros, lendários ou exóticos para construir um set completo!",
     "ModLockButton": "Selecionar mods",
-    "Other": "Outros",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -402,7 +397,6 @@
       "HelpFull": "Busca por todos os itens, mas leva mais tempo.",
       "ProcessingMode": "Modo de processamento"
     },
-    "Raid": "Incursão",
     "Scaled": "Nivelado",
     "SearchAMod": "Procurar um mod ou descrição",
     "SelectMods": "Selecionar mods",
@@ -514,6 +508,7 @@
     "ModsInfo": "Mods devem ser equipados diretamente no jogo, uma vez que o DIM não pode de fazer isso.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
+    "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
     "NotificationMessage": "Enviando set com um item para o cofre.",
     "NotificationMessage_female": "Equipando set com um item em sua {{store}}",
     "NotificationMessage_female_plural": "Equipando set com {{count}} itens em sua {{store}}",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Abrir no Otimizador de Set",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
+    "PullFromPostmasterGeneralError": "Não foi possível puxar todos os itens do Chefe do Correio.",
     "PullFromPostmasterNotification": "Movido um item do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterNotification_female": "Movido um item do Chefe do Correio para sua {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Movido {{count}} itens do Chefe do Correio para sua {{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Etapa {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Expandir ou recolher ações do item",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (padrão)",
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
-  }
+  },
+  "move-canceled": "Mover cancelado",
+  "no-space": "",
+  "wrong-level": ""
 }

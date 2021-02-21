@@ -12,28 +12,28 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
+import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import LoadoutBucketDropTarget from '../locked-armor/LoadoutBucketDropTarget';
 import {
+  knownModPlugCategoryHashes,
   LockableBuckets,
-  LockedArmor2Mod,
-  LockedArmor2ModMap,
   LockedExclude,
   LockedItemCase,
   LockedItemType,
   LockedMap,
+  LockedMod,
+  LockedModMap,
   LockedPerk,
-  ModPickerCategories,
 } from '../types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
 import styles from './LockArmorAndPerks.m.scss';
-import LockedArmor2ModIcon from './LockedArmor2ModIcon';
 import LockedItem from './LockedItem';
+import LockedModIcon from './LockedModIcon';
 
 interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedArmor2Mods: LockedModMap;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -141,12 +141,13 @@ function LockArmorAndPerks({
     }
   };
 
-  const onArmor2ModClicked = (item: LockedArmor2Mod) => {
+  const onModClicked = (mod: LockedMod) => {
+    const plugCategoryHash = mod.modDef.plug.plugCategoryHash;
     lbDispatch({
       type: 'lockedArmor2ModsChanged',
       lockedArmor2Mods: {
         ...lockedArmor2Mods,
-        [item.category]: lockedArmor2Mods[item.category]?.filter((ex) => ex.key !== item.key),
+        [plugCategoryHash]: lockedArmor2Mods[plugCategoryHash]?.filter((ex) => ex.key !== mod.key),
       },
     });
   };
@@ -174,10 +175,15 @@ function LockArmorAndPerks({
     _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
-  const modOrder = Object.values(ModPickerCategories);
-  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
-    .flatMap((category) => lockedArmor2Mods[category])
-    .filter(Boolean);
+  let flatLockedMods: LockedMod[] = knownModPlugCategoryHashes.flatMap(
+    (plugCategoryHash) => lockedArmor2Mods[plugCategoryHash] || []
+  );
+
+  for (const [plugCategoryHashAsString, mods] of Object.entries(lockedArmor2Mods)) {
+    if (mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHashAsString))) {
+      flatLockedMods = flatLockedMods.concat(mods);
+    }
+  }
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
@@ -187,14 +193,14 @@ function LockArmorAndPerks({
   return (
     <div>
       <div className={styles.area}>
-        {Boolean(flatLockedArmor2Mods.length) && (
+        {Boolean(flatLockedMods.length) && (
           <div className={styles.itemGrid}>
-            {flatLockedArmor2Mods.map((item) => (
-              <LockedArmor2ModIcon
+            {flatLockedMods.map((item) => (
+              <LockedModIcon
                 key={item.key}
                 item={item}
                 defs={defs}
-                onModClicked={() => onArmor2ModClicked(item)}
+                onModClicked={() => onModClicked(item)}
               />
             ))}
           </div>

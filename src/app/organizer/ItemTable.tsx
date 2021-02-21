@@ -325,7 +325,7 @@ function ItemTable({
   const onTagSelectedItems = (tagInfo: TagInfo) => {
     if (tagInfo.type && selectedItemIds.length) {
       const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-      dispatch(bulkTagItems(selectedItems, tagInfo.type));
+      dispatch(bulkTagItems(selectedItems, tagInfo.type, false));
     }
   };
 

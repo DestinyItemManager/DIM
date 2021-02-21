@@ -1,4 +1,3 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { warnLog } from 'app/utils/log';
 import {
@@ -38,7 +37,7 @@ export interface InventoryState {
 
   readonly profileResponse?: DestinyProfileResponse;
 
-  readonly profileError?: DimError;
+  readonly profileError?: Error;
 
   /**
    * The inventoryItemIds of all items that are "new".

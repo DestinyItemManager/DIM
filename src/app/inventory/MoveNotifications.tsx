@@ -18,11 +18,12 @@ const lingerMs = 2000;
 export function moveItemNotification(
   item: DimItem,
   target: DimStore,
-  movePromise: Promise<any>
+  movePromise: Promise<any>,
+  cancel: () => void
 ): NotifyInput {
   return {
     promise: movePromise,
-    duration: lingerMs,
+    duration: 0,
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
@@ -31,6 +32,7 @@ export function moveItemNotification(
       target: target.name,
       context: target.genderName,
     }),
+    onCancel: cancel,
   };
 }
 
@@ -40,11 +42,14 @@ export function moveItemNotification(
 export function loadoutNotification(
   loadout: Loadout,
   store: DimStore,
-  loadoutPromise: Promise<any>
+  loadoutPromise: Promise<any>,
+  cancel: () => void
 ): NotifyInput {
   const count = loadout.items.length;
 
   // TODO: pass in a state updater that can communicate application state
+
+  // TODO: body! show all items, check 'em off
 
   return {
     promise: loadoutPromise,
@@ -56,6 +61,7 @@ export function loadoutNotification(
       store: store.name,
       context: store.genderName,
     }),
+    onCancel: cancel,
   };
 }
 
@@ -65,7 +71,8 @@ export function loadoutNotification(
 export function postmasterNotification(
   count: number,
   store: DimStore,
-  promise: Promise<any>
+  promise: Promise<any>,
+  cancel: () => void
 ): NotifyInput {
   // TODO: pass in a state updater that can communicate application state
 
@@ -79,6 +86,7 @@ export function postmasterNotification(
       store: store.name,
       context: store.genderName,
     }),
+    onCancel: cancel,
   };
 }
 

@@ -55,6 +55,7 @@
     "Title": "Un messaggio da Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM non è autorizzato ad effettuare questa operazione.",
     "DestinyLegacyPlatform": "I servizi di Bungie al momento hanno un bug che impedisce a DIM di caricare le informazioni del tuo account di Destiny 2 se hai giocato a Destiny 1 su una console di vecchia generazione. Bungie lo risolverà presto, ma fino ad allora, dovrai giocare Destiny 1 su una console della generazione attuale per accedere ai tuoi dati.",
     "DevVersion": "Stai utilizzando una versione di DIM per sviluppatori? Devi registrare la tua estensione per Chrome su Bungie.net.",
     "Difficulties": "Bungie.net sta avendo dei problemi al momento.",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
     "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
+    "MissingInventory": "Bungie.net non ha restituito il tuo inventario, forse perché le tue impostazioni di privacy lo impediscono. Prova ad effettuare nuovamente l'accesso.",
     "NetworkError": "Errore Network - {{status}} {{statusText}}",
     "NoAccount": "Non è stato trovato alcun account di Destiny. Sei sicuro di aver selezionato la piattaforma corretta?",
     "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {{platform}}.",
@@ -72,7 +74,7 @@
     "Slow": "Bungie.net è rallentato in questo momento",
     "SlowDetails": "Bungie.net sta impiegando molto tempo per inviarci le tue informazioni. Questo può succedere quando molti giocatori sono in gioco contemporaneamente, oppure Bungie.net sta avendo problemi. Potresti anche avere problemi di connessione. Continueremo ad attendere una risposta.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
-    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste che DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -133,7 +135,7 @@
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
-    "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
+    "OutOfRoom": "Non hai più spazio per spostare oggetti da {{character}}. È il momento di fare pulizia!",
     "OutOfRoomTitle": "Spazio esaurito",
     "Stop": "Stop"
   },
@@ -206,8 +208,8 @@
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
     "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
-    "PowerLevel": "Mostra gli oggetti in base al loro livello di Potere.",
-    "PowerLimit": "Mostra gli oggetti basandosi sul massimo livello di potere al quale possono essere infusi.",
+    "PowerLevel": "Mostra gli oggetti in base al loro livello Potere. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Mostra gli oggetti basandosi sul livello Potere massimo al quale possono essere infusi. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Mostra gli incarichi che portano ad una ricompensa potente.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
     "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
-    "Chest": "Torace",
     "ChooseAMod": "Scegli le tue Modifiche",
     "ChooseAPerk": "Scegli un perk",
-    "ClassItem": "Oggetto di classe",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
@@ -357,9 +357,6 @@
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "FilterSets": "Filtra i set",
-    "Gauntlets": "Braccia",
-    "General": "Generale",
-    "Helmet": "Casco",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
     "LB": "Ottimizzatore Loadout",
-    "Legs": "Gambe",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
@@ -394,7 +390,6 @@
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
     "ModLockButton": "Seleziona Modifiche",
-    "Other": "Altro",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -402,7 +397,6 @@
       "HelpFull": "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo.",
       "ProcessingMode": "Procedura"
     },
-    "Raid": "Raid",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica o descrizione",
     "SelectMods": "Seleziona Modifiche",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
+    "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
     "NotificationMessage_female": "Equipaggiamento loadout di 1 oggetto su {{store}}",
     "NotificationMessage_female_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Apri in Ottimizzatore Loadout",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
+    "PullFromPostmasterGeneralError": "Impossibile spostare tutti gli oggetti dall'Amministratrice.",
     "PullFromPostmasterNotification": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
+      "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",
@@ -943,5 +940,8 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
-  }
+  },
+  "move-canceled": "Spostamento annullato",
+  "no-space": "",
+  "wrong-level": ""
 }

@@ -2,15 +2,24 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { infoLog } from '../../utils/log';
-import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import {
+  knownModPlugCategoryHashes,
+  LockableBuckets,
+  MinMax,
+  MinMaxIgnored,
+  raidPlugCategoryHashes,
+  statHashes,
+  StatTypes,
+} from '../types';
 import { statTier } from '../utils';
-import { canTakeAllMods, generateModPermutations } from './processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
-  LockedArmor2ProcessMods,
+  LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessMod,
 } from './types';
 
 const RETURNED_ARMOR_SETS = 200;
@@ -87,7 +96,7 @@ function insertIntoSetTracker(
 export function process(
   filteredItems: ProcessItemsByBucket,
   modStatTotals: { [stat in StatTypes]: number },
-  lockedArmor2ModMap: LockedArmor2ProcessMods,
+  lockedModMap: LockedProcessMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [stat in StatTypes]: MinMaxIgnored },
@@ -174,15 +183,28 @@ export function process(
   const statsCache: Record<string, number[]> = {};
 
   for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
-    statsCache[item.id] = getStatMix(item, assumeMasterwork, orderedStatValues);
+    statsCache[item.id] = getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatValues);
   }
 
-  const generalModsPermutations = generateModPermutations(
-    lockedArmor2ModMap[armor2PlugCategoryHashesByName.general]
-  );
-  const otherModPermutations = generateModPermutations(lockedArmor2ModMap.other);
+  let generalMods: ProcessMod[] = [];
+  let otherMods: ProcessMod[] = [];
+  let raidMods: ProcessMod[] = [];
 
-  const raidModPermutations = generateModPermutations(lockedArmor2ModMap.raid);
+  for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
+    const pch = Number(plugCategoryHash);
+    if (pch === armor2PlugCategoryHashesByName.general) {
+      generalMods = generalMods.concat(mods);
+    } else if (raidPlugCategoryHashes.includes(pch)) {
+      raidMods = raidMods.concat(mods);
+    } else if (!knownModPlugCategoryHashes.includes(pch)) {
+      otherMods = otherMods.concat(mods);
+    }
+  }
+
+  const generalModsPermutations = generateModPermutations(generalMods);
+  const otherModPermutations = generateModPermutations(otherMods);
+
+  const raidModPermutations = generateModPermutations(raidMods);
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
@@ -261,10 +283,8 @@ export function process(
 
               // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
               if (
-                (lockedArmor2ModMap.other.length ||
-                  lockedArmor2ModMap.raid.length ||
-                  lockedArmor2ModMap[armor2PlugCategoryHashesByName.general].length) &&
-                !canTakeAllMods(
+                (otherMods.length || raidMods.length || generalMods.length) &&
+                !canTakeSlotIndependantMods(
                   generalModsPermutations,
                   otherModPermutations,
                   raidModPermutations,
@@ -324,51 +344,6 @@ export function process(
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
-}
-
-const emptyStats: number[] = new Array(_.size(statHashes)).fill(0);
-
-/**
- * Generate all possible stat mixes this item can contribute from different perk options,
- * expressed as comma-separated strings in the same order as statHashes.
- */
-function getStatMix(item: ProcessItem, assumeMasterwork: boolean, orderedStatValues: number[]) {
-  const stats = item.stats;
-
-  if (!stats) {
-    return emptyStats;
-  }
-
-  const mixes: number[][] = [getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatValues)];
-
-  if (stats && item.sockets && item.energy) {
-    for (const socket of item.sockets.sockets) {
-      if (socket.plugOptions.length > 1) {
-        for (const plug of socket.plugOptions) {
-          if (plug !== socket.plug && plug.stats) {
-            // Stats without the currently selected plug, with the optional plug
-            const mixNum = mixes.length;
-            for (let mixIndex = 0; mixIndex < mixNum; mixIndex++) {
-              const existingMix = mixes[mixIndex];
-              const optionStat = orderedStatValues.map((statHash, index) => {
-                const currentPlugValue = (socket.plug?.stats && socket.plug.stats[statHash]) ?? 0;
-                const optionPlugValue = plug.stats?.[statHash] || 0;
-                return existingMix[index] - currentPlugValue + optionPlugValue;
-              });
-
-              mixes.push(optionStat);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if (mixes.length === 1) {
-    return mixes[0];
-  }
-  // return the mix with the higest total stat
-  return _.sortBy((mix) => _.sum(mix))[0];
 }
 
 /**

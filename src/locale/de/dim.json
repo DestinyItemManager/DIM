@@ -55,6 +55,7 @@
     "Title": "Eine Nachricht von Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM hat keine Berechtigung diese Aktion durchzuführen.",
     "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
     "DevVersion": "Sie haben eine Entwicklungsversion von DIM? Sie müssen Ihre Chrome-Erweiterung mit Bungie.net registrieren.",
     "Difficulties": "Bungie.net hat derzeit Schwierigkeiten.",
@@ -63,6 +64,7 @@
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
+    "MissingInventory": "Bungie.net hat dein Inventar nicht zurückgegeben, möglicherweise weil deine Privatsphäre-Einstellungen es verhindern. Versuche dich auszuloggen und dich wieder einzuloggen.",
     "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
     "NoAccount": "Kein Destiny Konto gefunden. Hast du die richtige Plattform ausgewählt?",
     "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
@@ -133,7 +135,7 @@
       "MakeRoom": "Schaffe Platz, durch Verschieben von Ausrüstung, um Gegenstände aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
-    "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll rauszuräumen!",
+    "OutOfRoom": "Du hast keinen Platz, um Items weg von {{character}} zu verschieben. Es ist Zeit den Müll wegzuschmeißen!",
     "OutOfRoomTitle": "Kein Platz mehr",
     "Stop": "Halt"
   },
@@ -206,8 +208,8 @@
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
-    "PowerLevel": "Zeigt Items basierend auf ihrem Powerlevel an.",
-    "PowerLimit": "Zeigt Items basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können.",
+    "PowerLevel": "Zeigt Gegenstände basierend auf ihrem Powerlevel an. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Zeigt Gegenstände basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Zeigt Jagden welche eine mächtige Belohnung hervorbringen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
     "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
@@ -346,10 +348,8 @@
   },
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
-    "Chest": "Brust",
     "ChooseAMod": "Wähle deine Mods",
     "ChooseAPerk": "Wähle einen Perk",
-    "ClassItem": "Klassengegenstand",
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Diese Ausrüstung enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
@@ -357,9 +357,6 @@
     "Exclude": "Ignorierte Gegenstände",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld), um Sets ohne diesen Gegenstand zu generieren.",
     "FilterSets": "Sets filtern",
-    "Gauntlets": "Handschuhe",
-    "General": "Allgemein",
-    "Helmet": "Helm",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
       "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen der Ausrüstung angezeigt werden.",
@@ -381,7 +378,6 @@
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
     "LB": "Ausrüstungs-Optimierer",
-    "Legs": "Beine",
     "LightMode": {
       "HelpCurrent": "Berechnet Ausrüstung mit dem aktuellen Verteidigungswert.",
       "HelpScaled": "Berechnet Ausrüstung als ob alle Gegenstände 350 Verteidigung hätten.",
@@ -394,7 +390,6 @@
     "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um es in der Ausrüstung zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
     "Missing2": "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
     "ModLockButton": "Mods auswählen",
-    "Other": "Andere",
     "ProcessingMode": {
       "Fast": "Schnell",
       "Full": "Vollständig",
@@ -402,7 +397,6 @@
       "HelpFull": "Bezieht mehr Ausrüstung ein, braucht dafür länger.",
       "ProcessingMode": "Berechnung"
     },
-    "Raid": "Raid",
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod oder Beschreibung",
     "SelectMods": "Mods auswählen",
@@ -514,6 +508,7 @@
     "ModsInfo": "DIM kann keine Mods ausstatten, das muss im Spiel geschehen.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
+    "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
     "NotificationMessage_female": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
     "NotificationMessage_female_plural": "Übertrage Ausrüstung mit {{count}} Gegenständen auf {{store}}",
@@ -525,6 +520,7 @@
     "OpenInOptimizer": "Im Ausrüstungs-Optimierer öffnen",
     "PullFromPostmaster": "Poststelle einsammeln",
     "PullFromPostmasterError": "Abrufen von Poststelle nicht möglich: {{error}}.",
+    "PullFromPostmasterGeneralError": "Nicht in der Lage, alle Elemente aus der Poststelle zu ziehen.",
     "PullFromPostmasterNotification": "Übertrage 1 Poststellen Gegenstand auf {{store}}.",
     "PullFromPostmasterNotification_female": "Hole 1 Poststellen Item für {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Hole {{count}} Poststellen Items für {{store}}.",
@@ -602,6 +598,7 @@
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "Schritt {{questStepNum}} von {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",
@@ -943,5 +940,8 @@
     "Voltron": "Voltron (Standard)",
     "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
-  }
+  },
+  "move-canceled": "Verschieben abgebrochen",
+  "no-space": "",
+  "wrong-level": ""
 }

@@ -13,6 +13,7 @@ import {
 } from 'app/inventory/stores-helpers';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
+import { CancelToken, withCancel } from 'app/utils/cancel';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
@@ -73,8 +74,11 @@ export function startFarming(storeId: string): ThunkResult {
     let unsubscribe = _.noop;
 
     unsubscribe = observeStore(storeSelector, (_, farmingStore) => {
+      const [cancelToken, cancel] = withCancel();
+
       if (!farmingStore || farmingStore.id !== storeId) {
         unsubscribe();
+        cancel();
         return;
       }
 
@@ -82,10 +86,10 @@ export function startFarming(storeId: string): ThunkResult {
         infoLog('farming', 'Farming interrupted, will resume when tasks are complete');
       } else {
         if (isD1Store(farmingStore)) {
-          dispatch(farmD1(farmingStore));
+          dispatch(farmD1(farmingStore, cancelToken));
         } else {
           // In D2 we just make room
-          dispatch(makeRoomForItems(farmingStore));
+          dispatch(makeRoomForItems(farmingStore, cancelToken));
         }
       }
     });
@@ -106,28 +110,30 @@ export function stopFarming(): ThunkResult {
 
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
-function makeRoomForItems(store: DimStore): ThunkResult {
+function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResult {
   return (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = Object.values(buckets.byHash).filter(
       (b) => b.category === BucketCategory.Equippable && b.type
     );
-    return dispatch(makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets));
+    return dispatch(
+      makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets, cancelToken)
+    );
   };
 }
 
 /// D1 Stuff ///
 
-function farmD1(store: D1Store): ThunkResult {
+function farmD1(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {
-    await dispatch(farmItems(store));
+    await dispatch(farmItems(store, cancelToken));
     if (settingsSelector(getState()).farmingMakeRoomForItems) {
-      await dispatch(makeRoomForD1Items(store));
+      await dispatch(makeRoomForD1Items(store, cancelToken));
     }
   };
 }
 
-function farmItems(store: D1Store): ThunkResult {
+function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   const toMove = store.items.filter(
     (i) =>
       !i.notransfer &&
@@ -138,16 +144,18 @@ function farmItems(store: D1Store): ThunkResult {
     return () => Promise.resolve();
   }
 
-  return moveItemsToVault(store, toMove, []);
+  return moveItemsToVault(store, toMove, [], cancelToken);
 }
 
 // Ensure that there's one open space in each category that could
 // hold an item, so they don't go to the postmaster.
-function makeRoomForD1Items(store: D1Store): ThunkResult {
+function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
-    return dispatch(makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets));
+    return dispatch(
+      makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets, cancelToken)
+    );
   };
 }
 
@@ -156,7 +164,8 @@ function makeRoomForD1Items(store: D1Store): ThunkResult {
 export function makeRoomForItemsInBuckets(
   stores: DimStore[],
   store: DimStore,
-  makeRoomBuckets: InventoryBucket[]
+  makeRoomBuckets: InventoryBucket[],
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     // If any category is full, we'll move one aside
@@ -186,14 +195,15 @@ export function makeRoomForItemsInBuckets(
       return;
     }
 
-    return dispatch(moveItemsToVault(store, itemsToMove, makeRoomBuckets));
+    return dispatch(moveItemsToVault(store, itemsToMove, makeRoomBuckets, cancelToken));
   };
 }
 
 function moveItemsToVault(
   store: DimStore,
   items: DimItem[],
-  makeRoomBuckets: InventoryBucket[]
+  makeRoomBuckets: InventoryBucket[],
+  cancelToken: CancelToken
 ): ThunkResult {
   const reservations: MoveReservations = {};
   // reserve one space in the active character
@@ -202,5 +212,5 @@ function moveItemsToVault(
     reservations[store.id][bucket.type!] = 1;
   });
 
-  return clearItemsOffCharacter(store, items, reservations);
+  return clearItemsOffCharacter(store, items, cancelToken, reservations);
 }
