@@ -5,6 +5,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -193,7 +194,19 @@ function Vendors({
         return v.def.hash;
       })
       .indexOf(3227191227);
-    delete vendorGroups[index];
+    if (Object.values(vendorGroups[index].vendors).some((v) => v.def.hash === VENDORS.XUR)) {
+      const xurIndex = vendorGroups[index].vendors
+        .map(function (v) {
+          return v.def.hash;
+        })
+        .indexOf(VENDORS.XUR);
+      delete vendorGroups[index].vendors[xurIndex]; // Remove Xur
+      vendorGroups[index].vendors.length--;
+    }
+    if (!vendorGroups[index].vendors.length) {
+      delete vendorGroups[index]; // Remove "Limited Time" if Xur was only Vendor
+      vendorGroups.length--;
+    }
   }
 
   const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
