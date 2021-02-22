@@ -184,28 +184,28 @@ function Vendors({
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
   }
 
+  const VENDORGROUPS_LIMITEDTIME = 3227191227;
+
   if (
     currentXur().start === undefined &&
     vendorGroups &&
-    Object.values(vendorGroups).some((v) => v.def.hash === 3227191227)
+    Object.values(vendorGroups).some((v) => v.def.hash === VENDORGROUPS_LIMITEDTIME)
   ) {
-    const index = vendorGroups
+    const vgIndex = vendorGroups
       .map(function (v) {
         return v.def.hash;
       })
-      .indexOf(3227191227);
-    if (Object.values(vendorGroups[index].vendors).some((v) => v.def.hash === VENDORS.XUR)) {
-      const xurIndex = vendorGroups[index].vendors
+      .indexOf(VENDORGROUPS_LIMITEDTIME);
+    if (Object.values(vendorGroups[vgIndex].vendors).some((v) => v.def.hash === VENDORS.XUR)) {
+      const xurIndex = vendorGroups[vgIndex].vendors
         .map(function (v) {
           return v.def.hash;
         })
         .indexOf(VENDORS.XUR);
-      delete vendorGroups[index].vendors[xurIndex]; // Remove Xur
-      vendorGroups[index].vendors.length--;
+      vendorGroups[vgIndex].vendors.splice(xurIndex, 1); // Remove Xur
     }
-    if (!vendorGroups[index].vendors.length) {
-      delete vendorGroups[index]; // Remove "Limited Time" if Xur was only Vendor
-      vendorGroups.length--;
+    if (!vendorGroups[vgIndex].vendors.length) {
+      vendorGroups.splice(vgIndex, 1); // Remove "Limited Time" if Xur was only Vendor
     }
   }
 
