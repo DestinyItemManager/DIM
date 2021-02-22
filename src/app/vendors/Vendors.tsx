@@ -5,7 +5,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { VENDORS } from 'app/search/d2-known-values';
+import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -184,18 +184,16 @@ function Vendors({
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
   }
 
-  const VENDORGROUPS_LIMITEDTIME = 3227191227;
-
   if (
     currentXur().start === undefined &&
     vendorGroups &&
-    Object.values(vendorGroups).some((v) => v.def.hash === VENDORGROUPS_LIMITEDTIME)
+    Object.values(vendorGroups).some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
   ) {
     const vgIndex = vendorGroups
       .map(function (v) {
         return v.def.hash;
       })
-      .indexOf(VENDORGROUPS_LIMITEDTIME);
+      .indexOf(VENDOR_GROUPS.LIMITED_TIME);
     if (Object.values(vendorGroups[vgIndex].vendors).some((v) => v.def.hash === VENDORS.XUR)) {
       const xurIndex = vendorGroups[vgIndex].vendors
         .map(function (v) {

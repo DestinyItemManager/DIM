@@ -243,6 +243,10 @@ export const VENDORS = {
   XUR: 2190858386,
 };
 
+export const VENDOR_GROUPS = {
+  LIMITED_TIME: 3227191227,
+};
+
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2319209868;
 
