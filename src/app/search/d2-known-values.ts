@@ -245,6 +245,8 @@ export const VENDORS = {
 
 export const VENDOR_GROUPS = {
   LIMITED_TIME: 3227191227,
+  TOWER: 679769104,
+  DESTINATION: 2537374699,
 };
 
 /** used to snag the icon for display */
