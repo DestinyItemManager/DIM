@@ -186,15 +186,14 @@ function Vendors({
 
   if (
     currentXur().start === undefined &&
-    vendorGroups &&
-    Object.values(vendorGroups).some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
+    vendorGroups?.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
   ) {
     const vgIndex = vendorGroups
       .map(function (v) {
         return v.def.hash;
       })
       .indexOf(VENDOR_GROUPS.LIMITED_TIME);
-    if (Object.values(vendorGroups[vgIndex].vendors).some((v) => v.def.hash === VENDORS.XUR)) {
+    if (vendorGroups[vgIndex].vendors.some((v) => v.def.hash === VENDORS.XUR)) {
       const xurIndex = vendorGroups[vgIndex].vendors
         .map(function (v) {
           return v.def.hash;
