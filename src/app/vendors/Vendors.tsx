@@ -177,32 +177,33 @@ function Vendors({
   const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
-  if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
-  }
-  if (vendorGroups && searchQuery.length) {
-    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
-  }
-
-  if (
-    currentXur().start === undefined &&
-    vendorGroups?.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
-  ) {
-    const vgIndex = vendorGroups
-      .map(function (v) {
-        return v.def.hash;
-      })
-      .indexOf(VENDOR_GROUPS.LIMITED_TIME);
-    if (vendorGroups[vgIndex].vendors.some((v) => v.def.hash === VENDORS.XUR)) {
-      const xurIndex = vendorGroups[vgIndex].vendors
+  if (vendorGroups) {
+    if (filterToUnacquired) {
+      vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
+    }
+    if (searchQuery.length) {
+      vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+    }
+    if (
+      currentXur().start === undefined &&
+      vendorGroups.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
+    ) {
+      const vgIndex = vendorGroups
         .map(function (v) {
           return v.def.hash;
         })
-        .indexOf(VENDORS.XUR);
-      vendorGroups[vgIndex].vendors.splice(xurIndex, 1); // Remove Xur
-    }
-    if (!vendorGroups[vgIndex].vendors.length) {
-      vendorGroups.splice(vgIndex, 1); // Remove "Limited Time" if Xur was only Vendor
+        .indexOf(VENDOR_GROUPS.LIMITED_TIME);
+      if (vendorGroups[vgIndex].vendors.some((v) => v.def.hash === VENDORS.XUR)) {
+        const xurIndex = vendorGroups[vgIndex].vendors
+          .map(function (v) {
+            return v.def.hash;
+          })
+          .indexOf(VENDORS.XUR);
+        vendorGroups[vgIndex].vendors.splice(xurIndex, 1); // Remove Xur
+      }
+      if (!vendorGroups[vgIndex].vendors.length) {
+        vendorGroups.splice(vgIndex, 1); // Remove "Limited Time" if Xur was only Vendor
+      }
     }
   }
 
