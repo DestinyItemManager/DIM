@@ -796,9 +796,12 @@
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
-    "GrenadeCooldown": "Grenade Cooldown",
-    "MeleeCooldown": "Melee Cooldown",
-    "SuperCooldown": "Super Cooldown",
+    "LightGrenadeCooldown": "Light Grenade Cooldown",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
+    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
+    "DarkMeleeCooldown": "Dark Melee Cooldown",
+    "DarkSuperCooldown": "Dark Super Cooldown",
     "RiftCooldown": "Rift Cooldown",
     "BarricadeCooldown": "Barricade Cooldown",
     "DodgeCooldown": "Dodge Cooldown",
