@@ -112,7 +112,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
   },
   {
     slotTag: 'combatstyle',
-    compatibleModTags: ['chargedwithlight', 'warmindcell', 'elementalwell'],
+    compatibleModTags: ['chargedwithlight', 'warmindcell', 'combat'],
     socketTypeHashes: [2955889001],
     compatiblePlugCategoryHashes: combatCompatiblePlugCategoryHashes,
     emptyModSocketHashes: [2493100093],
