@@ -85,7 +85,7 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
-      const plugCategoryId = def.plug?.plugCategoryIdentifier ?? '';
+      const plugCategoryId = def?.plug?.plugCategoryIdentifier ?? '';
 
       if (def.itemSubType === 21) {
         // Ornament Only Filtering
