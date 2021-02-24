@@ -66,6 +66,7 @@ export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)
   let i = 0;
 
   const rtn = [Array.from(modsCopy)];
+  containsSet.add(stringifyModPermutation(modsCopy));
 
   while (i < 5) {
     if (cursorArray[i] < i) {
