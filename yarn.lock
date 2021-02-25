@@ -943,6 +943,11 @@
   resolved "https://registry.yarnpkg.com/@d2api/d2api-types/-/d2api-types-1.0.2.tgz#ea90395bfdcd8cb233361573ba1f554b8d398e5d"
   integrity sha512-DR/vjANiI4UYf6Cy8hz+Xb0s5hE6c2I6OXsjx5DRBSJSETDevGxQk2LZjSt5b/yJcfvoaBoJowN3oEP4tlmXnw==
 
+"@d2api/date@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@d2api/date/-/date-2.0.1.tgz#dea556bf2cad9e026f79370fff66712ca34a7263"
+  integrity sha512-Te76ohH5yRXrRedZdQ0rRKnTBKp9oG0Hk2/ewdZDJKyS+NIZoTrumh+qAHUhas4GyJYqIiKOQLYcpzfPWoQKAg==
+
 "@destinyitemmanager/dim-api-types@^1.0.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.8.0.tgz#5fceeb54ac1f8004624f67ea813fe845ea49b2ee"

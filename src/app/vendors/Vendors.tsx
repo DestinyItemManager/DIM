@@ -1,9 +1,11 @@
+import { currentXur } from '@d2api/date';
 import CheckButton from 'app/dim-ui/CheckButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -175,11 +177,34 @@ function Vendors({
   const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
-  if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
-  }
-  if (vendorGroups && searchQuery.length) {
-    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+  if (vendorGroups) {
+    if (filterToUnacquired) {
+      vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
+    }
+    if (searchQuery.length) {
+      vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+    }
+    if (
+      currentXur().start === undefined &&
+      vendorGroups.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
+    ) {
+      const vgIndex = vendorGroups
+        .map(function (v) {
+          return v.def.hash;
+        })
+        .indexOf(VENDOR_GROUPS.LIMITED_TIME);
+      if (vendorGroups[vgIndex].vendors.some((v) => v.def.hash === VENDORS.XUR)) {
+        const xurIndex = vendorGroups[vgIndex].vendors
+          .map(function (v) {
+            return v.def.hash;
+          })
+          .indexOf(VENDORS.XUR);
+        vendorGroups[vgIndex].vendors.splice(xurIndex, 1); // Remove Xur
+      }
+      if (!vendorGroups[vgIndex].vendors.length) {
+        vendorGroups.splice(vgIndex, 1); // Remove "Limited Time" if Xur was only Vendor
+      }
+    }
   }
 
   const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
