@@ -60,7 +60,11 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
       if (!loadouts.length && !tags.length) {
         if (!silent) {
-          errorLog('importLegacyData', 'Error importing legacy data into DIM API - no data', data);
+          errorLog(
+            'importLegacyData',
+            'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
+            data
+          );
           showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
         }
         return;
