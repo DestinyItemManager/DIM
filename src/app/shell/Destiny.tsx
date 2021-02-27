@@ -16,7 +16,6 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
-import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ErrorPanel from './ErrorPanel';
@@ -269,7 +268,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
-      <MoveAmountPopupContainer />
     </>
   );
 }

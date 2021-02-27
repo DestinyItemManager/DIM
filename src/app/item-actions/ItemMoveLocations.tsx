@@ -118,13 +118,8 @@ export default function ItemMoveLocations({
         </>
       )}
 
-      {$featureFlags.moveAmounts && item.destinyVersion === 1 && maximum > 1 && (
-        <ItemMoveAmount
-          amount={amount}
-          maximum={maximum}
-          maxStackSize={item.maxStackSize}
-          onAmountChanged={setAmount}
-        />
+      {maximum > 1 && (
+        <ItemMoveAmount amount={amount} maximum={maximum} onAmountChanged={setAmount} />
       )}
     </>
   );

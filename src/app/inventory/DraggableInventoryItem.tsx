@@ -7,8 +7,6 @@ import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
 import { BehaviorSubject } from 'rxjs';
-import store from '../store/store';
-import { stackableDrag } from './actions';
 import { showDragGhost } from './drag-ghost-item';
 import { DimItem } from './item-types';
 
@@ -54,10 +52,6 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
     hideItemPopup();
 
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(true));
-    }
-
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
       document.body.classList.add('drag-perf-show');
@@ -68,13 +62,9 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
     return { item: props.item };
   },
 
-  endDrag(props) {
+  endDrag() {
     if (dragTimeout !== null) {
       cancelAnimationFrame(dragTimeout);
-    }
-
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(false));
     }
 
     document.body.classList.remove('drag-perf-show');

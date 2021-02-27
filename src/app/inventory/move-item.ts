@@ -136,7 +136,6 @@ export function moveItemTo(
 
       // Select how much of a stack to move
       if (
-        $featureFlags.moveAmounts &&
         chooseAmount &&
         item.maxStackSize > 1 &&
         item.amount > 1 &&
