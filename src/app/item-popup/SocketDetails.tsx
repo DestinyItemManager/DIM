@@ -243,8 +243,8 @@ function SocketDetails({
   const modListRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (modListRef.current) {
-      const firstElement = modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement;
-      firstElement?.focus();
+      const firstElement = modListRef.current.querySelector("[tabIndex='0']")!;
+      (firstElement as HTMLInputElement)?.focus();
     }
   }, []);
 
