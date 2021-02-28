@@ -471,7 +471,7 @@ module.exports = (env) => {
 
     config.module.rules.push({
       test: /\.jsx?$/,
-      include: /node_modules/,
+      include: /node_modules\/react-dom/,
       use: ['react-hot-loader/webpack'],
     });
   } else {
