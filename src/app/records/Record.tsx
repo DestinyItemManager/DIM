@@ -14,7 +14,7 @@ import {
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import catalystInfo from 'data/d2/catalyst-triumph-icons.json';
 import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
@@ -46,7 +46,7 @@ interface RecordInterval {
   rewards: DestinyItemQuantity[];
 }
 
-const overrideIcons = Object.keys(catalystIcons).map(Number);
+const overrideIcons = Object.keys(catalystInfo).map(Number);
 
 export default function Record({
   record,
@@ -76,12 +76,20 @@ export default function Record({
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
+
+  const sourceInfo = overrideIcons.includes(recordHash)
+    ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description ??
+      t('Progress.Redacted')
+    : null;
+
   const description = obscured
     ? recordDef.stateInfo.obscuredString
-    : recordDef.displayProperties.description;
+    : `${recordDef.displayProperties.description} ${
+        sourceInfo ? `\n\n${t('Progress.Source')} ${sourceInfo}` : ''
+      }`;
 
   const recordIcon = overrideIcons.includes(recordHash)
-    ? catalystIcons[recordHash]
+    ? catalystInfo[recordHash].icon
     : recordDef.displayProperties.icon;
 
   if (completedRecordsHidden && acquired) {

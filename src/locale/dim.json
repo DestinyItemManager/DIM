@@ -691,9 +691,11 @@
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[REDACTED]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Secret Triumph",
+    "Source": "Source:",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },
