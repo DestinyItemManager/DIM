@@ -330,6 +330,7 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
               </button>
             ))}
             */}
+          {session?.query}
         </div>
       }
     >
