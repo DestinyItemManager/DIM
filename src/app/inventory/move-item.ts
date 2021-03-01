@@ -1,7 +1,9 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { compareOpenSelector } from 'app/compare/selectors';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -55,8 +57,14 @@ function showMoveAmountPopup(
 /**
  * Move the item to the currently active store. Used for double-click action.
  */
-export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
+export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    if (loadoutDialogOpen || compareOpenSelector(getState())) {
+      return item;
+    }
+
+    e?.stopPropagation();
+
     const active = getCurrentStore(storesSelector(getState()))!;
 
     // Equip if it's not equipped or it's on another character

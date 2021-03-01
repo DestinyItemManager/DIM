@@ -1,4 +1,4 @@
-import { CompareService } from 'app/compare/compare.service';
+import { compareSessionSelector } from 'app/compare/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
@@ -90,6 +90,7 @@ function collect(connect: DragSourceConnector): InternalProps {
   };
 }
 
+// TODO: break this out for inspect = true!
 function DraggableInventoryItem({
   connectDragSource,
   inspect,
@@ -112,7 +113,9 @@ function DraggableInventoryItem({
   const onTouch = (e: React.TouchEvent) => {
     setTouchActive(e.type === 'touchstart');
 
-    if (!inspect || loadoutDialogOpen || CompareService.dialogOpen) {
+    // We don't need this to rerender on store / compare changes. But gotta figure out a better way to look at this.
+    // TODO: Do we need these checks at all?
+    if (!inspect || loadoutDialogOpen || Boolean(compareSessionSelector(store.getState()))) {
       return;
     }
 

@@ -10,6 +10,8 @@ import { createSelector } from 'reselect';
  */
 export const compareSessionSelector = (state: RootState) => state.compare.session;
 
+export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
+
 /**
  * Returns all the items being compared.
  */
