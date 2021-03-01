@@ -21,6 +21,7 @@ const svgToMiniDataURI = require('mini-svg-data-uri');
 const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -467,11 +468,7 @@ module.exports = (env) => {
       })
     );
 
-    config.module.rules.push({
-      test: /\.jsx?$/,
-      include: /node_modules/,
-      use: ['react-hot-loader/webpack'],
-    });
+    config.plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
     config.plugins.push(

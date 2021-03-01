@@ -4,7 +4,6 @@ import React from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd-multi-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { hot } from 'react-hot-loader/root';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
@@ -31,4 +30,4 @@ function Root() {
   );
 }
 
-export default hot(Root);
+export default Root;

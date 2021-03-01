@@ -2,6 +2,8 @@
 
 * You can once again select how much of a stackable item to move, by editing the amount in the move popup before clicking a move button. Holding shift during drag no longer allows you to select the amount - you must do it from the buttons in the popup.
 
+## 6.54.0 <span class="changelog-date">(2021-02-28)</span>
+
 ## 6.53.0 <span class="changelog-date">(2021-02-21)</span>
 
 * Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.
