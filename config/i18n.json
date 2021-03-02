@@ -726,7 +726,7 @@
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Secret Triumph",
-    "Source": "Source:",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",

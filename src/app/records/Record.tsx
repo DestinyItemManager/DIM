@@ -85,7 +85,7 @@ export default function Record({
   const description = obscured
     ? recordDef.stateInfo.obscuredString
     : `${recordDef.displayProperties.description} ${
-        sourceInfo ? `\n\n${t('Progress.Source')} ${sourceInfo}` : ''
+        sourceInfo ? `\n\n${t('Progress.Source', { sourceInfo })}` : ''
       }`;
 
   const recordIcon = overrideIcons.includes(recordHash)
