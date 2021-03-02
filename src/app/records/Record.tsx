@@ -46,7 +46,7 @@ interface RecordInterval {
   rewards: DestinyItemQuantity[];
 }
 
-const overrideIcons = Object.keys(catalystInfo).map(Number);
+const overrideInfo = Object.keys(catalystInfo).map(Number);
 
 export default function Record({
   record,
@@ -77,7 +77,9 @@ export default function Record({
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
 
-  const sourceInfo = overrideIcons.includes(recordHash)
+  const extraInfo = overrideInfo.includes(recordHash);
+
+  const sourceInfo = extraInfo
     ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description ??
       t('Progress.Redacted')
     : null;
@@ -88,9 +90,7 @@ export default function Record({
         sourceInfo ? `\n\n${t('Progress.Source', { sourceInfo })}` : ''
       }`;
 
-  const recordIcon = overrideIcons.includes(recordHash)
-    ? catalystInfo[recordHash].icon
-    : recordDef.displayProperties.icon;
+  const recordIcon = extraInfo ? catalystInfo[recordHash].icon : recordDef.displayProperties.icon;
 
   if (completedRecordsHidden && acquired) {
     return null;
