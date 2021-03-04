@@ -79,11 +79,18 @@ export default function Record({
 
   const extraInfo = overrideInfo.includes(recordHash);
 
+  const questName =
+    extraInfo && catalystInfo[recordHash].questHash
+      ? defs.InventoryItem.get(catalystInfo[recordHash].questHash)?.setData?.questLineName
+      : extraInfo && catalystInfo[recordHash].missionHash
+      ? defs.Activity.get(catalystInfo[recordHash].missionHash)?.displayProperties?.name
+      : null;
+
   const sourceInfo = extraInfo
     ? catalystInfo[recordHash].source
       ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description
       : catalystInfo[recordHash].key
-      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
+      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { questName }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
       : t('Progress.Redacted')
     : null;
 

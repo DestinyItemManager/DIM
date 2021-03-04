@@ -2,7 +2,8 @@
   "15917031": {
     "icon": "/common/destiny2_content/icons/a1fddbd287f5c9259914e4082417726e.jpg",
     "source": null,
-    "key": "DeadMansTale"
+    "key": "Quest",
+    "questHash": 2703740980
   },
   "173502661": {
     "icon": "/common/destiny2_content/icons/b760b737519af909e26f21009d6a1487.jpg",
@@ -47,7 +48,8 @@
   "591600693": {
     "icon": "/common/destiny2_content/icons/c013e41cdb32779bc2322337614ea06b.jpg",
     "source": null,
-    "key": "OutbreakPerfected"
+    "key": "Mission",
+    "missionHash": 2731208666
   },
   "663317912": {
     "icon": "/common/destiny2_content/icons/0e4aaccfad36ae9179375de5477bfd13.jpg",
@@ -72,12 +74,14 @@
   "1107018752": {
     "icon": "/common/destiny2_content/icons/d011f6e099dc412ca11a7c8c12c08a3c.jpg",
     "source": null,
-    "key": "ErianasVow"
+    "key": "Quest",
+    "questHash": 55722088
   },
   "1107121513": {
     "icon": "/common/destiny2_content/icons/690b61c9ddb068f4e2641e0ceca16fdb.jpg",
     "source": null,
-    "key": "Hawkmoon"
+    "key": "Mission",
+    "missionHash": 1738383283
   },
   "1182982189": {
     "icon": "/common/destiny2_content/icons/3e864b06fb9266cac7b4ab89835d2e6f.jpg",
@@ -117,12 +121,14 @@
   "1586771061": {
     "icon": "/common/destiny2_content/icons/6144b4eb582f8a6bdb3b011d8e9d9e4e.jpg",
     "source": null,
-    "key": "TommysMatchbook"
+    "key": "Quest",
+    "questHash": 3566017743
   },
   "1833569807": {
     "icon": "/common/destiny2_content/icons/68961477ce421de2dbd8cefbc59a6edf.jpg",
     "source": null,
-    "key": "TicuusDivination"
+    "key": "Quest",
+    "questHash": 3805576189
   },
   "1940645774": {
     "icon": "/common/destiny2_content/icons/374c3ebc08dd55d77a634360b3ec8603.jpg",
@@ -132,7 +138,8 @@
   "2135780490": {
     "icon": "/common/destiny2_content/icons/596b7579fcc98656493dc3783e6a963e.jpg",
     "source": null,
-    "key": "Duality"
+    "key": "Quest",
+    "questHash": 2652352679
   },
   "2383994221": {
     "icon": "/common/destiny2_content/icons/1d38c8d82f1bd1d22bf76314fe8764f9.jpg",
@@ -157,12 +164,14 @@
   "2708727662": {
     "icon": "/common/destiny2_content/icons/95a9a1af9280ef24c6c0d821f589d399.jpg",
     "source": null,
-    "key": "NoTimetoExplain"
+    "key": "Quest",
+    "questHash": 2510021888
   },
   "2744473468": {
     "icon": "/common/destiny2_content/icons/2398efcf2c81d69f03fd5fab272046ad.jpg",
     "source": null,
-    "key": "Witherhoard"
+    "key": "Quest",
+    "questHash": 2003401139
   },
   "2761319400": {
     "icon": "/common/destiny2_content/icons/19e7c9a3d838e3801e7147975d173cb5.jpg",
@@ -222,7 +231,8 @@
   "3644944303": {
     "icon": "/common/destiny2_content/icons/51c18c347866e7370597e0e155de4fb1.jpg",
     "source": null,
-    "key": "Symmetry"
+    "key": "Quest",
+    "questHash": 747436434
   },
   "3663964046": {
     "icon": "/common/destiny2_content/icons/f1144dc4e0d95d87d63ecedc4d31c84c.jpg",

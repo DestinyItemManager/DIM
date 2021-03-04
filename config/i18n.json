@@ -66,19 +66,11 @@
   },
   "Catalyst": {
     "Source": {
-      "DeadMansTale": "Acquired from the Quest \"At Your Fingertips.\"",
-      "Duality": "Acquired from the Quest \"Walk the Line.\"",
-      "ErianasVow": "Acquired from the Quest \"The Vow.\"",
-      "Hawkmoon": "Acquired from the \"Harbinger\" mission.",
       "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
-      "NoTimetoExplain": "Acquired from the Quest \"Soon.\"",
-      "OutbreakPerfected": "Acquired from the Heroic \"Zero Hour\" mission.",
+      "Mission": "Complete the \"{{questName}}\" mission.",
+      "Quest": "Complete the \"{{questName}}\" quest.",
       "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
-      "Symmetry": "Acquired from the Quest \"Symmetry Remastered.\"",
-      "TheFourthHorseman": "Acquired from Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors.",
-      "TicuusDivination": "Acquired from the Quest \"Points Piercing Forever.\"",
-      "TommysMatchbook": "Acquired from the Quest \"Good Match.\"",
-      "Witherhoard": "Acquired from the Quest \"The Bank Job.\""
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
     }
   },
   "Compare": {
