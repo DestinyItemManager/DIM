@@ -79,7 +79,7 @@ export default function Record({
 
   const extraInfo = overrideInfo.includes(recordHash);
 
-  const questName =
+  const title =
     extraInfo && catalystInfo[recordHash].questHash
       ? defs.InventoryItem.get(catalystInfo[recordHash].questHash)?.setData?.questLineName
       : extraInfo && catalystInfo[recordHash].missionHash
@@ -90,7 +90,7 @@ export default function Record({
     ? catalystInfo[recordHash].source
       ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description
       : catalystInfo[recordHash].key
-      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { questName }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
+      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { title }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
       : t('Progress.Redacted')
     : null;
 
