@@ -80,10 +80,12 @@ export default function Record({
   const extraInfo = overrideInfo.includes(recordHash);
 
   const title =
-    extraInfo && catalystInfo[recordHash].questHash
-      ? defs.InventoryItem.get(catalystInfo[recordHash].questHash)?.setData?.questLineName
-      : extraInfo && catalystInfo[recordHash].missionHash
-      ? defs.Activity.get(catalystInfo[recordHash].missionHash)?.displayProperties?.name
+    extraInfo && catalystInfo[recordHash].titleHash
+      ? catalystInfo[recordHash].key === 'Quest'
+        ? defs.InventoryItem.get(catalystInfo[recordHash].titleHash)?.setData?.questLineName
+        : catalystInfo[recordHash].key === 'Mission'
+        ? defs.Activity.get(catalystInfo[recordHash].titleHash)?.displayProperties?.name
+        : null
       : null;
 
   const sourceInfo = extraInfo
