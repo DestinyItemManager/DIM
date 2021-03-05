@@ -14,7 +14,7 @@ import {
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import catalystInfo from 'data/d2/catalyst-triumph-icons.json';
+import catalystInfo from 'data/d2/catalyst-triumph-info.json';
 import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
@@ -79,9 +79,21 @@ export default function Record({
 
   const extraInfo = overrideInfo.includes(recordHash);
 
+  const title =
+    extraInfo && catalystInfo[recordHash].titleHash
+      ? catalystInfo[recordHash].key === 'Quest'
+        ? defs.InventoryItem.get(catalystInfo[recordHash].titleHash)?.setData?.questLineName
+        : catalystInfo[recordHash].key === 'Mission'
+        ? defs.Activity.get(catalystInfo[recordHash].titleHash)?.displayProperties?.name
+        : null
+      : null;
+
   const sourceInfo = extraInfo
-    ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description ??
-      t('Progress.Redacted')
+    ? catalystInfo[recordHash].source
+      ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description
+      : catalystInfo[recordHash].key
+      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { title }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
+      : t('Progress.Redacted')
     : null;
 
   const description = obscured
