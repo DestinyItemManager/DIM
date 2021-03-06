@@ -79,6 +79,15 @@
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
     "VendorNotFound": "ベンダー情報ありません"
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "この武器で強力な敵を倒すことにより発見されます。",
+      "Mission": "\"{{title}}\" ミッションを完了。",
+      "Quest": "\"{{title}}\" クエストを完了。",
+      "RuinousEffigy": "変質スフィアで敵を倒すことによって発見されます。",
+      "TheFourthHorseman": "セラフバンカー、セラフタワー、および失われたセクター(伝説)を完了。"
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "アーマー2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "キャラクターからこのアイテムを外せません",
-    "Drag": "Shiftキーを押しながら、部分スタックを転送します",
     "NoStorage": "DIMがデータを保管できません。",
     "NoStorageMessage": "DIMは、ブラウザにデータを保存できません。この問題は、プライベートモードでブラウジングした場合、もしくは空きディスク容量が少ない場合が原因している可能性があります。DIMにログインしたり、利用することができません。"
   },
@@ -560,10 +568,7 @@
     "Weekly": "ウィークチャレンジ(週間の挑戦)"
   },
   "MoveAmount": {
-    "DownStack": "次のフルスタックになるまで減少させる",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
-    "UpStack": "次のフルスタックになるまで追加する"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "このアイテムはコレクションでアンロックされています。",
@@ -691,9 +696,11 @@
     "QuestExpires": "有効期限 ",
     "Quests": "クエスト",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[編集済み]",
     "Resets": "1 リセット",
     "Resets_plural": "{{count}} リセット",
     "SecretTriumph": "秘密の勝利の道のり",
+    "Source": "ソース : {{sourceInfo}}",
     "StatTrackers": "追跡中ステータス",
     "TrackedTriumphs": "追跡中の勝利の道のり"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "DIM Sync にデータを保存する際に問題が発生しました。後で自動的に再試行します。",
     "UpdateErrorTitle": "同期エラー",
     "Usage": "DIMは、このデバイスで利用可能な {{quota, humanBytes}} のうち {{usage, humanBytes}} を使用しています。これには、Bungie.netからダウンロードされたDestinyアイテムデータベースが含まれます。"
-  },
-  "StoreBucket": {
-    "FillStack": "フルスタック ({{amount}})",
-    "HowMuch": "{{itemname}} を何個移動しますか。",
-    "Move": "移動"
   },
   "Tags": {
     "Archive": "アーカイブ",

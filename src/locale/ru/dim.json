@@ -79,6 +79,15 @@
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные торговцев недоступны."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "Изначальные свойства",
     "Armor2": "Броня 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
-    "Drag": "Зажмите [Shift] чтобы переместить часть пачки",
     "NoStorage": "DIM не смог записать данные",
     "NoStorageMessage": "Сохранение данных в браузере недоступно. \nВы не сможете авторизоваться или использовать DIM.\n\nЭто может быть вызвано режимом Инкогнито, Приватным режимом или нехваткой места на диске."
   },
@@ -560,10 +568,7 @@
     "Weekly": "Еженедельное Испытание"
   },
   "MoveAmount": {
-    "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
-    "MinusStack": "-Пачка",
-    "PlusStack": "+Пачка",
-    "UpStack": "Увеличить до предыдущей полной \"пачки\""
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
@@ -691,9 +696,11 @@
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
+    "Redacted": "[УДАЛЕНО]",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Трекеры",
     "TrackedTriumphs": "Отслеживаемые Триумфы"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "Ошибка DIM Sync",
     "Usage": "Лоакльные Данные: занято {{usage, humanBytes}} из {{quota, humanBytes}} доступного места. В сохраненные данные входят Базы предметов Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Переместить все ({{amount}})",
-    "HowMuch": "Сколько {{itemname}} переместить?",
-    "Move": "Переместить"
   },
   "Tags": {
     "Archive": "Архив",

@@ -79,6 +79,15 @@
     "UnknownError": "Mensagem da Bungie.net: {{message}}",
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Encontrado ao derrotar inimigos poderosos com esta arma.",
+      "Mission": "Complete a missão \"{{title}}\".",
+      "Quest": "Complete a jornada \"{{title}}.",
+      "RuinousEffigy": "Encontrado ao derrotar inimigos com esferas de Transmutação.",
+      "TheFourthHorseman": "Complete Bunkers do Serafim, Torres do Serafim e Setores Perdidos Lendários."
+    }
+  },
   "Compare": {
     "Archetype": "Arquétipo",
     "Armor2": "Armadura 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
-    "Drag": "Segure a tecla shift para transferir uma pilha parcial",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não está conseguindo salvar dados em seu navegador. Isso normalmente ocorre durante a navegação privada ou em modo anônimo, ou ainda quando há pouco espaço disponível em disco. Sendo assim, não será possível se conectar ou usar o DIM."
   },
@@ -560,10 +568,7 @@
     "Weekly": "Desafio Semanal"
   },
   "MoveAmount": {
-    "DownStack": "Eliminar pilha",
-    "MinusStack": "-Pilha",
-    "PlusStack": "+Pilha",
-    "UpStack": "Completar pilha"
+    "Amount": "Quantidade:"
   },
   "MovePopup": {
     "Acquired": "Este item está desbloqueado em coleções.",
@@ -691,9 +696,11 @@
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[EDITADO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Triunfo Secreto",
+    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Estatísticas",
     "TrackedTriumphs": "Triunfos Rastreados"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
     "UpdateErrorTitle": "Erro na Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Encher Pilha ({{amount}})",
-    "HowMuch": "Quantos {{itemname}} para transferir?",
-    "Move": "Transferir"
   },
   "Tags": {
     "Archive": "Arquivar",

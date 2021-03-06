@@ -79,6 +79,15 @@
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "Los datos de los comerciantes no están disponibles."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Encontrado al derrotar enemigos poderosos con este arma.",
+      "Mission": "Completa la misión \"{{title}}\".",
+      "Quest": "Completa la aventura \"{{title}}\".",
+      "RuinousEffigy": "Encontrado al derrotar enemigos con esferas de Esferas de Transmutación.",
+      "TheFourthHorseman": "Completa Búnqueres Serafines, Torres Serafinas y Sectores Perdidos de Leyenda."
+    }
+  },
   "Compare": {
     "Archetype": "Arquetipo",
     "Armor2": "Armadura 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "Drag": "Mantenén SHIFT para transferir una pila parcial",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en privado o en modo incógnito, o cuando tengas poco espacio en disco. No podrás ser capaz de iniciar sesión o usar DIM."
   },
@@ -560,10 +568,7 @@
     "Weekly": "Desafío Semanal"
   },
   "MoveAmount": {
-    "DownStack": "Reducir a la siguiente pila",
-    "MinusStack": "-Pila",
-    "PlusStack": "+Pila",
-    "UpStack": "Aumenta hasta la siguiente pila"
+    "Amount": "Cantidad:"
   },
   "MovePopup": {
     "Acquired": "Este objeto está desbloqueado en colecciones.",
@@ -691,9 +696,11 @@
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[CENSURADO]",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
     "SecretTriumph": "Triunfo Secreto",
+    "Source": "Origen: {{sourceInfo}}",
     "StatTrackers": "Rastreadores de estadísticas",
     "TrackedTriumphs": "Triunfos seguidos"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "Tuvimos un problema guardando tus datos a Sincronización DIM. Seguiremos intentándolo automáticamente más tarde.",
     "UpdateErrorTitle": "Error de Sincronización DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Llenar la pila ({{amount}})",
-    "HowMuch": "¿Cuántos {{itemname}} quieres mover?",
-    "Move": "Mover"
   },
   "Tags": {
     "Archive": "Archivo",

@@ -79,6 +79,15 @@
     "UnknownError": "Wiadomość Bungie.net: {{message}}",
     "VendorNotFound": "Dane sprzedawcy są niedostępne."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "Archetyp",
     "Armor2": "Pancerz 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "Nie można zdjąć tego przedmiotu z tej postaci.",
-    "Drag": "Przytrzymaj shift aby przenieść częściowy stos",
     "NoStorage": "DIM nie może przechować danych",
     "NoStorageMessage": "DIM nie może przechować danych w twojej przeglądarce. To może być spowodowane przez przeglądanie w trybie prywatnym lub incognito, albo kiedy brakuje miejsca na dysku. Nie będziesz mógł się zalogować ani używać DIM."
   },
@@ -560,10 +568,7 @@
     "Weekly": "Cotygodniowe wyzwanie"
   },
   "MoveAmount": {
-    "DownStack": "Zmniejsz do następnego pełnego stosu",
-    "MinusStack": "-Stos",
-    "PlusStack": "+Stos",
-    "UpStack": "Zwiększ do następnego pełnego stosu"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
@@ -691,9 +696,11 @@
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
+    "Redacted": "[USUNIĘTO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
     "SecretTriumph": "Sekretny Triumf",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Śledzenie statystyk",
     "TrackedTriumphs": "Śledzone triumfy"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Automatycznie spróbujemy ponownie później.",
     "UpdateErrorTitle": "Błąd synchronizacji DIM",
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Wypełnij stos ({{amount}})",
-    "HowMuch": "Jak dużo {{itemname}} przenieść?",
-    "Move": "Przenieś"
   },
   "Tags": {
     "Archive": "Archiwizuj",

@@ -79,6 +79,15 @@
     "UnknownError": "來自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商販資料不可用."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "Drag": "按住shift轉移部分堆疊",
     "NoStorage": "DIM無法存儲資料",
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },
@@ -560,10 +568,7 @@
     "Weekly": "每週挑戰"
   },
   "MoveAmount": {
-    "DownStack": "減少一疊",
-    "MinusStack": "-堆叠",
-    "PlusStack": "+堆叠",
-    "UpStack": "增加一疊"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -691,9 +696,11 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任務",
     "RecordValue": "{{value}}點",
+    "Redacted": "［未公開］",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密勝利",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "同步錯誤",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
-  },
-  "StoreBucket": {
-    "FillStack": "最大堆疊 ({{amount}})",
-    "HowMuch": "想要移動多少個{{itemname}}？",
-    "Move": "移動"
   },
   "Tags": {
     "Archive": "歸檔",

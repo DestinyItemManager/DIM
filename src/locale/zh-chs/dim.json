@@ -79,6 +79,15 @@
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "通过使用此武器击败强大的敌人获得。",
+      "Mission": "完成“{{title}}”任务。",
+      "Quest": "完成“{{title}}”任务。",
+      "RuinousEffigy": "通过用蜕变球体击败敌人获得。",
+      "TheFourthHorseman": "完成炽天使地堡、炽天使高塔，以及传说遗失区域。"
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
-    "Drag": "按住shift转移部分堆叠",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM 无法在你的浏览器中存储数据。这可能是因为你在使用无痕或隐身模式，或磁盘空间不足。你将无法登录或使用 DIM。"
   },
@@ -560,10 +568,7 @@
     "Weekly": "每周挑战"
   },
   "MoveAmount": {
-    "DownStack": "减少一叠",
-    "MinusStack": "-堆叠",
-    "PlusStack": "+堆叠",
-    "UpStack": "增加一叠"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -691,9 +696,11 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",
+    "Redacted": "[隐藏]",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密胜利",
+    "Source": "来源：{{sourceInfo}}",
     "StatTrackers": "数据追踪器",
     "TrackedTriumphs": "跟踪的成就"
   },
@@ -766,16 +773,16 @@
     "BarricadeCooldown": "屏障冷却",
     "Custom": "自定义总和",
     "CustomDesc": "所选基础属性的自定义总和，未计入模组或大师杰作。可在设置里配置自定义总和所包含的属性。",
-    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
-    "DarkMeleeCooldown": "Dark Melee Cooldown",
-    "DarkSuperCooldown": "Dark Super Cooldown",
+    "DarkGrenadeCooldown": "冰影手雷冷却",
+    "DarkMeleeCooldown": "冰影近战冷却",
+    "DarkSuperCooldown": "冰影超能冷却",
     "Discipline": "训练",
     "DodgeCooldown": "闪身冷却",
     "FinalSeason": "（S{{finalSeason}}）",
     "Intellect": "智力",
-    "LightGrenadeCooldown": "Light Grenade Cooldown",
-    "LightMeleeCooldown": "Light Melee Cooldown",
-    "LightSuperCooldown": "Light Super Cooldown",
+    "LightGrenadeCooldown": "光能手雷冷却",
+    "LightMeleeCooldown": "光能近战冷却",
+    "LightSuperCooldown": "光能超能冷却",
     "MaxGearPower": "当前装备最大光等",
     "MaxGearPowerAll": "所有装备最高光等",
     "MaxTotalPower": "最大光等",
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "保存你的数据到 DIM 同步时出错。我们稍后会自动重试。",
     "UpdateErrorTitle": "DIM 同步错误",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
-  },
-  "StoreBucket": {
-    "FillStack": "最大堆叠 ({{amount}})",
-    "HowMuch": "想要移动多少个{{itemname}}？",
-    "Move": "移动"
   },
   "Tags": {
     "Archive": "归档",

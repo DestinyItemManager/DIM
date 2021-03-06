@@ -79,6 +79,15 @@
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Trovato sconfiggendo potenti nemici con quest'arma.",
+      "Mission": "Completa la missione \"{{title}}\".",
+      "Quest": "Completa l'impresa \"{{title}}\".",
+      "RuinousEffigy": "Trovato sconfiggendo nemici con le Sfere di Trasmutazione.",
+      "TheFourthHorseman": "Completa Bunker del Serafino, Torri del Serafino e Settori Perduti Leggenda."
+    }
+  },
   "Compare": {
     "Archetype": "Archetipo",
     "Armor2": "Armatura 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
-    "Drag": "Tieni premuto Shift per trasferire uno stack parziale",
     "NoStorage": "DIM non può salvare dati",
     "NoStorageMessage": "DIM non può memorizzare dati nel tuo browser. Questo succede se stai navigando in modalità privacy o in incognito, oppure se hai poco spazio libero in memoria. Non potrai effettuare l'accesso ed utilizzare DIM."
   },
@@ -560,10 +568,7 @@
     "Weekly": "Sfida Settimanale"
   },
   "MoveAmount": {
-    "DownStack": "Diminuisci fino al prossimo stack pieno",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
-    "UpStack": "Aumento fino al prossimo stack pieno"
+    "Amount": "Quantità:"
   },
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
@@ -691,9 +696,11 @@
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
+    "Redacted": "[CENSURATO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Trionfo Segreto",
+    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Contatori Statistiche",
     "TrackedTriumphs": "Trionfi Seguiti"
   },
@@ -766,16 +773,16 @@
     "BarricadeCooldown": "Tempo di recupero Barricata",
     "Custom": "Totale Personalizzato",
     "CustomDesc": "Totale personalizzato delle statistiche di base selezionate, ignorando Modifiche o Prodigio. Controlla Impostazioni per configurare quali statistiche vengono incluse.",
-    "DarkGrenadeCooldown": "Tempo di recupero Granata dell'Oscurità",
-    "DarkMeleeCooldown": "Tempo di recupero Corpo a corpo dell'Oscurità",
-    "DarkSuperCooldown": "Tempo di recupero della Super dell'Oscurità",
+    "DarkGrenadeCooldown": "Tempo di rec. Granata dell'Oscurità",
+    "DarkMeleeCooldown": "Tempo di rec. Corpo a corpo dell'Oscurità",
+    "DarkSuperCooldown": "Tempo di rec. della Super dell'Oscurità",
     "Discipline": "Disciplina",
     "DodgeCooldown": "Tempo di recupero Schivata",
     "FinalSeason": "(S{{finalSeason}})",
     "Intellect": "Intelletto",
-    "LightGrenadeCooldown": "Tempo di recupero Granata della Luce",
-    "LightMeleeCooldown": "Tempo di recupero Corpo a corpo della Luce",
-    "LightSuperCooldown": "Tempo di recupero della Super della Luce",
+    "LightGrenadeCooldown": "Tempo di rec. Granata della Luce",
+    "LightMeleeCooldown": "Tempo di rec. Corpo a corpo della Luce",
+    "LightSuperCooldown": "Tempo di rec. della Super della Luce",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",
     "MaxGearPowerAll": "Potere massimo di tutto l'equipaggiamento",
     "MaxTotalPower": "Potere Massimo totale",
@@ -840,11 +847,6 @@
     "UpdateErrorTitle": "Errore DIM Sync",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
-  "StoreBucket": {
-    "FillStack": "Riempi Stack ({{amount}})",
-    "HowMuch": "Quanti {{itemname}} spostare?",
-    "Move": "Sposta"
-  },
   "Tags": {
     "Archive": "Archivia",
     "ClearTag": "Cancella Etichetta",
@@ -880,9 +882,9 @@
       "FAQLogout": "Come posso effettuare il log out da DIM?",
       "FAQLogoutAnswer": "Apri il menù dall'icona in alto a sinistra e scegli \"Disconnetti\"",
       "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
-      "FAQLostItemAnswer": "Bungie non permette di cancellare oggetti (neanche la loro app!). Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o in un altro personaggio. Puoi cercare l'oggetto. Se ciò non dovesse funzionare, ricarica la pagina. Controlla su {{link}} o nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+      "FAQLostItemAnswer": "Bungie non permette di cancellare oggetti (neanche la loro app!). Molto probabilmente un trasferimento è fallito, ed ha lasciato il tuo oggetto nel deposito o in un altro personaggio. Puoi cercare l'oggetto e se ciò non dovesse funzionare, ricarica la pagina. Controlla su {{link}} o nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
       "FAQMobile": "DIM supporterà dispositivi mobili? Ci sarà una app?",
-      "FAQMobileAnswer": "Il sito di DIM può essere aperto su telefoni e tablet oggi, e puoi aggiungerlo alla tua schermata home per una esperienza simile ad un'app.",
+      "FAQMobileAnswer": "Il sito di DIM può essere aperto su telefoni e tablet, e puoi aggiungerlo alla tua schermata home per una esperienza simile ad un'app.",
       "GitHub": "GitHub",
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
@@ -898,7 +900,7 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
       "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{date}}",
-      "Wiki": "Wiki Guida utente DIM",
+      "Wiki": "Guida utente DIM",
       "WikiHelp": "Impara ad utilizzare DIM e contribuisci alla nostra guida utenti sviluppata dalla comunità.",
       "YouTube": "YouTube",
       "YouTubeHelp": "Impara ad usare DIM sul nostro canale YouTube."

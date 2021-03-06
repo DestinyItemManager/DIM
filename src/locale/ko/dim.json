@@ -79,6 +79,15 @@
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "이 무기로 강력한 전투원을 처치하여 찾을 수 있습니다.",
+      "Mission": "\"{{title}}\" 미션을 완료하세요.",
+      "Quest": "\"{{title}}\" 퀘스트를 완료하세요.",
+      "RuinousEffigy": "변환 구체로 전투원을 처치하여 찾을 수 있습니다.",
+      "TheFourthHorseman": "세라프 벙커, 세라프 탑, 전설 잊혀진 구역을 완료하세요."
+    }
+  },
   "Compare": {
     "Archetype": "아키타입",
     "Armor2": "방어구 2.0",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "Drag": "Shift 키를 누르고 유지하여 스택의 일부를 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 이와 같은 문제가 발생할 수 있습니다. DIM에 로그인하거나 사용할 수 없습니다."
   },
@@ -560,10 +568,7 @@
     "Weekly": "주간 도전"
   },
   "MoveAmount": {
-    "DownStack": "다음 최대 중첩량으로 감소시키기",
-    "MinusStack": "-스택",
-    "PlusStack": "+스택",
-    "UpStack": "다음 최대 중첩량으로 증가시키기"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
@@ -691,9 +696,11 @@
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
+    "Redacted": "[비공개]",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
     "SecretTriumph": "비밀 업적",
+    "Source": "출처: {{sourceInfo}}",
     "StatTrackers": "통계 추적기",
     "TrackedTriumphs": "추적 중인 업적"
   },
@@ -839,11 +846,6 @@
     "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
     "UpdateErrorTitle": "DIM 동기화 오류",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
-  },
-  "StoreBucket": {
-    "FillStack": "중첩 ({{amount}})개 채우기",
-    "HowMuch": "몇 개의 {{itemname}}을(를) 이동하시겠습니까?",
-    "Move": "이동"
   },
   "Tags": {
     "Archive": "보관",
