@@ -203,7 +203,7 @@ export function moveItemTo(
         reportException('moveItem', e);
       }
     } finally {
-      transaction.finish();
+      transaction?.finish();
     }
 
     return item;

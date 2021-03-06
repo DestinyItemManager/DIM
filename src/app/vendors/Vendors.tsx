@@ -185,7 +185,7 @@ function Vendors({
       vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
     }
     if (
-      currentXur().start === undefined &&
+      currentXur()?.start === undefined &&
       vendorGroups.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
     ) {
       const vgIndex = vendorGroups
