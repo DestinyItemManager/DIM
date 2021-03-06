@@ -401,8 +401,6 @@ module.exports = (env) => {
         '$featureFlags.mobileInspect': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
-        // Enable move amounts
-        '$featureFlags.moveAmounts': JSON.stringify(env.release),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results

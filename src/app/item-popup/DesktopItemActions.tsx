@@ -129,7 +129,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
       <LoadoutActionButton item={item} label={!sidecarCollapsed} />
       <InfuseActionButton item={item} label={!sidecarCollapsed} />
 
-      {!sidecarCollapsed && <ItemMoveLocations item={item} splitVault={true} />}
+      {!sidecarCollapsed && <ItemMoveLocations key={item.index} item={item} splitVault={true} />}
     </div>
   );
 }
