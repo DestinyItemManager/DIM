@@ -5,20 +5,21 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import produce from 'immer';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { endCompareSession, removeCompareItem } from './actions';
+import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
+import { findSimilarArmors, findSimilarWeapons } from './compare-buttons';
 import './compare.scss';
 import CompareItem from './CompareItem';
 import { CompareSession } from './reducer';
@@ -33,12 +34,7 @@ interface StoreProps {
   compareBaseStats: boolean;
 }
 
-const mapDispatchToProps = {
-  setSetting,
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = StoreProps & RouteComponentProps & DispatchProps;
+type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -52,16 +48,6 @@ function mapStateToProps(state: RootState): StoreProps {
 
 // TODO: There's far too much state here.
 // TODO: maybe have a holder/state component and a connected display component
-/*
-interface State {
-  highlight?: string | number;
-  sortedHash?: string | number;
-  sortBetterFirst: boolean;
-  comparisonSets: CompareButton[];
-  adjustedPlugs?: DimAdjustedPlugs;
-  adjustedStats?: DimAdjustedStats;
-}
-*/
 
 export interface StatInfo {
   id: string | number;
@@ -78,17 +64,26 @@ export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: Minimize?
-function Compare(this: void, { compareBaseStats, compareItems, session }: Props) {
+function Compare(
+  this: void,
+  { defs, allItems, compareBaseStats, compareItems, session, dispatch }: Props
+) {
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
   /** The stat row to sort by */
   const [sortedHash, setSortedHash] = useState<string | number>();
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
-  const [adjustedPlugs, setAdjustedPlugs] = useState<DimAdjustedPlugs>();
-  const [adjustedStats, setAdjustedStats] = useState<DimAdjustedStats>();
+  const [adjustedPlugs, setAdjustedPlugs] = useState<DimAdjustedPlugs>({});
+  const [adjustedStats, setAdjustedStats] = useState<DimAdjustedStats>({});
 
-  const dispatch = useDispatch();
-  //const location = useLocation();
+  const cancel = useCallback(() => {
+    // TODO: this is why we need a container, right? So we don't have to reset state
+    setHighlight(undefined);
+    setSortedHash(undefined);
+    setAdjustedPlugs({});
+    setAdjustedStats({});
+    dispatch(endCompareSession());
+  }, [dispatch]);
 
   const show = Boolean(session);
   const destinyVersion = show ? compareItems[0].destinyVersion : 2;
@@ -98,15 +93,13 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
     }
   }, [show, destinyVersion]);
 
+  // Reset on path changes
+  const { pathname } = useLocation();
+  useEffect(() => {
+    cancel();
+  }, [pathname, cancel]);
+
   // TODO: close on unmount?
-  // TODO: close on navigation?
-  /*
-    componentDidUpdate(prevProps: Props) {
-      if (prevProps.location.pathname !== this.props.location.pathname) {
-        this.cancel();
-      }
-    }
-    */
 
   // TODO: make a function that takes items and perk overrides and produces new items!
 
@@ -124,22 +117,10 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
     return null;
   }
 
-  const cancel = () => {
-    // TODO: this is why we need a container, right? So we don't have to reset state
-    setHighlight(undefined);
-    setSortedHash(undefined);
-    setAdjustedPlugs(undefined);
-    setAdjustedStats(undefined);
-    dispatch(endCompareSession());
+  const compareSimilar = (e: React.MouseEvent, newQuery: string) => {
+    e.preventDefault();
+    dispatch(updateCompareQuery(newQuery));
   };
-
-  /*
-    const compareSimilar = (e: React.MouseEvent, comparisonSetItems: DimItem[]) => {
-      e.preventDefault();
-      // Uhhh what's the query
-      dispatch(updateCompareQuery(newQuery));
-    };
-    */
 
   const sort = (newSortedHash?: string | number) => {
     // TODO: put sorting together?
@@ -155,155 +136,53 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
     }
   };
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const onChangeSetting: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSetting(e.target.name as any, e.target.checked);
   };
 
-  const comparator = reverseComparator(
-    chainComparator(
-      compareBy((item: DimItem) => {
-        const stat =
-          item.primStat && sortedHash === item.primStat.statHash
-            ? (item.primStat as MinimalStat)
-            : sortedHash === 'EnergyCapacity'
-            ? {
-                value: item.energy?.energyCapacity || 0,
-                base: undefined,
-              }
-            : sortedHash === 'PowerCap'
-            ? {
-                value: item.powerCap || 99999999,
-                base: undefined,
-              }
-            : (item.stats || []).find((s) => s.statHash === sortedHash);
-
-        if (!stat) {
-          return -1;
-        }
-
-        const shouldReverse =
-          isDimStat(stat) && stat.smallerIsBetter ? sortBetterFirst : !sortBetterFirst;
-
-        const statValue = (doCompareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
-        return shouldReverse ? -statValue : statValue;
-      }),
-      compareBy((i) => i.index),
-      compareBy((i) => i.name)
-    )
-  );
-
+  const comparator = sortCompareItemsComparator(sortedHash, sortBetterFirst, compareBaseStats);
   const sortedComparisonItems = !sortedHash
     ? compareItems
     : Array.from(compareItems).sort(comparator);
 
-  // TODO: factor out
-  const updateSocketComparePlug = ({
+  const doUpdateSocketComparePlug = ({
     item,
     socket,
-    plug: clickedPlug,
+    plug,
   }: {
     item: DimItem;
     socket: DimSocket;
     plug: DimPlug;
   }) => {
-    const { socketIndex } = socket;
-    const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
-    const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
-
-    /**
-     * Exit early if this plug / socket isn't a clickable target
-     * TODO: check the socket index detail
-     * */
-    if (
-      item.destinyVersion === 1 ||
-      !item.sockets ||
-      !item.stats ||
-      socketIndex > 2 ||
-      !pluggedPlug ||
-      (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash && currentAdjustedPlug === undefined)
-    ) {
+    const updatedPlugs = updateSocketComparePlug({
+      item,
+      socket,
+      plug,
+      adjustedPlugs,
+      adjustedStats,
+    });
+    if (!updatedPlugs) {
       return;
     }
-
-    /**
-     * Determine the next plug
-     * If the clicked plug is the currently adjusted plug,
-     * the next should be the original plug in the socket
-     */
-    const nextPlug =
-      clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash ? pluggedPlug : clickedPlug;
-
-    /**
-     * Determine the previous plug
-     * If the clicked plug is the currently adjusted plug,
-     * the previous should be the clicked plug
-     */
-    const prevPlug =
-      clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
-        ? clickedPlug
-        : currentAdjustedPlug ?? pluggedPlug;
-
-    /**
-     * Update the adjustedPlugs object
-     * If the next plug is the original plug, delete the adjustedPlug entry
-     * Else add the next plug to the item socket entry
-     */
-    const updatedPlugs =
-      nextPlug.plugDef.hash === pluggedPlug.plugDef.hash
-        ? produce(adjustedPlugs, (draft) => {
-            delete draft?.[item.id]?.[socketIndex];
-          })
-        : adjustedPlugs?.[item.id] !== undefined
-        ? produce(adjustedPlugs, (draft) => {
-            draft[item.id][socketIndex] = nextPlug;
-          })
-        : produce(adjustedPlugs ?? {}, (draft) => {
-            draft[item.id] = { [socketIndex]: nextPlug };
-          });
-
-    /**
-     * If there are no more adjustedPlugs for the item
-     * delete the associated adjustedPlugs and adjustedStats entries and exit
-     */
-    if (isEmpty(updatedPlugs?.[item.id])) {
-      const emptiedPlugs = produce(updatedPlugs, (draft) => {
-        delete draft?.[item.id];
-      });
-      const emptiedStats = produce(adjustedStats, (draft) => {
-        delete draft?.[item.id];
-      });
-      // TODO: put these together
-      setAdjustedPlugs(emptiedPlugs);
-      setAdjustedStats(emptiedStats);
-      return;
-    }
-
-    // Remove the stats listed on the previous plug from adjustedStats
-    const itemStatsAfterRemoval: DimAdjustedItemStat | undefined = calculateUpdatedStats({
-      itemStats: item.stats,
-      adjustedStats: adjustedStats?.[item.id] ?? {},
-      plugStats: prevPlug.stats,
-      mode: 'remove',
-    });
-
-    // Add the stats listed on the next plug to adjustedStats
-    const itemStatsAfterAddition: DimAdjustedItemStat | undefined = calculateUpdatedStats({
-      itemStats: item.stats,
-      adjustedStats: itemStatsAfterRemoval ?? adjustedStats?.[item.id] ?? {},
-      plugStats: nextPlug.stats,
-      mode: 'add',
-    });
-
-    // Update the adjustedStats object
-    const updatedStats = produce(adjustedStats ?? {}, (draft) => {
-      if (itemStatsAfterAddition) {
-        draft[item.id] = itemStatsAfterAddition;
-      }
-    });
-
-    setAdjustedPlugs(updatedPlugs);
-    setAdjustedStats(updatedStats);
+    // TODO: put these together
+    setAdjustedPlugs(updatedPlugs.adjustedPlugs);
+    setAdjustedStats(updatedPlugs.adjustedStats);
   };
+
+  // TODO: test/handle removing all items (no results)
+
+  // TODO: use initial item instead of example item?
+  // TODO: use filtered list of items matching category?
+  // TODO: what about D1??
+  const exampleItem =
+    // Search all items in case the original item was removed - this keeps the buttons stable?
+    (session?.initialItemId && allItems.find((i) => i.id === session.initialItemId)) ||
+    compareItems[0];
+  const comparisonSets = exampleItem.bucket.inArmor
+    ? findSimilarArmors(defs, allItems, exampleItem)
+    : exampleItem.bucket.inWeapons
+    ? findSimilarWeapons(allItems, exampleItem)
+    : [];
 
   return (
     <Sheet
@@ -315,21 +194,20 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
               label={t('Compare.CompareBaseStats')}
               name="compareBaseStats"
               value={compareBaseStats}
-              onChange={onChange}
+              onChange={onChangeSetting}
             />
           )}
-          {/*
-            {comparisonSets.map(({ buttonLabel, items }, index) => (
-              <button
-                type="button"
-                key={index}
-                className="dim-button"
-                onClick={(e) => compareSimilar(e, items)}
-              >
-                {buttonLabel} {`(${items.length})`}
-              </button>
-            ))}
-            */}
+          {comparisonSets.map(({ buttonLabel, items, query }, index) => (
+            <button
+              type="button"
+              key={index}
+              className="dim-button"
+              title={query}
+              onClick={(e) => compareSimilar(e, query)}
+            >
+              {buttonLabel} {`(${items.length})`}
+            </button>
+          ))}
           {session?.query}
         </div>
       }
@@ -363,7 +241,7 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
                 remove={remove}
                 setHighlight={setHighlight}
                 highlight={highlight}
-                updateSocketComparePlug={updateSocketComparePlug}
+                updateSocketComparePlug={doUpdateSocketComparePlug}
                 adjustedItemPlugs={adjustedPlugs?.[item.id]}
                 adjustedItemStats={adjustedStats?.[item.id]}
                 compareBaseStats={doCompareBaseStats}
@@ -374,6 +252,164 @@ function Compare(this: void, { compareBaseStats, compareItems, session }: Props)
       </div>
     </Sheet>
   );
+}
+
+function sortCompareItemsComparator(
+  sortedHash: string | number | undefined,
+  sortBetterFirst: boolean,
+  compareBaseStats: boolean
+) {
+  return reverseComparator(
+    chainComparator(
+      compareBy((item: DimItem) => {
+        const stat =
+          item.primStat && sortedHash === item.primStat.statHash
+            ? (item.primStat as MinimalStat)
+            : sortedHash === 'EnergyCapacity'
+            ? {
+                value: item.energy?.energyCapacity || 0,
+                base: undefined,
+              }
+            : sortedHash === 'PowerCap'
+            ? {
+                value: item.powerCap || 99999999,
+                base: undefined,
+              }
+            : (item.stats || []).find((s) => s.statHash === sortedHash);
+
+        if (!stat) {
+          return -1;
+        }
+
+        const shouldReverse =
+          isDimStat(stat) && stat.smallerIsBetter ? sortBetterFirst : !sortBetterFirst;
+
+        const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+        return shouldReverse ? -statValue : statValue;
+      }),
+      compareBy((i) => i.index),
+      compareBy((i) => i.name)
+    )
+  );
+}
+
+function updateSocketComparePlug({
+  item,
+  socket,
+  plug: clickedPlug,
+  adjustedPlugs,
+  adjustedStats,
+}: {
+  item: DimItem;
+  socket: DimSocket;
+  plug: DimPlug;
+  adjustedPlugs: DimAdjustedPlugs;
+  adjustedStats: DimAdjustedStats;
+}):
+  | {
+      adjustedPlugs: DimAdjustedPlugs;
+      adjustedStats: DimAdjustedStats;
+    }
+  | undefined {
+  const { socketIndex } = socket;
+  const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
+  const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
+
+  /**
+   * Exit early if this plug / socket isn't a clickable target
+   * TODO: check the socket index detail
+   * */
+  if (
+    item.destinyVersion === 1 ||
+    !item.sockets ||
+    !item.stats ||
+    socketIndex > 2 ||
+    !pluggedPlug ||
+    (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash && currentAdjustedPlug === undefined)
+  ) {
+    return undefined;
+  }
+
+  /**
+   * Determine the next plug
+   * If the clicked plug is the currently adjusted plug,
+   * the next should be the original plug in the socket
+   */
+  const nextPlug =
+    clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash ? pluggedPlug : clickedPlug;
+
+  /**
+   * Determine the previous plug
+   * If the clicked plug is the currently adjusted plug,
+   * the previous should be the clicked plug
+   */
+  const prevPlug =
+    clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
+      ? clickedPlug
+      : currentAdjustedPlug ?? pluggedPlug;
+
+  /**
+   * Update the adjustedPlugs object
+   * If the next plug is the original plug, delete the adjustedPlug entry
+   * Else add the next plug to the item socket entry
+   */
+  const updatedPlugs =
+    nextPlug.plugDef.hash === pluggedPlug.plugDef.hash
+      ? produce(adjustedPlugs, (draft) => {
+          delete draft?.[item.id]?.[socketIndex];
+        })
+      : adjustedPlugs?.[item.id] !== undefined
+      ? produce(adjustedPlugs, (draft) => {
+          draft[item.id][socketIndex] = nextPlug;
+        })
+      : produce(adjustedPlugs ?? {}, (draft) => {
+          draft[item.id] = { [socketIndex]: nextPlug };
+        });
+
+  /**
+   * If there are no more adjustedPlugs for the item
+   * delete the associated adjustedPlugs and adjustedStats entries and exit
+   */
+  if (isEmpty(updatedPlugs?.[item.id])) {
+    const emptiedPlugs = produce(updatedPlugs, (draft) => {
+      delete draft?.[item.id];
+    });
+    const emptiedStats = produce(adjustedStats, (draft) => {
+      delete draft?.[item.id];
+    });
+    return {
+      adjustedPlugs: emptiedPlugs,
+      adjustedStats: emptiedStats,
+    };
+  }
+
+  // Remove the stats listed on the previous plug from adjustedStats
+  const itemStatsAfterRemoval: DimAdjustedItemStat | undefined = calculateUpdatedStats({
+    itemStats: item.stats,
+    adjustedStats: adjustedStats?.[item.id] ?? {},
+    plugStats: prevPlug.stats,
+    mode: 'remove',
+  });
+
+  // Add the stats listed on the next plug to adjustedStats
+  const itemStatsAfterAddition: DimAdjustedItemStat | undefined = calculateUpdatedStats({
+    itemStats: item.stats,
+    adjustedStats: itemStatsAfterRemoval ?? adjustedStats?.[item.id] ?? {},
+    plugStats: nextPlug.stats,
+    mode: 'add',
+  });
+
+  // Update the adjustedStats object
+  const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+    if (itemStatsAfterAddition) {
+      draft[item.id] = itemStatsAfterAddition;
+    }
+  });
+
+  return {
+    adjustedPlugs: updatedPlugs,
+    adjustedStats: updatedStats,
+  };
 }
 
 function calculateUpdatedStats({
@@ -533,6 +569,4 @@ function makeFakeStat(
   };
 }
 
-export default withRouter(
-  connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(Compare)
-);
+export default connect<StoreProps>(mapStateToProps)(Compare);

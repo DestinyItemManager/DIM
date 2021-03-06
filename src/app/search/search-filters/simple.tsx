@@ -7,7 +7,7 @@ import { FilterDefinition } from '../filter-types';
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [
   {
-    keywords: ['armor2.0'],
+    keywords: 'armor2.0',
     description: tl('Filter.Energy'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => Boolean(item.energy) && item.bucket.inArmor,
