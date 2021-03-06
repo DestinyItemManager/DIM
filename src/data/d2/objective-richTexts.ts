@@ -4,6 +4,7 @@ const richTextManifestSourceData: RichTextManifestSourceData = {
   '[Arc]': ['Objective', 85535852],
   '[Auto Rifle]': ['Objective', 60057218],
   '[Bow]': ['Objective', 817189956],
+  '[Currency]': ['Objective', 5982754],
   '[Disruption]': ['SandboxPerk', 669536781],
   '[Fusion Rifle]': ['Objective', 579143207],
   '[Grenade Launcher]': ['Objective', 43313268],
@@ -39,7 +40,6 @@ const richTextManifestSourceData: RichTextManifestSourceData = {
   '[Trace Rifle]': ['Objective', 704693244],
   '[Void]': ['Objective', 85535854],
   '': ['Objective', 4231452845],
-  '': ['Objective', 5982754],
   '': ['Objective', 2258101260],
 };
 

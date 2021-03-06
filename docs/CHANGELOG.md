@@ -1,5 +1,7 @@
 ## Next
 
+## 6.54.0 <span class="changelog-date">(2021-02-28)</span>
+
 ## 6.53.0 <span class="changelog-date">(2021-02-21)</span>
 
 * Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.

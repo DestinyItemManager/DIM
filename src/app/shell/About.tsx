@@ -39,7 +39,7 @@ export default function About() {
   useEffect(() => {
     const script = document.createElement('script');
 
-    script.src = 'https://opencollective.com/dim/banner.js';
+    script.src = 'https://opencollective.com/dim/banner.js?style={"h2":{"color":"white"}}';
     script.async = true;
 
     document.getElementById('opencollective')!.appendChild(script);
