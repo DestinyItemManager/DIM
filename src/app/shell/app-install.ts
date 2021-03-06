@@ -1,8 +1,10 @@
-import { Subject } from 'rxjs';
+import { Observable } from 'app/utils/observable';
 
-export const installPrompt$ = new Subject<any>();
+export const installPrompt$ = new Observable<BeforeInstallPromptEvent | undefined>(undefined);
 
-window.addEventListener('beforeinstallprompt', (e) => {
+// This event is fired whenever the browser thinks it's possible to install the app. We then have
+// to save the event itself to use it to show the install prompt from a menu item click.
+window.addEventListener('beforeinstallprompt', (e: BeforeInstallPromptEvent) => {
   // Prevent Chrome 67 and earlier from automatically showing the prompt
   e.preventDefault();
   // Stash the event so it can be triggered later.

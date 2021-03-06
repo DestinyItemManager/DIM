@@ -7,7 +7,6 @@ import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
@@ -19,6 +18,7 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useSubscription } from 'use-subscription';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
@@ -75,8 +75,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
 
   // Install DIM as a PWA
   const [promptIosPwa, setPromptIosPwa] = useState(false);
-  const [installPromptEvent, setInstallPromptevent] = useState<any>(undefined);
-  useSubscription(() => installPrompt$.subscribe(setInstallPromptevent));
+  const installPromptEvent = useSubscription(installPrompt$);
 
   const showInstallPrompt = () => {
     setPromptIosPwa(true);
