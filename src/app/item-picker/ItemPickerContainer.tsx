@@ -1,5 +1,5 @@
-import { useSubscription } from 'app/utils/hooks';
-import React, { useEffect, useState } from 'react';
+import { useEventBusListener } from 'app/utils/hooks';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
@@ -15,8 +15,9 @@ function ItemPickerContainer() {
   const [generation, setGeneration] = useState(0);
   const [options, setOptions] = useState<ItemPickerState>();
 
-  useSubscription(() =>
-    showItemPicker$.subscribe((newOptions) => {
+  useEventBusListener(
+    showItemPicker$,
+    useCallback((newOptions) => {
       setOptions((options) => {
         if (options) {
           options.onCancel();
@@ -24,12 +25,10 @@ function ItemPickerContainer() {
         return newOptions;
       });
       setGeneration((gen) => gen + 1);
-    })
+    }, [])
   );
 
-  const onClose = () => {
-    setOptions(undefined);
-  };
+  const onClose = () => setOptions(undefined);
   const location = useLocation();
   useEffect(() => onClose(), [location.pathname]);
 

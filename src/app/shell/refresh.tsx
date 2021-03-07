@@ -2,14 +2,14 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { isDragging, isDragging$ } from 'app/inventory/DraggableInventoryItem';
 import { useEventBusListener } from 'app/utils/hooks';
+import { EventBus } from 'app/utils/observable';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Subject } from 'rxjs';
 import { useSubscription } from 'use-subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 
-export const refresh$ = new Subject();
+export const refresh$ = new EventBus<undefined>();
 
 export function refresh(e?) {
   // Individual pages should listen to this event and decide what to refresh,
@@ -18,7 +18,7 @@ export function refresh(e?) {
   if (e) {
     e.preventDefault();
   }
-  refresh$.next();
+  refresh$.next(undefined);
 }
 
 export default function Refresh() {

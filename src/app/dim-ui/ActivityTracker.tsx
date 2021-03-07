@@ -1,8 +1,7 @@
-import { dimNeedsUpdate, reloadDIM } from 'app/register-service-worker';
+import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Subscription } from 'rxjs';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
@@ -45,7 +44,7 @@ type Props = StoreProps;
 class ActivityTracker extends React.Component<Props> {
   private lastRefreshTimestamp = 0;
   private refreshAccountDataInterval?: number;
-  private refreshSubscription: Subscription;
+  private refreshSubscription: () => void;
 
   componentDidMount() {
     document.addEventListener('visibilitychange', this.visibilityHandler);
@@ -70,7 +69,7 @@ class ActivityTracker extends React.Component<Props> {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     document.removeEventListener('online', this.refreshAccountData);
     this.clearTimer();
-    this.refreshSubscription.unsubscribe();
+    this.refreshSubscription();
   }
 
   render() {
@@ -116,7 +115,7 @@ class ActivityTracker extends React.Component<Props> {
       if (this.props.refreshProfileOnVisible) {
         this.refreshAccountData();
       }
-    } else if (dimNeedsUpdate && !this.props.hasSearchQuery) {
+    } else if (dimNeedsUpdate$.getCurrentValue() && !this.props.hasSearchQuery) {
       // Sneaky updates - if DIM is hidden and needs an update, do the update.
       reloadDIM();
     }

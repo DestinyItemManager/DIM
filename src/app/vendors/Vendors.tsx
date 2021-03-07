@@ -11,7 +11,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import {
   DestinyCollectibleComponent,
   DestinyCurrenciesComponent,
@@ -19,7 +19,7 @@ import {
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -110,12 +110,16 @@ function Vendors({
     }
   }, [account, selectedStoreId, dispatch]);
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      if (selectedStoreId) {
-        loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
-      }
-    })
+  useEventBusListener(
+    refresh$,
+    useCallback(
+      () => () => {
+        if (selectedStoreId) {
+          loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
+        }
+      },
+      [account, dispatch, selectedStoreId]
+    )
   );
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
