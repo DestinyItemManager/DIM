@@ -1,15 +1,17 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
+import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { ActionType, getType, Reducer } from 'typesafe-actions';
 import * as actions from './actions';
 
 export interface CompareSession {
   /**
-   * An itemCategoryHash must be provided in order to limit the type of items which can be compared.
+   * A list of itemCategoryHashes must be provided in order to limit the type of items which can be compared.
+   * This list should match the item category drill-down from Organizer's ItemTypeSelector.
    */
-  readonly itemCategoryHash: number;
+  readonly itemCategoryHashes: number[];
   /**
    * The query further filters the items to be shown.
    */
@@ -83,7 +85,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     // Add to an existing session
 
     // Validate that item category matches what we have open
-    if (!item.itemCategoryHashes.includes(state.session.itemCategoryHash)) {
+    if (!state.session.itemCategoryHashes.every((h) => item.itemCategoryHashes.includes(h))) {
       // TODO: throw error instead?
       showNotification({
         type: 'warning',
@@ -117,9 +119,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     };
   } else {
     // Start a new session
-    // TODO: OK we might need a thunk so we can make decisions based on manifest state
-    //       For now just assume the last category is the most specific?
-    const itemCategoryHash = item.itemCategoryHashes[item.itemCategoryHashes.length - 1];
+    const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
     const itemNameQuery = item.bucket.inWeapons
       ? `name:"${item.name}"`
@@ -137,7 +137,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
       ...state,
       session: {
         query: itemNameQuery,
-        itemCategoryHash,
+        itemCategoryHashes,
         initialItemId: item.id,
       },
     };
@@ -173,18 +173,41 @@ function compareFilteredItems(
 ): CompareState {
   // TODO: what if it's already open?
 
-  // TODO: OK we might need a thunk so we can make decisions based on manifest state
-  //       For now just assume the last category is the most specific?
-  const itemCategoryHash =
-    filteredItems[0].itemCategoryHashes[filteredItems[0].itemCategoryHashes.length - 1];
+  const itemCategoryHashes = getItemCategoryHashesFromExampleItem(filteredItems[0]);
 
   return {
     ...state,
     session: {
       query: query,
-      itemCategoryHash,
+      itemCategoryHashes,
     },
   };
+}
+
+function getItemCategoryHashesFromExampleItem(item: DimItem) {
+  // This isn't right for armor
+  // TODO: OK we might need a thunk so we can make decisions based on manifest state
+  //       For now just assume the last category is the most specific?
+
+  const itemSelectionTree = getSelectionTree(item.destinyVersion);
+
+  const hashes: number[] = [];
+
+  // Dive two layers down (weapons/armor => type)
+  for (const node of itemSelectionTree.subCategories!) {
+    if (item.itemCategoryHashes.includes(node.itemCategoryHash)) {
+      hashes.push(node.itemCategoryHash);
+      for (const subNode of node.subCategories!) {
+        if (item.itemCategoryHashes.includes(subNode.itemCategoryHash)) {
+          hashes.push(subNode.itemCategoryHash);
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  return hashes;
 }
 
 // TODO: observe state and reflect in URL params?

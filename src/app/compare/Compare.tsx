@@ -202,7 +202,6 @@ function Compare(
             categoryItems={categoryItems}
             onQueryChanged={updateQuery}
           />
-          {session?.query}
         </div>
       }
     >

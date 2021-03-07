@@ -16,13 +16,15 @@ export const compareOpenSelector = (state: RootState) => Boolean(compareSessionS
  * Returns all the items matching the item category of the current compare session.
  */
 export const compareCategoryItemsSelector = createSelector(
-  (state: RootState) => state.compare.session?.itemCategoryHash,
+  (state: RootState) => state.compare.session?.itemCategoryHashes,
   allItemsSelector,
-  (itemCategoryHash, allItems) => {
-    if (!itemCategoryHash) {
+  (itemCategoryHashes, allItems) => {
+    if (!itemCategoryHashes) {
       return emptyArray<DimItem>();
     }
-    return allItems.filter((i) => i.itemCategoryHashes.includes(itemCategoryHash));
+    return allItems.filter((i) =>
+      itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h))
+    );
   }
 );
 
