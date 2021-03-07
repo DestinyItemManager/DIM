@@ -9,7 +9,6 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
@@ -31,25 +30,6 @@ export interface MoveAmountPopupOptions {
   maximum: number;
   onAmountSelected(amount: number);
   onCancel(): void;
-}
-
-export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
-
-function showMoveAmountPopup(
-  item: DimItem,
-  targetStore: DimStore,
-  maximum: number
-): Promise<number> {
-  return new Promise((resolve, reject) => {
-    showMoveAmountPopup$.next({
-      item,
-      targetStore,
-      amount: item.amount,
-      maximum,
-      onAmountSelected: resolve,
-      onCancel: reject,
-    });
-  });
 }
 
 /**
@@ -87,15 +67,10 @@ export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult 
 /**
  * Drop a dragged item
  */
-export function dropItem(
-  item: DimItem,
-  storeId: string,
-  equip = false,
-  chooseAmount = false
-): ThunkResult<DimItem> {
+export function dropItem(item: DimItem, storeId: string, equip = false): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    return dispatch(moveItemTo(item, store, equip, item.amount, chooseAmount));
+    return dispatch(moveItemTo(item, store, equip, item.amount));
   };
 }
 
@@ -106,8 +81,7 @@ export function moveItemTo(
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount,
-  chooseAmount = false
+  amount: number = item.amount
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const transaction = startTransaction({ name: 'moveItemTo' });
@@ -129,27 +103,10 @@ export function moveItemTo(
       }
     }
 
-    let moveAmount = amount || 1;
+    const moveAmount = amount || 1;
     const reload = item.equipped || equip;
     try {
       const stores = storesSelector(getState());
-
-      // Select how much of a stack to move
-      if (
-        chooseAmount &&
-        item.maxStackSize > 1 &&
-        item.amount > 1 &&
-        // https://github.com/DestinyItemManager/DIM/issues/3373
-        !item.uniqueStack
-      ) {
-        const maximum = amountOfItem(getStore(stores, item.owner)!, item);
-
-        try {
-          moveAmount = await showMoveAmountPopup(item, store, maximum);
-        } catch (e) {
-          throw new DimError('move-canceled', 'Move canceled'); // not shown to user
-        }
-      }
 
       if ($featureFlags.debugMoves) {
         infoLog(
