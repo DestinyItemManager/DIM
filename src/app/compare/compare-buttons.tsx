@@ -196,6 +196,7 @@ export function findSimilarWeapons(allItems: DimItem[], exampleItem: DimItem): C
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
       buttonLabel: exampleItem.typeName,
+      /** @deprecated */
       items: allWeapons,
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },

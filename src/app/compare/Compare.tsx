@@ -1,7 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import { allItemsSelector } from 'app/inventory/selectors';
 import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
@@ -23,11 +22,17 @@ import { findSimilarArmors, findSimilarWeapons } from './compare-buttons';
 import './compare.scss';
 import CompareItem from './CompareItem';
 import { CompareSession } from './reducer';
-import { compareItemsSelector, compareSessionSelector } from './selectors';
+import {
+  compareCategoryItemsSelector,
+  compareItemsSelector,
+  compareSessionSelector,
+} from './selectors';
 import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
 
 interface StoreProps {
-  allItems: DimItem[];
+  /** All items matching the current compare session itemCategoryHash */
+  categoryItems: DimItem[];
+  /** All items matching the current compare session query and itemCategoryHash */
   compareItems: DimItem[];
   session?: CompareSession;
   defs?: D2ManifestDefinitions;
@@ -38,7 +43,7 @@ type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    allItems: allItemsSelector(state),
+    categoryItems: compareCategoryItemsSelector(state),
     defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
     compareItems: compareItemsSelector(state),
@@ -64,9 +69,10 @@ export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: Minimize?
+// TODO: memoize
 function Compare(
   this: void,
-  { defs, allItems, compareBaseStats, compareItems, session, dispatch }: Props
+  { defs, categoryItems, compareBaseStats, compareItems, session, dispatch }: Props
 ) {
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
@@ -171,19 +177,21 @@ function Compare(
 
   // TODO: test/handle removing all items (no results)
 
+  // TODO: extract buttons to their own fancy component that knows how to count
   // TODO: use initial item instead of example item?
   // TODO: use filtered list of items matching category?
   // TODO: what about D1??
   const exampleItem =
     // Search all items in case the original item was removed - this keeps the buttons stable?
-    (session?.initialItemId && allItems.find((i) => i.id === session.initialItemId)) ||
+    (session?.initialItemId && categoryItems.find((i) => i.id === session.initialItemId)) ||
     compareItems[0];
   const comparisonSets = exampleItem.bucket.inArmor
-    ? findSimilarArmors(defs, allItems, exampleItem)
+    ? findSimilarArmors(defs, categoryItems, exampleItem)
     : exampleItem.bucket.inWeapons
-    ? findSimilarWeapons(allItems, exampleItem)
+    ? findSimilarWeapons(categoryItems, exampleItem)
     : [];
 
+  // TODO: highlight initial item
   return (
     <Sheet
       onClose={cancel}

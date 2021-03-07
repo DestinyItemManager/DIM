@@ -13,19 +13,31 @@ export const compareSessionSelector = (state: RootState) => state.compare.sessio
 export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
 
 /**
+ * Returns all the items matching the item category of the current compare session.
+ */
+export const compareCategoryItemsSelector = createSelector(
+  (state: RootState) => state.compare.session?.itemCategoryHash,
+  allItemsSelector,
+  (itemCategoryHash, allItems) => {
+    if (!itemCategoryHash) {
+      return emptyArray<DimItem>();
+    }
+    return allItems.filter((i) => i.itemCategoryHashes.includes(itemCategoryHash));
+  }
+);
+
+/**
  * Returns all the items being compared.
  */
 export const compareItemsSelector = createSelector(
   compareSessionSelector,
-  allItemsSelector,
+  compareCategoryItemsSelector,
   filterFactorySelector,
-  (session, allItems, filterFactorySelector) => {
+  (session, categoryItems, filterFactorySelector) => {
     if (!session) {
       return emptyArray<DimItem>();
     }
     const filterFunction = filterFactorySelector(session.query);
-    return allItems.filter(
-      (i) => i.itemCategoryHashes.includes(session.itemCategoryHash) && filterFunction(i)
-    );
+    return categoryItems.filter(filterFunction);
   }
 );
