@@ -93,7 +93,7 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
-  function doFillLoadoutFromUnequipped(e: React.MouseEvent) {
+  function doFillLoadOutFromUnequipped(e: React.MouseEvent) {
     e.preventDefault();
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
@@ -116,8 +116,8 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
-          <a className="dim-button loadout-add" onClick={doFillLoadoutFromUnequipped}>
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+          <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddInventoryItems')}
           </a>
 
           {typesWithoutItems.map((bucket) => (
@@ -227,7 +227,10 @@ async function fillLoadoutFromUnequipped(
     getCurrentStore(stores)!;
 
   const items = dimStore.items.filter(
-    (item) => itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+    (item) =>
+      item.bucket.type !== 'Class' &&
+      itemCanBeInLoadout(item) &&
+      fromEquippedTypes.includes(item.type)
   );
 
   for (const item of items) {
