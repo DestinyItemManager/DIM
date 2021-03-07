@@ -33,11 +33,11 @@ export const compareItemsSelector = createSelector(
   compareSessionSelector,
   compareCategoryItemsSelector,
   filterFactorySelector,
-  (session, categoryItems, filterFactorySelector) => {
+  (session, categoryItems, filterFactory) => {
     if (!session) {
       return emptyArray<DimItem>();
     }
-    const filterFunction = filterFactorySelector(session.query);
+    const filterFunction = filterFactory(session.query);
     return categoryItems.filter(filterFunction);
   }
 );

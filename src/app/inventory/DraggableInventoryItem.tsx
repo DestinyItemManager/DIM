@@ -3,6 +3,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import store from 'app/store/store';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';

@@ -13,14 +13,13 @@ import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
-import { findSimilarArmors, findSimilarWeapons } from './compare-buttons';
 import './compare.scss';
 import CompareItem from './CompareItem';
+import CompareSuggestions from './CompareSuggestions';
 import { CompareSession } from './reducer';
 import {
   compareCategoryItemsSelector,
@@ -35,7 +34,6 @@ interface StoreProps {
   /** All items matching the current compare session query and itemCategoryHash */
   compareItems: DimItem[];
   session?: CompareSession;
-  defs?: D2ManifestDefinitions;
   compareBaseStats: boolean;
 }
 
@@ -44,15 +42,11 @@ type Props = StoreProps & ThunkDispatchProp;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     categoryItems: compareCategoryItemsSelector(state),
-    defs: state.manifest.d2Manifest,
     compareBaseStats: settingsSelector(state).compareBaseStats,
     compareItems: compareItemsSelector(state),
     session: compareSessionSelector(state),
   };
 }
-
-// TODO: There's far too much state here.
-// TODO: maybe have a holder/state component and a connected display component
 
 export interface StatInfo {
   id: string | number;
@@ -68,17 +62,18 @@ export interface StatInfo {
 export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
-// TODO: Minimize?
+// TODO: Allow minimizing the sheet (to make selection easier)
 // TODO: memoize
 function Compare(
   this: void,
-  { defs, categoryItems, compareBaseStats, compareItems, session, dispatch }: Props
+  { categoryItems, compareBaseStats, compareItems, session, dispatch }: Props
 ) {
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
   /** The stat row to sort by */
   const [sortedHash, setSortedHash] = useState<string | number>();
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
+  // TODO: combine these
   const [adjustedPlugs, setAdjustedPlugs] = useState<DimAdjustedPlugs>({});
   const [adjustedStats, setAdjustedStats] = useState<DimAdjustedStats>({});
 
@@ -105,7 +100,13 @@ function Compare(
     cancel();
   }, [pathname, cancel]);
 
-  // TODO: close on unmount?
+  // Clear the session on unmount
+  useEffect(
+    () => () => {
+      dispatch(endCompareSession());
+    },
+    [dispatch]
+  );
 
   // TODO: make a function that takes items and perk overrides and produces new items!
 
@@ -123,8 +124,7 @@ function Compare(
     return null;
   }
 
-  const compareSimilar = (e: React.MouseEvent, newQuery: string) => {
-    e.preventDefault();
+  const updateQuery = (newQuery: string) => {
     dispatch(updateCompareQuery(newQuery));
   };
 
@@ -146,7 +146,7 @@ function Compare(
     setSetting(e.target.name as any, e.target.checked);
   };
 
-  const comparator = sortCompareItemsComparator(sortedHash, sortBetterFirst, compareBaseStats);
+  const comparator = sortCompareItemsComparator(sortedHash, sortBetterFirst, doCompareBaseStats);
   const sortedComparisonItems = !sortedHash
     ? compareItems
     : Array.from(compareItems).sort(comparator);
@@ -177,21 +177,13 @@ function Compare(
 
   // TODO: test/handle removing all items (no results)
 
-  // TODO: extract buttons to their own fancy component that knows how to count
-  // TODO: use initial item instead of example item?
-  // TODO: use filtered list of items matching category?
-  // TODO: what about D1??
-  const exampleItem =
-    // Search all items in case the original item was removed - this keeps the buttons stable?
-    (session?.initialItemId && categoryItems.find((i) => i.id === session.initialItemId)) ||
-    compareItems[0];
-  const comparisonSets = exampleItem.bucket.inArmor
-    ? findSimilarArmors(defs, categoryItems, exampleItem)
-    : exampleItem.bucket.inWeapons
-    ? findSimilarWeapons(categoryItems, exampleItem)
-    : [];
+  // If the session was started with a specific item, this is it
+  // TODO: highlight this item
+  const initialItem =
+    session?.initialItemId && categoryItems.find((i) => i.id === session.initialItemId);
+  // The example item is the one we'll use for generating suggestion buttons
+  const exampleItem = initialItem || compareItems[0];
 
-  // TODO: highlight initial item
   return (
     <Sheet
       onClose={cancel}
@@ -205,17 +197,11 @@ function Compare(
               onChange={onChangeSetting}
             />
           )}
-          {comparisonSets.map(({ buttonLabel, items, query }, index) => (
-            <button
-              type="button"
-              key={index}
-              className="dim-button"
-              title={query}
-              onClick={(e) => compareSimilar(e, query)}
-            >
-              {buttonLabel} {`(${items.length})`}
-            </button>
-          ))}
+          <CompareSuggestions
+            exampleItem={exampleItem}
+            categoryItems={categoryItems}
+            onQueryChanged={updateQuery}
+          />
           {session?.query}
         </div>
       }
