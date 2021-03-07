@@ -93,9 +93,9 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
-  function doFillLoadoutFromInventory(e: React.MouseEvent) {
+  function doFillLoadoutFromUnequipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutfromInventory(loadout, stores, add);
+    fillLoadoutFromUnequipped(loadout, stores, add);
   }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
@@ -116,8 +116,8 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
-          <a className="dim-button loadout-add" onClick={doFillLoadoutFromInventory}>
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddInventoryItems')}
+          <a className="dim-button loadout-add" onClick={doFillLoadoutFromUnequipped}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
           </a>
 
           {typesWithoutItems.map((bucket) => (
@@ -213,7 +213,7 @@ function fillLoadoutFromEquipped(
   }
 }
 
-async function fillLoadoutfromInventory(
+async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   stores: DimStore[],
   add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
@@ -231,8 +231,7 @@ async function fillLoadoutfromInventory(
   );
 
   for (const item of items) {
-    if (item.bucket.sort === 'Armor' || item.bucket.sort === 'Weapons') {
-      // filter only weapons and armor, delete to add all items currently in characters inventory
+    if (fromEquippedTypes.includes(item.type)) {
       add(item, undefined, true);
     }
   }
