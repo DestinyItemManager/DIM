@@ -2180,11 +2180,6 @@ acorn-numeric-separator@^0.3.0:
   resolved "https://registry.yarnpkg.com/acorn-numeric-separator/-/acorn-numeric-separator-0.3.6.tgz"
   integrity sha512-jUr5esgChu4k7VzesH/Nww3EysuyGJJcTEEiXqILUFKpO96PNyEXmK21M6nE0TSqGA1PeEg1MzgqJaoFsn9JMw==
 
-acorn-optional-chaining@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/acorn-optional-chaining/-/acorn-optional-chaining-0.0.3.tgz#b620a81ee3121d554c03a90f8c34f2dbe6ab90b6"
-  integrity sha512-kvXKOWyxajchq93OdXhCLB+v8/lbmwO9vstTxSJv1Ww1E6RRnQpycA0cKr+ja7gaeGcV9lC+bLm4aZPrZ04ytA==
-
 acorn-private-class-elements@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/acorn-private-class-elements/-/acorn-private-class-elements-0.2.7.tgz"

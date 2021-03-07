@@ -3,7 +3,6 @@ import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
@@ -134,13 +133,12 @@ class ActivityTracker extends React.Component<Props> {
       this.refresh();
     } else if (!dimHasNoActivePromises) {
       // Try again once the loading tracker goes back to inactive
-      loadingTracker.active$
-        .pipe(
-          filter((active) => !active),
-          take(1)
-        )
-        .toPromise()
-        .then(this.refreshAccountData);
+      const unsubscribe = loadingTracker.active$.subscribe((active) => {
+        if (!active) {
+          unsubscribe();
+          this.refreshAccountData();
+        }
+      });
     } else {
       // If we didn't refresh because things were disabled, keep the timer going
       this.resetTimer();

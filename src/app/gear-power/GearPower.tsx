@@ -5,13 +5,12 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
-import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { allItemsSelector, storesSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
@@ -29,16 +28,12 @@ const bucketClassNames = {
 export default function GearPower() {
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
-  const [selectedStore, setSelectedStore] = useState<DimStore | undefined>();
   const reset = () => {
-    setSelectedStore(undefined);
+    showGearPower$.next(undefined);
   };
 
-  useSubscription(() =>
-    showGearPower$.subscribe(({ selectedStoreId }) => {
-      setSelectedStore(stores.find((s) => s.id === selectedStoreId));
-    })
-  );
+  const selectedStoreId = useSubscription(showGearPower$);
+  const selectedStore = stores.find((s) => s.id === selectedStoreId);
 
   if (!selectedStore) {
     return null;

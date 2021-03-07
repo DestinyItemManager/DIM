@@ -1,10 +1,11 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { isDragging, isDragging$ } from 'app/inventory/DraggableInventoryItem';
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Subject } from 'rxjs';
+import { useSubscription } from 'use-subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 
@@ -21,15 +22,14 @@ export function refresh(e?) {
 }
 
 export default function Refresh() {
-  const [active, setActive] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
   const handleChanges = useCallback(
     () => setDisabled(!navigator.onLine || document.hidden || isDragging),
     []
   );
-  useSubscription(useCallback(() => loadingTracker.active$.subscribe(setActive), []));
-  useSubscription(useCallback(() => isDragging$.subscribe(handleChanges), [handleChanges]));
+  const active = useSubscription(loadingTracker.active$);
+  useEventBusListener(isDragging$, handleChanges);
 
   useEffect(() => {
     document.addEventListener('visibilitychange', handleChanges);
