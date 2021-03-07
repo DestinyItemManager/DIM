@@ -1,9 +1,9 @@
-import { Subject } from 'rxjs';
+import { EventBus } from 'app/utils/observable';
 import { DimItem } from '../inventory/item-types';
 
 export const CompareService = {
   dialogOpen: false,
-  compareItems$: new Subject<{
+  compareItems$: new EventBus<{
     additionalItems: DimItem[];
     showSomeDupes: boolean;
   }>(),

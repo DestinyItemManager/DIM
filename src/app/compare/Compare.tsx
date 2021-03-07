@@ -14,7 +14,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { createSelector } from 'reselect';
-import { Subscription } from 'rxjs';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
@@ -81,7 +80,7 @@ class Compare extends React.Component<Props, State> {
     show: false,
     sortBetterFirst: true,
   };
-  private subscription: Subscription;
+  private subscription: () => void;
 
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
@@ -114,7 +113,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    this.subscription();
     CompareService.dialogOpen = false;
   }
 
