@@ -9,11 +9,7 @@ type Unsubscribe = () => void;
  * with other existing types.
  */
 export class EventBus<T> {
-  private _subscriptions: Set<Subscription<T>>;
-
-  constructor() {
-    this._subscriptions = new Set();
-  }
+  private _subscriptions = new Set<Subscription<T>>();
 
   /**
    * Notify all subscribers of an event.
@@ -40,11 +36,10 @@ export class EventBus<T> {
  */
 export class Observable<T> {
   private _value: T;
-  private _event: EventBus<T>;
+  private _event = new EventBus<T>();
 
   constructor(initialValue: T) {
     this._value = initialValue;
-    this._event = new EventBus();
   }
 
   /**
@@ -57,17 +52,15 @@ export class Observable<T> {
 
   /**
    * Get the last value that was set for this observable.
+   * This needs to be an arrow function so it is bound to the instance since use-subscription uses it that way.
    */
-  getCurrentValue(): T {
-    return this._value;
-  }
+  getCurrentValue = (): T => this._value;
 
   /**
    * Add a subscription to value changes. Returns a function that can be used to unsubscribe.
    * The subscription is not called until the value changes - if you want the value at subscription
    * time call getCurrentValue().
+   * This needs to be an arrow function so it is bound to the instance since use-subscription uses it that way.
    */
-  subscribe(callback: Subscription<T>): Unsubscribe {
-    return this._event.subscribe(callback);
-  }
+  subscribe = (callback: Subscription<T>): Unsubscribe => this._event.subscribe(callback);
 }
