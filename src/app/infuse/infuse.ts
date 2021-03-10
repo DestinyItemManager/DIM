@@ -1,15 +1,11 @@
-import { Subject } from 'rxjs';
+import { EventBus } from 'app/utils/observable';
 import { DimItem } from '../inventory/item-types';
 
-export interface InfuseOptions {
-  item: DimItem;
-}
-
-export const showInfuse$ = new Subject<InfuseOptions>();
+export const showInfuse$ = new EventBus<DimItem>();
 
 /**
  * Show the infusion fuel finder.
  */
 export function showInfuse(item: DimItem) {
-  showInfuse$.next({ item });
+  showInfuse$.next(item);
 }

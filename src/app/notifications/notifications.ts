@@ -1,5 +1,5 @@
+import { EventBus } from 'app/utils/observable';
 import React from 'react';
-import { Subject } from 'rxjs';
 
 export type NotificationType = 'success' | 'info' | 'warning' | 'error' | 'progress';
 
@@ -71,7 +71,7 @@ export class NotificationError extends Error {
   }
 }
 
-export const notifications$ = new Subject<Notify>();
+export const notifications$ = new EventBus<Notify>();
 
 let notificationId = 0;
 export function showNotification(notification: NotifyInput) {

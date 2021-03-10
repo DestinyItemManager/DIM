@@ -1,4 +1,4 @@
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import { AnimatePresence, Spring } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 import Notification from './Notification';
@@ -11,14 +11,11 @@ const spring: Spring = { type: 'spring', bounce: 0, duration: 0.3 };
 export default function NotificationsContainer() {
   const [notifications, setNotifications] = useState<Notify[]>([]);
 
-  useSubscription(
-    useCallback(
-      () =>
-        notifications$.subscribe((notification: Notify) => {
-          setNotifications((notifications) => [...notifications, notification]);
-        }),
-      []
-    )
+  useEventBusListener(
+    notifications$,
+    useCallback((notification: Notify) => {
+      setNotifications((notifications) => [...notifications, notification]);
+    }, [])
   );
 
   const onNotificationClosed = (notification: Notify) =>

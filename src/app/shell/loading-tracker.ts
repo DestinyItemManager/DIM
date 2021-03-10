@@ -1,17 +1,15 @@
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { Observable } from 'app/utils/observable';
 
 /**
  * An object that can keep track of multiple running promises in order to drive a loading spinner.
  */
 class PromiseTracker {
   numTracked = 0;
-  subject = new BehaviorSubject(false);
-  active$ = this.subject.pipe(distinctUntilChanged(), shareReplay(1));
+  active$ = new Observable(false);
 
   addPromise<T>(promise: Promise<T>): Promise<T> {
     this.numTracked++;
-    this.subject.next(true);
+    this.active$.next(true);
     promise.then(this.countDown, this.countDown);
     return promise;
   }
@@ -31,7 +29,7 @@ class PromiseTracker {
 
   private countDown = () => {
     this.numTracked--;
-    this.subject.next(this.active());
+    this.active$.next(this.active());
   };
 }
 

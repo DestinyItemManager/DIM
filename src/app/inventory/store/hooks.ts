@@ -1,10 +1,9 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { refresh$ } from 'app/shell/refresh';
-import { ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useCallback, useEffect } from 'react';
 import { queueAction } from '../../utils/action-queue';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
@@ -21,7 +20,7 @@ export function useLoadStores(
   loaded: boolean,
   components?: DestinyComponentType[]
 ) {
-  const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const dispatch = useThunkDispatch();
 
   useEffect(() => {
     if (account && !loaded) {
@@ -33,8 +32,9 @@ export function useLoadStores(
     }
   }, [account, dispatch, components, loaded]);
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
+  useEventBusListener(
+    refresh$,
+    useCallback(() => {
       if (account) {
         queueAction<any>(() => {
           if (account?.destinyVersion === 2) {
@@ -44,6 +44,6 @@ export function useLoadStores(
           }
         });
       }
-    })
+    }, [account, dispatch])
   );
 }

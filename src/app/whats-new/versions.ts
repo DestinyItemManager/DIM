@@ -1,5 +1,5 @@
+import { Observable } from 'app/utils/observable';
 import _ from 'lodash';
-import { BehaviorSubject } from 'rxjs';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 
@@ -9,7 +9,7 @@ class Versions {
   previousVersion = cleanVersion(localStorage.getItem(localStorageKey));
 
   /** An observable for whether to show the changelog. */
-  showChangelog$ = new BehaviorSubject(this.showChangelog);
+  showChangelog$ = new Observable(this.showChangelog);
 
   /**
    * Signify that the changelog page has been viewed.
