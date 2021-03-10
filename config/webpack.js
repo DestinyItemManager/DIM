@@ -404,7 +404,7 @@ module.exports = (env) => {
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(!env.release),
+        '$featureFlags.searchResults': JSON.stringify(env.dev),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
