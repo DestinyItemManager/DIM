@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
+import React, { useState } from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { D1GridNode, DimItem } from '../../inventory/item-types';
 import { AppIcon, plusIcon } from '../../shell/icons';
@@ -19,87 +19,58 @@ interface Props {
   onItemLocked(item: DimItem): void;
 }
 
-interface State {
-  dialogOpen: boolean;
-}
+export default function LoadoutBuilderLockPerk(
+  this: void,
+  { type, lockeditem, i18nItemNames, activePerks, lockedPerks, onRemove, onItemLocked }: Props
+) {
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-export default class LoadoutBuilderLockPerk extends React.Component<Props, State> {
-  state: State = { dialogOpen: false };
-  render() {
-    const {
-      type,
-      lockeditem,
-      i18nItemNames,
-      activePerks,
-      lockedPerks,
-      onRemove,
-      onItemLocked,
-    } = this.props;
-    const { dialogOpen } = this.state;
+  const closeDialog = () => setDialogOpen(false);
+  const addPerkClicked = () => setDialogOpen(true);
 
-    return (
-      <div className="locked-item">
-        <LoadoutBucketDropTarget bucketType={type} onItemLocked={onItemLocked}>
-          {lockeditem === null ? (
-            <div className="empty-item">
-              <div className="perk-addition" onClick={this.addPerkClicked}>
-                {this.hasLockedPerks(type) ? (
-                  <div className="locked-perk-notification">
-                    <BungieImage
-                      src={this.getFirstPerk(type).icon}
-                      title={this.getFirstPerk(type).description}
-                    />
-                  </div>
-                ) : (
-                  <div className="perk-addition-text-container">
-                    <AppIcon icon={plusIcon} />
-                    <small className="perk-addition-text">{t('LB.LockPerk')}</small>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="lock-container">
-              <LoadoutBuilderItem item={lockeditem} />
-              <div
-                className="close"
-                onClick={() => onRemove({ type })}
-                role="button"
-                tabIndex={0}
-              />
-            </div>
-          )}
-          <div className="label">{i18nItemNames[type]}</div>
-          {dialogOpen && (
-            <LoadoutBuilderLocksDialog
-              activePerks={activePerks}
-              lockedPerks={lockedPerks}
-              type={type}
-              onPerkLocked={this.onPerkLocked}
-              onClose={this.closeDialog}
-            />
-          )}
-        </LoadoutBucketDropTarget>
-      </div>
-    );
-  }
-
-  private onPerkLocked = (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => {
-    this.closeDialog();
-    this.props.onPerkLocked(perk, type, $event);
+  const onPerkLocked = (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => {
+    closeDialog();
+    onPerkLocked(perk, type, $event);
   };
 
-  private getFirstPerk = (type: ArmorTypes) => {
-    const { lockedPerks } = this.props;
-    return lockedPerks[type][Object.keys(lockedPerks[type])[0]];
-  };
+  const firstPerk = lockedPerks[type][Object.keys(lockedPerks[type])[0]];
+  const hasLockedPerks = Object.keys(lockedPerks[type]).length > 0;
 
-  private hasLockedPerks(type: ArmorTypes) {
-    const { lockedPerks } = this.props;
-    return Object.keys(lockedPerks[type]).length > 0;
-  }
-
-  private addPerkClicked = () => this.setState({ dialogOpen: true });
-
-  private closeDialog = () => this.setState({ dialogOpen: false });
+  return (
+    <div className="locked-item">
+      <LoadoutBucketDropTarget bucketType={type} onItemLocked={onItemLocked}>
+        {lockeditem === null ? (
+          <div className="empty-item">
+            <div className="perk-addition" onClick={addPerkClicked}>
+              {hasLockedPerks ? (
+                <div className="locked-perk-notification">
+                  <BungieImage src={firstPerk.icon} title={firstPerk.description} />
+                </div>
+              ) : (
+                <div className="perk-addition-text-container">
+                  <AppIcon icon={plusIcon} />
+                  <small className="perk-addition-text">{t('LB.LockPerk')}</small>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="lock-container">
+            <LoadoutBuilderItem item={lockeditem} />
+            <div className="close" onClick={() => onRemove({ type })} role="button" tabIndex={0} />
+          </div>
+        )}
+        <div className="label">{i18nItemNames[type]}</div>
+        {dialogOpen && (
+          <LoadoutBuilderLocksDialog
+            activePerks={activePerks}
+            lockedPerks={lockedPerks}
+            type={type}
+            onPerkLocked={onPerkLocked}
+            onClose={closeDialog}
+          />
+        )}
+      </LoadoutBucketDropTarget>
+    </div>
+  );
 }
