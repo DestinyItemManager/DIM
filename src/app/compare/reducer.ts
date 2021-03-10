@@ -76,7 +76,6 @@ export const compare: Reducer<CompareState, CompareAction> = (
   }
 };
 
-// TODO: this may need to be a thunk
 // TODO: better query editing tools
 // TODO: extract some of this into shared functions w/ the compare screen?
 // TODO: some way to just compare that one item? shift-click? highlight the original item?
@@ -90,8 +89,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
       showNotification({
         type: 'warning',
         title: item.name,
-        // TODO: better warning, use item category!
-        body: t('Compare.Error.Archetype', { type: item.typeName }),
+        body: t('Compare.Error.Unmatched'),
       });
       return state;
     }

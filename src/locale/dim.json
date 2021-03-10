@@ -95,8 +95,7 @@
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
-      "Archetype": "Cannot compare this item as it is not a {{type}}.",
-      "Class": "Cannot compare this item as it is not for a {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
