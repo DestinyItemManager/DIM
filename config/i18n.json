@@ -745,6 +745,7 @@
   },
   "SearchHistory": {
     "Description": "These are all your past and saved searches. You can delete them from here.",
+    "DeleteAll": "Delete all unstarred searches",
     "Date": "Last Used",
     "UsageCount": "# Used",
     "Query": "Search",

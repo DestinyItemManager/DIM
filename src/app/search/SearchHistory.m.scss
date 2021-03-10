@@ -1,25 +1,25 @@
 .searchHistory {
-  composes: dim-page from global;
   list-style: none;
-  margin: 2em auto;
-  width: 100%;
-  padding: 0;
-  border-spacing: 0;
+  table {
+    border-spacing: 0;
+    width: 100%;
+  }
 
   th {
     text-align: left;
     border-bottom: 1px solid white;
+    white-space: nowrap;
   }
 
   td,
   th {
     vertical-align: top;
-    padding: 16px 0;
+    padding: 16px 8px;
   }
 
   tr:nth-child(2n) {
     td {
-      background-color: #282828;
+      background-color: rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -30,4 +30,16 @@
   color: white;
   padding: 0 2px;
   cursor: pointer;
+}
+
+.date {
+  white-space: nowrap;
+}
+
+.instructions {
+  margin: 1em;
+
+  button {
+    float: right;
+  }
 }

@@ -39,10 +39,21 @@ function SearchHistory({ recentSearches, dispatch }: Props) {
     dispatch(saveSearch({ query: item.query, saved: !item.saved }));
   };
 
+  const onDeleteAll = () => {
+    for (const s of recentSearches.filter((s) => !s.saved)) {
+      dispatch(searchDeleted(s.query));
+    }
+  };
+
   return (
-    <div className="dim-page">
-      <p>{t('SearchHistory.Description')}</p>
-      <table className={styles.searchHistory}>
+    <div className={styles.searchHistory}>
+      <p className={styles.instructions}>
+        {t('SearchHistory.Description')}
+        <button type="button" className="dim-button" onClick={onDeleteAll}>
+          {t('SearchHistory.DeleteAll')}
+        </button>
+      </p>
+      <table>
         <thead>
           <tr>
             <th></th>
@@ -68,7 +79,7 @@ function SearchHistory({ recentSearches, dispatch }: Props) {
                     <AppIcon icon={closeIcon} />
                   </button>
                 </td>
-                <td>{new Date(search.lastUsage).toLocaleString()}</td>
+                <td className={styles.date}>{new Date(search.lastUsage).toLocaleString()}</td>
                 <td>{search.usageCount}</td>
                 <td>
                   <button

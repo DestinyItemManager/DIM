@@ -712,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -944,7 +945,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }
