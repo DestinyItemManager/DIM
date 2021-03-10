@@ -43,7 +43,11 @@ export default function RecentItems() {
       {options.length > 0 && (
         <div className={styles.options}>
           <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
-          <ItemActionsDropdown filteredItems={items} searchActive={Boolean(query?.length)} />
+          <ItemActionsDropdown
+            filteredItems={items}
+            searchActive={Boolean(query?.length)}
+            searchQuery={query}
+          />
           <div className={styles.applySearch} onClick={() => dispatch(setSearchQuery(query))}>
             <AppIcon icon={searchIcon} />
           </div>

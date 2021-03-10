@@ -12,7 +12,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import ItemTable from './ItemTable';
@@ -82,7 +82,7 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
     0,
     ...(params.get('category') || '').split('~').map((s) => parseInt(s, 10) || 0),
   ];
-  const types = useMemo(() => defs && getSelectionTree(defs), [defs]);
+  const types = getSelectionTree(defs.isDestiny2() ? 2 : 1);
   const selection = drillToSelection(types, selectedItemCategoryHashes);
 
   // On the first render, apply the search from the query params if possible. Otherwise,

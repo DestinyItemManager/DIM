@@ -1,3 +1,4 @@
+import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { setItemNote } from 'app/inventory/actions';
@@ -11,7 +12,6 @@ import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { CompareService } from '../compare/compare.service';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -26,6 +26,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import styles from './ItemActionsDropdown.m.scss';
 
 interface ProvidedProps {
+  searchQuery: string;
   filteredItems: DimItem[];
   searchActive: boolean;
 }
@@ -52,10 +53,11 @@ function ItemActionsDropdown({
   searchActive,
   isPhonePortrait,
   filteredItems,
+  searchQuery,
   dispatch,
 }: Props) {
   let isComparable = false;
-  if (filteredItems.length && !CompareService.dialogOpen) {
+  if (filteredItems.length) {
     const type = filteredItems[0].typeName;
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
@@ -88,7 +90,7 @@ function ItemActionsDropdown({
   };
 
   const compareMatching = () => {
-    CompareService.addItemsToCompare(filteredItems);
+    dispatch(compareFilteredItems(searchQuery, filteredItems));
   };
 
   // Move items matching the current search. Max 9 per type.

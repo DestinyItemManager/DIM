@@ -1,4 +1,4 @@
-import { CompareService } from 'app/compare/compare.service';
+import { addCompareItem } from 'app/compare/actions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -53,7 +53,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
   });
   useHotkey('c', t('Compare.ButtonHelp'), () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
+    dispatch(addCompareItem(item));
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
