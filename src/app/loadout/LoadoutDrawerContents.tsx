@@ -117,7 +117,7 @@ export default function LoadoutDrawerContents(
             </a>
           )}
           <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddInventoryItems')}
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
           </a>
 
           {typesWithoutItems.map((bucket) => (
@@ -230,12 +230,11 @@ async function fillLoadoutFromUnequipped(
     (item) =>
       item.bucket.type !== 'Class' &&
       itemCanBeInLoadout(item) &&
-      fromEquippedTypes.includes(item.type)
+      fromEquippedTypes.includes(item.type) &&
+      !item.equipped
   );
 
   for (const item of items) {
-    if (fromEquippedTypes.includes(item.type)) {
-      add(item, undefined, true);
-    }
+    add(item, undefined, true);
   }
 }
