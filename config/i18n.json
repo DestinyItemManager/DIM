@@ -226,6 +226,7 @@
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
