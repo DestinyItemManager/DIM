@@ -197,11 +197,13 @@ function Compare(
               onChange={onChangeSetting}
             />
           )}
-          <CompareSuggestions
-            exampleItem={exampleItem}
-            categoryItems={categoryItems}
-            onQueryChanged={updateQuery}
-          />
+          {exampleItem && (
+            <CompareSuggestions
+              exampleItem={exampleItem}
+              categoryItems={categoryItems}
+              onQueryChanged={updateQuery}
+            />
+          )}
         </div>
       }
     >
