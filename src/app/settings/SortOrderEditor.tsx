@@ -27,88 +27,85 @@ const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => 
   </>
 ));
 
-interface Props {
-  order: SortProperty[];
-  onSortOrderChanged(order: SortProperty[]): void;
-}
-
 /**
  * An editor for sort-orders, with drag and drop.
  *
  * This is a "controlled component" - it fires an event when the order changes, and
  * must then be given back the new order by its parent.
  */
-export default class SortOrderEditor extends React.Component<Props> {
-  onDragEnd = (result: DropResult) => {
+export default function SortOrderEditor(
+  this: void,
+  {
+    order,
+    onSortOrderChanged,
+  }: {
+    order: SortProperty[];
+    onSortOrderChanged(order: SortProperty[]): void;
+  }
+) {
+  const moveItem = (oldIndex: number, newIndex: number, fromDrag = false) => {
+    newIndex = _.clamp(newIndex, 0, order.length);
+    const newOrder = reorder(order, oldIndex, newIndex);
+    if (fromDrag) {
+      newOrder[newIndex] = {
+        ...newOrder[newIndex],
+        enabled: newIndex === 0 || newOrder[newIndex - 1].enabled,
+      };
+    }
+    onSortOrderChanged(newOrder);
+  };
+
+  const onDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    this.moveItem(result.source.index, result.destination.index, true);
+    moveItem(result.source.index, result.destination.index, true);
   };
 
-  onClick = (e) => {
+  const toggleItem = (index: number) => {
+    const orderArr = Array.from(order);
+    orderArr[index] = { ...orderArr[index], enabled: !orderArr[index].enabled };
+    onSortOrderChanged(orderArr);
+  };
+
+  const onClick = (e) => {
     const target: HTMLElement = e.target;
     const getIndex = () => parseInt(target.parentElement!.dataset.index!, 10);
 
     if (target.classList.contains('sort-up')) {
       e.preventDefault();
       const index = getIndex();
-      this.moveItem(index, index - 1);
+      moveItem(index, index - 1);
     } else if (target.classList.contains('sort-down')) {
       e.preventDefault();
       const index = getIndex();
-      this.moveItem(index, index + 1);
+      moveItem(index, index + 1);
     } else if (target.classList.contains('sort-toggle')) {
       e.preventDefault();
       const index = getIndex();
-      this.toggleItem(index);
+      toggleItem(index);
     }
   };
 
-  render() {
-    const { order } = this.props;
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div
-              className="sort-order-editor"
-              ref={provided.innerRef}
-              onClick={this.onClick}
-              {...provided.droppableProps}
-            >
-              <SortEditorItemList order={order} />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    );
-  }
-
-  private moveItem(oldIndex, newIndex, fromDrag = false) {
-    newIndex = _.clamp(newIndex, 0, this.props.order.length);
-    const order = reorder(this.props.order, oldIndex, newIndex);
-    if (fromDrag) {
-      order[newIndex] = {
-        ...order[newIndex],
-        enabled: newIndex === 0 || order[newIndex - 1].enabled,
-      };
-    }
-    this.fireOrderChanged(order);
-  }
-
-  private toggleItem(index) {
-    const order = Array.from(this.props.order);
-    order[index] = { ...order[index], enabled: !order[index].enabled };
-    this.fireOrderChanged(order);
-  }
-
-  private fireOrderChanged(order: SortProperty[]) {
-    this.props.onSortOrderChanged(order);
-  }
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided) => (
+          <div
+            className="sort-order-editor"
+            ref={provided.innerRef}
+            onClick={onClick}
+            {...provided.droppableProps}
+          >
+            <SortEditorItemList order={order} />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 }
 
 // a little function to help us with reordering the result
