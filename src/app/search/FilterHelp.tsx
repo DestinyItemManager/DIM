@@ -51,7 +51,7 @@ function FilterHelp({ searchConfig }: Props) {
           return true;
         }
       })
-    : searchConfig.allFilters;
+    : searchConfig.allFilters.filter((s) => !s.deprecated);
 
   return (
     <div className={clsx(styles.filterView, 'dim-page dim-static-page')}>
