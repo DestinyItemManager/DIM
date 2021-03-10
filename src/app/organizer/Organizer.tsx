@@ -82,7 +82,7 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
     0,
     ...(params.get('category') || '').split('~').map((s) => parseInt(s, 10) || 0),
   ];
-  const types = getSelectionTree(defs.isDestiny2() ? 2 : 1);
+  const types = getSelectionTree(account.destinyVersion);
   const selection = drillToSelection(types, selectedItemCategoryHashes);
 
   // On the first render, apply the search from the query params if possible. Otherwise,
