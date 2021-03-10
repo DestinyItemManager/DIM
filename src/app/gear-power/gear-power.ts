@@ -1,14 +1,13 @@
-import { Subject } from 'rxjs';
+import { Observable } from 'app/utils/observable';
 
-export interface GearPowerStore {
-  selectedStoreId: string;
-}
-
-export const showGearPower$ = new Subject<GearPowerStore>();
+/**
+ * The currently selected store for showing gear power.
+ */
+export const showGearPower$ = new Observable<string | undefined>(undefined);
 
 /**
  * Show the gear power sheet
  */
 export function showGearPower(selectedStoreId: string) {
-  showGearPower$.next({ selectedStoreId });
+  showGearPower$.next(selectedStoreId);
 }

@@ -3,10 +3,10 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
-import { BehaviorSubject } from 'rxjs';
 import { showDragGhost } from './drag-ghost-item';
 import { DimItem } from './item-types';
 
@@ -41,7 +41,7 @@ export interface DragObject {
   item: DimItem;
 }
 
-export const isDragging$ = new BehaviorSubject(false);
+export const isDragging$ = new Observable<boolean>(false);
 export let isDragging = false;
 
 const LONGPRESS_TIMEOUT = 200;

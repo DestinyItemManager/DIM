@@ -1,3 +1,5 @@
+import { GlobalAlert } from 'bungie-api-ts/core';
+import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
@@ -17,6 +19,8 @@ export interface ShellState {
 
   /** Global, page-covering loading state. */
   readonly loadingMessages: string[];
+
+  readonly bungieAlerts: GlobalAlert[];
 }
 
 export type ShellAction = ActionType<typeof actions>;
@@ -26,6 +30,7 @@ const initialState: ShellState = {
   searchQuery: '',
   searchQueryVersion: 0,
   loadingMessages: [],
+  bungieAlerts: [],
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (
@@ -73,6 +78,12 @@ export const shell: Reducer<ShellState, ShellAction> = (
         ...state,
         loadingMessages: state.loadingMessages.filter((m) => m !== action.payload),
       };
+    }
+
+    case getType(actions.updateBungieAlerts): {
+      return deepEqual(state.bungieAlerts, action.payload)
+        ? state
+        : { ...state, bungieAlerts: action.payload };
     }
 
     default:

@@ -19,7 +19,6 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { showNotification } from '../notifications/notifications';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { Subscriptions } from '../utils/rx-utils';
 import { CompareButton, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
 import './compare.scss';
 import { CompareService } from './compare.service';
@@ -81,7 +80,7 @@ class Compare extends React.Component<Props, State> {
     show: false,
     sortBetterFirst: true,
   };
-  private subscriptions = new Subscriptions();
+  private subscription: () => void;
 
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
@@ -92,21 +91,19 @@ class Compare extends React.Component<Props, State> {
   );
 
   componentDidMount() {
-    this.subscriptions.add(
-      CompareService.compareItems$.subscribe((args) => {
-        this.setState({ show: true });
-        if (CompareService.dialogOpen === false) {
-          CompareService.dialogOpen = true;
-          ga(
-            'send',
-            'pageview',
-            `/profileMembershipId/d${args.additionalItems[0].destinyVersion}/compare`
-          );
-        }
+    this.subscription = CompareService.compareItems$.subscribe((args) => {
+      this.setState({ show: true });
+      if (CompareService.dialogOpen === false) {
+        CompareService.dialogOpen = true;
+        ga(
+          'send',
+          'pageview',
+          `/profileMembershipId/d${args.additionalItems[0].destinyVersion}/compare`
+        );
+      }
 
-        this.add(args);
-      })
-    );
+      this.add(args);
+    });
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -116,7 +113,7 @@ class Compare extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.subscriptions.unsubscribe();
+    this.subscription();
     CompareService.dialogOpen = false;
   }
 

@@ -6,11 +6,11 @@ import { LoadoutItem } from 'app/loadout/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import copy from 'fast-copy';
-import React, { useEffect, useReducer } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
@@ -175,13 +175,17 @@ function InfusionFinder({
     }
   }, [destinyVersion, show]);
 
-  // Listen for items coming in via showInfuse#
-  useSubscription(() =>
-    showInfuse$.subscribe(({ item }) => {
-      const hasInfusables = allItems.some((i) => isInfusable(item, i));
-      const hasFuel = allItems.some((i) => isInfusable(i, item));
-      stateDispatch({ type: 'init', item, hasInfusables: hasInfusables, hasFuel });
-    })
+  // Listen for items coming in via showInfuse$
+  useEventBusListener(
+    showInfuse$,
+    useCallback(
+      (item) => {
+        const hasInfusables = allItems.some((i) => isInfusable(item, i));
+        const hasFuel = allItems.some((i) => isInfusable(i, item));
+        stateDispatch({ type: 'init', item, hasInfusables: hasInfusables, hasFuel });
+      },
+      [allItems]
+    )
   );
 
   // Close the sheet on navigation

@@ -1,12 +1,11 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { DimItem } from 'app/inventory/item-types';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemSubHeader } from 'app/mobile-inspect/ItemSubHeader';
-import { useSubscription } from 'app/utils/hooks';
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useSubscription } from 'use-subscription';
 import { showMobileInspect$ } from './mobile-inspect';
 import styles from './MobileInspect.m.scss';
 
@@ -16,18 +15,11 @@ export const enum Inspect {
 }
 
 export default function MobileInspect() {
-  const [item, setItem] = useState<DimItem | undefined>();
-  const [inspectType, setInspectType] = useState<Inspect>(Inspect.default);
   const nodeRef = useRef<HTMLDivElement>(null);
   // TODO: In some very rare cases the popup doesn't close. Allow tapping to reset/close.
-  const reset = () => setItem(undefined);
+  const reset = () => showMobileInspect$.next({});
 
-  useSubscription(() =>
-    showMobileInspect$.subscribe(({ item, inspectType }) => {
-      setItem(item);
-      setInspectType(inspectType ?? Inspect.default);
-    })
-  );
+  const { item, inspectType = Inspect.default } = useSubscription(showMobileInspect$);
 
   return (
     <>

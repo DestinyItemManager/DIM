@@ -1,8 +1,8 @@
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
+import { EventBus } from 'app/utils/observable';
 import React, { useCallback, useContext, useRef } from 'react';
-import { Subject } from 'rxjs';
 
-export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
+export const ClickOutsideContext = React.createContext(new EventBus<React.MouseEvent>());
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
@@ -22,21 +22,21 @@ export default React.forwardRef(function ClickOutside(
 ) {
   const localRef = useRef<HTMLDivElement>(null);
   const wrapperRef = ref || localRef;
-  const context = useContext(ClickOutsideContext);
+  const mouseEvents = useContext(ClickOutsideContext);
 
-  const subscribeFn = useCallback(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    const handleClickOutside = (event: React.MouseEvent) => {
+  /**
+   * Alert if clicked on outside of element
+   */
+  const handleClickOutside = useCallback(
+    (event: React.MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         onClickOutside(event);
       }
-    };
-    return context.subscribe(handleClickOutside);
-  }, [context, onClickOutside, wrapperRef]);
+    },
+    [onClickOutside, wrapperRef]
+  );
 
-  useSubscription(subscribeFn);
+  useEventBusListener(mouseEvents, handleClickOutside);
 
   return (
     <div ref={wrapperRef} {...other}>
