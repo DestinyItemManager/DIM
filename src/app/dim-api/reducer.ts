@@ -446,6 +446,8 @@ function prepareUpdateQueue(state: DimApiState) {
   }
 }
 
+let unique = 0;
+
 /**
  * Combine this update with any update to the same object that's already in the queue.
  * This is meant to reduce how many updates the API has to process - especially if the
@@ -463,8 +465,6 @@ function compactUpdate(
   },
   update: ProfileUpdateWithRollback
 ) {
-  let unique = 0;
-
   // Figure out the ID of the object being acted on
   let key: string;
   switch (update.action) {
