@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
-import React, { useCallback, useState } from 'react';
+import React, { MouseEvent, useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
@@ -25,11 +25,13 @@ interface Props {
 const CharacterHeader = ({
   store,
   loadoutMenuOpen,
+  menuRef,
   onClick,
 }: {
   store: DimStore;
   loadoutMenuOpen: boolean;
-  onClick: () => void;
+  menuRef: React.RefObject<HTMLDivElement>;
+  onClick: (e: MouseEvent) => void;
 }) => (
   <div
     className={clsx('character', {
@@ -38,6 +40,7 @@ const CharacterHeader = ({
       destiny2: store.destinyVersion === 2,
       vault: store.isVault,
     })}
+    ref={menuRef}
     onClick={onClick}
   >
     <CharacterTile store={store} />
@@ -58,6 +61,7 @@ const CharacterHeader = ({
  */
 export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onTapped }: Props) {
   const [loadoutMenuOpen, setLoadoutMenuOpen] = useState(false);
+  const menuTrigger = useRef<HTMLDivElement>(null);
 
   const openLoadoutPopup = () => {
     if (store !== selectedStore && onTapped) {
@@ -76,7 +80,11 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
   let loadoutMenu: React.ReactNode | undefined;
   if (loadoutMenuOpen) {
     const menuContents = (
-      <ClickOutside onClickOutside={clickOutsideLoadoutMenu} className="loadout-menu">
+      <ClickOutside
+        onClickOutside={clickOutsideLoadoutMenu}
+        extraRef={menuTrigger}
+        className="loadout-menu"
+      >
         <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
       </ClickOutside>
     );
@@ -88,7 +96,12 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
 
   return (
     <div>
-      <CharacterHeader store={store} loadoutMenuOpen={loadoutMenuOpen} onClick={openLoadoutPopup} />
+      <CharacterHeader
+        store={store}
+        loadoutMenuOpen={loadoutMenuOpen}
+        onClick={openLoadoutPopup}
+        menuRef={menuTrigger}
+      />
       {loadoutMenu}
     </div>
   );

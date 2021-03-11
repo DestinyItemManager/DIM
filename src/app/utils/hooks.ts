@@ -54,7 +54,7 @@ export function useClickOutside(
         }
       }
     };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    document.addEventListener('click', handler, { capture: true });
+    return () => document.removeEventListener('click', handler, { capture: true });
   }, [ref, onClickOutside, extraRef]);
 }
