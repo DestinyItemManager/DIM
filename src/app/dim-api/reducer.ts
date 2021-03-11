@@ -344,7 +344,7 @@ export const dimApi = (
 
     case getType(actions.searchUsed):
       return produce(state, (draft) => {
-        searchUsed(draft, account!.destinyVersion, action.payload);
+        searchUsed(draft, account!, action.payload);
       });
 
     case getType(actions.saveSearch):
@@ -980,10 +980,24 @@ function trackTriumph(
   draft.updateQueue.push(updateAction);
 }
 
-function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
+  const destinyVersion = account.destinyVersion;
+
+  // Real hack to fake out enough store to select out the search configs
+  const searchConfigs = searchConfigSelector(({
+    accounts: {
+      accounts: [account],
+      currentAccount: 0,
+    },
+  } as any) as RootState);
+
   // Canonicalize the query so we always save it the same way
   try {
     const ast = parseQuery(query);
+    if (!validateQuery(ast, searchConfigs)) {
+      errorLog('saveSearch', 'Query not valid - not saving', query);
+      return;
+    }
     if (ast.op === 'filter' && ast.type === 'keyword') {
       // don't save "trivial" single-keyword filters
       // TODO: somehow also reject invalid searches (that don't match real keywords)
