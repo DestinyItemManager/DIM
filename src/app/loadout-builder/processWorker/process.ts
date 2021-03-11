@@ -383,14 +383,14 @@ function getStatValuesWithMWProcess(
 
       if (masterworkSocketCategory) {
         masterworkSocketHashes = masterworkSocketCategory.sockets
-          .map((socket) => socket?.plug?.plugItemHash ?? NaN)
+          .map((socket) => socket.plug?.plugItemHash ?? NaN)
           .filter((val) => !isNaN(val));
       }
     }
 
     if (masterworkSocketHashes.length) {
       for (const socket of item.sockets.sockets) {
-        const plugHash = socket?.plug?.plugItemHash ?? NaN;
+        const plugHash = socket.plug?.plugItemHash ?? NaN;
 
         if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
           for (const statHash of orderedStatValues) {

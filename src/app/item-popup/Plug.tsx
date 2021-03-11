@@ -54,7 +54,7 @@ export default function Plug({
     return null;
   }
 
-  const itemCategories = plug?.plugDef?.itemCategoryHashes || [];
+  const itemCategories = plug?.plugDef.itemCategoryHashes || [];
 
   const handleShiftClick =
     (onShiftClick || onClick) &&
