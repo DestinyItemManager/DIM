@@ -93,6 +93,10 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add);
   }
+  function doFillLoadOutFromUnequipped(e: React.MouseEvent) {
+    e.preventDefault();
+    fillLoadoutFromUnequipped(loadout, stores, add);
+  }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
@@ -112,6 +116,10 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
             </a>
           )}
+          <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+          </a>
+
           {typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
@@ -148,7 +156,6 @@ async function pickLoadoutItem(
   add: (item: DimItem, e?: MouseEvent) => void
 ) {
   const loadoutClassType = loadout?.classType;
-
   function loadoutHasItem(item: DimItem) {
     return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
@@ -203,5 +210,31 @@ function fillLoadoutFromEquipped(
     } else {
       infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
     }
+  }
+}
+
+async function fillLoadoutFromUnequipped(
+  loadout: Loadout,
+  stores: DimStore[],
+  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
+) {
+  if (!loadout) {
+    return;
+  }
+  const dimStore =
+    (loadout.classType !== DestinyClass.Unknown &&
+      stores.find((s) => s.classType === loadout.classType)) ||
+    getCurrentStore(stores)!;
+
+  const items = dimStore.items.filter(
+    (item) =>
+      item.bucket.type !== 'Class' &&
+      itemCanBeInLoadout(item) &&
+      fromEquippedTypes.includes(item.type) &&
+      !item.equipped
+  );
+
+  for (const item of items) {
+    add(item, undefined, true);
   }
 }

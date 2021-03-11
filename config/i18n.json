@@ -496,6 +496,7 @@
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
     "AddEquippedItems": "Add Equipped",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
