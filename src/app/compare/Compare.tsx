@@ -143,7 +143,7 @@ function Compare(
   };
 
   const onChangeSetting: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSetting(e.target.name as any, e.target.checked);
+    dispatch(setSetting(e.target.name as any, e.target.checked));
   };
 
   const comparator = sortCompareItemsComparator(sortedHash, sortBetterFirst, doCompareBaseStats);
