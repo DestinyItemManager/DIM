@@ -4,6 +4,7 @@
 * Deleting multiple searches from your search history works now - before there was a bug where only the first delete would succeed.
 * On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
 * Deprecated search filters no longer show up in Filter Help.
+* Searches that don't use any special filters now search for the entire string in item names and descriptions and perk names and descriptions. e.g. `gnawing hunger` now searches for the full string "gnawing hunger" as opposed to being equivalent to `"gnawing" and "hunger"`.
 
 ## 6.55.0 <span class="changelog-date">(2021-03-07)</span>
 

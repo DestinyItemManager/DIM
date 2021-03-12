@@ -3937,19 +3937,9 @@ Array [
 
 exports[`parse |cluster tracking|: ast 1`] = `
 Object {
-  "op": "and",
-  "operands": Array [
-    Object {
-      "args": "cluster",
-      "op": "filter",
-      "type": "keyword",
-    },
-    Object {
-      "args": "tracking",
-      "op": "filter",
-      "type": "keyword",
-    },
-  ],
+  "args": "cluster tracking",
+  "op": "filter",
+  "type": "keyword",
 }
 `;
 
@@ -3958,15 +3948,25 @@ Array [
   Array [
     "filter",
     "keyword",
-    "cluster",
+    "cluster tracking",
   ],
-  Array [
-    "implicit_and",
-  ],
+]
+`;
+
+exports[`parse |gnawing hunger|: ast 1`] = `
+Object {
+  "args": "gnawing hunger",
+  "op": "filter",
+  "type": "keyword",
+}
+`;
+
+exports[`parse |gnawing hunger|: lexer 1`] = `
+Array [
   Array [
     "filter",
     "keyword",
-    "tracking",
+    "gnawing hunger",
   ],
 ]
 `;
@@ -4709,6 +4709,60 @@ Array [
 ]
 `;
 
+exports[`parse |not "forgotten"|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not "forgotten"|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not (forgotten)|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not (forgotten)|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |not -not:maxpower|: ast 1`] = `
 Object {
   "op": "not",
@@ -4744,24 +4798,36 @@ Array [
 
 exports[`parse |not forgotten|: ast 1`] = `
 Object {
-  "op": "not",
-  "operand": Object {
-    "args": "forgotten",
-    "op": "filter",
-    "type": "keyword",
-  },
+  "args": "not forgotten",
+  "op": "filter",
+  "type": "keyword",
+}
+`;
+
+exports[`parse |not forgotten|: ast 2`] = `
+Object {
+  "args": "not forgotten",
+  "op": "filter",
+  "type": "keyword",
 }
 `;
 
 exports[`parse |not forgotten|: lexer 1`] = `
 Array [
   Array [
-    "not",
+    "filter",
+    "keyword",
+    "not forgotten",
   ],
+]
+`;
+
+exports[`parse |not forgotten|: lexer 2`] = `
+Array [
   Array [
     "filter",
     "keyword",
-    "forgotten",
+    "not forgotten",
   ],
 ]
 `;
@@ -4885,7 +4951,7 @@ Array [
 
 exports[`parse |‘grenade launcher reserves’|: ast 1`] = `
 Object {
-  "args": "grenade launcher reserves",
+  "args": "'grenade launcher reserves'",
   "op": "filter",
   "type": "keyword",
 }
@@ -4896,7 +4962,7 @@ Array [
   Array [
     "filter",
     "keyword",
-    "grenade launcher reserves",
+    "'grenade launcher reserves'",
   ],
 ]
 `;
