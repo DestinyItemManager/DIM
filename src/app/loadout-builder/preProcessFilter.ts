@@ -116,7 +116,7 @@ export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork:
       );
 
       for (const socket of item.sockets.allSockets) {
-        const plugHash = socket?.plugged?.plugDef?.hash ?? NaN;
+        const plugHash = socket.plugged?.plugDef.hash ?? NaN;
 
         if (socket.plugged?.stats && !masterworkSocketHashes.includes(plugHash)) {
           for (const statHash of statValues) {

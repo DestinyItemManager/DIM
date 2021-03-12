@@ -16,7 +16,7 @@ export function getMasterworkSocketHashes(
 
 function getPlugHashesFromCategory(category: DimSocketCategory) {
   return category.sockets
-    .map((socket) => socket?.plugged?.plugDef?.hash ?? NaN)
+    .map((socket) => socket.plugged?.plugDef.hash ?? NaN)
     .filter((val) => !isNaN(val));
 }
 
@@ -32,7 +32,7 @@ export function getSocketsWithStyle(
 
 export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash: number) {
   return sockets.allSockets.filter((socket) =>
-    socket?.plugged?.plugDef?.itemCategoryHashes?.includes(categoryHash)
+    socket.plugged?.plugDef.itemCategoryHashes?.includes(categoryHash)
   );
 }
 

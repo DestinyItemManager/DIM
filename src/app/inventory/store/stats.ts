@@ -390,7 +390,7 @@ function enhanceStatsWithPlugs(
   const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
     for (const plug of socket.plugOptions) {
-      if (plug.plugDef?.investmentStats?.length) {
+      if (plug.plugDef.investmentStats?.length) {
         plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
       }
     }
@@ -451,18 +451,26 @@ function buildLiveStats(
   const activePlugStatValues: { [statHash: number]: number } = {};
   let negativeModStatFound = false;
 
-  for (const { plugged } of createdItem.sockets?.allSockets || []) {
-    if (plugged?.enabled) {
-      for (const { isConditionallyActive, statTypeHash } of plugged.plugDef.investmentStats || []) {
-        const plugStat = plugged.stats?.[statTypeHash] ?? 0;
-        if (
-          !isPlugStatActive(createdItem, plugged.plugDef.hash, statTypeHash, isConditionallyActive)
-        ) {
-          inactivePlugStatValues[statTypeHash] =
-            (inactivePlugStatValues[statTypeHash] ?? 0) + plugStat;
-        } else {
-          activePlugStatValues[statTypeHash] = (activePlugStatValues[statTypeHash] ?? 0) + plugStat;
-          negativeModStatFound ||= plugStat < 0;
+  if (createdItem.sockets) {
+    for (const { plugged } of createdItem.sockets.allSockets) {
+      if (plugged?.enabled && plugged.plugDef.investmentStats) {
+        for (const { isConditionallyActive, statTypeHash } of plugged.plugDef.investmentStats) {
+          const plugStat = plugged.stats?.[statTypeHash] ?? 0;
+          if (
+            !isPlugStatActive(
+              createdItem,
+              plugged.plugDef.hash,
+              statTypeHash,
+              isConditionallyActive
+            )
+          ) {
+            inactivePlugStatValues[statTypeHash] =
+              (inactivePlugStatValues[statTypeHash] ?? 0) + plugStat;
+          } else {
+            activePlugStatValues[statTypeHash] =
+              (activePlugStatValues[statTypeHash] ?? 0) + plugStat;
+            negativeModStatFound ||= plugStat < 0;
+          }
         }
       }
     }

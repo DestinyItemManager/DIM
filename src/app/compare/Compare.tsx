@@ -339,7 +339,7 @@ function updateSocketComparePlug({
    * the previous should be the clicked plug
    */
   const prevPlug =
-    clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef?.hash
+    clickedPlug.plugDef.hash === currentAdjustedPlug?.plugDef.hash
       ? clickedPlug
       : currentAdjustedPlug ?? pluggedPlug;
 

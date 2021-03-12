@@ -250,8 +250,7 @@ function getNonReuseableModSockets(item: DimItem) {
   return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
-      _.intersection(s?.plugged?.plugDef?.itemCategoryHashes || [], modItemCategoryHashes).length >
-        0
+      _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0
   );
 }
 

@@ -46,14 +46,14 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 
       if (masterworkSocketCategory) {
         masterworkSocketHashes = masterworkSocketCategory.sockets
-          .map((socket) => socket?.plugged?.plugDef.hash ?? NaN)
+          .map((socket) => socket.plugged?.plugDef.hash ?? NaN)
           .filter((val) => !isNaN(val));
       }
     }
 
     if (masterworkSocketHashes.length) {
       for (const socket of item.sockets.allSockets) {
-        const plugHash = socket?.plugged?.plugDef.hash ?? NaN;
+        const plugHash = socket.plugged?.plugDef.hash ?? NaN;
 
         if (socket.plugged?.stats && masterworkSocketHashes.includes(plugHash)) {
           for (const statType of statKeys) {
