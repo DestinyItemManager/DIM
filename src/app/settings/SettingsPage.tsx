@@ -186,6 +186,7 @@ function SettingsPage({
     amount: t('Settings.SortByAmount'),
     rating: t('Settings.SortByRating'),
     classType: t('Settings.SortByClassType'),
+    ammoType: t('Settings.SortByAmmoType'),
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),

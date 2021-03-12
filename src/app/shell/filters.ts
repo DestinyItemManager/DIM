@@ -126,6 +126,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     })
   ),
   classType: compareBy((item: DimItem) => item.classType),
+  ammoType: compareBy((item: DimItem) => item.ammoType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {

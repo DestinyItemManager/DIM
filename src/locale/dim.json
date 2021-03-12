@@ -753,6 +753,7 @@
     "SingleCharacter": "Only show current character",
     "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "Item size",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
