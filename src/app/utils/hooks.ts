@@ -34,3 +34,27 @@ export function useShiftHeld() {
 
   return shiftHeld;
 }
+
+/**
+ * A hook version of ClickOutside - fires an event when an element outside of `ref` is clicked.
+ *
+ * You probably want to useCallback around the onClickOutside handler.
+ */
+export function useClickOutside(
+  ref: React.RefObject<HTMLElement>,
+  onClickOutside: (e: MouseEvent) => void,
+  /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
+  extraRef?: React.RefObject<HTMLElement>
+) {
+  useEffect(() => {
+    const handler = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        if (!extraRef?.current || !extraRef.current.contains(event.target as Node)) {
+          onClickOutside(event);
+        }
+      }
+    };
+    document.addEventListener('click', handler, { capture: true });
+    return () => document.removeEventListener('click', handler, { capture: true });
+  }, [ref, onClickOutside, extraRef]);
+}

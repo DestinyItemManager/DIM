@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
 import Developer from './developer/Developer';
 import ActivityTracker from './dim-ui/ActivityTracker';
-import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
 import ShowPageLoading from './dim-ui/ShowPageLoading';
@@ -115,58 +114,56 @@ function App({
       <ScrollToTop />
       <GATracker />
       <SneakyUpdates />
-      <ClickOutsideRoot>
-        <Header />
-        <PageLoading />
-        <ErrorBoundary name="DIM Code">
-          <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-            <Switch>
-              <Route path="/about" component={About} exact />
-              <Route path="/privacy" component={Privacy} exact />
-              <Route path="/whats-new" component={WhatsNew} exact />
-              <Route path="/login" component={Login} exact />
-              <Route path="/settings" component={SettingsPage} exact />
-              {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
-              {needsLogin &&
-                ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Redirect to={'/developer'} />
-                ) : (
-                  <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
-                ))}
-              <Route path="/search-history" component={SearchHistory} exact />
-              <Route
-                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                render={({ match }) => (
-                  <Destiny
-                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                    platformMembershipId={match.params.membershipId}
-                  />
-                )}
-              />
-              <Route
-                path={[
-                  '/inventory',
-                  '/progress',
-                  '/records',
-                  '/optimizer',
-                  '/organizer',
-                  '/vendors/:vendorId',
-                  '/vendors',
-                  '/record-books',
-                  '/activities',
-                ]}
-                exact
-              >
-                <AccountRedirectRoute />
-              </Route>
-              <Route component={DefaultAccount} />
-            </Switch>
-          </Suspense>
-        </ErrorBoundary>
-        <NotificationsContainer />
-        <ActivityTracker />
-        <HotkeysCheatSheet />
-      </ClickOutsideRoot>
+      <Header />
+      <PageLoading />
+      <ErrorBoundary name="DIM Code">
+        <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
+          <Switch>
+            <Route path="/about" component={About} exact />
+            <Route path="/privacy" component={Privacy} exact />
+            <Route path="/whats-new" component={WhatsNew} exact />
+            <Route path="/login" component={Login} exact />
+            <Route path="/settings" component={SettingsPage} exact />
+            {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
+            {needsLogin &&
+              ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
+                <Redirect to={'/developer'} />
+              ) : (
+                <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
+              ))}
+            <Route path="/search-history" component={SearchHistory} exact />
+            <Route
+              path="/:membershipId(\d+)/d:destinyVersion(1|2)"
+              render={({ match }) => (
+                <Destiny
+                  destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
+                  platformMembershipId={match.params.membershipId}
+                />
+              )}
+            />
+            <Route
+              path={[
+                '/inventory',
+                '/progress',
+                '/records',
+                '/optimizer',
+                '/organizer',
+                '/vendors/:vendorId',
+                '/vendors',
+                '/record-books',
+                '/activities',
+              ]}
+              exact
+            >
+              <AccountRedirectRoute />
+            </Route>
+            <Route component={DefaultAccount} />
+          </Switch>
+        </Suspense>
+      </ErrorBoundary>
+      <NotificationsContainer />
+      <ActivityTracker />
+      <HotkeysCheatSheet />
     </div>
   );
 }

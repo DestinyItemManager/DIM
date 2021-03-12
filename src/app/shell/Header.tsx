@@ -7,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useClickOutside } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
@@ -20,7 +21,6 @@ import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
 import { DestinyAccount } from '../accounts/destiny-account';
-import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { default as SearchFilter } from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
@@ -58,11 +58,9 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
   }, []);
 
-  const hideDropdown = (event) => {
-    if (!dropdownToggler.current || !dropdownToggler.current.contains(event.target)) {
-      setDropdownOpen(false);
-    }
-  };
+  const hideDropdown = useCallback(() => {
+    setDropdownOpen(false);
+  }, []);
 
   // Mobile search bar
   const [showSearch, setShowSearch] = useState(false);
@@ -114,7 +112,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     document.body.classList.toggle('search-open', showSearch);
   }, [showSearch]);
 
-  const nodeRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
 
@@ -246,6 +244,8 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     !window.MSStream &&
     (window.navigator as any).standalone !== true;
 
+  useClickOutside(dropdownRef, hideDropdown, dropdownToggler);
+
   return (
     <header id="header" className={showSearch ? 'search-expanded' : ''}>
       <a
@@ -263,17 +263,11 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
       <TransitionGroup component={null}>
         {dropdownOpen && (
           <CSSTransition
-            nodeRef={nodeRef}
+            nodeRef={dropdownRef}
             classNames="dropdown"
             timeout={{ enter: 500, exit: 500 }}
           >
-            <ClickOutside
-              ref={nodeRef}
-              key="dropdown"
-              className="dropdown"
-              onClickOutside={hideDropdown}
-              role="menu"
-            >
+            <div ref={dropdownRef} key="dropdown" className="dropdown" role="menu">
               {destinyLinks}
               <hr />
               <NavLink className="link menuItem" to="/settings">
@@ -303,7 +297,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
               )}
               {dimLinks}
               <MenuAccounts closeDropdown={hideDropdown} />
-            </ClickOutside>
+            </div>
           </CSSTransition>
         )}
       </TransitionGroup>
