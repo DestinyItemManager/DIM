@@ -82,7 +82,8 @@ export default function SeasonalRank({
     rewardItems.push(fakeReward(brightEngramHash, brightEngramRewardLevel));
   }
 
-  const getBrightEngram = prestigeMode && brightEngramRewardLevels.includes(seasonalRank % 10);
+  const getBrightEngram =
+    prestigeMode && brightEngramRewardLevels.includes((seasonalRank + 1) % 10);
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
     .filter((item) =>
