@@ -95,8 +95,7 @@
     "ButtonHelp": "Comparer des Objets",
     "CompareBaseStats": "Afficher les Statistiques de base",
     "Error": {
-      "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
-      "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "SunsetAfter": "Affiche les objets en fonction de la dernière saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Affiche les objets portant une certaine étiquette.",
       "Tagged": "Affiche les objets portant une étiquette."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "Ce sont toutes vos recherches passées et enregistrées. Vous pouvez les supprimer ici.",
     "Link": "Afficher et modifier l'historique de recherche",
     "Query": "Recherche",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Afficher uniquement le personnage actuel",
     "SingleCharacterExplanation": "DIM masquera tout les personnages sauf celui joué le plus récemment. L'inventaire de ces personnages apparaîtra comme étant dans le coffre.",
     "SizeItem": "Taille des objets",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Taille de la pile",
     "SortByClassType": "Classe requise",
     "SortByPrimary": "Niveau de puissance",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement. Elle est activé par défaut.",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
   },
-  "move-canceled": "Déplacement annulé",
   "no-space": "",
   "wrong-level": ""
 }

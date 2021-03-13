@@ -95,8 +95,7 @@
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
-      "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
-      "Class": "無法與此物品進行對比，因為它並不適用於{{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Only show current character",
     "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "物品顯示大小",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "堆疊大小",
     "SortByClassType": "必要的類",
     "SortByPrimary": "光等",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "願望清單備註:{{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }

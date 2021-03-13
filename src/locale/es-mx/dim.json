@@ -81,11 +81,11 @@
   },
   "Catalyst": {
     "Source": {
-      "LeviathansBreath": "Encontrado al derrotar enemigos poderosos con este arma.",
+      "LeviathansBreath": "Encontrado al derrotar enemigos poderosos con esta arma.",
       "Mission": "Completa la misión \"{{title}}\".",
       "Quest": "Completa la aventura \"{{title}}\".",
-      "RuinousEffigy": "Encontrado al derrotar enemigos con esferas de Esferas de Transmutación.",
-      "TheFourthHorseman": "Completa Búnqueres Serafines, Torres Serafinas y Sectores Perdidos de Leyenda."
+      "RuinousEffigy": "Encontrado al derrotar enemigos con Esferas de Transmutación.",
+      "TheFourthHorseman": "Completa Búnkeres Serafines, Torres Serafinas y Sectores Perdidos de Leyenda."
     }
   },
   "Compare": {
@@ -95,8 +95,7 @@
     "ButtonHelp": "Comparar Objetos",
     "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
-      "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
-      "Class": "No se puede comparar este objeto ya que no es para {{class}}."
+      "Unmatched": "Este artículo no coincide con el tipo de objetos que estás comparando."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Encuentra sets de objetos para equipar con el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
     "SunsetAfter": "Muestra objetos basados en la última temporada a la que pueden alcanzar el Limite de Poder de Temporada.",
-    "Sunsets": "",
+    "Sunsets": "Muestra objetos basados en la primera temporada en la que no puedan ser infundidos al Límite de Poder de Temporada.",
     "Tags": {
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Último uso",
+    "DeleteAll": "Borrar todas las búsquedas sin marcar",
     "Description": "Estas son todas tus búsquedas anteriores y guardadas. Puedes eliminarlas desde aquí.",
     "Link": "Ver y editar el historial de búsqueda",
     "Query": "Buscar",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Mostrar sólo personaje actual",
     "SingleCharacterExplanation": "DIM ocultará todo excepto el personaje jugado más reciente. Los inventarios de los otros personajes aparecerán como si fueran el depósito.",
     "SizeItem": "Tamaño de objeto",
+    "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",
     "SortByClassType": "Clase Requerida",
     "SortByPrimary": "Nivel de Poder",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos para PVE y PVP de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   },
-  "move-canceled": "Movimiento cancelado",
   "no-space": "",
   "wrong-level": ""
 }

@@ -95,8 +95,7 @@
     "ButtonHelp": "Gegenstände vergleichen",
     "CompareBaseStats": "Grundstatistiken anzeigen",
     "Error": {
-      "Archetype": "Kann diesen Gegenstand nicht vergleichen, da er kein {{type}} ist.",
-      "Class": "Kann diesen Gegenstand nicht vergleichen, da er nicht für einen {{class}} ist."
+      "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
     "SunsetAfter": "Zeigt Items basierend auf der letzten Saison an, in der sie die saisonale Power-Grenze erreichen.",
-    "Sunsets": "",
+    "Sunsets": "Zeigt Gegenstände basierend auf der ersten Saison, in der sie nicht mehr bis zur saisonalen Powergrenze infundiert werden können.",
     "Tags": {
       "Tag": "Zeigt Items mit einem bestimmten Tag an.",
       "Tagged": "Zeigt Items mit irgend einem Tag an."
@@ -568,7 +567,7 @@
     "Weekly": "Wöchentliche Herausforderung"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "Menge:"
   },
   "MovePopup": {
     "Acquired": "Dieses Element ist in Sammlungen freigeschaltet.",
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Zuletzt verwendet",
+    "DeleteAll": "Alle nicht markierten Suchen löschen",
     "Description": "Dies sind alle deine vergangenen und gespeicherten Suchen. Du kannst sie von hier löschen.",
     "Link": "Suchverlauf anzeigen und bearbeiten",
     "Query": "Suche",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Nur aktuellen Charakter anzeigen",
     "SingleCharacterExplanation": "DIM wird alle bis auf den zuletzt gespielten Charakter ausblenden. Die Inventare anderer Charaktere werden angezeigt, als wären sie im Tresor.",
     "SizeItem": "Gegenstandsgröße",
+    "SortByAmmoType": "Munitionstyp",
     "SortByAmount": "Stapel Größe",
     "SortByClassType": "Benötigte Klasse",
     "SortByPrimary": "Powerlevel",
@@ -945,7 +946,6 @@
     "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   },
-  "move-canceled": "Verschieben abgebrochen",
   "no-space": "",
   "wrong-level": ""
 }

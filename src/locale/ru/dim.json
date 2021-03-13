@@ -95,8 +95,7 @@
     "ButtonHelp": "Сравнить предметы",
     "CompareBaseStats": "Показать Базовые характеристики",
     "Error": {
-      "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
-      "Class": "Невозможно сравнить этот предмет, т.к. он не для {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Наборы брони с максимальной суммой Указанной Характеристики для каждого класса.",
     "StatsMax": "Броня в каждый слот с максимальной Указанной Характеристикой для всех персонажей. Фильтруются все предметы с максимальным значением Характеристики для каждого слота.",
     "SunsetAfter": "По сезону, после которого Максимальный уровень силы начнёт мешать Синтезу.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "С указанным Тэгом.",
       "Tagged": "С любым Тэгом."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Дата последнего Поиска",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "Избранные Поиски и их история. Можете удалять их на ваше усмотрение.",
     "Link": "Смотреть и редактировать запросы Поиска",
     "Query": "Запрос Поиска",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Только активный персонаж",
     "SingleCharacterExplanation": "DIM скроет персонажей, кроме последнего активного. Предметы в инвентарях скрытых персонажей добавятся к блоку Хранилища.",
     "SizeItem": "Размер предмета",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Количество",
     "SortByClassType": "Класс",
     "SortByPrimary": "Уровень Cилы",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron автоматически обновляемый Wish List с коллекцией ПвЕ и ПвП роллов от Mercules904 и pandapaxxy. DIM использует этот Wish List по умолчанию.",
     "WishListNotes": "Заметки Wish List: {{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }

@@ -95,8 +95,7 @@
     "ButtonHelp": "アイテムを比較する",
     "CompareBaseStats": "基本Statsを表示",
     "Error": {
-      "Archetype": "このアイテムは {{type}} ではないため、比較できません。",
-      "Class": "このアイテム {{class}} 用のため、比較できません。"
+      "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
     "SunsetAfter": "最終シーズンにシーズンパワー上限に到達する事ができるアイテムを表示します。",
-    "Sunsets": "",
+    "Sunsets": "シーズンパワーキャップにより融合できなくなった、最初のシーズンに基づくアイテムを表示。",
     "Tags": {
       "Tag": "特定のタグがあるアイテムを表示。",
       "Tagged": "タグのあるアイテムを表示。"
@@ -568,7 +567,7 @@
     "Weekly": "ウィークチャレンジ(週間の挑戦)"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "量 : "
   },
   "MovePopup": {
     "Acquired": "このアイテムはコレクションでアンロックされています。",
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "最後の使用",
+    "DeleteAll": "星でマークした全ての検索を削除",
     "Description": "これらは過去の検索と保存された検索です。ここから削除することができます。",
     "Link": "検索履歴を表示・編集",
     "Query": "検索",
@@ -753,6 +753,7 @@
     "SingleCharacter": "現在のキャラクターのみを表示",
     "SingleCharacterExplanation": "DIM は、最新のプレイしたキャラクターを除いて、すべてのキャラクターを非表示にします。これらのキャラクターのインベントリは、あたかも保管庫の中にあるかのように表示されます。",
     "SizeItem": "アイテムサイズ",
+    "SortByAmmoType": "弾のタイプ",
     "SortByAmount": "スタックサイズ",
     "SortByClassType": "必須クラス",
     "SortByPrimary": "パワーレベル",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltronはMercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新コレクションです。デフォルトでこれを発送します。",
     "WishListNotes": "欲しい物リスト メモ: {{notes}}"
   },
-  "move-canceled": "移動をキャンセルしました",
   "no-space": "",
   "wrong-level": ""
 }

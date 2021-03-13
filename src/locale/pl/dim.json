@@ -95,8 +95,7 @@
     "ButtonHelp": "Porównaj Przedmioty",
     "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
-      "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
-      "Class": "Nie można porównać tego przedmiotu, jako że nie jest dla klasy {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "SunsetAfter": "Pokazuje przedmioty w oparciu o ostatni sezon, w którym mogą osiągnąć Sezonowy Limit Mocy.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "To są Twoje przeszłe i zapisane wyszukiwania. Możesz je stąd usunąć.",
     "Link": "Zobacz i edytuj historię wyszukiwania",
     "Query": "Szukaj",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Pokaż tylko aktualną postać",
     "SingleCharacterExplanation": "DIM ukryje wszystkie oprócz ostatnio używanej postaci. Ekwipunki tych postaci będą traktowane jak by były w schowku.",
     "SizeItem": "Rozmiar elementu",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Rozmiar stosu",
     "SortByClassType": "Wymagana klasa",
     "SortByPrimary": "Poziom mocy",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy. Domyślnie zawarte w aplikacji.",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
   },
-  "move-canceled": "Anulowano przenoszenie",
   "no-space": "",
   "wrong-level": ""
 }

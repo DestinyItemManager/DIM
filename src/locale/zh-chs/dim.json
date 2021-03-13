@@ -95,8 +95,7 @@
     "ButtonHelp": "对比物品",
     "CompareBaseStats": "显示基础属性",
     "Error": {
-      "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
-      "Class": "无法与此物品进行对比，因为它并不适用于{{class}}."
+      "Unmatched": "此物品和要比较的物品类别不同。"
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "SunsetAfter": "按照可达到的赛季能量上限显示物品。",
-    "Sunsets": "",
+    "Sunsets": "按照第一个退环境的赛季显示物品。",
     "Tags": {
       "Tag": "显示具有特定标签的物品。",
       "Tagged": "显示具有任何标签的物品。"
@@ -568,7 +567,7 @@
     "Weekly": "每周挑战"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "数量："
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "最近使用",
+    "DeleteAll": "删除所有未加星标的搜索",
     "Description": "这些是你过去和保存的搜索。你可以在这里删除它们。",
     "Link": "查看和编辑搜索历史",
     "Query": "搜索​​​​",
@@ -753,6 +753,7 @@
     "SingleCharacter": "只显示当前角色",
     "SingleCharacterExplanation": "DIM 将只显示最近游玩的角色。其他角色的物品将和保险库显示在一起。",
     "SizeItem": "物品显示大小",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "堆叠大小",
     "SortByClassType": "必要的类",
     "SortByPrimary": "光等",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron 是来自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",
     "WishListNotes": "愿望清单备注:{{notes}}"
   },
-  "move-canceled": "移动已取消",
   "no-space": "",
   "wrong-level": ""
 }

@@ -95,8 +95,7 @@
     "ButtonHelp": "Comparar objetos",
     "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
-      "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
-      "Class": "No se puede comparar este objeto ya que no es para {{class}}."
+      "Unmatched": "Este artículo no coincide con el tipo de objetos siendo comparados."
     }
   },
   "Cooldown": {
@@ -235,8 +234,8 @@
     "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluír modificadores aplicados u obras maestras.",
     "StatsLoadout": "Encuentra sets de objetos para equipar por el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
-    "SunsetAfter": "Muestra objetos basados en la última temporada en el que pudieron alcanzar el Tope de Poder de Temporada.",
-    "Sunsets": "",
+    "SunsetAfter": "Muestra objetos basados en la última temporada en la que puedan alcanzar el Límite de Poder de Temporada.",
+    "Sunsets": "Muestra objetos basados en la primera temporada en la que no puedan ser infundidos al Límite de Poder de Temporada.",
     "Tags": {
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Último Usado",
+    "DeleteAll": "Borrar todas las búsquedas sin marcar",
     "Description": "Estas son todas tus búsquedas anteriores y guardadas. Puedes borrarlas desde aquí.",
     "Link": "Ver y ediar el historial de búsqueda",
     "Query": "Búsqueda",
@@ -753,13 +753,14 @@
     "SingleCharacter": "Mostrar sólo personaje actual",
     "SingleCharacterExplanation": "DIM ocultará todo excepto el personaje reciente más jugado. Los inventarios de esos personajes aparecerán como si fueran el depósito.",
     "SizeItem": "Tamaño de objeto",
+    "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",
     "SortByClassType": "Clase Requerida",
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
-    "SortByRating": "Calidad de la armadura (D1)",
+    "SortByRating": "Calidad de la Armadura (D1)",
     "SortBySeason": "Temporada (D2)",
-    "SortBySunset": "Ha Sido Jubilada (D2)",
+    "SortBySunset": "Ha Sido Caducada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   },
-  "move-canceled": "Movimiento cancelado",
   "no-space": "",
   "wrong-level": ""
 }

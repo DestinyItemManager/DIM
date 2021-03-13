@@ -95,14 +95,13 @@
     "ButtonHelp": "Confronta Oggetti",
     "CompareBaseStats": "Mostra statistiche di base",
     "Error": {
-      "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
-      "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
+      "Unmatched": "Impossibile confrontare oggetti di tipo diverso."
     }
   },
   "Cooldown": {
-    "Grenade": "Tempo di recupero delle granate: {{cooldown}}",
-    "Melee": "Tempo di recupero del corpo a corpo: {{cooldown}}",
-    "Super": "Tempo di recupero della super: {{cooldown}}"
+    "Grenade": "Recupero delle granate: {{cooldown}}",
+    "Melee": "Recupero del corpo a corpo: {{cooldown}}",
+    "Super": "Recupero della super: {{cooldown}}"
   },
   "Countdown": {
     "Days": "1 Giorno",
@@ -236,7 +235,7 @@
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "SunsetAfter": "Mostra gli oggetti basandosi sull'ultima stagione nella quale possono raggiungere il Limite Potere Stagionale.",
-    "Sunsets": "",
+    "Sunsets": "Mostra gli oggetti basandosi sulla prima stagione dalla quale non potranno più essere infusi al Limite di Potere Stagionale.",
     "Tags": {
       "Tag": "Mostra gli oggetti con un'etichetta specifica.",
       "Tagged": "Mostra gli oggetti che hanno una qualsiasi etichetta."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Recenti",
+    "DeleteAll": "Elimina tutte le ricerche non salvate",
     "Description": "Queste sono tutte le tue ricerche recenti e salvate. Le puoi cancellare da qui.",
     "Link": "Visualizza e modifica la cronologia di ricerca",
     "Query": "Cerca",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Mostra solo il personaggio attuale",
     "SingleCharacterExplanation": "DIM mostrerà solo il personaggio giocato più di recente. Gli inventari degli altri personaggi verranno mostrati come se fossero parte del Deposito.",
     "SizeItem": "Dimensione oggetti",
+    "SortByAmmoType": "Tipo di munizioni",
     "SortByAmount": "Dimensione dello stack",
     "SortByClassType": "Classe Richiesta",
     "SortByPrimary": "Livello di Potere",
@@ -770,22 +771,22 @@
     "InsertPlugError": "Impossible inserire Modifica"
   },
   "Stats": {
-    "BarricadeCooldown": "Tempo di recupero Barricata",
+    "BarricadeCooldown": "Recupero Barricata",
     "Custom": "Totale Personalizzato",
     "CustomDesc": "Totale personalizzato delle statistiche di base selezionate, ignorando Modifiche o Prodigio. Controlla Impostazioni per configurare quali statistiche vengono incluse.",
-    "DarkGrenadeCooldown": "Tempo di rec. Granata dell'Oscurità",
-    "DarkMeleeCooldown": "Tempo di rec. Corpo a corpo dell'Oscurità",
-    "DarkSuperCooldown": "Tempo di rec. della Super dell'Oscurità",
+    "DarkGrenadeCooldown": "Recupero Granata dell'Oscurità",
+    "DarkMeleeCooldown": "Recupero Corpo a corpo dell'Oscurità",
+    "DarkSuperCooldown": "Recupero della Super dell'Oscurità",
     "Discipline": "Disciplina",
-    "DodgeCooldown": "Tempo di recupero Schivata",
+    "DodgeCooldown": "Recupero Schivata",
     "FinalSeason": "(S{{finalSeason}})",
     "Intellect": "Intelletto",
-    "LightGrenadeCooldown": "Tempo di rec. Granata della Luce",
-    "LightMeleeCooldown": "Tempo di rec. Corpo a corpo della Luce",
-    "LightSuperCooldown": "Tempo di rec. della Super della Luce",
+    "LightGrenadeCooldown": "Recupero Granata della Luce",
+    "LightMeleeCooldown": "Recupero Corpo a corpo della Luce",
+    "LightSuperCooldown": "Recupero della Super della Luce",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",
-    "MaxGearPowerAll": "Potere massimo di tutto l'equipaggiamento",
-    "MaxTotalPower": "Potere Massimo totale",
+    "MaxGearPowerAll": "Potere max di tutto l'equipaggiamento",
+    "MaxTotalPower": "Potere massimo totale",
     "Milliseconds": "ms",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",
@@ -796,7 +797,7 @@
     "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
     "Quality": "Qualità statistiche",
-    "RiftCooldown": "Tempo di recupero Fonte",
+    "RiftCooldown": "Recupero Fonte",
     "Strength": "Forza",
     "Tier": "Grado {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
   },
-  "move-canceled": "Spostamento annullato",
   "no-space": "",
   "wrong-level": ""
 }

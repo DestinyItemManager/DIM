@@ -95,8 +95,7 @@
     "ButtonHelp": "아이템 비교",
     "CompareBaseStats": "기본 능력치 표시",
     "Error": {
-      "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
-      "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
+      "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
     }
   },
   "Cooldown": {
@@ -152,7 +151,7 @@
     "Instructions": "클릭 또는 파일 끌어서 놓기"
   },
   "Filter": {
-    "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
+    "AmmoType": "탄약 유형에 따른 아이템 표시",
     "Armor": "방어구인 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "주입 노드가 있으며 주입이 된 아이템 표시",
@@ -236,7 +235,7 @@
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
     "SunsetAfter": "전투력 상한선에 도달할 수 있는 시즌에 따른 아이템 표시",
-    "Sunsets": "",
+    "Sunsets": "전투력 상한선으로 주입할 수 없는 첫 번째 시즌에 따른 아이템 표시",
     "Tags": {
       "Tag": "특정 태그가 있는 아이템 표시",
       "Tagged": "태그가 있는 아이템 표시"
@@ -568,7 +567,7 @@
     "Weekly": "주간 도전"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "수량:"
   },
   "MovePopup": {
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "최근 사용",
+    "DeleteAll": "저장되지 않은 검색 기록 삭제",
     "Description": "이전에 저장된 검색 기록입니다. 이곳에서 삭제할 수 있습니다.",
     "Link": "검색 기록 보기 및 편집",
     "Query": "검색",
@@ -753,6 +753,7 @@
     "SingleCharacter": "현재 캐릭터만 표시",
     "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
     "SizeItem": "아이템 크기",
+    "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "전투력",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
   },
-  "move-canceled": "이동 취소됨",
   "no-space": "",
   "wrong-level": ""
 }

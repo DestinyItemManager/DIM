@@ -95,8 +95,7 @@
     "ButtonHelp": "Comparar itens",
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
-      "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
-      "Class": "Incapaz de comparar o item, pois ele não é para {{class}}."
+      "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     }
   },
   "Cooldown": {
@@ -236,7 +235,7 @@
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "SunsetAfter": "Exibe itens da última temporada que podem atingir o Limite de Poder Sazonal.",
-    "Sunsets": "",
+    "Sunsets": "Exibe itens baseado na primeira temporada em que estes não podem mais ser infundidos até o Limite de Poder Sazonal.",
     "Tags": {
       "Tag": "Exibe itens que possuem uma determinada tag.",
       "Tagged": "Exibe itens que possuam qualquer tag."
@@ -713,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Último uso",
+    "DeleteAll": "Descartar todas as pesquisas não favoritadas",
     "Description": "Aqui está todo seu passado e pesquisas salvas. Você pode deletá-las se precisar.",
     "Link": "Visualizar e editar o histórico de pesquisa",
     "Query": "Termo pesquisado",
@@ -753,6 +753,7 @@
     "SingleCharacter": "Exibir apenas o personagem atual",
     "SingleCharacterExplanation": "DIM exibirá apenas o inventário do personagem mais recente. Os itens dos demais personagens aparecerão como se eles estivessem no cofre.",
     "SizeItem": "Tamanho do item",
+    "SortByAmmoType": "Tipo de Munição",
     "SortByAmount": "Tamanho da Pilha",
     "SortByClassType": "Classe Requerida",
     "SortByPrimary": "Nível de poder",
@@ -945,7 +946,6 @@
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
   },
-  "move-canceled": "Mover cancelado",
   "no-space": "",
   "wrong-level": ""
 }
