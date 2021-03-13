@@ -1,4 +1,5 @@
 import rT from 'data/d2/objective-richTexts';
+import cabalGold from 'destiny-icons/beyond_light/cabal-gold.svg';
 import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
 import overload from 'destiny-icons/breakers/overload.svg';
 import pierce from 'destiny-icons/breakers/pierce.svg';
@@ -111,7 +112,9 @@ const baseConversionTable: {
   { unicode: '', icon: superAHunter,  objectiveHash: rT['[Hunter: Arcstrider Super]']   },
   { unicode: '', icon: superSHunter,  objectiveHash: rT['[Hunter: Gunslinger Super]']   },
   { unicode: '', icon: superVWarlock, objectiveHash: rT['[Warlock: Voidwalker Super]']  },
-  { unicode: '', icon: superSWarlock, objectiveHash: rT['[Warlock: Dawnblade Super]']   }
+  { unicode: '', icon: superSWarlock, objectiveHash: rT['[Warlock: Dawnblade Super]']   },
+  // New Items
+  { unicode: '', icon: cabalGold,     objectiveHash: rT['[Currency]']                   }
 ]
 
 /**
