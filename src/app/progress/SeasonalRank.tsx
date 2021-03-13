@@ -64,6 +64,16 @@ export default function SeasonalRank({
   const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
+  const brightEngramRewardLevelsTemp: number[] = [];
+
+  rewardItems
+    .filter((item) => item.itemHash === brightEngramHash)
+    .forEach((item) => {
+      brightEngramRewardLevelsTemp.push(item.rewardedAtProgressionLevel % 10);
+    });
+
+  const brightEngramRewardLevels = [...new Set(brightEngramRewardLevelsTemp)];
+
   if (
     // Only add the fake rewards once
     !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
@@ -72,7 +82,7 @@ export default function SeasonalRank({
     rewardItems.push(fakeReward(brightEngramHash, brightEngramRewardLevel));
   }
 
-  const getBrightEngram = prestigeMode && (seasonalRank - 1) % 5 === 0;
+  const getBrightEngram = prestigeMode && brightEngramRewardLevels.includes(seasonalRank % 10);
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
     .filter((item) =>
