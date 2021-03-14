@@ -11,6 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngrams from 'data/d2/bright-engrams.json';
+import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -64,15 +65,11 @@ export default function SeasonalRank({
   const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
-  const brightEngramRewardLevelsTemp: number[] = [];
-
-  rewardItems
-    .filter((item) => item.itemHash === brightEngramHash)
-    .forEach((item) => {
-      brightEngramRewardLevelsTemp.push(item.rewardedAtProgressionLevel % 10);
-    });
-
-  const brightEngramRewardLevels = [...new Set(brightEngramRewardLevelsTemp)];
+  const brightEngramRewardLevels = _.uniq(
+    rewardItems
+      .filter((item) => item.itemHash === brightEngramHash)
+      .map((item) => item.rewardedAtProgressionLevel % 10)
+  );
 
   if (
     // Only add the fake rewards once
