@@ -11,7 +11,7 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
-import { statTier } from '../utils';
+import { getPower, statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
@@ -65,7 +65,9 @@ function insertIntoSetTracker(
             armorSetIndex < currentStatMix.armorSets.length;
             armorSetIndex++
           ) {
-            if (armorSet.maxPower > currentStatMix.armorSets[armorSetIndex].maxPower) {
+            if (
+              getPower(armorSet.armor) > getPower(currentStatMix.armorSets[armorSetIndex].armor)
+            ) {
               currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
             } else {
               currentStatMix.armorSets.push(armorSet);
@@ -99,8 +101,7 @@ export function process(
   lockedModMap: LockedProcessMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [stat in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  statFilters: { [stat in StatTypes]: MinMaxIgnored }
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -223,12 +224,6 @@ export function process(
                 statsCache[classItem.id],
               ];
 
-              const maxPower = getPower(armor);
-
-              if (maxPower < minimumPower) {
-                continue;
-              }
-
               const stats: any = {};
               for (const stat of statChoices) {
                 let index = 0;
@@ -300,7 +295,6 @@ export function process(
                   [statType in StatTypes]: number;
                 },
                 statChoices,
-                maxPower,
               };
 
               insertIntoSetTracker(totalTier, tiers, newArmorSet, setTracker);
@@ -344,22 +338,6 @@ export function process(
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
-}
-
-/**
- * Get the maximum average power for a particular set of armor.
- */
-function getPower(items: ProcessItem[]) {
-  let power = 0;
-  let numPoweredItems = 0;
-  for (const item of items) {
-    if (item.basePower) {
-      power += item.basePower;
-      numPoweredItems++;
-    }
-  }
-
-  return Math.floor(power / numPoweredItems);
 }
 
 /**

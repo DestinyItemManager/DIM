@@ -1,8 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
-import { getMasterworkSocketHashes } from 'app/utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
@@ -11,7 +8,6 @@ import {
   LockedItemType,
   LockedMap,
   LockedModMap,
-  statValues,
 } from './types';
 
 /**
@@ -21,8 +17,6 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedModMap: LockedModMap,
-  minimumStatTotal: number,
-  assumeMasterwork: boolean,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -62,12 +56,7 @@ export function filterItems(
         (item) =>
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
-          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item))) &&
-          // Filter out items that don't contain all the armour stats as they will break things.
-          // if the item is not a class item, and its not locked, make sure it meets the minimum total stat without locked mods
-          (bucket === LockableBuckets.classitem ||
-            locked?.length ||
-            getTotalBaseStatsWithMasterwork(item, assumeMasterwork) >= minimumStatTotal)
+          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
       );
     }
   });
@@ -86,48 +75,4 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
     case 'item':
       return item.id === lockedItem.item.id;
   }
-}
-
-/**
- * This gets the total of the base stats plus any masterwork values. The two cases for masterwork values are,
- * 1. When assume masterwork is selected we add 2 onto each stat of each armour item
- * 2. When not assume masterwork we add on the the masterwork stat values for any items that have actually
- *   been masterworked since it cannot be removed from the item.
- */
-export function getTotalBaseStatsWithMasterwork(item: DimItem, assumeMasterwork: boolean | null) {
-  const stats = _.keyBy(item.stats, (stat) => stat.statHash);
-  const baseStats = {};
-
-  for (const statHash of statValues) {
-    baseStats[statHash] = stats[statHash]?.base || 0;
-  }
-
-  // Checking energy tells us if it is Armour 2.0
-  if (item.sockets && item.energy) {
-    if (assumeMasterwork) {
-      for (const statHash of statValues) {
-        baseStats[statHash] += 2;
-      }
-    } else {
-      // If not assume masterwork add on mw stats as they can't be removed.
-      const masterworkSocketHashes = getMasterworkSocketHashes(
-        item.sockets,
-        DestinySocketCategoryStyle.EnergyMeter
-      );
-
-      for (const socket of item.sockets.allSockets) {
-        const plugHash = socket.plugged?.plugDef.hash ?? NaN;
-
-        if (socket.plugged?.stats && !masterworkSocketHashes.includes(plugHash)) {
-          for (const statHash of statValues) {
-            if (socket.plugged.stats[statHash]) {
-              baseStats[statHash] += socket.plugged.stats[statHash];
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return _.sum(statValues.map((statHash) => Math.max(baseStats[statHash], 0)));
 }

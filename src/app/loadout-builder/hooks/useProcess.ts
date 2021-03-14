@@ -51,8 +51,7 @@ export function useProcess(
   lockedModMap: LockedModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
   const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState({
     processing: false,
@@ -67,8 +66,7 @@ export function useProcess(
     lockedModMap,
     assumeMasterwork,
     statOrder,
-    statFilters,
-    minimumPower
+    statFilters
   );
 
   if (currentCleanup && currentCleanup !== cleanup) {
@@ -131,8 +129,7 @@ export function useProcess(
         lockedProcessMods,
         assumeMasterwork,
         statOrder,
-        statFilters,
-        minimumPower
+        statFilters
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
         infoLog(
@@ -157,15 +154,7 @@ export function useProcess(
       });
     /* do not include things from state or worker in dependencies */
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [
-    filteredItems,
-    lockedItems,
-    lockedModMap,
-    assumeMasterwork,
-    statOrder,
-    statFilters,
-    minimumPower,
-  ]);
+  }, [filteredItems, lockedItems, lockedModMap, assumeMasterwork, statOrder, statFilters]);
 
   return { result, processing };
 }
@@ -183,8 +172,7 @@ function useWorkerAndCleanup(
   lockedModMap: LockedModMap,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored },
-  minimumPower: number
+  statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
   const { worker, cleanup } = useMemo(() => createWorker(), [
     filteredItems,
@@ -193,7 +181,6 @@ function useWorkerAndCleanup(
     assumeMasterwork,
     statOrder,
     statFilters,
-    minimumPower,
   ]);
 
   // cleanup the worker on unmount

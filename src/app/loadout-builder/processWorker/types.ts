@@ -54,8 +54,6 @@ export interface ProcessArmorSet {
   readonly armor: readonly string[];
   /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
   readonly statChoices: readonly number[][];
-  /** The maximum power loadout possible in this stat mix. */
-  readonly maxPower: number;
 }
 
 export interface IntermediateProcessArmorSet {
@@ -65,8 +63,6 @@ export interface IntermediateProcessArmorSet {
   armor: ProcessItem[];
   /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
   statChoices: number[][];
-  /** The maximum power loadout possible in this stat mix. */
-  maxPower: number;
 }
 
 interface ProcessStat {

@@ -6,6 +6,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import { ProcessItem } from './processWorker/types';
 import { LockedItemType, LockedMod, statValues } from './types';
 
 /**
@@ -162,4 +163,20 @@ export function someModHasEnergyRequirement(mods: LockedMod[]) {
     (mod) =>
       !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
   );
+}
+
+/**
+ * Get the maximum average power for a particular set of armor.
+ */
+export function getPower(items: DimItem[] | ProcessItem[]) {
+  let power = 0;
+  let numPoweredItems = 0;
+  for (const item of items) {
+    if (item.basePower) {
+      power += item.basePower;
+      numPoweredItems++;
+    }
+  }
+
+  return Math.floor(power / numPoweredItems);
 }
