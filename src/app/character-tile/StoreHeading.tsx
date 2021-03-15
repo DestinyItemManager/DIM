@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
-import React, { MouseEvent, useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
@@ -31,7 +31,7 @@ const CharacterHeader = ({
   store: DimStore;
   loadoutMenuOpen: boolean;
   menuRef: React.RefObject<HTMLDivElement>;
-  onClick: (e: MouseEvent) => void;
+  onClick: () => void;
 }) => (
   <div
     className={clsx('character', {
@@ -71,20 +71,16 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
     setLoadoutMenuOpen((open) => !open);
   };
 
-  const clickOutsideLoadoutMenu = useCallback(() => {
-    if (loadoutMenuOpen) {
+  const clickOutsideLoadoutMenu = (e) => {
+    if (!e || !menuTrigger.current || !menuTrigger.current.contains(e.target)) {
       setLoadoutMenuOpen(false);
     }
-  }, [loadoutMenuOpen]);
+  };
 
   let loadoutMenu: React.ReactNode | undefined;
   if (loadoutMenuOpen) {
     const menuContents = (
-      <ClickOutside
-        onClickOutside={clickOutsideLoadoutMenu}
-        extraRef={menuTrigger}
-        className="loadout-menu"
-      >
+      <ClickOutside onClickOutside={clickOutsideLoadoutMenu} className="loadout-menu">
         <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
       </ClickOutside>
     );
@@ -99,8 +95,8 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
       <CharacterHeader
         store={store}
         loadoutMenuOpen={loadoutMenuOpen}
-        onClick={openLoadoutPopup}
         menuRef={menuTrigger}
+        onClick={openLoadoutPopup}
       />
       {loadoutMenu}
     </div>
