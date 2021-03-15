@@ -1,5 +1,7 @@
 ## Next
 
+## 6.56.0 <span class="changelog-date">(2021-03-14)</span>
+
 * On the Compare screen, items will update to show their locked or unlocked state.
 * Deleting multiple searches from your search history works now - before there was a bug where only the first delete would succeed.
 * On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
