@@ -6,6 +6,8 @@ export const ClickOutsideContext = React.createContext(new EventBus<React.MouseE
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
+  /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
+  extraRef?: React.RefObject<HTMLElement>;
   onClickOutside(event: React.MouseEvent): void;
 };
 
@@ -17,7 +19,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * spawned through portals from the item popup.
  */
 export default React.forwardRef(function ClickOutside(
-  { onClickOutside, children, ...other }: Props,
+  { onClickOutside, children, extraRef, ...other }: Props,
   ref: React.RefObject<HTMLDivElement> | null
 ) {
   const localRef = useRef<HTMLDivElement>(null);
@@ -30,10 +32,12 @@ export default React.forwardRef(function ClickOutside(
   const handleClickOutside = useCallback(
     (event: React.MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        onClickOutside(event);
+        if (!extraRef?.current || !extraRef.current.contains(event.target as Node)) {
+          onClickOutside(event);
+        }
       }
     },
-    [onClickOutside, wrapperRef]
+    [onClickOutside, wrapperRef, extraRef]
   );
 
   useEventBusListener(mouseEvents, handleClickOutside);
