@@ -161,13 +161,9 @@ export function optimalLoadout(
   );
 }
 /** Create a loadout from all of this character's items that can be in loadouts */
-export function loadoutFromAllItems(
-  store: DimStore,
-  name: string,
-  onlyEquipped?: boolean
-): Loadout {
+export function loadoutFromAllItems(store: DimStore, name: string): Loadout {
   const allItems = store.items.filter(
-    (item) => (!onlyEquipped || item.equipped) && itemCanBeInLoadout(item)
+    (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster
   );
   return newLoadout(
     name,
