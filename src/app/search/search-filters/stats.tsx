@@ -89,22 +89,41 @@ function statFilterFromString(
   filterValue: string,
   byBaseValue = false
 ): (item: DimItem) => boolean {
-  const [statName, statValue, shouldntExist] = filterValue.split(':');
+  const [statNames, statValue, shouldntExist] = filterValue.split(':');
 
-  // we are looking for, at most, 3 colons in the overall filter text,
-  // and one was already removed, so bail if a 3rd element was found by split()
+  // we are looking for, at most, 3 colon-separated sections in the overall text:
+  // stat                   mobility                    >=5
+  // and one was already removed ("stat"), so bail if there's more than 1 colon left
   if (shouldntExist) {
-    throw new Error('Too many colons');
+    throw new Error('Too many segments');
   }
-  const numberComparisonFunction = rangeStringToComparator(statValue);
-  const byWhichValue = byBaseValue ? 'base' : 'value';
-  const statHashes: number[] = statName === 'any' ? armorAnyStatHashes : [statHashByName[statName]];
 
+  const numberComparisonFunction = rangeStringToComparator(statValue);
+
+  // this will be used to index into the right property of a DimStat
+  const byWhichValue = byBaseValue ? 'base' : 'value';
+
+  // a special case filter where we check for any single stat matching the comparator
+  if (statNames === 'any') {
+    return (item) => {
+      const matchingStats = item.stats?.filter(
+        (s) => armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
+      );
+      return Boolean(matchingStats?.length);
+    };
+  }
+
+  // convert stat names to stathashes and verify they all resolved to a valid hash
+  const statHashes: number[] = statNames.split('+').map((s) => statHashByName[s]);
+  if (!statHashes.every((s) => s)) {
+    throw new Error(`stathash lookup failed: ${statNames}`);
+  }
+
+  // the filter tallies combined values of requested stats and runs the total against comparator
   return (item) => {
-    const matchingStats = item.stats?.filter(
-      (s) => statHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
-    );
-    return Boolean(matchingStats?.length);
+    const matchingStats = item.stats?.filter((s) => statHashes.includes(s.statHash));
+    const total = matchingStats?.reduce((t, s) => s[byWhichValue] + t, 0) ?? 0;
+    return numberComparisonFunction(total);
   };
 }
 
