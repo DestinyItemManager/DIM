@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
@@ -71,16 +71,20 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
     setLoadoutMenuOpen((open) => !open);
   };
 
-  const clickOutsideLoadoutMenu = (e) => {
-    if (!e || !menuTrigger.current || !menuTrigger.current.contains(e.target)) {
+  const clickOutsideLoadoutMenu = useCallback(() => {
+    if (loadoutMenuOpen) {
       setLoadoutMenuOpen(false);
     }
-  };
+  }, [loadoutMenuOpen]);
 
   let loadoutMenu: React.ReactNode | undefined;
   if (loadoutMenuOpen) {
     const menuContents = (
-      <ClickOutside onClickOutside={clickOutsideLoadoutMenu} className="loadout-menu">
+      <ClickOutside
+        onClickOutside={clickOutsideLoadoutMenu}
+        extraRef={menuTrigger}
+        className="loadout-menu"
+      >
         <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
       </ClickOutside>
     );

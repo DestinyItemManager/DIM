@@ -1,5 +1,7 @@
 ## Next
 
+* Clicking on the empty area below Organizer can now close item popups, where it didn't before.
+
 ## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
 
 * Fix a bug where clicking inside the mod picker would dismiss the popup.
@@ -14,7 +16,6 @@
 * Invalid searches no longer save to search history.
 * Bright engrams show up correctly in the seasonal progress again.
 * Added an icon for Cabal Gold in objective text.
-* Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * You can sort items by ammo type.
 * There's a new button in the Loadout editor to add all unequipped items, similar to adding all equipped items.
 * The farming mode "stop" button no longer covers the category strip on mobile.
