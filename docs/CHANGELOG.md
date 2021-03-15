@@ -5,6 +5,13 @@
 * On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
 * Deprecated search filters no longer show up in Filter Help.
 * Searches that don't use any special filters now search for the entire string in item names and descriptions and perk names and descriptions. e.g. `gnawing hunger` now searches for the full string "gnawing hunger" as opposed to being equivalent to `"gnawing" and "hunger"`.
+* Invalid searches no longer save to search history.
+* Bright engrams show up correctly in the seasonal progress again.
+* Added an icon for Cabal Gold in objective text.
+* Clicking on the empty area below Organizer can now close item popups, where it didn't before.
+* You can sort items by ammo type.
+* There's a new button in the Loadout editor to add all unequipped items, similar to adding all equipped items.
+* The farming mode "stop" button no longer covers the category strip on mobile.
 
 ## 6.55.0 <span class="changelog-date">(2021-03-07)</span>
 
