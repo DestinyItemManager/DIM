@@ -1,3 +1,4 @@
+import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
@@ -33,17 +34,19 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
       sheetClassName={clsx('item-picker', styles.searchResults)}
       allowClickThrough={true}
     >
-      <div className="sub-bucket">
-        {sortItems(items, itemSortOrder).map((item) => (
-          <DraggableInventoryItem key={item.index} item={item}>
-            <ItemPopupTrigger item={item} key={item.index}>
-              {(ref, onClick) => (
-                <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-              )}
-            </ItemPopupTrigger>
-          </DraggableInventoryItem>
-        ))}
-      </div>
+      <ClickOutsideRoot>
+        <div className="sub-bucket">
+          {sortItems(items, itemSortOrder).map((item) => (
+            <DraggableInventoryItem key={item.index} item={item}>
+              <ItemPopupTrigger item={item} key={item.index}>
+                {(ref, onClick) => (
+                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                )}
+              </ItemPopupTrigger>
+            </DraggableInventoryItem>
+          ))}
+        </div>
+      </ClickOutsideRoot>
     </Sheet>
   );
 }

@@ -1,5 +1,13 @@
 ## Next
 
+* Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
+
+## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
+
+* Fix a bug where clicking inside the mod picker would dismiss the popup.
+
+## 6.56.0 <span class="changelog-date">(2021-03-14)</span>
+
 * On the Compare screen, items will update to show their locked or unlocked state.
 * Deleting multiple searches from your search history works now - before there was a bug where only the first delete would succeed.
 * On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
@@ -13,7 +21,6 @@
 * There's a new button in the Loadout editor to add all unequipped items, similar to adding all equipped items.
 * The farming mode "stop" button no longer covers the category strip on mobile.
 * Reverting a loadout (the button labeled "Before [LoadoutName]") no longer pulls items from Postmaster.
-* Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
 
 ## 6.55.0 <span class="changelog-date">(2021-03-07)</span>
 
