@@ -223,7 +223,7 @@ function PerkPicker({
 
   let lockedExoticPerk: LockedPerk | undefined;
 
-  for (const lockedBucket of Object.values(lockedMap)) {
+  for (const lockedBucket of Object.values(selectedPerks)) {
     for (const locked of lockedBucket || []) {
       if (locked.type === 'perk') {
         lockedExoticPerk = locked;
