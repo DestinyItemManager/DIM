@@ -1,8 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
-import { LockedItemType, LockedPerk } from '../types';
+import { LockedItemType } from '../types';
+import { getFilteredPerksAndPlugSets } from '../utils';
 import styles from './PickerSection.m.scss';
 import { SelectablePerk } from './SelectableBungieImage';
 
@@ -13,15 +14,19 @@ export default function PickerSectionPerks({
   bucket,
   defs,
   perks,
-  lockedPerk,
+  locked,
+  items,
   onPerkSelected,
 }: {
   bucket: InventoryBucket;
   defs: D2ManifestDefinitions;
   perks: readonly PluggableInventoryItemDefinition[];
-  lockedPerk?: LockedPerk;
+  locked: readonly LockedItemType[];
+  items: readonly DimItem[];
   onPerkSelected(perk: LockedItemType);
 }) {
+  const filterInfo = getFilteredPerksAndPlugSets(locked, items);
+
   return (
     <div className={styles.bucket}>
       <div className={styles.header}>{bucket.name}</div>
@@ -31,8 +36,8 @@ export default function PickerSectionPerks({
             key={perk.hash}
             defs={defs}
             bucket={bucket}
-            selected={Boolean(lockedPerk && perk.hash === lockedPerk.perk.hash)}
-            selectable={Boolean(!lockedPerk || perk.hash === lockedPerk.perk.hash)}
+            selected={Boolean(locked?.some((p) => p.type === 'perk' && p.perk.hash === perk.hash))}
+            selectable={Boolean(!filterInfo.filteredPerks || filterInfo.filteredPerks.has(perk))}
             perk={perk}
             onLockedPerk={onPerkSelected}
           />

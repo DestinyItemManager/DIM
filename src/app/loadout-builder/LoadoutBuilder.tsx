@@ -318,6 +318,7 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <PerkPicker
               classType={selectedStore.classType}
+              items={filteredItems}
               lockedMap={lockedMap}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}

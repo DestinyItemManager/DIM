@@ -20,7 +20,7 @@ import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import ArmorBucketIcon from '../ArmorBucketIcon';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { LockableBuckets, LockedItemType, LockedMap, LockedPerk } from '../types';
+import { ItemsByBucket, LockableBuckets, LockedItemType, LockedMap } from '../types';
 import {
   addLockedItem,
   filterPlugs,
@@ -32,6 +32,7 @@ import styles from './PerkPicker.m.scss';
 import PickerSectionPerks from './PickerSectionPerks';
 
 interface ProvidedProps {
+  items: ItemsByBucket;
   lockedMap: LockedMap;
   classType: DestinyClass;
   initialQuery?: string;
@@ -107,6 +108,7 @@ function PerkPicker({
   lockedMap,
   perks,
   buckets,
+  items,
   language,
   isPhonePortrait,
   initialQuery,
@@ -221,20 +223,6 @@ function PerkPicker({
       )
     : undefined;
 
-  let lockedExoticPerk: LockedPerk | undefined;
-
-  for (const lockedBucket of Object.values(lockedMap)) {
-    for (const locked of lockedBucket || []) {
-      if (locked.type === 'perk') {
-        lockedExoticPerk = locked;
-        break;
-      }
-    }
-    if (lockedExoticPerk) {
-      break;
-    }
-  }
-
   return (
     <Sheet
       onClose={onClose}
@@ -273,7 +261,8 @@ function PerkPicker({
               defs={defs}
               bucket={buckets.byHash[bucketId]}
               perks={queryFilteredPerks[bucketId]}
-              lockedPerk={lockedExoticPerk}
+              locked={selectedPerks[bucketId] || []}
+              items={items[bucketId]}
               onPerkSelected={(perk) => onPerkSelected(perk, buckets.byHash[bucketId])}
             />
           )
