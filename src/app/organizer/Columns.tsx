@@ -480,7 +480,11 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
-              <KillTrackerInfo tracker={killTrackerInfo} defs={defs} className={styles.modPerk} />
+              <KillTrackerInfo
+                tracker={killTrackerInfo}
+                defs={defs}
+                className={styles.killTrackerDisplay}
+              />
             )
           );
         },

@@ -4,7 +4,7 @@ import React from 'react';
 import BungieImage from './BungieImage';
 
 /**
- * this renders an objective image, optoinally a text label, then a kill count
+ * this renders an objective image, optionally a text label, then a kill count
  *
  * unfortunately class names can't be passed between sass modules because.... because they decided they can't.
  *
@@ -13,12 +13,12 @@ import BungieImage from './BungieImage';
  */
 export function KillTrackerInfo({
   tracker,
-  textLabel,
+  showTextLabel,
   defs,
   className,
 }: {
   tracker: KillTracker;
-  textLabel?: boolean;
+  showTextLabel?: boolean;
   defs: D2ManifestDefinitions;
   className?: string;
 }) {
@@ -31,7 +31,7 @@ export function KillTrackerInfo({
     killTrackerObjective && (
       <div className={className}>
         {<BungieImage src={killTrackerObjective.displayProperties.icon} />}{' '}
-        {textLabel && killTrackerObjective.progressDescription}{' '}
+        {showTextLabel && killTrackerObjective.progressDescription}{' '}
         <span>{tracker.count.toLocaleString()}</span>
       </div>
     )

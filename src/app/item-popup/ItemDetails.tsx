@@ -102,7 +102,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <KillTrackerInfo
           tracker={killTrackerInfo}
           defs={defs}
-          textLabel={true}
+          showTextLabel
           className="masterwork-progress"
         />
       )}
