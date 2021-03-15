@@ -84,8 +84,11 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
     return false;
   }
 
-  // if it's a modification, ignore it
-  if (plug.plugDef.inventory!.bucketTypeHash === BucketHashes.Modifications) {
+  // if it's an instanced modification, ignore it
+  if (
+    plug.plugDef.inventory!.bucketTypeHash === BucketHashes.Modifications &&
+    plug.plugDef.inventory!.isInstanceItem
+  ) {
     return false;
   }
 
