@@ -2,6 +2,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
+import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
   allStatNames,
@@ -105,12 +106,13 @@ function statFilterFromString(
 
   // a special case filter where we check for any single stat matching the comparator
   if (statNames === 'any') {
-    return (item) => {
-      const matchingStats = item.stats?.filter(
-        (s) => armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
+    return (item) =>
+      Boolean(
+        item.stats?.find(
+          (s) =>
+            armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
+        )
       );
-      return Boolean(matchingStats?.length);
-    };
   }
 
   // convert stat names to stathashes and verify they all resolved to a valid hash
@@ -122,7 +124,7 @@ function statFilterFromString(
   // the filter tallies combined values of requested stats and runs the total against comparator
   return (item) => {
     const matchingStats = item.stats?.filter((s) => statHashes.includes(s.statHash));
-    const total = matchingStats?.reduce((t, s) => s[byWhichValue] + t, 0) ?? 0;
+    const total = _.sumBy(matchingStats, (s) => s[byWhichValue]);
     return numberComparisonFunction(total);
   };
 }
