@@ -1,5 +1,7 @@
 ## Next
 
+## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
+
 * Fix a bug where clicking inside the mod picker would dismiss the popup.
 
 ## 6.56.0 <span class="changelog-date">(2021-03-14)</span>
