@@ -1,9 +1,5 @@
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import {
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ProcessItem } from './processWorker/types';
@@ -71,73 +67,6 @@ export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) 
     case 'perk':
       return second.type === 'perk' && first.perk.hash === second.perk.hash;
   }
-}
-
-/**
- * filteredPerks:
- * The input perks, filtered down to perks on items that also include the other selected perks in that bucket.
- * For example, if you'd selected "heavy ammo finder" for class items it would only include perks that are on
- * class items that also had "heavy ammo finder".
- *
- * filteredPlugSetHashes:
- * Plug set hashes that contain the mods that can slot into items that can also slot the other selected mods in that bucket.
- * For example, if you'd selected "scout rifle loader" for gauntlets it would only include mods that can slot on
- * gauntlets that can also slot "scout rifle loader".
- */
-export function getFilteredPerksAndPlugSets(
-  locked: readonly LockedItemType[] | undefined,
-  items: readonly DimItem[]
-) {
-  const filteredPlugSetHashes = new Set<number>();
-  const filteredPerks = new Set<DestinyInventoryItemDefinition>();
-
-  if (!locked) {
-    return {};
-  }
-
-  for (const item of items) {
-    // flat list of plugs per item
-    const itemPlugs: DestinyInventoryItemDefinition[] = [];
-    // flat list of plugSetHashes per item
-    const itemPlugSets: number[] = [];
-
-    if (item.sockets) {
-      for (const socket of item.sockets.allSockets) {
-        // Populate mods
-        if (!socket.isPerk) {
-          if (socket.socketDefinition.reusablePlugSetHash) {
-            itemPlugSets.push(socket.socketDefinition.reusablePlugSetHash);
-          } else if (socket.socketDefinition.randomizedPlugSetHash) {
-            itemPlugSets.push(socket.socketDefinition.randomizedPlugSetHash);
-          }
-        }
-
-        // Populate plugs
-        if (filterPlugs(socket)) {
-          socket.plugOptions.forEach((option) => {
-            itemPlugs.push(option.plugDef);
-          });
-        }
-      }
-    }
-
-    // for each item, look to see if all perks match locked
-    const matches = locked.every(
-      (locked) => locked.type !== 'perk' || itemPlugs.some((plug) => plug.hash === locked.perk.hash)
-    );
-
-    // It matches all perks and plugs
-    if (matches) {
-      for (const plugSetHash of itemPlugSets) {
-        filteredPlugSetHashes.add(plugSetHash);
-      }
-      for (const itemPlug of itemPlugs) {
-        filteredPerks.add(itemPlug);
-      }
-    }
-  }
-
-  return { filteredPlugSetHashes, filteredPerks };
 }
 
 /** Whether this item is eligible for being in loadout builder. Now only armour 2.0 and only items that have all the stats. */

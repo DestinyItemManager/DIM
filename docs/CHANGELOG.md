@@ -1,6 +1,7 @@
 ## Next
 
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
+* Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
 
 ## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
 
