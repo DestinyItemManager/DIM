@@ -48,8 +48,6 @@ interface ProvidedProps {
 interface StoreProps {
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
-  minimumPower: number;
-  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -99,12 +97,10 @@ function mapStateToProps() {
   );
 
   return (state: RootState): StoreProps => {
-    const { loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(state);
+    const { loAssumeMasterwork } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
-      minimumPower: loMinPower,
-      minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
@@ -121,8 +117,6 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
-  minimumPower,
-  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -157,16 +151,8 @@ function LoadoutBuilder({
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
-    () =>
-      filterItems(
-        characterItems,
-        lockedMap,
-        lockedArmor2Mods,
-        minimumStatTotal,
-        assumeMasterwork,
-        filter
-      ),
-    [characterItems, lockedMap, lockedArmor2Mods, minimumStatTotal, assumeMasterwork, filter]
+    () => filterItems(characterItems, lockedMap, lockedArmor2Mods, filter),
+    [characterItems, lockedMap, lockedArmor2Mods, filter]
   );
 
   const { result, processing } = useProcess(
@@ -176,8 +162,7 @@ function LoadoutBuilder({
     lockedArmor2Mods,
     assumeMasterwork,
     statOrder,
-    statFilters,
-    minimumPower
+    statFilters
   );
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -232,9 +217,6 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore}
-        minimumPower={minimumPower}
-        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })

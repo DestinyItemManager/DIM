@@ -71,8 +71,6 @@ export interface ArmorSet {
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
-  /** The maximum power loadout possible in this stat mix. */
-  readonly maxPower: number;
 }
 
 export type ItemsByBucket = Readonly<{

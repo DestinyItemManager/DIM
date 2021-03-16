@@ -8,6 +8,7 @@ import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { assignModsToArmorSet } from '../mod-utils';
 import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
+import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -72,14 +73,16 @@ function GeneratedSet({
     set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
   );
 
+  const items = set.armor.map((items) => items[0]);
+
   return (
     <div className={styles.build} style={style} ref={forwardedRef}>
       <div className={styles.header}>
         <SetStats
           defs={defs}
           stats={set.stats}
-          items={set.armor.map((items) => items[0])}
-          maxPower={set.maxPower}
+          items={items}
+          maxPower={getPower(items)}
           statOrder={statOrder}
           enabledStats={enabledStats}
           existingLoadoutName={existingLoadout?.name}

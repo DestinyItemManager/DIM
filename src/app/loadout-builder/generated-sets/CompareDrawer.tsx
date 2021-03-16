@@ -24,6 +24,7 @@ import {
   statKeys,
   StatTypes,
 } from '../types';
+import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
 import SetStats from './SetStats';
@@ -226,7 +227,7 @@ function CompareDrawer({
             defs={defs}
             items={setItems}
             stats={set.stats}
-            maxPower={set.maxPower}
+            maxPower={getPower(setItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
             className={styles.fillRow}
