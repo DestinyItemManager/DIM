@@ -270,7 +270,6 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1245115841, // Wing Theorem
     1299272338, // Ankaa Seeker IV
-    1402766122, // Retrofuturist
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
@@ -1927,7 +1926,6 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1245115841, // Wing Theorem
     1299272338, // Ankaa Seeker IV
-    1402766122, // Retrofuturist
     1467590642, // Binary Phoenix Bond
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
@@ -2095,7 +2093,6 @@ const missingSources: { [key: string]: number[] } = {
     3469164235, // The Took Offense
     3499839403, // Vigil of Heroes
     3500775049, // Vigil of Heroes
-    3514096004, // Eternal Blazon
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
     3631862279, // Vigil of Heroes
@@ -2274,7 +2271,6 @@ const missingSources: { [key: string]: number[] } = {
     3469164235, // The Took Offense
     3499839403, // Vigil of Heroes
     3500775049, // Vigil of Heroes
-    3514096004, // Eternal Blazon
     3544662820, // Vigil of Heroes
     3584380110, // Vigil of Heroes
     3631862279, // Vigil of Heroes
