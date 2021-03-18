@@ -186,6 +186,10 @@ export const powerfulSources = [
   3114385607, // Tier 3
 ];
 
+export const pinnacleSources = [
+  73143230, // Pinnacle
+];
+
 //
 // BUCKETS KNOWN VALUES
 //
