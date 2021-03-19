@@ -49,15 +49,21 @@ export function SearchFilter(
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
   const onRecords = location.pathname.endsWith('records');
+  const onProgress = location.pathname.endsWith('progress');
+  const onOptimizer = location.pathname.endsWith('optimizer');
 
   const placeholder = useMemo(
     () =>
       onRecords
         ? t('Header.FilterHelpRecords')
+        : onProgress
+        ? t('Header.FilterHelpProgress')
+        : onOptimizer
+        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:combatstyle' })
         : isPhonePortrait
         ? t('Header.FilterHelpBrief')
         : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait, onRecords]
+    [isPhonePortrait, onRecords, onProgress, onOptimizer]
   );
 
   const extras = useMemo(() => <MainSearchBarActions />, []);
