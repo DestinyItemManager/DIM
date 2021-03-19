@@ -275,6 +275,8 @@
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterHelpRecords": "Search triumphs and collections",
+    "FilterHelpProgress": "Search milestones and bounties",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
