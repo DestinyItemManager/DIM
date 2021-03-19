@@ -8,6 +8,9 @@ import { dedupePromise } from 'app/utils/util';
 import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
+  DestinyItemActionBlockDefinition,
+  DestinyItemTalentGridBlockDefinition,
+  DestinyItemTranslationBlockDefinition,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
@@ -38,9 +41,9 @@ const tableTrimmers = {
       // structures from JSON parsing. Only replace objects with empties, and always test with the
       // memory profiler. Don't assume that deleting something makes this smaller.
 
-      def.action! = emptyObject();
+      def.action = emptyObject<Mutable<DestinyItemActionBlockDefinition>>();
       def.backgroundColor = emptyObject();
-      def.translationBlock! = emptyObject();
+      def.translationBlock = emptyObject<Mutable<DestinyItemTranslationBlockDefinition>>();
       if (def.equippingBlock?.displayStrings?.length) {
         def.equippingBlock.displayStrings = emptyArray();
       }
@@ -48,7 +51,7 @@ const tableTrimmers = {
         def.preview.derivedItemCategories = emptyArray();
       }
       if (def.inventory!.bucketTypeHash !== BucketHashes.Subclass) {
-        def.talentGrid! = emptyObject();
+        def.talentGrid = emptyObject<Mutable<DestinyItemTalentGridBlockDefinition>>();
       }
 
       if (def.sockets) {

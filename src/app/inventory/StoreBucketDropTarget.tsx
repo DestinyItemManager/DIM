@@ -10,6 +10,7 @@ import {
   DropTargetMonitor,
   DropTargetSpec,
 } from 'react-dnd';
+import { DragObject } from './DraggableInventoryItem';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { dropItem } from './move-item';
@@ -41,9 +42,9 @@ function dragType(props: ExternalProps) {
 }
 
 // This determines the behavior of dropping on this target
-const dropSpec: DropTargetSpec<Props> = {
+const dropSpec: DropTargetSpec<Props, DragObject> = {
   drop(props, monitor) {
-    const item = monitor.getItem().item as DimItem;
+    const item = monitor.getItem().item;
     props.dispatch(dropItem(item, props.storeId, Boolean(props.equip)));
   },
   canDrop(props, monitor) {
@@ -52,13 +53,16 @@ const dropSpec: DropTargetSpec<Props> = {
       return true;
     }
     // But equipping has requirements
-    const item = monitor.getItem().item as DimItem;
+    const item = monitor.getItem().item;
     return itemCanBeEquippedByStoreId(item, props.storeId, props.storeClassType);
   },
 };
 
 // This forwards drag and drop state into props on the component
-function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
+function collect(
+  connect: DropTargetConnector,
+  monitor: DropTargetMonitor<DragObject>
+): InternalProps {
   const item = monitor.getItem();
   return {
     // Call this function inside render()
@@ -67,7 +71,7 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
     // You can ask the monitor about the current drag state:
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop(),
-    item: item && (item.item as DimItem),
+    item: item?.item,
   };
 }
 
