@@ -1,6 +1,7 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
+import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
 import {
   knownModPlugCategoryHashes,
@@ -101,6 +102,21 @@ function insertIntoSetTracker(
 }
 
 /**
+ * Generate a comparator that sorts first by the total of the considered stats,
+ * and then by the individual stats in the order we want.
+ */
+function compareByStatOrder(orderedConsideredStatHashes: number[]) {
+  return chainComparator<ProcessItem>(
+    // First compare by sum of considered stats
+    compareBy((i) => _.sumBy(orderedConsideredStatHashes, (h) => -i.baseStats[h])),
+    // Then by each stat individually in order
+    ...orderedConsideredStatHashes.map((h) => compareBy((i: ProcessItem) => -i.baseStats[h])),
+    // Then by overall total
+    compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
+  );
+}
+
+/**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
@@ -131,6 +147,9 @@ export function process(
   const orderedStatHashes = statOrder.map((statType) => statHashes[statType]);
   // Stat types excluding ignored stats
   const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
+  const orderedConsideredStatHashes = orderedConsideredStats.map(
+    (statType) => statHashes[statType]
+  );
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -145,33 +164,18 @@ export function process(
 
   // Sort gear by total stat (descending) so we consider the best gear first
   // TODO: make these a list/map
-  // TODO: we should precompute the stats first, and then sort on total, so we can incoporate the masterworkiness
-  // TODO: sort by total taking into account ignored stats!
-  const helms = _.sortBy(
-    filteredItems[LockableBuckets.helmet] || [],
-    (i) => -i.baseStats[TOTAL_STAT_HASH]
-  );
-  const gaunts = _.sortBy(
-    filteredItems[LockableBuckets.gauntlets] || [],
-    (i) => -i.baseStats[TOTAL_STAT_HASH]
-  );
-  const chests = _.sortBy(
-    filteredItems[LockableBuckets.chest] || [],
-    (i) => -i.baseStats[TOTAL_STAT_HASH]
-  );
-  const legs = _.sortBy(
-    filteredItems[LockableBuckets.leg] || [],
-    (i) => -i.baseStats[TOTAL_STAT_HASH]
-  );
+  // TODO: we should precompute the stats first, and then sort on total, so we can incoporate the masterworkiness?
+  const itemComparator = compareByStatOrder(orderedConsideredStatHashes);
+  const helms = (filteredItems[LockableBuckets.helmet] || []).sort(itemComparator);
+  const gaunts = (filteredItems[LockableBuckets.gauntlets] || []).sort(itemComparator);
+  const chests = (filteredItems[LockableBuckets.chest] || []).sort(itemComparator);
+  const legs = (filteredItems[LockableBuckets.leg] || []).sort(itemComparator);
   // TODO: we used to do these in chunks, where items w/ same stats were considered together. For class items that
   // might still be useful. In practice there are only 1/2 class items you need to care about - all of them that are
   // masterworked and all of them that aren't. I think we may want to go back to grouping like items but we'll need to
   // incorporate modslots and energy maybe.
   // TODO: test this hypothesis by counting by unique stat?
-  const classItems = _.sortBy(
-    filteredItems[LockableBuckets.classitem] || [],
-    (i) => -i.baseStats[TOTAL_STAT_HASH]
-  );
+  const classItems = (filteredItems[LockableBuckets.classitem] || []).sort(itemComparator);
 
   // We won't search through more than this number of stat combos because it takes too long.
   // On my machine (bhollis) it takes ~1s per 500,000 combos
