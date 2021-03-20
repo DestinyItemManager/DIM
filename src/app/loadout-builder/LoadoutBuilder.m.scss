@@ -43,8 +43,8 @@
   font-size: 1.2em;
   padding: 10px 10px;
   position: fixed;
-  top: $header-height;
   left: 50%;
+  @include below-header;
 
   white-space: nowrap;
   z-index: 10;

@@ -79,9 +79,8 @@ export default function GeneratedSetItem({
 
   return (
     <div className={styles.item}>
-      <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
-
       <div className={styles.swapButtonContainer}>
+        <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
         {itemOptions.length > 1 ? (
           <button
             type="button"
