@@ -203,7 +203,6 @@ export function process(
   // might still be useful. In practice there are only 1/2 class items you need to care about - all of them that are
   // masterworked and all of them that aren't. I think we may want to go back to grouping like items but we'll need to
   // incorporate modslots and energy maybe.
-  // TODO: test this hypothesis by counting by unique stat?
   const classItems = (filteredItems[LockableBuckets.classitem] || []).sort(itemComparator);
 
   // We won't search through more than this number of stat combos because it takes too long.
@@ -219,13 +218,7 @@ export function process(
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
   while (combos > combosLimit) {
-    const sortedTypes = [
-      helms,
-      gaunts,
-      chests,
-      legs,
-      // TODO: No class items?
-    ]
+    const sortedTypes = [helms, gaunts, chests, legs]
       // Don't ever remove the last item in a category
       .filter((items) => items.length > 1)
       // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
@@ -257,8 +250,6 @@ export function process(
   let lowestTier = 100;
   let setCount = 0;
 
-  // TODO: not sure what this is all about
-  // TODO: preprocess all this stuff? It doesn't change as often...
   let generalMods: ProcessMod[] = [];
   let otherMods: ProcessMod[] = [];
   let raidMods: ProcessMod[] = [];
@@ -369,7 +360,6 @@ export function process(
               }
             }
 
-            // TODO: Perhaps do this as a post-filter
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
               hasMods &&
@@ -393,7 +383,6 @@ export function process(
             setCount++;
 
             // If we've gone over our max sets to return, drop the worst set
-            // TODO: Could this remove good sets?
             if (setCount > RETURNED_ARMOR_SETS) {
               const lowestTierSet = setTracker[setTracker.length - 1];
               const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
