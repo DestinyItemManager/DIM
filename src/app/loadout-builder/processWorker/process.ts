@@ -248,9 +248,7 @@ export function process(
 
             // A string version of the tier-level of each stat, separated by commas
             // This is an awkward implementation to save garbage allocations.
-            let tiers = '';
             let totalTier = 0;
-            let index = 0;
             let statRangeExceeded = false;
             for (const statKey of orderedConsideredStats) {
               // Stats can't exceed 100 even with mods. At least, today they
@@ -273,12 +271,7 @@ export function process(
                 statRangeExceeded = true;
                 break;
               }
-              tiers += tier;
               totalTier += tier;
-              if (index < statOrder.length - 1) {
-                tiers += ',';
-              }
-              index++;
             }
 
             if (statRangeExceeded) {
@@ -310,6 +303,18 @@ export function process(
               armor,
               stats,
             };
+
+            // Calculate the "tiers string" here, since most sets don't make it this far
+            let tiers = '';
+            let index = 0;
+            for (const statKey of orderedConsideredStats) {
+              const tier = statTier(stats[statKey]);
+              tiers += tier;
+              if (index < statOrder.length - 1) {
+                tiers += ',';
+              }
+              index++;
+            }
 
             numInserted++;
             if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
