@@ -121,6 +121,8 @@ export function useProcess(
       (mods) => mods?.map((mod) => mapArmor2ModToProcessMod(mod)) || []
     );
 
+    // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
+    // TODO: does it hurt to recreate the worker each time?
     const workerStart = performance.now();
     worker
       .process(

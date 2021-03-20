@@ -212,11 +212,11 @@ export function process(
 
   // TODO: Map?
   // TODO: this could be a map from item object to stat!
-  const statsCache: Record<string, number[]> = {};
+  const statsCache: Map<ProcessItem, number[]> = new Map();
 
   // Precompute the stats of each item in the order the user asked for
   for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
-    statsCache[item.id] = getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatHashes);
+    statsCache.set(item, getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatHashes));
   }
 
   // TODO: not sure what this is all about
@@ -257,16 +257,7 @@ export function process(
 
             const armor = [helm, gaunt, chest, leg, classItem];
 
-            const statChoices = [
-              statsCache[helm.id],
-              statsCache[gaunt.id],
-              statsCache[chest.id],
-              statsCache[leg.id],
-              statsCache[classItem.id],
-            ];
-
             // TODO: why not just another ordered list?
-            // TODO: reuse this object?
             const stats: { [statType in StatTypes]: number } = {
               Mobility: 0,
               Resilience: 0,
@@ -275,7 +266,8 @@ export function process(
               Intellect: 0,
               Strength: 0,
             };
-            for (const itemStats of statChoices) {
+            for (const item of armor) {
+              const itemStats = statsCache.get(item)!;
               let index = 0;
               // itemStats are already in the user's chosen stat order
               for (const statType of statOrder) {
