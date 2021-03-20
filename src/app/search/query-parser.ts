@@ -18,8 +18,6 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-import _ from 'lodash';
-
 /* **** Parser **** */
 
 /**
@@ -273,11 +271,6 @@ const bareWords = /[^\s)]+/y;
 // Whitespace that doesn't match anything else is an implicit `and`
 const whitespace = /\s+/y;
 
-// A search matching this regex is treated as a single quoted string, to handle the common case of
-// someone typing "gnawing hunger" or "kill clip". This also means "not forgotten" is different from
-// "not (forgotten)" or "not "forgotten"".
-const isPlainSearch = /^[^":()<=>-]+$/;
-
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
  * This throws an exception if it finds an invalid input.
@@ -291,11 +284,6 @@ export function* lexer(query: string): Generator<Token> {
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
   query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
   query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
-
-  // First test for the simple case of plaintext search
-  if (isPlainSearch.test(query)) {
-    return yield ['filter', 'keyword', query];
-  }
 
   let match: string | undefined;
   let i = 0;
@@ -409,11 +397,15 @@ export function canonicalizeQuery(query: QueryAST, depth = 0) {
       return `-${canonicalizeQuery(query.operand, depth + 1)}`;
     case 'and':
     case 'or': {
-      const sortedOperands = _.sortBy(
-        query.operands.map((q) => canonicalizeQuery(q, depth + 1)),
-        (q) => q.replace(/[(-](.*)/, '$1')
-      ).join(query.op === 'and' ? ' ' : ` ${query.op} `);
-      return depth === 0 ? sortedOperands : `(${sortedOperands})`;
+      const joinedOperands = query.operands
+        .map((q) => canonicalizeQuery(q, depth + 1))
+        .join(
+          query.op === 'and' &&
+            !query.operands.some((op) => op.op === 'filter' && op.type === 'keyword')
+            ? ' '
+            : ` ${query.op} `
+        );
+      return depth === 0 ? joinedOperands : `(${joinedOperands})`;
     }
     case 'noop':
       return '';
