@@ -183,7 +183,7 @@ function useWorkerAndCleanup(
     statFilters,
   ]);
 
-  // cleanup the worker on unmount
+  // cleanup the worker on unmount or if the worker gets recreated
   useEffect(() => cleanup, [worker, cleanup]);
 
   return { worker, cleanup };

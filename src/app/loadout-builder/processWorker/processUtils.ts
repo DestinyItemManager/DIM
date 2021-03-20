@@ -48,6 +48,8 @@ function stringifyModPermutation(perm: (ProcessMod | null)[]) {
  * This is heaps algorithm implemented for generating mod permutations.
  * https://en.wikipedia.org/wiki/Heap%27s_algorithm
  *
+ * But why?
+ *
  * Note that we ensure the array length is always 5 so mods are aligned
  * with the 5 items.
  */
