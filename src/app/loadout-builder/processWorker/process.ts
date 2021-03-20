@@ -233,7 +233,7 @@ export function process(
         itemComparator(a[a.length - 1], b[b.length - 1])
       );
     // Pop the last item off the worst-sorted list
-    [sortedTypes[sortedTypes.length - 1]].pop();
+    sortedTypes[sortedTypes.length - 1].pop();
     // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
     combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
