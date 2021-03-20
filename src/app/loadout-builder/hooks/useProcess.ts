@@ -7,7 +7,7 @@ import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -38,7 +38,6 @@ interface ProcessState {
     combosWithoutCaps: number;
     statRanges?: { [stat in StatTypes]: MinMax };
   } | null;
-  currentCleanup: (() => void) | null;
 }
 
 /**
@@ -54,36 +53,20 @@ export function useProcess(
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
-  const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState<ProcessState>({
+  const [{ result, resultStoreId, processing }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStoreId,
     result: null,
-    currentCleanup: null,
   });
-
-  // TODO: just create a fresh worker every time
-  const { worker, cleanup } = useWorkerAndCleanup(
-    filteredItems,
-    lockedItems,
-    lockedModMap,
-    assumeMasterwork,
-    statOrder,
-    statFilters
-  );
-
-  if (currentCleanup && currentCleanup !== cleanup) {
-    currentCleanup();
-  }
 
   useEffect(() => {
     const processStart = performance.now();
 
-    setState({
+    setState((state) => ({
       processing: true,
       resultStoreId: selectedStoreId,
-      result: selectedStoreId === resultStoreId ? result : null,
-      currentCleanup: cleanup,
-    });
+      result: selectedStoreId === state.resultStoreId ? state.result : null,
+    }));
 
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
     const raidCombatAndLegacyMods = Object.entries(
@@ -124,8 +107,8 @@ export function useProcess(
     );
 
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
-    // TODO: does it hurt to recreate the worker each time?
     const workerStart = performance.now();
+    const { worker, cleanup } = createWorker();
     worker
       .process(
         processItems,
@@ -151,46 +134,24 @@ export function useProcess(
             combosWithoutCaps,
             statRanges,
           },
-          currentCleanup: null,
         }));
 
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
-      });
-    /* do not include things from state or worker in dependencies */
-    /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedModMap, assumeMasterwork, statOrder, statFilters]);
-
-  return { result, processing };
-}
-
-/**
- * Creates a worker and a cleanup function for the worker.
- *
- * The worker and cleanup are memoized so that when the any of the inputs are changed a new one is created.
- *
- * The worker will be cleaned up when the component unmounts.
- */
-function useWorkerAndCleanup(
-  filteredItems: ItemsByBucket,
-  lockedItems: LockedMap,
-  lockedModMap: LockedModMap,
-  assumeMasterwork: boolean,
-  statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
-) {
-  const { worker, cleanup } = useMemo(() => createWorker(), [
+      })
+      // Shut down the worker, we're done with it
+      .finally(() => cleanup());
+  }, [
     filteredItems,
     lockedItems,
     lockedModMap,
     assumeMasterwork,
     statOrder,
     statFilters,
+    selectedStoreId,
+    resultStoreId,
   ]);
 
-  // cleanup the worker on unmount or if the worker gets recreated
-  useEffect(() => cleanup, [worker, cleanup]);
-
-  return { worker, cleanup };
+  return { result, processing };
 }
 
 function createWorker() {
