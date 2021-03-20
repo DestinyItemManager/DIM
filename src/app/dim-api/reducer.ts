@@ -998,7 +998,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
       errorLog('saveSearch', 'Query not valid - not saving', query);
       return;
     }
-    if (ast.op === 'filter' && ast.type === 'keyword') {
+    if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
       // don't save "trivial" single-keyword filters
       // TODO: somehow also reject invalid searches (that don't match real keywords)
       return;
@@ -1032,6 +1032,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
     });
   }
 
+  // TODO: purge invalid searches
   // TODO: this is where we would cap the search history!
   // while (searches.length > MAX_SEARCH_HISTORY) {
   //   remove bottom-sorted search
@@ -1084,8 +1085,21 @@ function saveSearch(
   if (existingSearch) {
     existingSearch.saved = saved;
   } else {
-    // Hmm, may need to tweak this
-    throw new Error("Unable to save a search that's not in your history");
+    // Save this as a "used" search first. This may happen if it's a type of search we
+    // wouldn't normally save to history like a "simple" filter.
+    searches.push({
+      query,
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now(),
+    });
+    draft.updateQueue.push({
+      action: 'search',
+      payload: {
+        query,
+      },
+      destinyVersion,
+    });
   }
 
   draft.updateQueue.push(updateAction);
