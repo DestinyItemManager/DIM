@@ -1,5 +1,6 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import { getAllSets, insertIntoSetTracker, SetTracker, trimWorstSet } from 'set-tracker';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
@@ -12,7 +13,7 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
-import { getPower, statTier } from '../utils';
+import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
 import {
   IntermediateProcessArmorSet,
@@ -25,81 +26,6 @@ import {
 
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
-
-/**
- * A list of stat mixes by total tier. We can keep this list up to date
- * as we process new sets with an insertion sort algorithm.
- */
-type SetTracker = {
-  tier: number;
-  statMixes: { statMix: string; armorSets: IntermediateProcessArmorSet[] }[];
-}[];
-
-/**
- * Use an insertion sort algorithm to keep an ordered list of sets first by total tier, then by stat mix within a tier.
- * This takes advantage of the fact that strings are lexically comparable, but maybe it does that badly...
- */
-// TODO: replace with trie?
-function insertIntoSetTracker(
-  tier: number,
-  statMix: string,
-  armorSet: IntermediateProcessArmorSet,
-  setTracker: SetTracker
-): void {
-  if (setTracker.length === 0) {
-    setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-    return;
-  }
-
-  for (let tierIndex = 0; tierIndex < setTracker.length; tierIndex++) {
-    const currentTier = setTracker[tierIndex];
-
-    if (tier > currentTier.tier) {
-      setTracker.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-      return;
-    }
-
-    if (tier === currentTier.tier) {
-      const currentStatMixes = currentTier.statMixes;
-
-      for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
-        const currentStatMix = currentStatMixes[statMixIndex];
-
-        if (statMix > currentStatMix.statMix) {
-          currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
-          return;
-        }
-
-        if (currentStatMix.statMix === statMix) {
-          for (
-            let armorSetIndex = 0;
-            armorSetIndex < currentStatMix.armorSets.length;
-            armorSetIndex++
-          ) {
-            if (
-              getPower(armorSet.armor) > getPower(currentStatMix.armorSets[armorSetIndex].armor)
-            ) {
-              currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
-            } else {
-              currentStatMix.armorSets.push(armorSet);
-            }
-            return;
-          }
-        }
-
-        if (statMixIndex === currentStatMixes.length - 1) {
-          currentStatMixes.push({ statMix, armorSets: [armorSet] });
-          return;
-        }
-      }
-    }
-
-    if (tierIndex === setTracker.length - 1) {
-      setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-      return;
-    }
-  }
-}
 
 /**
  * Generate a comparator that sorts first by the total of the considered stats,
@@ -350,15 +276,6 @@ export function process(
               continue;
             }
 
-            // While we have less than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
-            if (totalTier < lowestTier) {
-              if (setCount <= RETURNED_ARMOR_SETS) {
-                lowestTier = totalTier;
-              } else {
-                continue;
-              }
-            }
-
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
               hasMods &&
@@ -372,6 +289,16 @@ export function process(
               continue;
             }
 
+            // While we have fewer than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
+            if (totalTier < lowestTier) {
+              if (setCount <= RETURNED_ARMOR_SETS) {
+                lowestTier = totalTier;
+              } else {
+                // Don't continue with this set
+                continue;
+              }
+            }
+
             const newArmorSet: IntermediateProcessArmorSet = {
               armor,
               stats,
@@ -383,20 +310,8 @@ export function process(
 
             // If we've gone over our max sets to return, drop the worst set
             if (setCount > RETURNED_ARMOR_SETS) {
-              const lowestTierSet = setTracker[setTracker.length - 1];
-              const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
-
-              worstMix.armorSets.pop();
+              lowestTier = trimWorstSet(setTracker);
               setCount--;
-
-              if (worstMix.armorSets.length === 0) {
-                lowestTierSet.statMixes.pop();
-
-                if (lowestTierSet.statMixes.length === 0) {
-                  setTracker.pop();
-                  lowestTier = setTracker[setTracker.length - 1].tier;
-                }
-              }
             }
           }
         }
@@ -404,7 +319,7 @@ export function process(
     }
   }
 
-  const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  const finalSets = getAllSets(setTracker);
 
   const totalTime = performance.now() - pstart;
   infoLog(
