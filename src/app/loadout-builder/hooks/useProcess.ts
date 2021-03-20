@@ -7,7 +7,7 @@ import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -53,19 +53,41 @@ export function useProcess(
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
-  const [{ result, resultStoreId, processing }, setState] = useState<ProcessState>({
+  const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStoreId,
     result: null,
   });
 
+  const cleanupRef = useRef<(() => void) | null>();
+
+  // Cleanup worker on unmount
+  useEffect(
+    () => () => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     const processStart = performance.now();
+
+    // Stop any previous worker
+    if (cleanupRef.current) {
+      cleanupRef.current();
+    }
+
+    const { worker, cleanup } = createWorker();
+    cleanupRef.current = cleanup;
 
     setState((state) => ({
       processing: true,
       resultStoreId: selectedStoreId,
       result: selectedStoreId === state.resultStoreId ? state.result : null,
+      currentCleanup: cleanup,
     }));
 
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
@@ -108,7 +130,6 @@ export function useProcess(
 
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
     const workerStart = performance.now();
-    const { worker, cleanup } = createWorker();
     worker
       .process(
         processItems,
@@ -138,8 +159,11 @@ export function useProcess(
 
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
       })
-      // Shut down the worker, we're done with it
-      .finally(() => cleanup());
+      // Cleanup the worker, we don't need it anymore.
+      .finally(() => {
+        cleanup();
+        cleanupRef.current = null;
+      });
   }, [
     filteredItems,
     lockedItems,
@@ -148,7 +172,6 @@ export function useProcess(
     statOrder,
     statFilters,
     selectedStoreId,
-    resultStoreId,
   ]);
 
   return { result, processing };
