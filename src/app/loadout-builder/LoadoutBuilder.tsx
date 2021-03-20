@@ -5,16 +5,21 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
+import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
@@ -37,7 +42,7 @@ import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
 import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
-import { getUnlockedMods, isLoadoutBuilderItem } from './utils';
+import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -61,6 +66,13 @@ interface StoreProps {
 }
 
 type Props = ProvidedProps & StoreProps;
+
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
+);
 
 function mapStateToProps() {
   const itemsSelector = createSelector(
@@ -215,10 +227,74 @@ function LoadoutBuilder({
     sets,
   ]);
   // No point memoing this as allItems
-  const unlockedMods = useMemo(
-    () => getUnlockedMods(allItems, defs, profileResponse, selectedStore?.classType),
-    [allItems, defs, profileResponse, selectedStore?.classType]
-  );
+  const unlockedMods = useMemo(() => {
+    const plugSets: { [bucketHash: number]: Set<number> } = {};
+    if (!profileResponse || selectedStore?.classType === undefined) {
+      return [];
+    }
+
+    // 1. loop through all items, build up a map of mod sockets by bucket
+    for (const item of allItems) {
+      if (
+        !item ||
+        !item.sockets ||
+        !isLoadoutBuilderItem(item) ||
+        !(item.classType === DestinyClass.Unknown || item.classType === selectedStore.classType)
+      ) {
+        continue;
+      }
+      if (!plugSets[item.bucket.hash]) {
+        plugSets[item.bucket.hash] = new Set<number>();
+      }
+      // build the filtered unique perks item picker
+      item.sockets.allSockets
+        .filter((s) => !s.isPerk)
+        .forEach((socket) => {
+          if (socket.socketDefinition.reusablePlugSetHash) {
+            plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+          } else if (socket.socketDefinition.randomizedPlugSetHash) {
+            plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
+          }
+          // TODO: potentially also add inventory-based mods
+        });
+    }
+
+    // 2. for each unique socket (type?) get a list of unlocked mods
+    const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
+      const unlockedPlugs: number[] = [];
+
+      for (const plugSetHash of sets) {
+        const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+        for (const plugSetItem of plugSetItems) {
+          if (plugIsInsertable(plugSetItem)) {
+            unlockedPlugs.push(plugSetItem.plugItemHash);
+          }
+        }
+      }
+
+      const finalMods: PluggableInventoryItemDefinition[] = [];
+
+      for (const plug of unlockedPlugs) {
+        const def = defs.InventoryItem.get(plug);
+
+        if (
+          isPluggableItem(def) &&
+          isArmor2Mod(def) &&
+          // Filters out mods that are deprecated.
+          (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
+          // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
+          // My investigation showed that only classified items had this being undefined.
+          def.itemTypeDisplayName !== undefined
+        ) {
+          finalMods.push(def);
+        }
+      }
+
+      return finalMods.sort(sortMods);
+    });
+
+    return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.hash);
+  }, [allItems, defs, profileResponse, selectedStore?.classType]);
 
   const plusFiveMods = useMemo(() => {
     const orderedStatHashes = statOrder.map((stat) => statHashes[stat]);
@@ -325,7 +401,6 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              mods={unlockedMods}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}

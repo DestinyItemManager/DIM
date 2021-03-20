@@ -2,20 +2,31 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { bucketsSelector } from 'app/inventory/selectors';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isArmor2Mod } from 'app/utils/item-utils';
+import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import { knownModPlugCategoryHashes, LockedModMap } from '../types';
+import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
@@ -23,7 +34,6 @@ interface ProvidedProps {
   lockedArmor2Mods: LockedModMap;
   classType: DestinyClass;
   initialQuery?: string;
-  mods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -33,16 +43,107 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
+  mods: PluggableInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
+);
+
+/** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+
 function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
+  /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+  const unlockedModsSelector = createSelector(
+    profileResponseSelector,
+    allItemsSelector,
+    (state: RootState) => state.manifest.d2Manifest!,
+    (_: RootState, props: ProvidedProps) => props.classType,
+    (
+      profileResponse: DestinyProfileResponse,
+      allItems: DimItem[],
+      defs: D2ManifestDefinitions,
+      classType?: DestinyClass
+    ): PluggableInventoryItemDefinition[] => {
+      const plugSets: { [bucketHash: number]: Set<number> } = {};
+      if (!profileResponse || classType === undefined) {
+        return [];
+      }
+
+      // 1. loop through all items, build up a map of mod sockets by bucket
+      for (const item of allItems) {
+        if (
+          !item ||
+          !item.sockets ||
+          !isLoadoutBuilderItem(item) ||
+          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+        ) {
+          continue;
+        }
+        if (!plugSets[item.bucket.hash]) {
+          plugSets[item.bucket.hash] = new Set<number>();
+        }
+        // build the filtered unique perks item picker
+        item.sockets.allSockets
+          .filter((s) => !s.isPerk)
+          .forEach((socket) => {
+            if (socket.socketDefinition.reusablePlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+            } else if (socket.socketDefinition.randomizedPlugSetHash) {
+              plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
+            }
+            // TODO: potentially also add inventory-based mods
+          });
+      }
+
+      // 2. for each unique socket (type?) get a list of unlocked mods
+      const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
+        const unlockedPlugs: number[] = [];
+
+        for (const plugSetHash of sets) {
+          const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+          for (const plugSetItem of plugSetItems) {
+            if (plugIsInsertable(plugSetItem)) {
+              unlockedPlugs.push(plugSetItem.plugItemHash);
+            }
+          }
+        }
+
+        const finalMods: PluggableInventoryItemDefinition[] = [];
+
+        for (const plug of unlockedPlugs) {
+          const def = defs.InventoryItem.get(plug);
+
+          if (
+            isPluggableItem(def) &&
+            isArmor2Mod(def) &&
+            // Filters out mods that are deprecated.
+            (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
+            // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
+            // My investigation showed that only classified items had this being undefined.
+            def.itemTypeDisplayName !== undefined
+          ) {
+            finalMods.push(def);
+          }
+        }
+
+        return finalMods.sort(sortMods);
+      });
+
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.hash);
+    }
+  );
+  return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     defs: state.manifest.d2Manifest!,
+    mods: unlockedModsSelector(state, props),
   });
 }
 

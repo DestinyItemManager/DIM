@@ -1,16 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import { isArmor2Mod } from 'app/utils/item-utils';
-import {
-  DestinyClass,
-  DestinyEnergyType,
-  DestinyProfileResponse,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ProcessItem } from './processWorker/types';
@@ -119,86 +108,4 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   }
 
   return Math.floor(power / numPoweredItems);
-}
-
-// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => mod.plug.energyCost?.energyType),
-  compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
-);
-
-/** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
-export function getUnlockedMods(
-  allItems: DimItem[],
-  defs: D2ManifestDefinitions,
-  profileResponse?: DestinyProfileResponse,
-  classType?: DestinyClass
-): PluggableInventoryItemDefinition[] {
-  const plugSets: { [bucketHash: number]: Set<number> } = {};
-  if (!profileResponse || classType === undefined) {
-    return [];
-  }
-
-  // 1. loop through all items, build up a map of mod sockets by bucket
-  for (const item of allItems) {
-    if (
-      !item ||
-      !item.sockets ||
-      !isLoadoutBuilderItem(item) ||
-      !(item.classType === DestinyClass.Unknown || item.classType === classType)
-    ) {
-      continue;
-    }
-    if (!plugSets[item.bucket.hash]) {
-      plugSets[item.bucket.hash] = new Set<number>();
-    }
-    // build the filtered unique perks item picker
-    item.sockets.allSockets
-      .filter((s) => !s.isPerk)
-      .forEach((socket) => {
-        if (socket.socketDefinition.reusablePlugSetHash) {
-          plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
-        } else if (socket.socketDefinition.randomizedPlugSetHash) {
-          plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
-        }
-        // TODO: potentially also add inventory-based mods
-      });
-  }
-
-  // 2. for each unique socket (type?) get a list of unlocked mods
-  const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
-    const unlockedPlugs: number[] = [];
-
-    for (const plugSetHash of sets) {
-      const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
-      for (const plugSetItem of plugSetItems) {
-        if (plugIsInsertable(plugSetItem)) {
-          unlockedPlugs.push(plugSetItem.plugItemHash);
-        }
-      }
-    }
-
-    const finalMods: PluggableInventoryItemDefinition[] = [];
-
-    for (const plug of unlockedPlugs) {
-      const def = defs.InventoryItem.get(plug);
-
-      if (
-        isPluggableItem(def) &&
-        isArmor2Mod(def) &&
-        // Filters out mods that are deprecated.
-        (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
-        // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
-        // My investigation showed that only classified items had this being undefined.
-        def.itemTypeDisplayName !== undefined
-      ) {
-        finalMods.push(def);
-      }
-    }
-
-    return finalMods.sort(sortMods);
-  });
-
-  return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.hash);
 }
