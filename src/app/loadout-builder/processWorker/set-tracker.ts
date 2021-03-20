@@ -1,5 +1,5 @@
-import { IntermediateProcessArmorSet } from 'types';
 import { getPower } from '../utils';
+import { IntermediateProcessArmorSet } from './types';
 
 interface TierSet {
   tier: number;
@@ -40,13 +40,16 @@ export class SetTracker {
       return;
     }
 
-    for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
+    let inserted = false;
+    // TODO: reverse order!
+    outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
       const currentTier = this.tiers[tierIndex];
 
       if (tier > currentTier.tier) {
         this.tiers.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
         this.totalSets++;
-        return;
+        inserted = true;
+        break outer;
       }
 
       if (tier === currentTier.tier) {
@@ -58,7 +61,8 @@ export class SetTracker {
           if (statMix > currentStatMix.statMix) {
             currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
             this.totalSets++;
-            return;
+            inserted = true;
+            break outer;
           }
 
           if (currentStatMix.statMix === statMix) {
@@ -74,29 +78,40 @@ export class SetTracker {
               } else {
                 currentStatMix.armorSets.push(armorSet);
               }
-              return;
+              this.totalSets++;
+              inserted = true;
+              break outer;
             }
           }
 
           if (statMixIndex === currentStatMixes.length - 1) {
             currentStatMixes.push({ statMix, armorSets: [armorSet] });
             this.totalSets++;
-            return;
+            inserted = true;
+            break outer;
           }
         }
       }
 
+      // This is larger than the largest tier we know about, insert it
       if (tierIndex === this.tiers.length - 1) {
         this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
         this.totalSets++;
-        return;
+        inserted = true;
+        break outer;
       }
     }
+
+    if (!inserted) {
+      throw new Error('failed to insert');
+    }
+
+    return this.trimWorstSet();
   }
 
-  trimWorstSet() {
-    if (this.totalSets < this.capacity) {
-      return;
+  private trimWorstSet(): boolean {
+    if (this.totalSets <= this.capacity) {
+      return true;
     }
 
     const lowestTierSet = this.tiers[this.tiers.length - 1];
@@ -113,6 +128,7 @@ export class SetTracker {
     }
     this.lowestTier = this.tiers[this.tiers.length - 1].tier;
     this.totalSets--;
+    return false;
   }
 
   /**

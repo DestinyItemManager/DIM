@@ -1,6 +1,5 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { SetTracker } from 'set-tracker';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
@@ -15,6 +14,7 @@ import {
 } from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
+import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
   LockedProcessMods,
@@ -192,14 +192,25 @@ export function process(
   const raidModPermutations = generateModPermutations(raidMods);
   const hasMods = otherMods.length || raidMods.length || generalMods.length;
 
+  let numSkippedLowTier = 0;
+  let numStatRangeExceeded = 0;
+  let numCantSlotMods = 0;
+  let numInserted = 0;
+  let numRejectedAfterInsert = 0;
+  let numDoubleExotic = 0;
+
+  // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
+
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (helm.equippingLabel && gaunt.equippingLabel) {
+        numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
         if (chest.equippingLabel && (helm.equippingLabel || gaunt.equippingLabel)) {
+          numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
@@ -207,6 +218,7 @@ export function process(
             leg.equippingLabel &&
             (chest.equippingLabel || helm.equippingLabel || gaunt.equippingLabel)
           ) {
+            numDoubleExotic += classItems.length;
             continue;
           }
           for (const classItem of classItems) {
@@ -270,11 +282,13 @@ export function process(
             }
 
             if (statRangeExceeded) {
+              numStatRangeExceeded++;
               continue;
             }
 
             // Drop this set if it could never make it
             if (!setTracker.couldInsert(totalTier)) {
+              numSkippedLowTier++;
               continue;
             }
 
@@ -288,6 +302,7 @@ export function process(
                 armor
               )
             ) {
+              numCantSlotMods++;
               continue;
             }
 
@@ -296,9 +311,10 @@ export function process(
               stats,
             };
 
-            setTracker.insert(totalTier, tiers, newArmorSet);
-
-            setTracker.trimWorstSet();
+            numInserted++;
+            if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
+              numRejectedAfterInsert++;
+            }
           }
         }
       }
@@ -318,7 +334,17 @@ export function process(
     totalTime,
     'ms - ',
     (combos * 1000) / totalTime,
-    'combos/s'
+    'combos/s',
+    {
+      numCantSlotMods,
+      numSkippedLowTier,
+      numStatRangeExceeded,
+      numInserted,
+      numRejectedAfterInsert,
+    },
+    {
+      numDoubleExotic,
+    }
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
