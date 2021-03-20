@@ -116,7 +116,7 @@ export function process(
   assumeMasterwork: boolean,
   // TODO: replace with stat hashes
   statOrder: StatTypes[],
-  // TODO: maps, eradicate stat types
+  // TODO: maps, eradicate StatTypes
   statFilters: { [stat in StatTypes]: MinMaxIgnored }
 ): {
   sets: ProcessArmorSet[];
@@ -125,6 +125,8 @@ export function process(
   statRanges?: { [stat in StatTypes]: MinMax };
 } {
   const pstart = performance.now();
+
+  // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
   const orderedStatHashes = statOrder.map((statType) => statHashes[statType]);
   // Stat types excluding ignored stats
@@ -163,14 +165,16 @@ export function process(
   );
   // TODO: we used to do these in chunks, where items w/ same stats were considered together. For class items that
   // might still be useful. In practice there are only 1/2 class items you need to care about - all of them that are
-  // masterworked and all of them that aren't.
+  // masterworked and all of them that aren't. I think we may want to go back to grouping like items but we'll need to
+  // incorporate modslots and energy maybe.
   // TODO: test this hypothesis by counting by unique stat?
   const classItems = _.sortBy(
     filteredItems[LockableBuckets.classitem] || [],
     (i) => -i.baseStats[TOTAL_STAT_HASH]
   );
 
-  // We won't search through more than this number of stat combos - it can cause us to run out of memory.
+  // We won't search through more than this number of stat combos because it takes too long.
+  // On my machine (bhollis) it takes ~1s per 500,000 combos
   const combosLimit = 2_000_000;
 
   // The maximum possible combos we could have

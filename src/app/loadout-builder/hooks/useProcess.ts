@@ -152,6 +152,9 @@ export function useProcess(
           currentCleanup: null,
         }));
 
+        // Destroy the worker since we're done with it
+        cleanup();
+
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
       });
     /* do not include things from state or worker in dependencies */
