@@ -44,6 +44,7 @@ interface ProcessState {
 /**
  * Hook to process all the stat groups for LO in a web worker.
  */
+// TODO: introduce params object
 export function useProcess(
   selectedStoreId: string | undefined,
   filteredItems: ItemsByBucket,
@@ -53,13 +54,14 @@ export function useProcess(
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
-  const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState({
+  const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStoreId,
     result: null,
     currentCleanup: null,
-  } as ProcessState);
+  });
 
+  // TODO: just create a fresh worker every time
   const { worker, cleanup } = useWorkerAndCleanup(
     filteredItems,
     lockedItems,
@@ -151,9 +153,6 @@ export function useProcess(
           },
           currentCleanup: null,
         }));
-
-        // Destroy the worker since we're done with it
-        cleanup();
 
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
       });
