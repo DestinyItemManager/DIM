@@ -268,13 +268,14 @@ export function process(
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // TODO: why not just another ordered list?
+            // Start with the contribution of mods. Spread operator is slow.
             const stats: { [statType in StatTypes]: number } = {
-              Mobility: 0,
-              Resilience: 0,
-              Recovery: 0,
-              Discipline: 0,
-              Intellect: 0,
-              Strength: 0,
+              Mobility: modStatTotals.Mobility,
+              Resilience: modStatTotals.Resilience,
+              Recovery: modStatTotals.Recovery,
+              Discipline: modStatTotals.Discipline,
+              Intellect: modStatTotals.Intellect,
+              Strength: modStatTotals.Strength,
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
@@ -295,7 +296,10 @@ export function process(
             for (const statKey of orderedConsideredStats) {
               // Stats can't exceed 100 even with mods. At least, today they
               // can't - we *could* pass the max value in from the stat def.
-              stats[statKey] = Math.min(stats[statKey] + modStatTotals[statKey], 100);
+              // Math.min is slow.
+              if (stats[statKey] > 100) {
+                stats[statKey] = 100;
+              }
               const tier = statTier(stats[statKey]);
 
               // Update our global min/max for this stat
