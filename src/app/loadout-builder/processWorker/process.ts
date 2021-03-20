@@ -103,14 +103,25 @@ function insertIntoSetTracker(
 
 /**
  * Generate a comparator that sorts first by the total of the considered stats,
- * and then by the individual stats in the order we want.
+ * and then by the individual stats in the order we want. This includes the effects
+ * of existing masterwork mods and assumeMasterwork
  */
-function compareByStatOrder(orderedConsideredStatHashes: number[]) {
+function compareByStatOrder(
+  orderedConsideredStatHashes: number[],
+  // A reverse index from stat hash to the index in the statsCache ordered stats array
+  statHashToOrder: { [statHash: number]: number },
+  // A map from item to stat values in user-selected order, with masterworks included
+  statsCache: Map<ProcessItem, number[]>
+) {
   return chainComparator<ProcessItem>(
     // First compare by sum of considered stats
-    compareBy((i) => _.sumBy(orderedConsideredStatHashes, (h) => -i.baseStats[h])),
+    compareBy((i) =>
+      _.sumBy(orderedConsideredStatHashes, (h) => -statsCache.get(i)![statHashToOrder[h]])
+    ),
     // Then by each stat individually in order
-    ...orderedConsideredStatHashes.map((h) => compareBy((i: ProcessItem) => -i.baseStats[h])),
+    ...orderedConsideredStatHashes.map((h) =>
+      compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])
+    ),
     // Then by overall total
     compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
   );
@@ -150,6 +161,8 @@ export function process(
   const orderedConsideredStatHashes = orderedConsideredStats.map(
     (statType) => statHashes[statType]
   );
+  const statHashToOrder: { [statHash: number]: number } = {};
+  statOrder.forEach((statType, index) => (statHashToOrder[statHashes[statType]] = index));
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -162,10 +175,26 @@ export function process(
     Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
   };
 
-  // Sort gear by total stat (descending) so we consider the best gear first
+  const statsCache: Map<ProcessItem, number[]> = new Map();
+
+  // Precompute the stats of each item in the order the user asked for
+  for (const item of [
+    ...filteredItems[LockableBuckets.helmet],
+    ...filteredItems[LockableBuckets.gauntlets],
+    ...filteredItems[LockableBuckets.chest],
+    ...filteredItems[LockableBuckets.leg],
+    ...filteredItems[LockableBuckets.classitem],
+  ]) {
+    statsCache.set(item, getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatHashes));
+  }
+
+  // Sort gear by the chosen stats so we consider the likely-best gear first
+  const itemComparator = compareByStatOrder(
+    orderedConsideredStatHashes,
+    statHashToOrder,
+    statsCache
+  );
   // TODO: make these a list/map
-  // TODO: we should precompute the stats first, and then sort on total, so we can incoporate the masterworkiness?
-  const itemComparator = compareByStatOrder(orderedConsideredStatHashes);
   const helms = (filteredItems[LockableBuckets.helmet] || []).sort(itemComparator);
   const gaunts = (filteredItems[LockableBuckets.gauntlets] || []).sort(itemComparator);
   const chests = (filteredItems[LockableBuckets.chest] || []).sort(itemComparator);
@@ -187,15 +216,25 @@ export function process(
 
   let combos = combosWithoutCaps;
 
-  // If we're over the limit, start trimming down the armor lists starting with the longest.
+  // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
-  // TODO: this should also be post adjusted stats
   while (combos > combosLimit) {
-    const lowestTotalStat = _.minBy(
-      [helms, gaunts, chests, legs],
-      (l) => l[l.length - 1].baseStats[TOTAL_STAT_HASH]
-    );
-    lowestTotalStat!.pop();
+    const sortedTypes = [
+      helms,
+      gaunts,
+      chests,
+      legs,
+      // TODO: No class items?
+    ]
+      // Don't ever remove the last item in a category
+      .filter((items) => items.length > 1)
+      // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
+      .sort((a: ProcessItem[], b: ProcessItem[]) =>
+        itemComparator(a[a.length - 1], b[b.length - 1])
+      );
+    // Pop the last item off the worst-sorted list
+    [sortedTypes[sortedTypes.length - 1]].pop();
+    // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
     combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
 
@@ -217,15 +256,6 @@ export function process(
 
   let lowestTier = 100;
   let setCount = 0;
-
-  // TODO: Map?
-  // TODO: this could be a map from item object to stat!
-  const statsCache: Map<ProcessItem, number[]> = new Map();
-
-  // Precompute the stats of each item in the order the user asked for
-  for (const item of [...helms, ...gaunts, ...chests, ...legs, ...classItems]) {
-    statsCache.set(item, getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatHashes));
-  }
 
   // TODO: not sure what this is all about
   // TODO: preprocess all this stuff? It doesn't change as often...
