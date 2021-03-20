@@ -243,21 +243,27 @@ export function process(
   const generalModsPermutations = generateModPermutations(generalMods);
   const otherModPermutations = generateModPermutations(otherMods);
   const raidModPermutations = generateModPermutations(raidMods);
+  const hasMods = otherMods.length || raidMods.length || generalMods.length;
 
   for (const helm of helms) {
     for (const gaunt of gaunts) {
+      // For each additional piece, skip the whole branch if we've managed to get 2 exotics
+      if (helm.equippingLabel && gaunt.equippingLabel) {
+        continue;
+      }
       for (const chest of chests) {
+        if (chest.equippingLabel && (helm.equippingLabel || gaunt.equippingLabel)) {
+          continue;
+        }
         for (const leg of legs) {
+          if (
+            leg.equippingLabel &&
+            (chest.equippingLabel || helm.equippingLabel || gaunt.equippingLabel)
+          ) {
+            continue;
+          }
           for (const classItem of classItems) {
-            const numExotics =
-              (helm.equippingLabel ? 1 : 0) +
-              (gaunt.equippingLabel ? 1 : 0) +
-              (chest.equippingLabel ? 1 : 0) +
-              (leg.equippingLabel ? 1 : 0) +
-              (classItem.equippingLabel ? 1 : 0);
-            if (numExotics > 1) {
-              continue;
-            }
+            // Exotic class items don't exist in D2, and if they did (like in D1) they wouldn't conflict with other exotics
 
             const armor = [helm, gaunt, chest, leg, classItem];
 
@@ -328,7 +334,7 @@ export function process(
             // TODO: Perhaps do this as a post-filter
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
-              (otherMods.length || raidMods.length || generalMods.length) &&
+              hasMods &&
               !canTakeSlotIndependantMods(
                 generalModsPermutations,
                 otherModPermutations,
@@ -374,6 +380,7 @@ export function process(
 
   const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
 
+  const totalTime = performance.now() - pstart;
   infoLog(
     'loadout optimizer',
     'found',
@@ -381,8 +388,10 @@ export function process(
     'stat mixes after processing',
     combos,
     'stat combinations in',
-    performance.now() - pstart,
-    'ms'
+    totalTime,
+    'ms - ',
+    (combos * 1000) / totalTime,
+    'combos/s'
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
