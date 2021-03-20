@@ -76,7 +76,7 @@ export function useProcess(
     );
 
     const processItems: ProcessItemsByBucket = {};
-    const itemsById: { [id: string]: DimItem[] } = {};
+    const itemsById = new Map<string, DimItem[]>();
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
@@ -96,7 +96,7 @@ export function useProcess(
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedModMap[bucketsToCategories[item.bucket.hash]])
           );
-          itemsById[item.id] = group;
+          itemsById.set(item.id, group);
         }
       }
     }

@@ -130,12 +130,12 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: { [id: string]: DimItem[] }
+  itemsById: Map<string, DimItem[]>
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
   for (const itemId of processed.armor) {
-    armor.push(itemsById[itemId]);
+    armor.push(itemsById.get(itemId)!);
   }
 
   return {
