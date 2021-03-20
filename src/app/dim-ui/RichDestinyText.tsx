@@ -147,18 +147,13 @@ const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
   });
 });
 
-const replaceWithIcon = (textSegment: string) => {
+const replaceWithIcon = (textSegment: string, index: number) => {
   const replacement = baseConversionTable.find(
     (r) => r.substring === textSegment || r.unicode === textSegment
   );
   return (
     (replacement && (
-      <img
-        src={replacement.icon}
-        className={styles.inlineSvg}
-        title={textSegment}
-        key={textSegment}
-      />
+      <img src={replacement.icon} className={styles.inlineSvg} title={textSegment} key={index} />
     )) || <span key={textSegment}>{textSegment}</span>
   );
 };
@@ -190,7 +185,7 @@ export default function RichDestinyText({
         (text ?? '')
           .split(iconPlaceholder)
           .filter(Boolean)
-          .map((t) => replaceWithIcon(t))
+          .map((t, index) => replaceWithIcon(t, index))
       }
     </>
   );

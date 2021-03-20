@@ -1,11 +1,14 @@
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout/loadout-types';
+import _ from 'lodash';
 import { useReducer } from 'react';
 import {
   ArmorSet,
   LockedItemType,
   LockedMap,
+  LockedMod,
   LockedModMap,
   MinMaxIgnored,
   StatTypes,
@@ -84,7 +87,13 @@ export type LoadoutBuilderAction =
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedModMap }
+  | {
+      type: 'lockedArmor2ModsChanged';
+      lockedArmor2Mods: {
+        [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
+      };
+    }
+  | { type: 'removeLockedArmor2Mod'; mod: LockedMod }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
@@ -138,8 +147,27 @@ function lbStateReducer(
         },
       };
     }
-    case 'lockedArmor2ModsChanged':
-      return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
+    case 'lockedArmor2ModsChanged': {
+      let modKey = 0;
+      return {
+        ...state,
+        lockedArmor2Mods: _.mapValues(action.lockedArmor2Mods, (plugs) =>
+          plugs?.map((plug) => ({ key: modKey++, modDef: plug }))
+        ),
+      };
+    }
+    case 'removeLockedArmor2Mod': {
+      const { plugCategoryHash } = action.mod.modDef.plug;
+      return {
+        ...state,
+        lockedArmor2Mods: {
+          ...state.lockedArmor2Mods,
+          [plugCategoryHash]: state.lockedArmor2Mods[plugCategoryHash]?.filter(
+            (locked) => locked.key !== action.mod.key
+          ),
+        },
+      };
+    }
     case 'openModPicker':
       return {
         ...state,

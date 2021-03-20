@@ -1,13 +1,16 @@
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
-import { ArmorSet } from '../types';
+import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { ArmorSet, LockedModMap, statHashes } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
@@ -18,14 +21,18 @@ export default function GeneratedSetButtons({
   store,
   set,
   canCompareLoadouts,
+  lockedArmor2Mods,
+  plusFiveMods,
   onLoadoutSet,
-  onCompareSet,
+  lbDispatch,
 }: {
   store: DimStore;
   set: ArmorSet;
   canCompareLoadouts: boolean;
+  lockedArmor2Mods: LockedModMap;
+  plusFiveMods: PluggableInventoryItemDefinition[];
   onLoadoutSet(loadout: Loadout): void;
-  onCompareSet(): void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const dispatch = useDispatch();
 
@@ -40,19 +47,54 @@ export default function GeneratedSetButtons({
     return dispatch(applyLoadout(store, loadout, true));
   };
 
+  const statsWithPlus5: number[] = [];
+
+  for (const [stat, value] of Object.entries(set.stats)) {
+    if (value % 10 > 4) {
+      statsWithPlus5.push(statHashes[stat]);
+    }
+  }
+
+  const onQuickAddPlusFiveMods = () => {
+    const maxNumberOfPlusFiveMods =
+      5 - (lockedArmor2Mods[armor2PlugCategoryHashesByName.general]?.length || 0);
+
+    const plusFiveModsToAdd = plusFiveMods
+      .filter((mod) =>
+        mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
+      )
+      .slice(0, maxNumberOfPlusFiveMods);
+
+    const newModSet = _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef));
+    newModSet[armor2PlugCategoryHashesByName.general] = [
+      ...plusFiveModsToAdd,
+      ...(newModSet[armor2PlugCategoryHashesByName.general] || []),
+    ];
+    lbDispatch({ type: 'lockedArmor2ModsChanged', lockedArmor2Mods: newModSet });
+  };
+
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={openLoadout}>
         {t('LoadoutBuilder.CreateLoadout')}
       </button>
       {canCompareLoadouts && (
-        <button type="button" className="dim-button" onClick={onCompareSet}>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => lbDispatch({ type: 'openCompareDrawer', set })}
+        >
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
       )}
       <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
+      {Boolean(statsWithPlus5.length) && (
+        <button type="button" className="dim-button" onClick={onQuickAddPlusFiveMods}>
+          {t('LoadoutBuilder.AddPlusFiveMods')}
+        </button>
+      )}
     </div>
   );
 }

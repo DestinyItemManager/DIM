@@ -131,7 +131,8 @@ function Stat({
         {t('LoadoutBuilder.TierNumber', {
           tier: statTier(value),
         })}
-      </b>{' '}
+      </b>
+      <span className={styles.pointValue}>{value % 10 > 4 ? `.${value % 10}` : ''}</span>{' '}
       <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
     </span>
   );

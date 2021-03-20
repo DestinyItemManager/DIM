@@ -9,12 +9,13 @@ import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -22,7 +23,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { allItemsSelector } from '../inventory/selectors';
+import { allItemsSelector, profileResponseSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
@@ -36,7 +37,7 @@ import styles from './LoadoutBuilder.m.scss';
 import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
 import { filterItems } from './preProcessFilter';
 import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
-import { isLoadoutBuilderItem } from './utils';
+import { getUnlockedMods, isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -46,6 +47,8 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
+  allItems: DimItem[];
+  profileResponse?: DestinyProfileResponse;
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
   isPhonePortrait: boolean;
@@ -99,6 +102,8 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const { loAssumeMasterwork } = settingsSelector(state);
     return {
+      allItems: allItemsSelector(state),
+      profileResponse: profileResponseSelector(state),
       statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
       isPhonePortrait: state.shell.isPhonePortrait,
@@ -114,6 +119,8 @@ function mapStateToProps() {
  * The Loadout Optimizer screen
  */
 function LoadoutBuilder({
+  allItems,
+  profileResponse,
   stores,
   statOrder,
   assumeMasterwork,
@@ -207,6 +214,34 @@ function LoadoutBuilder({
     enabledStats,
     sets,
   ]);
+  // No point memoing this as allItems
+  const unlockedMods = useMemo(
+    () => getUnlockedMods(allItems, defs, profileResponse, selectedStore?.classType),
+    [allItems, defs, profileResponse, selectedStore?.classType]
+  );
+
+  const plusFiveMods = useMemo(() => {
+    const orderedStatHashes = statOrder.map((stat) => statHashes[stat]);
+
+    return unlockedMods
+      .filter(
+        (mod) =>
+          mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general &&
+          mod.investmentStats.some(
+            (stat) => stat.value === 5 && orderedStatHashes.includes(stat.statTypeHash)
+          )
+      )
+      .sort((a, b) => {
+        // We just filtered on these so they will never be undefined
+        const aStatHash = a.investmentStats.find((stat) =>
+          orderedStatHashes.includes(stat.statTypeHash)
+        )!.statTypeHash;
+        const bStatHash = b.investmentStats.find((stat) =>
+          orderedStatHashes.includes(stat.statTypeHash)
+        )!.statTypeHash;
+        return orderedStatHashes.indexOf(aStatHash) - orderedStatHashes.indexOf(bStatHash);
+      });
+  }, [statOrder, unlockedMods]);
 
   // I dont think this can actually happen?
   if (!selectedStore) {
@@ -283,12 +318,14 @@ function LoadoutBuilder({
             lockedArmor2Mods={lockedArmor2Mods}
             loadouts={loadouts}
             params={params}
+            plusFiveMods={plusFiveMods}
           />
         )}
         {modPicker.open &&
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
+              mods={unlockedMods}
               lockedArmor2Mods={lockedArmor2Mods}
               initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}

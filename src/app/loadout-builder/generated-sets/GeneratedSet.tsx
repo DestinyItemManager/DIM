@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { errorLog } from 'app/utils/log';
@@ -27,6 +28,7 @@ interface Props {
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
+  plusFiveMods: PluggableInventoryItemDefinition[];
 }
 
 /**
@@ -46,6 +48,7 @@ function GeneratedSet({
   loadouts,
   lbDispatch,
   params,
+  plusFiveMods,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -105,8 +108,10 @@ function GeneratedSet({
           set={set}
           store={selectedStore!}
           canCompareLoadouts={canCompareLoadouts}
+          lockedArmor2Mods={lockedArmor2Mods}
+          plusFiveMods={plusFiveMods}
           onLoadoutSet={setCreateLoadout}
-          onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
+          lbDispatch={lbDispatch}
         />
       </div>
     </div>

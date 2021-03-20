@@ -1,21 +1,21 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import React from 'react';
 import ClosableContainer from '../ClosableContainer';
-import { LockedMod } from '../types';
 import styles from './LockedItem.m.scss';
 
 interface Props {
-  item: LockedMod;
+  mod: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   onModClicked(): void;
 }
 
-function LockedModIcon({ item, defs, onModClicked }: Props) {
+function LockedModIcon({ mod, defs, onModClicked }: Props) {
   return (
     <ClosableContainer onClose={onModClicked} showCloseIconOnHover={true}>
       <div className={styles.emptyItem}>
-        <SocketDetailsMod itemDef={item.modDef} defs={defs} />
+        <SocketDetailsMod itemDef={mod} defs={defs} />
       </div>
     </ClosableContainer>
   );

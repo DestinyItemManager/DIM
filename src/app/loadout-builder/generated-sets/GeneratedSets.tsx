@@ -2,6 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
@@ -33,6 +34,7 @@ interface Props {
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
+  plusFiveMods: PluggableInventoryItemDefinition[];
 }
 
 function numColumns(set: ArmorSet) {
@@ -58,6 +60,7 @@ export default function GeneratedSets({
   loadouts,
   lbDispatch,
   params,
+  plusFiveMods,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -164,6 +167,7 @@ export default function GeneratedSets({
           lockedArmor2Mods={lockedArmor2Mods}
           loadouts={loadouts}
           params={params}
+          plusFiveMods={plusFiveMods}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -191,6 +195,7 @@ export default function GeneratedSets({
                   lockedArmor2Mods={lockedArmor2Mods}
                   loadouts={loadouts}
                   params={params}
+                  plusFiveMods={plusFiveMods}
                 />
               )}
               scrollTop={scrollTop}

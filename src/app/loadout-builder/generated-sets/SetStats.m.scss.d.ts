@@ -6,6 +6,7 @@ interface CssExports {
   'light': string;
   'loadoutName': string;
   'nonActiveStat': string;
+  'pointValue': string;
   'statSegment': string;
   'statSegmentContainer': string;
   'tierLightContainer': string;
