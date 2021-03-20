@@ -81,11 +81,11 @@
   },
   "Catalyst": {
     "Source": {
-      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
-      "Mission": "Complete the \"{{title}}\" mission.",
-      "Quest": "Complete the \"{{title}}\" quest.",
-      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
-      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+      "LeviathansBreath": "Trouvé en battant des ennemis puissants avec cette arme.",
+      "Mission": "Terminez la mission \"{{title}}\".",
+      "Quest": "Terminez la quête \"{{title}}\".",
+      "RuinousEffigy": "Trouvé en battant des ennemis avec des sphères de transmutation.",
+      "TheFourthHorseman": "Complétez les Bunkers de Séraphin, les tours de Séraphin et les secteurs oubliés légendaires."
     }
   },
   "Compare": {
@@ -95,7 +95,7 @@
     "ButtonHelp": "Comparer des Objets",
     "CompareBaseStats": "Afficher les Statistiques de base",
     "Error": {
-      "Unmatched": "This item doesn't match the type of items being compared."
+      "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     }
   },
   "Cooldown": {
@@ -215,6 +215,7 @@
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance. $t(Filter.PowerKeywords)",
     "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés. $t(Filter.PowerKeywords)",
@@ -230,12 +231,12 @@
     "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
-    "Stats": "Affiche les objets en fonction de la valeur d'une statistique spécifique.",
-    "StatsBase": "Filtre les armures en fonction de la valeur de base de leurs statistiques, sans inclure les mods attachés ou les pièces maîtresses.",
+    "Stats": "Affiche les objets en fonction d'une valeur de stat spécifique. Supporte l'ajout de stats en connectant plusieurs noms de stats avec le symbole +.",
+    "StatsBase": "Filtre l'armure en fonction de sa valeur de stat de base, sans inclure les mods attachés ou les pièces maîtresses. Supporte l'ajout de stat en connectant plusieurs noms de stats avec le symbole +.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "SunsetAfter": "Affiche les objets en fonction de la dernière saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
-    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
+    "Sunsets": "Affiche les objets en fonction de la première saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
     "Tags": {
       "Tag": "Affiche les objets portant une certaine étiquette.",
       "Tagged": "Affiche les objets portant une étiquette."
@@ -269,6 +270,8 @@
     "FilterHelp": "Rechercher objet/attribut, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
     "FilterHelpMenuItem": "Aide Filtres...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Rechercher triomphes et collections",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
@@ -457,11 +460,7 @@
     "SaveAs": "Enregistrer sous",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectMinStatTotal": "Minimum des Statistiques Totales D'Armure",
-    "SelectMinStatTotalDescription": "Défini le total de statistique minimal pour chaque pièce d'armure (objets de classe exclus).",
     "SelectPerks": "Sélectionner des attributs",
-    "SelectPower": "Puissance minimum",
-    "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'arsenal (pas les pièces individuelles)",
     "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs.\n\nÀ cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur ou la valeur de base de {{stats}} de certains objets inclus. C'est une limitation des informations envoyées par Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
@@ -472,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Êtes-vous sûr de vouloir abandonner cette présélection ?",
     "AddEquippedItems": "Ajouter les objets équipés",
+    "AddUnequippedItems": "Ajouter les objets non équipés",
     "AlreadyExistsClass": "Un arsenal avec ce nom existe déjà pour votre {{className}}.",
     "AlreadyExistsGlobal": "Un arsenal global avec ce nom existe déjà.",
     "Any": "Tout",
@@ -567,7 +567,7 @@
     "Weekly": "Défi Hebdomadaire"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "Quantité :"
   },
   "MovePopup": {
     "Acquired": "Cet élément est déverrouillé dans les collections.",
@@ -699,7 +699,7 @@
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
     "SecretTriumph": "Triomphe Secret",
-    "Source": "Source: {{sourceInfo}}",
+    "Source": "Source : {{sourceInfo}}",
     "StatTrackers": "Compteur de Statistiques",
     "TrackedTriumphs": "Triomphes Suivis"
   },
@@ -712,7 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
-    "DeleteAll": "Delete all unstarred searches",
+    "DeleteAll": "Supprimer toutes les recherches non favorites",
     "Description": "Ce sont toutes vos recherches passées et enregistrées. Vous pouvez les supprimer ici.",
     "Link": "Afficher et modifier l'historique de recherche",
     "Query": "Recherche",
@@ -753,7 +753,7 @@
     "SingleCharacter": "Afficher uniquement le personnage actuel",
     "SingleCharacterExplanation": "DIM masquera tout les personnages sauf celui joué le plus récemment. L'inventaire de ces personnages apparaîtra comme étant dans le coffre.",
     "SizeItem": "Taille des objets",
-    "SortByAmmoType": "Ammo Type",
+    "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",
     "SortByClassType": "Classe requise",
     "SortByPrimary": "Niveau de puissance",
