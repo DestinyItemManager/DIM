@@ -28,7 +28,6 @@ export interface ProcessItem {
   id: string;
   type: string;
   name: string;
-  // TODO: replace with isExotic?
   equippingLabel?: string;
   // TODO: only used to calculate masterwork-stats. Maybe pass in bonus or adjusted stats ahead of time
   sockets: ProcessSockets | null;
@@ -39,8 +38,6 @@ export interface ProcessItem {
     val: number;
   } | null;
   basePower: number;
-  // TODO: unused
-  stats: { [statHash: number]: number };
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
   hasLegacyModSocket: boolean;

@@ -134,7 +134,6 @@ function compareByStatOrder(
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
-  /** No idea what this is */
   /** Selected mods' total contribution to each stat */
   // TODO: use stat hash, or order
   modStatTotals: { [stat in StatTypes]: number },
