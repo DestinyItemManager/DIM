@@ -1,6 +1,6 @@
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { getAllSets, insertIntoSetTracker, SetTracker, trimWorstSet } from 'set-tracker';
+import { SetTracker } from 'set-tracker';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
@@ -170,10 +170,7 @@ export function process(
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
-  const setTracker: SetTracker = [];
-
-  let lowestTier = 100;
-  let setCount = 0;
+  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   let generalMods: ProcessMod[] = [];
   let otherMods: ProcessMod[] = [];
@@ -276,6 +273,11 @@ export function process(
               continue;
             }
 
+            // Drop this set if it could never make it
+            if (!setTracker.couldInsert(totalTier)) {
+              continue;
+            }
+
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
               hasMods &&
@@ -289,37 +291,21 @@ export function process(
               continue;
             }
 
-            // While we have fewer than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
-            if (totalTier < lowestTier) {
-              if (setCount <= RETURNED_ARMOR_SETS) {
-                lowestTier = totalTier;
-              } else {
-                // Don't continue with this set
-                continue;
-              }
-            }
-
             const newArmorSet: IntermediateProcessArmorSet = {
               armor,
               stats,
             };
 
-            insertIntoSetTracker(totalTier, tiers, newArmorSet, setTracker);
+            setTracker.insert(totalTier, tiers, newArmorSet);
 
-            setCount++;
-
-            // If we've gone over our max sets to return, drop the worst set
-            if (setCount > RETURNED_ARMOR_SETS) {
-              lowestTier = trimWorstSet(setTracker);
-              setCount--;
-            }
+            setTracker.trimWorstSet();
           }
         }
       }
     }
   }
 
-  const finalSets = getAllSets(setTracker);
+  const finalSets = setTracker.getArmorSets();
 
   const totalTime = performance.now() - pstart;
   infoLog(

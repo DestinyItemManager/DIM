@@ -1,100 +1,124 @@
 import { IntermediateProcessArmorSet } from 'types';
 import { getPower } from '../utils';
 
+interface TierSet {
+  tier: number;
+  statMixes: { statMix: string; armorSets: IntermediateProcessArmorSet[] }[];
+}
+
 /**
  * A list of stat mixes by total tier. We can keep this list up to date
  * as we process new sets with an insertion sort algorithm.
  */
-export type SetTracker = {
-  tier: number;
-  statMixes: { statMix: string; armorSets: IntermediateProcessArmorSet[] }[];
-}[];
+export class SetTracker {
+  tiers: TierSet[] = [];
+  totalSets = 0;
+  lowestTier = 100;
+  capacity: number;
 
-/**
- * Use an insertion sort algorithm to keep an ordered list of sets first by total tier, then by stat mix within a tier.
- * This takes advantage of the fact that strings are lexically comparable, but maybe it does that badly...
- */
-// TODO: replace with trie?
-export function insertIntoSetTracker(
-  tier: number,
-  statMix: string,
-  armorSet: IntermediateProcessArmorSet,
-  setTracker: SetTracker
-): void {
-  if (setTracker.length === 0) {
-    setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-    return;
+  constructor(capacity: number) {
+    this.capacity = capacity;
   }
 
-  for (let tierIndex = 0; tierIndex < setTracker.length; tierIndex++) {
-    const currentTier = setTracker[tierIndex];
+  /**
+   * A short-circuit helper to check if inserting a set at this total tier could possibly be accepted.
+   */
+  couldInsert(totalTier: number) {
+    return totalTier >= this.lowestTier || this.totalSets < this.capacity;
+  }
 
-    if (tier > currentTier.tier) {
-      setTracker.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+  /**
+   * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
+   */
+  insert(tier: number, statMix: string, armorSet: IntermediateProcessArmorSet) {
+    if (tier < this.lowestTier) {
+      this.lowestTier = tier;
+    }
+    if (this.tiers.length === 0) {
+      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+      this.totalSets++;
       return;
     }
 
-    if (tier === currentTier.tier) {
-      const currentStatMixes = currentTier.statMixes;
+    for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
+      const currentTier = this.tiers[tierIndex];
 
-      for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
-        const currentStatMix = currentStatMixes[statMixIndex];
+      if (tier > currentTier.tier) {
+        this.tiers.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+        this.totalSets++;
+        return;
+      }
 
-        if (statMix > currentStatMix.statMix) {
-          currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
-          return;
-        }
+      if (tier === currentTier.tier) {
+        const currentStatMixes = currentTier.statMixes;
 
-        if (currentStatMix.statMix === statMix) {
-          for (
-            let armorSetIndex = 0;
-            armorSetIndex < currentStatMix.armorSets.length;
-            armorSetIndex++
-          ) {
-            if (
-              getPower(armorSet.armor) > getPower(currentStatMix.armorSets[armorSetIndex].armor)
+        for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
+          const currentStatMix = currentStatMixes[statMixIndex];
+
+          if (statMix > currentStatMix.statMix) {
+            currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
+            this.totalSets++;
+            return;
+          }
+
+          if (currentStatMix.statMix === statMix) {
+            for (
+              let armorSetIndex = 0;
+              armorSetIndex < currentStatMix.armorSets.length;
+              armorSetIndex++
             ) {
-              currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
-            } else {
-              currentStatMix.armorSets.push(armorSet);
+              if (
+                getPower(armorSet.armor) > getPower(currentStatMix.armorSets[armorSetIndex].armor)
+              ) {
+                currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
+              } else {
+                currentStatMix.armorSets.push(armorSet);
+              }
+              return;
             }
+          }
+
+          if (statMixIndex === currentStatMixes.length - 1) {
+            currentStatMixes.push({ statMix, armorSets: [armorSet] });
+            this.totalSets++;
             return;
           }
         }
+      }
 
-        if (statMixIndex === currentStatMixes.length - 1) {
-          currentStatMixes.push({ statMix, armorSets: [armorSet] });
-          return;
-        }
+      if (tierIndex === this.tiers.length - 1) {
+        this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+        this.totalSets++;
+        return;
       }
     }
+  }
 
-    if (tierIndex === setTracker.length - 1) {
-      setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+  trimWorstSet() {
+    if (this.totalSets < this.capacity) {
       return;
     }
-  }
-}
 
-/**
- * Returns the lowest known tier
- */
-export function trimWorstSet(setTracker: SetTracker) {
-  const lowestTierSet = setTracker[setTracker.length - 1];
-  const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
+    const lowestTierSet = this.tiers[this.tiers.length - 1];
+    const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
 
-  worstMix.armorSets.pop();
+    worstMix.armorSets.pop();
 
-  if (worstMix.armorSets.length === 0) {
-    lowestTierSet.statMixes.pop();
+    if (worstMix.armorSets.length === 0) {
+      lowestTierSet.statMixes.pop();
 
-    if (lowestTierSet.statMixes.length === 0) {
-      setTracker.pop();
+      if (lowestTierSet.statMixes.length === 0) {
+        this.tiers.pop();
+      }
     }
+    this.lowestTier = this.tiers[this.tiers.length - 1].tier;
+    this.totalSets--;
   }
-  return setTracker[setTracker.length - 1].tier;
-}
 
-export function getAllSets(setTracker: SetTracker) {
-  return setTracker.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  /**
+   * Get all tracked armor sets as a flat list.
+   */
+  getArmorSets(): IntermediateProcessArmorSet[] {
+    return this.tiers.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  }
 }
