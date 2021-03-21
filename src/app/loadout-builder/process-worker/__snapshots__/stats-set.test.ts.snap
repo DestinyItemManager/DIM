@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`insertAll 1: internal 1`] = `
+StatsSet {
+  "statNodes": Array [
+    Object {
+      "next": Array [
+        Object {
+          "next": Array [
+            Object {
+              "items": Array [
+                "a",
+              ],
+              "next": Array [],
+              "value": 3,
+            },
+          ],
+          "value": 2,
+        },
+        Object {
+          "next": Array [
+            Object {
+              "items": Array [
+                "b",
+              ],
+              "next": Array [],
+              "value": 2,
+            },
+            Object {
+              "items": Array [
+                "c",
+              ],
+              "next": Array [],
+              "value": 1,
+            },
+          ],
+          "value": 1,
+        },
+      ],
+      "value": 1,
+    },
+  ],
+}
+`;
