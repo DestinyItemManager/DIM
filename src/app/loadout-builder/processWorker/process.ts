@@ -246,8 +246,6 @@ export function process(
               }
             }
 
-            // A string version of the tier-level of each stat, separated by commas
-            // This is an awkward implementation to save garbage allocations.
             let totalTier = 0;
             let statRangeExceeded = false;
             for (const statKey of orderedConsideredStats) {
@@ -305,6 +303,8 @@ export function process(
             };
 
             // Calculate the "tiers string" here, since most sets don't make it this far
+            // A string version of the tier-level of each stat, separated by commas
+            // This is an awkward implementation to save garbage allocations.
             let tiers = '';
             let index = 0;
             for (const statKey of orderedConsideredStats) {
@@ -340,14 +340,15 @@ export function process(
     'ms - ',
     (combos * 1000) / totalTime,
     'combos/s',
+    // Split into two objects so console.log will show them all expanded
     {
       numCantSlotMods,
       numSkippedLowTier,
       numStatRangeExceeded,
-      numInserted,
-      numRejectedAfterInsert,
     },
     {
+      numInserted,
+      numRejectedAfterInsert,
       numDoubleExotic,
     }
   );
