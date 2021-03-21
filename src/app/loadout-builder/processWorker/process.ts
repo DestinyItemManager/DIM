@@ -12,8 +12,9 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
-import { getPower, statTier } from '../utils';
+import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
+import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
   LockedProcessMods,
@@ -25,81 +26,6 @@ import {
 
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
-
-/**
- * A list of stat mixes by total tier. We can keep this list up to date
- * as we process new sets with an insertion sort algorithm.
- */
-type SetTracker = {
-  tier: number;
-  statMixes: { statMix: string; armorSets: IntermediateProcessArmorSet[] }[];
-}[];
-
-/**
- * Use an insertion sort algorithm to keep an ordered list of sets first by total tier, then by stat mix within a tier.
- * This takes advantage of the fact that strings are lexically comparable, but maybe it does that badly...
- */
-// TODO: replace with trie?
-function insertIntoSetTracker(
-  tier: number,
-  statMix: string,
-  armorSet: IntermediateProcessArmorSet,
-  setTracker: SetTracker
-): void {
-  if (setTracker.length === 0) {
-    setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-    return;
-  }
-
-  for (let tierIndex = 0; tierIndex < setTracker.length; tierIndex++) {
-    const currentTier = setTracker[tierIndex];
-
-    if (tier > currentTier.tier) {
-      setTracker.splice(tierIndex, 0, { tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-      return;
-    }
-
-    if (tier === currentTier.tier) {
-      const currentStatMixes = currentTier.statMixes;
-
-      for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
-        const currentStatMix = currentStatMixes[statMixIndex];
-
-        if (statMix > currentStatMix.statMix) {
-          currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
-          return;
-        }
-
-        if (currentStatMix.statMix === statMix) {
-          for (
-            let armorSetIndex = 0;
-            armorSetIndex < currentStatMix.armorSets.length;
-            armorSetIndex++
-          ) {
-            if (
-              getPower(armorSet.armor) > getPower(currentStatMix.armorSets[armorSetIndex].armor)
-            ) {
-              currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
-            } else {
-              currentStatMix.armorSets.push(armorSet);
-            }
-            return;
-          }
-        }
-
-        if (statMixIndex === currentStatMixes.length - 1) {
-          currentStatMixes.push({ statMix, armorSets: [armorSet] });
-          return;
-        }
-      }
-    }
-
-    if (tierIndex === setTracker.length - 1) {
-      setTracker.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
-      return;
-    }
-  }
-}
 
 /**
  * Generate a comparator that sorts first by the total of the considered stats,
@@ -244,10 +170,7 @@ export function process(
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
-  const setTracker: SetTracker = [];
-
-  let lowestTier = 100;
-  let setCount = 0;
+  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   let generalMods: ProcessMod[] = [];
   let otherMods: ProcessMod[] = [];
@@ -269,14 +192,25 @@ export function process(
   const raidModPermutations = generateModPermutations(raidMods);
   const hasMods = otherMods.length || raidMods.length || generalMods.length;
 
+  let numSkippedLowTier = 0;
+  let numStatRangeExceeded = 0;
+  let numCantSlotMods = 0;
+  let numInserted = 0;
+  let numRejectedAfterInsert = 0;
+  let numDoubleExotic = 0;
+
+  // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
+
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (helm.equippingLabel && gaunt.equippingLabel) {
+        numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
         if (chest.equippingLabel && (helm.equippingLabel || gaunt.equippingLabel)) {
+          numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
@@ -284,6 +218,7 @@ export function process(
             leg.equippingLabel &&
             (chest.equippingLabel || helm.equippingLabel || gaunt.equippingLabel)
           ) {
+            numDoubleExotic += classItems.length;
             continue;
           }
           for (const classItem of classItems) {
@@ -307,23 +242,19 @@ export function process(
               // itemStats are already in the user's chosen stat order
               for (const statType of statOrder) {
                 stats[statType] = stats[statType] + itemStats[index];
+                // Stats can't exceed 100 even with mods. At least, today they
+                // can't - we *could* pass the max value in from the stat def.
+                // Math.min is slow.
+                if (stats[statType] > 100) {
+                  stats[statType] = 100;
+                }
                 index++;
               }
             }
 
-            // A string version of the tier-level of each stat, separated by commas
-            // This is an awkward implementation to save garbage allocations.
-            let tiers = '';
             let totalTier = 0;
-            let index = 0;
             let statRangeExceeded = false;
             for (const statKey of orderedConsideredStats) {
-              // Stats can't exceed 100 even with mods. At least, today they
-              // can't - we *could* pass the max value in from the stat def.
-              // Math.min is slow.
-              if (stats[statKey] > 100) {
-                stats[statKey] = 100;
-              }
               const tier = statTier(stats[statKey]);
 
               // Update our global min/max for this stat
@@ -338,25 +269,18 @@ export function process(
                 statRangeExceeded = true;
                 break;
               }
-              tiers += tier;
               totalTier += tier;
-              if (index < statOrder.length - 1) {
-                tiers += ',';
-              }
-              index++;
             }
 
             if (statRangeExceeded) {
+              numStatRangeExceeded++;
               continue;
             }
 
-            // While we have less than RETURNED_ARMOR_SETS sets keep adding and keep track of the lowest total tier.
-            if (totalTier < lowestTier) {
-              if (setCount <= RETURNED_ARMOR_SETS) {
-                lowestTier = totalTier;
-              } else {
-                continue;
-              }
+            // Drop this set if it could never make it
+            if (!setTracker.couldInsert(totalTier)) {
+              numSkippedLowTier++;
+              continue;
             }
 
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
@@ -369,6 +293,7 @@ export function process(
                 armor
               )
             ) {
+              numCantSlotMods++;
               continue;
             }
 
@@ -377,26 +302,23 @@ export function process(
               stats,
             };
 
-            insertIntoSetTracker(totalTier, tiers, newArmorSet, setTracker);
-
-            setCount++;
-
-            // If we've gone over our max sets to return, drop the worst set
-            if (setCount > RETURNED_ARMOR_SETS) {
-              const lowestTierSet = setTracker[setTracker.length - 1];
-              const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
-
-              worstMix.armorSets.pop();
-              setCount--;
-
-              if (worstMix.armorSets.length === 0) {
-                lowestTierSet.statMixes.pop();
-
-                if (lowestTierSet.statMixes.length === 0) {
-                  setTracker.pop();
-                  lowestTier = setTracker[setTracker.length - 1].tier;
-                }
+            // Calculate the "tiers string" here, since most sets don't make it this far
+            // A string version of the tier-level of each stat, separated by commas
+            // This is an awkward implementation to save garbage allocations.
+            let tiers = '';
+            let index = 0;
+            for (const statKey of orderedConsideredStats) {
+              const tier = statTier(stats[statKey]);
+              tiers += tier;
+              if (index < statOrder.length - 1) {
+                tiers += ',';
               }
+              index++;
+            }
+
+            numInserted++;
+            if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
+              numRejectedAfterInsert++;
             }
           }
         }
@@ -404,7 +326,7 @@ export function process(
     }
   }
 
-  const finalSets = setTracker.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  const finalSets = setTracker.getArmorSets();
 
   const totalTime = performance.now() - pstart;
   infoLog(
@@ -417,7 +339,18 @@ export function process(
     totalTime,
     'ms - ',
     (combos * 1000) / totalTime,
-    'combos/s'
+    'combos/s',
+    // Split into two objects so console.log will show them all expanded
+    {
+      numCantSlotMods,
+      numSkippedLowTier,
+      numStatRangeExceeded,
+    },
+    {
+      numInserted,
+      numRejectedAfterInsert,
+      numDoubleExotic,
+    }
   );
 
   return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
