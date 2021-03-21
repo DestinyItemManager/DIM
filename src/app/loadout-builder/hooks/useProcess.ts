@@ -7,7 +7,7 @@ import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -38,12 +38,12 @@ interface ProcessState {
     combosWithoutCaps: number;
     statRanges?: { [stat in StatTypes]: MinMax };
   } | null;
-  currentCleanup: (() => void) | null;
 }
 
 /**
  * Hook to process all the stat groups for LO in a web worker.
  */
+// TODO: introduce params object
 export function useProcess(
   selectedStoreId: string | undefined,
   filteredItems: ItemsByBucket,
@@ -53,35 +53,42 @@ export function useProcess(
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
-  const [{ result, resultStoreId, processing, currentCleanup }, setState] = useState({
+  const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStoreId,
     result: null,
-    currentCleanup: null,
-  } as ProcessState);
+  });
 
-  const { worker, cleanup } = useWorkerAndCleanup(
-    filteredItems,
-    lockedItems,
-    lockedModMap,
-    assumeMasterwork,
-    statOrder,
-    statFilters
+  const cleanupRef = useRef<(() => void) | null>();
+
+  // Cleanup worker on unmount
+  useEffect(
+    () => () => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    },
+    []
   );
-
-  if (currentCleanup && currentCleanup !== cleanup) {
-    currentCleanup();
-  }
 
   useEffect(() => {
     const processStart = performance.now();
 
-    setState({
+    // Stop any previous worker
+    if (cleanupRef.current) {
+      cleanupRef.current();
+    }
+
+    const { worker, cleanup } = createWorker();
+    cleanupRef.current = cleanup;
+
+    setState((state) => ({
       processing: true,
       resultStoreId: selectedStoreId,
-      result: selectedStoreId === resultStoreId ? result : null,
+      result: selectedStoreId === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
-    });
+    }));
 
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
     const raidCombatAndLegacyMods = Object.entries(
@@ -91,7 +98,7 @@ export function useProcess(
     );
 
     const processItems: ProcessItemsByBucket = {};
-    const itemsById: { [id: string]: DimItem[] } = {};
+    const itemsById = new Map<string, DimItem[]>();
 
     for (const [key, items] of Object.entries(filteredItems)) {
       processItems[key] = [];
@@ -111,7 +118,7 @@ export function useProcess(
           processItems[key].push(
             mapDimItemToProcessItem(item, lockedModMap[bucketsToCategories[item.bucket.hash]])
           );
-          itemsById[item.id] = group;
+          itemsById.set(item.id, group);
         }
       }
     }
@@ -121,6 +128,7 @@ export function useProcess(
       (mods) => mods?.map((mod) => mapArmor2ModToProcessMod(mod)) || []
     );
 
+    // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
     const workerStart = performance.now();
     worker
       .process(
@@ -147,46 +155,26 @@ export function useProcess(
             combosWithoutCaps,
             statRanges,
           },
-          currentCleanup: null,
         }));
 
         infoLog('loadout optimizer', `useProcess ${performance.now() - processStart}ms`);
+      })
+      // Cleanup the worker, we don't need it anymore.
+      .finally(() => {
+        cleanup();
+        cleanupRef.current = null;
       });
-    /* do not include things from state or worker in dependencies */
-    /* eslint-disable react-hooks/exhaustive-deps */
-  }, [filteredItems, lockedItems, lockedModMap, assumeMasterwork, statOrder, statFilters]);
-
-  return { result, processing };
-}
-
-/**
- * Creates a worker and a cleanup function for the worker.
- *
- * The worker and cleanup are memoized so that when the any of the inputs are changed a new one is created.
- *
- * The worker will be cleaned up when the component unmounts.
- */
-function useWorkerAndCleanup(
-  filteredItems: ItemsByBucket,
-  lockedItems: LockedMap,
-  lockedModMap: LockedModMap,
-  assumeMasterwork: boolean,
-  statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
-) {
-  const { worker, cleanup } = useMemo(() => createWorker(), [
+  }, [
     filteredItems,
     lockedItems,
     lockedModMap,
     assumeMasterwork,
     statOrder,
     statFilters,
+    selectedStoreId,
   ]);
 
-  // cleanup the worker on unmount
-  useEffect(() => cleanup, [worker, cleanup]);
-
-  return { worker, cleanup };
+  return { result, processing };
 }
 
 function createWorker() {

@@ -91,12 +91,10 @@ function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
 export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMod[]): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
-  const statMap: { [statHash: number]: number } = {};
   const baseStatMap: { [statHash: number]: number } = {};
 
   if (stats) {
-    for (const { statHash, value, base } of stats) {
-      statMap[statHash] = value;
+    for (const { statHash, base } of stats) {
       baseStatMap[statHash] = base;
     }
   }
@@ -113,7 +111,6 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
     name,
     equippingLabel,
     basePower,
-    stats: statMap,
     baseStats: baseStatMap,
     sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energy:
@@ -130,12 +127,12 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: { [id: string]: DimItem[] }
+  itemsById: Map<string, DimItem[]>
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
   for (const itemId of processed.armor) {
-    armor.push(itemsById[itemId]);
+    armor.push(itemsById.get(itemId)!);
   }
 
   return {

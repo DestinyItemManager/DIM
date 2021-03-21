@@ -29,6 +29,7 @@ export interface ProcessItem {
   type: string;
   name: string;
   equippingLabel?: string;
+  // TODO: only used to calculate masterwork-stats. Maybe pass in bonus or adjusted stats ahead of time
   sockets: ProcessSockets | null;
   energy: {
     type: DestinyEnergyType;
@@ -37,7 +38,6 @@ export interface ProcessItem {
     val: number;
   } | null;
   basePower: number;
-  stats: { [statHash: number]: number };
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
   hasLegacyModSocket: boolean;
@@ -52,8 +52,6 @@ export interface ProcessArmorSet {
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  readonly statChoices: readonly number[][];
 }
 
 export interface IntermediateProcessArmorSet {
@@ -61,8 +59,6 @@ export interface IntermediateProcessArmorSet {
   stats: { [statType in StatTypes]: number };
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  statChoices: number[][];
 }
 
 interface ProcessStat {
