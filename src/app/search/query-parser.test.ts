@@ -63,8 +63,8 @@ const equivalentSearches = [
     'is:blue is:weapon or is:armor not:maxpower',
     'is:blue and (is:weapon or is:armor) and -is:maxpower',
   ],
-  ['not forgotten', '"not forgotten"'],
-  ['cluster tracking', '"cluster tracking"'],
+  ['not forgotten', '-"forgotten"'],
+  ['cluster tracking', '"cluster" and "tracking"'],
   [
     'is:weapon and is:sniperrifle or not is:armor and modslot:arrival',
     '(is:weapon and is:sniperrifle) or (-is:armor and modslot:arrival)',
@@ -90,14 +90,14 @@ const canonicalize = [
   ['is:blue is:haspower not:maxpower', 'is:blue is:haspower -is:maxpower'],
   [
     'is:weapon and is:sniperrifle or not is:armor and modslot:arrival',
-    '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)',
+    '(is:weapon is:sniperrifle) or (-is:armor modslot:arrival)',
   ],
   [
     'is:rocketlauncher perk:"cluster" or perk:\'tracking module\'',
-    'is:rocketlauncher (perk:"tracking module" or perk:cluster)',
+    'is:rocketlauncher (perk:cluster or perk:"tracking module")',
   ],
-  ['( power:>1000 and -modslot:arrival ) ', '-modslot:arrival power:>1000'],
-  ['food fight', '"food fight"'],
+  ['( power:>1000 and -modslot:arrival ) ', 'power:>1000 -modslot:arrival'],
+  ['food fight', 'food and fight'],
 ];
 
 test.each(cases)('parse |%s|', (query) => {
