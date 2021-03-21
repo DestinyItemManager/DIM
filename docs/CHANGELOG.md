@@ -3,6 +3,14 @@
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
 * Added a new `is:pinnaclereward` search that searches for pinnacle rewards.
+* DIM Sync now less picky about saving very simple searches.
+* Fix mis-sized kill tracker icons in Organizer.
+* Support addition syntax in stat filters, i.e. `stat:recovery+mobility:>30`
+* Mulligan now shows up as a Wishlisted perk.
+* Search bar expands more readily to replace the top tabs, so the field isn't squished really tiny.
+* Loadout Optimizer
+  * Reposition some misplaced pieces of UI
+  * Improvements fixes and optimizations
 
 ## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
 
