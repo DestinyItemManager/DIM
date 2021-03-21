@@ -282,8 +282,8 @@ export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
-  query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
+  query = query.replace(/[\u2018\u2019\u201A]/g, "'");
+  query = query.replace(/[\u201C\u201D\u201E]/g, '"');
 
   let match: string | undefined;
   let i = 0;
