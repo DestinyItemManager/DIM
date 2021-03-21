@@ -2,7 +2,7 @@
 
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
-* Added a new `is:pinnaclereward` search that searches for pinnacle rewards.
+* Added a new `is:pinnaclereward` search that searches for pinnacle rewards on the Progress page.
 * DIM Sync now less picky about saving very simple searches.
 * Fix mis-sized kill tracker icons in Organizer.
 * Support addition syntax in stat filters, i.e. `stat:recovery+mobility:>30`
@@ -10,7 +10,9 @@
 * Search bar expands more readily to replace the top tabs, so the field isn't squished really tiny.
 * Loadout Optimizer
   * Reposition some misplaced pieces of UI
-  * Improvements fixes and optimizations
+  * Performance optimizations and some tweaks that could theoretically include some builds that wouldn't have shown up before.
+  * Fixed an issue that would show builds with more than 100 in a single stat once mods were included.
+  * Removed the minimum power and minimum stat total filters. Minimum power didn't see much use and minimum stat total can be achieved by searching `basestat:total:>52` in the search bar.
 
 ## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
 
