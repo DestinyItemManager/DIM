@@ -22,7 +22,7 @@ export default function GeneratedSetButtons({
   set,
   canCompareLoadouts,
   lockedArmor2Mods,
-  plusFiveMods,
+  halfTierMods,
   onLoadoutSet,
   lbDispatch,
 }: {
@@ -30,7 +30,7 @@ export default function GeneratedSetButtons({
   set: ArmorSet;
   canCompareLoadouts: boolean;
   lockedArmor2Mods: LockedModMap;
-  plusFiveMods: PluggableInventoryItemDefinition[];
+  halfTierMods: PluggableInventoryItemDefinition[];
   onLoadoutSet(loadout: Loadout): void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
@@ -59,7 +59,7 @@ export default function GeneratedSetButtons({
     const maxNumberOfPlusFiveMods =
       5 - (lockedArmor2Mods[armor2PlugCategoryHashesByName.general]?.length || 0);
 
-    const plusFiveModsToAdd = plusFiveMods
+    const halfTierModsToAdd = halfTierMods
       .filter((mod) =>
         mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
       )
@@ -67,7 +67,7 @@ export default function GeneratedSetButtons({
 
     const newModSet = _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef));
     newModSet[armor2PlugCategoryHashesByName.general] = [
-      ...plusFiveModsToAdd,
+      ...halfTierModsToAdd,
       ...(newModSet[armor2PlugCategoryHashesByName.general] || []),
     ];
     lbDispatch({ type: 'lockedArmor2ModsChanged', lockedArmor2Mods: newModSet });
@@ -92,7 +92,7 @@ export default function GeneratedSetButtons({
       </button>
       {Boolean(statsWithPlus5.length) && (
         <button type="button" className="dim-button" onClick={onQuickAddPlusFiveMods}>
-          {t('LoadoutBuilder.AddPlusFiveMods')}
+          {t('LoadoutBuilder.AddHalfTierMods')}
         </button>
       )}
     </div>

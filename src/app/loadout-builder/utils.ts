@@ -1,9 +1,9 @@
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
+import { TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ProcessItem } from './processWorker/types';
-import { LockedItemType, LockedMod, statValues } from './types';
+import { LockedItemType, statValues } from './types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk picker. We only want exotic perks.
@@ -81,17 +81,6 @@ export function isLoadoutBuilderItem(item: DimItem) {
 
 export function statTier(stat: number) {
   return _.clamp(Math.floor(stat / 10), 0, 10);
-}
-
-/**
- * Checks to see if some mod in a collection of LockedMod or LockedMod,
- * has an elemental (non-Any) energy requirement
- */
-export function someModHasEnergyRequirement(mods: LockedMod[]) {
-  return mods.some(
-    (mod) =>
-      !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
-  );
 }
 
 /**

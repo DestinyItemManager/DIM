@@ -440,6 +440,7 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",

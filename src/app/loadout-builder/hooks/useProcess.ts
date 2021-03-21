@@ -8,6 +8,7 @@ import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
+import { someModHasEnergyRequirement } from '../mod-utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -27,7 +28,6 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
-import { someModHasEnergyRequirement } from '../utils';
 
 interface ProcessState {
   processing: boolean;

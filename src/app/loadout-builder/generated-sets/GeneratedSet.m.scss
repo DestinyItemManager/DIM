@@ -1,16 +1,23 @@
 @import '../../variables.scss';
 
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+  @include phone-portrait {
+    flex-direction: column;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
 .build {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   padding: 10px 0 4px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-
-  @include phone-portrait {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
 }
 
 .header {
@@ -32,11 +39,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0;
-  //max-width: 800px;
-
-  @include phone-portrait {
-    justify-content: space-around;
-  }
+  max-width: 800px;
 
   // Prevents odd number of columns messing up the layout
   @media (max-width: 1079px) {

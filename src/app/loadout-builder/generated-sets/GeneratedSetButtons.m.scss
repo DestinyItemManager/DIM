@@ -1,8 +1,16 @@
+@import '../../variables.scss';
+
 .buttons {
   width: min-content;
   text-align: center;
-  margin-right: 14px;
-  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+
+  @include phone-portrait {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+  }
 
   @media (min-width: 1080px) {
     margin-right: 0;
@@ -19,8 +27,10 @@
     );
     margin-bottom: 4px;
     padding: 5px;
-    &:last-child {
-      margin-bottom: 0;
+
+    @include phone-portrait {
+      margin-right: 4px;
+      width: auto;
     }
   }
 }

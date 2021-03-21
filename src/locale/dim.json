@@ -423,6 +423,7 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "ChooseAlternate": "Choose another item with the same stats:",

@@ -132,3 +132,14 @@ export function assignModsToArmorSet(
 
   return [assignedMods, unassignedMods];
 }
+
+/**
+ * Checks to see if some mod in a collection of LockedMod or LockedMod,
+ * has an elemental (non-Any) energy requirement
+ */
+export function someModHasEnergyRequirement(mods: LockedMod[]) {
+  return mods.some(
+    (mod) =>
+      !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
+  );
+}

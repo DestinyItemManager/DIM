@@ -15,8 +15,8 @@ import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } fr
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { someModHasEnergyRequirement } from '../mod-utils';
 import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
-import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -34,7 +34,7 @@ interface Props {
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
-  plusFiveMods: PluggableInventoryItemDefinition[];
+  halfTierMods: PluggableInventoryItemDefinition[];
 }
 
 function numColumns(set: ArmorSet) {
@@ -60,7 +60,7 @@ export default function GeneratedSets({
   loadouts,
   lbDispatch,
   params,
-  plusFiveMods,
+  halfTierMods,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -167,7 +167,7 @@ export default function GeneratedSets({
           lockedArmor2Mods={lockedArmor2Mods}
           loadouts={loadouts}
           params={params}
-          plusFiveMods={plusFiveMods}
+          halfTierMods={halfTierMods}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -195,7 +195,7 @@ export default function GeneratedSets({
                   lockedArmor2Mods={lockedArmor2Mods}
                   loadouts={loadouts}
                   params={params}
-                  plusFiveMods={plusFiveMods}
+                  halfTierMods={halfTierMods}
                 />
               )}
               scrollTop={scrollTop}
