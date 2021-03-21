@@ -242,6 +242,12 @@ export function process(
               // itemStats are already in the user's chosen stat order
               for (const statType of statOrder) {
                 stats[statType] = stats[statType] + itemStats[index];
+                // Stats can't exceed 100 even with mods. At least, today they
+                // can't - we *could* pass the max value in from the stat def.
+                // Math.min is slow.
+                if (stats[statType] > 100) {
+                  stats[statType] = 100;
+                }
                 index++;
               }
             }
@@ -249,12 +255,6 @@ export function process(
             let totalTier = 0;
             let statRangeExceeded = false;
             for (const statKey of orderedConsideredStats) {
-              // Stats can't exceed 100 even with mods. At least, today they
-              // can't - we *could* pass the max value in from the stat def.
-              // Math.min is slow.
-              if (stats[statKey] > 100) {
-                stats[statKey] = 100;
-              }
               const tier = statTier(stats[statKey]);
 
               // Update our global min/max for this stat
