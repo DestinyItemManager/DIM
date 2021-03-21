@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
+import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -55,19 +56,31 @@ export default function GeneratedSetButtons({
     }
   }
 
-  const onQuickAddPlusFiveMods = () => {
+  const onQuickAddHalfTierMods = () => {
     const maxNumberOfPlusFiveMods =
       5 - (lockedArmor2Mods[armor2PlugCategoryHashesByName.general]?.length || 0);
 
-    const halfTierModsToAdd = halfTierMods
-      .filter((mod) =>
-        mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
-      )
-      .slice(0, maxNumberOfPlusFiveMods);
+    const halfTierModsToAdd = halfTierMods.filter((mod) =>
+      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
+    );
+    const halfTierModsCapped = halfTierModsToAdd.slice(0, maxNumberOfPlusFiveMods);
+
+    if (statsWithPlus5.length > maxNumberOfPlusFiveMods) {
+      const failures = halfTierModsToAdd
+        .slice(maxNumberOfPlusFiveMods)
+        .map((mod) => mod.displayProperties.name)
+        .join(', ');
+
+      showNotification({
+        title: t('LoadoutBuilder.UnableToAddAllMods'),
+        body: t('LoadoutBuilder.UnableToAddAllModsBody', { mods: failures }),
+        type: 'warning',
+      });
+    }
 
     const newModSet = _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef));
     newModSet[armor2PlugCategoryHashesByName.general] = [
-      ...halfTierModsToAdd,
+      ...halfTierModsCapped,
       ...(newModSet[armor2PlugCategoryHashesByName.general] || []),
     ];
     lbDispatch({ type: 'lockedArmor2ModsChanged', lockedArmor2Mods: newModSet });
@@ -91,7 +104,7 @@ export default function GeneratedSetButtons({
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
       {Boolean(statsWithPlus5.length) && (
-        <button type="button" className="dim-button" onClick={onQuickAddPlusFiveMods}>
+        <button type="button" className="dim-button" onClick={onQuickAddHalfTierMods}>
           {t('LoadoutBuilder.AddHalfTierMods')}
         </button>
       )}

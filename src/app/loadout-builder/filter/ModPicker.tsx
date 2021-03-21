@@ -30,6 +30,13 @@ import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
+// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
+);
+
 interface ProvidedProps {
   lockedArmor2Mods: LockedModMap;
   classType: DestinyClass;
@@ -47,13 +54,6 @@ interface StoreProps {
 }
 
 type Props = ProvidedProps & StoreProps;
-
-// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => mod.plug.energyCost?.energyType),
-  compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
-);
 
 /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
 
