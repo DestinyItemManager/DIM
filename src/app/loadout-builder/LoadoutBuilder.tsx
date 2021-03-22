@@ -14,7 +14,6 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -74,17 +73,17 @@ function mapStateToProps() {
         if (!item || !isLoadoutBuilderItem(item)) {
           continue;
         }
-        for (const classType of item.classType === DestinyClass.Unknown
-          ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
-          : [item.classType]) {
-          if (!items[classType]) {
-            items[classType] = {};
-          }
-          if (!items[classType][item.bucket.hash]) {
-            items[classType][item.bucket.hash] = [];
-          }
-          items[classType][item.bucket.hash].push(item);
+        const { classType, bucket } = item;
+
+        if (!items[classType]) {
+          items[classType] = {};
         }
+
+        if (!items[classType][bucket.hash]) {
+          items[classType][bucket.hash] = [];
+        }
+
+        items[classType][bucket.hash].push(item);
       }
 
       return items;
