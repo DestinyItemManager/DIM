@@ -2,7 +2,6 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
 import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import heavy from 'destiny-icons/general/ammo_heavy.svg';
@@ -54,14 +53,7 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
               <ElementIcon element={item.element} className={styles.elementIcon} />
             )}
           <div className={styles.power}>{item.primStat?.value}</div>
-          {item.powerCap && (
-            <div className={styles.powerCap}>
-              | {item.powerCap}{' '}
-              {t('Stats.FinalSeason', {
-                finalSeason: getItemPowerCapFinalSeason(item),
-              })}
-            </div>
-          )}
+          {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
           {item.pursuit?.questStepNum && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {

@@ -17,7 +17,6 @@ export function ItemSubHeader({ item }: { item: DimItem }) {
 
   const subtitleData = {
     light,
-    maxLight: item.powerCap,
     statName: item.primStat?.stat.displayProperties.name,
     classType: classType ? classType : ' ',
     typeName: item.typeName,
