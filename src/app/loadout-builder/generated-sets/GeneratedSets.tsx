@@ -47,7 +47,7 @@ function getMeasureSetAndIndicator(sets, isPhonePortrait): [ArmorSet | undefined
         }
       }
 
-      if (countWithExoticPerkOrSwapIcon > indicator) {
+      if (countWithExoticPerkOrSwapIcon > recalcTrigger) {
         recalcTrigger = countWithExoticPerkOrSwapIcon;
       }
 
@@ -58,7 +58,7 @@ function getMeasureSetAndIndicator(sets, isPhonePortrait): [ArmorSet | undefined
     measureSet = sets.find((set) =>
       set.armor.some((items) => {
         const hasTaller = hasExoticPerkOrSwapIcon(items);
-        if (!indicator && hasTaller) {
+        if (!recalcTrigger && hasTaller) {
           recalcTrigger = 1;
         }
         return hasTaller;
