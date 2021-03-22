@@ -2,7 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
@@ -11,7 +11,7 @@ import {
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
@@ -37,13 +37,6 @@ interface Props {
   halfTierMods: PluggableInventoryItemDefinition[];
 }
 
-function numColumns(set: ArmorSet) {
-  return _.sumBy(set.armor, (items) => {
-    const item = items[0];
-    return (item.sockets && _.max(item.sockets.categories.map((c) => c.sockets.length))) || 0;
-  });
-}
-
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
@@ -61,19 +54,17 @@ export default function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
+  isPhonePortrait,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
     rowHeight: number;
     rowWidth: number;
   }>({ rowHeight: 0, rowWidth: 0 });
-  const rowColumns = useMemo(() => sets.reduce((memo, set) => Math.max(memo, numColumns(set)), 0), [
-    sets,
-  ]);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
-  }, [rowColumns]);
+  }, [sets]);
 
   useEffect(() => {
     const handleWindowResize = () =>
@@ -105,9 +96,30 @@ export default function GeneratedSets({
     [rowHeight]
   );
 
+  /** A single set which we determine to have the greatest height when rendered. */
   let measureSet: ArmorSet | undefined;
-  if (sets.length > 0 && rowHeight === 0 && rowColumns !== 0) {
-    measureSet = _.maxBy(sets, numColumns);
+  // On first render we find the heightest list item so we can render it and determine the height.
+  if (sets.length > 0 && rowHeight === 0) {
+    /** Taller item groups have either the swap icon under the item of an exotic perk. */
+    const hasExoticPerkOrSwapIcon = (items: DimItem[]) =>
+      items.length > 1 || items.some((item) => item.isExotic);
+
+    // In phone portrait we have 2 columns and 3 rows of items.
+    if (isPhonePortrait) {
+      measureSet = _.maxBy(sets, (set) => {
+        let countWithExoticPerkOrSwapIcon = 0;
+        // So we look on those rows for items with the swap icon or an exotic perk.
+        for (const indexes of [[0, 1], [2, 3], [4]]) {
+          if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+            countWithExoticPerkOrSwapIcon++;
+          }
+        }
+        return countWithExoticPerkOrSwapIcon;
+      });
+    } else {
+      // when not in phone portrait we just find one set that has a taller item.
+      measureSet = sets.find((set) => set.armor.some(hasExoticPerkOrSwapIcon));
+    }
   }
 
   let groupingDescription;
