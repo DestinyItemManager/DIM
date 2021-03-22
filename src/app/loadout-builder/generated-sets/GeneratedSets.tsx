@@ -20,6 +20,55 @@ import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
+/** Taller item groups have either the swap icon under the item of an exotic perk. */
+function hasExoticPerkOrSwapIcon(items: DimItem[]) {
+  return items.length > 1 || items.some((item) => item.isExotic);
+}
+
+/**
+ * Gets the set used to measure how high a row can be. It also returns a recalcTrigger that is
+ * intended to trigger a recalculation when the value changes.
+ *
+ * It figures out the tallest row by looking at items with exotic perks and swap icons.
+ * Exotic perks add another row to the mod icons and the swap icon sits below the item image.
+ * The height they add is roughly equivalent so we treat both conditions equally.
+ */
+function getMeasureSetAndIndicator(sets, isPhonePortrait): [ArmorSet | undefined, number] {
+  // In phone portrait we have 2 columns and 3 rows of items.
+  let measureSet: ArmorSet | undefined;
+  let recalcTrigger = 0;
+  if (isPhonePortrait) {
+    measureSet = _.maxBy(sets, (set) => {
+      let countWithExoticPerkOrSwapIcon = 0;
+      // So we look on those rows for items with the swap icon or an exotic perk.
+      for (const indexes of [[0, 1], [2, 3], [4]]) {
+        if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+          countWithExoticPerkOrSwapIcon++;
+        }
+      }
+
+      if (countWithExoticPerkOrSwapIcon > indicator) {
+        recalcTrigger = countWithExoticPerkOrSwapIcon;
+      }
+
+      return countWithExoticPerkOrSwapIcon;
+    });
+  } else {
+    // when not in phone portrait we just find one set that has a taller item.
+    measureSet = sets.find((set) =>
+      set.armor.some((items) => {
+        const hasTaller = hasExoticPerkOrSwapIcon(items);
+        if (!indicator && hasTaller) {
+          recalcTrigger = 1;
+        }
+        return hasTaller;
+      })
+    );
+  }
+
+  return [measureSet, recalcTrigger];
+}
+
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -62,9 +111,12 @@ export default function GeneratedSets({
     rowWidth: number;
   }>({ rowHeight: 0, rowWidth: 0 });
 
+  // eslint-disable-next-line prefer-const
+  let [measureSet, recalcTrigger] = getMeasureSetAndIndicator(sets, isPhonePortrait);
+
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
-  }, [sets]);
+  }, [recalcTrigger]);
 
   useEffect(() => {
     const handleWindowResize = () =>
@@ -96,30 +148,9 @@ export default function GeneratedSets({
     [rowHeight]
   );
 
-  /** A single set which we determine to have the greatest height when rendered. */
-  let measureSet: ArmorSet | undefined;
-  // On first render we find the heightest list item so we can render it and determine the height.
-  if (sets.length > 0 && rowHeight === 0) {
-    /** Taller item groups have either the swap icon under the item of an exotic perk. */
-    const hasExoticPerkOrSwapIcon = (items: DimItem[]) =>
-      items.length > 1 || items.some((item) => item.isExotic);
-
-    // In phone portrait we have 2 columns and 3 rows of items.
-    if (isPhonePortrait) {
-      measureSet = _.maxBy(sets, (set) => {
-        let countWithExoticPerkOrSwapIcon = 0;
-        // So we look on those rows for items with the swap icon or an exotic perk.
-        for (const indexes of [[0, 1], [2, 3], [4]]) {
-          if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
-            countWithExoticPerkOrSwapIcon++;
-          }
-        }
-        return countWithExoticPerkOrSwapIcon;
-      });
-    } else {
-      // when not in phone portrait we just find one set that has a taller item.
-      measureSet = sets.find((set) => set.armor.some(hasExoticPerkOrSwapIcon));
-    }
+  // If we already have row height we dont want to render the measure set.
+  if (rowHeight !== 0) {
+    measureSet = undefined;
   }
 
   let groupingDescription;
