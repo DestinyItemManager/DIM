@@ -1,5 +1,7 @@
 ## Next
 
+## 6.57.0 <span class="changelog-date">(2021-03-21)</span>
+
 * We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
