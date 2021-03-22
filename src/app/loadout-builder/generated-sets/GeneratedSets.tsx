@@ -55,15 +55,16 @@ function getMeasureSetAndIndicator(sets, isPhonePortrait): [ArmorSet | undefined
     });
   } else {
     // when not in phone portrait we just find one set that has a taller item.
-    measureSet = sets.find((set) =>
-      set.armor.some((items) => {
-        const hasTaller = hasExoticPerkOrSwapIcon(items);
-        if (!recalcTrigger && hasTaller) {
-          recalcTrigger = 1;
-        }
-        return hasTaller;
-      })
-    );
+    measureSet =
+      sets.find((set) =>
+        set.armor.some((items) => {
+          const hasTaller = hasExoticPerkOrSwapIcon(items);
+          if (!recalcTrigger && hasTaller) {
+            recalcTrigger = 1;
+          }
+          return hasTaller;
+        })
+      ) || sets[0];
   }
 
   return [measureSet, recalcTrigger];
