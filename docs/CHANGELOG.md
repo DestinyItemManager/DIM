@@ -1,5 +1,7 @@
 ## Next
 
+## 6.57.1 <span class="changelog-date">(2021-03-22)</span>
+
 * Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
 * Fix Loadout Optimizer acting as if "Assume Masterworked" was always checked.
 
