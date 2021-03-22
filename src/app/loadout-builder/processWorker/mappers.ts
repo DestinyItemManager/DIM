@@ -117,6 +117,7 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
       dimItem.energy && costInitial !== null
         ? {
             type: dimItem.energy.energyType,
+            capacity: dimItem.energy.energyCapacity,
             val: costInitial,
           }
         : null,

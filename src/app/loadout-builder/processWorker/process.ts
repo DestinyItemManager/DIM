@@ -368,7 +368,7 @@ function getStatValuesWithMWProcess(
 
   // Checking energy tells us if it is Armour 2.0 (it can have value 0)
   if (item.sockets && item.energy) {
-    if (assumeMasterwork || item.energy) {
+    if (assumeMasterwork || item.energy.capacity === 10) {
       // TODO: technically we could derive this from the available mods instead ("slot" them all)
       // Alternately we could make a lot more assumptions and just say if the energy capacity is 10, add 2 to every stat
       for (const statHash of orderedStatValues) {

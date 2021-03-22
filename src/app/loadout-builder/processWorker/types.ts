@@ -33,8 +33,12 @@ export interface ProcessItem {
   sockets: ProcessSockets | null;
   energy: {
     type: DestinyEnergyType;
-    /** This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
-     * function for ProcessItems and ProcessMods. */
+    /** The energy capacity of the item, e.g. if masterworked this will be 10 */
+    capacity: number;
+    /**
+     * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
+     * function for ProcessItems and ProcessMods.
+     */
     val: number;
   } | null;
   basePower: number;
