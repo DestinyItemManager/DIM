@@ -1,7 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import { powerCapPlugSetHash } from 'app/search/d2-known-values';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -265,11 +264,6 @@ function sortCompareItemsComparator(
                 value: item.energy?.energyCapacity || 0,
                 base: undefined,
               }
-            : sortedHash === 'PowerCap'
-            ? {
-                value: item.powerCap || 99999999,
-                base: undefined,
-              }
             : (item.stats || []).find((s) => s.statHash === sortedHash);
 
         if (!stat) {
@@ -457,18 +451,6 @@ function getAllStats(
         firstComparison.primStat.stat.displayProperties,
         (item: DimItem) => item.primStat || undefined
       )
-    );
-  }
-  if (
-    firstComparison.destinyVersion === 2 &&
-    (firstComparison.bucket.inArmor || firstComparison.bucket.inWeapons)
-  ) {
-    stats.push(
-      makeFakeStat('PowerCap', t('Stats.PowerCap'), (item: DimItem) => ({
-        statHash: powerCapPlugSetHash,
-        value: item.powerCap ?? undefined,
-        base: undefined,
-      }))
     );
   }
 
