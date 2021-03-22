@@ -79,8 +79,17 @@ export function isLoadoutBuilderItem(item: DimItem) {
   );
 }
 
+/** Gets the stat tier from a stat value. */
 export function statTier(stat: number) {
   return _.clamp(Math.floor(stat / 10), 0, 10);
+}
+
+/**
+ * Gets the stat tier plus a .5 if stat % 10 >= 5.
+ * To be used for display purposed only.
+ */
+export function statTierWithHalf(stat: number) {
+  return `${_.clamp(Math.floor(stat / 10), 0, 10)}${stat % 10 >= 5 ? '.5' : ''}`;
 }
 
 /**

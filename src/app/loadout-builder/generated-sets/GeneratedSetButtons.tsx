@@ -56,6 +56,10 @@ export default function GeneratedSetButtons({
     }
   }
 
+  /**
+   * Adds as many of the half tier mods as it can as per the order of the filters stat values.
+   * Will show a notification if some mods couldn't be slotted.
+   */
   const onQuickAddHalfTierMods = () => {
     const maxNumberOfPlusFiveMods =
       5 - (lockedArmor2Mods[armor2PlugCategoryHashesByName.general]?.length || 0);
@@ -63,6 +67,7 @@ export default function GeneratedSetButtons({
     const halfTierModsToAdd = halfTierMods.filter((mod) =>
       mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
     );
+
     const halfTierModsCapped = halfTierModsToAdd.slice(0, maxNumberOfPlusFiveMods);
 
     if (statsWithPlus5.length > maxNumberOfPlusFiveMods) {
@@ -78,6 +83,8 @@ export default function GeneratedSetButtons({
       });
     }
 
+    // Gets a set of PluggableInventoryItems from the locked mods and adds the half tier mods
+    // to the general category.
     const newModSet = _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef));
     newModSet[armor2PlugCategoryHashesByName.general] = [
       ...halfTierModsCapped,

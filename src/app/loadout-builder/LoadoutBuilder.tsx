@@ -72,7 +72,7 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  /** Gets  */
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const itemsSelector = createSelector(
     allItemsSelector,
     (

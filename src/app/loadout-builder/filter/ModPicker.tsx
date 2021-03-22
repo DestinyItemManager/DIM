@@ -55,8 +55,6 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-/** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
-
 function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedModsSelector = createSelector(
@@ -172,6 +170,7 @@ function ModPicker({
     }
   }, [isPhonePortrait, filterInput]);
 
+  /** Add a new mod to the internal mod picker state */
   const onModSelected = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
       const { plugCategoryHash } = mod.plug;
@@ -183,6 +182,7 @@ function ModPicker({
     [setLockedModsInternal]
   );
 
+  /** Remove a mod from the internal mod picker state */
   const onModRemoved = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
       const { plugCategoryHash } = mod.plug;
