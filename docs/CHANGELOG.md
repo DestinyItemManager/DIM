@@ -1,5 +1,8 @@
 ## Next
 
+* Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
+* Fix Loadout Optimizer acting as if "Assume Masterworked" was always checked.
+
 ## 6.57.0 <span class="changelog-date">(2021-03-21)</span>
 
 * We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
