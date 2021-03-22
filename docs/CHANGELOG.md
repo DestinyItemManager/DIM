@@ -1,5 +1,6 @@
 ## Next
 
+* We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
 * Added a new `is:pinnaclereward` search that searches for pinnacle rewards on the Progress page.
