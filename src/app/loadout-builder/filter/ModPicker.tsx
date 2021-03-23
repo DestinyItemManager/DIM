@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { knownModPlugCategoryHashes, LockedMod, LockedModMap } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
