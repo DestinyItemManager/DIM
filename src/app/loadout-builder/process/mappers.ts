@@ -66,7 +66,7 @@ export function getTotalModStatChanges(lockedArmor2Mods: LockedModMap) {
 }
 
 export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMod[]): ProcessItem {
-  const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
+  const { bucket, id, type, name, equippingLabel, basePower, stats, energy } = dimItem;
 
   const baseStatMap: { [statHash: number]: number } = {};
 
@@ -80,7 +80,7 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
   const modsCost = modsForSlot
     ? _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0)
     : 0;
-  const costInitial = dimItem.energy ? modsCost : null;
+
   return {
     bucketHash: bucket.hash,
     id,
@@ -89,14 +89,13 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
     equippingLabel,
     basePower,
     baseStats: baseStatMap,
-    energy:
-      dimItem.energy && costInitial !== null
-        ? {
-            type: dimItem.energy.energyType,
-            capacity: dimItem.energy.energyCapacity,
-            val: costInitial,
-          }
-        : null,
+    energy: energy
+      ? {
+          type: energy.energyType,
+          capacity: energy.energyCapacity,
+          val: modsCost,
+        }
+      : undefined,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
     hasLegacyModSocket: Boolean(modMetadatas?.some((m) => m.slotTag === 'legacy')),
   };

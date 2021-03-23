@@ -14,7 +14,7 @@ export interface ProcessItem {
   type: string;
   name: string;
   equippingLabel?: string;
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
     capacity: number;
@@ -23,7 +23,7 @@ export interface ProcessItem {
      * function for ProcessItems and ProcessMods.
      */
     val: number;
-  } | null;
+  };
   basePower: number;
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
