@@ -1,4 +1,3 @@
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
@@ -110,7 +109,7 @@ export function process(
     ...filteredItems[LockableBuckets.leg],
     ...filteredItems[LockableBuckets.classitem],
   ]) {
-    statsCache.set(item, getStatValuesWithMWProcess(item, assumeMasterwork, orderedStatHashes));
+    statsCache.set(item, getStatValuesWithMW(item, assumeMasterwork, orderedStatHashes));
   }
 
   // Sort gear by the chosen stats so we consider the likely-best gear first
@@ -359,45 +358,16 @@ export function process(
 /**
  * Gets the stat values of an item with masterwork.
  */
-function getStatValuesWithMWProcess(
+function getStatValuesWithMW(
   item: ProcessItem,
   assumeMasterwork: boolean | null,
   orderedStatValues: number[]
 ) {
   const baseStats = { ...item.baseStats };
 
-  // Checking energy tells us if it is Armour 2.0 (it can have value 0)
-  if (item.sockets && item.energy) {
-    if (assumeMasterwork) {
-      // TODO: technically we could derive this from the available mods instead ("slot" them all)
-      // Alternately we could make a lot more assumptions and just say if the energy capacity is 10, add 2 to every stat
-      for (const statHash of orderedStatValues) {
-        baseStats[statHash] += 2;
-      }
-    } else {
-      // Armor masterworking is just filling up the energy meter
-      const masterworkSocketCategory = item.sockets.categories.find(
-        (category) => category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter
-      );
-
-      const masterworkSocketHashes =
-        masterworkSocketCategory?.sockets
-          .map((socket) => socket.plug?.plugItemHash ?? NaN)
-          .filter((val) => !isNaN(val)) ?? [];
-
-      if (masterworkSocketHashes.length) {
-        for (const socket of item.sockets.sockets) {
-          const plugHash = socket.plug?.plugItemHash ?? NaN;
-
-          if (socket.plug?.stats && masterworkSocketHashes.includes(plugHash)) {
-            for (const statHash of orderedStatValues) {
-              if (socket.plug.stats[statHash]) {
-                baseStats[statHash] += socket.plug.stats[statHash];
-              }
-            }
-          }
-        }
-      }
+  if (assumeMasterwork || item.energy?.capacity === 10) {
+    for (const statHash of orderedStatValues) {
+      baseStats[statHash] += 2;
     }
   }
   // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods

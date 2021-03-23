@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import { DimItem, DimSocket, DimSockets } from '../../inventory/item-types';
+import { DimItem } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
+import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
   ArmorSet,
   knownModPlugCategoryHashes,
@@ -13,20 +14,6 @@ import {
   statHashToType,
   StatTypes,
 } from '../types';
-import { ProcessArmorSet, ProcessItem, ProcessMod, ProcessSocket, ProcessSockets } from './types';
-
-function mapDimSocketToProcessSocket(dimSocket: DimSocket): ProcessSocket {
-  return {
-    plug: dimSocket.plugged && {
-      stats: dimSocket.plugged.stats,
-      plugItemHash: dimSocket.plugged.plugDef.hash,
-    },
-    plugOptions: dimSocket.plugOptions.map((dimPlug) => ({
-      stats: dimPlug.stats,
-      plugItemHash: dimPlug.plugDef.hash,
-    })),
-  };
-}
 
 export function mapArmor2ModToProcessMod(mod: LockedMod): ProcessMod {
   const processMod: ProcessMod = {
@@ -78,16 +65,6 @@ export function getTotalModStatChanges(lockedArmor2Mods: LockedModMap) {
   return totals;
 }
 
-function mapDimSocketsToProcessSockets(dimSockets: DimSockets): ProcessSockets {
-  return {
-    sockets: dimSockets.allSockets.map(mapDimSocketToProcessSocket),
-    categories: dimSockets.categories.map((category) => ({
-      categoryStyle: category.category.categoryStyle,
-      sockets: category.sockets.map(mapDimSocketToProcessSocket),
-    })),
-  };
-}
-
 export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMod[]): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats } = dimItem;
 
@@ -112,11 +89,11 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
     equippingLabel,
     basePower,
     baseStats: baseStatMap,
-    sockets: dimItem.sockets && mapDimSocketsToProcessSockets(dimItem.sockets),
     energy:
       dimItem.energy && costInitial !== null
         ? {
             type: dimItem.energy.energyType,
+            capacity: dimItem.energy.energyCapacity,
             val: costInitial,
           }
         : null,
