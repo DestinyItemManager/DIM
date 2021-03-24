@@ -33,7 +33,7 @@ function hasExoticPerkOrSwapIcon(items: DimItem[]) {
  * Exotic perks add another row to the mod icons and the swap icon sits below the item image.
  * The height they add is roughly equivalent so we treat both conditions equally.
  */
-function getMeasureSetAndIndicator(sets, isPhonePortrait): [ArmorSet | undefined, number] {
+function getMeasureSet(sets, isPhonePortrait): [ArmorSet | undefined, number] {
   // In phone portrait we have 2 columns and 3 rows of items.
   let measureSet: ArmorSet | undefined;
   let recalcTrigger = 0;
@@ -113,7 +113,7 @@ export default function GeneratedSets({
   }>({ rowHeight: 0, rowWidth: 0 });
 
   // eslint-disable-next-line prefer-const
-  let [measureSet, recalcTrigger] = getMeasureSetAndIndicator(sets, isPhonePortrait);
+  let [measureSet, recalcTrigger] = getMeasureSet(sets, isPhonePortrait);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
