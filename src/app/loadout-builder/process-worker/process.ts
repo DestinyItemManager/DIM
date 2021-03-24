@@ -12,7 +12,7 @@ import {
   StatTypes,
 } from '../types';
 import { statTier } from '../utils';
-import { canTakeSlotIndependantMods, generateModPermutations } from './processUtils';
+import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
