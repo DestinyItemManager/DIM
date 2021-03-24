@@ -2,7 +2,10 @@ import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
-import { canTakeSlotIndependantMods, generateModPermutations } from './process-worker/processUtils';
+import {
+  canTakeSlotIndependantMods,
+  generateModPermutations,
+} from './process-worker/process-utils';
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 import {
