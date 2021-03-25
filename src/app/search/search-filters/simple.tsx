@@ -1,7 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import { isSunset } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
 
 // simple checks against check an attribute found on DimItem
@@ -73,10 +72,7 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'sunset',
     description: tl('Filter.IsSunset'),
-    filter: () => (item) => {
-      const sunsetSeason = getItemPowerCapFinalSeason(item);
-      return sunsetSeason !== undefined && D2CalculatedSeason >= sunsetSeason + 1;
-    },
+    filter: () => isSunset,
   },
 ];
 

@@ -1,8 +1,26 @@
 ## Next
 
+## 6.57.1 <span class="changelog-date">(2021-03-22)</span>
+
+* Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
+* Fix Loadout Optimizer acting as if "Assume Masterworked" was always checked.
+
+## 6.57.0 <span class="changelog-date">(2021-03-21)</span>
+
+* We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
 * Clicking on the empty area below Organizer can now close item popups, where it didn't before.
 * Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
-* Added a new `is:pinnaclereward` search that searches for pinnacle rewards.
+* Added a new `is:pinnaclereward` search that searches for pinnacle rewards on the Progress page.
+* DIM Sync now less picky about saving very simple searches.
+* Fix mis-sized kill tracker icons in Organizer.
+* Support addition syntax in stat filters, i.e. `stat:recovery+mobility:>30`
+* Mulligan now shows up as a Wishlisted perk.
+* Search bar expands more readily to replace the top tabs, so the field isn't squished really tiny.
+* Loadout Optimizer
+  * Reposition some misplaced pieces of UI
+  * Performance optimizations and some tweaks that could theoretically include some builds that wouldn't have shown up before.
+  * Fixed an issue that would show builds with more than 100 in a single stat once mods were included.
+  * Removed the minimum power and minimum stat total filters. Minimum power didn't see much use and minimum stat total can be achieved by searching `basestat:total:>52` in the search bar.
 
 ## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
 

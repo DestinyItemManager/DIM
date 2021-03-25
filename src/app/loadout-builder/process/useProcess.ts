@@ -9,13 +9,7 @@ import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
-import {
-  getTotalModStatChanges,
-  hydrateArmorSet,
-  mapArmor2ModToProcessMod,
-  mapDimItemToProcessItem,
-} from '../processWorker/mappers';
-import { ProcessItemsByBucket } from '../processWorker/types';
+import { ProcessItemsByBucket } from '../process-worker/types';
 import {
   ArmorSet,
   bucketsToCategories,
@@ -28,6 +22,12 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
+import {
+  getTotalModStatChanges,
+  hydrateArmorSet,
+  mapArmor2ModToProcessMod,
+  mapDimItemToProcessItem,
+} from './mappers';
 
 interface ProcessState {
   processing: boolean;
@@ -178,9 +178,9 @@ export function useProcess(
 }
 
 function createWorker() {
-  const instance = new Worker(new URL('../processWorker/ProcessWorker', import.meta.url));
+  const instance = new Worker(new URL('../process-worker/ProcessWorker', import.meta.url));
 
-  const worker = wrap<import('../processWorker/ProcessWorker').ProcessWorker>(instance);
+  const worker = wrap<import('../process-worker/ProcessWorker').ProcessWorker>(instance);
 
   const cleanup = () => {
     worker[releaseProxy]();

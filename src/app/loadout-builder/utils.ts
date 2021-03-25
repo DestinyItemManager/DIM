@@ -2,7 +2,7 @@ import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { ProcessItem } from './processWorker/types';
+import { ProcessItem } from './process-worker/types';
 import { LockedItemType, statValues } from './types';
 
 /**

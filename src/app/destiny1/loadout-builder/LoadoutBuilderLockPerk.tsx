@@ -21,14 +21,23 @@ interface Props {
 
 export default function LoadoutBuilderLockPerk(
   this: void,
-  { type, lockeditem, i18nItemNames, activePerks, lockedPerks, onRemove, onItemLocked }: Props
+  {
+    type,
+    lockeditem,
+    i18nItemNames,
+    activePerks,
+    lockedPerks,
+    onRemove,
+    onPerkLocked,
+    onItemLocked,
+  }: Props
 ) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const closeDialog = () => setDialogOpen(false);
   const addPerkClicked = () => setDialogOpen(true);
 
-  const onPerkLocked = (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => {
+  const doOnPerkLocked = (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => {
     closeDialog();
     onPerkLocked(perk, type, $event);
   };
@@ -66,7 +75,7 @@ export default function LoadoutBuilderLockPerk(
             activePerks={activePerks}
             lockedPerks={lockedPerks}
             type={type}
-            onPerkLocked={onPerkLocked}
+            onPerkLocked={doOnPerkLocked}
             onClose={closeDialog}
           />
         )}

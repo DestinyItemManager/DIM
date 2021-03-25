@@ -10,7 +10,7 @@ import React, { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, LockedModMap, statHashes } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';

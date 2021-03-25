@@ -6,7 +6,7 @@ import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
 import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import { getPower } from '../utils';

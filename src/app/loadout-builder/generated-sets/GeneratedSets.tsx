@@ -14,7 +14,7 @@ import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { someModHasEnergyRequirement } from '../mod-utils';
 import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';

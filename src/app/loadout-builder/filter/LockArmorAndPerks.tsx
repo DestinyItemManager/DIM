@@ -12,8 +12,8 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
 import {
   knownModPlugCategoryHashes,
   LockableBuckets,
