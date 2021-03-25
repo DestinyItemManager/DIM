@@ -31,10 +31,10 @@ import PerkPicker from './filter/PerkPicker';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
-import { useProcess } from './hooks/useProcess';
+import { filterItems } from './item-filter';
+import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
-import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
-import { filterItems } from './preProcessFilter';
+import { useProcess } from './process/useProcess';
 import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
 import { isLoadoutBuilderItem } from './utils';
 

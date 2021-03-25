@@ -13,7 +13,7 @@ import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
 import { someModHasEnergyRequirement } from '../utils';
 import GeneratedSet from './GeneratedSet';

@@ -6,7 +6,7 @@ interface SortParam {
   energy?: {
     type: DestinyEnergyType;
     val: number;
-  } | null;
+  };
 }
 
 export interface ProcessItemSubset extends SortParam {

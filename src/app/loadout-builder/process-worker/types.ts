@@ -8,37 +8,22 @@ export interface ProcessPlug {
   plugItemHash: number;
 }
 
-export interface ProcessSocket {
-  plug: ProcessPlug | null;
-  plugOptions: ProcessPlug[];
-}
-
-export interface ProcessSocketCategory {
-  categoryStyle: number;
-  sockets: ProcessSocket[];
-}
-
-export interface ProcessSockets {
-  sockets: ProcessSocket[];
-  /** Sockets grouped by category. */
-  categories: ProcessSocketCategory[];
-}
 export interface ProcessItem {
   bucketHash: number;
   id: string;
   type: string;
   name: string;
   equippingLabel?: string;
-  // TODO: only used to calculate masterwork-stats. Maybe pass in bonus or adjusted stats ahead of time
-  sockets: ProcessSockets | null;
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
+    /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
+    capacity: number;
     /**
      * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
      * function for ProcessItems and ProcessMods.
      */
     val: number;
-  } | null;
+  };
   basePower: number;
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];

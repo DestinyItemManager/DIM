@@ -19,7 +19,7 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import ArmorBucketIcon from '../ArmorBucketIcon';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LockableBuckets, LockedItemType, LockedMap, LockedPerk } from '../types';
 import {
   addLockedItem,
