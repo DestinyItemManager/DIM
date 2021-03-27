@@ -1,3 +1,4 @@
+import Switch from 'app/dim-ui/Switch';
 import React from 'react';
 import HelpLink from '../dim-ui/HelpLink';
 import { Settings } from './initial-settings';
@@ -15,7 +16,7 @@ export default function Checkbox({
   title?: string;
   helpLink?: string;
   name: keyof Settings;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange(checked: boolean, name: string): void;
 }) {
   return (
     <div className="setting horizontal">
@@ -24,7 +25,7 @@ export default function Checkbox({
       </label>
 
       {helpLink && <HelpLink helpLink={helpLink} />}
-      <input type="checkbox" id={name} name={name} checked={value} onChange={onChange} />
+      <Switch name={name} checked={value} onChange={onChange} />
     </div>
   );
 }

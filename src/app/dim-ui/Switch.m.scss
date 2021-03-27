@@ -1,0 +1,94 @@
+@import '../variables.scss';
+
+$dotSize: 16px;
+$barHeight: 10px;
+$barWidth: 30px;
+$duration: 150ms;
+$touchPadding: 2px; // A bit of extra hit area
+
+.switch {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+  height: $dotSize + $touchPadding * 2;
+  box-sizing: border-box;
+  vertical-align: middle;
+
+  label {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    padding: $touchPadding !important;
+    height: $dotSize;
+    margin: 0 !important;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: $barWidth;
+      height: $barHeight;
+      margin: ($dotSize - $barHeight) / 2 !important;
+      padding: 0 !important;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      transition: background-color $duration ease-out;
+    }
+
+    // The dot
+    &::after {
+      content: '';
+      position: absolute;
+      width: $dotSize - 4px;
+      height: $dotSize - 4px;
+      border-radius: 50%;
+      background-color: white;
+      transition: left $duration ease-out, background-color $duration ease-out;
+      top: $touchPadding;
+      left: $touchPadding;
+      border: 2px solid transparent;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  input {
+    position: absolute;
+    top: 0;
+    left: -999px; // move it away but keep it focusable
+    &:checked {
+      & + label {
+        &::before {
+          background-color: change-color($orange, $alpha: 0.5);
+        }
+        // The dot
+        &::after {
+          left: $touchPadding + $barWidth - $barHeight;
+          background-color: $orange;
+        }
+      }
+    }
+
+    // Set focus styles
+    &:focus + label::after {
+      border-color: #0175ff;
+    }
+    // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
+    &:focus:not(:focus-visible) + label::after {
+      border-color: transparent;
+    }
+
+    &:disabled {
+      & + label {
+        &::before {
+          cursor: not-allowed;
+          background-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        // The dot
+        &::after {
+          background-color: #666;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
