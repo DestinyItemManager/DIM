@@ -57,6 +57,11 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
 };
 
+export const chargedWithLightPlugCategoryHashes = [
+  PlugCategoryHashes.EnhancementsSeasonV470,
+  PlugCategoryHashes.EnhancementsSeasonV490,
+];
+
 const legacySocketTypeHashes = [
   1540673283, // an outlaw-looking one, that's on S11 LW/Reverie,
   // but in-game it has the same compatibility as any other legacy slot

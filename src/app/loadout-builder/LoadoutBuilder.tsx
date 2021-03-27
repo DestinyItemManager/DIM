@@ -156,7 +156,7 @@ function LoadoutBuilder({
   );
 
   const { result, processing } = useProcess(
-    selectedStoreId,
+    selectedStore,
     filteredItems,
     lockedMap,
     lockedArmor2Mods,
