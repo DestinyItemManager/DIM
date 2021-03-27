@@ -3,7 +3,8 @@
 .newItem {
   display: none;
 
-  :global(.show-new-items) & {
+  :global(.show-new-items) &,
+  &.alwaysShow {
     display: block;
     width: calc(var(--item-size) * 0.08);
     height: calc(var(--item-size) * 0.08);
