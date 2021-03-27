@@ -147,6 +147,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
+  acquisitionRecency: reverseComparator(compareBy((item: DimItem) => BigInt(item.id))),
   default: () => 0,
 };
 
