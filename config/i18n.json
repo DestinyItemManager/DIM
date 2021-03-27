@@ -661,6 +661,7 @@
   },
   "Organizer": {
     "Organizer": "Organizer",
+    "OpenIn": "Show in Organizer",
     "EnabledColumns": "Enabled Columns",
     "BulkMove": "Move To",
     "BulkTag": "Tag",
