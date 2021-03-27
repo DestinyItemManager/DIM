@@ -6,7 +6,6 @@ interface CssExports {
   'customstat': string;
   'dmg': string;
   'energy': string;
-  'guideLink': string;
   'hasFilter': string;
   'header': string;
   'icon': string;

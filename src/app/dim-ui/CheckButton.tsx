@@ -1,13 +1,16 @@
 import clsx from 'clsx';
 import React from 'react';
 import styles from './CheckButton.m.scss';
+import Switch from './Switch';
 
 export default function CheckButton({
+  name,
   onChange,
   className,
   checked,
   children,
 }: {
+  name: string;
   checked: boolean;
   className?: string;
   children: React.ReactNode;
@@ -15,8 +18,7 @@ export default function CheckButton({
 }) {
   return (
     <label className={clsx(styles.checkButton, className)}>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />{' '}
-      {children}
+      <Switch name={name} checked={checked} onChange={(checked) => onChange(checked)} /> {children}
     </label>
   );
 }

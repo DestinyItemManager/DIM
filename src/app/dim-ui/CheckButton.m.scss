@@ -2,35 +2,28 @@
 
 // TODO: Move to common button library!
 .checkButton {
+  composes: dim-button from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
+  box-sizing: border-box;
   margin-top: 8px;
+
+  > *:nth-last-child(n + 1) {
+    margin-right: 4px;
+  }
+
   @include phone-portrait {
     display: block;
     width: auto;
     margin: 8px var(--inventory-column-padding) 0 var(--inventory-column-padding);
   }
 
-  box-sizing: border-box;
-  cursor: pointer;
-  background-color: #555;
-  padding: 4px 6px 4px 10px;
-  display: inline-block;
-  border: none;
-  color: white;
-  font-size: 12px;
-  font-family: 'Open Sans', sans-serif;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  &:hover {
-    background-color: $orange;
-  }
+  // Don't do hover
+  &:hover,
   &:active {
-    box-shadow: none;
-    background-color: $orange;
-  }
-  input {
-    margin-left: 4px;
-    float: right;
-    vertical-align: middle;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
   }
 }

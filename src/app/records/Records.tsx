@@ -169,10 +169,18 @@ function Records({
           </div>
         )}
         <div className="presentationNodeOptions">
-          <CheckButton checked={completedRecordsHidden} onChange={onToggleCompletedRecordsHidden}>
+          <CheckButton
+            name="hide-completed"
+            checked={completedRecordsHidden}
+            onChange={onToggleCompletedRecordsHidden}
+          >
             {t('Triumphs.HideCompleted')}
           </CheckButton>
-          <CheckButton checked={redactedRecordsRevealed} onChange={onToggleRedactedRecordsRevealed}>
+          <CheckButton
+            name="reveal-redacted"
+            checked={redactedRecordsRevealed}
+            onChange={onToggleRedactedRecordsRevealed}
+          >
             {t('Triumphs.RevealRedacted')}
           </CheckButton>
         </div>
