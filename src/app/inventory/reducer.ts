@@ -44,9 +44,6 @@ export interface InventoryState {
    */
   readonly newItems: Set<string>;
   readonly newItemsLoaded: boolean;
-
-  /** Are we currently dragging a stack? */
-  readonly isDraggingStack: boolean;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -56,7 +53,6 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
-  isDraggingStack: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -117,13 +113,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return {
         ...state,
         newItems: new Set(),
-      };
-
-    // Stack dragging
-    case getType(actions.stackableDrag):
-      return {
-        ...state,
-        isDraggingStack: action.payload,
       };
 
     case getType(setCurrentAccount):

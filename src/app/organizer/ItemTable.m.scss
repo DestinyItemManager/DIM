@@ -236,7 +236,8 @@ $toolbarHeight: 41px - 16px + 8px;
   font-weight: bold;
 }
 
-.locationCell {
+.locationCell,
+.killTrackerDisplay {
   display: flex;
   flex-direction: row;
   align-items: flex-start;

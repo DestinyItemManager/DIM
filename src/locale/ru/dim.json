@@ -79,6 +79,15 @@
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные торговцев недоступны."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "Изначальные свойства",
     "Armor2": "Броня 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Сравнить предметы",
     "CompareBaseStats": "Показать Базовые характеристики",
     "Error": {
-      "Archetype": "Невозможно сравнить этот предмет из-за несовпадения его типа с {{type}}.",
-      "Class": "Невозможно сравнить этот предмет, т.к. он не для {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "С названием, описанием, бонусами или модификаторами содержащими введенный после фильтра текст. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'. Фильтр \"perk:\" ищет только по бонусам.",
     "Perk": "С бонусом или модификатором содержащим введенный после фильтра текст в названии или описании. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "PerkName": "С бонусом или модификатором содержащим введенный после фильтра текст Только В Названии. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Одинаковые, Исключая перевыпуски разных сезонов.",
     "StackLevel": "По количеству в пачке/стаке.",
     "Stackable": "Стакающиеся (боеприпасы, странные монеты и т.д.)",
-    "Stats": "По значению определенной характеристики.",
-    "StatsBase": "По базовым значениям характеристик брони, НЕ учитывая Модификаторы или Абсолют.",
+    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "Наборы брони с максимальной суммой Указанной Характеристики для каждого класса.",
     "StatsMax": "Броня в каждый слот с максимальной Указанной Характеристикой для всех персонажей. Фильтруются все предметы с максимальным значением Характеристики для каждого слота.",
     "SunsetAfter": "По сезону, после которого Максимальный уровень силы начнёт мешать Синтезу.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "С указанным Тэгом.",
       "Tagged": "С любым Тэгом."
@@ -261,6 +270,8 @@
     "FilterHelp": "Поиск предмета/перка, {{example}}, и другое",
     "FilterHelpBrief": "Поиск",
     "FilterHelpMenuItem": "Помощь по Фильтрам...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Поиск по Триумфам и Коллекции",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "Невозможно переместить этот предмет этого с персонажа.",
-    "Drag": "Зажмите [Shift] чтобы переместить часть пачки",
     "NoStorage": "DIM не смог записать данные",
     "NoStorageMessage": "Сохранение данных в браузере недоступно. \nВы не сможете авторизоваться или использовать DIM.\n\nЭто может быть вызвано режимом Инкогнито, Приватным режимом или нехваткой места на диске."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Сохранить как",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
-    "SelectMinStatTotal": "Минимальное Всего брони",
-    "SelectMinStatTotalDescription": "Сумма характеристик каждого предмета (кроме классового) предлагаемых Наборов будет выше.",
     "SelectPerks": "Добавить к Обязательным",
-    "SelectPower": "Минимум Силы",
-    "SelectPowerDescription": "Уровень Силы предлагаемых Наборов (не отдельных предметов) будет больше указанного значения.",
     "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Не сохраняем Набор?",
     "AddEquippedItems": "Добавить Используемое",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "Данное Имя уже используется для Набора {{className}}.",
     "AlreadyExistsGlobal": "Имя Набора уже используется.",
     "Any": "Любой класс",
@@ -560,10 +567,7 @@
     "Weekly": "Еженедельное Испытание"
   },
   "MoveAmount": {
-    "DownStack": "Уменьшить до предыдущей полной \"пачки\"",
-    "MinusStack": "-Пачка",
-    "PlusStack": "+Пачка",
-    "UpStack": "Увеличить до предыдущей полной \"пачки\""
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
+    "Redacted": "[УДАЛЕНО]",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Трекеры",
     "TrackedTriumphs": "Отслеживаемые Триумфы"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Дата последнего Поиска",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "Избранные Поиски и их история. Можете удалять их на ваше усмотрение.",
     "Link": "Смотреть и редактировать запросы Поиска",
     "Query": "Запрос Поиска",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Только активный персонаж",
     "SingleCharacterExplanation": "DIM скроет персонажей, кроме последнего активного. Предметы в инвентарях скрытых персонажей добавятся к блоку Хранилища.",
     "SizeItem": "Размер предмета",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Количество",
     "SortByClassType": "Класс",
     "SortByPrimary": "Уровень Cилы",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Время восстановления Баррикады",
     "Custom": "Почти Всего",
     "CustomDesc": "Сумма заданных Характеристик, без учета модификаторов и абсолюта. Выбрать Характеристики можно в настройках DIM.",
+    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
+    "DarkMeleeCooldown": "Dark Melee Cooldown",
+    "DarkSuperCooldown": "Dark Super Cooldown",
     "Discipline": "Дисциплина",
     "DodgeCooldown": "Время восстановления Уклонения",
-    "Effect": "Эффект",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Время восстановления Гранаты",
     "Intellect": "Интеллект",
+    "LightGrenadeCooldown": "Light Grenade Cooldown",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
     "MaxGearPower": "Предметы наибольшей Силы, доступные персонажу",
     "MaxGearPowerAll": "Сила мощнейших предметов",
     "MaxTotalPower": "Максимальная Сила",
-    "MeleeCooldown": "Время восстановления Способности ближнего боя",
     "Milliseconds": " ms",
     "NoBonus": "Без бонуса",
     "NotApplicable": "Н/Д",
@@ -788,7 +799,6 @@
     "Quality": "Качество характеристик",
     "RiftCooldown": "Время восстановления Раскола",
     "Strength": "Стойкость",
-    "SuperCooldown": "Время восстановления Суперспособности",
     "Tier": "Ранг {{tier}}",
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "Ошибка DIM Sync",
     "Usage": "Лоакльные Данные: занято {{usage, humanBytes}} из {{quota, humanBytes}} доступного места. В сохраненные данные входят Базы предметов Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Переместить все ({{amount}})",
-    "HowMuch": "Сколько {{itemname}} переместить?",
-    "Move": "Переместить"
   },
   "Tags": {
     "Archive": "Архив",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron автоматически обновляемый Wish List с коллекцией ПвЕ и ПвП роллов от Mercules904 и pandapaxxy. DIM использует этот Wish List по умолчанию.",
     "WishListNotes": "Заметки Wish List: {{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }

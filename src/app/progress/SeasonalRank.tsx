@@ -11,6 +11,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngrams from 'data/d2/bright-engrams.json';
+import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -64,6 +65,12 @@ export default function SeasonalRank({
   const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
+  const brightEngramRewardLevels = _.uniq(
+    rewardItems
+      .filter((item) => item.itemHash === brightEngramHash)
+      .map((item) => item.rewardedAtProgressionLevel % 10)
+  );
+
   if (
     // Only add the fake rewards once
     !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
@@ -72,7 +79,8 @@ export default function SeasonalRank({
     rewardItems.push(fakeReward(brightEngramHash, brightEngramRewardLevel));
   }
 
-  const getBrightEngram = prestigeMode && (seasonalRank - 1) % 5 === 0;
+  const getBrightEngram =
+    prestigeMode && brightEngramRewardLevels.includes((seasonalRank + 1) % 10);
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
     .filter((item) =>
@@ -85,6 +93,11 @@ export default function SeasonalRank({
     // Filter class-specific items
     .filter((item) => {
       const def = defs.InventoryItem.get(item.itemHash);
+
+      if (!def) {
+        return false;
+      }
+
       const plugCategoryId = def.plug?.plugCategoryIdentifier ?? '';
 
       if (def.itemSubType === 21) {

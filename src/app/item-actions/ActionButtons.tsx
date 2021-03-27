@@ -1,4 +1,4 @@
-import { CompareService } from 'app/compare/compare.service';
+import { addCompareItem } from 'app/compare/actions';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
@@ -26,9 +26,11 @@ interface ActionButtonProps {
 }
 
 export function CompareActionButton({ item, label }: ActionButtonProps) {
+  const dispatch = useDispatch();
+
   const openCompare = () => {
     hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
+    dispatch(addCompareItem(item));
   };
 
   if (!item.comparable) {

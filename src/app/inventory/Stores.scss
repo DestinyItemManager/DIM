@@ -278,6 +278,7 @@
   justify-content: space-around;
   padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
   padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
+  z-index: 7;
 
   > div {
     display: flex;

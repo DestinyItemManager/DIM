@@ -186,6 +186,10 @@ export const powerfulSources = [
   3114385607, // Tier 3
 ];
 
+export const pinnacleSources = [
+  73143230, // Pinnacle
+];
+
 //
 // BUCKETS KNOWN VALUES
 //
@@ -241,6 +245,12 @@ export const VENDORS = {
   RAHOOL: 2255782930,
   VAULT: 1037843411,
   XUR: 2190858386,
+};
+
+export const VENDOR_GROUPS = {
+  LIMITED_TIME: 3227191227,
+  TOWER: 679769104,
+  DESTINATION: 2537374699,
 };
 
 /** used to snag the icon for display */

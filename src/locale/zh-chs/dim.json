@@ -79,6 +79,15 @@
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "通过使用此武器击败强大的敌人获得。",
+      "Mission": "完成“{{title}}”任务。",
+      "Quest": "完成“{{title}}”任务。",
+      "RuinousEffigy": "通过用蜕变球体击败敌人获得。",
+      "TheFourthHorseman": "完成炽天使地堡、炽天使高塔，以及传说遗失区域。"
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "对比物品",
     "CompareBaseStats": "显示基础属性",
     "Error": {
-      "Archetype": "无法与此物品进行对比，因为它并不是{{type}}.",
-      "Class": "无法与此物品进行对比，因为它并不适用于{{class}}."
+      "Unmatched": "此物品和要比较的物品类别不同。"
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "显示名称/描述/特性/模组与筛选器部分匹配的物品。使用引号来搜索包含空格的文本。使用 'perk:' 过滤器便可仅搜索特性。",
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
+    "PinnacleReward": "显示提供巅峰奖励的追猎目标。",
     "Postmaster": "目前在邮政官处的物品.",
     "PowerLevel": "按能量等级显示物品。$t(Filter.PowerKeywords)",
     "PowerLimit": "按可被灌注达到的最高能量等级显示物品。$t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
     "StackLevel": "根据堆叠数量来显示物品.",
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
-    "Stats": "按指定的属性值显示物品。",
-    "StatsBase": "按基础属性值筛选护甲，不包含附加模组或大师杰作属性。",
+    "Stats": "按特定属性的数值显示物品。用加号衔接多个属性名称便可组合过滤。",
+    "StatsBase": "按基础属性数值过滤护甲，并排除模组或大师杰作的影响。用加号衔接多个属性名称便可组合过滤。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "SunsetAfter": "按照可达到的赛季能量上限显示物品。",
-    "Sunsets": "",
+    "Sunsets": "按照第一个退环境的赛季显示物品。",
     "Tags": {
       "Tag": "显示具有特定标签的物品。",
       "Tagged": "显示具有任何标签的物品。"
@@ -261,6 +270,8 @@
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpMenuItem": "过滤器帮助...",
+    "FilterHelpOptimizer": "从配装里过滤护甲：{{example}}",
+    "FilterHelpProgress": "搜索里程碑和悬赏",
     "FilterHelpRecords": "搜索成就和收藏品",
     "FilterMatchCount": "1个物品",
     "FilterMatchCount_plural": "{{count}} 个物品",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "无法从该角色中移出物品.",
-    "Drag": "按住shift转移部分堆叠",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM 无法在你的浏览器中存储数据。这可能是因为你在使用无痕或隐身模式，或磁盘空间不足。你将无法登录或使用 DIM。"
   },
@@ -450,11 +460,7 @@
     "SaveAs": "保存为",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "SelectMinStatTotal": "最小护甲属性总和",
-    "SelectMinStatTotalDescription": "设置单件护甲的最小属性总和（职业物品除外）。",
     "SelectPerks": "选择特性",
-    "SelectPower": "最小光等",
-    "SelectPowerDescription": "设置一套最低光等的整体配装(非单件物品压低光等)",
     "StatIncorrectWarning": "为了获得精确结果，请移除任何带有属性惩罚的模组。\n\n鉴于有属性惩罚的模组，DIM 无法为一些包含的物品确定基础数值或 {{stats}} 的数值。这是因为 Bungie.net 的数据限制。",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "你确定要放弃此配装?",
     "AddEquippedItems": "添加已装备",
+    "AddUnequippedItems": "添加未装备的",
     "AlreadyExistsClass": "{{className}} 下同名配装已经存在",
     "AlreadyExistsGlobal": "同名全域配装已经存在",
     "Any": "全部职业",
@@ -560,10 +567,7 @@
     "Weekly": "每周挑战"
   },
   "MoveAmount": {
-    "DownStack": "减少一叠",
-    "MinusStack": "-堆叠",
-    "PlusStack": "+堆叠",
-    "UpStack": "增加一叠"
+    "Amount": "数量："
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -691,9 +695,11 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",
+    "Redacted": "[隐藏]",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密胜利",
+    "Source": "来源：{{sourceInfo}}",
     "StatTrackers": "数据追踪器",
     "TrackedTriumphs": "跟踪的成就"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "最近使用",
+    "DeleteAll": "删除所有未加星标的搜索",
     "Description": "这些是你过去和保存的搜索。你可以在这里删除它们。",
     "Link": "查看和编辑搜索历史",
     "Query": "搜索​​​​",
@@ -746,6 +753,7 @@
     "SingleCharacter": "只显示当前角色",
     "SingleCharacterExplanation": "DIM 将只显示最近游玩的角色。其他角色的物品将和保险库显示在一起。",
     "SizeItem": "物品显示大小",
+    "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
     "SortByClassType": "必要的类",
     "SortByPrimary": "光等",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "屏障冷却",
     "Custom": "自定义总和",
     "CustomDesc": "所选基础属性的自定义总和，未计入模组或大师杰作。可在设置里配置自定义总和所包含的属性。",
+    "DarkGrenadeCooldown": "冰影手雷冷却",
+    "DarkMeleeCooldown": "冰影近战冷却",
+    "DarkSuperCooldown": "冰影超能冷却",
     "Discipline": "训练",
     "DodgeCooldown": "闪身冷却",
-    "Effect": "效果",
     "FinalSeason": "（S{{finalSeason}}）",
-    "GrenadeCooldown": "手雷冷却",
     "Intellect": "智力",
+    "LightGrenadeCooldown": "光能手雷冷却",
+    "LightMeleeCooldown": "光能近战冷却",
+    "LightSuperCooldown": "光能超能冷却",
     "MaxGearPower": "当前装备最大光等",
     "MaxGearPowerAll": "所有装备最高光等",
     "MaxTotalPower": "最大光等",
-    "MeleeCooldown": "近战冷却",
     "Milliseconds": "毫秒",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
@@ -788,7 +799,6 @@
     "Quality": "品质",
     "RiftCooldown": "裂痕冷却",
     "Strength": "力量",
-    "SuperCooldown": "超能冷却",
     "Tier": "{{tier}} 阶",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "保存你的数据到 DIM 同步时出错。我们稍后会自动重试。",
     "UpdateErrorTitle": "DIM 同步错误",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
-  },
-  "StoreBucket": {
-    "FillStack": "最大堆叠 ({{amount}})",
-    "HowMuch": "想要移动多少个{{itemname}}？",
-    "Move": "移动"
   },
   "Tags": {
     "Archive": "归档",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron 是来自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",
     "WishListNotes": "愿望清单备注:{{notes}}"
   },
-  "move-canceled": "移动已取消",
   "no-space": "",
   "wrong-level": ""
 }

@@ -37,7 +37,7 @@ const socketFilters: FilterDefinition[] = [
 
       const matchesCollectionsRoll = item.sockets?.allSockets
         // curatedRoll is only set for perk-style sockets
-        .filter((socket) => socket?.plugOptions.length && socket.curatedRoll)
+        .filter((socket) => socket.plugOptions.length && socket.curatedRoll)
         .every(
           (socket) =>
             socket.curatedRoll!.length === socket.plugOptions.length &&

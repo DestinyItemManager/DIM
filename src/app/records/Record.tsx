@@ -14,7 +14,7 @@ import {
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import catalystInfo from 'data/d2/catalyst-triumph-info.json';
 import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
@@ -46,7 +46,7 @@ interface RecordInterval {
   rewards: DestinyItemQuantity[];
 }
 
-const overrideIcons = Object.keys(catalystIcons).map(Number);
+const overrideInfo = Object.keys(catalystInfo).map(Number);
 
 export default function Record({
   record,
@@ -76,13 +76,33 @@ export default function Record({
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
+
+  const extraInfo = overrideInfo.includes(recordHash);
+
+  const title =
+    extraInfo && catalystInfo[recordHash].titleHash
+      ? catalystInfo[recordHash].key === 'Quest'
+        ? defs.InventoryItem.get(catalystInfo[recordHash].titleHash)?.setData?.questLineName
+        : catalystInfo[recordHash].key === 'Mission'
+        ? defs.Activity.get(catalystInfo[recordHash].titleHash)?.displayProperties?.name
+        : null
+      : null;
+
+  const sourceInfo = extraInfo
+    ? catalystInfo[recordHash].source
+      ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description
+      : catalystInfo[recordHash].key
+      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { title }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
+      : t('Progress.Redacted')
+    : null;
+
   const description = obscured
     ? recordDef.stateInfo.obscuredString
-    : recordDef.displayProperties.description;
+    : `${recordDef.displayProperties.description} ${
+        sourceInfo ? `\n\n${t('Progress.Source', { sourceInfo })}` : ''
+      }`;
 
-  const recordIcon = overrideIcons.includes(recordHash)
-    ? catalystIcons[recordHash]
-    : recordDef.displayProperties.icon;
+  const recordIcon = extraInfo ? catalystInfo[recordHash].icon : recordDef.displayProperties.icon;
 
   if (completedRecordsHidden && acquired) {
     return null;

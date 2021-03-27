@@ -44,7 +44,7 @@ function buildMasterworkInfo(
 ): DimMasterwork | null {
   const socket = sockets.allSockets.find(
     (socket) =>
-      socket?.plugged?.plugDef.plug &&
+      socket.plugged?.plugDef.plug &&
       (socket.plugged.plugDef.plug.uiPlugLabel === 'masterwork' ||
         socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
         socket.plugged.plugDef.plug.plugCategoryIdentifier.endsWith('_masterwork'))

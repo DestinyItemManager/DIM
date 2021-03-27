@@ -79,6 +79,15 @@
     "UnknownError": "來自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商販資料不可用."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
-      "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
-      "Class": "無法與此物品進行對比，因為它並不適用於{{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
-    "Stats": "Shows items based on a specific stat value.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking.",
+    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -261,6 +270,8 @@
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1個物品",
     "FilterMatchCount_plural": "{{count}} 個物品",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "Drag": "按住shift轉移部分堆疊",
     "NoStorage": "DIM無法存儲資料",
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Save as",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "SelectMinStatTotal": "Minimum Armor Stat Total",
-    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "選擇特性",
-    "SelectPower": "最小光等",
-    "SelectPowerDescription": "設置一套最低光等的整體配裝(非單件物品壓低光等)",
     "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "你確定要放棄此配裝?",
     "AddEquippedItems": "添加已裝備",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "{{className}} 下同名配裝已經存在",
     "AlreadyExistsGlobal": "同名全域配裝已經存在",
     "Any": "全部職業",
@@ -560,10 +567,7 @@
     "Weekly": "每週挑戰"
   },
   "MoveAmount": {
-    "DownStack": "減少一疊",
-    "MinusStack": "-堆叠",
-    "PlusStack": "+堆叠",
-    "UpStack": "增加一疊"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -691,9 +695,11 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任務",
     "RecordValue": "{{value}}點",
+    "Redacted": "［未公開］",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密勝利",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Only show current character",
     "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "物品顯示大小",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "堆疊大小",
     "SortByClassType": "必要的類",
     "SortByPrimary": "光等",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Barricade Cooldown",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
+    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
+    "DarkMeleeCooldown": "Dark Melee Cooldown",
+    "DarkSuperCooldown": "Dark Super Cooldown",
     "Discipline": "訓練",
     "DodgeCooldown": "Dodge Cooldown",
-    "Effect": "Effect",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Grenade Cooldown",
     "Intellect": "智力",
+    "LightGrenadeCooldown": "Light Grenade Cooldown",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
     "MaxGearPower": "當前裝備最大光等",
     "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "最大光等",
-    "MeleeCooldown": "Melee Cooldown",
     "Milliseconds": "毫秒",
     "NoBonus": "無加成",
     "NotApplicable": "不可用",
@@ -788,7 +799,6 @@
     "Quality": "品質",
     "RiftCooldown": "Rift Cooldown",
     "Strength": "力量",
-    "SuperCooldown": "Super Cooldown",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "同步錯誤",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
-  },
-  "StoreBucket": {
-    "FillStack": "最大堆疊 ({{amount}})",
-    "HowMuch": "想要移動多少個{{itemname}}？",
-    "Move": "移動"
   },
   "Tags": {
     "Archive": "歸檔",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "願望清單備註:{{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }

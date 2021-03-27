@@ -3,7 +3,10 @@ import _ from 'lodash';
 /**
  * Count the number of values in the list that pass the predicate.
  */
-export function count<T>(list: readonly T[], predicate: (value: T) => boolean): number {
+export function count<T>(
+  list: readonly T[],
+  predicate: (value: T) => boolean | null | undefined
+): number {
   return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 

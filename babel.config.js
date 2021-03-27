@@ -42,7 +42,7 @@ module.exports = function (api) {
   } else {
     // In dev, compile TS with babel
     plugins.push(
-      'react-hot-loader/babel',
+      'react-refresh/babel',
       ['@babel/proposal-class-properties', { loose: true }],
       '@babel/proposal-object-rest-spread',
       [

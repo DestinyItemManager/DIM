@@ -79,6 +79,15 @@
     "UnknownError": "Message de Bungie.net: {{message}}",
     "VendorNotFound": "Les données du vendeur sont indisponibles."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Trouvé en battant des ennemis puissants avec cette arme.",
+      "Mission": "Terminez la mission \"{{title}}\".",
+      "Quest": "Terminez la quête \"{{title}}\".",
+      "RuinousEffigy": "Trouvé en battant des ennemis avec des sphères de transmutation.",
+      "TheFourthHorseman": "Complétez les Bunkers de Séraphin, les tours de Séraphin et les secteurs oubliés légendaires."
+    }
+  },
   "Compare": {
     "Archetype": "Archétype",
     "Armor2": "Armure 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Comparer des Objets",
     "CompareBaseStats": "Afficher les Statistiques de base",
     "Error": {
-      "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}.",
-      "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
+      "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance. $t(Filter.PowerKeywords)",
     "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
-    "Stats": "Affiche les objets en fonction de la valeur d'une statistique spécifique.",
-    "StatsBase": "Filtre les armures en fonction de la valeur de base de leurs statistiques, sans inclure les mods attachés ou les pièces maîtresses.",
+    "Stats": "Affiche les objets en fonction d'une valeur de stat spécifique. Supporte l'ajout de stats en connectant plusieurs noms de stats avec le symbole +.",
+    "StatsBase": "Filtre l'armure en fonction de sa valeur de stat de base, sans inclure les mods attachés ou les pièces maîtresses. Supporte l'ajout de stat en connectant plusieurs noms de stats avec le symbole +.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "SunsetAfter": "Affiche les objets en fonction de la dernière saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
-    "Sunsets": "",
+    "Sunsets": "Affiche les objets en fonction de la première saison lors de laquelle ils peuvent atteindre le Cap de Puissance Saisonnier.",
     "Tags": {
       "Tag": "Affiche les objets portant une certaine étiquette.",
       "Tagged": "Affiche les objets portant une étiquette."
@@ -261,6 +270,8 @@
     "FilterHelp": "Rechercher objet/attribut, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
     "FilterHelpMenuItem": "Aide Filtres...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Rechercher triomphes et collections",
     "FilterMatchCount": "1 objet",
     "FilterMatchCount_plural": "{{count}} objets",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-    "Drag": "Maintenir maj pour transférer une partie de la pile",
     "NoStorage": "DIM ne peut pas stocker de données",
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être causé par la navigation privée ou en mode incognito, ou un espace disque faible. Vous ne pourrez pas vous connecter à ou utiliser DIM."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Enregistrer sous",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectMinStatTotal": "Minimum des Statistiques Totales D'Armure",
-    "SelectMinStatTotalDescription": "Défini le total de statistique minimal pour chaque pièce d'armure (objets de classe exclus).",
     "SelectPerks": "Sélectionner des attributs",
-    "SelectPower": "Puissance minimum",
-    "SelectPowerDescription": "Défini un niveau de puissance minimum pour tout l'arsenal (pas les pièces individuelles)",
     "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs.\n\nÀ cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur ou la valeur de base de {{stats}} de certains objets inclus. C'est une limitation des informations envoyées par Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Êtes-vous sûr de vouloir abandonner cette présélection ?",
     "AddEquippedItems": "Ajouter les objets équipés",
+    "AddUnequippedItems": "Ajouter les objets non équipés",
     "AlreadyExistsClass": "Un arsenal avec ce nom existe déjà pour votre {{className}}.",
     "AlreadyExistsGlobal": "Un arsenal global avec ce nom existe déjà.",
     "Any": "Tout",
@@ -560,10 +567,7 @@
     "Weekly": "Défi Hebdomadaire"
   },
   "MoveAmount": {
-    "DownStack": "Diminution jusqu'à la pile complète suivante",
-    "MinusStack": "-Pile",
-    "PlusStack": "+Pile",
-    "UpStack": "Augmentation jusqu'à la pile complète suivante"
+    "Amount": "Quantité :"
   },
   "MovePopup": {
     "Acquired": "Cet élément est déverrouillé dans les collections.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Expire dans ",
     "Quests": "Quêtes",
     "RecordValue": "{{value}}pts",
+    "Redacted": "(CENSURÉ)",
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
     "SecretTriumph": "Triomphe Secret",
+    "Source": "Source : {{sourceInfo}}",
     "StatTrackers": "Compteur de Statistiques",
     "TrackedTriumphs": "Triomphes Suivis"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
+    "DeleteAll": "Supprimer toutes les recherches non favorites",
     "Description": "Ce sont toutes vos recherches passées et enregistrées. Vous pouvez les supprimer ici.",
     "Link": "Afficher et modifier l'historique de recherche",
     "Query": "Recherche",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Afficher uniquement le personnage actuel",
     "SingleCharacterExplanation": "DIM masquera tout les personnages sauf celui joué le plus récemment. L'inventaire de ces personnages apparaîtra comme étant dans le coffre.",
     "SizeItem": "Taille des objets",
+    "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",
     "SortByClassType": "Classe requise",
     "SortByPrimary": "Niveau de puissance",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Délai de Barricade",
     "Custom": "Total Personnalisé",
     "CustomDesc": "Total personnalisé des statistiques de base sélectionnés, ignore les mods et les pièces maîtresses. Allez dans les paramètres pour configurer les statistiques inclues.",
+    "DarkGrenadeCooldown": "Délai de la Grenade de Ténèbre",
+    "DarkMeleeCooldown": "Délai de la Mêlée de Ténèbre",
+    "DarkSuperCooldown": "Délai du Super de Ténèbre",
     "Discipline": "Discipline",
     "DodgeCooldown": "Délai Esquive",
-    "Effect": "Effet",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Délai de la Grenade",
     "Intellect": "Intelligence",
+    "LightGrenadeCooldown": "Délai de la Grenade de Lumière",
+    "LightMeleeCooldown": "Délai de la Mêlée de Lumière",
+    "LightSuperCooldown": "Délai du Super de Lumière",
     "MaxGearPower": "Puissance maximale des équipements pouvant être équipés",
     "MaxGearPowerAll": "Puissance maximale de tous les équipements",
     "MaxTotalPower": "Puissance totale maximale",
-    "MeleeCooldown": "Délai de la Mêlée",
     "Milliseconds": "ms",
     "NoBonus": "Pas de Bonus",
     "NotApplicable": "N/A",
@@ -788,7 +799,6 @@
     "Quality": "Qualité des stats",
     "RiftCooldown": "Délai de la Faille",
     "Strength": "Force",
-    "SuperCooldown": "Délai du Super",
     "Tier": "Palier {{tier}}",
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
     "UpdateErrorTitle": "Erreur de synchronisation DIM",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Remplir la pile ({{amount}})",
-    "HowMuch": "Combien de {{itemname}} à déplacer ?",
-    "Move": "Déplacer"
   },
   "Tags": {
     "Archive": "Archive",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement. Elle est activé par défaut.",
     "WishListNotes": "Notes de liste de souhaits: {{notes}}"
   },
-  "move-canceled": "Déplacement annulé",
   "no-space": "",
   "wrong-level": ""
 }

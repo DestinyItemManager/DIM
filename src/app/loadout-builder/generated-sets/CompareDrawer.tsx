@@ -7,7 +7,7 @@ import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors'
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { DestinyClass, DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import produce from 'immer';
 import _ from 'lodash';
@@ -15,7 +15,7 @@ import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
 import { assignModsToArmorSet } from '../mod-utils';
-import { getTotalModStatChanges } from '../processWorker/mappers';
+import { getTotalModStatChanges } from '../process/mappers';
 import {
   ArmorSet,
   LockableBucketHashes,
@@ -24,6 +24,7 @@ import {
   statKeys,
   StatTypes,
 } from '../types';
+import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
 import SetStats from './SetStats';
@@ -35,43 +36,12 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
     (value) => item.stats?.find((s) => s.statHash === value)?.base || 0
   );
 
-  // Checking energy tells us if it is Armour 2.0 (it can have value 0)
-  if (item.sockets && item.energy) {
-    let masterworkSocketHashes: number[] = [];
-    // only get masterwork sockets if we aren't manually adding the values
-    if (!assumeMasterwork) {
-      const masterworkSocketCategory = item.sockets.categories.find(
-        (sockCat) => sockCat.category.categoryStyle === DestinySocketCategoryStyle.EnergyMeter
-      );
-
-      if (masterworkSocketCategory) {
-        masterworkSocketHashes = masterworkSocketCategory.sockets
-          .map((socket) => socket?.plugged?.plugDef.hash ?? NaN)
-          .filter((val) => !isNaN(val));
-      }
-    }
-
-    if (masterworkSocketHashes.length) {
-      for (const socket of item.sockets.allSockets) {
-        const plugHash = socket?.plugged?.plugDef.hash ?? NaN;
-
-        if (socket.plugged?.stats && masterworkSocketHashes.includes(plugHash)) {
-          for (const statType of statKeys) {
-            const statHash = statHashes[statType];
-            if (socket.plugged.stats[statHash]) {
-              baseStats[statType] += socket.plugged.stats[statHash];
-            }
-          }
-        }
-      }
-    }
-
-    if (assumeMasterwork) {
-      for (const statType of statKeys) {
-        baseStats[statType] += 2;
-      }
+  if (assumeMasterwork || item.energy?.energyCapacity === 10) {
+    for (const statType of statKeys) {
+      baseStats[statType] += 2;
     }
   }
+
   return baseStats;
 }
 
@@ -226,7 +196,7 @@ function CompareDrawer({
             defs={defs}
             items={setItems}
             stats={set.stats}
-            maxPower={set.maxPower}
+            maxPower={getPower(setItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
             className={styles.fillRow}

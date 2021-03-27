@@ -344,7 +344,7 @@ export const dimApi = (
 
     case getType(actions.searchUsed):
       return produce(state, (draft) => {
-        searchUsed(draft, account!.destinyVersion, action.payload);
+        searchUsed(draft, account!, action.payload);
       });
 
     case getType(actions.saveSearch):
@@ -446,6 +446,8 @@ function prepareUpdateQueue(state: DimApiState) {
   }
 }
 
+let unique = 0;
+
 /**
  * Combine this update with any update to the same object that's already in the queue.
  * This is meant to reduce how many updates the API has to process - especially if the
@@ -463,8 +465,6 @@ function compactUpdate(
   },
   update: ProfileUpdateWithRollback
 ) {
-  let unique = 0;
-
   // Figure out the ID of the object being acted on
   let key: string;
   switch (update.action) {
@@ -980,11 +980,25 @@ function trackTriumph(
   draft.updateQueue.push(updateAction);
 }
 
-function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
+  const destinyVersion = account.destinyVersion;
+
+  // Real hack to fake out enough store to select out the search configs
+  const searchConfigs = searchConfigSelector(({
+    accounts: {
+      accounts: [account],
+      currentAccount: 0,
+    },
+  } as any) as RootState);
+
   // Canonicalize the query so we always save it the same way
   try {
     const ast = parseQuery(query);
-    if (ast.op === 'filter' && ast.type === 'keyword') {
+    if (!validateQuery(ast, searchConfigs)) {
+      errorLog('saveSearch', 'Query not valid - not saving', query);
+      return;
+    }
+    if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
       // don't save "trivial" single-keyword filters
       // TODO: somehow also reject invalid searches (that don't match real keywords)
       return;
@@ -1018,6 +1032,7 @@ function searchUsed(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, q
     });
   }
 
+  // TODO: purge invalid searches
   // TODO: this is where we would cap the search history!
   // while (searches.length > MAX_SEARCH_HISTORY) {
   //   remove bottom-sorted search
@@ -1070,8 +1085,21 @@ function saveSearch(
   if (existingSearch) {
     existingSearch.saved = saved;
   } else {
-    // Hmm, may need to tweak this
-    throw new Error("Unable to save a search that's not in your history");
+    // Save this as a "used" search first. This may happen if it's a type of search we
+    // wouldn't normally save to history like a "simple" filter.
+    searches.push({
+      query,
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now(),
+    });
+    draft.updateQueue.push({
+      action: 'search',
+      payload: {
+        query,
+      },
+      destinyVersion,
+    });
   }
 
   draft.updateQueue.push(updateAction);

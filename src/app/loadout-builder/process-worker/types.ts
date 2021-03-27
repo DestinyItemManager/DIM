@@ -8,36 +8,23 @@ export interface ProcessPlug {
   plugItemHash: number;
 }
 
-export interface ProcessSocket {
-  plug: ProcessPlug | null;
-  plugOptions: ProcessPlug[];
-}
-
-export interface ProcessSocketCategory {
-  categoryStyle: number;
-  sockets: ProcessSocket[];
-}
-
-export interface ProcessSockets {
-  sockets: ProcessSocket[];
-  /** Sockets grouped by category. */
-  categories: ProcessSocketCategory[];
-}
 export interface ProcessItem {
   bucketHash: number;
   id: string;
   type: string;
   name: string;
   equippingLabel?: string;
-  sockets: ProcessSockets | null;
-  energy: {
+  energy?: {
     type: DestinyEnergyType;
-    /** This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
-     * function for ProcessItems and ProcessMods. */
+    /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
+    capacity: number;
+    /**
+     * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
+     * function for ProcessItems and ProcessMods.
+     */
     val: number;
-  } | null;
+  };
   basePower: number;
-  stats: { [statHash: number]: number };
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
   hasLegacyModSocket: boolean;
@@ -52,10 +39,6 @@ export interface ProcessArmorSet {
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  readonly statChoices: readonly number[][];
-  /** The maximum power loadout possible in this stat mix. */
-  readonly maxPower: number;
 }
 
 export interface IntermediateProcessArmorSet {
@@ -63,10 +46,6 @@ export interface IntermediateProcessArmorSet {
   stats: { [statType in StatTypes]: number };
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  statChoices: number[][];
-  /** The maximum power loadout possible in this stat mix. */
-  maxPower: number;
 }
 
 interface ProcessStat {

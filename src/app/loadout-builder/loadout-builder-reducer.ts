@@ -17,7 +17,6 @@ export interface LoadoutBuilderState {
   lockedArmor2Mods: LockedModMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
-  minimumPower: number;
   modPicker: {
     open: boolean;
     initialQuery?: string;
@@ -69,7 +68,6 @@ const lbStateInit = ({
       Strength: { min: 0, max: 10, ignored: false },
     },
     lockedArmor2Mods: {},
-    minimumPower: 750,
     selectedStoreId: selectedStoreId,
     modPicker: {
       open: false,
@@ -83,7 +81,6 @@ const lbStateInit = ({
 export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
-  | { type: 'minimumPowerChanged'; minimumPower: number }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -114,12 +111,9 @@ function lbStateReducer(
           Intellect: { min: 0, max: 10, ignored: false },
           Strength: { min: 0, max: 10, ignored: false },
         },
-        minimumPower: 0,
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };
-    case 'minimumPowerChanged':
-      return { ...state, minimumPower: action.minimumPower };
     case 'lockedMapChanged':
       return { ...state, lockedMap: action.lockedMap };
     case 'addItemToLockedMap': {

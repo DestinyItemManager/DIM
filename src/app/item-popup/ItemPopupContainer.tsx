@@ -17,17 +17,16 @@ import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
-import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
+import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
-import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
+import { hideItemPopup, showItemPopup$ } from './item-popup';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import styles from './ItemPopupContainer.m.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
@@ -74,40 +73,14 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  */
 function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
-  const [currentItem, setCurrentItem] = useState<{
-    item: DimItem;
-    element?: HTMLElement;
-    extraInfo?: ItemPopupExtraInfo;
-  }>();
+  const currentItem = useSubscription(showItemPopup$);
   const onTabChanged = (newTab: ItemPopupTab) => {
     if (newTab !== tab) {
       setTab(newTab);
     }
   };
 
-  const onClose = () => setCurrentItem(undefined);
-
-  useSubscription(() =>
-    showItemPopup$.subscribe(({ item, element, extraInfo }) => {
-      if (!item || item === currentItem?.item) {
-        onClose();
-      } else {
-        setCurrentItem({
-          item,
-          element,
-          extraInfo,
-        });
-        // Log the item so it's easy to inspect item structure by clicking on an item
-        if ($DIM_FLAVOR !== 'release') {
-          infoLog(
-            'clicked item',
-            `https://data.destinysets.com/i/InventoryItem%3A${item.hash}`,
-            item
-          );
-        }
-      }
-    })
-  );
+  const onClose = () => hideItemPopup();
 
   const { pathname } = useLocation();
   useEffect(() => {

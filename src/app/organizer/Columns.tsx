@@ -31,6 +31,7 @@ import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/filters';
 import {
   AppIcon,
+  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
@@ -41,11 +42,11 @@ import { compareBy } from 'app/utils/comparators';
 import {
   getItemDamageShortName,
   getItemKillTrackerInfo,
-  getItemPowerCapFinalSeason,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadatas,
   isD1Item,
+  isSunset,
 } from 'app/utils/item-utils';
 import { isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -233,21 +234,12 @@ export function getColumns(
     },
     !isGhost &&
       destinyVersion === 2 && {
-        id: 'maxpower',
-        header: t('Stats.PowerCap'),
-        value: (item) => item.powerCap,
-        cell: (value, item) =>
-          value && (
-            <>
-              {t('Stats.PowerCapWithSeason', {
-                powerCap: value,
-                finalSeason: getItemPowerCapFinalSeason(item),
-              })}
-            </>
-          ),
-        defaultSort: SortDirection.DESC,
-        filter: (value) => (value ? `powerlimit:=${value}` : undefined),
-        gridWidth: 'minmax(max-content,max-content)',
+        id: 'sunset',
+        header: t('Stats.Sunset'),
+        value: isSunset,
+        defaultSort: SortDirection.ASC,
+        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
+        filter: (value) => (value ? 'is:sunset' : '-is:sunset'),
       },
     !isGhost &&
       (destinyVersion === 2 || isWeapon) && {
@@ -480,7 +472,11 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
-              <KillTrackerInfo tracker={killTrackerInfo} defs={defs} className={styles.modPerk} />
+              <KillTrackerInfo
+                tracker={killTrackerInfo}
+                defs={defs}
+                className={styles.killTrackerDisplay}
+              />
             )
           );
         },

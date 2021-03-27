@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import missingFactionTokenHashes from 'data/d2/missing-faction-tokens.json';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
@@ -55,7 +54,6 @@ export default function VendorItems({
     currencies = _.uniqBy(
       [
         ...Object.keys(faction.tokenValues)
-          .filter((tokenValues) => !missingFactionTokenHashes.includes(Number(tokenValues))) // TODO: remove when bad token hashes no longer exist
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
           .filter(Boolean),
         ...currencies,

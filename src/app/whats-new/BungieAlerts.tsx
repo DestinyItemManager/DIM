@@ -1,17 +1,7 @@
 import { t } from 'app/i18next-t';
-import { useSubscription } from 'app/utils/hooks';
-import { GlobalAlert } from 'bungie-api-ts/core';
-import { deepEqual } from 'fast-equals';
-import React, { useState } from 'react';
-import { EMPTY, from, timer } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs/operators';
-import { getGlobalAlerts } from '../bungie-api/bungie-core-api';
+import { bungieAlertsSelector } from 'app/shell/selectors';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import ExternalLink from '../dim-ui/ExternalLink';
 import './BungieAlerts.scss';
 
@@ -23,21 +13,11 @@ export const GlobalAlertLevelsToToastLevels = [
   'error', // Red
 ];
 
-export const alerts$ = timer(0, 10 * 60 * 1000).pipe(
-  // Fetch global alerts, but swallow errors
-  switchMap(() => from(getGlobalAlerts()).pipe(catchError((_err) => EMPTY))),
-  startWith<GlobalAlert[]>([]),
-  // Deep equals
-  distinctUntilChanged<GlobalAlert[]>(deepEqual),
-  shareReplay()
-);
-
 /**
  * Displays maintenance alerts from Bungie.net.
  */
 export default function BungieAlerts() {
-  const [alerts, setAlerts] = useState<GlobalAlert[]>([]);
-  useSubscription(() => alerts$.subscribe(setAlerts));
+  const alerts = useSelector(bungieAlertsSelector);
 
   return (
     <div className="bungie-alerts">

@@ -1,13 +1,12 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import { isSunset } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
 
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [
   {
-    keywords: ['armor2.0'],
+    keywords: 'armor2.0',
     description: tl('Filter.Energy'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => Boolean(item.energy) && item.bucket.inArmor,
@@ -73,10 +72,7 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'sunset',
     description: tl('Filter.IsSunset'),
-    filter: () => (item) => {
-      const sunsetSeason = getItemPowerCapFinalSeason(item);
-      return sunsetSeason !== undefined && D2CalculatedSeason >= sunsetSeason + 1;
-    },
+    filter: () => isSunset,
   },
 ];
 

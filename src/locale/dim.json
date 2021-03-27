@@ -79,6 +79,15 @@
     "UnknownError": "Bungie.net message: {{message}}",
     "VendorNotFound": "Vendor data is unavailable."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "Archetype",
     "Armor2": "Armor 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
-      "Archetype": "Cannot compare this item as it is not a {{type}}.",
-      "Class": "Cannot compare this item as it is not for a {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -177,7 +185,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
-    "IsSunset": "",
+    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
@@ -222,12 +231,10 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
-    "Stats": "Shows items based on a specific stat value.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking.",
+    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
-    "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
-    "Sunsets": "",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -261,6 +268,8 @@
     "FilterHelp": "Search item/perk, {{example}}, and more",
     "FilterHelpBrief": "Search items",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
@@ -282,7 +291,6 @@
   },
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
-    "Drag": "Hold shift to transfer a partial stack",
     "NoStorage": "DIM can't store data",
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
@@ -450,11 +458,7 @@
     "SaveAs": "Save as",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectMinStatTotal": "Minimum Armor Stat Total",
-    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "Select Perks",
-    "SelectPower": "Minimum Power",
-    "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
     "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
@@ -465,6 +469,7 @@
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",
     "AddEquippedItems": "Add Equipped",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
@@ -560,10 +565,7 @@
     "Weekly": "Weekly Challenge"
   },
   "MoveAmount": {
-    "DownStack": "Decrease down to the next full stack",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
-    "UpStack": "Increase up to the next full stack"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
@@ -691,9 +693,11 @@
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[REDACTED]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Secret Triumph",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },
@@ -706,6 +710,7 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -746,6 +751,7 @@
     "SingleCharacter": "Only show current character",
     "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "Item size",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",
     "SortByPrimary": "Power level",
@@ -766,29 +772,29 @@
     "BarricadeCooldown": "Barricade Cooldown",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
+    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
+    "DarkMeleeCooldown": "Dark Melee Cooldown",
+    "DarkSuperCooldown": "Dark Super Cooldown",
     "Discipline": "Discipline",
     "DodgeCooldown": "Dodge Cooldown",
-    "Effect": "Effect",
-    "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Grenade Cooldown",
     "Intellect": "Intellect",
+    "LightGrenadeCooldown": "Light Grenade Cooldown",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
     "MaxGearPower": "Maximum Power of equippable gear",
     "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "Maximum total Power",
-    "MeleeCooldown": "Melee Cooldown",
     "Milliseconds": "ms",
     "NoBonus": "No Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} of max roll",
     "PercentHelp": "Click for more information about what Stats Quality is.",
-    "PowerCap": "Power Limit",
-    "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "Quality": "Stats quality",
     "RiftCooldown": "Rift Cooldown",
     "Strength": "Strength",
-    "SuperCooldown": "Super Cooldown",
+    "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +843,6 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Fill Stack ({{amount}})",
-    "HowMuch": "How many {{itemname}} to move?",
-    "Move": "Move"
   },
   "Tags": {
     "Archive": "Archive",
@@ -941,7 +942,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
-  "move-canceled": "Move canceled",
   "no-space": "",
   "wrong-level": ""
 }

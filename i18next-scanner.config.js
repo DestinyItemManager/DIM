@@ -70,6 +70,11 @@ module.exports = {
         fallback: false,
         separator: '',
       },
+      catalysts: {
+        list: ['Quest', 'Mission', 'LeviathansBreath', 'RuinousEffigy', 'TheFourthHorseman'],
+        fallback: false,
+        separator: '',
+      },
     },
   },
 };

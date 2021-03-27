@@ -13,7 +13,6 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import GearPower from '../gear-power/GearPower';
 import DragGhostItem from './DragGhostItem';
 import { storesLoadedSelector } from './selectors';
-import StackableDragHelp from './StackableDragHelp';
 import { useLoadStores } from './store/hooks';
 
 interface ProvidedProps {
@@ -57,7 +56,6 @@ function Inventory({ storesLoaded, account, isPhonePortrait }: Props) {
   return (
     <ErrorBoundary name="Inventory">
       <Stores account={account} />
-      {$featureFlags.moveAmounts && <StackableDragHelp />}
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
       {$featureFlags.mobileInspect && isPhonePortrait && <MobileInspect />}

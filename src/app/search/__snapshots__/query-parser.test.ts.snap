@@ -3971,6 +3971,42 @@ Array [
 ]
 `;
 
+exports[`parse |gnawing hunger|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "gnawing",
+      "op": "filter",
+      "type": "keyword",
+    },
+    Object {
+      "args": "hunger",
+      "op": "filter",
+      "type": "keyword",
+    },
+  ],
+}
+`;
+
+exports[`parse |gnawing hunger|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "keyword",
+    "gnawing",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "hunger",
+  ],
+]
+`;
+
 exports[`parse |is:armor2.0|: ast 1`] = `
 Object {
   "args": "armor2.0",
@@ -4709,6 +4745,60 @@ Array [
 ]
 `;
 
+exports[`parse |not "forgotten"|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not "forgotten"|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not (forgotten)|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not (forgotten)|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |not -not:maxpower|: ast 1`] = `
 Object {
   "op": "not",
@@ -4753,7 +4843,31 @@ Object {
 }
 `;
 
+exports[`parse |not forgotten|: ast 2`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
 exports[`parse |not forgotten|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not forgotten|: lexer 2`] = `
 Array [
   Array [
     "not",

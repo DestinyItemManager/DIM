@@ -250,8 +250,7 @@ function getNonReuseableModSockets(item: DimItem) {
   return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
-      _.intersection(s?.plugged?.plugDef?.itemCategoryHashes || [], modItemCategoryHashes).length >
-        0
+      _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0
   );
 }
 
@@ -263,7 +262,7 @@ function getModdedStatValue(item: DimItem, stat: DimStat) {
   const modSockets = getNonReuseableModSockets(item).filter(
     (socket) =>
       socket.plugged?.enabled &&
-      socket.plugged?.stats &&
+      socket.plugged.stats &&
       String(stat.statHash) in socket.plugged.stats &&
       isPlugStatActive(
         item,
@@ -290,7 +289,7 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  */
 function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[], item?: DimItem) {
   return _.sumBy(sockets, (socket) =>
-    socket.plugged?.stats
+    socket.plugged?.enabled && socket.plugged.stats
       ? _.sumBy(
           armorStatHashes,
           (armorStatHash) =>

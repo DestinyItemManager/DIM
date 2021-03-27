@@ -30,7 +30,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import { StatHashes } from 'data/d2/generated-enums';
-import powerCapToSeason from 'data/d2/lightcap-to-season.json';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -120,10 +119,6 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
-/** given item, get the final season it will be relevant (able to hit max power level) */
-export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
-  item.powerCap ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
-
 /** accepts a DimMasterwork or lack thereof, & always returns a string */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
   return (
@@ -159,6 +154,14 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
  */
 export function itemIsInstanced(item: DimItem): boolean {
   return item.id !== '0';
+}
+
+/**
+ * Items that are sunset are always sunset.
+ */
+export function isSunset(item: DimItem): boolean {
+  // 1310 is the last power cap value before sunsetting was sunsetted
+  return item.powerCap !== null && item.powerCap < 1310;
 }
 
 /** Can this item be equipped by the given store? */

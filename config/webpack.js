@@ -21,6 +21,7 @@ const svgToMiniDataURI = require('mini-svg-data-uri');
 const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -400,12 +401,10 @@ module.exports = (env) => {
         '$featureFlags.mobileInspect': JSON.stringify(true),
         // Move the pull from button
         '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
-        // Enable move amounts
-        '$featureFlags.moveAmounts': JSON.stringify(env.release),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(!env.release),
+        '$featureFlags.searchResults': JSON.stringify(env.dev),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
@@ -415,7 +414,7 @@ module.exports = (env) => {
         // Show bounty guide
         '$featureFlags.bountyGuide': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
-        '$featureFlags.abilityCooldowns': JSON.stringify(env.dev),
+        '$featureFlags.abilityCooldowns': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
@@ -469,11 +468,7 @@ module.exports = (env) => {
       })
     );
 
-    config.module.rules.push({
-      test: /\.jsx?$/,
-      include: /node_modules/,
-      use: ['react-hot-loader/webpack'],
-    });
+    config.plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
     config.plugins.push(

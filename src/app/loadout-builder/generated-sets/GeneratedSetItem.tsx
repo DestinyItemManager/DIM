@@ -6,9 +6,9 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React, { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
+import { matchLockedItem } from '../item-filter';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { matchLockedItem } from '../preProcessFilter';
 import { LockedItemType, LockedMod } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
@@ -79,9 +79,8 @@ export default function GeneratedSetItem({
 
   return (
     <div className={styles.item}>
-      <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
-
       <div className={styles.swapButtonContainer}>
+        <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
         {itemOptions.length > 1 ? (
           <button
             type="button"

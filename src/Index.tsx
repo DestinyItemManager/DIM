@@ -3,6 +3,7 @@ import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import { loadCoreSettings } from 'app/manifest/actions';
+import { pollForBungieAlerts } from 'app/shell/actions';
 import store from 'app/store/store';
 import { infoLog } from 'app/utils/log';
 import React from 'react';
@@ -33,6 +34,7 @@ updateCSSVariables();
 
 store.dispatch(loadDimApiData());
 store.dispatch(loadCoreSettings());
+store.dispatch(pollForBungieAlerts());
 
 saveItemInfosOnStateChange();
 

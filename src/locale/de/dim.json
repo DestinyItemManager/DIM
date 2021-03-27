@@ -79,6 +79,15 @@
     "UnknownError": "Bungie.net Nachricht: {{message}}",
     "VendorNotFound": "Händler Daten nicht verfügbar."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Gefunden, indem du mächtige Gegner mit dieser Waffe besiegst.",
+      "Mission": "Schließe die \"{{title}}\" Mission ab.",
+      "Quest": "Schließe die \"{{title}}\" Quest ab.",
+      "RuinousEffigy": "Gefunden, indem du Feinde mit Transmutationssphären besiegst.",
+      "TheFourthHorseman": "Schließe Seraph Bunker, Seraph Türme und Legendäre Verlorene Sektoren ab."
+    }
+  },
   "Compare": {
     "Archetype": "Urtyp",
     "Armor2": "Rüstung 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Gegenstände vergleichen",
     "CompareBaseStats": "Grundstatistiken anzeigen",
     "Error": {
-      "Archetype": "Kann diesen Gegenstand nicht vergleichen, da er kein {{type}} ist.",
-      "Class": "Kann diesen Gegenstand nicht vergleichen, da er nicht für einen {{class}} ist."
+      "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Zeigt Gegenstände, deren Name, Beschreibung, jeglicher Perk, oder Mod eine teilweise Übereinstimmung zum Suchtext haben. Suche nach ganzen Phrasen mittels Anführungszeichen. Der 'perk:' Filter durchsucht nur Perks.",
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
+    "PinnacleReward": "Zeigt Jagden, welche eine Spitzenbelohnung hervorbringen.",
     "Postmaster": "Items die derzeit bei der Poststelle sind.",
     "PowerLevel": "Zeigt Gegenstände basierend auf ihrem Powerlevel an. $t(Filter.PowerKeywords)",
     "PowerLimit": "Zeigt Gegenstände basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Zeigt doppelte Elemente, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
-    "Stats": "Zeigt Items basierend auf einem bestimmten Wert der Statistik.",
-    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, Mod- oder Meisterwerk-Verbesserungen werden ignoriert.",
+    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Statistik-Wert. Unterstützt das Verbinden mehrerer Statistik-Namen mit dem + Symbol.",
+    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk. Unterstützt das Hinzufügen von Statistiken durch das Verbinden mehrerer Statistik-Namen mit dem + Symbol.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
     "SunsetAfter": "Zeigt Items basierend auf der letzten Saison an, in der sie die saisonale Power-Grenze erreichen.",
-    "Sunsets": "",
+    "Sunsets": "Zeigt Gegenstände basierend auf der ersten Saison, in der sie nicht mehr bis zur saisonalen Powergrenze infundiert werden können.",
     "Tags": {
       "Tag": "Zeigt Items mit einem bestimmten Tag an.",
       "Tagged": "Zeigt Items mit irgend einem Tag an."
@@ -261,6 +270,8 @@
     "FilterHelp": "Suche Item/Perk, {{example}} und mehr",
     "FilterHelpBrief": "Suche Gegenstände",
     "FilterHelpMenuItem": "Filter Hilfe...",
+    "FilterHelpOptimizer": "Filter Rüstung von Loadouts: {{example}}",
+    "FilterHelpProgress": "Suche Meilensteine und Herausforderungen",
     "FilterHelpRecords": "Triumphe und Sammlungen durchsuchen",
     "FilterMatchCount": "1 Gegenstand",
     "FilterMatchCount_plural": "{{count}} Gegenstände",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "Gegenstand kann nicht von diesem Charakter wegbewegt werden.",
-    "Drag": "Halte Shift um einen Teilstapel zu übertragen",
     "NoStorage": "DIM kann die Daten nicht speichern",
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. Du wirst dich weder anmelden, noch DIM nutzen können."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Speichern unter",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectMinStatTotal": "Minimum Rüstungs-Stats Total",
-    "SelectMinStatTotalDescription": "Legt den Mindestwert für ein einzelnes Rüstungsteil fest (ohne Klassengegenstände).",
     "SelectPerks": "Wähle Perks",
-    "SelectPower": "Minimum Power",
-    "SelectPowerDescription": "Legt ein minimales Powerlevel für die gesamte Ausrüstung fest (nicht einzelne Stücke)",
     "StatIncorrectWarning": "Um genaue Ergebnisse zu erhalten, entferne bitte alle Mods mit negativen Statistik-Effekten.\n\nAufgrund von Mods mit negativen Statistik-Modifikatoren, kann DIM den Grundwert von {{stats}} bei einigen enthaltenen Gegenständen nicht bestimmen. Dies ist eine Einschränkung der, durch Bungie.net, übermittelten Informationen.",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Möchtest du diese Ausrüstung wirklich verwerfen?",
     "AddEquippedItems": "Ausgerüstetes hinzufügen",
+    "AddUnequippedItems": "Unausgerüstet hinzufügen",
     "AlreadyExistsClass": "Eine Ausrüstung mit diesem Namen existiert bereits für {{className}}.",
     "AlreadyExistsGlobal": "Eine globale Ausrüstung mit diesem Namen existiert bereits.",
     "Any": "Jede Klasse",
@@ -560,10 +567,7 @@
     "Weekly": "Wöchentliche Herausforderung"
   },
   "MoveAmount": {
-    "DownStack": "Auf letzten vollen Stapel verringern",
-    "MinusStack": "-Stapel",
-    "PlusStack": "+Stapel",
-    "UpStack": "Auf nächsten vollen Stapel erhöhen"
+    "Amount": "Menge:"
   },
   "MovePopup": {
     "Acquired": "Dieses Element ist in Sammlungen freigeschaltet.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",
+    "Redacted": "[VERTRAULICH]",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
     "SecretTriumph": "Geheimer Triumph",
+    "Source": "Quelle: {{sourceInfo}}",
     "StatTrackers": "Statistiken Tracker",
     "TrackedTriumphs": "Verfolgte Triumphe"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Zuletzt verwendet",
+    "DeleteAll": "Alle nicht markierten Suchen löschen",
     "Description": "Dies sind alle deine vergangenen und gespeicherten Suchen. Du kannst sie von hier löschen.",
     "Link": "Suchverlauf anzeigen und bearbeiten",
     "Query": "Suche",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Nur aktuellen Charakter anzeigen",
     "SingleCharacterExplanation": "DIM wird alle bis auf den zuletzt gespielten Charakter ausblenden. Die Inventare anderer Charaktere werden angezeigt, als wären sie im Tresor.",
     "SizeItem": "Gegenstandsgröße",
+    "SortByAmmoType": "Munitionstyp",
     "SortByAmount": "Stapel Größe",
     "SortByClassType": "Benötigte Klasse",
     "SortByPrimary": "Powerlevel",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Abklingzeit Barrikade",
     "Custom": "Benutzerdefinierte Summe",
     "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Statistiken, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Statistiken enthalten sind.",
+    "DarkGrenadeCooldown": "Dunkle Granate Abklingzeit",
+    "DarkMeleeCooldown": "Dunkler Nahkampf Abklingzeit",
+    "DarkSuperCooldown": "Dunkle Super Abklingzeit",
     "Discipline": "Disziplin",
     "DodgeCooldown": "Abklingzeit Ausweichen",
-    "Effect": "Effekt",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Abklingzeit Granaten",
     "Intellect": "Intellekt",
+    "LightGrenadeCooldown": "Helle Granate Abklingzeit",
+    "LightMeleeCooldown": "Heller Nahkampf Abklingzeit",
+    "LightSuperCooldown": "Helle Super Abklingzeit",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
     "MaxGearPowerAll": "Maximale Power von gesamter Ausrüstung",
     "MaxTotalPower": "Maximale Gesamt Power",
-    "MeleeCooldown": "Abklingzeit Nahkampf",
     "Milliseconds": "ms",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
@@ -788,7 +799,6 @@
     "Quality": "Wert-Qualität",
     "RiftCooldown": "Abklingzeit Rift",
     "Strength": "Stärke",
-    "SuperCooldown": "Abklingzeit Super",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "Wir hatten ein Problem beim Speichern deiner Daten in DIM Sync. Wir versuchen es später automatisch nochmal.",
     "UpdateErrorTitle": "DIM Sync Fehler",
     "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Stapel auffüllen ({{amount}})",
-    "HowMuch": "Wie viele {{itemname}} sollen verschoben werden?",
-    "Move": "Verschieben"
   },
   "Tags": {
     "Archive": "Archiv",
@@ -941,7 +946,6 @@
     "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   },
-  "move-canceled": "Verschieben abgebrochen",
   "no-space": "",
   "wrong-level": ""
 }

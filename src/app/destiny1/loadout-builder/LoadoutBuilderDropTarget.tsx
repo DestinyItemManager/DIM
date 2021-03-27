@@ -54,21 +54,17 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): Inte
   };
 }
 
-class LoadoutBucketDropTarget extends React.Component<Props> {
-  render() {
-    const { connectDropTarget, children, isOver, canDrop } = this.props;
-
-    return connectDropTarget(
-      <div
-        className={clsx({
-          'on-drag-hover': canDrop && isOver,
-          'on-drag-enter': canDrop,
-        })}
-      >
-        {children}
-      </div>
-    );
-  }
+function LoadoutBucketDropTarget({ connectDropTarget, children, isOver, canDrop }: Props) {
+  return connectDropTarget(
+    <div
+      className={clsx({
+        'on-drag-hover': canDrop && isOver,
+        'on-drag-enter': canDrop,
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default DropTarget(dragType, dropSpec, collect)(LoadoutBucketDropTarget);

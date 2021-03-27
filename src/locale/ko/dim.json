@@ -79,6 +79,15 @@
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "이 무기로 강력한 전투원을 처치하여 찾을 수 있습니다.",
+      "Mission": "\"{{title}}\" 미션을 완료하세요.",
+      "Quest": "\"{{title}}\" 퀘스트를 완료하세요.",
+      "RuinousEffigy": "변환 구체로 전투원을 처치하여 찾을 수 있습니다.",
+      "TheFourthHorseman": "세라프 벙커, 세라프 탑, 전설 잊혀진 구역을 완료하세요."
+    }
+  },
   "Compare": {
     "Archetype": "아키타입",
     "Armor2": "방어구 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "아이템 비교",
     "CompareBaseStats": "기본 능력치 표시",
     "Error": {
-      "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
-      "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
+      "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
     }
   },
   "Cooldown": {
@@ -143,7 +151,7 @@
     "Instructions": "클릭 또는 파일 끌어서 놓기"
   },
   "Filter": {
-    "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
+    "AmmoType": "탄약 유형에 따른 아이템 표시",
     "Armor": "방어구인 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "주입 노드가 있으며 주입이 된 아이템 표시",
@@ -207,6 +215,7 @@
     "PartialMatch": "이름, 설명, 특성이나 개조 부품이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
+    "PinnacleReward": "최고급 보상을 주는 목표 표시",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerLevel": "전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
     "PowerLimit": "최대로 주입할 수 있는 전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "중복된 아이템 표시, 다른 시즌의 재출시된 아이템은 같은 아이템으로 취급하지 않음.",
     "StackLevel": "중첩된 개수에 따른 아이템 표시",
     "Stackable": "중첩 가능한 아이템(탄약 신스, 이상한 동전 등) 표시",
-    "Stats": "특정 능력치 값에 따른 아이템 표시",
-    "StatsBase": "방어구를 장착된 개조 부품과 걸작을 제외한 기본 능력치 값으로 필터링",
+    "Stats": "특정 능력치 값에 따라 아이템을 표시합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
+    "StatsBase": "방어구를 장착된 개조 부품이나 걸작을 포함하지 않은 기초 능력치 값으로 필터링합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
     "SunsetAfter": "전투력 상한선에 도달할 수 있는 시즌에 따른 아이템 표시",
-    "Sunsets": "",
+    "Sunsets": "전투력 상한선으로 주입할 수 없는 첫 번째 시즌에 따른 아이템 표시",
     "Tags": {
       "Tag": "특정 태그가 있는 아이템 표시",
       "Tagged": "태그가 있는 아이템 표시"
@@ -261,6 +270,8 @@
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
     "FilterHelpMenuItem": "필터 도움말...",
+    "FilterHelpOptimizer": "로드아웃에서 방어구 필터링: {{example}}",
+    "FilterHelpProgress": "이정표와 현상금 검색",
     "FilterHelpRecords": "업적과 수집품 검색",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "Drag": "Shift 키를 누르고 유지하여 스택의 일부를 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 이와 같은 문제가 발생할 수 있습니다. DIM에 로그인하거나 사용할 수 없습니다."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "다른 이름으로 저장",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
-    "SelectMinStatTotal": "방어구 총 능력치 최솟값",
-    "SelectMinStatTotalDescription": "방어구 하나의 총 능력치 최솟값을 설정합니다.(직업 아이템 제외)",
     "SelectPerks": "특성 선택",
-    "SelectPower": "최소 파워",
-    "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
     "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.\n\n개조 부품의 능력치 페널티로 인하여 DIM에서 일부 아이템의 {{stats}} 능력치의 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "이 로드아웃을 삭제하시겠습니까?",
     "AddEquippedItems": "장착한 아이템 추가",
+    "AddUnequippedItems": "장착하지 않은 아이템 추가",
     "AlreadyExistsClass": "동일한 이름을 가진 로드아웃이 {{className}} 직업에 존재합니다.",
     "AlreadyExistsGlobal": "동일한 이름을 가진 공용 로드아웃이 존재합니다.",
     "Any": "모든 직업",
@@ -560,10 +567,7 @@
     "Weekly": "주간 도전"
   },
   "MoveAmount": {
-    "DownStack": "다음 최대 중첩량으로 감소시키기",
-    "MinusStack": "-스택",
-    "PlusStack": "+스택",
-    "UpStack": "다음 최대 중첩량으로 증가시키기"
+    "Amount": "수량:"
   },
   "MovePopup": {
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
@@ -691,9 +695,11 @@
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
+    "Redacted": "[비공개]",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
     "SecretTriumph": "비밀 업적",
+    "Source": "출처: {{sourceInfo}}",
     "StatTrackers": "통계 추적기",
     "TrackedTriumphs": "추적 중인 업적"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "최근 사용",
+    "DeleteAll": "저장되지 않은 검색 기록 삭제",
     "Description": "이전에 저장된 검색 기록입니다. 이곳에서 삭제할 수 있습니다.",
     "Link": "검색 기록 보기 및 편집",
     "Query": "검색",
@@ -746,6 +753,7 @@
     "SingleCharacter": "현재 캐릭터만 표시",
     "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
     "SizeItem": "아이템 크기",
+    "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "전투력",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "방벽 재사용 대기시간",
     "Custom": "사용자 정의 총합",
     "CustomDesc": "개조 부품이나 걸작을 제외한 선택된 기본 능력치의 사용자 정의 총합입니다. 설정에서 어떤 능력치를 포함할지 선택하세요.",
+    "DarkGrenadeCooldown": "어둠 수류탄 재사용 대기시간",
+    "DarkMeleeCooldown": "어둠 근접 능력 재사용 대기시간",
+    "DarkSuperCooldown": "어둠 궁극기 재사용 대기시간",
     "Discipline": "규율",
     "DodgeCooldown": "회피 재사용 대기시간",
-    "Effect": "효과",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "수류탄 재사용 대기시간",
     "Intellect": "지능",
+    "LightGrenadeCooldown": "빛 수류탄 재사용 대기시간",
+    "LightMeleeCooldown": "빛 근접 능력 재사용 대기시간",
+    "LightSuperCooldown": "빛 궁극기 재사용 대기시간",
     "MaxGearPower": "장착 가능한 최대 전투력",
     "MaxGearPowerAll": "모든 장비의 최대 전투력",
     "MaxTotalPower": "최대 전투력",
-    "MeleeCooldown": "근접 능력 재사용 대기시간",
     "Milliseconds": "ms",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
@@ -788,7 +799,6 @@
     "Quality": "능력치 품질",
     "RiftCooldown": "균열 재사용 대기시간",
     "Strength": "힘",
-    "SuperCooldown": "궁극기 재사용 대기시간",
     "Tier": "{{tier}}단계",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
     "UpdateErrorTitle": "DIM 동기화 오류",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
-  },
-  "StoreBucket": {
-    "FillStack": "중첩 ({{amount}})개 채우기",
-    "HowMuch": "몇 개의 {{itemname}}을(를) 이동하시겠습니까?",
-    "Move": "이동"
   },
   "Tags": {
     "Archive": "보관",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
   },
-  "move-canceled": "이동 취소됨",
   "no-space": "",
   "wrong-level": ""
 }

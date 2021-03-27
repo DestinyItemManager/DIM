@@ -31,7 +31,7 @@ export function getSeason(item: DimItem): number {
   // iconOverlay has precedence for season
   const overlay = item.iconOverlay || item.hiddenOverlay;
 
-  if (item.source && SourceToD2Season[item.source]) {
+  if (item.source && SourceToD2Season[item.source] && !overlay) {
     return SourceToD2Season[item.source];
   }
 

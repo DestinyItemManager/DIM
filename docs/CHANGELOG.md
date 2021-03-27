@@ -1,5 +1,54 @@
 ## Next
 
+## 6.57.1 <span class="changelog-date">(2021-03-22)</span>
+
+* Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
+* Fix Loadout Optimizer acting as if "Assume Masterworked" was always checked.
+
+## 6.57.0 <span class="changelog-date">(2021-03-21)</span>
+
+* We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
+* Clicking on the empty area below Organizer can now close item popups, where it didn't before.
+* Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
+* Added a new `is:pinnaclereward` search that searches for pinnacle rewards on the Progress page.
+* DIM Sync now less picky about saving very simple searches.
+* Fix mis-sized kill tracker icons in Organizer.
+* Support addition syntax in stat filters, i.e. `stat:recovery+mobility:>30`
+* Mulligan now shows up as a Wishlisted perk.
+* Search bar expands more readily to replace the top tabs, so the field isn't squished really tiny.
+* Loadout Optimizer
+  * Reposition some misplaced pieces of UI
+  * Performance optimizations and some tweaks that could theoretically include some builds that wouldn't have shown up before.
+  * Fixed an issue that would show builds with more than 100 in a single stat once mods were included.
+  * Removed the minimum power and minimum stat total filters. Minimum power didn't see much use and minimum stat total can be achieved by searching `basestat:total:>52` in the search bar.
+
+## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
+
+* Fix a bug where clicking inside the mod picker would dismiss the popup.
+
+## 6.56.0 <span class="changelog-date">(2021-03-14)</span>
+
+* On the Compare screen, items will update to show their locked or unlocked state.
+* Deleting multiple searches from your search history works now - before there was a bug where only the first delete would succeed.
+* On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
+* Deprecated search filters no longer show up in Filter Help.
+* Searches that don't use any special filters now search for the entire string in item names and descriptions and perk names and descriptions. e.g. `gnawing hunger` now searches for the full string "gnawing hunger" as opposed to being equivalent to `"gnawing" and "hunger"`.
+* Invalid searches no longer save to search history.
+* Bright engrams show up correctly in the seasonal progress again.
+* Added an icon for Cabal Gold in objective text.
+* You can sort items by ammo type.
+* There's a new button in the Loadout editor to add all unequipped items, similar to adding all equipped items.
+* The farming mode "stop" button no longer covers the category strip on mobile.
+* Reverting a loadout (the button labeled "Before [LoadoutName]") no longer pulls items from Postmaster.
+
+## 6.55.0 <span class="changelog-date">(2021-03-07)</span>
+
+* You can once again select how much of a stackable item to move, by editing the amount in the move popup before clicking a move button. Holding shift during drag no longer allows you to select the amount - you must do it from the buttons in the popup.
+
+## 6.54.0 <span class="changelog-date">(2021-02-28)</span>
+
+## 6.53.0 <span class="changelog-date">(2021-02-21)</span>
+
 * Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.
 * Bulk tagging in the Organizer no longer shows an "undo" popup. We expect you know what you're doing there!
 

@@ -79,6 +79,15 @@
     "UnknownError": "Wiadomość Bungie.net: {{message}}",
     "VendorNotFound": "Dane sprzedawcy są niedostępne."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "Archetyp",
     "Armor2": "Pancerz 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Porównaj Przedmioty",
     "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
-      "Archetype": "Nie można porównać tego przedmiotu, jako że nie jest to {{type}}.",
-      "Class": "Nie można porównać tego przedmiotu, jako że nie jest dla klasy {{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Pokazuje elementy, w których ich nazwa, opis, dowolny atut lub dowolne modyfikacje są częściowo dopasowane do tekstu filtra. Wyszukaj całe frazy za pomocą cytatów. Filtr 'perk:' będzie tylko wyszukiwać atuty.",
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
     "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
     "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy. $t(Filter.PowerKeywords)",
     "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
-    "Stats": "Pokazuje przedmioty na podstawie określonej wartości statystyki.",
-    "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statyczną, nie licząc dołączonych modyfikacji lub mistrzostwa.",
+    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "SunsetAfter": "Pokazuje przedmioty w oparciu o ostatni sezon, w którym mogą osiągnąć Sezonowy Limit Mocy.",
-    "Sunsets": "",
+    "Sunsets": "Shows items based on the first season they can no longer be infused to the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
@@ -261,6 +270,8 @@
     "FilterHelp": "Szukaj przedmiotu/atutu, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterHelpMenuItem": "Pomoc z filtrami...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Szukaj triumfy i kolekcje",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "Nie można zdjąć tego przedmiotu z tej postaci.",
-    "Drag": "Przytrzymaj shift aby przenieść częściowy stos",
     "NoStorage": "DIM nie może przechować danych",
     "NoStorageMessage": "DIM nie może przechować danych w twojej przeglądarce. To może być spowodowane przez przeglądanie w trybie prywatnym lub incognito, albo kiedy brakuje miejsca na dysku. Nie będziesz mógł się zalogować ani używać DIM."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Zapisz jako",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
-    "SelectMinStatTotal": "Minimalna suma statystyk pancerza",
-    "SelectMinStatTotalDescription": "Ustawia minimalną sumę statystyk dla pojedynczego elementu pancerza (z pominięciem przedmiotów klasy).",
     "SelectPerks": "Wybierz Atuty",
-    "SelectPower": "Minimalna Moc",
-    "SelectPowerDescription": "Ustawia minimalny poziom mocy dla całego uzbrojenia (nie dla poszczególnych części)",
     "StatIncorrectWarning": "Aby uzyskać dokładne wyniki, usuń wszystkie modyfikacje z negatywnymi efektami statystyki.\n\nZe względu na modyfikacje z negatywnymi modyfikatorami statystyk, DIM nie może określić wartości bazowej lub wartości {{stats}} dla niektórych zawartych przedmiotów. Jest to ograniczenie informacji wysyłanych przez Bungie.net.",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Czy na pewno chcesz porzucić te uzbrojenie?",
     "AddEquippedItems": "Dodaj Założone",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "Uzbrojenie z tą nazwą już istnieje dla twojego {{className}}.",
     "AlreadyExistsGlobal": "Globalne uzbrojenie o tej nazwie już istnieje.",
     "Any": "Dowolna klasa",
@@ -560,10 +567,7 @@
     "Weekly": "Cotygodniowe wyzwanie"
   },
   "MoveAmount": {
-    "DownStack": "Zmniejsz do następnego pełnego stosu",
-    "MinusStack": "-Stos",
-    "PlusStack": "+Stos",
-    "UpStack": "Zwiększ do następnego pełnego stosu"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
     "RecordValue": "{{value}}pkt",
+    "Redacted": "[USUNIĘTO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
     "SecretTriumph": "Sekretny Triumf",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Śledzenie statystyk",
     "TrackedTriumphs": "Śledzone triumfy"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "To są Twoje przeszłe i zapisane wyszukiwania. Możesz je stąd usunąć.",
     "Link": "Zobacz i edytuj historię wyszukiwania",
     "Query": "Szukaj",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Pokaż tylko aktualną postać",
     "SingleCharacterExplanation": "DIM ukryje wszystkie oprócz ostatnio używanej postaci. Ekwipunki tych postaci będą traktowane jak by były w schowku.",
     "SizeItem": "Rozmiar elementu",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Rozmiar stosu",
     "SortByClassType": "Wymagana klasa",
     "SortByPrimary": "Poziom mocy",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Odnowienie barykady",
     "Custom": "Niestandardowa suma",
     "CustomDesc": "Niestandardowa suma wybranych statystyk podstawowych, ignorując modyfikacje lub mistrzostwo. Odwiedź ustawienia, aby skonfigurować, które statystyki są dołączone.",
+    "DarkGrenadeCooldown": "Odnowienie Mrocznego Granatu",
+    "DarkMeleeCooldown": "Odnowienie mrocznego ataku wręcz",
+    "DarkSuperCooldown": "Odnowienie mrocznej super umiejętności",
     "Discipline": "Dyscyplina",
     "DodgeCooldown": "Odnowienie uniku",
-    "Effect": "Efekt",
     "FinalSeason": "(S{{finalSeason}})",
-    "GrenadeCooldown": "Odnowienie granatu",
     "Intellect": "Intelekt",
+    "LightGrenadeCooldown": "Odnowienie Granatu Jasności",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
     "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",
     "MaxGearPowerAll": "Maksymalna moc całego wyposażenia",
     "MaxTotalPower": "Maksymalna całkowita Moc",
-    "MeleeCooldown": "Odnowienie ataku wręcz",
     "Milliseconds": "ms",
     "NoBonus": "Bez bonusu",
     "NotApplicable": "ND.",
@@ -788,7 +799,6 @@
     "Quality": "Jakość statystyk",
     "RiftCooldown": "Odnowienie wyrwy",
     "Strength": "Siła",
-    "SuperCooldown": "Odnowienie superzdolności",
     "Tier": "Poziom {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Automatycznie spróbujemy ponownie później.",
     "UpdateErrorTitle": "Błąd synchronizacji DIM",
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Wypełnij stos ({{amount}})",
-    "HowMuch": "Jak dużo {{itemname}} przenieść?",
-    "Move": "Przenieś"
   },
   "Tags": {
     "Archive": "Archiwizuj",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy. Domyślnie zawarte w aplikacji.",
     "WishListNotes": "Notatki z listy życzeń: {{notes}}"
   },
-  "move-canceled": "Anulowano przenoszenie",
   "no-space": "",
   "wrong-level": ""
 }

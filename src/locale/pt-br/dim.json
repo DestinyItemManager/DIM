@@ -79,6 +79,15 @@
     "UnknownError": "Mensagem da Bungie.net: {{message}}",
     "VendorNotFound": "Dados do vendedor não disponíveis."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Encontrado ao derrotar inimigos poderosos com esta arma.",
+      "Mission": "Complete a missão \"{{title}}\".",
+      "Quest": "Complete a jornada \"{{title}}.",
+      "RuinousEffigy": "Encontrado ao derrotar inimigos com esferas de Transmutação.",
+      "TheFourthHorseman": "Complete Bunkers do Serafim, Torres do Serafim e Setores Perdidos Lendários."
+    }
+  },
   "Compare": {
     "Archetype": "Arquétipo",
     "Armor2": "Armadura 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Comparar itens",
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
-      "Archetype": "Incapaz de comparar o item, pois não é um {{type}}.",
-      "Class": "Incapaz de comparar o item, pois ele não é para {{class}}."
+      "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     }
   },
   "Cooldown": {
@@ -207,10 +215,11 @@
     "PartialMatch": "Exibe itens onde seu nome, descrição, seus perks ou mods tenham uma correspondência parcial com o filtro indicado. Pesquise por frases inteiras usando aspas. O filtro 'perk:' buscará apenas por perks.",
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
     "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
+    "PinnacleReward": "Exibe empreitadas que recompensam equipamentos pináculos.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerLevel": "Exibe itens baseados em seu nível de poder. $t(Filter.PowerKeywords)",
     "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos. $t(Filter.PowerKeywords)",
-    "PowerfulReward": "Exibe buscas que produzem uma recompensa poderosa.",
+    "PowerfulReward": "Exibe empreitadas que recompensam equipamentos poderosos.",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
     "RandomRoll": "Mostra itens que caem com valores aleatórios.",
     "RarityTier": "Mostra itens baseado no nível de raridade deles.",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Exibe itens duplicados, desconsiderando revisões de uma temporada diferente de um mesmo item.",
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
-    "Stats": "Exibe itens baseando-se em um valor de atributo específico.",
-    "StatsBase": "Filtra armaduras baseando-se em seu valor de atributo base, não incluindo mods anexados ou obras-primas.",
+    "Stats": "Exibe itens baseado em um valor de atributo específico. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
+    "StatsBase": "Filtra armaduras com base no valor base do atributo, sem incluir mods anexados ou obra-prima. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "SunsetAfter": "Exibe itens da última temporada que podem atingir o Limite de Poder Sazonal.",
-    "Sunsets": "",
+    "Sunsets": "Exibe itens baseado na primeira temporada em que estes não podem mais ser infundidos até o Limite de Poder Sazonal.",
     "Tags": {
       "Tag": "Exibe itens que possuem uma determinada tag.",
       "Tagged": "Exibe itens que possuam qualquer tag."
@@ -261,6 +270,8 @@
     "FilterHelp": "Pesquisar item/perk, {{example}}, e mais",
     "FilterHelpBrief": "Procurar itens",
     "FilterHelpMenuItem": "Ajuda sobre filtros...",
+    "FilterHelpOptimizer": "Filtrar armaduras dos sets: {{example}}",
+    "FilterHelpProgress": "Pesquisar marcos e contratos",
     "FilterHelpRecords": "Pesquisar em triunfos e coleções",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} itens",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
-    "Drag": "Segure a tecla shift para transferir uma pilha parcial",
     "NoStorage": "DIM não pode salvar os dados",
     "NoStorageMessage": "DIM não está conseguindo salvar dados em seu navegador. Isso normalmente ocorre durante a navegação privada ou em modo anônimo, ou ainda quando há pouco espaço disponível em disco. Sendo assim, não será possível se conectar ou usar o DIM."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Salvar como",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
-    "SelectMinStatTotal": "Mínimo do Atributo Total de Armadura",
-    "SelectMinStatTotalDescription": "Determina um valor mínimo para o atributo total de uma única peça da armadura (excluindo itens de classe).",
     "SelectPerks": "Selecionar perks",
-    "SelectPower": "Poder Mínimo",
-    "SelectPowerDescription": "Define um nível de poder mínimo para todo o set (não peças individuais)",
     "StatIncorrectWarning": "Por favor, remova quaisquer mods com efeitos negativos em atributos para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "Você tem certeza que gostaria de descartar esse set?",
     "AddEquippedItems": "Adicionar Equipado",
+    "AddUnequippedItems": "Adicionar Não Equipados",
     "AlreadyExistsClass": "Um set com este nome já existe para o seu {{className}}.",
     "AlreadyExistsGlobal": "Um set global com este nome já existe.",
     "Any": "Qualquer classe",
@@ -560,10 +567,7 @@
     "Weekly": "Desafio Semanal"
   },
   "MoveAmount": {
-    "DownStack": "Eliminar pilha",
-    "MinusStack": "-Pilha",
-    "PlusStack": "+Pilha",
-    "UpStack": "Completar pilha"
+    "Amount": "Quantidade:"
   },
   "MovePopup": {
     "Acquired": "Este item está desbloqueado em coleções.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[EDITADO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Triunfo Secreto",
+    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Estatísticas",
     "TrackedTriumphs": "Triunfos Rastreados"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Último uso",
+    "DeleteAll": "Descartar todas as pesquisas não favoritadas",
     "Description": "Aqui está todo seu passado e pesquisas salvas. Você pode deletá-las se precisar.",
     "Link": "Visualizar e editar o histórico de pesquisa",
     "Query": "Termo pesquisado",
@@ -746,6 +753,7 @@
     "SingleCharacter": "Exibir apenas o personagem atual",
     "SingleCharacterExplanation": "DIM exibirá apenas o inventário do personagem mais recente. Os itens dos demais personagens aparecerão como se eles estivessem no cofre.",
     "SizeItem": "Tamanho do item",
+    "SortByAmmoType": "Tipo de Munição",
     "SortByAmount": "Tamanho da Pilha",
     "SortByClassType": "Classe Requerida",
     "SortByPrimary": "Nível de poder",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Carregamento da Barricada",
     "Custom": "Total Personalizado",
     "CustomDesc": "Total personalizado de atributos base selecionados, ignorando mods e obras-primas. Acesse as Configurações para modificar quais atributos serão incluídos.",
+    "DarkGrenadeCooldown": "Carregamento da Granada de Treva",
+    "DarkMeleeCooldown": "Carregamento do Corpo-a-corpo de Treva",
+    "DarkSuperCooldown": "Carregamento do Super de Treva",
     "Discipline": "Disciplina",
     "DodgeCooldown": "Carregamento da Esquiva",
-    "Effect": "Efeito",
     "FinalSeason": "(T{{finalSeason}})",
-    "GrenadeCooldown": "Carregamento da Granada",
     "Intellect": "Intelecto",
+    "LightGrenadeCooldown": "Carregamento da Granada de Luz",
+    "LightMeleeCooldown": "Carregamento do Corpo-a-corpo de Luz",
+    "LightSuperCooldown": "Carregamento do Super de Luz",
     "MaxGearPower": "Poder máximo de itens equipáveis",
     "MaxGearPowerAll": "Poder Máximo de todos os equipamentos",
     "MaxTotalPower": "Poder máximo total",
-    "MeleeCooldown": "Carregamento do Corpo-a-corpo",
     "Milliseconds": "ms",
     "NoBonus": "Sem bônus",
     "NotApplicable": "N/D",
@@ -788,7 +799,6 @@
     "Quality": "Níveis de qualidade",
     "RiftCooldown": "Carregamento da Fissura",
     "Strength": "Força",
-    "SuperCooldown": "Carregamento do Super",
     "Tier": "Nível {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
     "UpdateErrorTitle": "Erro na Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Encher Pilha ({{amount}})",
-    "HowMuch": "Quantos {{itemname}} para transferir?",
-    "Move": "Transferir"
   },
   "Tags": {
     "Archive": "Arquivar",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
     "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
   },
-  "move-canceled": "Mover cancelado",
   "no-space": "",
   "wrong-level": ""
 }

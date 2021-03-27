@@ -79,6 +79,15 @@
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "Los datos de los comerciantes no están disponibles."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Encontrado al derrotar enemigos poderosos con este arma.",
+      "Mission": "Completa la misión \"{{title}}\".",
+      "Quest": "Completa la aventura \"{{title}}\".",
+      "RuinousEffigy": "Encontrado al derrotar enemigos con esferas de Esferas de Transmutación.",
+      "TheFourthHorseman": "Completa Búnqueres Serafines, Torres Serafinas y Sectores Perdidos de Leyenda."
+    }
+  },
   "Compare": {
     "Archetype": "Arquetipo",
     "Armor2": "Armadura 2.0",
@@ -86,8 +95,7 @@
     "ButtonHelp": "Comparar objetos",
     "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
-      "Archetype": "No se puede comparar este objeto ya que no es {{type}}.",
-      "Class": "No se puede comparar este objeto ya que no es para {{class}}."
+      "Unmatched": "Este artículo no coincide con el tipo de objetos siendo comparados."
     }
   },
   "Cooldown": {
@@ -207,6 +215,7 @@
     "PartialMatch": "Muestra objetos donde su nombre, descripción, cualquier ventaja, o cualquier modificador tiene una coincidencia parcial al texto filtrado. Busca por frases enteras usando comillas. El filtro \"perk:\" sólo buscará ventajas.",
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
     "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
+    "PinnacleReward": "Muestra aventuras que produzcan una recompensa pináculo.",
     "Postmaster": "Objetos que están actualmente en la Administración.",
     "PowerLevel": "Muesta objetos basados en su nivel de poder. $t(Filter.PowerKeywords)",
     "PowerLimit": "Muestra objetos basados en el poder nivel máximo de poder en el que pueden ser infundidos. $t(Filter.PowerKeywords)",
@@ -222,12 +231,12 @@
     "SeasonalDupe": "Muestra objetos duplicados, sin contar reincidencias de una temporada diferente como el mismo objeto.",
     "StackLevel": "Muestra los objetos según la cantidad de objetos apilados.",
     "Stackable": "Muestra objetos que pueden ser apilados (municiones sintéticas, monedas extrañas, etc)",
-    "Stats": "Muestra objetos basados en un valor específico de estadística.",
-    "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluír modificadores aplicados u obras maestras.",
+    "Stats": "Muestra objetos basados en un valor de estadística específico. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
+    "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluír modificadores insertados u obras maestras. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
     "StatsLoadout": "Encuentra sets de objetos para equipar por el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
-    "SunsetAfter": "Muestra objetos basados en la última temporada en el que pudieron alcanzar el Tope de Poder de Temporada.",
-    "Sunsets": "",
+    "SunsetAfter": "Muestra objetos basados en la última temporada en la que puedan alcanzar el Límite de Poder de Temporada.",
+    "Sunsets": "Muestra objetos basados en la primera temporada en la que no puedan ser infundidos al Límite de Poder de Temporada.",
     "Tags": {
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
@@ -261,6 +270,8 @@
     "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
+    "FilterHelpOptimizer": "Filtrar armadura desde equipaciones: {{example}}",
+    "FilterHelpProgress": "Buscar hazañas y contratos",
     "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount": "1 objeto",
     "FilterMatchCount_plural": "{{count}} objetos",
@@ -282,7 +293,6 @@
   },
   "Help": {
     "CannotMove": "No puedes mover ese objeto de este personaje.",
-    "Drag": "Mantenén SHIFT para transferir una pila parcial",
     "NoStorage": "DIM no puede almacenar información",
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en privado o en modo incógnito, o cuando tengas poco espacio en disco. No podrás ser capaz de iniciar sesión o usar DIM."
   },
@@ -450,11 +460,7 @@
     "SaveAs": "Guardar como",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
-    "SelectMinStatTotal": "Estadística de Armadura Total Mínima",
-    "SelectMinStatTotalDescription": "Establece la estadística total mínima para una única pieza de armadura (excluyendo objetos de clase).",
     "SelectPerks": "Seleccionar Ventajas",
-    "SelectPower": "Poder Mínimo",
-    "SelectPowerDescription": "Establece un nivel de poder mínimo para toda la equipación (sin piezas individuales)",
     "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimine cualquier modificador con efectos de estado negativos.\n\nDebido a modificadores con modificadores de estadísticas negativos, DIM no puede determinar el valor base o el valor de las {{stats}} en algunos objetos incluidos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -465,6 +471,7 @@
   "Loadouts": {
     "Abandon": "¿Estás seguro de que quieres abandonar esta equipación?",
     "AddEquippedItems": "Añadir Equipados",
+    "AddUnequippedItems": "Añadir Desequipados",
     "AlreadyExistsClass": "Una equipación con este nombre ya existe para tu {{className}}.",
     "AlreadyExistsGlobal": "Una equipación global ya existe con este nombre.",
     "Any": "Cualquier clase",
@@ -560,10 +567,7 @@
     "Weekly": "Desafío Semanal"
   },
   "MoveAmount": {
-    "DownStack": "Reducir a la siguiente pila",
-    "MinusStack": "-Pila",
-    "PlusStack": "+Pila",
-    "UpStack": "Aumenta hasta la siguiente pila"
+    "Amount": "Cantidad:"
   },
   "MovePopup": {
     "Acquired": "Este objeto está desbloqueado en colecciones.",
@@ -691,9 +695,11 @@
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
+    "Redacted": "[CENSURADO]",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
     "SecretTriumph": "Triunfo Secreto",
+    "Source": "Origen: {{sourceInfo}}",
     "StatTrackers": "Rastreadores de estadísticas",
     "TrackedTriumphs": "Triunfos seguidos"
   },
@@ -706,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Último Usado",
+    "DeleteAll": "Borrar todas las búsquedas sin marcar",
     "Description": "Estas son todas tus búsquedas anteriores y guardadas. Puedes borrarlas desde aquí.",
     "Link": "Ver y ediar el historial de búsqueda",
     "Query": "Búsqueda",
@@ -746,13 +753,14 @@
     "SingleCharacter": "Mostrar sólo personaje actual",
     "SingleCharacterExplanation": "DIM ocultará todo excepto el personaje reciente más jugado. Los inventarios de esos personajes aparecerán como si fueran el depósito.",
     "SizeItem": "Tamaño de objeto",
+    "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",
     "SortByClassType": "Clase Requerida",
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
-    "SortByRating": "Calidad de la armadura (D1)",
+    "SortByRating": "Calidad de la Armadura (D1)",
     "SortBySeason": "Temporada (D2)",
-    "SortBySunset": "Ha Sido Jubilada (D2)",
+    "SortBySunset": "Ha Sido Caducada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
@@ -766,16 +774,19 @@
     "BarricadeCooldown": "Enfriamiento de Barricada",
     "Custom": "Total Personalizado",
     "CustomDesc": "Total personalizado de estadísticas base seleccionadas, ignorando modificadores u obras maestras. Visita Ajustes para configurar cuales estadísticas están incluídas.",
+    "DarkGrenadeCooldown": "Enfriamiento de Granada de Oscuridad",
+    "DarkMeleeCooldown": "Enfriamiento de Cuerpo a Cuerpo de Oscuridad",
+    "DarkSuperCooldown": "Enfriamiento de Súper de Oscuridad",
     "Discipline": "Disciplina",
     "DodgeCooldown": "Enfriamiento de Esquivar",
-    "Effect": "Efecto",
     "FinalSeason": "(T{{finalSeason}})",
-    "GrenadeCooldown": "Enfriamiento de Granada",
     "Intellect": "Intelecto",
+    "LightGrenadeCooldown": "Enfriamiento de Granada de Luz",
+    "LightMeleeCooldown": "Enfriamiento de Cuerpo a Cuerpo de Luz",
+    "LightSuperCooldown": "Enfriamiento de Súper de Luz",
     "MaxGearPower": "Poder Máximo del equipamiento equipable",
     "MaxGearPowerAll": "Poder Máximo de todo el equipamiento",
     "MaxTotalPower": "Poder total máximo",
-    "MeleeCooldown": "Enfriamiento de Cuerpo a Cuerpo",
     "Milliseconds": "ms",
     "NoBonus": "Sin bonus",
     "NotApplicable": "No aplicable",
@@ -788,7 +799,6 @@
     "Quality": "Calidad de las estadísticas",
     "RiftCooldown": "Enfriamiento de Grieta",
     "Strength": "Fuerza",
-    "SuperCooldown": "Enfriamiento de Super",
     "Tier": "Nivel {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -837,11 +847,6 @@
     "UpdateErrorBody": "Tuvimos un problema guardando tus datos a Sincronización DIM. Seguiremos intentándolo automáticamente más tarde.",
     "UpdateErrorTitle": "Error de Sincronización DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Llenar la pila ({{amount}})",
-    "HowMuch": "¿Cuántos {{itemname}} quieres mover?",
-    "Move": "Mover"
   },
   "Tags": {
     "Archive": "Archivo",
@@ -941,7 +946,6 @@
     "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   },
-  "move-canceled": "Movimiento cancelado",
   "no-space": "",
   "wrong-level": ""
 }

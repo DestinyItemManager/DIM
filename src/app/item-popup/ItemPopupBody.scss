@@ -44,6 +44,8 @@
     background: scale-color($red, $lightness: -90%);
     border-top: 4px solid $red;
     padding: 8px;
+    white-space: normal;
+    max-width: fit-content;
     a {
       color: white;
       font-size: 12px;
