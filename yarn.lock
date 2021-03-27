@@ -2345,6 +2345,11 @@ acorn-numeric-separator@^0.3.0:
   resolved "https://registry.yarnpkg.com/acorn-numeric-separator/-/acorn-numeric-separator-0.3.6.tgz#af7f0abaf8e74bd9ca1117602954d0a3b75804f3"
   integrity sha512-jUr5esgChu4k7VzesH/Nww3EysuyGJJcTEEiXqILUFKpO96PNyEXmK21M6nE0TSqGA1PeEg1MzgqJaoFsn9JMw==
 
+acorn-optional-chaining@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/acorn-optional-chaining/-/acorn-optional-chaining-0.0.3.tgz#b620a81ee3121d554c03a90f8c34f2dbe6ab90b6"
+  integrity sha512-kvXKOWyxajchq93OdXhCLB+v8/lbmwO9vstTxSJv1Ww1E6RRnQpycA0cKr+ja7gaeGcV9lC+bLm4aZPrZ04ytA==
+
 acorn-private-class-elements@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/acorn-private-class-elements/-/acorn-private-class-elements-0.2.7.tgz#b14902c705bcff267adede1c9f61c1a317ef95d2"
@@ -6091,11 +6096,12 @@ i18next-http-backend@^1.0.21:
 
 i18next-scanner@delphiactual/i18next-scanner:
   version "2.11.0"
-  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/d999725cd4eb1295dd36b0fb79043b72e08c0855"
+  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/ba2db230c16a4f0b2f9a96866b23fc9dc7da31d6"
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
     acorn-jsx "^5.2.0"
+    acorn-optional-chaining "^0.0.3"
     acorn-stage3 "^2.0.0"
     acorn-walk "^6.0.0"
     chalk "^2.4.1"
@@ -6104,9 +6110,9 @@ i18next-scanner@delphiactual/i18next-scanner:
     deepmerge "^4.0.0"
     ensure-array "^1.0.0"
     eol "^0.9.1"
-    esprima "^4.0.1"
+    esprima "^4.0.0"
     gulp-sort "^2.0.0"
-    i18next "*"
+    i18next "^19.0.0"
     lodash "^4.0.0"
     parse5 "^5.0.0"
     sortobject "^1.1.1"
@@ -6114,7 +6120,7 @@ i18next-scanner@delphiactual/i18next-scanner:
     vinyl "^2.2.0"
     vinyl-fs "^3.0.1"
 
-i18next@*, i18next@^19.0.0:
+i18next@^19.0.0:
   version "19.9.2"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.9.2.tgz#ea5a124416e3c5ab85fddca2c8e3c3669a8da397"
   integrity sha512-0i6cuo6ER6usEOtKajUUDj92zlG+KArFia0857xxiEHAQcUwh/RtOQocui1LPJwunSYT574Pk64aNva1kwtxZg==
