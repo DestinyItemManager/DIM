@@ -56,6 +56,11 @@ module.exports = {
         fallback: false,
         separator: false,
       },
+      progress: {
+        list: ['Bounties', 'Items', 'Quests'],
+        fallback: false,
+        separator: false,
+      },
     },
   },
 };

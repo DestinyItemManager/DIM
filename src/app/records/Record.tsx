@@ -92,7 +92,7 @@ export default function Record({
     ? catalystInfo[recordHash].source
       ? defs.InventoryItem.get(catalystInfo[recordHash].source)?.displayProperties.description
       : catalystInfo[recordHash].key
-      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { title }) // t('Catalyst.Source.', { context: '', contextList: 'catalysts' })
+      ? t(`Catalyst.Source.${catalystInfo[recordHash].key}`, { title, contextList: 'catalysts' })
       : t('Progress.Redacted')
     : null;
 
