@@ -98,7 +98,7 @@ export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
-  const additionalSuggestions = filter.suggestionsGenerator?.({}) || [];
+  const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
     new Set(
       [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(

@@ -109,7 +109,7 @@ export type FilterDefinition = {
   /**
    * A custom function used to generate (additional) suggestions
    */
-  suggestionsGenerator?: (args: SuggestionsContext) => string[];
+  suggestionsGenerator?: (args: SuggestionsContext) => string[] | undefined;
 };
 
 export const enum FilterDeprecation {

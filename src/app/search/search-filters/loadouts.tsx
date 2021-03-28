@@ -5,12 +5,14 @@ import { FilterDefinition } from '../filter-types';
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
-    // format: 'custom',
+    // excluding a "format" property causes autogeneration of the simple "is" and "not" stems
+
     suggestionsGenerator: ({ loadouts }) =>
       loadouts
+        // we can't properly quote loadout names if they contain both ' and ",
+        // so.. we filter them out. small caveat there
         ?.filter((l) => !(l.name.includes(`'`) && l.name.includes(`"`)))
-        .map((l) => (l.name.includes(`"`) ? `inloadout:'${l.name}'` : `inloadout:"${l.name}"`)) ??
-      [],
+        .map((l) => (l.name.includes(`"`) ? `inloadout:'${l.name}'` : `inloadout:"${l.name}"`)),
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
       // is:inloadout
