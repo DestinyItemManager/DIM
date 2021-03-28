@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';
-import { emptyObject } from 'app/utils/empty';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
@@ -99,7 +98,7 @@ export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
-  const additionalSuggestions = filter.suggestionsGenerator?.(emptyObject()) || [];
+  const additionalSuggestions = filter.suggestionsGenerator?.({}) || [];
   const suggestions = Array.from(
     new Set(
       [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(

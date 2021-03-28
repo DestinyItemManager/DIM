@@ -1,6 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { emptyObject } from 'app/utils/empty';
 import { createSelector } from 'reselect';
 import { FilterDefinition, SuggestionsContext } from './filter-types';
 import advancedFilters from './search-filters/advanced';
@@ -55,7 +54,7 @@ export interface SearchConfig {
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(
   destinyVersion: DestinyVersion,
-  suggestionsContext: SuggestionsContext = emptyObject()
+  suggestionsContext: SuggestionsContext = {}
 ): SearchConfig {
   const keywords = new Set<string>();
   const allFiltersByKeyword: Record<string, FilterDefinition> = {};
