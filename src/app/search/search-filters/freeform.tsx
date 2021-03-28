@@ -1,5 +1,8 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
@@ -23,6 +26,17 @@ function startWordRegexp(s: string, language: string) {
 /** returns input string toLower, and stripped of accents if it's a latin language */
 const plainString = (s: string, language: string): string =>
   (isLatinBased(language) ? latinise(s) : s).toLowerCase();
+
+const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]); //
+const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
+  const perkNames = allItems
+    .filter((i) => {
+      const pch = i.plug?.plugCategoryHash;
+      return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
+    })
+    .map((i) => `perkname:"${i.displayProperties.name.toLowerCase()}"`);
+  return _.uniq(perkNames);
+});
 
 const freeformFilters: FilterDefinition[] = [
   {
@@ -75,6 +89,11 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perkname',
     description: tl('Filter.PerkName'),
     format: 'freeform',
+    suggestionsGenerator: ({ d2Manifest }) => {
+      if (d2Manifest) {
+        return getPerkNamesFromManifest(Object.values(d2Manifest.InventoryItem.getAll()));
+      }
+    },
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
       return (item) => {

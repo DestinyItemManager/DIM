@@ -299,8 +299,8 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
       return suggestions;
     } else if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
-      // so prevent "what's been typed" from appearing in the returned suggestions form this function
-      const deDuped = new Set([typed, typedToLower, ...suggestions]);
+      // so prevent "what's been typed" from appearing in the returned suggestions from this function
+      const deDuped = new Set(suggestions);
       deDuped.delete(typed);
       deDuped.delete(typedToLower);
       return [...deDuped];
