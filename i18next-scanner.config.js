@@ -24,56 +24,37 @@ module.exports = {
     contextList: {
       // contexts
       compact: { list: ['compact'], fallback: false },
-      max: { list: ['Max'], fallback: true },
+      max: { list: ['Max'] },
       // dynamic keys
       buckets: {
         list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'],
         fallback: false,
-        separator: '',
+        separator: false,
       },
       cooldowns: {
         list: ['Grenade', 'Melee', 'Super'],
         fallback: false,
-        separator: '',
+        separator: false,
       },
       difficulty: {
         list: ['Normal', 'Hard'],
         fallback: false,
-        separator: '',
-      },
-      ghost_locations: {
-        list: [
-          'crucible',
-          'dreaming',
-          'edz',
-          'gambit',
-          'io', // dcv
-          'leviathan', // dcv
-          'mars', // dcv
-          'mercury', // dcv
-          'nessus',
-          'strikes',
-          'tangled',
-          'titan', // dcv
-          'moon',
-        ],
-        fallback: false,
-        separator: '',
+        separator: false,
       },
       minMax: {
         list: ['Min', 'Max'],
         fallback: false,
-        separator: '',
+        separator: false,
       },
       platforms: {
-        list: ['Blizzard', 'PlayStation', 'Stadia', 'Steam', 'Xbox'],
+        list: ['PlayStation', 'Stadia', 'Steam', 'Xbox'],
         fallback: false,
-        separator: '',
+        separator: false,
       },
       catalysts: {
         list: ['Quest', 'Mission', 'LeviathansBreath', 'RuinousEffigy', 'TheFourthHorseman'],
         fallback: false,
-        separator: '',
+        separator: false,
       },
     },
   },
