@@ -34,7 +34,8 @@ export interface FilterContext {
 }
 
 /**
- * wip
+ * this provides data so that SearchConfig can build smarter lists of suggestions.
+ * all properties must be optional, so jest & api stuff can use SearchConfig without any context
  */
 export interface SuggestionsContext {
   allItems?: DimItem[];
