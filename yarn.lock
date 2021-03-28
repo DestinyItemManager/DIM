@@ -6096,7 +6096,7 @@ i18next-http-backend@^1.0.21:
 
 i18next-scanner@delphiactual/i18next-scanner:
   version "2.11.0"
-  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/4ad292b66aa748be0045a184caadb9c6dd760cd5"
+  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/bd3fc1a8a471e886f549c1d793252c52357e1988"
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
