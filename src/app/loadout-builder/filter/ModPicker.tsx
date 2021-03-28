@@ -84,16 +84,13 @@ function mapStateToProps() {
         if (!plugSets[item.bucket.hash]) {
           plugSets[item.bucket.hash] = new Set<number>();
         }
-        // build the filtered unique perks item picker
+        // build the filtered unique mods
         item.sockets.allSockets
           .filter((s) => !s.isPerk)
           .forEach((socket) => {
             if (socket.socketDefinition.reusablePlugSetHash) {
               plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
-            } else if (socket.socketDefinition.randomizedPlugSetHash) {
-              plugSets[item.bucket.hash].add(socket.socketDefinition.randomizedPlugSetHash);
             }
-            // TODO: potentially also add inventory-based mods
           });
       }
 
@@ -244,10 +241,7 @@ function ModPicker({
   const groupHeaderOrder = [...knownModPlugCategoryHashes];
 
   for (const mod of queryFilteredMods) {
-    const title =
-      language === 'en'
-        ? mod.modDef.itemTypeDisplayName.replaceAll(/armor/gi, '').replaceAll(/mod/gi, '').trim()
-        : mod.modDef.itemTypeDisplayName;
+    const title = mod.modDef.itemTypeDisplayName;
 
     if (!groupedModsByItemTypeDisplayName[title]) {
       groupedModsByItemTypeDisplayName[title] = {
