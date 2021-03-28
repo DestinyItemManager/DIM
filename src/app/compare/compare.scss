@@ -38,12 +38,20 @@
 }
 
 .compare-options {
-  button {
+  display: flex;
+  flex-wrap: wrap;
+  .dim-button {
     margin-bottom: 4px;
-    margin-right: 3px;
+    &:nth-last-child(n + 2) {
+      margin-right: 3px;
+    }
   }
-  .sheet & {
-    padding-right: 48px;
+}
+
+.organizer-link {
+  margin-left: auto;
+  @include phone-portrait {
+    margin-left: 0;
   }
 }
 

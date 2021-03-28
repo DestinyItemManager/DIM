@@ -1,3 +1,4 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
@@ -41,5 +42,21 @@ export const compareItemsSelector = createSelector(
     }
     const filterFunction = filterFactory(session.query);
     return categoryItems.filter(filterFunction);
+  }
+);
+
+/**
+ * Returns a link to the organizer for the current compare search.
+ */
+export const compareOrganizerLinkSelector = createSelector(
+  currentAccountSelector,
+  compareSessionSelector,
+  (account, session) => {
+    if (!session || !account) {
+      return undefined;
+    }
+    return `/${account.membershipId}/d${
+      account.destinyVersion
+    }/organizer?category=${session.itemCategoryHashes.join('~')}&search=${session.query}`;
   }
 );
