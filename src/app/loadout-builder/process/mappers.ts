@@ -98,11 +98,6 @@ export function getTotalModStatChanges(
     Strength: 0,
   };
 
-  // This should only happen on initialisation if the store is undefined.
-  if (!characterClass) {
-    return totals;
-  }
-
   const flatMods = Object.values(lockedArmor2Mods)
     .flat()
     .filter((mod): mod is LockedMod => Boolean(mod));
