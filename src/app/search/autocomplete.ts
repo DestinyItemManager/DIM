@@ -184,7 +184,7 @@ export function autocompleteTermSuggestions(
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
   // Find the last word that looks like a search
-  const match = /\b([\w:"']{3,})$/i.exec(query.slice(0, caretIndex));
+  const match = /(\b[\w:"']{3,}|#\w*)$/i.exec(query.slice(0, caretIndex));
   if (match) {
     const term = match[1];
     const candidates = filterComplete(term);
