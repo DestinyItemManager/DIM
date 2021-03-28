@@ -801,6 +801,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",
+    "SortByRecent": "Recently Acquired (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",

@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -45,7 +46,7 @@ interface ProcessState {
  */
 // TODO: introduce params object
 export function useProcess(
-  selectedStoreId: string | undefined,
+  selectedStore: DimStore<DimItem> | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedModMap: LockedModMap,
@@ -55,7 +56,7 @@ export function useProcess(
 ) {
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
-    resultStoreId: selectedStoreId,
+    resultStoreId: selectedStore?.id,
     result: null,
   });
 
@@ -85,8 +86,8 @@ export function useProcess(
 
     setState((state) => ({
       processing: true,
-      resultStoreId: selectedStoreId,
-      result: selectedStoreId === state.resultStoreId ? state.result : null,
+      resultStoreId: selectedStore?.id,
+      result: selectedStore?.id === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
     }));
 
@@ -133,7 +134,7 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedModMap),
+        getTotalModStatChanges(lockedModMap, selectedStore?.classType),
         lockedProcessMods,
         assumeMasterwork,
         statOrder,
@@ -171,7 +172,7 @@ export function useProcess(
     assumeMasterwork,
     statOrder,
     statFilters,
-    selectedStoreId,
+    selectedStore,
   ]);
 
   return { result, processing };
