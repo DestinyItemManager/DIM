@@ -3,7 +3,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { AppIcon, faList } from 'app/shell/icons';
+import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -231,7 +231,9 @@ function Compare(
                 onClick={() => sort(stat.id)}
               >
                 {stat.displayProperties.name}{' '}
-                {stat.id === sortedHash && (sortBetterFirst ? '>' : '<')}
+                {stat.id === sortedHash && (
+                  <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
+                )}
               </div>
             ))}
           </div>
@@ -249,6 +251,7 @@ function Compare(
                 adjustedItemPlugs={adjustedPlugs?.[item.id]}
                 adjustedItemStats={adjustedStats?.[item.id]}
                 compareBaseStats={doCompareBaseStats}
+                isInitialItem={session?.initialItemId === item.id}
               />
             ))}
           </div>

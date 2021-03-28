@@ -33,6 +33,8 @@ const faCaretDown = 'fas fa-caret-down';
 const faPencilAlt = 'fas fa-pencil-alt';
 const faPlus = 'fas fa-plus';
 const faCaretRight = 'fas fa-caret-right';
+const faAngleRight = 'fas fa-angle-right';
+const faAngleLeft = 'fas fa-angle-left';
 const faAngleDoubleLeft = 'fas fa-angle-double-left';
 const faAngleDoubleRight = 'fas fa-angle-double-right';
 const faPlusCircle = 'fas fa-plus-circle';
@@ -197,4 +199,6 @@ export {
   faGithub,
   faReddit,
   faList,
+  faAngleLeft,
+  faAngleRight,
 };

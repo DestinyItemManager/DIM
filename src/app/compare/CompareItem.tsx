@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
+import clsx from 'clsx';
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -21,6 +22,7 @@ export default function CompareItem({
   updateSocketComparePlug,
   adjustedItemPlugs,
   adjustedItemStats,
+  isInitialItem,
 }: {
   item: DimItem;
   stats: StatInfo[];
@@ -32,6 +34,7 @@ export default function CompareItem({
   updateSocketComparePlug(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
   adjustedItemStats?: DimAdjustedItemStat;
+  isInitialItem: boolean;
 }) {
   return (
     <div className="compare-item">
@@ -40,7 +43,10 @@ export default function CompareItem({
         <TagActionButton item={item} label={true} hideKeys={true} />
         <div className="close" onClick={() => remove(item)} />
       </div>
-      <div className="item-name" onClick={() => itemClick(item)}>
+      <div
+        className={clsx('item-name', { 'compare-initial-item': isInitialItem })}
+        onClick={() => itemClick(item)}
+      >
         {item.name} <AppIcon icon={searchIcon} />
       </div>
       <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
