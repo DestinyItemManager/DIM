@@ -12,7 +12,12 @@ const loadoutFilters: FilterDefinition[] = [
         // we can't properly quote loadout names if they contain both ' and ", so..
         // we filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user
         ?.filter((l) => !(l.name.includes(`'`) && l.name.includes(`"`)))
-        .map((l) => (l.name.includes(`"`) ? `inloadout:'${l.name}'` : `inloadout:"${l.name}"`)),
+        .map((l) => {
+          const loadoutName = l.name.toLowerCase();
+          return loadoutName.includes(`"`)
+            ? `inloadout:'${loadoutName}'`
+            : `inloadout:"${loadoutName}"`;
+        }),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
