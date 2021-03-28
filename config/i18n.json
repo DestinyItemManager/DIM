@@ -661,6 +661,7 @@
   },
   "Organizer": {
     "Organizer": "Organizer",
+    "OpenIn": "Show in Organizer",
     "EnabledColumns": "Enabled Columns",
     "BulkMove": "Move To",
     "BulkTag": "Tag",
@@ -798,6 +799,7 @@
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",
+    "SortByRecent": "Recently Acquired (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",

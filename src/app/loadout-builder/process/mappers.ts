@@ -1,3 +1,11 @@
+import { modsWithConditionalStats } from 'app/search/d2-known-values';
+import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
+import {
+  DestinyClass,
+  DestinyEnergyType,
+  DestinyItemInvestmentStatDefinition,
+} from 'bungie-api-ts/destiny2';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem } from '../../inventory/item-types';
 import {
@@ -36,12 +44,51 @@ export function mapArmor2ModToProcessMod(mod: LockedMod): ProcessMod {
   return processMod;
 }
 
+function isModStatActive(
+  characterClass: DestinyClass,
+  plugHash: number,
+  stat: DestinyItemInvestmentStatDefinition,
+  lockedMods: LockedMod[]
+): boolean {
+  if (!stat.isConditionallyActive) {
+    return true;
+  } else if (
+    plugHash === modsWithConditionalStats.powerfulFriends ||
+    plugHash === modsWithConditionalStats.radiantLight
+  ) {
+    // Powerful Friends & Radiant Light
+    // True if another arc charged with light mod is found
+    // Note the this is not entirely correct as another arc mod slotted into the same item would
+    // also trigger it but we dont know that until we try to socket them. Basically it is too hard
+    // to figure that condition out so lets leave it as a known issue for now.
+    return Boolean(
+      lockedMods.find(
+        (mod) =>
+          mod.modDef.plug.energyCost?.energyType === DestinyEnergyType.Arc &&
+          chargedWithLightPlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)
+      )
+    );
+  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
+    // Charge Harvester
+    return (
+      (characterClass === DestinyClass.Hunter && stat.statTypeHash === StatHashes.Mobility) ||
+      (characterClass === DestinyClass.Titan && stat.statTypeHash === StatHashes.Resilience) ||
+      (characterClass === DestinyClass.Warlock && stat.statTypeHash === StatHashes.Recovery)
+    );
+  } else {
+    return true;
+  }
+}
+
 /**
  * This sums up the total stat contributions across mods passed in. These are then applied
  * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
  */
-export function getTotalModStatChanges(lockedArmor2Mods: LockedModMap) {
+export function getTotalModStatChanges(
+  lockedArmor2Mods: LockedModMap,
+  characterClass?: DestinyClass
+) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -51,11 +98,20 @@ export function getTotalModStatChanges(lockedArmor2Mods: LockedModMap) {
     Strength: 0,
   };
 
+  // This should only happen on initialisation if the store is undefined.
+  if (characterClass === undefined) {
+    return totals;
+  }
+
+  const flatMods = Object.values(lockedArmor2Mods)
+    .flat()
+    .filter((mod): mod is LockedMod => Boolean(mod));
+
   for (const mods of Object.values(lockedArmor2Mods)) {
     for (const mod of mods || []) {
       for (const stat of mod.modDef.investmentStats) {
         const statType = statHashToType[stat.statTypeHash];
-        if (statType) {
+        if (statType && isModStatActive(characterClass, mod.modDef.hash, stat, flatMods)) {
           totals[statType] += stat.value;
         }
       }

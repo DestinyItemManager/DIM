@@ -3,7 +3,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { AppIcon, faAngleLeft, faAngleRight } from 'app/shell/icons';
+import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -13,6 +13,7 @@ import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -24,6 +25,7 @@ import { CompareSession } from './reducer';
 import {
   compareCategoryItemsSelector,
   compareItemsSelector,
+  compareOrganizerLinkSelector,
   compareSessionSelector,
 } from './selectors';
 import { DimAdjustedItemStat, DimAdjustedPlugs, DimAdjustedStats } from './types';
@@ -35,6 +37,7 @@ interface StoreProps {
   compareItems: DimItem[];
   session?: CompareSession;
   compareBaseStats: boolean;
+  organizerLink?: string;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
@@ -45,6 +48,7 @@ function mapStateToProps(state: RootState): StoreProps {
     compareBaseStats: settingsSelector(state).compareBaseStats,
     compareItems: compareItemsSelector(state),
     session: compareSessionSelector(state),
+    organizerLink: compareOrganizerLinkSelector(state),
   };
 }
 
@@ -66,7 +70,7 @@ type StatGetter = (item: DimItem) => undefined | MinimalStat;
 // TODO: memoize
 function Compare(
   this: void,
-  { categoryItems, compareBaseStats, compareItems, session, dispatch }: Props
+  { categoryItems, compareBaseStats, compareItems, session, organizerLink, dispatch }: Props
 ) {
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
@@ -203,6 +207,11 @@ function Compare(
               categoryItems={categoryItems}
               onQueryChanged={updateQuery}
             />
+          )}
+          {organizerLink && (
+            <Link className="dim-button organizer-link" to={organizerLink}>
+              <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
+            </Link>
           )}
         </div>
       }

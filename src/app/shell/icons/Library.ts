@@ -53,6 +53,7 @@ const faStarOutline = 'far fa-star';
 const faSync = 'fas fa-sync';
 const faTable = 'fas fa-table';
 const faTag = 'fas fa-tag';
+const faList = 'fas fa-list';
 const faThumbsUp = 'fas fa-thumbs-up';
 const faThumbsUpRegular = 'far fa-thumbs-up';
 const faThumbsDown = 'fas fa-thumbs-down';
@@ -197,6 +198,7 @@ export {
   faDiscord,
   faGithub,
   faReddit,
+  faList,
   faAngleLeft,
   faAngleRight,
 };
