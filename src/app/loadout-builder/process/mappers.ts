@@ -99,7 +99,7 @@ export function getTotalModStatChanges(
   };
 
   // This should only happen on initialisation if the store is undefined.
-  if (!characterClass) {
+  if (characterClass === undefined) {
     return totals;
   }
 
