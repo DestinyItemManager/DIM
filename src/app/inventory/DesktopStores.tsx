@@ -157,8 +157,11 @@ function CollapsibleContainer({
   }
 
   return (
-    <InventoryCollapsibleTitle title={t(`Bucket.${category}`)} sectionId={category} stores={stores}>
-      {/* t('Bucket.', { context: '', contextList: 'buckets' }) */}
+    <InventoryCollapsibleTitle
+      title={t(`Bucket.${category}`, { contextList: 'buckets' })}
+      sectionId={category}
+      stores={stores}
+    >
       {inventoryBucket.map((bucket) => (
         <StoreBuckets
           key={bucket.hash}

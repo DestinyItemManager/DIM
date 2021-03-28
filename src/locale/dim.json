@@ -4,7 +4,6 @@
     "ConfirmTitle": "Confirm Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",

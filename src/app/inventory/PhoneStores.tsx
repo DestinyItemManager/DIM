@@ -122,7 +122,7 @@ function CategoryStrip({
             onClick={() => onCategorySelected(category)}
             className={clsx({ selected: category === selectedCategoryId })}
           >
-            {t(`Bucket.${category}`)}
+            {t(`Bucket.${category}`, { contextList: 'buckets' })}
           </div>
         ))}
     </div>
