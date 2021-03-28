@@ -165,7 +165,9 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 }
 
 const caretEndRegex = /([\s)]|$)/;
-
+const lastWordRegex = /(\b[\w:"']{3,}|#\w*)$/;
+// matches a string that seems to end with a closing, not opening, quote
+const closingQuoteRegex = /\w["']$/;
 /**
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
@@ -184,31 +186,33 @@ export function autocompleteTermSuggestions(
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
   // Find the last word that looks like a search
-  const match = /(\b[\w:"']{3,}|#\w*)$/i.exec(query.slice(0, caretIndex));
-  if (match) {
-    const term = match[1];
-    const candidates = filterComplete(term);
-    const base = query.slice(0, match.index);
-
-    // new query is existing query minus match plus suggestion
-    return candidates.map((word) => {
-      const filterDef = findFilter(word, searchConfig);
-      const newQuery = base + word + query.slice(caretIndex);
-      return {
-        query: newQuery,
-        type: SearchItemType.Autocomplete,
-        highlightRange: [match.index, match.index + word.length],
-        helpText: filterDef
-          ? (Array.isArray(filterDef.description)
-              ? t(...filterDef.description)
-              : t(filterDef.description)
-            )?.replace(/\.$/, '')
-          : undefined,
-      };
-    });
+  const match = lastWordRegex.exec(query.slice(0, caretIndex));
+  if (!match) {
+    return [];
   }
+  const term = match[1];
+  if (closingQuoteRegex.test(term)) {
+    return [];
+  }
+  const candidates = filterComplete(term);
+  const base = query.slice(0, match.index);
 
-  return [];
+  // new query is existing query minus match plus suggestion
+  return candidates.map((word) => {
+    const filterDef = findFilter(word, searchConfig);
+    const newQuery = base + word + query.slice(caretIndex);
+    return {
+      query: newQuery,
+      type: SearchItemType.Autocomplete,
+      highlightRange: [match.index, match.index + word.length],
+      helpText: filterDef
+        ? (Array.isArray(filterDef.description)
+            ? t(...filterDef.description)
+            : t(filterDef.description)
+          )?.replace(/\.$/, '')
+        : undefined,
+    };
+  });
 }
 
 function findFilter(term: string, searchConfig: SearchConfig) {
