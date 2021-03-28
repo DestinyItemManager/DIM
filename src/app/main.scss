@@ -348,8 +348,14 @@ select {
   &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-    &:hover {
-      background-color: #555;
+    &:hover,
+    &:active,
+    &.selected {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      img {
+        filter: drop-shadow(0 0 1px black);
+      }
     }
   }
   img {
