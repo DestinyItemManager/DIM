@@ -1,4 +1,5 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
@@ -30,6 +31,16 @@ export interface FilterContext {
     [itemHash: string]: ItemHashTag;
   };
   language: string;
+}
+
+/**
+ * wip
+ */
+export interface SuggestionsContext {
+  allItems?: DimItem[];
+  loadouts?: Loadout[];
+  itemInfos?: ItemInfos;
+  d2Manifest?: D2ManifestDefinitions;
 }
 
 // TODO: FilterCategory
@@ -98,9 +109,7 @@ export type FilterDefinition = {
   /**
    * A custom function used to generate (additional) suggestions
    */
-  // TODO: give this access to a SuggestionsContext arg
-  // TODO: add manifest to SuggestionsContext and we can generate archetype/perk/etc suggestions
-  suggestionsGenerator?: () => string[];
+  suggestionsGenerator?: (args: SuggestionsContext) => string[];
 };
 
 export const enum FilterDeprecation {

@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
-import { generateSuggestionsForFilter } from '../search-utils';
+import { generateSuggestionsForFilter } from '../suggestions-generation';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
 

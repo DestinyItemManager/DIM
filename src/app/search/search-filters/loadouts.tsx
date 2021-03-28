@@ -5,9 +5,24 @@ import { FilterDefinition } from '../filter-types';
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
+    // format: 'custom',
+    suggestionsGenerator: ({ loadouts }) =>
+      loadouts
+        ?.filter((l) => !(l.name.includes(`'`) && l.name.includes(`"`)))
+        .map((l) => (l.name.includes(`"`) ? `inloadout:'${l.name}'` : `inloadout:"${l.name}"`)) ??
+      [],
     description: tl('Filter.InLoadout'),
-    filter: ({ loadouts }) => {
-      const loadoutItemIds = collectItemsInLoadouts(loadouts);
+    filter: ({ filterValue, loadouts }) => {
+      // is:inloadout
+      let selectedLoadouts = loadouts;
+
+      // inloadout:"loadout name here"
+      if (filterValue !== 'inloadout') {
+        const foundLoadout = loadouts.find((l) => l.name === filterValue);
+        selectedLoadouts = foundLoadout ? [foundLoadout] : [];
+      }
+
+      const loadoutItemIds = collectItemsInLoadouts(selectedLoadouts);
       return (item) => loadoutItemIds.has(item.id);
     },
   },
