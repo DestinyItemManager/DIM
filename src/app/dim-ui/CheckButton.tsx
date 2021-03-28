@@ -18,7 +18,8 @@ export default function CheckButton({
 }) {
   return (
     <label className={clsx(styles.checkButton, className)}>
-      <Switch name={name} checked={checked} onChange={(checked) => onChange(checked)} /> {children}
+      <span>{children}</span>
+      <Switch name={name} checked={checked} onChange={(checked) => onChange(checked)} />
     </label>
   );
 }

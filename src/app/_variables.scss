@@ -101,7 +101,7 @@ $issue-banner-height: 101px;
 
 // Apply spacing between children
 @mixin horizontal-space-children($space) {
-  > *:nth-last-child(n + 1) {
+  > *:nth-last-child(n + 2) {
     margin-right: $space;
   }
 }
