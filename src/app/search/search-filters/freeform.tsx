@@ -28,15 +28,14 @@ function startWordRegexp(s: string, language: string) {
 const plainString = (s: string, language: string): string =>
   (isLatinBased(language) ? latinise(s) : s).toLowerCase();
 
-const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]); //
-
+const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
   const perkNames = allItems
     .filter((i) => {
       const pch = i.plug?.plugCategoryHash;
       return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
     })
-    .map((i) => `perkname:"${i.displayProperties.name.toLowerCase()}"`);
+    .map((i) => i.displayProperties.name);
   return _.uniq(perkNames);
 });
 
@@ -56,7 +55,7 @@ const getUniqueItemNamesFromManifest = _.once(
         // (user's owned items will be included regardless)
         return !powerCap || !irrelevantPowerCaps.has(powerCap);
       })
-      .map((i) => i.displayProperties.name.toLowerCase());
+      .map((i) => i.displayProperties.name);
     return _.uniq(itemNames);
   }
 );
@@ -66,6 +65,22 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
+    suggestionsGenerator: ({ itemInfos }) => {
+      if (!itemInfos) {
+        return;
+      }
+      // collect hash tags from item notes
+      const hashTags = new Set<string>();
+      for (const info of Object.values(itemInfos)) {
+        const matches = info.notes?.matchAll(/#\w+/g);
+        if (matches) {
+          for (const match of matches) {
+            hashTags.add(match[0]);
+          }
+        }
+      }
+      return [...hashTags];
+    },
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
@@ -74,18 +89,22 @@ const freeformFilters: FilterDefinition[] = [
       };
     },
   },
+  // could we do this with a for loop faster,
+  // with wayyyyy more lines of code?? absolutely
   {
     keywords: 'name',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myItemNames = allItems.map((i) => `name:"${i.name.toLowerCase()}"`);
+        const myItemNames = allItems.map((i) => i.name);
         // favor items we actually own
         const allItemNames = getUniqueItemNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())
         );
-        return _.uniq([...myItemNames, ...allItemNames]);
+        return _.uniq([...myItemNames, ...allItemNames]).map(
+          (s) => `name:${quoteFilterString(s.toLowerCase())}`
+        );
       }
     },
     filter: ({ filterValue, language }) => {
@@ -124,19 +143,17 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myPerkNames = allItems
-          .flatMap(
-            (i) =>
-              i.sockets?.allSockets.filter(
-                (s) => s.isPerk && s.plugged?.plugDef.displayProperties.name
-              ) ?? []
-          )
-          .map((s) => `perkname:"${s.plugged!.plugDef.displayProperties.name.toLowerCase()}"`);
+        const myPerks = allItems.flatMap(
+          (i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []
+        );
+        const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
         const allPerkNames = getPerkNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())
         );
         // favor items we actually own
-        return _.uniq([...myPerkNames, ...allPerkNames]);
+        return _.uniq([...myPerkNames, ...allPerkNames]).map(
+          (s) => `perkname:${quoteFilterString(s.toLowerCase())}`
+        );
       }
     },
     filter: ({ filterValue, language }) => {
