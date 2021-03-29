@@ -1,6 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { Loadout } from 'app/loadout/loadout-types';
 import { FilterDefinition } from '../filter-types';
+import { isQuotable, quoteFilterString } from './freeform';
 
 const loadoutFilters: FilterDefinition[] = [
   {
@@ -9,15 +10,8 @@ const loadoutFilters: FilterDefinition[] = [
     // excluding a "format" property causes autogeneration of the simple "is" and "not" stems
     suggestionsGenerator: ({ loadouts }) =>
       loadouts
-        // we can't properly quote loadout names if they contain both ' and ", so..
-        // we filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user
-        ?.filter((l) => !(l.name.includes(`'`) && l.name.includes(`"`)))
-        .map((l) => {
-          const loadoutName = l.name.toLowerCase();
-          return loadoutName.includes(`"`)
-            ? `inloadout:'${loadoutName}'`
-            : `inloadout:"${loadoutName}"`;
-        }),
+        ?.filter((l) => isQuotable(l.name))
+        .map((l) => quoteFilterString(l.name.toLowerCase())),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {

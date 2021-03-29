@@ -1,5 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -28,6 +29,7 @@ const plainString = (s: string, language: string): string =>
   (isLatinBased(language) ? latinise(s) : s).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]); //
+
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
   const perkNames = allItems
     .filter((i) => {
@@ -37,6 +39,27 @@ const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinitio
     .map((i) => `perkname:"${i.displayProperties.name.toLowerCase()}"`);
   return _.uniq(perkNames);
 });
+
+// things that are sunset            1010        1060        1060        1260
+const irrelevantPowerCaps = new Set([2471437758, 1862490583, 1862490584, 1862490585]);
+
+const getUniqueItemNamesFromManifest = _.once(
+  (allManifestItems: DestinyInventoryItemDefinition[]) => {
+    const itemNames = allManifestItems
+      .filter((i) => {
+        if (!i.displayProperties.name || !i.equippable) {
+          return;
+        }
+        const { quality } = i;
+        const powerCap = quality?.versions[quality.currentVersion].powerCapHash;
+        // don't suggest outdated items from the manifest
+        // (user's owned items will be included regardless)
+        return !powerCap || !irrelevantPowerCaps.has(powerCap);
+      })
+      .map((i) => i.displayProperties.name.toLowerCase());
+    return _.uniq(itemNames);
+  }
+);
 
 const freeformFilters: FilterDefinition[] = [
   {
@@ -55,6 +78,16 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'name',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
+    suggestionsGenerator: ({ d2Manifest, allItems }) => {
+      if (d2Manifest && allItems) {
+        const myItemNames = allItems.map((i) => `name:"${i.name.toLowerCase()}"`);
+        // favor items we actually own
+        const allItemNames = getUniqueItemNamesFromManifest(
+          Object.values(d2Manifest.InventoryItem.getAll())
+        );
+        return _.uniq([...myItemNames, ...allItemNames]);
+      }
+    },
     filter: ({ filterValue, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => plainString(item.name, language).includes(filterValue);
@@ -89,9 +122,21 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perkname',
     description: tl('Filter.PerkName'),
     format: 'freeform',
-    suggestionsGenerator: ({ d2Manifest }) => {
-      if (d2Manifest) {
-        return getPerkNamesFromManifest(Object.values(d2Manifest.InventoryItem.getAll()));
+    suggestionsGenerator: ({ d2Manifest, allItems }) => {
+      if (d2Manifest && allItems) {
+        const myPerkNames = allItems
+          .flatMap(
+            (i) =>
+              i.sockets?.allSockets.filter(
+                (s) => s.isPerk && s.plugged?.plugDef.displayProperties.name
+              ) ?? []
+          )
+          .map((s) => `perkname:"${s.plugged!.plugDef.displayProperties.name.toLowerCase()}"`);
+        const allPerkNames = getPerkNamesFromManifest(
+          Object.values(d2Manifest.InventoryItem.getAll())
+        );
+        // favor items we actually own
+        return _.uniq([...myPerkNames, ...allPerkNames]);
       }
     },
     filter: ({ filterValue, language }) => {
@@ -168,7 +213,7 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 }
 
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromAllSockets(item, includeDescription = true) {
+export function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
   return (
     item.sockets?.allSockets.flatMap((socket) => {
       const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
@@ -180,6 +225,16 @@ export function getStringsFromAllSockets(item, includeDescription = true) {
   );
 }
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromTalentGrid(item, includeDescription = true) {
+export function getStringsFromTalentGrid(item: DimItem, includeDescription = true) {
   return getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, includeDescription);
+}
+
+// we can't properly quote a search string if it contains both ' and ", so.. we use this
+// to filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user
+export function isQuotable(s: string) {
+  return !(s.includes(`'`) && s.includes(`"`));
+}
+
+export function quoteFilterString(s: string) {
+  return s.includes(`"`) ? `'${s}'` : `"${s}"`;
 }
