@@ -1,5 +1,7 @@
 ## Next
 
+## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
+
 * When comparing items, the item you launched Compare from is now highlighted with an orange title.
 * The Compare screen has an "Open in Organizer" button that shows the exact same items in the Organizer which has more options for comparing items.
 * Fixed some mods in Loadout Organizer that weren't applying the right stats.
