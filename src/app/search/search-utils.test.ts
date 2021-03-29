@@ -1,7 +1,7 @@
 import { energyCapacityTypeNames } from './d2-known-values';
 import { FilterDefinition } from './filter-types';
 import { allStatNames, searchableArmorStatNames } from './search-filter-values';
-import { generateSuggestionsForFilter } from './search-utils';
+import { generateSuggestionsForFilter } from './suggestions-generation';
 
 describe('generateSuggestionsForFilter', () => {
   const cases: [

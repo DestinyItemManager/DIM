@@ -1,7 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { createSelector } from 'reselect';
-import { FilterDefinition } from './filter-types';
+import { FilterDefinition, SuggestionsContext } from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
@@ -16,7 +16,7 @@ import socketFilters from './search-filters/sockets';
 import statFilters from './search-filters/stats';
 import locationFilters from './search-filters/stores';
 import wishlistFilters from './search-filters/wishlist';
-import { generateSuggestionsForFilter } from './search-utils';
+import { generateSuggestionsForFilter, suggestionsContextSelector } from './suggestions-generation';
 
 const allFilters = [
   ...dupeFilters,
@@ -35,7 +35,11 @@ const allFilters = [
   ...advancedFilters,
 ];
 
-export const searchConfigSelector = createSelector(destinyVersionSelector, buildSearchConfig);
+export const searchConfigSelector = createSelector(
+  destinyVersionSelector,
+  suggestionsContextSelector,
+  buildSearchConfig
+);
 
 //
 // SearchConfig
@@ -48,7 +52,10 @@ export interface SearchConfig {
 }
 
 /** Builds an object that describes the available search keywords and filter definitions. */
-export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
+export function buildSearchConfig(
+  destinyVersion: DestinyVersion,
+  suggestionsContext: SuggestionsContext = {}
+): SearchConfig {
   const keywords = new Set<string>();
   const allFiltersByKeyword: Record<string, FilterDefinition> = {};
   const allApplicableFilters: FilterDefinition[] = [];
@@ -57,7 +64,7 @@ export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig 
       for (const keyword of generateSuggestionsForFilter(filter)) {
         keywords.add(keyword);
       }
-      for (const keyword of filter.suggestionsGenerator?.() ?? []) {
+      for (const keyword of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
         keywords.add(keyword);
       }
       allApplicableFilters.push(filter);

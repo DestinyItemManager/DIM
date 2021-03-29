@@ -980,16 +980,22 @@ function trackTriumph(
   draft.updateQueue.push(updateAction);
 }
 
-function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
-  const destinyVersion = account.destinyVersion;
-
-  // Real hack to fake out enough store to select out the search configs
-  const searchConfigs = searchConfigSelector(({
+// Real hack to fake out enough store to select out the search configs
+function stubSearchRootState(account: DestinyAccount) {
+  return ({
     accounts: {
       accounts: [account],
       currentAccount: 0,
     },
-  } as any) as RootState);
+    inventory: { stores: [] },
+    dimApi: { profiles: {} },
+    manifest: {},
+  } as any) as RootState;
+}
+
+function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
+  const destinyVersion = account.destinyVersion;
+  const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
   try {
@@ -1048,14 +1054,7 @@ function saveSearch(
   saved: boolean
 ) {
   const destinyVersion = account.destinyVersion;
-
-  // Real hack to fake out enough store to select out the search configs
-  const searchConfigs = searchConfigSelector(({
-    accounts: {
-      accounts: [account],
-      currentAccount: 0,
-    },
-  } as any) as RootState);
+  const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
   try {

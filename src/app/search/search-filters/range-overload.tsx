@@ -6,7 +6,7 @@ import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
-import { generateSuggestionsForFilter } from '../search-utils';
+import { generateSuggestionsForFilter } from '../suggestions-generation';
 import { rangeStringToComparator } from './range-numeric';
 
 /** matches a filterValue that's probably a math check */

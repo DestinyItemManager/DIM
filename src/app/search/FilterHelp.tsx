@@ -7,7 +7,7 @@ import { connect, useDispatch } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
 import { SearchConfig, searchConfigSelector } from './search-config';
-import { generateSuggestionsForFilter } from './search-utils';
+import { generateSuggestionsForFilter } from './suggestions-generation';
 
 interface StoreProps {
   searchConfig: SearchConfig;
@@ -98,7 +98,7 @@ export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
-  const additionalSuggestions = filter.suggestionsGenerator?.() || [];
+  const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
     new Set(
       [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(
