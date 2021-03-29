@@ -1,5 +1,9 @@
 ## Next
 
+* Searching loadouts by exact name now works. For instance, `inloadout:"My PVP Equipment"` will highlight any items that loadout contains.
+* To help with that, loadout names, `perkname`s, and item `name`s are suggested as you type.
+* Search will also suggest any #hashtags found in your notes, for instance `#pve`
+
 ## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
 
 * When comparing items, the item you launched Compare from is now highlighted with an orange title.
