@@ -27,7 +27,7 @@ function startWordRegexp(s: string, language: string) {
 const plainString = (s: string, language: string): string =>
   (isLatinBased(language) ? latinise(s) : s).toLowerCase();
 
-const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]); //
+const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
   const perkNames = allItems
     .filter((i) => {
