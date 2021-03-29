@@ -32,8 +32,9 @@
     height: 18px;
     padding-top: 0;
     padding-bottom: 0;
-    background-position-y: 6px;
-    background-size: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+    background-position-x: calc(100% - 4px);
     width: 45px;
   }
 }

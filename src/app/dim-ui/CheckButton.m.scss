@@ -13,6 +13,9 @@
   > *:nth-last-child(n + 2) {
     margin-right: auto;
   }
+  > *:last-child {
+    margin-left: 6px;
+  }
 
   @include phone-portrait {
     width: auto;
