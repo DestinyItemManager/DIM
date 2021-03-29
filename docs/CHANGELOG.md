@@ -1,5 +1,12 @@
 ## Next
 
+## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
+
+* When comparing items, the item you launched Compare from is now highlighted with an orange title.
+* The Compare screen has an "Open in Organizer" button that shows the exact same items in the Organizer which has more options for comparing items.
+* Fixed some mods in Loadout Organizer that weren't applying the right stats.
+* You can now sort inventory by how recently you acquired the item.
+
 ## 6.57.1 <span class="changelog-date">(2021-03-22)</span>
 
 * Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
