@@ -17,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
     "ButtonOn": "Active Mode",
     "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
