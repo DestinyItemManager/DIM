@@ -4,6 +4,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { SearchConfig } from './search-config';
+import freeformFilters from './search-filters/freeform';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -170,6 +171,7 @@ const caretEndRegex = /([\s)]|$)/;
 const lastWordRegex = /(\b[\w:"']{3,}|#\w*)$/;
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
+
 /**
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
@@ -229,6 +231,8 @@ function findFilter(term: string, searchConfig: SearchConfig) {
   return searchConfig.filters[filterName];
 }
 
+const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s}:`);
+
 /**
  * This builds a filter-complete function that uses the given search config's keywords to
  * offer autocomplete suggestions for a partially typed term.
@@ -241,7 +245,7 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
       return [];
     }
 
-    const typedToLower = typed.toLowerCase();
+    let typedToLower = typed.toLowerCase();
 
     // because we are fighting against other elements for space in the suggestion dropdown,
     // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
@@ -252,14 +256,24 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     const filterLowPrioritySuggestions = (s: string) =>
       (hasNotModifier || !s.startsWith('not:')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
 
-    // if there's already a colon typed, we are on a path, not wildly guessing,
-    // so only match from beginning of the typed string
-    let suggestions = (typedToLower.includes(':')
-      ? // ("stat:" matches "stat:" but not "basestat:")
-        searchConfig.keywords.filter((word) => word.startsWith(typedToLower))
-      : // ("stat" matches "stat:" and "basestat:")
-        searchConfig.keywords.filter((word) => word.includes(typedToLower))
-    ).filter(filterLowPrioritySuggestions);
+    let mustStartWith = '';
+    if (freeformTerms.some((t) => typedToLower.startsWith(t))) {
+      const typedSegments = typedToLower.split(':');
+      mustStartWith = typedSegments.shift()!;
+      typedToLower = typedSegments.join(':');
+    }
+
+    // for most searches (non-string-based), if there's already a colon typed,
+    // we are on a path through known terms, not wildly guessing, so we only match
+    // from beginning of the typed string, instead of middle snippets from suggestions.
+
+    // this way, "stat:" matches "stat:" but not "basestat:"
+    // and "stat" matches "stat:" and "basestat:"
+    const matchType = !mustStartWith && typedToLower.includes(':') ? 'startsWith' : 'includes';
+
+    let suggestions = searchConfig.keywords
+      .filter((word) => word.startsWith(mustStartWith) && word[matchType](typedToLower))
+      .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
     suggestions = suggestions.sort(
