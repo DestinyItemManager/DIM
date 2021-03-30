@@ -231,6 +231,8 @@ function findFilter(term: string, searchConfig: SearchConfig) {
   return searchConfig.filters[filterName];
 }
 
+// these filters might include quotes, so we search for two text segments to ignore quotes & colon
+// i.e. `name:test` can find `name:"test item"`
 const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s}:`);
 
 /**
