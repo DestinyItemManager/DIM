@@ -52,11 +52,8 @@ export default function GeneratedSetButtons({
     }
   }
 
-  /**
-   * Adds as many of the half tier mods as it can as per the order of the filters stat values.
-   * Will show a notification if some mods couldn't be slotted.
-   */
   const onQuickAddHalfTierMods = () => {
+    // Note that half tier mods are already sorted in our desired stat order so we just keep their ordering.
     const mods = halfTierMods.filter((mod) =>
       mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
     );
