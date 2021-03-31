@@ -317,6 +317,11 @@ select {
   &:focus:not(:focus-visible) {
     border-color: transparent;
   }
+
+  option {
+    background: black;
+    color: white;
+  }
 }
 
 /* Button */
