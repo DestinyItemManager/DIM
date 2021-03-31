@@ -2,7 +2,9 @@
 
 * Searching loadouts by exact name now works. For instance, `inloadout:"My PVP Equipment"` will highlight any items that loadout contains.
 * To help with that, loadout names, `perkname`s, and item `name`s are suggested as you type.
-* Search will also suggest any #hashtags found in your notes, for instance `#pve`
+* Search will suggest names of items and perks as you type.
+* Search will also suggest any #hashtags found in your notes, for instance `#pve`.
+* Visual refresh for buttons and some dropdowns.
 
 ## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
 
