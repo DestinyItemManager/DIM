@@ -2,10 +2,7 @@
 
 // Mode toggle
 .inventoryToggle {
-  padding: 0;
-  padding: 4px 10px;
-  display: flex;
-  width: fit-content;
+  width: fit-content !important;
 }
 
 .beta {
@@ -15,4 +12,5 @@
   color: black;
   padding: 2px 4px;
   border-radius: 5px;
+  display: inline-block;
 }

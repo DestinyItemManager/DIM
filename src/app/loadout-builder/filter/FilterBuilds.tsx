@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import _ from 'lodash';
@@ -56,13 +57,13 @@ export default function FilterBuilds({
           className={styles.assumeMasterwork}
           title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
         >
-          <input
-            id="lo-assume-masterwork"
-            type="checkbox"
+          <CheckButton
+            name="lo-assume-masterwork"
             checked={assumeMasterwork}
-            onChange={(e) => dispatch(setSetting('loAssumeMasterwork', e.target.checked))}
-          />
-          <label htmlFor="lo-assume-masterwork">{t('LoadoutBuilder.AssumeMasterwork')}</label>
+            onChange={(checked) => dispatch(setSetting('loAssumeMasterwork', checked))}
+          >
+            {t('LoadoutBuilder.AssumeMasterwork')}
+          </CheckButton>
         </div>
       </div>
     </div>

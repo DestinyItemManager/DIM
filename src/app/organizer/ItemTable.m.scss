@@ -45,10 +45,6 @@ $content-cells: 5;
 }
 $toolbarHeight: 41px - 16px + 8px;
 
-.guideLink {
-  margin-right: 8px !important;
-}
-
 .importButton {
   @media (max-width: 1000px) {
     display: none;

@@ -86,12 +86,7 @@ export default function LoadoutDrawerOptions({
             placeholder={t('Loadouts.LoadoutName')}
           />
           {showClass && (
-            <select
-              className="dim-select"
-              name="classType"
-              onChange={setClassType}
-              value={loadout.classType}
-            >
+            <select name="classType" onChange={setClassType} value={loadout.classType}>
               {classTypeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}

@@ -4,9 +4,10 @@
 
 .row {
   display: grid;
-  grid-template-columns: min-content 1fr 25% 25%;
+  grid-template-columns: min-content 1fr 45px 45px;
   gap: 4px 4px;
   margin-bottom: 2px;
+  padding-right: 4px;
   background-color: black;
   align-items: center;
 
@@ -25,6 +26,16 @@
     flex-direction: row;
     align-items: center;
     white-space: nowrap;
+  }
+
+  > select {
+    height: 18px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    background-position-x: calc(100% - 4px);
+    width: 45px;
   }
 }
 

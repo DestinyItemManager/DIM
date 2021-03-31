@@ -225,7 +225,11 @@ function Vendors({
           />
         )}
         {selectedStore && (
-          <CheckButton checked={filterToUnacquired} onChange={setFilterToUnacquired}>
+          <CheckButton
+            name="filter-to-unacquired"
+            checked={filterToUnacquired}
+            onChange={setFilterToUnacquired}
+          >
             {t('Vendors.FilterToUnacquired')}
           </CheckButton>
         )}

@@ -473,7 +473,7 @@ function ItemTable({
             onTagSelectedItems={onTagSelectedItems}
             onMoveSelectedItems={onMoveSelectedItems}
           />
-          <UserGuideLink topic="Organizer" className={styles.guideLink} />
+          <UserGuideLink topic="Organizer" />
           <Dropzone onDrop={importCsv} accept=".csv">
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className={styles.importButton}>

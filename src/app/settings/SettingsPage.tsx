@@ -129,6 +129,13 @@ function SettingsPage({
 }: Props) {
   useLoadStores(currentAccount, storesLoaded);
 
+  const onCheckChange = (checked, name) => {
+    if (name.length === 0) {
+      errorLog('settings', new Error('You need to have a name on the form input'));
+    }
+
+    dispatch(setSetting(name, checked));
+  };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
@@ -303,7 +310,7 @@ function SettingsPage({
                 label={t('Settings.ShowNewItems')}
                 name="showNewItems"
                 value={settings.showNewItems}
-                onChange={onChange}
+                onChange={onCheckChange}
               />
               <div className="subSetting">
                 <button
@@ -311,7 +318,8 @@ function SettingsPage({
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
                 >
-                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+                  <NewItemIndicator className="new-item" alwaysShow />{' '}
+                  <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
             </div>
@@ -348,7 +356,7 @@ function SettingsPage({
                 label={t('Settings.SingleCharacter')}
                 name="singleCharacter"
                 value={settings.singleCharacter}
-                onChange={onChange}
+                onChange={onCheckChange}
               />
               <div className="fineprint">{t('Settings.SingleCharacterExplanation')}</div>
             </div>
@@ -439,7 +447,7 @@ function SettingsPage({
               label={t('Settings.EnableAdvancedStats')}
               name="itemQuality"
               value={settings.itemQuality}
-              onChange={onChange}
+              onChange={onCheckChange}
             />
           </section>
 
