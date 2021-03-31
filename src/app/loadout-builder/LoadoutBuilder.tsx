@@ -5,12 +5,11 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -39,6 +38,7 @@ import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
 import {
+  generalSocketReusablePlugSetHash,
   ItemsByBucket,
   statHashes,
   statHashToType,
@@ -110,51 +110,30 @@ function mapStateToProps() {
 
   /** A selector to pull out all half tier general mods so we can quick add them to sets. */
   const halfTierModsSelector = createSelector(
-    allItemsSelector,
     (state: RootState) => settingsSelector(state).loStatSortOrder,
-    (_: RootState, { defs }: ProvidedProps) => defs,
-    (allItems, statOrder, defs) => {
+    (state: RootState) => state.manifest.d2Manifest,
+    (statOrder, defs) => {
       const halfTierMods: PluggableInventoryItemDefinition[] = [];
-      let generalSocket: DimSocket | undefined;
 
-      // Look for the first socket in items which has the general category in its whitelist and then break out.
-      itemLoop: for (const item of allItems) {
-        if (item.bucket.inArmor && item.energy) {
-          for (const socket of item.sockets?.allSockets || []) {
-            const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
-            if (
-              socketType.plugWhitelist.some(
-                (plug) => plug.categoryHash === armor2PlugCategoryHashesByName.general
-              )
-            ) {
-              generalSocket = socket;
-              break itemLoop;
-            }
-          }
-        }
-      }
+      // Get all the item hashes for the general sockets whitelisted plugs.
+      const reusablePlugs =
+        defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
+          (p) => p.plugItemHash
+        ) || [];
 
-      if (generalSocket) {
-        // Get all the item hashes for the whitelisted plugs.
-        const reusablePlugs =
-          defs.PlugSet.get(
-            generalSocket.socketDefinition.reusablePlugSetHash || NaN
-          )?.reusablePlugItems.map((p) => p.plugItemHash) || [];
+      for (const plugHash of reusablePlugs) {
+        const plug = defs?.InventoryItem.get(plugHash);
 
-        for (const plugHash of reusablePlugs) {
-          const plug = defs.InventoryItem.get(plugHash) || [];
-
-          // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
-          // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
-          if (
-            isPluggableItem(plug) &&
-            isArmor2Mod(plug) &&
-            plug.investmentStats.some(
-              (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
-            )
-          ) {
-            halfTierMods.push(plug);
-          }
+        // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
+        // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
+        if (
+          isPluggableItem(plug) &&
+          isArmor2Mod(plug) &&
+          plug.investmentStats.some(
+            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+          )
+        ) {
+          halfTierMods.push(plug);
         }
       }
 
@@ -171,7 +150,7 @@ function mapStateToProps() {
     }
   );
 
-  return (state: RootState, props: ProvidedProps): StoreProps => {
+  return (state: RootState): StoreProps => {
     const { loAssumeMasterwork } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
@@ -181,7 +160,7 @@ function mapStateToProps() {
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
       searchQuery: querySelector(state),
-      halfTierMods: halfTierModsSelector(state, props),
+      halfTierMods: halfTierModsSelector(state),
     };
   };
 }

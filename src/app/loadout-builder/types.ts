@@ -130,3 +130,9 @@ export const statKeys = Object.keys(statHashes) as StatTypes[];
 
 // Need to force the type as lodash converts the StatTypes type to string.
 export const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
+
+/**
+ * The resuablePlugSetHash from armour 2.0's general socket.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const generalSocketReusablePlugSetHash = 3559124992;

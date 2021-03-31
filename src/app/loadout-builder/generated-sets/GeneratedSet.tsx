@@ -111,7 +111,6 @@ function GeneratedSet({
         set={set}
         store={selectedStore!}
         canCompareLoadouts={canCompareLoadouts}
-        lockedArmor2Mods={lockedArmor2Mods}
         halfTierMods={halfTierMods}
         onLoadoutSet={setCreateLoadout}
         lbDispatch={lbDispatch}

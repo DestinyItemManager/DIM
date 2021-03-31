@@ -2,8 +2,6 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
-import { showNotification } from 'app/notifications/notifications';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
@@ -11,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout/loadout-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, LockedModMap, statHashes } from '../types';
+import { ArmorSet, statHashes } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
@@ -22,7 +20,6 @@ export default function GeneratedSetButtons({
   store,
   set,
   canCompareLoadouts,
-  lockedArmor2Mods,
   halfTierMods,
   onLoadoutSet,
   lbDispatch,
@@ -30,7 +27,6 @@ export default function GeneratedSetButtons({
   store: DimStore;
   set: ArmorSet;
   canCompareLoadouts: boolean;
-  lockedArmor2Mods: LockedModMap;
   halfTierMods: PluggableInventoryItemDefinition[];
   onLoadoutSet(loadout: Loadout): void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -61,36 +57,11 @@ export default function GeneratedSetButtons({
    * Will show a notification if some mods couldn't be slotted.
    */
   const onQuickAddHalfTierMods = () => {
-    const maxNumberOfPlusFiveMods =
-      5 - (lockedArmor2Mods[armor2PlugCategoryHashesByName.general]?.length || 0);
-
-    const halfTierModsToAdd = halfTierMods.filter((mod) =>
+    const mods = halfTierMods.filter((mod) =>
       mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
     );
 
-    const halfTierModsCapped = halfTierModsToAdd.slice(0, maxNumberOfPlusFiveMods);
-
-    if (statsWithPlus5.length > maxNumberOfPlusFiveMods) {
-      const failures = halfTierModsToAdd
-        .slice(maxNumberOfPlusFiveMods)
-        .map((mod) => mod.displayProperties.name)
-        .join(', ');
-
-      showNotification({
-        title: t('LoadoutBuilder.UnableToAddAllMods'),
-        body: t('LoadoutBuilder.UnableToAddAllModsBody', { mods: failures }),
-        type: 'warning',
-      });
-    }
-
-    // Gets a set of PluggableInventoryItems from the locked mods and adds the half tier mods
-    // to the general category.
-    const newModSet = _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef));
-    newModSet[armor2PlugCategoryHashesByName.general] = [
-      ...halfTierModsCapped,
-      ...(newModSet[armor2PlugCategoryHashesByName.general] || []),
-    ];
-    lbDispatch({ type: 'lockedArmor2ModsChanged', lockedArmor2Mods: newModSet });
+    lbDispatch({ type: 'addGeneralMods', mods });
   };
 
   return (

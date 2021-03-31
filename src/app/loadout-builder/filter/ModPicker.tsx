@@ -156,7 +156,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(
+  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(() =>
     _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef))
   );
   const filterInput = useRef<SearchFilterRef | null>(null);
