@@ -44,7 +44,8 @@ export default function PhoneStoresHeader({
   const trackRef = useRef<HTMLDivElement>(null);
 
   // The track is divided into "segments", with one item per segment
-  const numSegments = stores.length;
+  const numSegments = 5; // since we wrap the items, we're always showing a virtual repeating window from index -2 to +2
+  const numItems = stores.length;
   // This is a floating-point, animated representation of the position within the segments, relative to the current store
   const offset = useMotionValue(0);
   // Keep track of the starting point when we begin a gesture
@@ -54,7 +55,7 @@ export default function PhoneStoresHeader({
     let diff = index - lastIndex.current;
     if (lastIndex.current === 0 && diff > 1) {
       diff = -1;
-    } else if (lastIndex.current === numSegments - 1 && diff < -1) {
+    } else if (lastIndex.current === numItems - 1 && diff < -1) {
       diff = 1;
     }
 
@@ -62,7 +63,7 @@ export default function PhoneStoresHeader({
     offset.set(offset.get() - diff);
     animate(offset, 0, { ...spring, velocity });
     lastIndex.current = index;
-  }, [index, offset, numSegments]);
+  }, [index, offset, numItems]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
