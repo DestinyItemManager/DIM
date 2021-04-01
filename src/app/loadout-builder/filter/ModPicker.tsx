@@ -25,7 +25,7 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { knownModPlugCategoryHashes, LockedModMap } from '../types';
+import { knownModPlugCategoryHashes, LockedMods } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
@@ -38,7 +38,7 @@ const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 );
 
 interface ProvidedProps {
-  lockedArmor2Mods: LockedModMap;
+  lockedMods: LockedMods;
   classType: DestinyClass;
   initialQuery?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -150,14 +150,14 @@ function ModPicker({
   mods,
   language,
   isPhonePortrait,
-  lockedArmor2Mods,
+  lockedMods,
   initialQuery,
   lbDispatch,
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(() =>
-    _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef))
+  const [lockedModsInternal, setLockedModsInternal] = useState(() =>
+    _.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))
   );
   const filterInput = useRef<SearchFilterRef | null>(null);
 
@@ -205,8 +205,8 @@ function ModPicker({
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
     lbDispatch({
-      type: 'lockedArmor2ModsChanged',
-      lockedArmor2Mods: lockedArmor2ModsInternal,
+      type: 'lockedModsChanged',
+      lockedMods: lockedModsInternal,
     });
     onClose();
   };
@@ -283,12 +283,12 @@ function ModPicker({
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = Object.values(lockedArmor2ModsInternal).some((f) => Boolean(f?.length))
+  const footer = Object.values(lockedModsInternal).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
           groupOrder={groupedMods}
-          lockedArmor2Mods={lockedArmor2ModsInternal}
+          lockedMods={lockedModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
           onModSelected={onModRemoved}
@@ -330,7 +330,7 @@ function ModPicker({
           key={plugCategoryHashes.join('-')}
           mods={mods}
           defs={defs}
-          locked={lockedArmor2ModsInternal}
+          locked={lockedModsInternal}
           title={title}
           plugCategoryHashes={plugCategoryHashes}
           onModSelected={onModSelected}

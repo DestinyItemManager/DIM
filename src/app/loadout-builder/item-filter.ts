@@ -7,7 +7,7 @@ import {
   LockableBuckets,
   LockedItemType,
   LockedMap,
-  LockedModMap,
+  LockedMods,
 } from './types';
 
 /**
@@ -16,7 +16,7 @@ import {
 export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
-  lockedModMap: LockedModMap,
+  lockedModMap: LockedMods,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};

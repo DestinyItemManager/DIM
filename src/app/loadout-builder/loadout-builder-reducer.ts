@@ -12,7 +12,7 @@ import {
   LockedItemType,
   LockedMap,
   LockedMod,
-  LockedModMap,
+  LockedMods,
   MinMaxIgnored,
   StatTypes,
 } from './types';
@@ -20,7 +20,7 @@ import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
-  lockedArmor2Mods: LockedModMap;
+  lockedMods: LockedMods;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   modPicker: {
@@ -73,7 +73,7 @@ const lbStateInit = ({
       Intellect: { min: 0, max: 10, ignored: false },
       Strength: { min: 0, max: 10, ignored: false },
     },
-    lockedArmor2Mods: {},
+    lockedMods: {},
     selectedStoreId: selectedStoreId,
     modPicker: {
       open: false,
@@ -91,8 +91,8 @@ export type LoadoutBuilderAction =
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | {
-      type: 'lockedArmor2ModsChanged';
-      lockedArmor2Mods: {
+      type: 'lockedModsChanged';
+      lockedMods: {
         [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
       };
     }
@@ -151,21 +151,21 @@ function lbStateReducer(
         },
       };
     }
-    case 'lockedArmor2ModsChanged': {
+    case 'lockedModsChanged': {
       let modKey = 0;
       return {
         ...state,
-        lockedArmor2Mods: _.mapValues(action.lockedArmor2Mods, (plugs) =>
+        lockedMods: _.mapValues(action.lockedMods, (plugs) =>
           plugs?.map((plug) => ({ key: modKey++, modDef: plug }))
         ),
       };
     }
     case 'addGeneralMods': {
-      const genrealMods = state.lockedArmor2Mods[armor2PlugCategoryHashesByName.general];
+      const genrealMods = state.lockedMods[armor2PlugCategoryHashesByName.general];
       const newGeneralMods = genrealMods?.length ? [...genrealMods] : [];
       const failures: string[] = [];
       let largestModKey = Math.max(
-        ...Object.values(state.lockedArmor2Mods)
+        ...Object.values(state.lockedMods)
           .flat()
           .map((locked) => locked?.key || 0)
       );
@@ -188,8 +188,8 @@ function lbStateReducer(
 
       return {
         ...state,
-        lockedArmor2Mods: {
-          ...state.lockedArmor2Mods,
+        lockedMods: {
+          ...state.lockedMods,
           [armor2PlugCategoryHashesByName.general]: newGeneralMods,
         },
       };
@@ -198,9 +198,9 @@ function lbStateReducer(
       const { plugCategoryHash } = action.mod.modDef.plug;
       return {
         ...state,
-        lockedArmor2Mods: {
-          ...state.lockedArmor2Mods,
-          [plugCategoryHash]: state.lockedArmor2Mods[plugCategoryHash]?.filter(
+        lockedMods: {
+          ...state.lockedMods,
+          [plugCategoryHash]: state.lockedMods[plugCategoryHash]?.filter(
             (locked) => locked.key !== action.mod.key
           ),
         },

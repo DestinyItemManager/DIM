@@ -10,7 +10,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   groupOrder: { plugCategoryHashes: number[] }[];
   isPhonePortrait: boolean;
-  lockedArmor2Mods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined };
+  lockedMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined };
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   onModSelected(item: PluggableInventoryItemDefinition): void;
 }
@@ -19,7 +19,7 @@ function ModPickerFooter({
   defs,
   isPhonePortrait,
   groupOrder,
-  lockedArmor2Mods,
+  lockedMods,
   onSubmit,
   onModSelected,
 }: Props) {
@@ -40,9 +40,9 @@ function ModPickerFooter({
         {groupOrder.map((group) =>
           group.plugCategoryHashes.map(
             (pch) =>
-              pch in lockedArmor2Mods && (
+              pch in lockedMods && (
                 <React.Fragment key={pch}>
-                  {lockedArmor2Mods[pch]?.map((mod) => {
+                  {lockedMods[pch]?.map((mod) => {
                     if (!modCounts[mod.hash]) {
                       modCounts[mod.hash] = 0;
                     }

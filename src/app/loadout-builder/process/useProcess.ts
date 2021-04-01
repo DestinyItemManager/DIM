@@ -17,7 +17,7 @@ import {
   ItemsByBucket,
   LockedMap,
   LockedMod,
-  LockedModMap,
+  LockedMods,
   MinMax,
   MinMaxIgnored,
   statHashes,
@@ -49,7 +49,7 @@ export function useProcess(
   selectedStore: DimStore<DimItem> | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedModMap: LockedModMap,
+  lockedModMap: LockedMods,
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
