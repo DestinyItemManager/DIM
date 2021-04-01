@@ -45,13 +45,13 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
 
   const handleSwipe: HammerListener = (e) => {
     const selectedStoreIndex = selectedStoreId
-      ? stores.findIndex((s) => s.id === selectedStoreId)
-      : stores.findIndex((s) => s.current);
+      ? headerStores.findIndex((s) => s.id === selectedStoreId)
+      : headerStores.findIndex((s) => s.current);
 
     if (e.direction === 2) {
-      setSelectedStoreId(headerStores[wrap(selectedStoreIndex + 1, stores.length)].id);
+      setSelectedStoreId(headerStores[wrap(selectedStoreIndex + 1, headerStores.length)].id);
     } else if (e.direction === 4) {
-      setSelectedStoreId(headerStores[wrap(selectedStoreIndex - 1, stores.length)].id);
+      setSelectedStoreId(headerStores[wrap(selectedStoreIndex - 1, headerStores.length)].id);
     }
   };
 
