@@ -95,7 +95,7 @@ function flattenRecords(nodeTree: DimPresentationNode): DimRecord[] {
   return records;
 }
 
-export function PursuitsGroup({
+function PursuitsGroup({
   store,
   defs,
   pursuits,
