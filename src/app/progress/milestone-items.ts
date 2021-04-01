@@ -281,7 +281,7 @@ function makeFakePursuitItem(
     taggable: false,
     comparable: false,
     basePower: 0,
-    index: '',
+    index: hash.toString(),
     infusable: false,
     infusionFuel: false,
     sockets: null,
