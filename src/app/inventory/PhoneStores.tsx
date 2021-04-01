@@ -28,7 +28,10 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
 
-  const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
+  const [{ selectedStoreId, direction }, setSelectedStoreId] = useState({
+    selectedStoreId: currentStore?.id,
+    direction: 1,
+  });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
@@ -49,9 +52,15 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
       : headerStores.findIndex((s) => s.current);
 
     if (e.direction === 2) {
-      setSelectedStoreId(headerStores[wrap(selectedStoreIndex + 1, headerStores.length)].id);
+      setSelectedStoreId({
+        selectedStoreId: headerStores[wrap(selectedStoreIndex + 1, headerStores.length)].id,
+        direction: 1,
+      });
     } else if (e.direction === 4) {
-      setSelectedStoreId(headerStores[wrap(selectedStoreIndex - 1, headerStores.length)].id);
+      setSelectedStoreId({
+        selectedStoreId: headerStores[wrap(selectedStoreIndex - 1, headerStores.length)].id,
+        direction: -1,
+      });
     }
   };
 
@@ -73,9 +82,12 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
       <HeaderShadowDiv className="store-row store-header" onTouchStart={(e) => e.stopPropagation()}>
         <PhoneStoresHeader
           selectedStore={selectedStore}
+          direction={direction}
           stores={headerStores}
           loadoutMenuRef={detachedLoadoutMenu}
-          setSelectedStoreId={setSelectedStoreId}
+          setSelectedStoreId={(selectedStoreId, direction) =>
+            setSelectedStoreId({ selectedStoreId, direction })
+          }
         />
       </HeaderShadowDiv>
 

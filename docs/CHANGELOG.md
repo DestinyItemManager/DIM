@@ -5,6 +5,8 @@
 * Search will suggest names of items and perks as you type.
 * Search will also suggest any #hashtags found in your notes, for instance `#pve`.
 * Visual refresh for buttons and some dropdowns.
+* Swiping between characters on mobile by swiping the inventory works again.
+* Swiping the character headers behaves more sensibly now.
 
 ## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
 
