@@ -462,3 +462,7 @@ a.dim-button {
     --inventory-column-padding: 12px;
   }
 }
+
+.horizontal-swipable {
+  touch-action: pan-y;
+}

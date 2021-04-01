@@ -18,9 +18,9 @@ import {
   DestinyItemPlug,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
+import { motion, PanInfo } from 'framer-motion';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -124,16 +124,23 @@ function Vendors({
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
 
-  const handleSwipe: HammerListener = (e) => {
+  const handleSwipe = (_e, info: PanInfo) => {
+    // Velocity is in px/ms
+    if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
+      return;
+    }
+
+    const direction = -Math.sign(info.velocity.x);
+
     const characters = stores.filter((s) => !s.isVault);
 
     const selectedStoreIndex = selectedStoreId
       ? characters.findIndex((s) => s.id === selectedStoreId)
       : characters.findIndex((s) => s.current);
 
-    if (e.direction === 2 && selectedStoreIndex < characters.length - 1) {
+    if (direction > 0 && selectedStoreIndex < characters.length - 1) {
       setCharacterId(characters[selectedStoreIndex + 1].id);
-    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+    } else if (direction < 0 && selectedStoreIndex > 0) {
       setCharacterId(characters[selectedStoreIndex - 1].id);
     }
   };
@@ -236,25 +243,23 @@ function Vendors({
         {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents>
-        <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
-          <div>
-            {vendorGroups && currencyLookups && defs ? (
-              vendorGroups.map((group) => (
-                <VendorGroup
-                  key={group.def.hash}
-                  defs={defs}
-                  group={group}
-                  ownedItemHashes={fullOwnedItemHashes}
-                  currencyLookups={currencyLookups}
-                  filtering={filterToUnacquired || searchQuery.length > 0}
-                  characterId={selectedStore.id}
-                />
-              ))
-            ) : (
-              <ShowPageLoading message={t('Loading.Vendors')} />
-            )}
-          </div>
-        </Hammer>
+        <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
+          {vendorGroups && currencyLookups && defs ? (
+            vendorGroups.map((group) => (
+              <VendorGroup
+                key={group.def.hash}
+                defs={defs}
+                group={group}
+                ownedItemHashes={fullOwnedItemHashes}
+                currencyLookups={currencyLookups}
+                filtering={filterToUnacquired || searchQuery.length > 0}
+                characterId={selectedStore.id}
+              />
+            ))
+          ) : (
+            <ShowPageLoading message={t('Loading.Vendors')} />
+          )}
+        </motion.div>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

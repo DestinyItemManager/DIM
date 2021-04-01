@@ -1767,11 +1767,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hammerjs@*":
-  version "2.0.39"
-  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.39.tgz#4be64bbacf3813c79c0dab895c6b0fdc7d5e513f"
-  integrity sha512-lYR2Y/tV2ujpk/WyUc7S0VLI0a9hrtVIN9EwnrNo5oSEJI2cK2/XrgwOQmXLL3eTulOESvh9qP6si9+DWM9cOA==
-
 "@types/history@*":
   version "4.7.8"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.8.tgz#49348387983075705fe8f4e02fb67f7daaec4934"
@@ -1893,14 +1888,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.3.tgz#7fdf37b8af9d6d40127137865bb3fff8871d7ee1"
   integrity sha512-4NnJbCeWE+8YBzupn/YrJxZ8VnjcJq5iR1laqQ1vkpQgBiA7bwk0Rp24fxsdNinzJY2U+HHS4dJJDPdoMjdJ7w==
   dependencies:
-    "@types/react" "*"
-
-"@types/react-hammerjs@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/react-hammerjs/-/react-hammerjs-1.0.1.tgz#f417f0ed5d34452951752198207495955e3e696c"
-  integrity sha512-vOxsidbF1vkQaIQ7sl+yMj7fjp6F7EQodwYD3tDYm04QSmopBEvlSKIwu6azZKtt+zdnFyZEvLWqWQWKwF0F3Q==
-  dependencies:
-    "@types/hammerjs" "*"
     "@types/react" "*"
 
 "@types/react-redux@^7.0.3", "@types/react-redux@^7.1.16":
@@ -5736,11 +5723,6 @@ gzip-size@^6.0.0:
   dependencies:
     duplexer "^0.1.2"
 
-hammerjs@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
-
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
@@ -6101,7 +6083,6 @@ i18next-scanner@delphiactual/i18next-scanner:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
     acorn-jsx "^5.2.0"
-    acorn-optional-chaining "^0.0.3"
     acorn-stage3 "^2.0.0"
     acorn-walk "^6.0.0"
     chalk "^2.4.1"
@@ -6110,9 +6091,9 @@ i18next-scanner@delphiactual/i18next-scanner:
     deepmerge "^4.0.0"
     ensure-array "^1.0.0"
     eol "^0.9.1"
-    esprima "^4.0.0"
+    esprima "^4.0.1"
     gulp-sort "^2.0.0"
-    i18next "^19.0.0"
+    i18next "*"
     lodash "^4.0.0"
     parse5 "^5.0.0"
     sortobject "^1.1.1"
@@ -9393,13 +9374,6 @@ react-dropzone@^11.0.1:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"
     prop-types "^15.7.2"
-
-react-hammerjs@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-hammerjs/-/react-hammerjs-1.0.1.tgz#bc1ed9e9ef7da057163fb169ce12917b6d6ca7d8"
-  integrity sha1-vB7Z6e99oFcWP7FpzhKRe21sp9g=
-  dependencies:
-    hammerjs "^2.0.8"
 
 "react-is@^16.12.0 || ^17.0.0", react-is@^17.0.1, react-is@^17.0.2:
   version "17.0.2"
