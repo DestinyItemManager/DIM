@@ -17,7 +17,7 @@ import {
   ArmorSet,
   knownModPlugCategoryHashes,
   LockedMod,
-  LockedModMap,
+  LockedMods,
   raidPlugCategoryHashes,
   statHashToType,
   StatTypes,
@@ -85,10 +85,7 @@ function isModStatActive(
  * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
  */
-export function getTotalModStatChanges(
-  lockedArmor2Mods: LockedModMap,
-  characterClass?: DestinyClass
-) {
+export function getTotalModStatChanges(lockedMods: LockedMods, characterClass?: DestinyClass) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -103,11 +100,11 @@ export function getTotalModStatChanges(
     return totals;
   }
 
-  const flatMods = Object.values(lockedArmor2Mods)
+  const flatMods = Object.values(lockedMods)
     .flat()
     .filter((mod): mod is LockedMod => Boolean(mod));
 
-  for (const mods of Object.values(lockedArmor2Mods)) {
+  for (const mods of Object.values(lockedMods)) {
     for (const mod of mods || []) {
       for (const stat of mod.modDef.investmentStats) {
         const statType = statHashToType[stat.statTypeHash];

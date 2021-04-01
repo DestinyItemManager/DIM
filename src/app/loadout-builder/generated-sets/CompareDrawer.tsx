@@ -19,7 +19,7 @@ import { getTotalModStatChanges } from '../process/mappers';
 import {
   ArmorSet,
   LockableBucketHashes,
-  LockedModMap,
+  LockedMods,
   statHashes,
   statKeys,
   StatTypes,
@@ -48,7 +48,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
-  lockedArmor2Mods: LockedModMap;
+  lockedMods: LockedMods;
   defs: D2ManifestDefinitions;
   classType: DestinyClass;
   statOrder: StatTypes[];
@@ -75,7 +75,7 @@ function CompareDrawer({
   characterClass,
   loadouts,
   set,
-  lockedArmor2Mods,
+  lockedMods,
   allItems,
   defs,
   classType,
@@ -116,7 +116,7 @@ function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedArmor2Mods);
+  const lockedModStats = getTotalModStatChanges(lockedMods);
 
   for (const statType of statKeys) {
     loadoutStats[statType] += lockedModStats[statType];
@@ -124,12 +124,12 @@ function CompareDrawer({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedArmor2Mods
+    lockedMods
   );
 
   const [loadoutAssignedMods, loadoutUnassignedMods] = assignModsToArmorSet(
     loadoutItems,
-    lockedArmor2Mods
+    lockedMods
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {

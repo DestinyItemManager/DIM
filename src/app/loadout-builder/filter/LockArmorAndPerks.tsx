@@ -22,7 +22,7 @@ import {
   LockedItemType,
   LockedMap,
   LockedMod,
-  LockedModMap,
+  LockedMods,
   LockedPerk,
 } from '../types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
@@ -33,7 +33,7 @@ import LockedModIcon from './LockedModIcon';
 interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
-  lockedArmor2Mods: LockedModMap;
+  lockedMods: LockedMods;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -62,7 +62,7 @@ function LockArmorAndPerks({
   selectedStore,
   defs,
   lockedMap,
-  lockedArmor2Mods,
+  lockedMods,
   buckets,
   stores,
   lbDispatch,
@@ -172,10 +172,10 @@ function LockArmorAndPerks({
   );
 
   let flatLockedMods: LockedMod[] = knownModPlugCategoryHashes.flatMap(
-    (plugCategoryHash) => lockedArmor2Mods[plugCategoryHash] || []
+    (plugCategoryHash) => lockedMods[plugCategoryHash] || []
   );
 
-  for (const [plugCategoryHashAsString, mods] of Object.entries(lockedArmor2Mods)) {
+  for (const [plugCategoryHashAsString, mods] of Object.entries(lockedMods)) {
     if (mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHashAsString))) {
       flatLockedMods = flatLockedMods.concat(mods);
     }

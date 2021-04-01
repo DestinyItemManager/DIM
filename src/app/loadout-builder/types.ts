@@ -59,7 +59,8 @@ export interface LockedMod {
   modDef: PluggableInventoryItemDefinition;
 }
 
-export type LockedModMap = {
+/** An object of plugCategoryHashes to arrays of locked mods with said plugCategoryHash. */
+export type LockedMods = {
   [plugCategoryHash: number]: LockedMod[] | undefined;
 };
 

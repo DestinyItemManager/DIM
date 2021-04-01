@@ -182,15 +182,7 @@ function LoadoutBuilder({
   halfTierMods,
 }: Props) {
   const [
-    {
-      lockedMap,
-      lockedArmor2Mods,
-      selectedStoreId,
-      statFilters,
-      modPicker,
-      perkPicker,
-      compareSet,
-    },
+    { lockedMap, lockedMods, selectedStoreId, statFilters, modPicker, perkPicker, compareSet },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -206,16 +198,18 @@ function LoadoutBuilder({
   const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
-  const filteredItems = useMemo(
-    () => filterItems(characterItems, lockedMap, lockedArmor2Mods, filter),
-    [characterItems, lockedMap, lockedArmor2Mods, filter]
-  );
+  const filteredItems = useMemo(() => filterItems(characterItems, lockedMap, lockedMods, filter), [
+    characterItems,
+    lockedMap,
+    lockedMods,
+    filter,
+  ]);
 
   const { result, processing } = useProcess(
     selectedStore,
     filteredItems,
     lockedMap,
-    lockedArmor2Mods,
+    lockedMods,
     assumeMasterwork,
     statOrder,
     statFilters
@@ -244,13 +238,11 @@ function LoadoutBuilder({
           return stat;
         })
       ),
-      mods: Object.values(lockedArmor2Mods).flatMap(
-        (mods) => mods?.map((m) => m.modDef.hash) || []
-      ),
+      mods: Object.values(lockedMods).flatMap((mods) => mods?.map((m) => m.modDef.hash) || []),
       query: searchQuery,
       assumeMasterworked: assumeMasterwork,
     }),
-    [assumeMasterwork, lockedArmor2Mods, searchQuery, statFilters, statOrder]
+    [assumeMasterwork, lockedMods, searchQuery, statFilters, statOrder]
   );
 
   const combos = result?.combos || 0;
@@ -285,7 +277,7 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedArmor2Mods={lockedArmor2Mods}
+        lockedMods={lockedMods}
         lbDispatch={lbDispatch}
       />
     </div>
@@ -336,7 +328,7 @@ function LoadoutBuilder({
             defs={defs}
             statOrder={statOrder}
             enabledStats={enabledStats}
-            lockedArmor2Mods={lockedArmor2Mods}
+            lockedMods={lockedMods}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
@@ -346,7 +338,7 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              lockedArmor2Mods={lockedArmor2Mods}
+              lockedMods={lockedMods}
               initialQuery={modPicker.initialQuery}
               lbDispatch={lbDispatch}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
@@ -369,7 +361,7 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
-              lockedArmor2Mods={lockedArmor2Mods}
+              lockedMods={lockedMods}
               defs={defs}
               classType={selectedStore.classType}
               statOrder={statOrder}

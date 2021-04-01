@@ -8,7 +8,7 @@ import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedMap, LockedModMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, LockedMods, StatTypes } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -24,7 +24,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedModMap;
+  lockedMods: LockedMods;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -44,7 +44,7 @@ function GeneratedSet({
   defs,
   enabledStats,
   forwardedRef,
-  lockedArmor2Mods,
+  lockedMods,
   loadouts,
   lbDispatch,
   params,
@@ -65,7 +65,7 @@ function GeneratedSet({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedArmor2Mods
+    lockedMods
   );
 
   const canCompareLoadouts =

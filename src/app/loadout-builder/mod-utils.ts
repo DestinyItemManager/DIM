@@ -13,7 +13,7 @@ import {
   knownModPlugCategoryHashes,
   LockableBucketHashes,
   LockedMod,
-  LockedModMap,
+  LockedMods,
   raidPlugCategoryHashes,
 } from './types';
 
@@ -50,14 +50,14 @@ function assignModsForSlot(
  */
 function assignSlotIndependantMods(
   setToMatch: ProcessItem[],
-  lockedArmor2Mods: LockedModMap,
+  lockedMods: LockedMods,
   assignments: Record<string, number[]>
 ): void {
   let generalMods: LockedMod[] = [];
   let otherMods: LockedMod[] = [];
   let raidMods: LockedMod[] = [];
 
-  for (const [plugCategoryHashString, mods] of Object.entries(lockedArmor2Mods)) {
+  for (const [plugCategoryHashString, mods] of Object.entries(lockedMods)) {
     const plugCategoryHash = Number(plugCategoryHashString);
 
     if (!mods) {
@@ -95,7 +95,7 @@ function assignSlotIndependantMods(
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
-  lockedArmor2Mods: LockedModMap
+  lockedMods: LockedMods
 ): [Record<string, LockedMod[]>, LockedMod[]] {
   const assignments: Record<string, number[]> = {};
 
@@ -109,16 +109,16 @@ export function assignModsToArmorSet(
     const item = setToMatch.find((i) => i.bucket.hash === hash);
 
     if (item) {
-      const lockedMods = lockedArmor2Mods[bucketsToCategories[hash]];
-      assignModsForSlot(item, assignments, lockedMods);
-      processItems.push(mapDimItemToProcessItem(item, lockedMods));
+      const lockedModsByPlugCategoryHash = lockedMods[bucketsToCategories[hash]];
+      assignModsForSlot(item, assignments, lockedModsByPlugCategoryHash);
+      processItems.push(mapDimItemToProcessItem(item, lockedModsByPlugCategoryHash));
     }
   }
 
-  assignSlotIndependantMods(processItems, lockedArmor2Mods, assignments);
+  assignSlotIndependantMods(processItems, lockedMods, assignments);
 
   const modsByHash = _.groupBy(
-    Object.values(lockedArmor2Mods)
+    Object.values(lockedMods)
       .flat()
       .filter((x: LockedMod | undefined): x is LockedMod => Boolean(x)),
     (mod) => mod.modDef.hash
@@ -127,7 +127,7 @@ export function assignModsToArmorSet(
     modHashes.map((modHash) => modsByHash[modHash].pop()).filter((x): x is LockedMod => Boolean(x))
   );
   const assigned = Object.values(assignedMods).flat();
-  const unassignedMods = Object.values(lockedArmor2Mods)
+  const unassignedMods = Object.values(lockedMods)
     .flat()
     .filter((unassign): unassign is LockedMod =>
       Boolean(unassign && !assigned.some((assign) => assign.key === unassign.key))
