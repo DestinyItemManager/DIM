@@ -5,7 +5,8 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
@@ -14,6 +15,8 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -34,7 +37,15 @@ import { filterItems } from './item-filter';
 import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { ItemsByBucket, statHashes, statHashToType, statKeys, StatTypes } from './types';
+import {
+  generalSocketReusablePlugSetHash,
+  ItemsByBucket,
+  statHashes,
+  statHashToType,
+  statKeys,
+  StatTypes,
+  statValues,
+} from './types';
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
@@ -54,11 +65,13 @@ interface StoreProps {
   loadouts: Loadout[];
   filter: ItemFilter;
   searchQuery: string;
+  halfTierMods: PluggableInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const itemsSelector = createSelector(
     allItemsSelector,
     (
@@ -95,6 +108,48 @@ function mapStateToProps() {
     (loStatSortOrder: number[]) => loStatSortOrder.map((hash) => statHashToType[hash])
   );
 
+  /** A selector to pull out all half tier general mods so we can quick add them to sets. */
+  const halfTierModsSelector = createSelector(
+    (state: RootState) => settingsSelector(state).loStatSortOrder,
+    (state: RootState) => state.manifest.d2Manifest,
+    (statOrder, defs) => {
+      const halfTierMods: PluggableInventoryItemDefinition[] = [];
+
+      // Get all the item hashes for the general sockets whitelisted plugs.
+      const reusablePlugs =
+        defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
+          (p) => p.plugItemHash
+        ) || [];
+
+      for (const plugHash of reusablePlugs) {
+        const plug = defs?.InventoryItem.get(plugHash);
+
+        // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
+        // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
+        if (
+          isPluggableItem(plug) &&
+          isArmor2Mod(plug) &&
+          plug.investmentStats.some(
+            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+          )
+        ) {
+          halfTierMods.push(plug);
+        }
+      }
+
+      // Sort the mods so they are in the same order as our stat filters. This ensures the desired stats
+      // will be enhanced first.
+      return halfTierMods.sort(
+        compareBy((mod) => {
+          const stat = mod.investmentStats.find(
+            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+          );
+          return statOrder.indexOf(stat!.statTypeHash);
+        })
+      );
+    }
+  );
+
   return (state: RootState): StoreProps => {
     const { loAssumeMasterwork } = settingsSelector(state);
     return {
@@ -105,6 +160,7 @@ function mapStateToProps() {
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
       searchQuery: querySelector(state),
+      halfTierMods: halfTierModsSelector(state),
     };
   };
 }
@@ -123,6 +179,7 @@ function LoadoutBuilder({
   filter,
   preloadedLoadout,
   searchQuery,
+  halfTierMods,
 }: Props) {
   const [
     {
@@ -282,6 +339,7 @@ function LoadoutBuilder({
             lockedArmor2Mods={lockedArmor2Mods}
             loadouts={loadouts}
             params={params}
+            halfTierMods={halfTierMods}
           />
         )}
         {modPicker.open &&

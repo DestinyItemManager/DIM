@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   bucketsSelector,
@@ -16,8 +17,7 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import copy from 'fast-copy';
+import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
@@ -25,19 +25,16 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { knownModPlugCategoryHashes, LockedMod, LockedModMap } from '../types';
+import { knownModPlugCategoryHashes, LockedModMap } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
-/** Used for generating the key attribute of the lockedArmor2Mods */
-let modKey = 0;
-
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<LockedMod>(
-  compareBy((l) => l.modDef.plug.energyCost?.energyType),
-  compareBy((l) => l.modDef.plug.energyCost?.energyCost),
-  compareBy((l) => l.modDef.displayProperties.name)
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
 );
 
 interface ProvidedProps {
@@ -53,7 +50,7 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
-  mods: LockedMod[];
+  mods: PluggableInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -65,9 +62,14 @@ function mapStateToProps() {
     allItemsSelector,
     (state: RootState) => state.manifest.d2Manifest!,
     (_: RootState, props: ProvidedProps) => props.classType,
-    (profileResponse, allItems, defs, classType): StoreProps['mods'] => {
+    (
+      profileResponse: DestinyProfileResponse,
+      allItems: DimItem[],
+      defs: D2ManifestDefinitions,
+      classType?: DestinyClass
+    ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
-      if (!profileResponse) {
+      if (!profileResponse || classType === undefined) {
         return [];
       }
 
@@ -107,7 +109,7 @@ function mapStateToProps() {
           }
         }
 
-        const transformedMods: LockedMod[] = [];
+        const finalMods: PluggableInventoryItemDefinition[] = [];
 
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
@@ -121,28 +123,27 @@ function mapStateToProps() {
             // My investigation showed that only classified items had this being undefined.
             def.itemTypeDisplayName !== undefined
           ) {
-            transformedMods.push({ modDef: def });
+            finalMods.push(def);
           }
         }
 
-        return transformedMods.sort(sortMods);
+        return finalMods.sort(sortMods);
       });
 
-      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.modDef.hash);
+      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.hash);
     }
   );
-
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
-    mods: unlockedModsSelector(state, props),
     defs: state.manifest.d2Manifest!,
+    mods: unlockedModsSelector(state, props),
   });
 }
 
 /**
- * A sheet that allows picking a perk.
+ * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
   defs,
@@ -155,7 +156,9 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(copy(lockedArmor2Mods));
+  const [lockedArmor2ModsInternal, setLockedModsInternal] = useState(() =>
+    _.mapValues(lockedArmor2Mods, (mods) => mods?.map((mod) => mod.modDef))
+  );
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -164,23 +167,25 @@ function ModPicker({
     }
   }, [isPhonePortrait, filterInput]);
 
+  /** Add a new mod to the internal mod picker state */
   const onModSelected = useCallback(
-    (mod: LockedMod) => {
-      const { plugCategoryHash } = mod.modDef.plug;
+    (mod: PluggableInventoryItemDefinition) => {
+      const { plugCategoryHash } = mod.plug;
       setLockedModsInternal((oldState) => ({
         ...oldState,
-        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod, key: modKey++ }],
+        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod }],
       }));
     },
     [setLockedModsInternal]
   );
 
+  /** Remove a mod from the internal mod picker state */
   const onModRemoved = useCallback(
-    (mod: LockedMod) => {
-      const { plugCategoryHash } = mod.modDef.plug;
+    (mod: PluggableInventoryItemDefinition) => {
+      const { plugCategoryHash } = mod.plug;
       setLockedModsInternal((oldState) => {
         const firstIndex =
-          oldState[plugCategoryHash]?.findIndex((li) => li.modDef.hash === mod.modDef.hash) ?? -1;
+          oldState[plugCategoryHash]?.findIndex((locked) => locked.hash === mod.hash) ?? -1;
 
         if (firstIndex >= 0) {
           const newState = [...(oldState[plugCategoryHash] || [])];
@@ -214,12 +219,12 @@ function ModPicker({
     return query.length
       ? mods.filter(
           (mod) =>
-            regexp.test(mod.modDef.displayProperties.name) ||
-            regexp.test(mod.modDef.displayProperties.description) ||
-            regexp.test(mod.modDef.itemTypeDisplayName) ||
+            regexp.test(mod.displayProperties.name) ||
+            regexp.test(mod.displayProperties.description) ||
+            regexp.test(mod.itemTypeDisplayName) ||
             (query.startsWith('plugCategoryHash:in:') &&
-              query.includes(`${mod.modDef.plug.plugCategoryHash}`)) ||
-            mod.modDef.perks.some((perk) => {
+              query.includes(`${mod.plug.plugCategoryHash}`)) ||
+            mod.perks.some((perk) => {
               const perkDef = defs.SandboxPerk.get(perk.perkHash);
               return (
                 perkDef &&
@@ -234,36 +239,38 @@ function ModPicker({
 
   // Group mods by itemTypeDisplayName as there are two hashes for charged with light mods
   const groupedModsByItemTypeDisplayName: {
-    [title: string]: { title: string; mods: LockedMod[]; plugCategoryHashes: number[] };
+    [title: string]: {
+      title: string;
+      mods: PluggableInventoryItemDefinition[];
+      plugCategoryHashes: number[];
+    };
   } = {};
 
   // We use this to sort the final groups so that it goes general, helmet, ..., classitem, raid, others.
   const groupHeaderOrder = [...knownModPlugCategoryHashes];
 
   for (const mod of queryFilteredMods) {
-    const title = mod.modDef.itemTypeDisplayName;
+    const title = mod.itemTypeDisplayName;
 
     if (!groupedModsByItemTypeDisplayName[title]) {
       groupedModsByItemTypeDisplayName[title] = {
         title,
         mods: [mod],
-        plugCategoryHashes: [mod.modDef.plug.plugCategoryHash],
+        plugCategoryHashes: [mod.plug.plugCategoryHash],
       };
     } else {
       groupedModsByItemTypeDisplayName[title].mods.push(mod);
       if (
         !groupedModsByItemTypeDisplayName[title].plugCategoryHashes.includes(
-          mod.modDef.plug.plugCategoryHash
+          mod.plug.plugCategoryHash
         )
       ) {
-        groupedModsByItemTypeDisplayName[title].plugCategoryHashes.push(
-          mod.modDef.plug.plugCategoryHash
-        );
+        groupedModsByItemTypeDisplayName[title].plugCategoryHashes.push(mod.plug.plugCategoryHash);
       }
     }
 
-    if (!groupHeaderOrder.includes(mod.modDef.plug.plugCategoryHash)) {
-      groupHeaderOrder.push(mod.modDef.plug.plugCategoryHash);
+    if (!groupHeaderOrder.includes(mod.plug.plugCategoryHash)) {
+      groupHeaderOrder.push(mod.plug.plugCategoryHash);
     }
   }
 

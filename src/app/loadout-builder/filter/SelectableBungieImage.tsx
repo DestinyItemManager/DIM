@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import ClosableContainer from '../ClosableContainer';
-import { LockedItemType, LockedMod } from '../types';
+import { LockedItemType } from '../types';
 import styles from './SelectableBungieImage.m.scss';
 
 export function SelectableMod({
@@ -21,12 +21,12 @@ export function SelectableMod({
   onModSelected,
   onModRemoved,
 }: {
-  mod: LockedMod;
+  mod: PluggableInventoryItemDefinition;
   defs: D2ManifestDefinitions;
   selected: boolean;
   selectable: boolean;
-  onModSelected(mod: LockedMod): void;
-  onModRemoved(mod: LockedMod): void;
+  onModSelected(mod: PluggableInventoryItemDefinition): void;
+  onModRemoved(mod: PluggableInventoryItemDefinition): void;
 }) {
   const handleClick = () => {
     selectable && onModSelected(mod);
@@ -43,11 +43,11 @@ export function SelectableMod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod className={styles.iconContainer} itemDef={mod.modDef} defs={defs} />
+        <SocketDetailsMod className={styles.iconContainer} itemDef={mod} defs={defs} />
         <div className={styles.perkInfo}>
-          <div className={styles.perkTitle}>{mod.modDef.displayProperties.name}</div>
+          <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
           {_.uniqBy(
-            mod.modDef.perks,
+            mod.perks,
             (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
           ).map((perk) => (
             <div key={perk.perkHash}>
@@ -60,7 +60,7 @@ export function SelectableMod({
               )}
             </div>
           ))}
-          {mod.modDef.investmentStats
+          {mod.investmentStats
             .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>

@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { statHashes, StatTypes } from '../types';
-import { statTier } from '../utils';
+import { statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
@@ -125,13 +125,21 @@ function Stat({
 }) {
   return (
     <span
-      className={isActive ? styles.statSegment : `${styles.statSegment} ${styles.nonActiveStat}`}
+      className={clsx(styles.statSegment, {
+        [styles.nonActiveStat]: !isActive,
+      })}
     >
-      <b>
-        {t('LoadoutBuilder.TierNumber', {
-          tier: statTier(value),
+      <span
+        className={clsx({
+          [styles.halfTierValue]: isActive && value % 10 >= 5,
         })}
-      </b>{' '}
+      >
+        <b>
+          {t('LoadoutBuilder.TierNumber', {
+            tier: statTierWithHalf(value),
+          })}
+        </b>
+      </span>
       <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
     </span>
   );

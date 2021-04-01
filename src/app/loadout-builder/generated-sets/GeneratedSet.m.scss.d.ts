@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'build': string;
+  'container': string;
   'header': string;
   'items': string;
 }

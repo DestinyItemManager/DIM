@@ -1,11 +1,17 @@
+import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout/loadout-types';
+import { showNotification } from 'app/notifications/notifications';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import _ from 'lodash';
 import { useReducer } from 'react';
 import {
   ArmorSet,
   LockedItemType,
   LockedMap,
+  LockedMod,
   LockedModMap,
   MinMaxIgnored,
   StatTypes,
@@ -84,7 +90,14 @@ export type LoadoutBuilderAction =
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
-  | { type: 'lockedArmor2ModsChanged'; lockedArmor2Mods: LockedModMap }
+  | {
+      type: 'lockedArmor2ModsChanged';
+      lockedArmor2Mods: {
+        [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
+      };
+    }
+  | { type: 'removeLockedArmor2Mod'; mod: LockedMod }
+  | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
   | { type: 'openPerkPicker'; initialQuery?: string }
@@ -138,8 +151,61 @@ function lbStateReducer(
         },
       };
     }
-    case 'lockedArmor2ModsChanged':
-      return { ...state, lockedArmor2Mods: action.lockedArmor2Mods };
+    case 'lockedArmor2ModsChanged': {
+      let modKey = 0;
+      return {
+        ...state,
+        lockedArmor2Mods: _.mapValues(action.lockedArmor2Mods, (plugs) =>
+          plugs?.map((plug) => ({ key: modKey++, modDef: plug }))
+        ),
+      };
+    }
+    case 'addGeneralMods': {
+      const genrealMods = state.lockedArmor2Mods[armor2PlugCategoryHashesByName.general];
+      const newGeneralMods = genrealMods?.length ? [...genrealMods] : [];
+      const failures: string[] = [];
+      let largestModKey = Math.max(
+        ...Object.values(state.lockedArmor2Mods)
+          .flat()
+          .map((locked) => locked?.key || 0)
+      );
+
+      for (const mod of action.mods) {
+        if (newGeneralMods.length === 5) {
+          failures.push(mod.displayProperties.name);
+        } else {
+          newGeneralMods.push({ key: ++largestModKey, modDef: mod });
+        }
+      }
+
+      if (failures.length) {
+        showNotification({
+          title: t('LoadoutBuilder.UnableToAddAllMods'),
+          body: t('LoadoutBuilder.UnableToAddAllModsBody', { mods: failures.join(', ') }),
+          type: 'warning',
+        });
+      }
+
+      return {
+        ...state,
+        lockedArmor2Mods: {
+          ...state.lockedArmor2Mods,
+          [armor2PlugCategoryHashesByName.general]: newGeneralMods,
+        },
+      };
+    }
+    case 'removeLockedArmor2Mod': {
+      const { plugCategoryHash } = action.mod.modDef.plug;
+      return {
+        ...state,
+        lockedArmor2Mods: {
+          ...state.lockedArmor2Mods,
+          [plugCategoryHash]: state.lockedArmor2Mods[plugCategoryHash]?.filter(
+            (locked) => locked.key !== action.mod.key
+          ),
+        },
+      };
+    }
     case 'openModPicker':
       return {
         ...state,

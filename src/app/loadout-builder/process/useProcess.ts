@@ -9,6 +9,7 @@ import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
+import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
 import {
   ArmorSet,
@@ -22,7 +23,6 @@ import {
   statHashes,
   StatTypes,
 } from '../types';
-import { someModHasEnergyRequirement } from '../utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,

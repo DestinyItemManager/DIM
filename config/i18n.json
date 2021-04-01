@@ -441,6 +441,7 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
@@ -494,6 +495,8 @@
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item",
     "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
