@@ -22,16 +22,19 @@ export default function PhoneStoresHeader({
   selectedStore,
   stores,
   setSelectedStoreId,
+  direction,
   loadoutMenuRef,
 }: {
   selectedStore: DimStore;
   stores: DimStore[];
+  // The direction we changed stores in - positive for an increasing index, negative for decreasing
+  direction: number;
   loadoutMenuRef: React.RefObject<HTMLElement>;
-  setSelectedStoreId(id: string): void;
+  setSelectedStoreId(id: string, direction: number): void;
 }) {
-  const onIndexChanged = (index: number) => {
+  const onIndexChanged = (index: number, dir: number) => {
     const originalIndex = stores.indexOf(selectedStore);
-    setSelectedStoreId(stores[wrap(originalIndex + index, stores.length)].id);
+    setSelectedStoreId(stores[wrap(originalIndex + index, stores.length)].id, dir);
     hideItemPopup();
   };
 
@@ -44,25 +47,20 @@ export default function PhoneStoresHeader({
   const trackRef = useRef<HTMLDivElement>(null);
 
   // The track is divided into "segments", with one item per segment
-  const numSegments = stores.length;
+  const numSegments = 5; // since we wrap the items, we're always showing a virtual repeating window from index -2 to +2
+  const numItems = stores.length;
   // This is a floating-point, animated representation of the position within the segments, relative to the current store
   const offset = useMotionValue(0);
   // Keep track of the starting point when we begin a gesture
   const startOffset = useRef<number>(0);
 
   useEffect(() => {
-    let diff = index - lastIndex.current;
-    if (lastIndex.current === 0 && diff > 1) {
-      diff = -1;
-    } else if (lastIndex.current === numSegments - 1 && diff < -1) {
-      diff = 1;
-    }
-
     const velocity = offset.getVelocity();
-    offset.set(offset.get() - diff);
+    const newOffset = offset.get() - direction;
+    offset.set(newOffset);
     animate(offset, 0, { ...spring, velocity });
     lastIndex.current = index;
-  }, [index, offset, numSegments]);
+  }, [index, direction, offset, numItems]);
 
   // We want a bit more control than Framer Motion's drag gesture can give us, so fall
   // back to the pan gesture and implement our own elasticity, etc.
@@ -86,16 +84,16 @@ export default function PhoneStoresHeader({
     let newIndex = Math.round(offset.get());
     const scale = trackRef.current!.clientWidth / numSegments;
 
+    const direction = -Math.sign(info.velocity.x);
     if (newIndex === 0) {
       const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
       if (swipe > 0.05) {
-        const direction = -Math.sign(info.velocity.x);
         newIndex = newIndex + direction;
       }
     }
 
     if (newIndex !== 0) {
-      onIndexChanged(newIndex);
+      onIndexChanged(newIndex, direction);
     } else {
       animate(offset, 0, spring);
     }
@@ -127,7 +125,7 @@ export default function PhoneStoresHeader({
         onPanEnd={onPanEnd}
         style={{ width: `${100 * segments.length}%`, x: offsetPercent }}
       >
-        {segments.map((store) => (
+        {segments.map((store, index) => (
           <div
             className="store-cell"
             key={makeKey(store.id)}
@@ -136,7 +134,7 @@ export default function PhoneStoresHeader({
             <StoreHeading
               store={store}
               selectedStore={selectedStore}
-              onTapped={setSelectedStoreId}
+              onTapped={(id) => setSelectedStoreId(id, index - 2)}
               loadoutMenuRef={loadoutMenuRef}
             />
           </div>
