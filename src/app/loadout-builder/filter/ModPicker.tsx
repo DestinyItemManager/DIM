@@ -237,48 +237,20 @@ function ModPicker({
       : mods;
   }, [language, query, mods, defs.SandboxPerk]);
 
-  // Group mods by itemTypeDisplayName as there are two hashes for charged with light mods
-  const groupedModsByItemTypeDisplayName: {
-    [title: string]: {
-      title: string;
-      mods: PluggableInventoryItemDefinition[];
-      plugCategoryHashes: number[];
-    };
-  } = {};
-
-  // We use this to sort the final groups so that it goes general, helmet, ..., classitem, raid, others.
-  const groupHeaderOrder = [...knownModPlugCategoryHashes];
-
-  for (const mod of queryFilteredMods) {
-    const title = mod.itemTypeDisplayName;
-
-    if (!groupedModsByItemTypeDisplayName[title]) {
-      groupedModsByItemTypeDisplayName[title] = {
-        title,
-        mods: [mod],
-        plugCategoryHashes: [mod.plug.plugCategoryHash],
-      };
-    } else {
-      groupedModsByItemTypeDisplayName[title].mods.push(mod);
-      if (
-        !groupedModsByItemTypeDisplayName[title].plugCategoryHashes.includes(
-          mod.plug.plugCategoryHash
-        )
-      ) {
-        groupedModsByItemTypeDisplayName[title].plugCategoryHashes.push(mod.plug.plugCategoryHash);
-      }
-    }
-
-    if (!groupHeaderOrder.includes(mod.plug.plugCategoryHash)) {
-      groupHeaderOrder.push(mod.plug.plugCategoryHash);
-    }
-  }
-
-  const groupedMods = Object.values(groupedModsByItemTypeDisplayName).sort(
-    (groupA, groupB) =>
-      groupHeaderOrder.indexOf(groupA.plugCategoryHashes[0]) -
-      groupHeaderOrder.indexOf(groupB.plugCategoryHashes[0])
+  const groupedMods = Object.values(
+    _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
+  ).sort(
+    chainComparator(
+      compareBy((mods: PluggableInventoryItemDefinition[]) => {
+        // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
+        const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
+        return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
+      }),
+      compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
+    )
   );
+
+  const plugCategoryHashOrder = groupedMods.map((mods) => mods[0].plug.plugCategoryHash);
 
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
@@ -287,8 +259,8 @@ function ModPicker({
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
-          groupOrder={groupedMods}
-          lockedMods={lockedModsInternal}
+          groupOrder={plugCategoryHashOrder}
+          locked={lockedModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
           onModSelected={onModRemoved}
@@ -325,14 +297,12 @@ function ModPicker({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {groupedMods.map(({ mods, plugCategoryHashes, title }) => (
+      {groupedMods.map((mods) => (
         <PickerSectionMods
-          key={plugCategoryHashes.join('-')}
+          key={mods[0].plug.plugCategoryHash}
           mods={mods}
           defs={defs}
           locked={lockedModsInternal}
-          title={title}
-          plugCategoryHashes={plugCategoryHashes}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

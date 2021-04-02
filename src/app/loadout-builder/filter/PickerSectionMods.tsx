@@ -24,16 +24,12 @@ export default function PickerSectionMods({
   defs,
   mods,
   locked,
-  title,
-  plugCategoryHashes,
   onModSelected,
   onModRemoved,
 }: {
   defs: D2ManifestDefinitions;
   mods: readonly PluggableInventoryItemDefinition[];
   locked: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined };
-  title: string;
-  plugCategoryHashes: number[];
   onModSelected(mod: PluggableInventoryItemDefinition);
   onModRemoved(mod: PluggableInventoryItemDefinition);
 }) {
@@ -41,22 +37,25 @@ export default function PickerSectionMods({
     return null;
   }
 
-  const isSlotSpecificCategory = Boolean(
-    _.intersection(slotSpecificPlugCategoryHashes, plugCategoryHashes).length
-  );
+  const { plugCategoryHash } = mods[0].plug;
+  const title = mods[0].itemTypeDisplayName;
+
+  const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
 
   let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
 
-  if (
-    isSlotSpecificCategory ||
-    plugCategoryHashes.includes(armor2PlugCategoryHashesByName.general)
-  ) {
-    associatedLockedMods = plugCategoryHashes.flatMap((hash) => locked[hash] || []);
-  } else if (_.intersection(raidPlugCategoryHashes, plugCategoryHashes).length) {
+  if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+    associatedLockedMods = locked[plugCategoryHash] || [];
+  } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
     associatedLockedMods = raidPlugCategoryHashes.flatMap((hash) => locked[hash] || []);
   } else {
-    associatedLockedMods = Object.entries(locked).flatMap(([plugCategoryHash, mods]) =>
-      mods && !knownModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+    associatedLockedMods = Object.entries(
+      locked
+    ).flatMap(([lockedPlugCategoryHash, lockedModsByPlugCatHash]) =>
+      lockedModsByPlugCatHash &&
+      !knownModPlugCategoryHashes.includes(Number(lockedPlugCategoryHash))
+        ? lockedModsByPlugCatHash
+        : []
     );
   }
 

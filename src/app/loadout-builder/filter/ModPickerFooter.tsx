@@ -8,9 +8,11 @@ import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  groupOrder: { plugCategoryHashes: number[] }[];
+  groupOrder: number[];
   isPhonePortrait: boolean;
-  lockedMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined };
+  locked: {
+    [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
+  };
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   onModSelected(item: PluggableInventoryItemDefinition): void;
 }
@@ -19,7 +21,7 @@ function ModPickerFooter({
   defs,
   isPhonePortrait,
   groupOrder,
-  lockedMods,
+  locked,
   onSubmit,
   onModSelected,
 }: Props) {
@@ -37,28 +39,26 @@ function ModPickerFooter({
         </button>
       </div>
       <div className={styles.selectedMods}>
-        {groupOrder.map((group) =>
-          group.plugCategoryHashes.map(
-            (pch) =>
-              pch in lockedMods && (
-                <React.Fragment key={pch}>
-                  {lockedMods[pch]?.map((mod) => {
-                    if (!modCounts[mod.hash]) {
-                      modCounts[mod.hash] = 0;
-                    }
+        {groupOrder.map(
+          (pch) =>
+            pch in locked && (
+              <React.Fragment key={pch}>
+                {locked[pch]?.map((mod) => {
+                  if (!modCounts[mod.hash]) {
+                    modCounts[mod.hash] = 0;
+                  }
 
-                    return (
-                      <LockedModIcon
-                        key={`${mod.hash}-${++modCounts[mod.hash]}`}
-                        mod={mod}
-                        defs={defs}
-                        onModClicked={() => onModSelected(mod)}
-                      />
-                    );
-                  })}
-                </React.Fragment>
-              )
-          )
+                  return (
+                    <LockedModIcon
+                      key={`${mod.hash}-${++modCounts[mod.hash]}`}
+                      mod={mod}
+                      defs={defs}
+                      onModClicked={() => onModSelected(mod)}
+                    />
+                  );
+                })}
+              </React.Fragment>
+            )
         )}
       </div>
     </div>
