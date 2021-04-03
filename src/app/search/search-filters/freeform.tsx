@@ -148,9 +148,9 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myPerks = allItems.flatMap(
-          (i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []
-        );
+        const myPerks = allItems
+          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []);
         const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
         const allPerkNames = getPerkNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())
