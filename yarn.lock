@@ -6076,9 +6076,10 @@ i18next-http-backend@^1.0.21:
   dependencies:
     node-fetch "2.6.1"
 
-i18next-scanner@delphiactual/i18next-scanner:
-  version "2.11.0"
-  resolved "https://codeload.github.com/delphiactual/i18next-scanner/tar.gz/bd3fc1a8a471e886f549c1d793252c52357e1988"
+i18next-scanner-dim@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/i18next-scanner-dim/-/i18next-scanner-dim-2.11.1.tgz#2b4eb501adc219a31fafabc923a7bfab9f0dd4ec"
+  integrity sha512-xaOgJWYriS3//Oe9jb+mPgJptJuU3xtDS9++6jdYz2TEYIgxSBuj+Tf4R1zcYkCz4y+D26C147oeTPimpL3hxA==
   dependencies:
     acorn "^6.0.0"
     acorn-dynamic-import "^4.0.0"
