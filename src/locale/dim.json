@@ -384,6 +384,7 @@
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
     "LB": "Loadout Optimizer",
+    "LB2": "Optimizer 2.0",
     "LightMode": {
       "HelpCurrent": "Calculates loadouts at current defense levels.",
       "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
