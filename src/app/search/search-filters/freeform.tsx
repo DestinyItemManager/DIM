@@ -2,7 +2,7 @@ import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import latinise from 'voca/latinise';
@@ -46,8 +46,11 @@ const getUniqueItemNamesFromManifest = _.once(
   (allManifestItems: DestinyInventoryItemDefinition[]) => {
     const itemNames = allManifestItems
       .filter((i) => {
-        if (!i.displayProperties.name || !i.equippable) {
-          return;
+        const isWeaponOrArmor =
+          i.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon) ||
+          i.itemCategoryHashes?.includes(ItemCategoryHashes.Armor);
+        if (!i.displayProperties.name || !isWeaponOrArmor) {
+          return false;
         }
         const { quality } = i;
         const powerCap = quality?.versions[quality.currentVersion].powerCapHash;
@@ -97,7 +100,9 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myItemNames = allItems.map((i) => i.name);
+        const myItemNames = allItems
+          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+          .map((i) => i.name);
         // favor items we actually own
         const allItemNames = getUniqueItemNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())
@@ -143,9 +148,9 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myPerks = allItems.flatMap(
-          (i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []
-        );
+        const myPerks = allItems
+          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []);
         const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
         const allPerkNames = getPerkNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())
