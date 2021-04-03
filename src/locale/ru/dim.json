@@ -4,7 +4,6 @@
     "ConfirmTitle": "Подтверждение"
   },
   "Accounts": {
-    "Blizzard": "ПК",
     "ErrorLoadInventory": "Невозможно загрузить персонажей и инвентарь Destiny {{version}}",
     "ErrorLoadManifest": "Не удается загрузить информацию базы данных Destiny c Bungie.net",
     "ErrorLoading": "Аккаунты Destiny не загружаются из Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "БЕТА",
-    "ButtonOff": "Инвентари",
     "ButtonOn": "Активность",
     "ChangeFilter": "Фильтры",
     "Farming": "Предметы",
@@ -421,6 +419,7 @@
     "Vendors": "Загрузка вендоров Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Бонусы Абсолюта",
     "AssumeMasterworkDetailed": "Бонус Абсолюта учитывается в Характеристиках всех предметов при генерации предложений.",
     "ChooseAlternate": "Предметы с такими же характеристиками:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",
     "TierNumber": "Т{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Убрать из Обязательных"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Для открытия Органайзера поверните телефон в альбомную ориентацию.",
     "Note": "Добавить Заметку",
     "NotePrompt": "Заметка:",
+    "OpenIn": "Show in Organizer",
     "Organizer": "Органайзер",
     "SelectAll": "Выбрать всё",
     "SelectItem": "Выбрать/Снять выделение с {{name}}",

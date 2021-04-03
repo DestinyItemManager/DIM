@@ -4,7 +4,6 @@
     "ConfirmTitle": "Aktion bestätigen"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Inventar-Modus",
     "ButtonOn": "Aktiver Modus",
     "ChangeFilter": "Filter ändern",
     "Farming": "Neueste Gegenstände",
@@ -421,6 +419,7 @@
     "Vendors": "Lade Destiny Händler..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "+5 Mods hinzufügen",
     "AssumeMasterwork": "Meisterwerk-Statistiken verwenden",
     "AssumeMasterworkDetailed": "Generiere Sets unter der Voraussetzung, dass alle Gegenstände Meisterwerke sind.",
     "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Statistiken:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Einschließen",
     "TheseModsCouldNotBeAssigned": "Diese Mods konnten der bestehenden Ausrüstung nicht zugewiesen werden.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
+    "UnableToAddAllModsBody": "Es waren nicht genügend Mod-Slots verfügbar für {{mods}}.",
     "UnlockItem": "Abpinnen"
   },
   "Loadouts": {
@@ -623,7 +624,7 @@
   },
   "Organizer": {
     "BulkMove": "Verschieben zu",
-    "BulkMoveLoadoutName": "Im Planer ausgewählt",
+    "BulkMoveLoadoutName": "Im Organizer ausgewählt",
     "BulkTag": "Markierung",
     "Columns": {
       "Archetype": "Archetyp",
@@ -663,10 +664,11 @@
     "EnabledColumns": "Aktivierte Spalten",
     "Lock": "Sperren",
     "NoItems": "Keine Gegenstände ausgewählt",
-    "NoMobile": "Drehe dein Telefon seitlich, um den Planer zu verwenden.",
+    "NoMobile": "Drehe dein Telefon seitlich, um den Organizer zu verwenden.",
     "Note": "Notiz erstellen",
     "NotePrompt": "Notiz:",
-    "Organizer": "Planer",
+    "OpenIn": "Im Organizer anzeigen",
+    "Organizer": "Organizer",
     "SelectAll": "Alle auswählen",
     "SelectItem": "{{name}} auswählen oder abwählen",
     "ShiftTip": "Tipp: Halte die Umschalt-Taste gedrückt und klicke auf eine Zelle, um Objekte zu filtern",
@@ -757,7 +759,7 @@
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Rüstungsqualität (D1)",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "Zeitpunkt des Erhalts (D2)",
     "SortBySeason": "Saison (D2)",
     "SortBySunset": "In Waffen-Ruhestand (D2)",
     "SortByTag": "Markierung ({{taglist}})",

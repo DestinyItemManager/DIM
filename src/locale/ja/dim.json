@@ -4,7 +4,6 @@
     "ConfirmTitle": "操作を確認"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "ベータ",
-    "ButtonOff": "所持品モード",
     "ButtonOn": "アクティブモード",
     "ChangeFilter": "フィルターを変更",
     "Farming": "最近のアイテム",
@@ -421,6 +419,7 @@
     "Vendors": "Destinyのベンダー情報をロードしています..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Mod を +5 追加",
     "AssumeMasterwork": "マスターワーク済みと仮定する",
     "AssumeMasterworkDetailed": "すべてのアイテムがマスターワークされていると仮定してセットを生成します。",
     "ChooseAlternate": "同じ統計を持つ別のアイテムを選択してください:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "含む",
     "TheseModsCouldNotBeAssigned": "これらの mod は、既存のロードアウトに割り当てることができませんでした。",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "全てのModを追加することはできません。",
+    "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
     "UnlockItem": "アイテムのピン留めを解除"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "携帯電話を横向きにしてオーガナイザーを使用する。",
     "Note": "備考を書く",
     "NotePrompt": "メモ：",
+    "OpenIn": "オーガナイザーに表示",
     "Organizer": "オーガナイザー",
     "SelectAll": "すべて選択",
     "SelectItem": "{{name}} を選択/解除",
@@ -757,7 +759,7 @@
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
     "SortByRating": "防具の品質 (D1)",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "最近獲得したもの (D2)",
     "SortBySeason": "シーズン (D2)",
     "SortBySunset": "リタイヤ済み (D2)",
     "SortByTag": "タグ ({{taglist}})",

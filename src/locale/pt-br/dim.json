@@ -4,7 +4,6 @@
     "ConfirmTitle": "Confirmar Ação"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Modo Inventário",
     "ButtonOn": "Modo Ativo",
     "ChangeFilter": "Modificar Filtro",
     "Farming": "Itens Recentes",
@@ -421,6 +419,7 @@
     "Vendors": "Carregando comerciantes do Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Adicionar Mods +5",
     "AssumeMasterwork": "Assumir atributos obra-prima",
     "AssumeMasterworkDetailed": "Gerar sets assumindo que todos os itens são obra-primas.",
     "ChooseAlternate": "Escolher outro item com os mesmos atributos:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
     "TierNumber": "N{{tier}}",
+    "UnableToAddAllMods": "Não foi possível adicionar todos os mods.",
+    "UnableToAddAllModsBody": "Não havia espaços de mods suficientes para caber {{mods}}.",
     "UnlockItem": "Desfixar item"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Vire seu celular de lado para usar o Organizador.",
     "Note": "Definir notas",
     "NotePrompt": "Notas:",
+    "OpenIn": "Mostrar no Organizador",
     "Organizer": "Organizador",
     "SelectAll": "Selecionar todos",
     "SelectItem": "Selecionar ou desmarcar {{name}}",
@@ -757,7 +759,7 @@
     "SortByPrimary": "Nível de poder",
     "SortByRarity": "Raridade",
     "SortByRating": "Qualidade da Armadura (D1)",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "Obtido recentemente (D2)",
     "SortBySeason": "Temporada (D2)",
     "SortBySunset": "Poder Foi Limitado (D2)",
     "SortByTag": "Tag ({{taglist}})",

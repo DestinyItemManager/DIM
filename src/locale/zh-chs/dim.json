@@ -4,7 +4,6 @@
     "ConfirmTitle": "确认操作"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
     "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "公测版",
-    "ButtonOff": "物品栏模式",
     "ButtonOn": "主动模式",
     "ChangeFilter": "更改过滤器",
     "Farming": "最近项目",
@@ -421,6 +419,7 @@
     "Vendors": "正在加载命运商人..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "假定大师之作属性",
     "AssumeMasterworkDetailed": "假定所有物品是大师之作, 生产套装",
     "ChooseAlternate": "选择另一个拥有相同状态的物品：",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "取消固定物品"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "将手机横放来使用管理器。",
     "Note": "添加备注",
     "NotePrompt": "备注：",
+    "OpenIn": "在管理器中显示",
     "Organizer": "管理器",
     "SelectAll": "全选",
     "SelectItem": "选择或取消选择 {{name}}",
@@ -757,7 +759,7 @@
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "护甲质量（D1）",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "最近获得（D2）",
     "SortBySeason": "赛季（D2）",
     "SortBySunset": "已退环境（D2）",
     "SortByTag": "标签{{taglist}}",

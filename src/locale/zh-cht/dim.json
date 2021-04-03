@@ -4,7 +4,6 @@
     "ConfirmTitle": "確認操作"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
     "ButtonOn": "Active Mode",
     "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
@@ -421,6 +419,7 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "假設所有物品是大師之作, 生成套裝",
     "ChooseAlternate": "選擇另一個擁有相同狀態的物品：",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Set Note",
     "NotePrompt": "備註：",
+    "OpenIn": "Show in Organizer",
     "Organizer": "管理器",
     "SelectAll": "全選",
     "SelectItem": "Select or unselect {{name}}",

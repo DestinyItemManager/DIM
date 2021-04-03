@@ -4,7 +4,6 @@
     "ConfirmTitle": "Confirmar Acción"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "No se pueden cargar tus personajes e inventario de Destiny {{version}}",
     "ErrorLoadManifest": "La información de la base de datos de Destiny desde Bungie no se pudo cargar",
     "ErrorLoading": "No se pudieron cargar cuentas de Destiny desde Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Modo Inventario",
     "ButtonOn": "Modo Activo",
     "ChangeFilter": "Cambiar filtro",
     "Farming": "Objetos Recientes",
@@ -421,6 +419,7 @@
     "Vendors": "Cargando vendedores de Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Asumir Estadísticas de Obra Maestra",
     "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Desanclar objeto"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Gira tu teléfono en forma horizontal para usar el Organizador.",
     "Note": "Establecer Nota",
     "NotePrompt": "Nota:",
+    "OpenIn": "Mostrar en el Organizador",
     "Organizer": "Organizador",
     "SelectAll": "Seleccionar Todo",
     "SelectItem": "Seleccionar o deseleccionar {{name}}",
@@ -757,7 +759,7 @@
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calidad de la armadura (D1)",
-    "SortByRecent": "Recientemente Adquiridos (D2)",
+    "SortByRecent": "Conseguidos Recientemente (D2)",
     "SortBySeason": "Temporada (D2)",
     "SortBySunset": "Ha Sido Jubilada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",

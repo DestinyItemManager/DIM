@@ -4,7 +4,6 @@
     "ConfirmTitle": "Potwierdź działanie"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
     "ErrorLoadManifest": "Nie można załadować bazy danych informacji Destiny od Bungie",
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Tryb ekwipunku",
     "ButtonOn": "Tryb aktywny",
     "ChangeFilter": "Zmień Filtr",
     "Farming": "Ostatnie przedmioty",
@@ -421,6 +419,7 @@
     "Vendors": "Wczytywanie sprzedawców Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Przyjmij Mistrzowskie Statystyki",
     "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Odepnij Przedmiot"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Obróć telefon na bok, aby użyć organizatora.",
     "Note": "Ustaw notatkę",
     "NotePrompt": "Notka:",
+    "OpenIn": "Show in Organizer",
     "Organizer": "Organizator",
     "SelectAll": "Zaznacz wszystko",
     "SelectItem": "Wybierz lub odznacz {{name}}",

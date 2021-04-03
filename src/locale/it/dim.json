@@ -4,7 +4,6 @@
     "ConfirmTitle": "Conferma Azione"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
     "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
     "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Modalità Inventario",
     "ButtonOn": "Modalità Attiva",
     "ChangeFilter": "Cambia Filtro",
     "Farming": "Oggetti Recenti",
@@ -421,6 +419,7 @@
     "Vendors": "Caricamento dei mercanti di Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Aggiungi Modifiche +5",
     "AssumeMasterwork": "Presupponi statistiche prodigiose",
     "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
     "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
+    "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
     "UnlockItem": "Sblocca oggetto"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Gira il telefono in orizzontale per usare Il Gestore Deposito.",
     "Note": "Imposta Nota",
     "NotePrompt": "Nota:",
+    "OpenIn": "Mostra in Gestione Deposito",
     "Organizer": "Gestione Deposito",
     "SelectAll": "Seleziona Tutto",
     "SelectItem": "Seleziona o deleseziona {{name}}",

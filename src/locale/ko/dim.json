@@ -4,7 +4,6 @@
     "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
     "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
     "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "베타",
-    "ButtonOff": "소지품 모드",
     "ButtonOn": "활성 모드",
     "ChangeFilter": "필터 변경",
     "Farming": "최근 아이템",
@@ -421,6 +419,7 @@
     "Vendors": "데스티니 상인 불러오는 중..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "+5 개조 부품 추가",
     "AssumeMasterwork": "걸작 능력치 가정",
     "AssumeMasterworkDetailed": "모든 아이템이 걸작인 것으로 가정하여 조합을 생성합니다.",
     "ChooseAlternate": "동일한 능력치를 가진 다른 아이템 선택:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
+    "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
     "UnlockItem": "아이템 고정 해제"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "정리 도구를 사용하시려면 핸드폰을 가로로 돌려주세요.",
     "Note": "메모 설정",
     "NotePrompt": "메모:",
+    "OpenIn": "정리 도구에서 열기",
     "Organizer": "정리 도구",
     "SelectAll": "모두 선택",
     "SelectItem": "{{name}} 선택 혹은 선택 해제",
@@ -757,7 +759,7 @@
     "SortByPrimary": "전투력",
     "SortByRarity": "희귀도",
     "SortByRating": "방어구 품질 (D1)",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "최근 획득 (D2)",
     "SortBySeason": "시즌 (D2)",
     "SortBySunset": "만료됨 (D2)",
     "SortByTag": "태그 ({{taglist}})",

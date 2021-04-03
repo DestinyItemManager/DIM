@@ -4,7 +4,6 @@
     "ConfirmTitle": "Confirmar Acción"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "No se pudieron cargar tu inventario y personajes de Destiny {{version}}",
     "ErrorLoadManifest": "No se pudo cargar información de la base de datos de Destiny desde Bungie",
     "ErrorLoading": "No se pudieron cargr cuentas de Destiny desde Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Modo Inventario",
     "ButtonOn": "Modo Activo",
     "ChangeFilter": "Cambiar Filtro",
     "Farming": "Objetos Recientes",
@@ -421,6 +419,7 @@
     "Vendors": "Cargando comerciantes de Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Asumir Estadísticas de Obra Maestra",
     "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
     "TierNumber": "N{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Desanclar objeto"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Gire su teléfono en horizontal para usar el Organizador.",
     "Note": "Establecer Nota",
     "NotePrompt": "Nota:",
+    "OpenIn": "Mostrar en el Organizador",
     "Organizer": "Organizador",
     "SelectAll": "Seleccionar Todo",
     "SelectItem": "Seleccionar o deseleccionar {{name}}",

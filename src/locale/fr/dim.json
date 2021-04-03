@@ -4,7 +4,6 @@
     "ConfirmTitle": "Confirmer L'Action"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
@@ -18,7 +17,6 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Mode Inventaire",
     "ButtonOn": "Mode Actif",
     "ChangeFilter": "Changer Filtre",
     "Farming": "Objets récents",
@@ -421,6 +419,7 @@
     "Vendors": "Chargement des marchands Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Considérer comme ayant les statistiques de Pièce Maîtresse",
     "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets sont une pièce maîtresse.",
     "ChooseAlternate": "Choisissez un autre objet avec les mêmes statistiques:",
@@ -464,6 +463,8 @@
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
     "TierNumber": "T{{tier}}",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Désépingler Objet"
   },
   "Loadouts": {
@@ -666,6 +667,7 @@
     "NoMobile": "Tournez votre téléphone sur le côté pour utiliser l'Organisateur.",
     "Note": "Définir la Note",
     "NotePrompt": "Note:",
+    "OpenIn": "Show in Organizer",
     "Organizer": "Organisateur",
     "SelectAll": "Tout sélectionner",
     "SelectItem": "Sélectionner ou désélectionner {{name}}",
