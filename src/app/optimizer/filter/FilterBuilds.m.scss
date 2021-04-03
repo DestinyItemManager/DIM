@@ -1,0 +1,70 @@
+.filters {
+  margin: 8px 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: min-content 1fr 45px 45px;
+  gap: 4px 4px;
+  margin-bottom: 2px;
+  padding-right: 4px;
+  background-color: black;
+  align-items: center;
+
+  > * {
+    margin: 4px 0;
+    &:first-child {
+      margin-left: 8px;
+    }
+    &:last-child {
+      margin-right: 4px;
+    }
+  }
+
+  label > span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  > select {
+    height: 18px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    background-position-x: calc(100% - 4px);
+    width: 45px;
+  }
+}
+
+.powerSelect {
+  label {
+    display: block;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+  }
+
+  input[type='range'] {
+    flex: 1;
+    margin-right: 8px;
+  }
+}
+
+.assumeMasterwork {
+  margin-bottom: 4px;
+
+  input {
+    margin-left: 0;
+    vertical-align: middle;
+  }
+
+  label {
+    cursor: pointer;
+    vertical-align: middle;
+  }
+}

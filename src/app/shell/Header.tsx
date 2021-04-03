@@ -168,6 +168,10 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
         to: `${path}/optimizer`,
         text: t('LB.LB'),
       },
+      $featureFlags.optimizer2 && {
+        to: `${path}/optimizer2`,
+        text: t('LB.LB2'),
+      },
       {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),

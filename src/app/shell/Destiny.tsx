@@ -9,6 +9,7 @@ import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import OptimizerLoader from 'app/optimizer/OptimizerLoader';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
@@ -224,6 +225,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <D1LoadoutBuilder />
             )}
           </Route>
+          {$featureFlags.optimizer2 && (
+            <Route path={`${path}/optimizer2`} exact>
+              <OptimizerLoader account={account} />
+            </Route>
+          )}
           <Route path={`${path}/organizer`} exact>
             <Organizer account={account} />
           </Route>

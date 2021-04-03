@@ -1,0 +1,42 @@
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  justify-content: space-around;
+  margin-bottom: 3px;
+
+  :global(.item-drag-container) {
+    margin: 0;
+  }
+}
+
+.area {
+  padding: 4px;
+  margin-bottom: 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  &:global(.on-drag-enter),
+  &:global(.on-drag-hover) {
+    background-color: black;
+  }
+
+  &:global(.on-drag-hover) {
+    background-color: rgba(128, 128, 128, 0.2);
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  > * {
+    flex: 1;
+    margin-right: 4px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.dragHelp {
+  margin-bottom: 4px;
+}

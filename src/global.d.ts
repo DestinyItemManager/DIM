@@ -46,6 +46,8 @@ declare const $featureFlags: {
   bountyGuide: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
+  /** Enable optimizer 2.0 */
+  optimizer2: boolean;
 };
 
 declare namespace React {

@@ -1,0 +1,97 @@
+@import '../../variables.scss';
+
+.header {
+  font-size: 20px;
+  margin: 4px;
+}
+
+.content {
+  margin: 16px;
+  display: inline-block;
+
+  @include phone-portrait {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+}
+
+.fillRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.setHeader {
+  margin: 0 4px 4px 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+.setTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.loadoutSelect {
+  padding: 4px;
+  border-radius: 2px;
+  font-size: 12px;
+  height: 24px;
+}
+
+.set {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+.item {
+  display: grid;
+  grid-template-areas:
+    'item sockets'
+    'button sockets';
+  gap: 6px;
+  width: min-content;
+  align-items: start;
+  justify-content: start;
+  margin: 7px 0 14px 0;
+
+  @include phone-portrait {
+    grid-template-columns: min-content min-content 1fr;
+    grid-template-areas: 'item sockets button';
+    width: 100%;
+  }
+
+  > *:first-child {
+    grid-area: item;
+  }
+
+  > :last-child {
+    margin-right: 0;
+  }
+}
+
+.unassigned {
+  margin-bottom: 8px;
+}
+
+.unassignedMods {
+  display: flex;
+  flex-direction: row;
+}
+
+.noLoadouts {
+  margin: 16px;
+  font-size: 14px;
+}
+
+.loadoutName {
+  font-weight: 600;
+}

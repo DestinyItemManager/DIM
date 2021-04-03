@@ -415,6 +415,8 @@ module.exports = (env) => {
         '$featureFlags.bountyGuide': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
+        // Enable optimizer 2.0
+        '$featureFlags.optimizer2': JSON.stringify(env.dev),
       }),
 
       new LodashModuleReplacementPlugin({

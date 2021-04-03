@@ -1,0 +1,80 @@
+@import '../../variables.scss';
+
+.item {
+  display: grid;
+  grid-template-areas: 'item sockets';
+  gap: 6px;
+  width: min-content;
+  align-items: start;
+  justify-content: start;
+
+  > *:first-child {
+    grid-area: item;
+  }
+
+  :global {
+    .item-socket-category {
+      margin-right: 0;
+      margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .sockets {
+      grid-area: sockets;
+      flex-direction: column;
+    }
+
+    .item-sockets {
+      flex-wrap: nowrap;
+    }
+    .item-socket {
+      margin-right: 2px;
+    }
+    .item-socket-category-Reusable .item-socket {
+      border: none;
+      padding: 0;
+    }
+
+    .item-details {
+      clear: both;
+      margin: 0;
+    }
+
+    .item-socket-category-name {
+      display: none;
+    }
+
+    .item-drag-container {
+      flex-shrink: 0;
+      margin-right: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.lockedSockets {
+  display: flex;
+  flex-direction: column;
+}
+
+.lockedSocketsRow {
+  margin-bottom: 4px;
+}
+
+.swapButton {
+  composes: dim-button from global;
+  justify-self: center;
+  margin-top: 6px;
+  @include phone-portrait {
+    padding: 8px 20px;
+  }
+}
+
+.swapButtonContainer {
+  display: grid;
+  min-height: 24px;
+  @include phone-portrait {
+    min-height: 32px;
+  }
+}

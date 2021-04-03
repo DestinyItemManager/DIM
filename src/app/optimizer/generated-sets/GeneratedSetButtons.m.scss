@@ -1,0 +1,40 @@
+@import '../../variables.scss';
+
+.buttons {
+  width: min-content;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  @include phone-portrait {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  @media (min-width: 1080px) {
+    margin-right: 0;
+  }
+
+  > * {
+    // Matches three action buttons to the same height as two socket slots
+    min-height: calc((((0.59 * var(--item-size)) * 2) - 4px) / 3);
+    width: 100%;
+    // Matches GeneratedSetItem width
+    min-width: calc(
+      var(--item-size) + ((((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px) * 2) +
+        8px
+    );
+    margin-bottom: 4px;
+    padding: 5px;
+
+    @include phone-portrait {
+      margin-right: 4px;
+      width: auto;
+    }
+  }
+}
+
+.combos {
+  margin-right: 8px;
+}
