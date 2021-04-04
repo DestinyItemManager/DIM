@@ -1,12 +1,16 @@
 ## Next
 
-* Searching loadouts by exact name now works. For instance, `inloadout:"My PVP Equipment"` will highlight any items that loadout contains.
-* To help with that, loadout names, `perkname`s, and item `name`s are suggested as you type.
-* Search will suggest names of items and perks as you type.
-* Search will also suggest any #hashtags found in your notes, for instance `#pve`.
 * Visual refresh for buttons and some dropdowns.
 * Swiping between characters on mobile by swiping the inventory works again.
 * Swiping the character headers behaves more sensibly now.
+* Search
+  * Loadouts can be found by exact name. For instance, `inloadout:"My PVP Equipment"` will highlight any items in the `My PVP Equipment` loadout.
+  * To help reduce typing and remembering, `inloadout` names, `perkname`s, and item `name`s are now suggested as you type them.
+  * We will also suggest any #hashtags found in your notes, for instance... `#pve`?
+* Loadout Optimizer
+  * Mod groupings have been updated so inconsistent labels don't split them apart.
+  * Half-tiers show up in results to warn you when a +5 stat mod might benefit you.
+  * A quick +5 mod picker has been added.
 
 ## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
 
