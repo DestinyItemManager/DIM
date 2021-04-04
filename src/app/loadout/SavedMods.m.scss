@@ -31,12 +31,16 @@
 .categoryName {
   font-size: 10px;
   text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .mods {
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: fit-content;
 
   > * {
     margin-right: 4px;
