@@ -32,15 +32,31 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  > div {
+    padding: 0;
+  }
+}
+
+.compare-initial-item {
+  color: $orange;
+  font-weight: bold;
 }
 
 .compare-options {
-  button {
+  display: flex;
+  flex-wrap: wrap;
+  .dim-button {
     margin-bottom: 4px;
-    margin-right: 3px;
+    &:nth-last-child(n + 2) {
+      margin-right: 3px;
+    }
   }
-  .sheet & {
-    padding-right: 48px;
+}
+
+.organizer-link {
+  margin-left: auto;
+  @include phone-portrait {
+    margin-left: 0;
   }
 }
 
@@ -48,6 +64,7 @@
   flex: 1;
   white-space: nowrap;
   overflow-x: scroll;
+  touch-action: pan-x;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -58,12 +75,6 @@
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
-
-  .comp-lock-icon .app-icon {
-    font-size: 12px;
-    margin: 0 5px 0 2px;
-    vertical-align: middle;
-  }
 
   .item {
     float: right;
@@ -102,12 +113,6 @@
   }
   .range {
     font-size: 0.9em;
-  }
-  .tagSelector {
-    flex: 1;
-    > button {
-      width: 100%;
-    }
   }
   .spacer {
     height: 46px;

@@ -4,23 +4,31 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import {
+  CompareActionButton,
+  ConsolidateActionButton,
+  DistributeActionButton,
+  InfuseActionButton,
+  LoadoutActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
+import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
+import DesktopItemActions from 'app/item-popup/DesktopItemActions';
+import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
-import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
+import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
-import DesktopItemActions from './DesktopItemActions';
-import { ItemPopupExtraInfo, showItemPopup$ } from './item-popup';
-import ItemActions from './ItemActions';
+import { hideItemPopup, showItemPopup$ } from './item-popup';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import styles from './ItemPopupContainer.m.scss';
-import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
 
 interface ProvidedProps {
@@ -31,7 +39,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   itemDetails: boolean;
   stores: DimStore[];
-  language: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
@@ -40,7 +47,6 @@ function mapStateToProps(state: RootState): StoreProps {
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     itemDetails: settings.itemDetails,
-    language: settings.language,
   };
 }
 
@@ -65,38 +71,16 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelector }: Props) {
+function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
-  const [currentItem, setCurrentItem] = useState<{
-    item: DimItem;
-    element?: HTMLElement;
-    extraInfo?: ItemPopupExtraInfo;
-  }>();
+  const currentItem = useSubscription(showItemPopup$);
   const onTabChanged = (newTab: ItemPopupTab) => {
     if (newTab !== tab) {
       setTab(newTab);
     }
   };
 
-  const onClose = () => setCurrentItem(undefined);
-
-  useSubscription(() =>
-    showItemPopup$.subscribe(({ item, element, extraInfo }) => {
-      if (!item || item === currentItem?.item) {
-        onClose();
-      } else {
-        setCurrentItem({
-          item,
-          element,
-          extraInfo,
-        });
-        // Log the item so it's easy to inspect item structure by clicking on an item
-        if ($DIM_FLAVOR !== 'release') {
-          infoLog('clicked item', item);
-        }
-      }
-    })
-  );
+  const onClose = () => hideItemPopup();
 
   const { pathname } = useLocation();
   useEffect(() => {
@@ -121,15 +105,6 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
   // Try to find an updated version of the item!
   const item = maybeFindItem(currentItem.item, stores);
 
-  const header = (
-    <ItemPopupHeader
-      item={item}
-      key={`header${item.index}`}
-      language={language}
-      isPhonePortrait={isPhonePortrait}
-    />
-  );
-
   const body = (
     <ItemPopupBody
       item={item}
@@ -143,15 +118,28 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
   return isPhonePortrait ? (
     <Sheet
       onClose={onClose}
-      header={header}
+      header={<ItemPopupHeader item={item} key={`header${item.index}`} />}
       sheetClassName={clsx(
         'item-popup',
         `is-${item.tier}`,
         tierClasses[item.tier],
         styles.movePopupDialog
       )}
-      footer={<ItemActions key={item.index} item={item} />}
+      footer={
+        <div className={styles.mobileMoveLocations}>
+          <ItemMoveLocations key={item.index} item={item} />
+        </div>
+      }
     >
+      <div className={styles.mobileItemActions}>
+        <TagActionButton item={item} label={true} hideKeys={true} />
+        <LockActionButton item={item} />
+        <CompareActionButton item={item} />
+        <ConsolidateActionButton item={item} />
+        <DistributeActionButton item={item} />
+        <LoadoutActionButton item={item} />
+        <InfuseActionButton item={item} />
+      </div>
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
@@ -170,11 +158,11 @@ function ItemPopupContainer({ isPhonePortrait, stores, language, boundarySelecto
         <ItemTagHotkeys item={item} />
         <div className={styles.desktopPopup}>
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-            {header}
+            <ItemPopupHeader item={item} key={`header${item.index}`} />
             {body}
           </div>
           <div className={clsx(styles.desktopActions)}>
-            <DesktopItemActions key={item.index} item={item} />
+            <DesktopItemActions item={item} />
           </div>
         </div>
       </ClickOutside>

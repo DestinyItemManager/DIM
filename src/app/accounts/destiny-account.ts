@@ -2,9 +2,10 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
-import { BungieMembershipType } from 'bungie-api-ts/common';
 import {
+  BungieMembershipType,
   DestinyGameVersions,
   DestinyLinkedProfilesResponse,
   DestinyProfileUserInfoCard,
@@ -25,7 +26,7 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 export const PLATFORM_LABELS = {
-  // t('Accounts.', {context: '', contextList: 'platforms'})
+  // t('Accounts.', { contextList: 'platforms' })
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
@@ -199,10 +200,10 @@ async function findD1Characters(account: DestinyAccount): Promise<any | null> {
     }
     return null;
   } catch (e) {
+    const code = e instanceof DimError ? e.bungieErrorCode() : undefined;
     if (
-      e.code &&
-      (e.code === PlatformErrorCodes.DestinyAccountNotFound ||
-        e.code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible)
+      code === PlatformErrorCodes.DestinyAccountNotFound ||
+      code === PlatformErrorCodes.DestinyLegacyPlatformInaccessible
     ) {
       return null;
     }

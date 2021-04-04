@@ -11,11 +11,7 @@ import { isUri } from 'valid-url';
 import FileUpload from '../dim-ui/FileUpload';
 import HelpLink from '../dim-ui/HelpLink';
 import { clearWishLists } from '../wishlists/actions';
-import {
-  wishListsEnabledSelector,
-  wishListsLastFetchedSelector,
-  wishListsSelector,
-} from '../wishlists/selectors';
+import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
 
 // config/content-security-policy.js must be edited alongside this list
 export const wishListAllowedPrefixes = [
@@ -32,7 +28,6 @@ const choosyVoltronLocation =
   'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/choosy_voltron.txt';
 
 interface StoreProps {
-  wishListsEnabled: boolean;
   numWishListRolls: number;
   title?: string;
   description?: string;
@@ -48,7 +43,6 @@ function mapStateToProps(state: RootState): StoreProps {
   const wishLists = wishListsSelector(state);
   const wishList = wishLists.wishListAndInfo;
   return {
-    wishListsEnabled: wishListsEnabledSelector(state),
     numWishListRolls: wishList.wishListRolls.length,
     title: wishList.title,
     description: wishList.description,
@@ -60,7 +54,6 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 function WishListSettings({
-  wishListsEnabled,
   wishListSource,
   numWishListRolls,
   title,
@@ -206,7 +199,7 @@ function WishListSettings({
         )}
       </div>
 
-      {wishListsEnabled && (
+      {wishListSource && (
         <div className="setting">
           <div className="horizontal">
             <label>

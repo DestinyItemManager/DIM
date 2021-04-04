@@ -1,24 +1,34 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
-import { LockedArmor2Mod, LockedArmor2ModMap, ModPickerCategory } from '../types';
-import LockedArmor2ModIcon from './LockedArmor2ModIcon';
+import LockedModIcon from './LockedModIcon';
 import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  categoryOrder: { category: ModPickerCategory; translatedName: string }[];
+  groupOrder: number[];
   isPhonePortrait: boolean;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  locked: {
+    [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
+  };
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
-  onModSelected(item: LockedArmor2Mod): void;
+  onModSelected(item: PluggableInventoryItemDefinition): void;
 }
 
-function ModPickerFooter(props: Props) {
-  const { defs, isPhonePortrait, categoryOrder, lockedArmor2Mods, onSubmit, onModSelected } = props;
-
+function ModPickerFooter({
+  defs,
+  isPhonePortrait,
+  groupOrder,
+  locked,
+  onSubmit,
+  onModSelected,
+}: Props) {
   useHotkey('enter', t('LB.SelectMods'), onSubmit);
+
+  // used for creating unique keys for the mods
+  const modCounts = {};
 
   return (
     <div className={styles.footer}>
@@ -29,18 +39,24 @@ function ModPickerFooter(props: Props) {
         </button>
       </div>
       <div className={styles.selectedMods}>
-        {categoryOrder.map(
-          (category) =>
-            lockedArmor2Mods[category.category] && (
-              <React.Fragment key={category.category}>
-                {lockedArmor2Mods[category.category]?.map((lockedItem) => (
-                  <LockedArmor2ModIcon
-                    key={lockedItem.key}
-                    item={lockedItem}
-                    defs={defs}
-                    onModClicked={() => onModSelected(lockedItem)}
-                  />
-                ))}
+        {groupOrder.map(
+          (pch) =>
+            pch in locked && (
+              <React.Fragment key={pch}>
+                {locked[pch]?.map((mod) => {
+                  if (!modCounts[mod.hash]) {
+                    modCounts[mod.hash] = 0;
+                  }
+
+                  return (
+                    <LockedModIcon
+                      key={`${mod.hash}-${++modCounts[mod.hash]}`}
+                      mod={mod}
+                      defs={defs}
+                      onModClicked={() => onModSelected(mod)}
+                    />
+                  );
+                })}
               </React.Fragment>
             )
         )}

@@ -4,7 +4,6 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
@@ -20,10 +19,8 @@ import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getPlatforms } from '../accounts/platforms';
-import { getDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -119,6 +116,9 @@ const languageOptions = mapToOptions({
 // Edge doesn't support these
 const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 
+// This state is outside the settings page because the settings loses its
+let languageChanged = false;
+
 function SettingsPage({
   settings,
   isPhonePortrait,
@@ -127,15 +127,15 @@ function SettingsPage({
   currentAccount,
   dispatch,
 }: Props) {
-  useEffect(() => {
-    dispatch(getDefinitions());
-    dispatch(getPlatforms());
-  }, [dispatch]);
-
   useLoadStores(currentAccount, storesLoaded);
 
-  const [languageChanged, setLanguageChanged] = useState(false);
+  const onCheckChange = (checked, name) => {
+    if (name.length === 0) {
+      errorLog('settings', new Error('You need to have a name on the form input'));
+    }
 
+    dispatch(setSetting(name, checked));
+  };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
@@ -149,12 +149,12 @@ function SettingsPage({
   };
 
   const changeLanguage = (e) => {
+    languageChanged = true;
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
       dispatch(setSetting('language', language));
     });
-    setLanguageChanged(true);
   };
 
   const resetItemSize = (e) => {
@@ -193,9 +193,12 @@ function SettingsPage({
     amount: t('Settings.SortByAmount'),
     rating: t('Settings.SortByRating'),
     classType: t('Settings.SortByClassType'),
+    ammoType: t('Settings.SortByAmmoType'),
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),
+    sunset: t('Settings.SortBySunset'),
+    acquisitionRecency: t('Settings.SortByRecent'),
     // archetype: 'Archetype'
   };
 
@@ -236,14 +239,12 @@ function SettingsPage({
     { id: 'spreadsheets', title: t('Settings.Data') },
   ]);
 
-  if (!storesLoaded) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
-
-  const uniqChars = _.uniqBy(
-    stores.filter((s) => !s.isVault),
-    (s) => s.classType
-  );
+  const uniqChars =
+    stores &&
+    _.uniqBy(
+      stores.filter((s) => !s.isVault),
+      (s) => s.classType
+    );
 
   return (
     <PageWithMenu>
@@ -309,7 +310,7 @@ function SettingsPage({
                 label={t('Settings.ShowNewItems')}
                 name="showNewItems"
                 value={settings.showNewItems}
-                onChange={onChange}
+                onChange={onCheckChange}
               />
               <div className="subSetting">
                 <button
@@ -317,7 +318,8 @@ function SettingsPage({
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
                 >
-                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
+                  <NewItemIndicator className="new-item" alwaysShow />{' '}
+                  <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
             </div>
@@ -350,53 +352,64 @@ function SettingsPage({
           <section id="inventory">
             <h2>{t('Settings.Inventory')}</h2>
             <div className="setting">
-              <label>{t('Settings.CharacterOrder')}</label>
-              <div className="radioOptions">
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecent'}
-                    value="mostRecent"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderRecent')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'mostRecentReverse'}
-                    value="mostRecentReverse"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderReversed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'fixed'}
-                    value="fixed"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.CharacterOrderFixed')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="characterOrder"
-                    checked={settings.characterOrder === 'custom'}
-                    value="custom"
-                    onChange={onChange}
-                  />
-                  <span>{t('Settings.SortCustom')}</span>
-                </label>
-                {settings.characterOrder === 'custom' && (
-                  <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
-                )}
-              </div>
+              <Checkbox
+                label={t('Settings.SingleCharacter')}
+                name="singleCharacter"
+                value={settings.singleCharacter}
+                onChange={onCheckChange}
+              />
+              <div className="fineprint">{t('Settings.SingleCharacterExplanation')}</div>
             </div>
+            {!settings.singleCharacter && (
+              <div className="setting">
+                <label>{t('Settings.CharacterOrder')}</label>
+                <div className="radioOptions">
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecent'}
+                      value="mostRecent"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderRecent')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'mostRecentReverse'}
+                      value="mostRecentReverse"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderReversed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'fixed'}
+                      value="fixed"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.CharacterOrderFixed')}</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="characterOrder"
+                      checked={settings.characterOrder === 'custom'}
+                      value="custom"
+                      onChange={onChange}
+                    />
+                    <span>{t('Settings.SortCustom')}</span>
+                  </label>
+                  {settings.characterOrder === 'custom' && (
+                    <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
+                  )}
+                </div>
+              </div>
+            )}
 
             {supportsCssVar &&
               (isPhonePortrait ? (
@@ -434,7 +447,7 @@ function SettingsPage({
               label={t('Settings.EnableAdvancedStats')}
               name="itemQuality"
               value={settings.itemQuality}
-              onChange={onChange}
+              onChange={onCheckChange}
             />
           </section>
 

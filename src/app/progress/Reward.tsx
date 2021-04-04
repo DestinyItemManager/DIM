@@ -1,6 +1,7 @@
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyInventoryItemDefinition, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
+import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
@@ -58,7 +59,7 @@ export function Reward({
     <div className={styles.reward}>
       <BungieImage src={rewardDisplay.icon} alt="" />
       <span>
-        {powerBonus && `+${powerBonus} `}
+        {powerBonus !== undefined && `+${powerBonus} `}
         {rewardDisplay.name}
         {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}
       </span>
@@ -73,13 +74,15 @@ function getEngramPowerBonus(item: DestinyInventoryItemDefinition, maxPower?: nu
   }
 
   maxPower ||= 0;
+  maxPower = Math.floor(maxPower);
   const season = D2SeasonInfo[D2CalculatedSeason];
+  const powerfulCap = season.powerfulCap;
   if (engramInfo.cap === PowerCap.Powerful) {
-    return Math.min(engramInfo.bonus, season.softCap - maxPower);
+    // Powerful engrams can't go above the powerful cap
+    return _.clamp(powerfulCap - maxPower, 0, engramInfo.bonus);
   } else if (engramInfo.cap === PowerCap.Pinnacle) {
-    if (maxPower > season.softCap) {
-      return Math.min(2, season.maxPower - maxPower);
-    }
-    return Math.min(engramInfo.bonus, season.softCap + 2 - maxPower);
+    // Once you're at or above the powerful cap, pinnacles only give +2, up to the hard cap
+    const pinnacleCap = Math.min(season.pinnacleCap, Math.max(maxPower, powerfulCap) + 2);
+    return _.clamp(pinnacleCap - maxPower, 0, engramInfo.bonus);
   }
 }

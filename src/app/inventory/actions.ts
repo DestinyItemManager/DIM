@@ -1,5 +1,4 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
 import {
@@ -44,7 +43,7 @@ export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterI
 /**
  * Reflect the old stores service data into the Redux store as a migration aid.
  */
-export const error = createAction('inventory/ERROR')<DimError>();
+export const error = createAction('inventory/ERROR')<Error>();
 
 /**
  * An item has moved (or equipped/dequipped)
@@ -134,6 +133,3 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
-
-/** Notify that a stackable stack has begun or ended dragging. A bit overkill to put this in redux but eh. */
-export const stackableDrag = createAction('stackable_drag/DRAG')<boolean>();

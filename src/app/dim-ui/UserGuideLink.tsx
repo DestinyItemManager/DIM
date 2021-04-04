@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import React from 'react';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
-import styles from './UserGuideLink.m.scss';
 
 /**
  * Link to a specific topic in the DIM User Guide wiki.
@@ -24,9 +23,8 @@ export default function UserGuideLink({
   const link = `https://destinyitemmanager.fandom.com/wiki/${topic}`;
 
   return (
-    <ExternalLink href={link} className={clsx(styles.link, className)}>
-      <AppIcon icon={helpIcon} />
-      {title || t('General.UserGuideLink')}
+    <ExternalLink href={link} className={clsx('dim-button', className)}>
+      <AppIcon icon={helpIcon} /> {title || t('General.UserGuideLink')}
     </ExternalLink>
   );
 }

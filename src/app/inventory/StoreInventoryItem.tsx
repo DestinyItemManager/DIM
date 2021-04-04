@@ -1,8 +1,6 @@
-import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
-import { CompareService } from '../compare/compare.service';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import { DimItem } from './item-types';
@@ -21,10 +19,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const dispatch = useThunkDispatch();
 
   const doubleClicked = (e: React.MouseEvent) => {
-    if (!loadoutDialogOpen && !CompareService.dialogOpen) {
-      e.stopPropagation();
-      dispatch(moveItemToCurrentStore(item));
-    }
+    dispatch(moveItemToCurrentStore(item, e));
   };
 
   return (

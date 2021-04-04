@@ -1,16 +1,16 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { useActivityInfo } from 'app/active-mode/Views/activity-util';
 import ActivityInformation from 'app/active-mode/Views/current-activity/ActivityInformation';
-import { Destinations } from 'app/active-mode/Views/current-activity/util';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
-import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { RootState } from 'app/store/types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 interface ProvidedProps {
@@ -31,59 +31,58 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-async function refreshActivity({ account, store }: { account: DestinyAccount; store: DimStore }) {
-  const profileInfo = await getCurrentActivity(account);
-  return profileInfo.characterActivities.data?.[store.id].currentActivityHash;
-}
-
 function CurrentActivity({ account, store, defs, buckets }: Props) {
-  const [hash, setHash] = useState<number | undefined>();
-  useEffect(() => {
-    refreshActivity({ account, store }).then(setHash);
-  }, [defs, account, store]);
+  const activityInfo = useActivityInfo({ account, store });
 
-  if (!defs || !hash || hash === Destinations.Orbit) {
+  if (!defs) {
     return null;
   }
 
-  const activity = defs.Activity.get(hash);
+  const activity =
+    (activityInfo?.currentActivityHash && defs.Activity.get(activityInfo.currentActivityHash)) ||
+    undefined;
+  const activityMode = defs.ActivityMode[activityInfo?.currentActivityModeHash ?? 0];
+  const place = activity && defs.Place.get(activity.placeHash);
 
-  if (!activity) {
-    return null;
-  }
-
-  const place = defs.Place.get(activity.placeHash);
-  const placeName = place.displayProperties.name; // "Earth" "The Crucible"
-  const activityName = activity.displayProperties.name; // "Adventure activity quest name" "Rusted Lands"
-  const activityType = defs.ActivityMode[activity.activityTypeHash];
-  const gameType = activityType?.displayProperties.name; // "Explore" (nothing for crucible)
-  // Consider showing rewards for current activity?
+  const placeName = place?.displayProperties.name; // "Earth" "The Crucible"
+  const activityName = activity?.displayProperties.name ?? ''; // "Adventure activity quest name" "Rusted Lands"
+  const gameType = activityMode?.displayProperties.name; // "Explore" "Mayhem"
 
   return (
-    <>
-      <CollapsibleTitle
-        title={
-          <>
-            <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />{' '}
-            {gameType || placeName}
-          </>
-        }
-        sectionId={'active-activity'}
-        defaultCollapsed={true}
-      >
-        <div className={styles.currentLocation}>{activityName}</div>
-        <div className={styles.activityItems}>
-          <ActivityInformation defs={defs} store={store} activity={activity} />
+    <CollapsibleTitle
+      title={
+        <>
+          {(activityMode?.displayProperties.hasIcon && (
+            <BungieImage
+              className={styles.activityIcon}
+              src={activityMode.displayProperties.icon}
+            />
+          )) ||
+            (activity?.displayProperties.hasIcon && (
+              <BungieImage className={styles.activityIcon} src={activity.displayProperties.icon} />
+            ))}
+          {gameType ||
+            placeName ||
+            (!activityInfo ? t('ActiveMode.Loading') : t('ActiveMode.Offline'))}
+        </>
+      }
+      sectionId={'active-activity'}
+      defaultCollapsed={true}
+    >
+      {activityInfo && (
+        <>
+          {activityName?.length > 0 && <div className={styles.title}>{activityName}</div>}
+          <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
           <VendorBounties
             account={account}
             store={store}
-            activity={activity}
+            activityInfo={activityInfo}
             buckets={buckets}
             defs={defs}
           />
-        </div>
-      </CollapsibleTitle>
-    </>
+        </>
+      )}
+    </CollapsibleTitle>
   );
 }
 

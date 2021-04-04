@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { EventBus } from 'app/utils/observable';
 import { DimItem } from '../inventory/item-types';
 
 export interface ItemPickerOptions {
@@ -21,7 +21,7 @@ export type ItemPickerState = ItemPickerOptions & {
   onCancel(reason?: Error): void;
 };
 
-export const showItemPicker$ = new Subject<ItemPickerState>();
+export const showItemPicker$ = new EventBus<ItemPickerState | undefined>();
 
 /**
  * Show an item picker UI, optionally filtered to a specific set of items. When an item

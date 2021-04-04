@@ -2,19 +2,35 @@
 
 .activityIcon {
   height: 18px;
+  margin-right: 3px;
   vertical-align: bottom;
 }
-.currentLocation {
-  padding: 10px;
-  margin-bottom: 10px;
-  opacity: 0.8;
-  font-size: 1.1em;
-  background-color: rgba(0, 0, 0, 0.2);
+
+.bountyGuide {
+  margin: 0;
+
+  :global(.progress-for-character) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  }
 }
-.activityItems {
+
+.title {
+  display: flex;
+  margin: 8px 0;
+  padding-bottom: 1px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 0.5px solid #666;
+}
+
+.suggestedBounties {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
-  & > div {
-    padding-bottom: 7px;
+  grid-gap: 6px 0;
+  margin-bottom: 8px;
+
+  > div {
+    cursor: pointer;
   }
 }

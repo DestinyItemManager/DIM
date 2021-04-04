@@ -5,7 +5,8 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
@@ -14,12 +15,13 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { compareBy } from 'app/utils/comparators';
+import { isArmor2Mod } from 'app/utils/item-utils';
+import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
@@ -31,17 +33,19 @@ import PerkPicker from './filter/PerkPicker';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
-import { useProcess } from './hooks/useProcess';
+import { filterItems } from './item-filter';
+import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
-import { LoadoutBuilderState, useLbState } from './loadoutBuilderReducer';
-import { filterItems } from './preProcessFilter';
+import { useProcess } from './process/useProcess';
 import {
+  generalSocketReusablePlugSetHash,
   ItemsByBucket,
-  LockedArmor2ModMap,
+  PluggableItemsByPlugCategoryHash,
   statHashes,
   statHashToType,
   statKeys,
   StatTypes,
+  statValues,
 } from './types';
 import { isLoadoutBuilderItem } from './utils';
 
@@ -55,8 +59,6 @@ interface ProvidedProps {
 interface StoreProps {
   statOrder: StatTypes[];
   assumeMasterwork: boolean;
-  minimumPower: number;
-  minimumStatTotal: number;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -64,11 +66,13 @@ interface StoreProps {
   loadouts: Loadout[];
   filter: ItemFilter;
   searchQuery: string;
+  halfTierMods: PluggableInventoryItemDefinition[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const itemsSelector = createSelector(
     allItemsSelector,
     (
@@ -83,17 +87,17 @@ function mapStateToProps() {
         if (!item || !isLoadoutBuilderItem(item)) {
           continue;
         }
-        for (const classType of item.classType === DestinyClass.Unknown
-          ? [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock]
-          : [item.classType]) {
-          if (!items[classType]) {
-            items[classType] = {};
-          }
-          if (!items[classType][item.bucket.hash]) {
-            items[classType][item.bucket.hash] = [];
-          }
-          items[classType][item.bucket.hash].push(item);
+        const { classType, bucket } = item;
+
+        if (!items[classType]) {
+          items[classType] = {};
         }
+
+        if (!items[classType][bucket.hash]) {
+          items[classType][bucket.hash] = [];
+        }
+
+        items[classType][bucket.hash].push(item);
       }
 
       return items;
@@ -105,18 +109,59 @@ function mapStateToProps() {
     (loStatSortOrder: number[]) => loStatSortOrder.map((hash) => statHashToType[hash])
   );
 
+  /** A selector to pull out all half tier general mods so we can quick add them to sets. */
+  const halfTierModsSelector = createSelector(
+    (state: RootState) => settingsSelector(state).loStatSortOrder,
+    (state: RootState) => state.manifest.d2Manifest,
+    (statOrder, defs) => {
+      const halfTierMods: PluggableInventoryItemDefinition[] = [];
+
+      // Get all the item hashes for the general sockets whitelisted plugs.
+      const reusablePlugs =
+        defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
+          (p) => p.plugItemHash
+        ) || [];
+
+      for (const plugHash of reusablePlugs) {
+        const plug = defs?.InventoryItem.get(plugHash);
+
+        // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
+        // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
+        if (
+          isPluggableItem(plug) &&
+          isArmor2Mod(plug) &&
+          plug.investmentStats.some(
+            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+          )
+        ) {
+          halfTierMods.push(plug);
+        }
+      }
+
+      // Sort the mods so they are in the same order as our stat filters. This ensures the desired stats
+      // will be enhanced first.
+      return halfTierMods.sort(
+        compareBy((mod) => {
+          const stat = mod.investmentStats.find(
+            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+          );
+          return statOrder.indexOf(stat!.statTypeHash);
+        })
+      );
+    }
+  );
+
   return (state: RootState): StoreProps => {
-    const { loAssumeMasterwork, loMinPower, loMinStatTotal } = settingsSelector(state);
+    const { loAssumeMasterwork } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
       assumeMasterwork: loAssumeMasterwork,
-      minimumPower: loMinPower,
-      minimumStatTotal: loMinStatTotal,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
       searchQuery: querySelector(state),
+      halfTierMods: halfTierModsSelector(state),
     };
   };
 }
@@ -128,8 +173,6 @@ function LoadoutBuilder({
   stores,
   statOrder,
   assumeMasterwork,
-  minimumPower,
-  minimumStatTotal,
   isPhonePortrait,
   items,
   defs,
@@ -137,17 +180,10 @@ function LoadoutBuilder({
   filter,
   preloadedLoadout,
   searchQuery,
+  halfTierMods,
 }: Props) {
   const [
-    {
-      lockedMap,
-      lockedArmor2Mods,
-      selectedStoreId,
-      statFilters,
-      modPicker,
-      perkPicker,
-      compareSet,
-    },
+    { lockedMap, lockedMods, selectedStoreId, statFilters, modPicker, perkPicker, compareSet },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -163,27 +199,21 @@ function LoadoutBuilder({
   const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
-  const filteredItems = useMemo(
-    () =>
-      filterItems(
-        characterItems,
-        lockedMap,
-        lockedArmor2Mods,
-        minimumStatTotal,
-        assumeMasterwork,
-        filter
-      ),
-    [characterItems, lockedMap, lockedArmor2Mods, minimumStatTotal, assumeMasterwork, filter]
-  );
+  const filteredItems = useMemo(() => filterItems(characterItems, lockedMap, lockedMods, filter), [
+    characterItems,
+    lockedMap,
+    lockedMods,
+    filter,
+  ]);
 
   const { result, processing } = useProcess(
+    selectedStore,
     filteredItems,
     lockedMap,
-    lockedArmor2Mods,
+    lockedMods,
     assumeMasterwork,
     statOrder,
-    statFilters,
-    minimumPower
+    statFilters
   );
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -209,13 +239,11 @@ function LoadoutBuilder({
           return stat;
         })
       ),
-      mods: Object.values(lockedArmor2Mods)
-        .flat()
-        .map((m) => m.modDef.hash),
+      mods: Object.values(lockedMods).flatMap((mods) => mods?.map((m) => m.modDef.hash) || []),
       query: searchQuery,
       assumeMasterworked: assumeMasterwork,
     }),
-    [assumeMasterwork, lockedArmor2Mods, searchQuery, statFilters, statOrder]
+    [assumeMasterwork, lockedMods, searchQuery, statFilters, statOrder]
   );
 
   const combos = result?.combos || 0;
@@ -229,8 +257,6 @@ function LoadoutBuilder({
     sets,
   ]);
 
-  const loadingNodeRef = useRef<HTMLDivElement>(null);
-
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -240,9 +266,6 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <FilterBuilds
         statRanges={result?.statRanges}
-        selectedStore={selectedStore}
-        minimumPower={minimumPower}
-        minimumStatTotal={minimumStatTotal}
         stats={statFilters}
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
@@ -255,7 +278,7 @@ function LoadoutBuilder({
       <LockArmorAndPerks
         selectedStore={selectedStore}
         lockedMap={lockedMap}
-        lockedArmor2Mods={lockedArmor2Mods}
+        lockedMods={lockedMods}
         lbDispatch={lbDispatch}
       />
     </div>
@@ -280,25 +303,20 @@ function LoadoutBuilder({
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
-        <TransitionGroup component={null}>
+        <AnimatePresence>
           {processing && (
-            <CSSTransition
-              nodeRef={loadingNodeRef}
-              classNames={{
-                enter: styles.processingEnter,
-                enterActive: styles.processingEnterActive,
-                exit: styles.processingExit,
-                exitActive: styles.processingExitActive,
-              }}
-              timeout={{ enter: 500, exit: 500 }}
+            <motion.div
+              className={styles.processing}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ ease: 'easeInOut', duration: 0.5 }}
             >
-              <div className={styles.processing} ref={loadingNodeRef}>
-                <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
-                <AppIcon icon={refreshIcon} spinning={true} />
-              </div>
-            </CSSTransition>
+              <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
+              <AppIcon icon={refreshIcon} spinning={true} />
+            </motion.div>
           )}
-        </TransitionGroup>
+        </AnimatePresence>
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
@@ -311,24 +329,24 @@ function LoadoutBuilder({
             defs={defs}
             statOrder={statOrder}
             enabledStats={enabledStats}
-            lockedArmor2Mods={lockedArmor2Mods}
+            lockedMods={lockedMods}
             loadouts={loadouts}
             params={params}
+            halfTierMods={halfTierMods}
           />
         )}
         {modPicker.open &&
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              lockedArmor2Mods={lockedArmor2Mods}
+              lockedMods={lockedMods}
               initialQuery={modPicker.initialQuery}
-              onAccept={(newLockedArmor2Mods: LockedArmor2ModMap) =>
+              onAccept={(newLockedMods: PluggableItemsByPlugCategoryHash) =>
                 lbDispatch({
-                  type: 'lockedArmor2ModsChanged',
-                  lockedArmor2Mods: newLockedArmor2Mods,
+                  type: 'lockedModsChanged',
+                  lockedMods: newLockedMods,
                 })
               }
-              filterLegacy={modPicker.filterLegacy}
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,
             document.body
@@ -337,7 +355,6 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <PerkPicker
               classType={selectedStore.classType}
-              items={filteredItems}
               lockedMap={lockedMap}
               initialQuery={perkPicker.initialQuery}
               onClose={() => lbDispatch({ type: 'closePerkPicker' })}
@@ -350,7 +367,7 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
-              lockedArmor2Mods={lockedArmor2Mods}
+              lockedMods={lockedMods}
               defs={defs}
               classType={selectedStore.classType}
               statOrder={statOrder}

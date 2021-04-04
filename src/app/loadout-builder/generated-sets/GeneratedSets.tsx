@@ -2,18 +2,73 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { newLoadout } from 'app/loadout/loadout-utils';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import {
+  armor2PlugCategoryHashes,
+  armor2PlugCategoryHashesByName,
+} from 'app/search/d2-known-values';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { ArmorSet, LockedArmor2ModMap, LockedMap, ModPickerCategories, StatTypes } from '../types';
-import { someModHasEnergyRequirement } from '../utils';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { someModHasEnergyRequirement } from '../mod-utils';
+import { ArmorSet, LockedMap, LockedMods, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
+
+/** Taller item groups have either the swap icon under the item of an exotic perk. */
+function hasExoticPerkOrSwapIcon(items: DimItem[]) {
+  return items.length > 1 || items.some((item) => item.isExotic);
+}
+
+/**
+ * Gets the set used to measure how high a row can be. It also returns a recalcTrigger that is
+ * intended to trigger a recalculation when the value changes.
+ *
+ * It figures out the tallest row by looking at items with exotic perks and swap icons.
+ * Exotic perks add another row to the mod icons and the swap icon sits below the item image.
+ * The height they add is roughly equivalent so we treat both conditions equally.
+ */
+function getMeasureSet(sets, isPhonePortrait): [ArmorSet | undefined, number] {
+  // In phone portrait we have 2 columns and 3 rows of items.
+  let measureSet: ArmorSet | undefined;
+  let recalcTrigger = 0;
+  if (isPhonePortrait) {
+    measureSet = _.maxBy(sets, (set) => {
+      let countWithExoticPerkOrSwapIcon = 0;
+      // So we look on those rows for items with the swap icon or an exotic perk.
+      for (const indexes of [[0, 1], [2, 3], [4]]) {
+        if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+          countWithExoticPerkOrSwapIcon++;
+        }
+      }
+
+      if (countWithExoticPerkOrSwapIcon > recalcTrigger) {
+        recalcTrigger = countWithExoticPerkOrSwapIcon;
+      }
+
+      return countWithExoticPerkOrSwapIcon;
+    });
+  } else {
+    // when not in phone portrait we just find one set that has a taller item.
+    measureSet =
+      sets.find((set) =>
+        set.armor.some((items) => {
+          const hasTaller = hasExoticPerkOrSwapIcon(items);
+          if (!recalcTrigger && hasTaller) {
+            recalcTrigger = 1;
+          }
+          return hasTaller;
+        })
+      ) || sets[0];
+  }
+
+  return [measureSet, recalcTrigger];
+}
 
 interface Props {
   selectedStore: DimStore;
@@ -25,17 +80,11 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedMods: LockedMods;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
-}
-
-function numColumns(set: ArmorSet) {
-  return _.sumBy(set.armor, (items) => {
-    const item = items[0];
-    return (item.sockets && _.max(item.sockets.categories.map((c) => c.sockets.length))) || 0;
-  });
+  halfTierMods: PluggableInventoryItemDefinition[];
 }
 
 /**
@@ -50,23 +99,25 @@ export default function GeneratedSets({
   combos,
   combosWithoutCaps,
   enabledStats,
-  lockedArmor2Mods,
+  lockedMods,
   loadouts,
   lbDispatch,
   params,
+  halfTierMods,
+  isPhonePortrait,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
     rowHeight: number;
     rowWidth: number;
   }>({ rowHeight: 0, rowWidth: 0 });
-  const rowColumns = useMemo(() => sets.reduce((memo, set) => Math.max(memo, numColumns(set)), 0), [
-    sets,
-  ]);
+
+  // eslint-disable-next-line prefer-const
+  let [measureSet, recalcTrigger] = getMeasureSet(sets, isPhonePortrait);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
-  }, [rowColumns]);
+  }, [recalcTrigger]);
 
   useEffect(() => {
     const handleWindowResize = () =>
@@ -98,22 +149,23 @@ export default function GeneratedSets({
     [rowHeight]
   );
 
-  let measureSet: ArmorSet | undefined;
-  if (sets.length > 0 && rowHeight === 0 && rowColumns !== 0) {
-    measureSet = _.maxBy(sets, numColumns);
+  // If we already have row height we dont want to render the measure set.
+  if (rowHeight !== 0) {
+    measureSet = undefined;
   }
 
   let groupingDescription;
 
-  if (
-    someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.other]) ||
-    (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general]) &&
-      lockedArmor2Mods[ModPickerCategories.other].length)
-  ) {
+  const generalMods = lockedMods[armor2PlugCategoryHashesByName.general] || [];
+  const raidCombatAndLegacyMods = Object.entries(lockedMods).flatMap(([plugCategoryHash, mods]) =>
+    !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
+  );
+
+  if (someModHasEnergyRequirement(raidCombatAndLegacyMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
-  } else if (lockedArmor2Mods[ModPickerCategories.other].length) {
+  } else if (raidCombatAndLegacyMods.length) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
-  } else if (someModHasEnergyRequirement(lockedArmor2Mods[ModPickerCategories.general])) {
+  } else if (someModHasEnergyRequirement(generalMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
   } else {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStats');
@@ -154,9 +206,10 @@ export default function GeneratedSets({
           defs={defs}
           statOrder={statOrder}
           enabledStats={enabledStats}
-          lockedArmor2Mods={lockedArmor2Mods}
+          lockedMods={lockedMods}
           loadouts={loadouts}
           params={params}
+          halfTierMods={halfTierMods}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -181,9 +234,10 @@ export default function GeneratedSets({
                   defs={defs}
                   statOrder={statOrder}
                   enabledStats={enabledStats}
-                  lockedArmor2Mods={lockedArmor2Mods}
+                  lockedMods={lockedMods}
                   loadouts={loadouts}
                   params={params}
+                  halfTierMods={halfTierMods}
                 />
               )}
               scrollTop={scrollTop}

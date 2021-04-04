@@ -13,6 +13,7 @@ import {
   DestinyItemQualityBlockDefinition,
   DestinyItemQuantity,
   DestinyItemSocketEntryDefinition,
+  DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
@@ -134,7 +135,7 @@ export interface DimItem {
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
   plug?: {
     energyCost: number;
-    costElementIcon: string;
+    costElementIcon?: string;
   };
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
@@ -196,6 +197,8 @@ export interface DimItem {
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
   collectibleState?: DestinyCollectibleState;
+  /** Extra tooltips to show in the item popup */
+  tooltipNotifications?: DestinyItemTooltipNotification[];
 }
 
 /**
@@ -241,8 +244,8 @@ export interface DimStat {
   value: number;
   /** Base stat without bonus perks applied. Important in D2 for armor. */
   base: number;
-  /** If negative mods are found and the investment stat is 0, the base value may be incorrect */
-  baseMayBeWrong?: boolean;
+  /** If negative mods are found and the investment stat is 0, the base and value may be incorrect */
+  statMayBeWrong?: boolean;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -259,6 +262,10 @@ export interface DimStat {
    * This is true of armor stats.
    */
   additive: boolean;
+  /**
+   * Whether the stat is always active or certain conditions need to be met before it is.
+   */
+  isConditionallyActive: boolean;
 }
 
 export interface D1Stat extends DimStat {
@@ -410,4 +417,6 @@ export interface DimPursuit {
   expiredInActivityMessage?: string;
   /** Modifiers active in this quest */
   modifierHashes: number[];
+  questStepNum?: number;
+  questStepsTotal?: number;
 }

@@ -8,7 +8,12 @@ import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
-import { breakerTypes, D2ItemCategoryHashesByName, powerfulSources } from '../d2-known-values';
+import {
+  breakerTypes,
+  D2ItemCategoryHashesByName,
+  pinnacleSources,
+  powerfulSources,
+} from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
 
@@ -130,6 +135,13 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) => item.pursuit?.rewards.some((r) => powerfulSources.includes(r.itemHash)),
   },
+  {
+    keywords: 'pinnaclereward',
+    description: tl('Filter.PinnacleReward'),
+    destinyVersion: 2,
+    filter: () => (item) => item.pursuit?.rewards.some((r) => pinnacleSources.includes(r.itemHash)),
+  },
+
   {
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'

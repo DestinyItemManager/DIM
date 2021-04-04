@@ -1,100 +1,107 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { getItemDamageShortName, getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { DamageType } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import heavy from 'destiny-icons/general/ammo_heavy.svg';
+import primary from 'destiny-icons/general/ammo_primary.svg';
+import special from 'destiny-icons/general/ammo_special.svg';
 import React from 'react';
-import { CompareService } from '../compare/compare.service';
+import { useSelector } from 'react-redux';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, compareIcon } from '../shell/icons';
-import { ammoTypeClass } from './ammo-type';
-import { hideItemPopup } from './item-popup';
-import './ItemPopupHeader.scss';
-import { ItemSubHeader } from './ItemSubHeader';
-import ItemTagSelector from './ItemTagSelector';
-import LockButton from './LockButton';
+import styles from './ItemPopupHeader.m.scss';
 
-export default function ItemPopupHeader({
-  item,
-  language,
-  isPhonePortrait,
-}: {
-  item: DimItem;
-  language: string;
-  isPhonePortrait: boolean;
-}) {
-  const hasLeftIcon = item.trackable || item.lockable || item.element;
-  const openCompare = () => {
-    hideItemPopup();
-    CompareService.addItemsToCompare([item], true);
-  };
+const tierClassName = {
+  Common: styles.common,
+  Uncommon: styles.uncommon,
+  Rare: styles.rare,
+  Legendary: styles.legendary,
+  Exotic: styles.exotic,
+};
 
-  const light = item.primStat?.value.toString();
+export default function ItemPopupHeader({ item }: { item: DimItem }) {
+  const language = useSelector(settingsSelector).language;
 
-  useHotkey('c', t('Compare.ButtonHelp'), openCompare);
-
-  const finalSeason = getItemPowerCapFinalSeason(item);
-  const powerCapString =
-    (light || item.powerCap) &&
-    (finalSeason
-      ? t('Stats.PowerCapWithSeason', { powerCap: item.powerCap, finalSeason })
-      : t('MovePopup.PowerCap', { powerCap: item.powerCap }));
   return (
     <div
-      className={clsx('item-header', `is-${item.tier}`, {
-        masterwork: item.masterwork,
-        pursuit: item.pursuit,
+      className={clsx(styles.header, tierClassName[item.tier], {
+        [styles.masterwork]: item.masterwork,
+        [styles.pursuit]: item.pursuit,
       })}
     >
-      <div className="item-title-container">
-        {(item.trackable || item.lockable) && (
-          <div className="icon">
-            {item.lockable && <LockButton item={item} type="lock" />}
-            {item.trackable && <LockButton item={item} type="track" />}
-          </div>
-        )}
-        <div className="item-title-link">
-          <ExternalLink href={destinyDBLink(item, language)} className="item-title">
-            {item.name}
-          </ExternalLink>
-        </div>
-        {isPhonePortrait && item.comparable && (
-          <a className="compare-button info" title={t('Compare.ButtonHelp')} onClick={openCompare}>
-            <AppIcon icon={compareIcon} />
-          </a>
-        )}
+      <div className={styles.title}>
+        <ExternalLink href={destinyDBLink(item, language)}>{item.name}</ExternalLink>
       </div>
 
-      <div className="item-subtitle">
-        {hasLeftIcon &&
-          item.element &&
-          !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-            <div className="icon">
-              <ElementIcon
-                element={item.element}
-                className={clsx('element', getItemDamageShortName(item))}
-              />
+      <div className={styles.subtitle}>
+        <div className={styles.type}>
+          <ItemTypeName item={item} />
+          {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
+          {item.breakerType && (
+            <BungieImage
+              className={styles.breakerIcon}
+              src={item.breakerType.displayProperties.icon}
+            />
+          )}
+        </div>
+
+        <div className={styles.details}>
+          {item.element &&
+            !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
+              <ElementIcon element={item.element} className={styles.elementIcon} />
+            )}
+          <div className={styles.power}>{item.primStat?.value}</div>
+          {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
+          {item.pursuit?.questStepNum && (
+            <div className={styles.itemType}>
+              {t('MovePopup.Subtitle.QuestProgress', {
+                questStepNum: item.pursuit.questStepNum,
+                questStepsTotal: item.pursuit.questStepsTotal,
+              })}
             </div>
           )}
-        {item.destinyVersion === 2 && item.ammoType > 0 && (
-          <div className={clsx('ammo-type', ammoTypeClass(item.ammoType))} />
-        )}
-        {item.breakerType && (
-          <BungieImage className="small-icon" src={item.breakerType.displayProperties.icon} />
-        )}
-        <div className="item-type-info">
-          <ItemSubHeader item={item} />
         </div>
-        {isPhonePortrait && item.taggable && <ItemTagSelector item={item} />}
       </div>
-      {powerCapString && (
-        <div className="item-subtitle">
-          <div>{`${t('Stats.PowerCap')}: ${powerCapString}`}</div>
-        </div>
-      )}
+    </div>
+  );
+}
+
+const ammoIcons = {
+  [DestinyAmmunitionType.Primary]: primary,
+  [DestinyAmmunitionType.Special]: special,
+  [DestinyAmmunitionType.Heavy]: heavy,
+};
+
+function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
+  return (
+    <img
+      className={clsx(styles.ammoIcon, {
+        [styles.primary]: type === DestinyAmmunitionType.Primary,
+      })}
+      src={ammoIcons[type]}
+    />
+  );
+}
+
+function ItemTypeName({ item }: { item: DimItem }) {
+  const classType =
+    (item.classType !== DestinyClass.Unknown &&
+      // These already include the class name
+      item.type !== 'ClassItem' &&
+      item.type !== 'Artifact' &&
+      item.type !== 'Class' &&
+      !item.classified &&
+      item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
+    ' ';
+
+  return (
+    <div className={styles.itemType}>
+      {t('MovePopup.Subtitle.Type', {
+        classType,
+        typeName: item.typeName,
+      })}
     </div>
   );
 }

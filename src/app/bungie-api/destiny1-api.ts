@@ -1,16 +1,13 @@
 import { t } from 'app/i18next-t';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
-import { DestinyManifest, PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
+import { DestinyManifest, ServerResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D1Item, DimItem } from '../inventory/item-types';
 import { D1Store } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
-import {
-  authenticatedHttpClient,
-  dimError,
-  handleUniquenessViolation,
-} from './bungie-service-helper';
+import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-service-helper';
 
 /**
  * APIs for interacting with Destiny 1 game data.
@@ -30,11 +27,11 @@ export async function getCharacters(platform: DestinyAccount) {
     )
   );
   if (!response || Object.keys(response.Response).length === 0) {
-    throw dimError(
+    throw new DimError(
+      'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
         platform: platform.platformLabel,
-      }),
-      PlatformErrorCodes.DestinyAccountNotFound
+      })
     );
   }
   return _.map(response.Response.data.characters, (c) => {

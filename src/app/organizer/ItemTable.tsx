@@ -92,7 +92,7 @@ function mapStateToProps() {
       if (!terminal) {
         return emptyArray<DimItem>();
       }
-      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h > 0);
+      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
       const items = allItems.filter(
         (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
       );
@@ -325,7 +325,7 @@ function ItemTable({
   const onTagSelectedItems = (tagInfo: TagInfo) => {
     if (tagInfo.type && selectedItemIds.length) {
       const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-      dispatch(bulkTagItems(selectedItems, tagInfo.type));
+      dispatch(bulkTagItems(selectedItems, tagInfo.type, false));
     }
   };
 
@@ -473,7 +473,7 @@ function ItemTable({
             onTagSelectedItems={onTagSelectedItems}
             onMoveSelectedItems={onMoveSelectedItems}
           />
-          <UserGuideLink topic="Organizer" className={styles.guideLink} />
+          <UserGuideLink topic="Organizer" />
           <Dropzone onDrop={importCsv} accept=".csv">
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className={styles.importButton}>

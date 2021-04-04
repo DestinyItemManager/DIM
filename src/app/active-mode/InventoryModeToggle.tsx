@@ -1,7 +1,7 @@
 import styles from 'app/active-mode/InventoryModeToggle.m.scss';
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
-import clsx from 'clsx';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -9,14 +9,14 @@ export default function InventoryModeToggle({ mode }: { mode: boolean }) {
   const dispatch = useDispatch();
 
   return (
-    <div
-      className={clsx(`dim-button`, styles.inventoryToggle, { [styles.alt]: mode })}
-      onClick={() => {
-        dispatch(setSetting('activeMode', !mode));
-      }}
+    <CheckButton
+      name="active-mode"
+      className={styles.inventoryToggle}
+      checked={mode}
+      onChange={(checked) => dispatch(setSetting('activeMode', checked))}
     >
-      {mode ? t(`ActiveMode.ButtonOn`) : t(`ActiveMode.ButtonOff`)}{' '}
+      {t(`ActiveMode.ButtonOn`)}
       <div className={styles.beta}>{t(`ActiveMode.Beta`)}</div>
-    </div>
+    </CheckButton>
   );
 }

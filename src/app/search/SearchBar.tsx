@@ -248,26 +248,40 @@ function SearchBar(
     setInputValue,
     reset,
     openMenu,
-    closeMenu,
   } = useCombobox<SearchItem>({
     items,
+    stateReducer,
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
-        // Handle selecting the special "help" item
-        if (selectedItem.type === SearchItemType.Help) {
-          setFilterHelpOpen(true);
-          closeMenu();
-        }
-      }
-    },
     onInputValueChange: ({ inputValue }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
     },
   });
+
+  // special click handling for filter helper
+  function stateReducer(state, actionAndChanges) {
+    const { type, changes } = actionAndChanges;
+    switch (type) {
+      case useCombobox.stateChangeTypes.ItemClick:
+        //exit early if non FilterHelper item was selected
+        if (!changes.selectedItem || changes.selectedItem.type !== SearchItemType.Help) {
+          return changes;
+        }
+
+        // helper click, open FilterHelper and modify state
+        setFilterHelpOpen(true);
+        return {
+          ...changes,
+          selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
+          closeMenu: true, // close the menu
+        };
+
+      default:
+        return changes; // no handling for other types
+    }
+  }
 
   const onFocus = () => {
     if (!liveQuery && !isOpen && !autoFocus) {

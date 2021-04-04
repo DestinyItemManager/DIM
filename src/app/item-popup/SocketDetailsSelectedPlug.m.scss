@@ -6,15 +6,16 @@
   display: grid;
   grid-template-columns: var(--item-size) 1fr 1fr;
   grid-template-areas:
-    'mod desc stat'
-    'mod modstat stat';
+    'mod desc stat button'
+    'mod modstat stat button';
   gap: 0 8px;
   @include phone-portrait {
     grid-template-columns: var(--item-size) 1fr;
     grid-template-areas:
       'mod desc'
       'mod modstat'
-      'mod stat';
+      'mod stat'
+      'mod button';
     gap: 8px 8px;
   }
 }
@@ -52,5 +53,23 @@
   img {
     height: 16px;
     width: 16px;
+    margin-right: 0;
+  }
+}
+
+.insertButton {
+  composes: dim-button from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  grid-area: button;
+  align-self: center;
+
+  @include horizontal-space-children(8px);
+
+  > span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }

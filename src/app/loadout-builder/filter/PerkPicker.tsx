@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
-import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
+import BungieImage from 'app/dim-ui/BungieImage';
 import GlobalHotkeys from 'app/hotkeys/GlobalHotkeys';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -19,8 +19,8 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import ArmorBucketIcon from '../ArmorBucketIcon';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
-import { ItemsByBucket, LockableBuckets, LockedItemType, LockedMap } from '../types';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { LockableBuckets, LockedItemType, LockedMap, LockedPerk } from '../types';
 import {
   addLockedItem,
   filterPlugs,
@@ -32,7 +32,6 @@ import styles from './PerkPicker.m.scss';
 import PickerSectionPerks from './PickerSectionPerks';
 
 interface ProvidedProps {
-  items: ItemsByBucket;
   lockedMap: LockedMap;
   classType: DestinyClass;
   initialQuery?: string;
@@ -71,7 +70,7 @@ function mapStateToProps() {
         if (!perks[item.bucket.hash]) {
           perks[item.bucket.hash] = [];
         }
-        // build the filtered unique perks item picker
+        // get all the exotic perks
         item.sockets.allSockets.filter(filterPlugs).forEach((socket) => {
           socket.plugOptions.forEach((option) => {
             perks[item.bucket.hash].push(option.plugDef);
@@ -108,7 +107,6 @@ function PerkPicker({
   lockedMap,
   perks,
   buckets,
-  items,
   language,
   isPhonePortrait,
   initialQuery,
@@ -151,45 +149,9 @@ function PerkPicker({
     onClose();
   };
 
-  const scrollToBucket = (bucketId: number) => {
-    const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
-    elem?.scrollIntoView();
-  };
-
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
-  const header = (
-    <div>
-      <h1>{t('LB.ChooseAPerk')}</h1>
-      <div className="item-picker-search">
-        <div className="search-filter" role="search">
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            autoFocus={autoFocus}
-            placeholder="Search perk name and description"
-            type="text"
-            name="filter"
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
-        </div>
-      </div>
-      <div className={styles.tabs}>
-        {order.map((bucketId) => (
-          <div key={bucketId} className={styles.tab} onClick={() => scrollToBucket(bucketId)}>
-            <ArmorBucketIcon bucket={buckets.byHash[bucketId]} />
-            {buckets.byHash[bucketId].name}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   // Only some languages effectively use the \b regex word boundary
   const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
@@ -259,10 +221,45 @@ function PerkPicker({
       )
     : undefined;
 
+  let lockedExoticPerk: LockedPerk | undefined;
+
+  for (const lockedBucket of Object.values(selectedPerks)) {
+    for (const locked of lockedBucket || []) {
+      if (locked.type === 'perk') {
+        lockedExoticPerk = locked;
+        break;
+      }
+    }
+    if (lockedExoticPerk) {
+      break;
+    }
+  }
+
   return (
     <Sheet
       onClose={onClose}
-      header={header}
+      header={
+        <div>
+          <h1>{t('LB.ChooseAPerk')}</h1>
+          <div className="item-picker-search">
+            <div className="search-filter" role="search">
+              <AppIcon icon={searchIcon} className="search-bar-icon" />
+              <input
+                className="filter-input"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoFocus={autoFocus}
+                placeholder="Search perk name and description"
+                type="text"
+                name="filter"
+                value={query}
+                onChange={(e) => setQuery(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+        </div>
+      }
       footer={footer}
       sheetClassName="item-picker"
       freezeInitialHeight={true}
@@ -276,8 +273,7 @@ function PerkPicker({
               defs={defs}
               bucket={buckets.byHash[bucketId]}
               perks={queryFilteredPerks[bucketId]}
-              locked={selectedPerks[bucketId] || []}
-              items={items[bucketId]}
+              lockedPerk={lockedExoticPerk}
               onPerkSelected={(perk) => onPerkSelected(perk, buckets.byHash[bucketId])}
             />
           )
@@ -300,9 +296,8 @@ function LockedItemIcon({
     case 'perk':
       return (
         <span onClick={onClick}>
-          <BungieImageAndAmmo
+          <BungieImage
             className={styles.selectedPerk}
-            hash={lockedItem.perk.hash}
             title={lockedItem.perk.displayProperties.name}
             src={lockedItem.perk.displayProperties.icon}
           />

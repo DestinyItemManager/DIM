@@ -1,7 +1,23 @@
 @import '../variables.scss';
 
+.singleCharacter {
+  --num-characters: 1;
+}
+
+.inventory-container {
+  display: flex;
+
+  .issue-banner-shown & {
+    padding-bottom: $issue-banner-height;
+    @include phone-portrait {
+      padding-bottom: 0;
+    }
+  }
+}
+
 .inventory-content {
   margin: 0 auto;
+  width: 100%;
 
   .title {
     top: 124px;
@@ -42,6 +58,14 @@
     1fr;
   box-sizing: border-box;
 
+  // Split evenly between character and vault
+  .singleCharacter &.account-wide {
+    grid-template-columns: 1fr 1fr;
+    .singleCharacter & {
+      grid-column: auto;
+    }
+  }
+
   @include phone-portrait {
     // Full-width, single column
     grid-template-columns: 1fr;
@@ -77,6 +101,9 @@
 
   &.account-wide {
     grid-column: 1 / span var(--num-characters);
+    .singleCharacter & {
+      grid-column: auto;
+    }
   }
 
   > div {
@@ -188,6 +215,9 @@
   left: 0;
   width: 100%;
   z-index: 10;
+  grid-template-columns:
+    repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
+    calc(6px + var(--character-column-width) + var(--column-padding)) 1fr !important;
   background: $gradient;
   background-position: center top;
   background-repeat: no-repeat;
@@ -248,6 +278,7 @@
   justify-content: space-around;
   padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
   padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
+  z-index: 7;
 
   > div {
     display: flex;

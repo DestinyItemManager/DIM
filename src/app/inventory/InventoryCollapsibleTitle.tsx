@@ -98,7 +98,14 @@ function InventoryCollapsibleTitle({
               {index === 0 ? (
                 <span className="collapse-handle" onClick={toggle}>
                   <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
-                  <span>{showPostmasterFull ? text : title}</span>
+                  <span>
+                    {showPostmasterFull ? text : title}
+                    {checkPostmaster && collapsed && (
+                      <span className="bucket-size">
+                        ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
+                      </span>
+                    )}
+                  </span>
                 </span>
               ) : (
                 showPostmasterFull && text

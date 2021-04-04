@@ -6,6 +6,7 @@ import { importDataBackup } from 'app/dim-api/import';
 import { parseProfileKey } from 'app/dim-api/reducer';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import HelpLink from 'app/dim-ui/HelpLink';
+import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -39,8 +40,8 @@ const dimApiHelpLink =
 function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
-  const onApiPermissionChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const granted = event.target.checked;
+  const onApiPermissionChange = async (checked: boolean) => {
+    const granted = checked;
     dispatch(setApiPermissionGranted(granted));
     if (granted) {
       const data = await dispatch(exportLocalData());
@@ -84,13 +85,11 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       <h2>{t('Storage.MenuTitle')}</h2>
 
       <div className="setting">
-        <div className="horizontal">
+        <div className="setting horizontal">
           <label htmlFor="apiPermissionGranted">
             {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
           </label>
-          <input
-            type="checkbox"
-            id="apiPermissionGranted"
+          <Switch
             name="apiPermissionGranted"
             checked={apiPermissionGranted}
             onChange={onApiPermissionChange}

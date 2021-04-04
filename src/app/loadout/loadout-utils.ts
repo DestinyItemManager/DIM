@@ -2,6 +2,8 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LockedMod } from 'app/loadout-builder/types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -161,13 +163,9 @@ export function optimalLoadout(
   );
 }
 /** Create a loadout from all of this character's items that can be in loadouts */
-export function loadoutFromAllItems(
-  store: DimStore,
-  name: string,
-  onlyEquipped?: boolean
-): Loadout {
+export function loadoutFromAllItems(store: DimStore, name: string): Loadout {
   const allItems = store.items.filter(
-    (item) => (!onlyEquipped || item.equipped) && itemCanBeInLoadout(item)
+    (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster
   );
   return newLoadout(
     name,
@@ -246,4 +244,22 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
   loadout.classType = store.classType;
 
   return loadout;
+}
+
+export function getModsFromLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  loadout: Loadout
+) {
+  const mods: LockedMod[] = [];
+
+  if (defs.isDestiny2() && loadout.parameters?.mods) {
+    for (const [index, modHash] of loadout.parameters.mods.entries()) {
+      const item = defs.InventoryItem.get(modHash);
+      if (isPluggableItem(item)) {
+        mods.push({ modDef: item, key: index });
+      }
+    }
+  }
+
+  return mods;
 }

@@ -118,6 +118,14 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
+      2915991372, // Source: Crucible
+      3656787928, // Source: Crucible Salvager's Salvo Armament
+    ],
+  },
+  deepstonecrypt: {
+    itemHashes: [],
+    sourceHashes: [
+      1405897559, // Source: "Deep Stone Crypt" raid.
     ],
   },
   do: {
@@ -160,6 +168,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
     ],
   },
+  dsc: {
+    itemHashes: [],
+    sourceHashes: [
+      1405897559, // Source: "Deep Stone Crypt" raid.
+    ],
+  },
   edz: {
     itemHashes: [],
     sourceHashes: [
@@ -186,6 +200,15 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       4137108180, // Source: Escalation Protocol on Mars.
+    ],
+  },
+  europa: {
+    itemHashes: [],
+    sourceHashes: [
+      286427063, // Source: Fallen Empire campaign.
+      1148859274, // Source: Found exploring Europa.
+      3125456997, // Source: Europan Tour.
+      3965815470, // Source: Rare drop from elected difficulty Empire Hunts.
     ],
   },
   eververse: {
@@ -281,6 +304,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2448092902, // Rusted Iron
     ],
     sourceHashes: [
+      561111210, // Source: Iron Banner Salvager's Salvo Armament
       1027607603, // Source: Complete this reward's associated Iron Banner quest.
       1312894505, // Source: Iron Banner.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
@@ -388,6 +412,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
+      1749037998, // Source: Nightfall: The Ordeal
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
       2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing Nightfall: The Ordeal on Master difficulty.
@@ -398,6 +423,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
+      3528789901, // Source: Season of the Chosen Nightfall: The Ordeal Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4208190159, // Source: Complete a Nightfall strike.
@@ -506,6 +532,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
+      2915991372, // Source: Crucible
+      3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
   },
   shipwright: {
@@ -538,6 +566,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
       1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
@@ -642,6 +671,30 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       4122810030, // Source: Complete seasonal activities during Season of the Undying.
     ],
   },
+  wrathborn: {
+    itemHashes: [
+      197764097, // Wild Hunt Boots
+      238284968, // Wild Hunt Strides
+      251310542, // Wild Hunt Hood
+      317220729, // Wild Hunt Vestment
+      1148770067, // Wild Hunt Cloak
+      1276513983, // Wild Hunt Gloves
+      1458739906, // Wild Hunt Vest
+      2025716654, // Wild Hunt Grasps
+      2055947316, // Wild Hunt Bond
+      2279193565, // Wild Hunt Mark
+      2453357042, // Blast Battue
+      2545401128, // Wild Hunt Gauntlets
+      2776503072, // Royal Chase
+      3180809346, // Wild Hunt Greaves
+      3351935136, // Wild Hunt Plate
+      3887272785, // Wild Hunt Helm
+      4079117607, // Wild Hunt Mask
+    ],
+    sourceHashes: [
+      841568343, // Source: "Hunt for the Wrathborn" quest.
+    ],
+  },
   zavala: {
     itemHashes: [
       274843196, // Vanguard Unyielding
@@ -659,6 +712,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
       1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.

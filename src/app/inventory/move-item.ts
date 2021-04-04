@@ -1,20 +1,23 @@
-import { DimError } from 'app/bungie-api/bungie-service-helper';
+import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { compareOpenSelector } from 'app/compare/selectors';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { ThunkResult } from 'app/store/types';
+import { CanceledError, withCancel } from 'app/utils/cancel';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
-import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { Subject } from 'rxjs';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
-import { moveItemTo as moveTo } from './item-move-service';
+import { executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
@@ -31,30 +34,17 @@ export interface MoveAmountPopupOptions {
   onCancel(): void;
 }
 
-export const showMoveAmountPopup$ = new Subject<MoveAmountPopupOptions>();
-
-function showMoveAmountPopup(
-  item: DimItem,
-  targetStore: DimStore,
-  maximum: number
-): Promise<number> {
-  return new Promise((resolve, reject) => {
-    showMoveAmountPopup$.next({
-      item,
-      targetStore,
-      amount: item.amount,
-      maximum,
-      onAmountSelected: resolve,
-      onCancel: reject,
-    });
-  });
-}
-
 /**
  * Move the item to the currently active store. Used for double-click action.
  */
-export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
+export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    if (loadoutDialogOpen || compareOpenSelector(getState())) {
+      return item;
+    }
+
+    e?.stopPropagation();
+
     const active = getCurrentStore(storesSelector(getState()))!;
 
     // Equip if it's not equipped or it's on another character
@@ -70,32 +60,25 @@ export function moveItemToCurrentStore(item: DimItem): ThunkResult<DimItem> {
 export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: store.name,
-        }),
-      });
+    const { item } = await showItemPicker({
+      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket: bucket.name,
+        store: store.name,
+      }),
+    });
 
-      await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    await dispatch(moveItemTo(item, store));
   };
 }
 
 /**
  * Drop a dragged item
  */
-export function dropItem(
-  item: DimItem,
-  storeId: string,
-  equip = false,
-  chooseAmount = false
-): ThunkResult<DimItem> {
+export function dropItem(item: DimItem, storeId: string, equip = false): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    return dispatch(moveItemTo(item, store, equip, item.amount, chooseAmount));
+    return dispatch(moveItemTo(item, store, equip, item.amount));
   };
 }
 
@@ -106,17 +89,20 @@ export function moveItemTo(
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount,
-  chooseAmount = false
+  amount: number = item.amount
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    const transaction = startTransaction({ name: 'moveItemTo' });
+    // set the transaction on the scope so it picks up any errors
+    getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+
     hideItemPopup();
     if (
       item.location.inPostmaster
         ? !item.canPullFromPostmaster
         : item.notransfer && item.owner !== store.id
     ) {
-      throw new Error(t('Help.CannotMove'));
+      throw new DimError('Help.CannotMove');
     }
 
     if (item.owner === store.id && !item.location.inPostmaster) {
@@ -125,30 +111,10 @@ export function moveItemTo(
       }
     }
 
-    let moveAmount = amount || 1;
+    const moveAmount = amount || 1;
     const reload = item.equipped || equip;
     try {
       const stores = storesSelector(getState());
-
-      // Select how much of a stack to move
-      if (
-        $featureFlags.moveAmounts &&
-        chooseAmount &&
-        item.maxStackSize > 1 &&
-        item.amount > 1 &&
-        // https://github.com/DestinyItemManager/DIM/issues/3373
-        !item.uniqueStack
-      ) {
-        const maximum = amountOfItem(getStore(stores, item.owner)!, item);
-
-        try {
-          moveAmount = await showMoveAmountPopup(item, store, maximum);
-        } catch (e) {
-          const error: DimError = new Error('move-canceled');
-          error.code = 'move-canceled';
-          throw error;
-        }
-      }
 
       if ($featureFlags.debugMoves) {
         infoLog(
@@ -168,10 +134,14 @@ export function moveItemTo(
       // in time.
       updateManualMoveTimestamp(item);
 
+      const [cancelToken, cancel] = withCancel();
+
       const movePromise = queueAction(() =>
-        loadingTracker.addPromise(dispatch(moveTo(item, store, equip, moveAmount)))
+        loadingTracker.addPromise(
+          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount, cancelToken }))
+        )
       );
-      showNotification(moveItemNotification(item, store, movePromise));
+      showNotification(moveItemNotification(item, store, movePromise, cancel));
 
       item = await movePromise;
 
@@ -181,15 +151,24 @@ export function moveItemTo(
         dispatch(updateCharacters());
       }
     } catch (e) {
+      if (e instanceof CanceledError) {
+        return item;
+      }
+
       errorLog('move', 'error moving item', item.name, 'to', store.name, e);
       // Some errors aren't worth reporting
       if (
-        e.code !== 'wrong-level' &&
-        e.code !== 'no-space' &&
-        e.code !== PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+        e instanceof DimError &&
+        (e.code === 'wrong-level' ||
+          e.code === 'no-space' ||
+          e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
       ) {
+        // don't report
+      } else {
         reportException('moveItem', e);
       }
+    } finally {
+      transaction?.finish();
     }
 
     return item;
@@ -217,7 +196,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
-                await dispatch(moveTo(item, vault, false, amount));
+                await dispatch(executeMoveItem(item, vault, { equip: false, amount }));
               }
             }
 
@@ -229,7 +208,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
-                await dispatch(moveTo(item, store, false, amount));
+                await dispatch(executeMoveItem(item, store, { equip: false, amount }));
               }
             }
             const data = { name: actionableItem.name, store: store.name };
@@ -312,7 +291,9 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           async function applyMoves(moves: Move[]) {
             for (const move of moves) {
               const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
-              await dispatch(moveTo(item, move.target, false, move.amount));
+              await dispatch(
+                executeMoveItem(item, move.target, { equip: false, amount: move.amount })
+              );
             }
           }
 

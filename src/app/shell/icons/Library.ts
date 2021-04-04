@@ -33,6 +33,8 @@ const faCaretDown = 'fas fa-caret-down';
 const faPencilAlt = 'fas fa-pencil-alt';
 const faPlus = 'fas fa-plus';
 const faCaretRight = 'fas fa-caret-right';
+const faAngleRight = 'fas fa-angle-right';
+const faAngleLeft = 'fas fa-angle-left';
 const faAngleDoubleLeft = 'fas fa-angle-double-left';
 const faAngleDoubleRight = 'fas fa-angle-double-right';
 const faPlusCircle = 'fas fa-plus-circle';
@@ -51,6 +53,7 @@ const faStarOutline = 'far fa-star';
 const faSync = 'fas fa-sync';
 const faTable = 'fas fa-table';
 const faTag = 'fas fa-tag';
+const faList = 'fas fa-list';
 const faThumbsUp = 'fas fa-thumbs-up';
 const faThumbsUpRegular = 'far fa-thumbs-up';
 const faThumbsDown = 'fas fa-thumbs-down';
@@ -85,6 +88,7 @@ const faBookmark = 'far fa-bookmark';
 const faBalanceScaleLeft = 'fas fa-balance-scale-left';
 const faGripVertical = 'fas fa-grip-vertical';
 const faThumbtack = 'fas fa-thumbtack';
+const faInfoCircle = 'fas fa-info-circle';
 
 const faXbox = 'fab fa-xbox';
 const faPlaystation = 'fab fa-playstation';
@@ -186,6 +190,7 @@ export {
   faTshirt,
   faGripVertical as dragHandleIcon,
   faExternalLinkAlt,
+  faInfoCircle,
   faXbox,
   faPlaystation,
   faSteam,
@@ -193,4 +198,7 @@ export {
   faDiscord,
   faGithub,
   faReddit,
+  faList,
+  faAngleLeft,
+  faAngleRight,
 };

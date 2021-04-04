@@ -1,5 +1,6 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
+import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
@@ -124,6 +125,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     })
   ),
   classType: compareBy((item: DimItem) => item.classType),
+  ammoType: compareBy((item: DimItem) => item.ammoType),
   name: compareBy((item: DimItem) => item.name),
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
   tag: compareBy((item: DimItem) => {
@@ -140,10 +142,12 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
       compareBy((item: DimItem) => item.iconOverlay ?? '')
     )
   ),
+  sunset: compareBy(isSunset),
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
+  acquisitionRecency: reverseComparator(compareBy((item: DimItem) => BigInt(item.id))),
   default: () => 0,
 };
 

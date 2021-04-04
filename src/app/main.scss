@@ -192,30 +192,6 @@ input[type='search'] {
   -webkit-appearance: textfield;
 }
 
-.drag-help {
-  font-size: 1.5em;
-  position: fixed;
-  backface-visibility: hidden;
-  bottom: 2em;
-  transition: transform 0.5s, opacity 0.5s, background-color 0.1s;
-  background-color: rgba(0, 0, 0, 0.8);
-  left: calc(50% - 15em);
-  width: 30em;
-  right: 0;
-  border-radius: 0.5em;
-  text-align: center;
-  padding: 0.5em;
-  color: #e0e0e0;
-  &.drag-shift-activated {
-    background-color: rgba(0, 60, 0, 0.8);
-  }
-}
-
-.drag-help-hidden {
-  transform: translateY(5em);
-  opacity: 0;
-}
-
 #content {
   margin: 0 auto;
   user-select: none;
@@ -309,31 +285,66 @@ textarea.textarea-error {
 }
 
 select {
-  background: #555;
-  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="white" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>')
+    no-repeat;
+  background-size: 10px;
+  background-position: calc(100% - 10px) center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 2px 28px 2px 10px;
+  height: 27px;
+  font-size: 12px;
   color: white;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  border: 1px solid transparent;
+  &:hover,
+  &:active {
+    background-color: $orange;
+    color: black;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="black" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>');
+  }
+  // Set focus styles
+  &:focus {
+    border-color: $orange;
+    outline: none;
+  }
+  // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
+  &:focus:not(:focus-visible) {
+    border-color: transparent;
+  }
+
+  option {
+    background: black;
+    color: white;
+  }
 }
 
 /* Button */
 
 .dim-button {
   cursor: pointer;
-  background-color: #555;
   padding: 4px 10px;
   display: inline-block;
-  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
   color: white;
   font-size: 12px;
   font-family: 'Open Sans', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  &:hover {
-    background-color: $orange;
-  }
+  border: 1px solid transparent;
+  transition: all 150ms ease-out;
+  &:hover,
   &:active,
   &.selected {
-    box-shadow: none;
     background-color: $orange;
+    color: black;
+    img {
+      filter: invert(1) drop-shadow(0 0 1px black);
+    }
   }
   input {
     display: none;
@@ -342,8 +353,14 @@ select {
   &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-    &:hover {
-      background-color: #555;
+    &:hover,
+    &:active,
+    &.selected {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      img {
+        filter: drop-shadow(0 0 1px black);
+      }
     }
   }
   img {
@@ -352,11 +369,21 @@ select {
     vertical-align: bottom;
     margin: 0 0.3em;
     filter: drop-shadow(0 0 1px black);
+    transition: filter 150ms ease-out;
   }
   &.danger {
     &:hover {
       background-color: $red;
     }
+  }
+  // Set focus styles
+  &:focus {
+    border-color: $orange;
+    outline: none;
+  }
+  // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
+  &:focus:not(:focus-visible) {
+    border-color: transparent;
   }
 }
 
@@ -434,4 +461,8 @@ a.dim-button {
   @include phone-portrait {
     --inventory-column-padding: 12px;
   }
+}
+
+.horizontal-swipable {
+  touch-action: pan-y;
 }

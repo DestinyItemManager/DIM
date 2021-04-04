@@ -1,5 +1,6 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
+  armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   armorBuckets,
   D2ArmorStatHashByName,
@@ -16,9 +17,6 @@ export type StatTypes =
   | 'Discipline'
   | 'Intellect'
   | 'Strength';
-
-// todo: and this?
-export type BurnTypes = 'arc' | 'solar' | 'void';
 
 export interface MinMax {
   min: number;
@@ -55,47 +53,15 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export const raidPlugs = [
-  PlugCategoryHashes.EnhancementsSeasonOutlaw,
-  PlugCategoryHashes.EnhancementsRaidGarden,
-  PlugCategoryHashes.EnhancementsRaidDescent,
-] as const;
-
-export const raidSockets = [1444083081, 1764679361, 1269555732] as const;
-
-export const ModPickerCategories = {
-  ...armor2PlugCategoryHashesByName,
-  /** This encompases combat and legacy mods as they "share" a socket position on armour */
-  other: 'other',
-  raid: 'raid',
-} as const;
-export type ModPickerCategory = typeof ModPickerCategories[keyof typeof ModPickerCategories];
-
-/**
- * Checks whether the passed in value is a ModPickerCategory.
- */
-export function isModPickerCategory(value: unknown): value is ModPickerCategory {
-  return (
-    value === ModPickerCategories.general ||
-    value === ModPickerCategories.helmet ||
-    value === ModPickerCategories.gauntlets ||
-    value === ModPickerCategories.chest ||
-    value === ModPickerCategories.leg ||
-    value === ModPickerCategories.classitem ||
-    value === ModPickerCategories.other ||
-    value === ModPickerCategories.raid
-  );
-}
-
-export interface LockedArmor2Mod {
+export interface LockedMod {
   /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
-  key?: number;
+  key: number;
   modDef: PluggableInventoryItemDefinition;
-  category: ModPickerCategory;
 }
 
-export type LockedArmor2ModMap = {
-  [T in ModPickerCategory]: LockedArmor2Mod[];
+/** An object of plugCategoryHashes to arrays of locked mods with said plugCategoryHash. */
+export type LockedMods = {
+  [plugCategoryHash: number]: LockedMod[] | undefined;
 };
 
 /**
@@ -106,10 +72,6 @@ export interface ArmorSet {
   readonly stats: Readonly<{ [statType in StatTypes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
-  /** The chosen stats for each armor type, as a list in the order Mobility/Resiliency/Recovery. */
-  readonly statChoices: readonly number[][];
-  /** The maximum power loadout possible in this stat mix. */
-  readonly maxPower: number;
 }
 
 export type ItemsByBucket = Readonly<{
@@ -137,6 +99,23 @@ export const bucketsToCategories = {
   [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
 };
 
+export const slotSpecificPlugCategoryHashes = [
+  armor2PlugCategoryHashesByName.helmet,
+  armor2PlugCategoryHashesByName.gauntlets,
+  armor2PlugCategoryHashesByName.chest,
+  armor2PlugCategoryHashesByName.leg,
+  armor2PlugCategoryHashesByName.classitem,
+];
+
+// TODO generate this somehow so we dont need to maintain it
+export const raidPlugCategoryHashes = [
+  PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
+  PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
+  PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
+];
+
+export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
+
 // to-do: deduplicate this and use D2ArmorStatHashByName instead
 export const statHashes: { [type in StatTypes]: number } = {
   Mobility: D2ArmorStatHashByName.mobility,
@@ -152,3 +131,13 @@ export const statKeys = Object.keys(statHashes) as StatTypes[];
 
 // Need to force the type as lodash converts the StatTypes type to string.
 export const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
+
+/**
+ * The resuablePlugSetHash from armour 2.0's general socket.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const generalSocketReusablePlugSetHash = 3559124992;
+
+export type PluggableItemsByPlugCategoryHash = {
+  [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
+};

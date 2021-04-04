@@ -1,52 +1,46 @@
-import { BehaviorSubject, combineLatest, empty, from, of, timer } from 'rxjs';
-import { catchError, distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { getCurrentHub } from '@sentry/browser';
 import { reportException } from './utils/exceptions';
-import { errorLog, infoLog } from './utils/log';
+import { errorLog, infoLog, warnLog } from './utils/log';
+import { Observable } from './utils/observable';
+import { delay } from './utils/util';
 
 /**
  * A function that will attempt to update the service worker in place.
  * It will return a promise for when the update is complete.
  * If service workers are not enabled or installed, this is a no-op.
  */
-let updateServiceWorker = () => Promise.resolve();
-
-/** Whether a new service worker has been installed */
-const serviceWorkerUpdated$ = new BehaviorSubject(false);
-
-/**
- * An observable for what version the server thinks is current.
- * This is to handle cases where folks have DIM open for a long time.
- * It will attempt to update the service worker before reporting true.
- */
-const serverVersionChanged$ = timer(10 * 1000, 15 * 60 * 1000).pipe(
-  // Fetch but swallow errors
-  switchMap(() => from(getServerVersion()).pipe(catchError((_err) => empty()))),
-  map(isNewVersion),
-  distinctUntilChanged(),
-  // At this point the value of the observable will flip to true once and only once
-  switchMap((needsUpdate) =>
-    needsUpdate ? from(updateServiceWorker().then(() => true)) : of(false)
-  ),
-  shareReplay()
-);
-
-export let dimNeedsUpdate = false;
+let updateServiceWorker = async () => true;
 
 /**
  * Whether there is new content available if you reload DIM.
  *
  * We only need to update when there's new content and we've already updated the service worker.
  */
-export const dimNeedsUpdate$ = combineLatest(
-  serverVersionChanged$,
-  serviceWorkerUpdated$,
-  (serverVersionChanged, updated) => serverVersionChanged || updated
-).pipe(
-  tap((needsUpdate) => {
-    dimNeedsUpdate = needsUpdate;
-  }),
-  distinctUntilChanged()
-);
+export const dimNeedsUpdate$ = new Observable<boolean>(false);
+
+/**
+ * Poll what the server thinks is current.
+ * This is to handle cases where folks have DIM open for a long time.
+ * It will attempt to update the service worker before reporting that DIM needs update.
+ */
+// TODO: Move this state into Redux?
+(async () => {
+  await delay(10 * 1000);
+  const interval = setInterval(async () => {
+    try {
+      const serverVersion = await getServerVersion();
+      if (isNewVersion(serverVersion, $DIM_VERSION)) {
+        const updated = await updateServiceWorker();
+        if (updated) {
+          dimNeedsUpdate$.next(true);
+          clearInterval(interval);
+        }
+      }
+    } catch (e) {
+      errorLog('SW', 'Failed to check version.json', e);
+    }
+  }, 15 * 60 * 1000);
+})();
 
 /**
  * If Service Workers are supported, install our Service Worker and listen for updates.
@@ -76,7 +70,7 @@ export default function registerServiceWorker() {
                 infoLog('SW', 'New content is available; please refresh. (from onupdatefound)');
                 // At this point, is it really cached??
 
-                serviceWorkerUpdated$.next(true);
+                dimNeedsUpdate$.next(true);
 
                 let preventDevToolsReloadLoop = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -104,24 +98,33 @@ export default function registerServiceWorker() {
           };
         };
 
-        updateServiceWorker = () => {
+        updateServiceWorker = async () => {
           infoLog('SW', 'Checking for service worker update.');
-          return registration
-            .update()
-            .catch((err) => {
-              if ($featureFlags.debugSW) {
-                errorLog('SW', 'Unable to update service worker.', err);
-                reportException('service-worker', err);
+          try {
+            await registration.update();
+          } catch (err) {
+            if ($featureFlags.debugSW) {
+              errorLog('SW', 'Unable to update service worker.', err);
+              reportException('service-worker', err);
+            }
+            return false;
+          }
+          if (registration.waiting) {
+            infoLog('SW', 'New content is available; please refresh. (from update)');
+
+            if ($featureFlags.sentry) {
+              // Disable Sentry error logging if this user is on an older version
+              const sentryOptions = getCurrentHub()?.getClient()?.getOptions();
+              if (sentryOptions) {
+                sentryOptions.enabled = false;
               }
-            })
-            .then(() => {
-              if (registration.waiting) {
-                infoLog('SW', 'New content is available; please refresh. (from update)');
-                serviceWorkerUpdated$.next(true);
-              } else {
-                infoLog('SW', 'Updated, but theres not a new worker waiting');
-              }
-            });
+            }
+
+            return true;
+          } else {
+            infoLog('SW', 'Updated, but theres not a new worker waiting');
+            return false;
+          }
         };
       })
       .catch((err) => {
@@ -147,17 +150,32 @@ async function getServerVersion() {
   }
 }
 
-function isNewVersion(version: string) {
+export function isNewVersion(version: string, currentVersion: string) {
   const parts = version.split('.');
-  const currentVersionParts = $DIM_VERSION.split('.');
+  const currentVersionParts = currentVersion.split('.');
+
+  let newerAvailable = false;
+  let olderAvailable = false;
 
   for (let i = 0; i < parts.length && i < currentVersionParts.length; i++) {
-    if (parseInt(parts[i], 10) > parseInt(currentVersionParts[i], 10)) {
-      return true;
+    const versionSegment = parseInt(parts[i], 10);
+    const currentVersionSegment = parseInt(currentVersionParts[i], 10);
+    if (versionSegment > currentVersionSegment) {
+      newerAvailable = true;
+      break;
+    } else if (versionSegment < currentVersionSegment) {
+      olderAvailable = true;
+      break;
     }
   }
 
-  return false;
+  if (olderAvailable) {
+    warnLog('SW', 'Server version ', version, ' is older than current version ', currentVersion);
+  } else if (newerAvailable) {
+    infoLog('SW', 'Found newer version on server, attempting to update');
+  }
+
+  return newerAvailable;
 }
 
 /**

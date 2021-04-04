@@ -1,10 +1,11 @@
+import { t } from 'app/i18next-t';
+import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
+import clsx from 'clsx';
 import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
-import ItemTagSelector from '../item-popup/ItemTagSelector';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import LockButton from '../item-popup/LockButton';
 import { AppIcon, searchIcon } from '../shell/icons';
 import { StatInfo } from './Compare';
 import CompareStat from './CompareStat';
@@ -21,6 +22,7 @@ export default function CompareItem({
   updateSocketComparePlug,
   adjustedItemPlugs,
   adjustedItemStats,
+  isInitialItem,
 }: {
   item: DimItem;
   stats: StatInfo[];
@@ -32,18 +34,19 @@ export default function CompareItem({
   updateSocketComparePlug(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
   adjustedItemStats?: DimAdjustedItemStat;
+  isInitialItem: boolean;
 }) {
   return (
     <div className="compare-item">
       <div className="compare-item-header">
-        <div className="icon comp-lock-icon">
-          {item.lockable && <LockButton item={item} type="lock" />}
-          {item.trackable && <LockButton item={item} type="track" />}
-        </div>
-        <ItemTagSelector item={item} className="tagSelector" hideKeys={true} />
+        <LockActionButton item={item} />
+        <TagActionButton item={item} label={true} hideKeys={true} />
         <div className="close" onClick={() => remove(item)} />
       </div>
-      <div className="item-name" onClick={() => itemClick(item)}>
+      <div
+        className={clsx('item-name', { 'compare-initial-item': isInitialItem })}
+        onClick={() => itemClick(item)}
+      >
         {item.name} <AppIcon icon={searchIcon} />
       </div>
       <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
@@ -59,6 +62,9 @@ export default function CompareItem({
         />
       ))}
       {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
+      {item.missingSockets && (
+        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+      )}
       {item.sockets && (
         <ItemSockets
           item={item}

@@ -4,72 +4,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #0d0d16;
+  background-color: black;
 }
 
 .collapsed .hideWhenCollapsed {
   display: none;
-}
-
-.entry {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 6px 8px;
-
-  > img,
-  > :global(.app-icon) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-    height: 24px;
-    width: 24px;
-    font-size: 16px;
-    text-align: center;
-
-    .collapsed & {
-      margin-right: 0;
-    }
-  }
-  :global(.app-icon) {
-    color: #eee;
-  }
-}
-
-.itemTagSelector {
-  composes: entry;
-  padding: 6px 8px;
-
-  .collapsed & {
-    padding: 0;
-    button {
-      border-radius: 0;
-      padding: 6px 8px;
-      > div > :global(.app-icon) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        margin: 0;
-        height: 24px;
-        width: 24px;
-      }
-    }
-  }
-}
-
-.actionButton {
-  composes: entry;
-  cursor: pointer;
-
-  &:hover {
-    background: $orange;
-    color: black;
-    :global(.app-icon) {
-      color: black;
-    }
-  }
 }
 
 .collapseButton {
@@ -97,73 +36,4 @@
   [data-popper-placement^='left'] & {
     transform: scaleX(-1);
   }
-}
-
-.moveLocations {
-  flex-direction: column;
-  align-items: inherit;
-  justify-self: flex-end;
-  padding: 6px 8px 0 8px;
-  &:last-child {
-    padding-bottom: 8px;
-  }
-}
-
-.moveLocationIcons {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  margin: 4px 0 0 0;
-}
-
-.move,
-.equip {
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-  width: 36px;
-  &:nth-child(n + 2) {
-    margin-left: 8px;
-  }
-
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 36px;
-    width: 36px;
-    object-fit: cover;
-  }
-
-  :global(.app-icon) {
-    position: absolute;
-    height: 60%;
-    width: 60%;
-    top: 7px;
-    left: 7px;
-    filter: drop-shadow(1px 1px 2px black);
-  }
-
-  &:hover {
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border: 1px solid white;
-    }
-  }
-}
-
-.disabled {
-  filter: contrast(0.5) brightness(0.5);
-  cursor: default;
-  pointer-events: none;
 }

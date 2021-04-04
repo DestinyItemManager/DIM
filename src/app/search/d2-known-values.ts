@@ -73,6 +73,7 @@ export const armor2PlugCategoryHashesByName = {
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
 } as const;
 
+/** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
 export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
@@ -178,6 +179,15 @@ export const powerfulSources = [
   4143344829, // InventoryItem "Luminous Engram"
   4039143015, // InventoryItem "Powerful Gear"
   4249081773, // InventoryItem "Powerful Armor"
+  73143230, // Pinnacle
+  3114385605, // Tier 1
+  4039143015, // Powerful
+  3114385606, // Tier 2
+  3114385607, // Tier 3
+];
+
+export const pinnacleSources = [
+  73143230, // Pinnacle
 ];
 
 //
@@ -237,6 +247,12 @@ export const VENDORS = {
   XUR: 2190858386,
 };
 
+export const VENDOR_GROUPS = {
+  LIMITED_TIME: 3227191227,
+  TOWER: 679769104,
+  DESTINATION: 2537374699,
+};
+
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2319209868;
 
@@ -248,6 +264,8 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Arc]: 'arc',
   [DestinyEnergyType.Thermal]: 'solar',
   [DestinyEnergyType.Void]: 'void',
+  [DestinyEnergyType.Ghost]: 'ghost',
+  [DestinyEnergyType.Subclass]: 'subclass',
 };
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
@@ -274,3 +292,9 @@ export const breakerTypes = {
 export const powerCapPlugSetHash = 573;
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
+
+export const modsWithConditionalStats = {
+  powerfulFriends: 1484685887,
+  radiantLight: 2979815167,
+  chargeHarvester: 2263321587,
+} as const;

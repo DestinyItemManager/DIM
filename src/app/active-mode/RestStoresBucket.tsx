@@ -10,7 +10,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
-import { searchFiltersConfigSelector } from '../search/search-filter';
+import { filterFactorySelector } from '../search/search-filter';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 
@@ -37,7 +37,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
 
   return (state, ownProps) => ({
     restItems: filteredItemsSelector(state, ownProps),
-    filters: searchFiltersConfigSelector(state),
+    filters: filterFactorySelector(state),
     itemSortOrder: itemSortOrderSelector(state),
   });
 }

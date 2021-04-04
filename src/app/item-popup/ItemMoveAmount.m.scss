@@ -1,0 +1,11 @@
+.moveAmount {
+  margin: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  label {
+    margin-bottom: 2px;
+  }
+  input[type='text'] {
+    width: 3em;
+  }
+}

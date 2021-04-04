@@ -4,7 +4,6 @@
     "ConfirmTitle": "確認操作"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
@@ -18,15 +17,18 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Inventory Mode",
     "ButtonOn": "Active Mode",
     "ChangeFilter": "Change Filter",
     "Farming": "Recent Items",
     "FarmingStart": "Start Farming",
+    "FarmingStop": "Stop Farming",
+    "Loading": "Current Activity",
     "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
     "NoSearches": "Create saved searches and filter them here.",
-    "Pursuits": "Pursuits"
+    "Offline": "Offline",
+    "Pursuits": "Pursuits",
+    "SuggestedBounties": "Suggested Bounties"
   },
   "Activities": {
     "Activities": "活動",
@@ -51,6 +53,7 @@
     "Title": "一則來自Bungie的資訊:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "目前Bungie的服務出現了一個Bug，如果您在上一代主機上遊玩過Destiny1，那麼DIM將無法載入您的Destiny2帳號資訊。Bungie將很快修復這個Bug。但是，直到Bug修復完成前，您必須在目前世代主機上遊玩Destiny1以便DIM能讀取您的帳號資訊。",
     "DevVersion": "您是否正在運行DIM的開發版本？您必須先將您的Chrome擴展與Bungie.net關聯。",
     "Difficulties": "Bungie.net目前存在問題。",
@@ -59,6 +62,7 @@
     "ItemUniquenessExplanation_female": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "ItemUniquenessExplanation_male": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
     "Maintenance": "Bungie.net伺服器停機維護中.",
+    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
     "NetworkError": "網路錯誤 - {{status}}{{statusText}}",
     "NoAccount": "No Destiny account was found. Do you have the right platform selected?",
     "NoAccountForPlatform": "在{{platform}} 上沒有找到Destiny帳戶.",
@@ -73,6 +77,15 @@
     "UnknownError": "來自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商販資料不可用."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
+      "Mission": "Complete the \"{{title}}\" mission.",
+      "Quest": "Complete the \"{{title}}\" quest.",
+      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
+    }
+  },
   "Compare": {
     "Archetype": "原型",
     "Armor2": "防具 2.0",
@@ -80,8 +93,7 @@
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
-      "Archetype": "無法與此物品進行對比，因為它並不是{{type}}.",
-      "Class": "無法與此物品進行對比，因為它並不適用於{{class}}."
+      "Unmatched": "This item doesn't match the type of items being compared."
     }
   },
   "Cooldown": {
@@ -129,7 +141,7 @@
       "MakeRoom": "移動裝備騰出空間以便拾取物品",
       "Tooltip": "如果勾選，DIM將在保險庫中移動武器和防具來給記憶水晶騰出空間。"
     },
-    "OutOfRoom": "您的{{character}} 角色已經沒有空間了。是時候來解鎖一些記憶水晶和清理一些不必要的物品！",
+    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "空間不足",
     "Stop": "停止"
   },
@@ -156,7 +168,7 @@
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "Shows duplicate items, including reissues",
-    "DupeCount": "Items that have the specificied number of duplicates.",
+    "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "顯示記憶水晶.",
@@ -171,6 +183,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
+    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -200,9 +213,10 @@
     "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items where one of their perks or mods has a partial match to the filter text in their name only. Search for entire phrases using quotes.",
+    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
     "Postmaster": "目前在郵政官處的物品.",
-    "PowerLevel": "Shows items based on their power level.",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to.",
+    "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
     "RandomRoll": "顯示可以隨機特性掉落的物品",
@@ -215,11 +229,10 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
-    "Stats": "Shows items based on a specific stat value.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking.",
+    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
-    "SunsetAfter": "Shows items based on the last season they can reach the Seasonal Power Cap.",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
@@ -253,6 +266,8 @@
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpMenuItem": "Filters Help...",
+    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpProgress": "Search milestones and bounties",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterMatchCount": "1個物品",
     "FilterMatchCount_plural": "{{count}} 個物品",
@@ -274,7 +289,6 @@
   },
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
-    "Drag": "按住shift轉移部分堆疊",
     "NoStorage": "DIM無法存儲資料",
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },
@@ -298,7 +312,6 @@
     "Filter": "Filter items",
     "InfuseSource": "選擇要灌注入{{name}} 的物品",
     "InfuseTarget": "選擇需要灌注至{{name}} 的物品：",
-    "Infusion": "灌注選擇器",
     "InfusionMaterials": "灌注材料",
     "NoItems": "沒有可用於灌注的物品.",
     "NoTransfer": "移動灌注材料\n{{target}} 無法移動.",
@@ -335,26 +348,21 @@
     "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
     "PostmasterFull": "全滿了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "預覽 {{type}} 內容",
+    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
   },
   "LB": {
     "AdvancedOptions": "高級選項",
-    "Chest": "Chest",
     "ChooseAMod": "Choose your mods",
     "ChooseAPerk": "Choose a perk",
-    "ClassItem": "Class Item",
     "ClearLocked": "清除鎖定",
-    "Combat": "Combat",
     "ContainsVendorItems": "該配裝包含商販物品.",
     "Current": "當前",
     "Equip": "裝備在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
     "FilterSets": "組合過濾",
-    "Gauntlets": "Gauntlets",
-    "General": "General",
-    "Helmet": "头盔",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
       "ChangeNodes": "如要創建一個配裝,請改變智力,訓練和力量的比例,如圖所示.",
@@ -376,7 +384,6 @@
     "HideAllConfigs": "隱藏所有配置",
     "HideConfigs": "隱藏配置",
     "LB": "配裝優化器",
-    "Legs": "腿部",
     "LightMode": {
       "HelpCurrent": "計算當前防禦等級.",
       "HelpScaled": "計算使所有角色都都擁有350防禦.",
@@ -398,7 +405,6 @@
     },
     "Scaled": "縮放",
     "SearchAMod": "Search a mod or description",
-    "Seasonal": "賽季",
     "SelectMods": "Select Mods",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
@@ -413,9 +419,9 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Add +5 Mods",
     "AssumeMasterwork": "Assume Masterworked Stats",
     "AssumeMasterworkDetailed": "假設所有物品是大師之作, 生成套裝",
-    "BadPerk": "“輕微”改變的特性不是最好的選擇",
     "ChooseAlternate": "選擇另一個擁有相同狀態的物品：",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "Compare Loadout",
@@ -449,25 +455,22 @@
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
-    "SeasonNum": "Season {{season}}",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "SelectMinStatTotal": "Minimum Armor Stat Total",
-    "SelectMinStatTotalDescription": "Sets the minimum stat total for a single armor piece (excluding class items).",
     "SelectPerks": "選擇特性",
-    "SelectPower": "最小光等",
-    "SelectPowerDescription": "設置一套最低光等的整體配裝(非單件物品壓低光等)",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative or conditional stat effects.\n\nDue to mods with negative stat modifiers or conditional stat effects, DIM cannot determine the base value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Traction-特性提供+1移動性",
+    "UnableToAddAllMods": "Unable to add all mods.",
+    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
     "Abandon": "你確定要放棄此配裝?",
     "AddEquippedItems": "添加已裝備",
+    "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "{{className}} 下同名配裝已經存在",
     "AlreadyExistsGlobal": "同名全域配裝已經存在",
     "Any": "全部職業",
@@ -508,8 +511,10 @@
     "MaximizePower": "最高光等配裝",
     "MaximizeStat": "最高屬性",
     "Mods": "Mods",
+    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
     "NoExotics": "沒有記憶水晶可以轉移.",
+    "NoSpace": "You're out of space in the vault and any other characters.",
     "NotificationMessage": "正在將包含1件物品的配裝轉移到保險櫃",
     "NotificationMessage_female": "正在為{{store}} 穿戴1件物品的配裝",
     "NotificationMessage_female_plural": "正在為{{store}} 穿戴{{count}} 件物品的配裝",
@@ -521,6 +526,7 @@
     "OpenInOptimizer": "Open in Loadout Optimizer",
     "PullFromPostmaster": "從郵政官處取回物品",
     "PullFromPostmasterError": "無法從郵政官處取回物品:{{error}}.",
+    "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterNotification": "正在從郵政官處取回1項物品至{{store}}.",
     "PullFromPostmasterNotification_female": "正在從郵政官處取回1項物品至{{store}}.",
     "PullFromPostmasterNotification_female_plural": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
@@ -560,10 +566,7 @@
     "Weekly": "每週挑戰"
   },
   "MoveAmount": {
-    "DownStack": "減少一疊",
-    "MinusStack": "-堆叠",
-    "PlusStack": "+堆叠",
-    "UpStack": "增加一疊"
+    "Amount": "Amount:"
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
@@ -573,13 +576,10 @@
     "All": "All",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
-    "Details": "Popup",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "EquipWithName": "Equip to {{character}}",
-    "Expand": "展開項目詳細信息",
     "Infuse": "灌注",
-    "ItemDetailSheet": "Open item details",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
       "Locked": "Locked",
@@ -591,21 +591,19 @@
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "該模組在您的模組庫存中。",
-    "PowerCap": "",
     "PullItem": "從{{bucket}} 移到{{store}}",
     "PullPostmaster": "Pull from Postmaster",
     "ReadLore": "在Ishtar Collective閱讀背景故事",
     "ReadLoreLink": "Read lore",
     "Rewards": "獎勵：",
     "SendToVault": "Send to Vault",
-    "Split": "拆分",
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Consumable": "{{classType}}{{typeName}}",
-      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}"
+      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
+      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "收集",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "跟蹤{{itemType}}",
@@ -669,6 +667,7 @@
     "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Set Note",
     "NotePrompt": "備註：",
+    "OpenIn": "Show in Organizer",
     "Organizer": "管理器",
     "SelectAll": "全選",
     "SelectItem": "Select or unselect {{name}}",
@@ -687,7 +686,6 @@
     "CrucibleRank": "排名",
     "Items": "任務物品",
     "LegacyRecord": "This Triumph will no longer be available to complete after Beyond Light is released.",
-    "LegacyTriumphs": "Legacy Triumphs",
     "Milestones": "里程碑和挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "重置百分比{{pct}}%",
@@ -697,9 +695,11 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任務",
     "RecordValue": "{{value}}點",
+    "Redacted": "［未公開］",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密勝利",
+    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },
@@ -712,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Last Used",
+    "DeleteAll": "Delete all unstarred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
     "Link": "View and edit search history",
     "Query": "Search",
@@ -731,6 +732,7 @@
     "DefaultItemSizeNote": "50 px 的物品大小看起來最清晰, 而不會模糊物品圖片或文本。",
     "DontForgetDupes": "您可以在搜尋框使用 is:dupe 來快速查找重複物品, 也可以使用對比工具來對比相關物品.",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
+    "ExpandSingleCharacter": "Show all characters",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
     "ExportSSNoStores": "請在刷新一次庫存後點擊此按鈕",
@@ -748,49 +750,59 @@
     "SetSort": "物品排序方式:",
     "Settings": "設置",
     "ShowNewItems": "用紅點指示新物品",
+    "SingleCharacter": "Only show current character",
+    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
     "SizeItem": "物品顯示大小",
+    "SortByAmmoType": "Ammo Type",
     "SortByAmount": "堆疊大小",
     "SortByClassType": "必要的類",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "Armor Quality (D1)",
+    "SortByRecent": "Recently Acquired (D2)",
     "SortBySeason": "Season (D2)",
+    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱"
   },
+  "Sockets": {
+    "InsertModButton": "Insert Mod",
+    "InsertPlugError": "Couldn't insert mod"
+  },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
+    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
+    "DarkMeleeCooldown": "Dark Melee Cooldown",
+    "DarkSuperCooldown": "Dark Super Cooldown",
     "Discipline": "訓練",
     "DodgeCooldown": "Dodge Cooldown",
-    "Effect": "Effect",
-    "GrenadeCooldown": "Grenade Cooldown",
     "Intellect": "智力",
+    "LightGrenadeCooldown": "Light Grenade Cooldown",
+    "LightMeleeCooldown": "Light Melee Cooldown",
+    "LightSuperCooldown": "Light Super Cooldown",
     "MaxGearPower": "當前裝備最大光等",
     "MaxGearPowerAll": "Maximum Power of all gear",
     "MaxTotalPower": "最大光等",
-    "MeleeCooldown": "Melee Cooldown",
     "Milliseconds": "毫秒",
     "NoBonus": "無加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉範圍{{range}}",
     "PercentHelp": "點擊獲取更多關於品質屬性的資訊.",
-    "PowerCap": "Power Limit",
-    "PowerCapWithSeason": "{{powerCap}} (Season {{finalSeason}} max)",
     "PowerModifier": "季節神器提升光等",
     "Prestige": "威望等級: {{level}}\n{{exp}}xp 于5明亮之塵之前.",
     "Quality": "品質",
     "RiftCooldown": "Rift Cooldown",
     "Strength": "力量",
-    "SuperCooldown": "Super Cooldown",
+    "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "Total": "總計",
-    "TotalIncorrectWarning": "Due to mods with negative or conditional stat effects, DIM cannot determine the base value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -829,16 +841,11 @@
     "ImportWrongFileType": "檔案不是json檔案。它可能不是dim備份。",
     "IndexedDBStorage": "本地流覽器存儲",
     "MenuTitle": "同步和備份",
-    "ProfileErrorBody": "We had a problem loading your DIM Sync data",
+    "ProfileErrorBody": "We had a problem loading your data from DIM Sync. We'll keep trying to load it automatically.",
     "ProfileErrorTitle": "同步錯誤",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "同步錯誤",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
-  },
-  "StoreBucket": {
-    "FillStack": "最大堆疊 ({{amount}})",
-    "HowMuch": "想要移動多少個{{itemname}}？",
-    "Move": "移動"
   },
   "Tags": {
     "Archive": "歸檔",
@@ -855,13 +862,7 @@
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs"
   },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz 提示這位商販掉落高光等物品。",
-    "ServiceCallFailed": "VendorEngrams.xyz 服務調用失敗。",
-    "Vote": "看到商販銷售平光裝備？去VendorEngrams.xyz 投票讓其他玩家知道這件事吧!"
-  },
   "Vendors": {
-    "Catalysts": "催化劑",
     "Collections": "收藏品",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
@@ -927,7 +928,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "清除愿望清单",
-    "ExternalSource": "可選：提供願望清單的URL",
+    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportError": "Error loading wish list: {{error}}",
@@ -943,5 +944,7 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "願望清單備註:{{notes}}"
-  }
+  },
+  "no-space": "",
+  "wrong-level": ""
 }

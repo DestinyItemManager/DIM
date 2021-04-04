@@ -1,5 +1,9 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
@@ -24,11 +28,62 @@ function startWordRegexp(s: string, language: string) {
 const plainString = (s: string, language: string): string =>
   (isLatinBased(language) ? latinise(s) : s).toLowerCase();
 
+const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
+const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
+  const perkNames = allItems
+    .filter((i) => {
+      const pch = i.plug?.plugCategoryHash;
+      return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
+    })
+    .map((i) => i.displayProperties.name);
+  return _.uniq(perkNames);
+});
+
+// things that are sunset            1010        1060        1060        1260
+const irrelevantPowerCaps = new Set([2471437758, 1862490583, 1862490584, 1862490585]);
+
+const getUniqueItemNamesFromManifest = _.once(
+  (allManifestItems: DestinyInventoryItemDefinition[]) => {
+    const itemNames = allManifestItems
+      .filter((i) => {
+        const isWeaponOrArmor =
+          i.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon) ||
+          i.itemCategoryHashes?.includes(ItemCategoryHashes.Armor);
+        if (!i.displayProperties.name || !isWeaponOrArmor) {
+          return false;
+        }
+        const { quality } = i;
+        const powerCap = quality?.versions[quality.currentVersion].powerCapHash;
+        // don't suggest outdated items from the manifest
+        // (user's owned items will be included regardless)
+        return !powerCap || !irrelevantPowerCaps.has(powerCap);
+      })
+      .map((i) => i.displayProperties.name);
+    return _.uniq(itemNames);
+  }
+);
+
 const freeformFilters: FilterDefinition[] = [
   {
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
+    suggestionsGenerator: ({ itemInfos }) => {
+      if (!itemInfos) {
+        return;
+      }
+      // collect hash tags from item notes
+      const hashTags = new Set<string>();
+      for (const info of Object.values(itemInfos)) {
+        const matches = info.notes?.matchAll(/#\w+/g);
+        if (matches) {
+          for (const match of matches) {
+            hashTags.add(match[0]);
+          }
+        }
+      }
+      return [...hashTags];
+    },
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
@@ -37,10 +92,26 @@ const freeformFilters: FilterDefinition[] = [
       };
     },
   },
+  // could we do this with a for loop faster,
+  // with wayyyyy more lines of code?? absolutely
   {
     keywords: 'name',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
+    suggestionsGenerator: ({ d2Manifest, allItems }) => {
+      if (d2Manifest && allItems) {
+        const myItemNames = allItems
+          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+          .map((i) => i.name);
+        // favor items we actually own
+        const allItemNames = getUniqueItemNamesFromManifest(
+          Object.values(d2Manifest.InventoryItem.getAll())
+        );
+        return _.uniq([...myItemNames, ...allItemNames]).map(
+          (s) => `name:${quoteFilterString(s.toLowerCase())}`
+        );
+      }
+    },
     filter: ({ filterValue, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => plainString(item.name, language).includes(filterValue);
@@ -75,6 +146,21 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perkname',
     description: tl('Filter.PerkName'),
     format: 'freeform',
+    suggestionsGenerator: ({ d2Manifest, allItems }) => {
+      if (d2Manifest && allItems) {
+        const myPerks = allItems
+          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []);
+        const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
+        const allPerkNames = getPerkNamesFromManifest(
+          Object.values(d2Manifest.InventoryItem.getAll())
+        );
+        // favor items we actually own
+        return _.uniq([...myPerkNames, ...allPerkNames]).map(
+          (s) => `perkname:${quoteFilterString(s.toLowerCase())}`
+        );
+      }
+    },
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
       return (item) => {
@@ -149,7 +235,7 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 }
 
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromAllSockets(item, includeDescription = true) {
+export function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
   return (
     item.sockets?.allSockets.flatMap((socket) => {
       const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
@@ -161,6 +247,16 @@ export function getStringsFromAllSockets(item, includeDescription = true) {
   );
 }
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromTalentGrid(item, includeDescription = true) {
+export function getStringsFromTalentGrid(item: DimItem, includeDescription = true) {
   return getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, includeDescription);
+}
+
+// we can't properly quote a search string if it contains both ' and ", so.. we use this
+// to filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user
+export function isQuotable(s: string) {
+  return !(s.includes(`'`) && s.includes(`"`));
+}
+
+export function quoteFilterString(s: string) {
+  return s.includes(`"`) ? `'${s}'` : `"${s}"`;
 }

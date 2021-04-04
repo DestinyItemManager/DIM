@@ -1,20 +1,20 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout-builder/filter/ModPicker';
-import { LockedArmor2ModMap } from 'app/loadout-builder/types';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import produce from 'immer';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
-import { Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -31,11 +31,10 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import './loadout-drawer.scss';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { getItemsFromLoadoutItems, newLoadout } from './loadout-utils';
+import { getItemsFromLoadoutItems, getModsFromLoadout, newLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import { getLockedModMapFromModHashes } from './mod-utils';
 import { loadoutsSelector } from './selectors';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
@@ -43,12 +42,12 @@ import { loadoutsSelector } from './selectors';
 /** Is the loadout drawer currently open? */
 export let loadoutDialogOpen = false;
 
-export const editLoadout$ = new Subject<{
+export const editLoadout$ = new EventBus<{
   loadout: Loadout;
   showClass?: boolean;
   isNew?: boolean;
 }>();
-export const addItem$ = new Subject<{
+export const addItem$ = new EventBus<{
   item: DimItem;
   clickEvent: MouseEvent;
 }>();
@@ -384,15 +383,18 @@ function LoadoutDrawer({
   // Sync this global variable with our actual state. TODO: move to redux
   loadoutDialogOpen = Boolean(loadout);
 
-  // The loadout to edit comes in from the editLoadout$ rx observable
-  const editLoadout = (args: { loadout: Loadout; showClass?: boolean; isNew?: boolean }) => {
-    const loadout = args.loadout;
-    const isNew = Boolean(args.isNew);
-    const showClass = Boolean(args.showClass);
-
-    stateDispatch({ type: 'editLoadout', loadout, showClass, isNew });
-  };
-  useSubscription(() => editLoadout$.subscribe(editLoadout));
+  // The loadout to edit comes in from the editLoadout$ observable
+  useEventBusListener(
+    editLoadout$,
+    useCallback(({ loadout, showClass, isNew }) => {
+      stateDispatch({
+        type: 'editLoadout',
+        loadout,
+        showClass: Boolean(showClass),
+        isNew: Boolean(isNew),
+      });
+    }, [])
+  );
 
   const loadoutItems = loadout?.items;
 
@@ -403,8 +405,11 @@ function LoadoutDrawer({
     allItems,
   ]);
 
-  const onAddItem = (item: DimItem, e?: MouseEvent) =>
-    stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items });
+  const onAddItem = useCallback(
+    (item: DimItem, e?: MouseEvent) =>
+      stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items }),
+    [items]
+  );
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
@@ -414,10 +419,9 @@ function LoadoutDrawer({
   /**
    * If an item comes in on the addItem$ rx observable, add it.
    */
-  useSubscription(() =>
-    addItem$.subscribe((args: { item: DimItem; clickEvent: MouseEvent }) =>
-      onAddItem(args.item, args.clickEvent)
-    )
+  useEventBusListener(
+    addItem$,
+    useCallback(({ item, clickEvent }) => onAddItem(item, clickEvent), [onAddItem])
   );
 
   const close = () => {
@@ -490,13 +494,19 @@ function LoadoutDrawer({
     close();
   };
 
-  const onUpdateMods = (newLockedArmor2Mods: LockedArmor2ModMap) => {
+  const onUpdateMods = (newMods: PluggableItemsByPlugCategoryHash) => {
     const newLoadout = { ...loadout };
+    const mods: number[] = [];
+
+    for (const mod of Object.values(newMods).flat()) {
+      if (mod) {
+        mods.push(mod.hash);
+      }
+    }
+
     newLoadout.parameters = {
       ...newLoadout.parameters,
-      mods: Object.values(newLockedArmor2Mods)
-        .flat()
-        .map((mod) => mod.modDef.hash),
+      mods,
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
   };
@@ -598,7 +608,10 @@ function LoadoutDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
-            lockedArmor2Mods={getLockedModMapFromModHashes(defs, loadout.parameters?.mods)}
+            lockedMods={_.groupBy(
+              getModsFromLoadout(defs, loadout),
+              (mod) => mod.modDef.plug.plugCategoryHash
+            )}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'openModPicker', modPickerOpen: false })}
           />,

@@ -7,7 +7,7 @@ import { connect, useDispatch } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
 import { SearchConfig, searchConfigSelector } from './search-config';
-import { generateSuggestionsForFilter } from './search-utils';
+import { generateSuggestionsForFilter } from './suggestions-generation';
 
 interface StoreProps {
   searchConfig: SearchConfig;
@@ -51,14 +51,14 @@ function FilterHelp({ searchConfig }: Props) {
           return true;
         }
       })
-    : searchConfig.allFilters;
+    : searchConfig.allFilters.filter((s) => !s.deprecated);
 
   return (
     <div className={clsx(styles.filterView, 'dim-page dim-static-page')}>
       <div>
         <p>
           {t('Filter.Combine', {
-            example: '(is:weapon and sunsetsafter:arrival) or (is:armor and stat:total:<55)',
+            example: '(is:weapon and is:legendary) or (is:armor and stat:total:<55)',
           })}{' '}
           {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
           <a href="/search-history">{t('SearchHistory.Link')}</a>
@@ -98,7 +98,7 @@ export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
-  const additionalSuggestions = filter.suggestionsGenerator?.() || [];
+  const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
     new Set(
       [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(

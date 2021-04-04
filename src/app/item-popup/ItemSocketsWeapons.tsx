@@ -13,8 +13,9 @@ import { connect } from 'react-redux';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { inventoryWishListsSelector, wishListsEnabledSelector } from '../wishlists/selectors';
+import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
+import ItemPerksList from './ItemPerksList';
 import './ItemSockets.scss';
 import styles from './ItemSocketsWeapons.m.scss';
 import Plug from './Plug';
@@ -32,16 +33,14 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   defs?: D2ManifestDefinitions;
   isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
-    wishListsEnabled: wishListsEnabledSelector(state),
-    inventoryWishListRoll: inventoryWishListsSelector(state)[item.id],
+    wishlistRoll: inventoryWishListsSelector(state)[item.id],
     defs: state.manifest.d2Manifest,
     isPhonePortrait: state.shell.isPhonePortrait,
   };
@@ -53,8 +52,7 @@ function ItemSocketsWeapons({
   defs,
   item,
   minimal,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
   classesByHash,
   isPhonePortrait,
   onShiftClick,
@@ -113,7 +111,7 @@ function ItemSocketsWeapons({
         [styles.minimal]: minimal,
       })}
     >
-      {(archetype || (!minimal && mods.length > 0)) && (
+      {(archetype?.plugged || (!minimal && mods.length > 0)) && (
         <div className={clsx(styles.row, styles.archetype)}>
           {archetype?.plugged && (
             <>
@@ -124,8 +122,7 @@ function ItemSocketsWeapons({
                   item={item}
                   isPhonePortrait={isPhonePortrait}
                   socket={archetype}
-                  wishListsEnabled={wishListsEnabled}
-                  inventoryWishListRoll={inventoryWishListRoll}
+                  wishlistRoll={wishlistRoll}
                   classesByHash={classesByHash}
                   onClick={handleSocketClick}
                   onShiftClick={onShiftClick}
@@ -158,8 +155,7 @@ function ItemSocketsWeapons({
                   item={item}
                   isPhonePortrait={isPhonePortrait}
                   socket={socketInfo}
-                  wishListsEnabled={wishListsEnabled}
-                  inventoryWishListRoll={inventoryWishListRoll}
+                  wishlistRoll={wishlistRoll}
                   classesByHash={classesByHash}
                   onClick={handleSocketClick}
                   onShiftClick={onShiftClick}
@@ -170,36 +166,38 @@ function ItemSocketsWeapons({
           )}
         </div>
       )}
-      {perks && (
-        <div
-          className={clsx(
-            'item-socket-category',
-            categoryStyle(perks.category.categoryStyle),
-            styles.perks
-          )}
-        >
-          <div className="item-sockets">
-            {perks.sockets.map(
-              (socketInfo) =>
-                socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
-                  <Socket
-                    key={socketInfo.socketIndex}
-                    defs={defs}
-                    item={item}
-                    isPhonePortrait={isPhonePortrait}
-                    socket={socketInfo}
-                    wishListsEnabled={wishListsEnabled}
-                    inventoryWishListRoll={inventoryWishListRoll}
-                    classesByHash={classesByHash}
-                    onClick={handleSocketClick}
-                    onShiftClick={onShiftClick}
-                    adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-                  />
-                )
+      {perks &&
+        ($featureFlags.newPerks && !minimal ? (
+          <ItemPerksList item={item} perks={perks} />
+        ) : (
+          <div
+            className={clsx(
+              'item-socket-category',
+              categoryStyle(perks.category.categoryStyle),
+              styles.perks
             )}
+          >
+            <div className="item-sockets">
+              {perks.sockets.map(
+                (socketInfo) =>
+                  socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
+                    <Socket
+                      key={socketInfo.socketIndex}
+                      defs={defs}
+                      item={item}
+                      isPhonePortrait={isPhonePortrait}
+                      socket={socketInfo}
+                      wishlistRoll={wishlistRoll}
+                      classesByHash={classesByHash}
+                      onClick={handleSocketClick}
+                      onShiftClick={onShiftClick}
+                      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+                    />
+                  )
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        ))}
       {minimal && mods.length > 0 && (
         <div className="item-socket-category-Consumable socket-container">
           {mods.map((socketInfo) => (
@@ -209,8 +207,7 @@ function ItemSocketsWeapons({
               item={item}
               isPhonePortrait={isPhonePortrait}
               socket={socketInfo}
-              wishListsEnabled={wishListsEnabled}
-              inventoryWishListRoll={inventoryWishListRoll}
+              wishlistRoll={wishlistRoll}
               classesByHash={classesByHash}
               onClick={handleSocketClick}
               onShiftClick={onShiftClick}
@@ -259,8 +256,7 @@ function Socket({
   defs,
   item,
   socket,
-  wishListsEnabled,
-  inventoryWishListRoll,
+  wishlistRoll,
   classesByHash,
   isPhonePortrait,
   onClick,
@@ -270,8 +266,7 @@ function Socket({
   defs: D2ManifestDefinitions;
   item: DimItem;
   socket: DimSocket;
-  wishListsEnabled?: boolean;
-  inventoryWishListRoll?: InventoryWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
   /** Extra CSS classes to apply to perks based on their hash */
   classesByHash?: { [plugHash: number]: string };
   isPhonePortrait: boolean;
@@ -294,8 +289,7 @@ function Socket({
           item={item}
           socketInfo={socket}
           defs={defs}
-          wishListsEnabled={wishListsEnabled}
-          inventoryWishListRoll={inventoryWishListRoll}
+          wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
           className={classesByHash?.[plug.plugDef.hash]}

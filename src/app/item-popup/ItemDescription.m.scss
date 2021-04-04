@@ -16,6 +16,11 @@
 
 .officialDescription {
   composes: description;
+  overflow: auto;
+}
+
+.flavorText {
+  composes: description;
   font-style: italic;
   overflow: auto;
 }

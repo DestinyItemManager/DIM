@@ -5,7 +5,13 @@ import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  AllDestinyManifestComponents,
+  DestinyInventoryItemDefinition,
+  DestinyItemActionBlockDefinition,
+  DestinyItemTalentGridBlockDefinition,
+  DestinyItemTranslationBlockDefinition,
+} from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { del, get, set } from 'idb-keyval';
@@ -35,9 +41,9 @@ const tableTrimmers = {
       // structures from JSON parsing. Only replace objects with empties, and always test with the
       // memory profiler. Don't assume that deleting something makes this smaller.
 
-      def.action! = emptyObject();
+      def.action = emptyObject<Mutable<DestinyItemActionBlockDefinition>>();
       def.backgroundColor = emptyObject();
-      def.translationBlock! = emptyObject();
+      def.translationBlock = emptyObject<Mutable<DestinyItemTranslationBlockDefinition>>();
       if (def.equippingBlock?.displayStrings?.length) {
         def.equippingBlock.displayStrings = emptyArray();
       }
@@ -45,7 +51,7 @@ const tableTrimmers = {
         def.preview.derivedItemCategories = emptyArray();
       }
       if (def.inventory!.bucketTypeHash !== BucketHashes.Subclass) {
-        def.talentGrid! = emptyObject();
+        def.talentGrid = emptyObject<Mutable<DestinyItemTalentGridBlockDefinition>>();
       }
 
       if (def.sockets) {
@@ -93,16 +99,16 @@ export const warnMissingDefinition = _.debounce(
 );
 
 const getManifestAction = memoizeOne(
-  (tableAllowList): ThunkResult<object> =>
+  (tableAllowList): ThunkResult<AllDestinyManifestComponents> =>
     dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
 );
 
-export function getManifest(tableAllowList: string[]): ThunkResult<object> {
+export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return getManifestAction(tableAllowList);
 }
 
 // This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
-function doGetManifest(tableAllowList: string[]): ThunkResult<object> {
+function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
     const stopTimer = timer('Load manifest');

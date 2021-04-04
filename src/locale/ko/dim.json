@@ -4,7 +4,6 @@
     "ConfirmTitle": "작업 확인"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
     "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
     "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
@@ -18,15 +17,18 @@
   },
   "ActiveMode": {
     "Beta": "베타",
-    "ButtonOff": "소지품 모드",
     "ButtonOn": "활성 모드",
     "ChangeFilter": "필터 변경",
     "Farming": "최근 아이템",
     "FarmingStart": "파밍 시작",
+    "FarmingStop": "파밍 종료",
+    "Loading": "현재 활동",
     "Loadouts": "로드아웃",
     "NoQuests": "추적 중인 퀘스트 없음",
     "NoSearches": "여기서 저장된 검색 기록을 만들고 필터링하세요.",
-    "Pursuits": "목표"
+    "Offline": "오프라인",
+    "Pursuits": "목표",
+    "SuggestedBounties": "추천 현상금"
   },
   "Activities": {
     "Activities": "활동",
@@ -51,6 +53,7 @@
     "Title": "Bungie로부터의 메시지:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM이 이 작업을 수행할 권한이 없습니다.",
     "DestinyLegacyPlatform": "Bungie의 서비스에는 이전 세대의 콘솔에서 데스티니 1을 플레이하였을 경우 DIM이 데스티니 2 정보를 불러오지 못하게 막는 버그가 있습니다. Bungie가 이 버그를 곧 고칠 것이지만, 그전에 당신의 정보에 접근하기 위해서는 현세대 콘솔에서 데스티니 1을 플레이하셔야 합니다.",
     "DevVersion": "DIM의 개발 버전을 실행 중이신가요? Bungie.net에 크롬 확장 프로그램을 등록하셔야 합니다.",
     "Difficulties": "현재 Bungie.net에 문제가 있습니다.",
@@ -59,6 +62,7 @@
     "ItemUniquenessExplanation_female": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "ItemUniquenessExplanation_male": "'{{name}}' {{type}} 을(를) {{character}}에 이동하려 하셨으나, 해당 캐릭터는 이미 그 아이템을 소유하고 있으며 그 아이템은 캐릭터당 하나만 소유할 수 있습니다.",
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
+    "MissingInventory": "Bungie.net에서 소지품을 반환하지 않았으며, 개인 정보 보호 설정에 의해 차단되었을 수 있습니다. 로그아웃 후 다시 로그인해 보십시오.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
     "NoAccount": "데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
     "NoAccountForPlatform": "{{platform}}에서 데스티니 계정을 찾지 못했습니다.",
@@ -73,6 +77,15 @@
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
   },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "이 무기로 강력한 전투원을 처치하여 찾을 수 있습니다.",
+      "Mission": "\"{{title}}\" 미션을 완료하세요.",
+      "Quest": "\"{{title}}\" 퀘스트를 완료하세요.",
+      "RuinousEffigy": "변환 구체로 전투원을 처치하여 찾을 수 있습니다.",
+      "TheFourthHorseman": "세라프 벙커, 세라프 탑, 전설 잊혀진 구역을 완료하세요."
+    }
+  },
   "Compare": {
     "Archetype": "아키타입",
     "Armor2": "방어구 2.0",
@@ -80,8 +93,7 @@
     "ButtonHelp": "아이템 비교",
     "CompareBaseStats": "기본 능력치 표시",
     "Error": {
-      "Archetype": "이 아이템은 {{type}}이(가) 아니므로 비교할 수 없습니다.",
-      "Class": "이 아이템은 {{class}}을(를) 위한 장비가 아니므로 비교할 수 없습니다."
+      "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
     }
   },
   "Cooldown": {
@@ -129,7 +141,7 @@
       "MakeRoom": "장비를 이동시켜 아이템을 얻을 공간을 확보",
       "Tooltip": "체크하면 DIM이 금고 내 엔그램의 공간 확보를 위해서 무기와 방어구를 옮길 것입니다."
     },
-    "OutOfRoom": "{{character}}에게서 아이템을 이동할 공간이 없습니다. 엔그램을 해독하고 쓰레기를 청소할 때가 됐습니다!",
+    "OutOfRoom": "{{character}}에게서 아이템을 이동할 공간이 없습니다. 쓰레기를 청소할 때가 됐습니다!",
     "OutOfRoomTitle": "공간 부족",
     "Stop": "중지"
   },
@@ -137,7 +149,7 @@
     "Instructions": "클릭 또는 파일 끌어서 놓기"
   },
   "Filter": {
-    "AmmoType": "사용하는 총탄의 종류 기준으로 아이템 표시",
+    "AmmoType": "탄약 유형에 따른 아이템 표시",
     "Armor": "방어구인 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
     "Ascended": "주입 노드가 있으며 주입이 된 아이템 표시",
@@ -171,6 +183,7 @@
     "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "InLoadout": "로드아웃에 포함된 아이템 표시",
     "Infusable": "주입할 수 있는 장비 표시",
+    "IsSunset": "만료되어 최고 전투력으로 주입할 수 없는 아이템 표시",
     "ItemHash": "주어진 소지품 아이템 해시와 일치하는 아이템 표시. 고급 사용자용.",
     "ItemId": "주어진 소지품 아이템 ID와 일치하는 아이템 표시. 고급 사용자용.",
     "Leveling": {
@@ -200,9 +213,10 @@
     "PartialMatch": "이름, 설명, 특성이나 개조 부품이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
     "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
+    "PinnacleReward": "최고급 보상을 주는 목표 표시",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
-    "PowerLevel": "전투력 레벨에 따른 아이템 검색",
-    "PowerLimit": "최대로 주입할 수 있는 전투력에 따른 아이템 표시",
+    "PowerLevel": "전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
+    "PowerLimit": "최대로 주입할 수 있는 전투력을 기준으로 아이템을 표시합니다. $t(Filter.PowerKeywords)",
     "PowerfulReward": "강력한 보상을 주는 목표 표시",
     "Quality": "전체 스탯 백분율에 기초하여 아이템 보여주기. '{{percentage}}' 은(는) '{{quality}}' 로 불립니다.",
     "RandomRoll": "무작위 특성 아이템 표시",
@@ -215,11 +229,10 @@
     "SeasonalDupe": "중복된 아이템 표시, 다른 시즌의 재출시된 아이템은 같은 아이템으로 취급하지 않음.",
     "StackLevel": "중첩된 개수에 따른 아이템 표시",
     "Stackable": "중첩 가능한 아이템(탄약 신스, 이상한 동전 등) 표시",
-    "Stats": "특정 능력치 값에 따른 아이템 표시",
-    "StatsBase": "방어구를 장착된 개조 부품과 걸작을 제외한 기본 능력치 값으로 필터링",
+    "Stats": "특정 능력치 값에 따라 아이템을 표시합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
+    "StatsBase": "방어구를 장착된 개조 부품이나 걸작을 포함하지 않은 기초 능력치 값으로 필터링합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
-    "SunsetAfter": "전투력 상한선에 도달할 수 있는 시즌에 따른 아이템 표시",
     "Tags": {
       "Tag": "특정 태그가 있는 아이템 표시",
       "Tagged": "태그가 있는 아이템 표시"
@@ -253,6 +266,8 @@
     "FilterHelp": "아이템/특성, {{example}} 등 검색",
     "FilterHelpBrief": "아이템 검색",
     "FilterHelpMenuItem": "필터 도움말...",
+    "FilterHelpOptimizer": "로드아웃에서 방어구 필터링: {{example}}",
+    "FilterHelpProgress": "이정표와 현상금 검색",
     "FilterHelpRecords": "업적과 수집품 검색",
     "FilterMatchCount": "아이템 1개",
     "FilterMatchCount_plural": "아이템 {{count}}개",
@@ -274,7 +289,6 @@
   },
   "Help": {
     "CannotMove": "그 아이템은 해당 캐릭터에서 옮길 수 없습니다.",
-    "Drag": "Shift 키를 누르고 유지하여 스택의 일부를 이동",
     "NoStorage": "DIM이 데이터를 저장할 수 없음",
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 이와 같은 문제가 발생할 수 있습니다. DIM에 로그인하거나 사용할 수 없습니다."
   },
@@ -298,7 +312,6 @@
     "Filter": "아이템 필터",
     "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
     "InfuseTarget": "{{name}}에 주입할 아이템 선택",
-    "Infusion": "주입 재료 탐색기",
     "InfusionMaterials": "주입 재료",
     "NoItems": "주입할 수 있는 아이템이 존재하지 않음",
     "NoTransfer": "주입 재료 이동\n{{target}}은(는) 옮겨질 수 없습니다.",
@@ -335,26 +348,21 @@
     "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
+    "ShouldNotBeInVault": "이 아이템은 금고에 있을 경우 위험할 수 있습니다. 캐릭터로 옮겨주세요.",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}"
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
-    "Chest": "가슴",
     "ChooseAMod": "개조 부품 선택",
     "ChooseAPerk": "특성 선택",
-    "ClassItem": "직업 아이템",
     "ClearLocked": "잠금 해제",
-    "Combat": "전투",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
     "Equip": "{{character}}에게 장착",
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
     "FilterSets": "필터 조합",
-    "Gauntlets": "건틀릿",
-    "General": "일반",
-    "Helmet": "헬멧",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
       "ChangeNodes": "로드아웃을 생성하려면 표기된 값으로 게임 내에서 지능, 힘, 규율 스탯을 변경하세요.",
@@ -376,7 +384,6 @@
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
     "LB": "로드아웃 최적화",
-    "Legs": "다리",
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
       "HelpScaled": "모든 장비가 350 방어라는 가정 하에 로드아웃 계산",
@@ -398,7 +405,6 @@
     },
     "Scaled": "확대 됨",
     "SearchAMod": "개조 부품이나 설명 검색",
-    "Seasonal": "시즌",
     "SelectMods": "개조 부품 선택",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -413,9 +419,9 @@
     "Vendors": "데스티니 상인 불러오는 중..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "+5 개조 부품 추가",
     "AssumeMasterwork": "걸작 능력치 가정",
     "AssumeMasterworkDetailed": "모든 아이템이 걸작인 것으로 가정하여 조합을 생성합니다.",
-    "BadPerk": "\"약간\" 적용되는 특성은 최고의 옵션이 아닙니다.",
     "ChooseAlternate": "동일한 능력치를 가진 다른 아이템 선택:",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
@@ -449,25 +455,22 @@
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "고정된 아이템 초기화",
     "SaveAs": "다른 이름으로 저장",
-    "SeasonNum": "시즌 {{season}}",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
-    "SelectMinStatTotal": "방어구 총 능력치 최솟값",
-    "SelectMinStatTotalDescription": "방어구 하나의 총 능력치 최솟값을 설정합니다.(직업 아이템 제외)",
     "SelectPerks": "특성 선택",
-    "SelectPower": "최소 파워",
-    "SelectPowerDescription": "로드아웃 전체의 최소 전투력 설정 (개별 부위가 아님)",
-    "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치 감소나 상황에 따른 능력치 변화가 있는 모든 개조 부품을 제거하십시오.\n\n능력치 감소나 상황에 따른 능력치 변화가 있는 개조 부품으로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
+    "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.\n\n개조 부품의 능력치 페널티로 인하여 DIM에서 일부 아이템의 {{stats}} 능력치의 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
     "TierNumber": "T{{tier}}",
-    "Traction": "견인 특성은 기동성 +1을 제공합니다.",
+    "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
+    "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
     "UnlockItem": "아이템 고정 해제"
   },
   "Loadouts": {
     "Abandon": "이 로드아웃을 삭제하시겠습니까?",
     "AddEquippedItems": "장착한 아이템 추가",
+    "AddUnequippedItems": "장착하지 않은 아이템 추가",
     "AlreadyExistsClass": "동일한 이름을 가진 로드아웃이 {{className}} 직업에 존재합니다.",
     "AlreadyExistsGlobal": "동일한 이름을 가진 공용 로드아웃이 존재합니다.",
     "Any": "모든 직업",
@@ -508,8 +511,10 @@
     "MaximizePower": "전투력 최대화",
     "MaximizeStat": "능력치 최대화",
     "Mods": "개조 부품",
+    "ModsInfo": "DIM에서 개조 부품을 장착할 수 없으며, 반드시 게임 내에서 해야 됩니다.",
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
+    "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
     "NotificationMessage": "1개의 아이템이 포함된 로드아웃을 금고로 이동하였습니다.",
     "NotificationMessage_female": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 장착하였습니다.",
     "NotificationMessage_female_plural": "{{count}}개의 아이템이 포함된 로드아웃을 {{store}}에게 장착하였습니다.",
@@ -521,6 +526,7 @@
     "OpenInOptimizer": "로드아웃 최적화에서 열기",
     "PullFromPostmaster": "우편 담당자에게서 수령",
     "PullFromPostmasterError": "우편 담당자로부터 가져올 수 없습니다: {{error}}",
+    "PullFromPostmasterGeneralError": "우편 담당자에게서 모든 아이템을 가져올 수 없습니다.",
     "PullFromPostmasterNotification": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_female": "1개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_female_plural": "{{count}}개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
@@ -560,10 +566,7 @@
     "Weekly": "주간 도전"
   },
   "MoveAmount": {
-    "DownStack": "다음 최대 중첩량으로 감소시키기",
-    "MinusStack": "-스택",
-    "PlusStack": "+스택",
-    "UpStack": "다음 최대 중첩량으로 증가시키기"
+    "Amount": "수량:"
   },
   "MovePopup": {
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
@@ -573,17 +576,14 @@
     "All": "전체",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
     "Consolidate": "모으기",
-    "Details": "팝업",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "EquipWithName": "{{character}}에게 장착",
-    "Expand": "아이템 세부정보 확장",
     "Infuse": "주입",
-    "ItemDetailSheet": "아이템 세부정보 열기",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠금",
-      "Unlock": "{{itemType}} 잠금 해제하기",
+      "Unlock": "{{itemType}} 잠금 해제",
       "Unlocked": "잠금 해제됨"
     },
     "MissingSockets": "Bungie가 서비스를 업데이트하는 도중에는 특성과 개조 부품 정보를 확인할 수 없습니다. 일반적으로 몇 시간 후 업데이트가 끝나면 다시 확인할 수 있습니다.",
@@ -591,21 +591,19 @@
     "OverviewTab": "개요",
     "Owned": "이 아이템은 소지품에 있습니다.",
     "OwnedMod": "이 개조 부품은 소지품의 개조 부품 항목에 있습니다.",
-    "PowerCap": "",
     "PullItem": "{{bucket}}에서 {{store}}(으)로 이동",
     "PullPostmaster": "우편 담당자에게서 가져오기",
     "ReadLore": "Ishtar Collective에서 지식 읽기",
     "ReadLoreLink": "지식 읽기",
     "Rewards": "보상:",
     "SendToVault": "금고로 이동",
-    "Split": "분할",
     "Store": "보관",
     "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
-      "Consumable": "{{classType}} {{typeName}}",
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}"
+      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
+      "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
+      "Type": "{{classType}} {{typeName}}"
     },
-    "Take": "모으기",
     "ToggleSidecar": "아이템 액션 확장 또는 축소",
     "TrackUntrack": {
       "Track": "{{itemType}} 추적",
@@ -669,6 +667,7 @@
     "NoMobile": "정리 도구를 사용하시려면 핸드폰을 가로로 돌려주세요.",
     "Note": "메모 설정",
     "NotePrompt": "메모:",
+    "OpenIn": "정리 도구에서 열기",
     "Organizer": "정리 도구",
     "SelectAll": "모두 선택",
     "SelectItem": "{{name}} 선택 혹은 선택 해제",
@@ -687,7 +686,6 @@
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
     "LegacyRecord": "빛의 저편이 출시된 뒤에는 이 업적을 완료할 수 없습니다.",
-    "LegacyTriumphs": "과거의 업적",
     "Milestones": "이정표 & 도전",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
@@ -697,9 +695,11 @@
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
+    "Redacted": "[비공개]",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
     "SecretTriumph": "비밀 업적",
+    "Source": "출처: {{sourceInfo}}",
     "StatTrackers": "통계 추적기",
     "TrackedTriumphs": "추적 중인 업적"
   },
@@ -712,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "최근 사용",
+    "DeleteAll": "저장되지 않은 검색 기록 삭제",
     "Description": "이전에 저장된 검색 기록입니다. 이곳에서 삭제할 수 있습니다.",
     "Link": "검색 기록 보기 및 편집",
     "Query": "검색",
@@ -728,9 +729,10 @@
     "CsvImport": "CSV 가져오기",
     "CustomStatDesc": "방어구 능력치를 선택하면 아이템 팝업, 정리 도구, 비교에서 표시되는 사용자 정의 총합을 만들 수 있습니다. stat:custom:>=30로 검색하세요.",
     "Data": "스프레드시트",
-    "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트를 흐리게 하지 않고 가장 선명하게 보이게 할 것입니다.",
+    "DefaultItemSizeNote": "아이템 크기를 50px로 하면 아이템 그림이나 텍스트가 흐려지지 않고 가장 선명하게 보입니다.",
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
+    "ExpandSingleCharacter": "모든 캐릭터 표시",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
     "ExportSSNoStores": "이 버튼을 클릭하기 전에 소지품을 한 번 불러와야 합니다.",
@@ -748,49 +750,59 @@
     "SetSort": "아이템 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
+    "SingleCharacter": "현재 캐릭터만 표시",
+    "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
     "SizeItem": "아이템 크기",
+    "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",
     "SortByClassType": "필요한 직업",
     "SortByPrimary": "전투력",
     "SortByRarity": "희귀도",
     "SortByRating": "방어구 품질 (D1)",
+    "SortByRecent": "최근 획득 (D2)",
     "SortBySeason": "시즌 (D2)",
+    "SortBySunset": "만료됨 (D2)",
     "SortByTag": "태그 ({{taglist}})",
     "SortByType": "유형",
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름"
   },
+  "Sockets": {
+    "InsertModButton": "개조 부품 장착",
+    "InsertPlugError": "개조 부품 장착 불가"
+  },
   "Stats": {
     "BarricadeCooldown": "방벽 재사용 대기시간",
     "Custom": "사용자 정의 총합",
     "CustomDesc": "개조 부품이나 걸작을 제외한 선택된 기본 능력치의 사용자 정의 총합입니다. 설정에서 어떤 능력치를 포함할지 선택하세요.",
+    "DarkGrenadeCooldown": "어둠 수류탄 재사용 대기시간",
+    "DarkMeleeCooldown": "어둠 근접 능력 재사용 대기시간",
+    "DarkSuperCooldown": "어둠 궁극기 재사용 대기시간",
     "Discipline": "규율",
     "DodgeCooldown": "회피 재사용 대기시간",
-    "Effect": "효과",
-    "GrenadeCooldown": "수류탄 재사용 대기시간",
     "Intellect": "지능",
+    "LightGrenadeCooldown": "빛 수류탄 재사용 대기시간",
+    "LightMeleeCooldown": "빛 근접 능력 재사용 대기시간",
+    "LightSuperCooldown": "빛 궁극기 재사용 대기시간",
     "MaxGearPower": "장착 가능한 최대 전투력",
     "MaxGearPowerAll": "모든 장비의 최대 전투력",
     "MaxTotalPower": "최대 전투력",
-    "MeleeCooldown": "근접 능력 재사용 대기시간",
     "Milliseconds": "ms",
     "NoBonus": "보너스 없음",
     "NotApplicable": "해당 없음",
     "OfMaxRoll": "최대로 나올 수 있는 {{range}}",
     "PercentHelp": "클릭하셔서 품질에 대한 자세한 내용을 확인하세요.",
-    "PowerCap": "전투력 제한",
-    "PowerCapWithSeason": "{{powerCap}} (최대 시즌 {{finalSeason}})",
     "PowerModifier": "시즌 경험치 획득으로 주어진 전투력",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
     "Quality": "능력치 품질",
     "RiftCooldown": "균열 재사용 대기시간",
     "Strength": "힘",
-    "SuperCooldown": "궁극기 재사용 대기시간",
+    "Sunset": "만료",
     "Tier": "{{tier}}단계",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
     "Total": "총",
-    "TotalIncorrectWarning": "능력치 감소나 상황에 따른 능력치 변화가 있는 개조 부품으로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
+    "TotalIncorrectWarning": "개조 부품의 능력치 페널티로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -829,16 +841,11 @@
     "ImportWrongFileType": "이 파일은 JSON 파일이 아닙니다. DIM 백업 파일이 아닐 수 있습니다.",
     "IndexedDBStorage": "로컬 브라우저 저장소",
     "MenuTitle": "동기화 & 백업",
-    "ProfileErrorBody": "DIM 동기화 데이터를 불러오는 중 문제가 발생함",
+    "ProfileErrorBody": "DIM 동기화에서 데이터를 불러오는 도중 문제가 발생하였습니다. 계속 불러오려고 시도하겠습니다.",
     "ProfileErrorTitle": "DIM 동기화 오류",
-    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 중 문제가 발생함",
+    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
     "UpdateErrorTitle": "DIM 동기화 오류",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
-  },
-  "StoreBucket": {
-    "FillStack": "중첩 ({{amount}})개 채우기",
-    "HowMuch": "몇 개의 {{itemname}}을(를) 이동하시겠습니까?",
-    "Move": "이동"
   },
   "Tags": {
     "Archive": "보관",
@@ -855,13 +862,7 @@
     "HideCompleted": "완료한 업적 숨기기",
     "RevealRedacted": "삭제된 업적 표시"
   },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz에서 이 상인이 높은 전투력의 아이템을 판매하는 것을 보고하였습니다.",
-    "ServiceCallFailed": "VendorEngrams.xyz 서비스 호출에 실패하였습니다.",
-    "Vote": "상인이 현재 전투력과 비슷한 아이템을 판매하는 것을 보셨나요? VendorEngrams.xyz에서 투표하셔서 커뮤니티가 알 수 있게 해주세요!"
-  },
   "Vendors": {
-    "Catalysts": "촉매제",
     "Collections": "수집품",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
@@ -927,7 +928,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록이며 쓰레기 목록이 포함되어 있습니다.",
     "Clear": "희망 아이템 목록 비우기",
-    "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요.",
+    "ExternalSource": "선택적으로 희망 아이템 목록 URL을 입력하세요. (\"|\"로 구분)",
     "Header": "희망 아이템 목록",
     "Import": "희망 아이템 목록 불러오기",
     "ImportError": "희망 아이템 목록 불러오기 실패: {{error}}",
@@ -943,5 +944,7 @@
     "Voltron": "voltron (기본값)",
     "VoltronDescription": "voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
     "WishListNotes": "희망 아이템 메모: {{notes}}"
-  }
+  },
+  "no-space": "",
+  "wrong-level": ""
 }

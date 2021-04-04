@@ -4,10 +4,10 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { useSubscription } from 'app/utils/hooks';
+import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -88,12 +88,14 @@ function SingleVendor({
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      if (defs?.Vendor.get(vendorHash)?.returnWithVendorRequest) {
+  const returnWithVendorRequest = defs?.Vendor.get(vendorHash)?.returnWithVendorRequest;
+  useEventBusListener(
+    refresh$,
+    useCallback(() => {
+      if (returnWithVendorRequest) {
         loadingTracker.addPromise(dispatch(loadAllVendors(account, characterId)));
       }
-    })
+    }, [account, characterId, dispatch, returnWithVendorRequest])
   );
 
   useEffect(() => {

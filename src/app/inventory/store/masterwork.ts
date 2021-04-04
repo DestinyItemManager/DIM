@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { isPlugStatActive } from 'app/utils/item-utils';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
@@ -43,7 +44,7 @@ function buildMasterworkInfo(
 ): DimMasterwork | null {
   const socket = sockets.allSockets.find(
     (socket) =>
-      socket?.plugged?.plugDef.plug &&
+      socket.plugged?.plugDef.plug &&
       (socket.plugged.plugDef.plug.uiPlugLabel === 'masterwork' ||
         socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
         socket.plugged.plugDef.plug.plugCategoryIdentifier.endsWith('_masterwork'))
@@ -68,7 +69,14 @@ function buildMasterworkInfo(
   const stats: DimMasterwork['stats'] = [];
 
   for (const stat of investmentStats) {
-    if (stat.isConditionallyActive) {
+    if (
+      !isPlugStatActive(
+        createdItem,
+        socket.plugged.plugDef.hash,
+        stat.statTypeHash,
+        stat.isConditionallyActive
+      )
+    ) {
       continue;
     }
     if (!createdItem.element && createdItem.bucket?.sort === 'Armor') {

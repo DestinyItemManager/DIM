@@ -57,9 +57,12 @@
 }
 
 .statSegment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   white-space: nowrap;
   min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
-  margin-right: 14px;
 
   @include phone-portrait {
     min-width: 120px;
@@ -73,4 +76,8 @@
 .warning {
   color: yellow;
   margin-right: 4px;
+}
+
+.halfTierValue {
+  color: $gold;
 }

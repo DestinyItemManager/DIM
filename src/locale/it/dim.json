@@ -4,7 +4,6 @@
     "ConfirmTitle": "Conferma Azione"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
     "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
     "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
@@ -18,15 +17,18 @@
   },
   "ActiveMode": {
     "Beta": "BETA",
-    "ButtonOff": "Modalità Inventario",
     "ButtonOn": "Modalità Attiva",
     "ChangeFilter": "Cambia Filtro",
     "Farming": "Oggetti Recenti",
     "FarmingStart": "Attiva Farming",
+    "FarmingStop": "Disattiva Farming",
+    "Loading": "Attività attuale",
     "Loadouts": "Loadout",
     "NoQuests": "Non stai seguendo nessuna impresa",
     "NoSearches": "Crea ricerche salvate e filtrale qui.",
-    "Pursuits": "Incarichi"
+    "Offline": "Non in linea",
+    "Pursuits": "Incarichi",
+    "SuggestedBounties": "Taglie suggerite"
   },
   "Activities": {
     "Activities": "Attività",
@@ -51,6 +53,7 @@
     "Title": "Un messaggio da Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM non è autorizzato ad effettuare questa operazione.",
     "DestinyLegacyPlatform": "I servizi di Bungie al momento hanno un bug che impedisce a DIM di caricare le informazioni del tuo account di Destiny 2 se hai giocato a Destiny 1 su una console di vecchia generazione. Bungie lo risolverà presto, ma fino ad allora, dovrai giocare Destiny 1 su una console della generazione attuale per accedere ai tuoi dati.",
     "DevVersion": "Stai utilizzando una versione di DIM per sviluppatori? Devi registrare la tua estensione per Chrome su Bungie.net.",
     "Difficulties": "Bungie.net sta avendo dei problemi al momento.",
@@ -59,6 +62,7 @@
     "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
     "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già uno e solo uno è concesso.",
     "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
+    "MissingInventory": "Bungie.net non ha restituito il tuo inventario, forse perché le tue impostazioni di privacy lo impediscono. Prova ad effettuare nuovamente l'accesso.",
     "NetworkError": "Errore Network - {{status}} {{statusText}}",
     "NoAccount": "Non è stato trovato alcun account di Destiny. Sei sicuro di aver selezionato la piattaforma corretta?",
     "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {{platform}}.",
@@ -68,10 +72,19 @@
     "Slow": "Bungie.net è rallentato in questo momento",
     "SlowDetails": "Bungie.net sta impiegando molto tempo per inviarci le tue informazioni. Questo può succedere quando molti giocatori sono in gioco contemporaneamente, oppure Bungie.net sta avendo problemi. Potresti anche avere problemi di connessione. Continueremo ad attendere una risposta.",
     "SlowResponse": "Bungie.net ha impiegato troppo tempo per rispondere.",
-    "Throttled": "Bungie.net sta limitando il numero di richieste the DIM può fare.",
+    "Throttled": "Bungie.net sta limitando il numero di richieste che DIM può fare.",
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
+  },
+  "Catalyst": {
+    "Source": {
+      "LeviathansBreath": "Trovato sconfiggendo potenti nemici con quest'arma.",
+      "Mission": "Completa la missione \"{{title}}\".",
+      "Quest": "Completa l'impresa \"{{title}}\".",
+      "RuinousEffigy": "Trovato sconfiggendo nemici con le Sfere di Trasmutazione.",
+      "TheFourthHorseman": "Completa Bunker del Serafino, Torri del Serafino e Settori Perduti Leggenda."
+    }
   },
   "Compare": {
     "Archetype": "Archetipo",
@@ -80,14 +93,13 @@
     "ButtonHelp": "Confronta Oggetti",
     "CompareBaseStats": "Mostra statistiche di base",
     "Error": {
-      "Archetype": "Impossibile confrontare questo oggetto, poiché non è un {{type}}.",
-      "Class": "Impossibile confrontare questo oggetto, poiché non è per {{class}}."
+      "Unmatched": "Impossibile confrontare oggetti di tipo diverso."
     }
   },
   "Cooldown": {
-    "Grenade": "Tempo di recupero delle granate: {{cooldown}}",
-    "Melee": "Tempo di recupero del corpo a corpo: {{cooldown}}",
-    "Super": "Tempo di recupero della super: {{cooldown}}"
+    "Grenade": "Recupero delle granate: {{cooldown}}",
+    "Melee": "Recupero del corpo a corpo: {{cooldown}}",
+    "Super": "Recupero della super: {{cooldown}}"
   },
   "Countdown": {
     "Days": "1 Giorno",
@@ -129,7 +141,7 @@
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
-    "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
+    "OutOfRoom": "Non hai più spazio per spostare oggetti da {{character}}. È il momento di fare pulizia!",
     "OutOfRoomTitle": "Spazio esaurito",
     "Stop": "Stop"
   },
@@ -171,6 +183,7 @@
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
+    "IsSunset": "Mostra gli oggetti che sono stati resi obsoleti e non possono essere infusi al livello massimo di Potere.",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
     "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
     "Leveling": {
@@ -200,9 +213,10 @@
     "PartialMatch": "Mostra gli oggetti nei quali nome, descrizione, qualsiasi perk, o modifica, hanno un riscontro parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' filtrerà solo i perks.",
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
     "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
+    "PinnacleReward": "Mostra gli incarichi che portano ad una ricompensa di punta.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
-    "PowerLevel": "Mostra gli oggetti in base al loro livello di Potere.",
-    "PowerLimit": "Mostra gli oggetti basandosi sul massimo livello di potere al quale possono essere infusi.",
+    "PowerLevel": "Mostra gli oggetti in base al loro livello Potere. $t(Filter.PowerKeywords)",
+    "PowerLimit": "Mostra gli oggetti basandosi sul livello Potere massimo al quale possono essere infusi. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Mostra gli incarichi che portano ad una ricompensa potente.",
     "Quality": "Mostra gli oggetti basandosi sulla percentuale totale della qualità delle statistiche. '{{quality}}' può essere usato al posto di '{{percentage}}'.",
     "RandomRoll": "Mostra gli oggetti che droppano con perk casuali.",
@@ -215,11 +229,10 @@
     "SeasonalDupe": "Mostra gli oggetti duplicati, senza contare quelli ri-emessi in una stagione diversa come stesso oggetto.",
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità nel loro stack.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
-    "Stats": "Mostra gli oggetti basandosi su uno specifico valore di statistica.",
-    "StatsBase": "Filtra le armature basandosi sul loro valore di statistiche di base, senza contare le modifiche inserite o Prodigio.",
+    "Stats": "Mostra gli oggetti basandosi su uno specifico valore di statistica. Supporta l'aggiunta di statistiche multiple connettendo i nomi con il simbolo +.",
+    "StatsBase": "Filtra le armature considerando il valore di base delle statistiche, escludendo Modifiche installate e Prodigio. Supporta l'aggiunta di statistiche multiple connettendo i nomi con il simbolo +.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
-    "SunsetAfter": "Mostra gli oggetti basandosi sull'ultima stagione nella quale possono raggiungere il Limite Potere Stagionale.",
     "Tags": {
       "Tag": "Mostra gli oggetti con un'etichetta specifica.",
       "Tagged": "Mostra gli oggetti che hanno una qualsiasi etichetta."
@@ -253,6 +266,8 @@
     "FilterHelp": "Cerca oggetto/perk, {{example}}, e altro",
     "FilterHelpBrief": "Cerca oggetti",
     "FilterHelpMenuItem": "Aiuto per Filtri...",
+    "FilterHelpOptimizer": "Filtra armature dai loadout: {{example}}",
+    "FilterHelpProgress": "Cerca pietre miliari e taglie",
     "FilterHelpRecords": "Cerca trionfi e collezioni",
     "FilterMatchCount": "1 oggetto",
     "FilterMatchCount_plural": "{{count}} oggetti",
@@ -274,7 +289,6 @@
   },
   "Help": {
     "CannotMove": "Non posso spostare quell'oggetto da questo personaggio.",
-    "Drag": "Tieni premuto Shift per trasferire uno stack parziale",
     "NoStorage": "DIM non può salvare dati",
     "NoStorageMessage": "DIM non può memorizzare dati nel tuo browser. Questo succede se stai navigando in modalità privacy o in incognito, oppure se hai poco spazio libero in memoria. Non potrai effettuare l'accesso ed utilizzare DIM."
   },
@@ -298,7 +312,6 @@
     "Filter": "Filtra oggetti",
     "InfuseSource": "Selezionare oggetto in cui infondere {{name}}",
     "InfuseTarget": "Selezionare oggetto da infondere in {{name}}",
-    "Infusion": "Trova oggetti per infusione",
     "InfusionMaterials": "Materiali da Infusione",
     "NoItems": "Nessun oggetto disponibile per l'infusione.",
     "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
@@ -335,26 +348,21 @@
     "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Anteprima contenuto {{type}}",
+    "ShouldNotBeInVault": "Potrebbe essere rischioso tenere questo oggetto nel Deposito. Trasferiscilo ad un personaggio.",
     "StackFull": "Hai già uno stack pieno di {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
-    "Chest": "Torace",
     "ChooseAMod": "Scegli le tue Modifiche",
     "ChooseAPerk": "Scegli un perk",
-    "ClassItem": "Oggetto di classe",
     "ClearLocked": "Pulisci Bloccati",
-    "Combat": "Combattimento",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
     "Equip": "Equipaggia su {{character}}",
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "FilterSets": "Filtra i set",
-    "Gauntlets": "Braccia",
-    "General": "Generale",
-    "Helmet": "Casco",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -376,7 +384,6 @@
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
     "LB": "Ottimizzatore Loadout",
-    "Legs": "Gambe",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
@@ -398,7 +405,6 @@
     },
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica o descrizione",
-    "Seasonal": "Stagionale",
     "SelectMods": "Seleziona Modifiche",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -413,9 +419,9 @@
     "Vendors": "Caricamento dei mercanti di Destiny..."
   },
   "LoadoutBuilder": {
+    "AddHalfTierMods": "Aggiungi Modifiche +5",
     "AssumeMasterwork": "Presupponi statistiche prodigiose",
     "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
-    "BadPerk": "Un perk che modifica \"leggermente\" non è la miglior opzione.",
     "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
@@ -449,25 +455,22 @@
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
     "SaveAs": "Salva come",
-    "SeasonNum": "Stagione {{season}}",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectMinStatTotal": "Totale Minimo Statistiche Armatura",
-    "SelectMinStatTotalDescription": "Imposta il minimo totale delle statistiche per un singolo pezzo di armatura (esclusi oggetti di classe).",
     "SelectPerks": "Seleziona Perks",
-    "SelectPower": "Potere Minimo",
-    "SelectPowerDescription": "Imposta un Livello di Potere minimo per tutto il loadout (non singoli pezzi)",
-    "StatIncorrectWarning": "Per ottenere risultati accurati, rimuovi qualsiasi Modifica con valori di statistiche negativi o condizionali.\n\nA causa delle Modifiche con valori negativi oppure condizionali, DIM non può determinare il valore base di {{stats}} su alcuni degli oggetti selezionati. Questo è un limite delle informazioni inviate da Bungie.net.",
+    "StatIncorrectWarning": "Per ottenere risultati accurati, rimuovi qualsiasi Modifica con effetti negativi sulle statistiche.\n\nA causa delle Modifiche con valori negativi, DIM non può determinare il valore di base o il valore di {{stats}} su alcuni oggetti inclusi. È un limite delle informazioni inviate da Bungie.net.",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",
     "TierNumber": "T{{tier}}",
-    "Traction": "Il perk Trazione fornisce +1 Mobilità.",
+    "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
+    "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
     "UnlockItem": "Sblocca oggetto"
   },
   "Loadouts": {
     "Abandon": "Vuoi davvero abbandonare questo loadout?",
     "AddEquippedItems": "Aggiungi Equipaggiati",
+    "AddUnequippedItems": "Aggiungi non equipaggiati",
     "AlreadyExistsClass": "Un loadout con questo nome esiste già per il tuo {{className}}.",
     "AlreadyExistsGlobal": "Un loadout globale con questo nome esiste già.",
     "Any": "Qualsiasi classe",
@@ -508,8 +511,10 @@
     "MaximizePower": "Massimizza Potere",
     "MaximizeStat": "Massimizza Statistica",
     "Mods": "Modifiche",
+    "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
+    "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
     "NotificationMessage_female": "Equipaggiamento loadout di 1 oggetto su {{store}}",
     "NotificationMessage_female_plural": "Equipaggiamento di {{count}} oggetti su {{store}}",
@@ -521,6 +526,7 @@
     "OpenInOptimizer": "Apri in Ottimizzatore Loadout",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
+    "PullFromPostmasterGeneralError": "Impossibile spostare tutti gli oggetti dall'Amministratrice.",
     "PullFromPostmasterNotification": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female": "Spostamento di 1 oggetto dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_female_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
@@ -560,10 +566,7 @@
     "Weekly": "Sfida Settimanale"
   },
   "MoveAmount": {
-    "DownStack": "Diminuisci fino al prossimo stack pieno",
-    "MinusStack": "-Stack",
-    "PlusStack": "+Stack",
-    "UpStack": "Aumento fino al prossimo stack pieno"
+    "Amount": "Quantità:"
   },
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
@@ -573,13 +576,10 @@
     "All": "Tutto",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
-    "Details": "Popup",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
     "EquipWithName": "Equipaggia su {{character}}",
-    "Expand": "Espandi dettagli oggetto",
     "Infuse": "Infondi",
-    "ItemDetailSheet": "Apri dettagli oggetto",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
       "Locked": "Bloccato",
@@ -591,21 +591,19 @@
     "OverviewTab": "Panoramica",
     "Owned": "Questo oggetto è nel tuo inventario.",
     "OwnedMod": "Questa Modifica è nel tuo inventario delle Modifiche.",
-    "PowerCap": "",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
     "PullPostmaster": "Prendi dall'Amministratore",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReadLoreLink": "Leggi storia",
     "Rewards": "Ricompense:",
     "SendToVault": "Invia al Deposito",
-    "Split": "Dividi",
     "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
-      "Consumable": "{{typeName}} {{classType}}",
-      "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}"
+      "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
+      "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
+      "Type": "{{typeName}} {{classType}}"
     },
-    "Take": "Prendi",
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",
     "TrackUntrack": {
       "Track": "Segui {{itemType}}",
@@ -669,6 +667,7 @@
     "NoMobile": "Gira il telefono in orizzontale per usare Il Gestore Deposito.",
     "Note": "Imposta Nota",
     "NotePrompt": "Nota:",
+    "OpenIn": "Mostra in Gestione Deposito",
     "Organizer": "Gestione Deposito",
     "SelectAll": "Seleziona Tutto",
     "SelectItem": "Seleziona o deleseziona {{name}}",
@@ -687,7 +686,6 @@
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
     "LegacyRecord": "Questo Trionfo non sarà più completabile dopo l'uscita di Oltre la Luce.",
-    "LegacyTriumphs": "Trionfi Storici",
     "Milestones": "Pietre miliari & Sfide",
     "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
@@ -697,9 +695,11 @@
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
+    "Redacted": "[CENSURATO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Trionfo Segreto",
+    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Contatori Statistiche",
     "TrackedTriumphs": "Trionfi Seguiti"
   },
@@ -712,6 +712,7 @@
   },
   "SearchHistory": {
     "Date": "Recenti",
+    "DeleteAll": "Elimina tutte le ricerche non salvate",
     "Description": "Queste sono tutte le tue ricerche recenti e salvate. Le puoi cancellare da qui.",
     "Link": "Visualizza e modifica la cronologia di ricerca",
     "Query": "Cerca",
@@ -731,6 +732,7 @@
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi usare lo strumento di confronto per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
+    "ExpandSingleCharacter": "Mostra tutti i personaggi",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
     "ExportSSNoStores": "Devi caricare il tuo inventario una volta prima di cliccare questo pulsante.",
@@ -748,49 +750,59 @@
     "SetSort": "Ordina gli oggetti per:",
     "Settings": "Impostazioni",
     "ShowNewItems": "Indica i nuovi oggetti con un puntino rosso",
+    "SingleCharacter": "Mostra solo il personaggio attuale",
+    "SingleCharacterExplanation": "DIM mostrerà solo il personaggio giocato più di recente. Gli inventari degli altri personaggi verranno mostrati come se fossero parte del Deposito.",
     "SizeItem": "Dimensione oggetti",
+    "SortByAmmoType": "Tipo di munizioni",
     "SortByAmount": "Dimensione dello stack",
     "SortByClassType": "Classe Richiesta",
     "SortByPrimary": "Livello di Potere",
     "SortByRarity": "Rarità",
     "SortByRating": "Qualità dell'armatura (D1)",
+    "SortByRecent": "Acquisizione recente (D2)",
     "SortBySeason": "Stagione (D2)",
+    "SortBySunset": "Limite di Potere massimo raggiungibile (D2)",
     "SortByTag": "Etichetta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome"
   },
+  "Sockets": {
+    "InsertModButton": "Inserisci Modifica",
+    "InsertPlugError": "Impossible inserire Modifica"
+  },
   "Stats": {
-    "BarricadeCooldown": "Tempo di recupero Barricata",
+    "BarricadeCooldown": "Recupero Barricata",
     "Custom": "Totale Personalizzato",
     "CustomDesc": "Totale personalizzato delle statistiche di base selezionate, ignorando Modifiche o Prodigio. Controlla Impostazioni per configurare quali statistiche vengono incluse.",
+    "DarkGrenadeCooldown": "Recupero Granata dell'Oscurità",
+    "DarkMeleeCooldown": "Rec. Corpo a corpo dell'Oscurità",
+    "DarkSuperCooldown": "Recupero della Super dell'Oscurità",
     "Discipline": "Disciplina",
-    "DodgeCooldown": "Tempo di recupero Schivata",
-    "Effect": "Effetto",
-    "GrenadeCooldown": "Tempo di recupero Granata",
+    "DodgeCooldown": "Recupero Schivata",
     "Intellect": "Intelletto",
+    "LightGrenadeCooldown": "Recupero Granata della Luce",
+    "LightMeleeCooldown": "Recupero Corpo a corpo della Luce",
+    "LightSuperCooldown": "Recupero della Super della Luce",
     "MaxGearPower": "Potere Massimo degli oggetti equipaggiabili",
-    "MaxGearPowerAll": "Potere massimo di tutto l'equipaggiamento",
-    "MaxTotalPower": "Potere Massimo totale",
-    "MeleeCooldown": "Tempo di recupero Corpo a corpo",
+    "MaxGearPowerAll": "Potere max di tutto l'equipaggiamento",
+    "MaxTotalPower": "Potere massimo totale",
     "Milliseconds": "ms",
     "NoBonus": "Nessun Bonus",
     "NotApplicable": "N/A",
     "OfMaxRoll": "{{range}} del roll massimo",
     "PercentHelp": "Clicca per maggiori informazioni riguardo la Qualità delle Statistiche.",
-    "PowerCap": "Limite di Potere",
-    "PowerCapWithSeason": "{{powerCap}} (Max stagione {{finalSeason}})",
     "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
     "Quality": "Qualità statistiche",
-    "RiftCooldown": "Tempo di recupero Fonte",
+    "RiftCooldown": "Recupero Fonte",
     "Strength": "Forza",
-    "SuperCooldown": "Tempo di recupero Super",
+    "Sunset": "Obsoleto",
     "Tier": "Grado {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Totale",
-    "TotalIncorrectWarning": "A causa delle Modifiche con valori negativi oppure condizionali, DIM non può determinare il valore base di {{stats}}. Questo è un limite delle informazioni inviate da Bungie.net."
+    "TotalIncorrectWarning": "A causa delle Modifiche con effetti negativi sulle statistiche, DIM non può determinare il valore base o il valore di {{stats}}. Questo è un limite delle informazioni inviate da Bungie.net."
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -829,16 +841,11 @@
     "ImportWrongFileType": "Il file non è un file JSON. Potrebbe non essere un backup di DIM.",
     "IndexedDBStorage": "Memoria del browser locale",
     "MenuTitle": "Sync & Backup",
-    "ProfileErrorBody": "Si è verificato un errore durante il caricamento dei tuoi dati su DIM Sync",
+    "ProfileErrorBody": "Abbiamo avuto un problema nel caricamento dei tuoi dati da DIM Sync. Continueremo a cercare di caricarli automaticamente.",
     "ProfileErrorTitle": "Errore DIM Sync",
-    "UpdateErrorBody": "Si è verificato un errore durante il salvataggio dei tuoi dati su DIM Sync",
+    "UpdateErrorBody": "Abbiamo avuto un problema durante il salvataggio dei tuoi dati su DIM Sync. Riproveremo automaticamente più tardi.",
     "UpdateErrorTitle": "Errore DIM Sync",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
-  },
-  "StoreBucket": {
-    "FillStack": "Riempi Stack ({{amount}})",
-    "HowMuch": "Quanti {{itemname}} spostare?",
-    "Move": "Sposta"
   },
   "Tags": {
     "Archive": "Archivia",
@@ -855,13 +862,7 @@
     "HideCompleted": "Nascondi trionfi completati",
     "RevealRedacted": "Mostra trionfi segreti"
   },
-  "VendorEngramsXyz": {
-    "DroppingHigh": "VendorEngrams.xyz segnala che questo mercante sta vendendo oggetti di livello alto.",
-    "ServiceCallFailed": "Richiesta al servizio di VendorEngrams.xyz fallita.",
-    "Vote": "Vedi un mercante che sta vendendo oggetti vicino al tuo Livello Potere? Vai su VendorEngrams.xyz per votare e farlo sapere alla comunità!"
-  },
   "Vendors": {
-    "Catalysts": "Catalizzatori",
     "Collections": "Collezioni",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
@@ -881,9 +882,9 @@
       "FAQLogout": "Come posso effettuare il log out da DIM?",
       "FAQLogoutAnswer": "Apri il menù dall'icona in alto a sinistra e scegli \"Disconnetti\"",
       "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
-      "FAQLostItemAnswer": "Bungie non permette di cancellare oggetti (neanche la loro app!). Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o in un altro personaggio. Puoi cercare l'oggetto. Se ciò non dovesse funzionare, ricarica la pagina. Controlla su {{link}} o nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+      "FAQLostItemAnswer": "Bungie non permette di cancellare oggetti (neanche la loro app!). Molto probabilmente un trasferimento è fallito, ed ha lasciato il tuo oggetto nel deposito o in un altro personaggio. Puoi cercare l'oggetto e se ciò non dovesse funzionare, ricarica la pagina. Controlla su {{link}} o nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
       "FAQMobile": "DIM supporterà dispositivi mobili? Ci sarà una app?",
-      "FAQMobileAnswer": "Il sito di DIM può essere aperto su telefoni e tablet oggi, e puoi aggiungerlo alla tua schermata home per una esperienza simile ad un'app.",
+      "FAQMobileAnswer": "Il sito di DIM può essere aperto su telefoni e tablet, e puoi aggiungerlo alla tua schermata home per una esperienza simile ad un'app.",
       "GitHub": "GitHub",
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
@@ -899,7 +900,7 @@
       "Twitter": "Twitter",
       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
       "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{date}}",
-      "Wiki": "Wiki Guida utente DIM",
+      "Wiki": "Guida utente DIM",
       "WikiHelp": "Impara ad utilizzare DIM e contribuisci alla nostra guida utenti sviluppata dalla comunità.",
       "YouTube": "YouTube",
       "YouTubeHelp": "Impara ad usare DIM sul nostro canale YouTube."
@@ -927,7 +928,7 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy, insieme al alcuni roll da scartare.",
     "Clear": "Cancella Lista Desideri",
-    "ExternalSource": "Oppure, inserisci un URL di una Lista Desideri",
+    "ExternalSource": "Facoltativamente, inserire uno o più URL di una Lista Desideri (separati da \"|\")",
     "Header": "Lista Desideri",
     "Import": "Carica i roll della Lista Desideri",
     "ImportError": "Errore nel caricamento della Lista Desideri: {{error}}",
@@ -943,5 +944,7 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri: {{notes}}"
-  }
+  },
+  "no-space": "",
+  "wrong-level": ""
 }

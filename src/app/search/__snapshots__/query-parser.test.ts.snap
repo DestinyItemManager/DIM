@@ -1,5 +1,3185 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parse |  (
+    (
+    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)
+    or
+    (
+    (is:armor -is:exotic -is:classitem)
+  
+    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))
+    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))
+    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))
+  
+    -(
+    ((basestat:mobility:>=18 basestat:resilience:>=13) or
+    (basestat:mobility:>=18 basestat:recovery:>=13) or
+    (basestat:mobility:>=18 basestat:discipline:>=13) or
+    (basestat:mobility:>=18 basestat:intellect:>=13) or
+    (basestat:mobility:>=18 basestat:strength:>=13) or
+    (basestat:resilience:>=18 basestat:mobility:>=13) or
+    (basestat:resilience:>=18 basestat:recovery:>=13) or
+    (basestat:resilience:>=18 basestat:discipline:>=13) or
+    (basestat:resilience:>=18 basestat:intellect:>=13) or
+    (basestat:resilience:>=18 basestat:strength:>=13) or
+    (basestat:recovery:>=18 basestat:mobility:>=13) or
+    (basestat:recovery:>=18 basestat:resilience:>=13) or
+    (basestat:recovery:>=18 basestat:discipline:>=13) or
+    (basestat:recovery:>=18 basestat:intellect:>=13) or
+    (basestat:recovery:>=18 basestat:strength:>=13) or
+    (basestat:discipline:>=18 basestat:mobility:>=13) or
+    (basestat:discipline:>=18 basestat:resilience:>=13) or
+    (basestat:discipline:>=18 basestat:recovery:>=13) or
+    (basestat:discipline:>=18 basestat:intellect:>=13) or
+    (basestat:discipline:>=18 basestat:strength:>=13) or
+    (basestat:intellect:>=18 basestat:mobility:>=13) or
+    (basestat:intellect:>=18 basestat:resilience:>=13) or
+    (basestat:intellect:>=18 basestat:recovery:>=13) or
+    (basestat:intellect:>=18 basestat:discipline:>=13) or
+    (basestat:intellect:>=18 basestat:strength:>=13) or
+    (basestat:strength:>=18 basestat:mobility:>=13) or
+    (basestat:strength:>=18 basestat:resilience:>=13) or
+    (basestat:strength:>=18 basestat:recovery:>=13) or
+    (basestat:strength:>=18 basestat:discipline:>=13) or
+    (basestat:strength:>=18 basestat:intellect:>=13))
+    )
+  
+    -(
+    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))
+    )
+  
+    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)
+    )
+  
+    or
+    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) 
+    or
+    (is:armor -powerlimit:>1060) 
+    or
+    (is:armor is:blue)
+    )
+    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
+    )|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "op": "or",
+      "operands": Array [
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "weapon",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "args": "maxpower",
+                "op": "filter",
+                "type": "is",
+              },
+            },
+            Object {
+              "op": "or",
+              "operands": Array [
+                Object {
+                  "args": "1060",
+                  "op": "filter",
+                  "type": "powerlimit",
+                },
+                Object {
+                  "args": "junk",
+                  "op": "filter",
+                  "type": "tag",
+                },
+                Object {
+                  "args": "blue",
+                  "op": "filter",
+                  "type": "is",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "armor",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "args": "exotic",
+                "op": "filter",
+                "type": "is",
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "args": "classitem",
+                "op": "filter",
+                "type": "is",
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "and",
+                "operands": Array [
+                  Object {
+                    "args": "titan",
+                    "op": "filter",
+                    "type": "is",
+                  },
+                  Object {
+                    "op": "or",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "total:>=63",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "and",
+                "operands": Array [
+                  Object {
+                    "args": "hunter",
+                    "op": "filter",
+                    "type": "is",
+                  },
+                  Object {
+                    "op": "or",
+                    "operands": Array [
+                      Object {
+                        "op": "and",
+                        "operands": Array [
+                          Object {
+                            "args": "recovery:>=13",
+                            "op": "filter",
+                            "type": "basestat",
+                          },
+                          Object {
+                            "args": "mobility:>=18",
+                            "op": "filter",
+                            "type": "basestat",
+                          },
+                        ],
+                      },
+                      Object {
+                        "args": "recovery:>15",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "total:>=63",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "and",
+                "operands": Array [
+                  Object {
+                    "args": "warlock",
+                    "op": "filter",
+                    "type": "is",
+                  },
+                  Object {
+                    "op": "or",
+                    "operands": Array [
+                      Object {
+                        "op": "and",
+                        "operands": Array [
+                          Object {
+                            "args": "recovery:>=18",
+                            "op": "filter",
+                            "type": "basestat",
+                          },
+                          Object {
+                            "args": ">=17",
+                            "op": "filter",
+                            "type": "discipline",
+                          },
+                        ],
+                      },
+                      Object {
+                        "args": "total:>=63",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "or",
+                "operands": Array [
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "intellect:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "intellect:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "intellect:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "intellect:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "intellect:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "strength:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "strength:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "strength:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "strength:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "strength:>=18",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "or",
+                "operands": Array [
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "mobility:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "resilience:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "recovery:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                  Object {
+                    "op": "and",
+                    "operands": Array [
+                      Object {
+                        "args": "discipline:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "intellect:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                      Object {
+                        "args": "strength:>=13",
+                        "op": "filter",
+                        "type": "basestat",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "op": "and",
+                "operands": Array [
+                  Object {
+                    "args": "mobility:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                  Object {
+                    "args": "resilience:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                  Object {
+                    "args": "recovery:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                  Object {
+                    "args": "discipline:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                  Object {
+                    "args": "intellect:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                  Object {
+                    "args": "strength:>=8",
+                    "op": "filter",
+                    "type": "basestat",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "classitem",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "op": "or",
+              "operands": Array [
+                Object {
+                  "op": "and",
+                  "operands": Array [
+                    Object {
+                      "args": "dupelower",
+                      "op": "filter",
+                      "type": "is",
+                    },
+                    Object {
+                      "op": "not",
+                      "operand": Object {
+                        "args": "modded",
+                        "op": "filter",
+                        "type": "is",
+                      },
+                    },
+                  ],
+                },
+                Object {
+                  "args": "sunset",
+                  "op": "filter",
+                  "type": "is",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "armor",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "op": "not",
+              "operand": Object {
+                "args": ">1060",
+                "op": "filter",
+                "type": "powerlimit",
+              },
+            },
+          ],
+        },
+        Object {
+          "op": "and",
+          "operands": Array [
+            Object {
+              "args": "armor",
+              "op": "filter",
+              "type": "is",
+            },
+            Object {
+              "args": "blue",
+              "op": "filter",
+              "type": "is",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "keep",
+        "op": "filter",
+        "type": "tag",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "archive",
+        "op": "filter",
+        "type": "tag",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "favorite",
+        "op": "filter",
+        "type": "tag",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "infuse",
+        "op": "filter",
+        "type": "tag",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "maxpower",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": ">=1260",
+        "op": "filter",
+        "type": "power",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "inloadout",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+    Object {
+      "op": "not",
+      "operand": Object {
+        "args": "masterwork",
+        "op": "filter",
+        "type": "is",
+      },
+    },
+  ],
+}
+`;
+
+exports[`parse |  (
+    (
+    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)
+    or
+    (
+    (is:armor -is:exotic -is:classitem)
+  
+    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))
+    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))
+    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))
+  
+    -(
+    ((basestat:mobility:>=18 basestat:resilience:>=13) or
+    (basestat:mobility:>=18 basestat:recovery:>=13) or
+    (basestat:mobility:>=18 basestat:discipline:>=13) or
+    (basestat:mobility:>=18 basestat:intellect:>=13) or
+    (basestat:mobility:>=18 basestat:strength:>=13) or
+    (basestat:resilience:>=18 basestat:mobility:>=13) or
+    (basestat:resilience:>=18 basestat:recovery:>=13) or
+    (basestat:resilience:>=18 basestat:discipline:>=13) or
+    (basestat:resilience:>=18 basestat:intellect:>=13) or
+    (basestat:resilience:>=18 basestat:strength:>=13) or
+    (basestat:recovery:>=18 basestat:mobility:>=13) or
+    (basestat:recovery:>=18 basestat:resilience:>=13) or
+    (basestat:recovery:>=18 basestat:discipline:>=13) or
+    (basestat:recovery:>=18 basestat:intellect:>=13) or
+    (basestat:recovery:>=18 basestat:strength:>=13) or
+    (basestat:discipline:>=18 basestat:mobility:>=13) or
+    (basestat:discipline:>=18 basestat:resilience:>=13) or
+    (basestat:discipline:>=18 basestat:recovery:>=13) or
+    (basestat:discipline:>=18 basestat:intellect:>=13) or
+    (basestat:discipline:>=18 basestat:strength:>=13) or
+    (basestat:intellect:>=18 basestat:mobility:>=13) or
+    (basestat:intellect:>=18 basestat:resilience:>=13) or
+    (basestat:intellect:>=18 basestat:recovery:>=13) or
+    (basestat:intellect:>=18 basestat:discipline:>=13) or
+    (basestat:intellect:>=18 basestat:strength:>=13) or
+    (basestat:strength:>=18 basestat:mobility:>=13) or
+    (basestat:strength:>=18 basestat:resilience:>=13) or
+    (basestat:strength:>=18 basestat:recovery:>=13) or
+    (basestat:strength:>=18 basestat:discipline:>=13) or
+    (basestat:strength:>=18 basestat:intellect:>=13))
+    )
+  
+    -(
+    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))
+    )
+  
+    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)
+    )
+  
+    or
+    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) 
+    or
+    (is:armor -powerlimit:>1060) 
+    or
+    (is:armor is:blue)
+    )
+    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
+    )|: lexer 1`] = `
+Array [
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "maxpower",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "powerlimit",
+    "1060",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "tag",
+    "junk",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "is",
+    "blue",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "exotic",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "classitem",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "titan",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "total:>=63",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "hunter",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>15",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "total:>=63",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "warlock",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "discipline",
+    ">=17",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "total:>=63",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=18",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=13",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=13",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "mobility:>=8",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "resilience:>=8",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "recovery:>=8",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "discipline:>=8",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "intellect:>=8",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "basestat",
+    "strength:>=8",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "classitem",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "dupelower",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "modded",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "sunset",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "powerlimit",
+    ">1060",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "is",
+    "blue",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "tag",
+    "keep",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "tag",
+    "archive",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "tag",
+    "favorite",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "tag",
+    "infuse",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "maxpower",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "power",
+    ">=1260",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "inloadout",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "is",
+    "masterwork",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |"grenade launcher reserves"|: ast 1`] = `
 Object {
   "args": "grenade launcher reserves",
@@ -791,6 +3971,42 @@ Array [
 ]
 `;
 
+exports[`parse |gnawing hunger|: ast 1`] = `
+Object {
+  "op": "and",
+  "operands": Array [
+    Object {
+      "args": "gnawing",
+      "op": "filter",
+      "type": "keyword",
+    },
+    Object {
+      "args": "hunger",
+      "op": "filter",
+      "type": "keyword",
+    },
+  ],
+}
+`;
+
+exports[`parse |gnawing hunger|: lexer 1`] = `
+Array [
+  Array [
+    "filter",
+    "keyword",
+    "gnawing",
+  ],
+  Array [
+    "implicit_and",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "hunger",
+  ],
+]
+`;
+
 exports[`parse |is:armor2.0|: ast 1`] = `
 Object {
   "args": "armor2.0",
@@ -1529,6 +4745,60 @@ Array [
 ]
 `;
 
+exports[`parse |not "forgotten"|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not "forgotten"|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not (forgotten)|: ast 1`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
+exports[`parse |not (forgotten)|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
 exports[`parse |not -not:maxpower|: ast 1`] = `
 Object {
   "op": "not",
@@ -1573,7 +4843,31 @@ Object {
 }
 `;
 
+exports[`parse |not forgotten|: ast 2`] = `
+Object {
+  "op": "not",
+  "operand": Object {
+    "args": "forgotten",
+    "op": "filter",
+    "type": "keyword",
+  },
+}
+`;
+
 exports[`parse |not forgotten|: lexer 1`] = `
+Array [
+  Array [
+    "not",
+  ],
+  Array [
+    "filter",
+    "keyword",
+    "forgotten",
+  ],
+]
+`;
+
+exports[`parse |not forgotten|: lexer 2`] = `
 Array [
   Array [
     "not",

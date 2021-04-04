@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { Subject } from 'rxjs';
+import { Observable } from 'app/utils/observable';
 import { Inspect } from './MobileInspect';
 
 export interface MobileInspector {
@@ -7,7 +7,7 @@ export interface MobileInspector {
   inspectType?: Inspect;
 }
 
-export const showMobileInspect$ = new Subject<MobileInspector>();
+export const showMobileInspect$ = new Observable<MobileInspector>({});
 
 /**
  * Show the mobile quick move sheet

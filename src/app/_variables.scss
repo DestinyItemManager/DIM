@@ -46,6 +46,9 @@ $badge-height: '(#{$badge-font-size} + 4px)';
 // The height of the black header bar
 $header-height: 44px;
 
+// The height of our "issue banner" for charities/causes
+$issue-banner-height: 101px;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -78,7 +81,7 @@ $header-height: 44px;
 @mixin destiny-header {
   text-transform: uppercase;
   font-weight: 600;
-  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+  font-family: 'Helvetica', Arial, sans-serif;
 }
 
 @mixin draggable-hover-border {

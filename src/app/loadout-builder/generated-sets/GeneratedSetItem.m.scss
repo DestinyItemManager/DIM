@@ -2,9 +2,7 @@
 
 .item {
   display: grid;
-  grid-template-areas:
-    'item sockets'
-    'container sockets';
+  grid-template-areas: 'item sockets';
   gap: 6px;
   width: min-content;
   align-items: start;
@@ -55,20 +53,6 @@
   }
 }
 
-.altPerk {
-  background-color: scale-color($orange, $alpha: -50%) !important;
-  border: 1px dashed $orange !important;
-}
-
-.selectedPerk {
-  background-color: scale-color($xp, $alpha: -50%) !important;
-  border: 1px solid $xp !important;
-
-  :global(.item-socket-category-Reusable) & {
-    border-radius: 50%;
-  }
-}
-
 .lockedSockets {
   display: flex;
   flex-direction: column;
@@ -81,13 +65,13 @@
 .swapButton {
   composes: dim-button from global;
   justify-self: center;
+  margin-top: 6px;
   @include phone-portrait {
     padding: 8px 20px;
   }
 }
 
 .swapButtonContainer {
-  grid-area: container;
   display: grid;
   min-height: 24px;
   @include phone-portrait {

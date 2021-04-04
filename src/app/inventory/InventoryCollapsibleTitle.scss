@@ -25,10 +25,6 @@
     }
   }
 
-  &.collapsed {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
   .collapse-handle {
     cursor: pointer;
     height: 100%;
@@ -54,4 +50,11 @@
     min-height: 34px;
     opacity: 0.8;
   }
+}
+
+.bucket-size {
+  margin-left: 4px;
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: 0;
 }

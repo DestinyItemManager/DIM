@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
+  executeMoveItem,
   getSimilarItem,
-  moveItemTo,
   MoveReservations,
 } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
@@ -24,6 +24,8 @@ import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
+import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
+import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import copy from 'fast-copy';
@@ -66,7 +68,11 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
       infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
     }
 
-    const loadoutPromise = queueAction(() => dispatch(doApplyLoadout(store, loadout, allowUndo)));
+    const [cancelToken, cancel] = withCancel();
+
+    const loadoutPromise = queueAction(() =>
+      dispatch(doApplyLoadout(store, loadout, cancelToken, allowUndo))
+    );
     loadingTracker.addPromise(loadoutPromise);
 
     showNotification(
@@ -78,14 +84,16 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
         loadoutPromise.then((scope) => {
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
-              throw new Error(t('Loadouts.AppliedError'));
+              throw new DimError('Loadouts.AppliedError');
             } else {
-              throw new Error(
+              throw new DimError(
+                'Loadouts.AppliedWarn',
                 t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
               );
             }
           }
-        })
+        }),
+        cancel
       )
     );
 
@@ -93,7 +101,12 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
   };
 }
 
-function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): ThunkResult<Scope> {
+function doApplyLoadout(
+  store: DimStore,
+  loadout: Loadout,
+  cancelToken: CancelToken,
+  allowUndo = false
+): ThunkResult<Scope> {
   return async (dispatch, getState) => {
     dispatch(interruptFarming());
     const getStores = () => storesSelector(getState());
@@ -190,7 +203,7 @@ function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): T
       await Promise.all(dequips);
     }
 
-    await dispatch(applyLoadoutItems(store, items, loadoutItemIds, scope));
+    await dispatch(applyLoadoutItems(store, items, loadoutItemIds, cancelToken, scope));
 
     let equippedItems: LoadoutItem[];
     if (itemsToEquip.length > 1) {
@@ -232,7 +245,9 @@ function doApplyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): T
           .flat()
           .map((i) => getLoadoutItem(i, store, getStores()))
       );
-      await dispatch(clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems));
+      await dispatch(
+        clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems, cancelToken)
+      );
     }
 
     dispatch(resumeFarming());
@@ -245,6 +260,7 @@ function applyLoadoutItems(
   store: DimStore,
   items: LoadoutItem[],
   loadoutItemIds: { id: string; hash: number }[],
+  cancelToken: CancelToken,
   scope: {
     failed: number;
     total: number;
@@ -309,17 +325,34 @@ function applyLoadoutItems(
               amountNeeded -= amountToMove;
               totalAmount += amountToMove;
 
-              await dispatch(moveItemTo(sourceItem, store, false, amountToMove, loadoutItemIds));
+              await dispatch(
+                executeMoveItem(sourceItem, store, {
+                  equip: false,
+                  amount: amountToMove,
+                  excludes: loadoutItemIds,
+                  cancelToken,
+                })
+              );
             }
           }
         } else {
           // Pass in the list of items that shouldn't be moved away
-          await dispatch(moveItemTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds));
+          await dispatch(
+            executeMoveItem(item, store, {
+              equip: pseudoItem.equipped,
+              amount: item.amount,
+              excludes: loadoutItemIds,
+              cancelToken,
+            })
+          );
         }
 
         scope.successfulItems.push(item);
       }
     } catch (e) {
+      if (e instanceof CanceledError) {
+        throw e;
+      }
       const level = e.level || 'error';
       if (level === 'error') {
         errorLog('loadout', 'Failed to apply loadout item', item?.name, e);
@@ -333,7 +366,7 @@ function applyLoadoutItems(
     }
 
     // Keep going
-    return dispatch(applyLoadoutItems(store, items, loadoutItemIds, scope));
+    return dispatch(applyLoadoutItems(store, items, loadoutItemIds, cancelToken, scope));
   };
 }
 
@@ -359,7 +392,7 @@ function getLoadoutItem(
   return item;
 }
 
-function clearSpaceAfterLoadout(store: DimStore, items: DimItem[]) {
+function clearSpaceAfterLoadout(store: DimStore, items: DimItem[], cancelToken: CancelToken) {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {};
@@ -403,7 +436,7 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[]) {
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   });
 
-  return clearItemsOffCharacter(store, itemsToRemove, reservations);
+  return clearItemsOffCharacter(store, itemsToRemove, cancelToken, reservations);
 }
 
 /**
@@ -414,6 +447,7 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[]) {
 export function clearItemsOffCharacter(
   store: DimStore,
   items: DimItem[],
+  cancelToken: CancelToken,
   reservations: MoveReservations
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -446,7 +480,13 @@ export function clearItemsOffCharacter(
               );
             }
             await dispatch(
-              moveItemTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations)
+              executeMoveItem(item, otherStoresWithSpace[0], {
+                equip: false,
+                amount: item.amount,
+                excludes: items,
+                reservations,
+                cancelToken,
+              })
             );
             continue;
           } else if (vaultSpaceLeft === 0) {
@@ -467,9 +507,20 @@ export function clearItemsOffCharacter(
             getStore(stores, item.owner)!.name
           );
         }
-        await dispatch(moveItemTo(item, vault, false, item.amount, items, reservations));
+        await dispatch(
+          executeMoveItem(item, vault, {
+            equip: false,
+            amount: item.amount,
+            excludes: items,
+            reservations,
+            cancelToken,
+          })
+        );
       } catch (e) {
-        if (e.code === 'no-space') {
+        if (e instanceof CanceledError) {
+          throw e;
+        }
+        if (e instanceof DimError && e.code === 'no-space') {
           outOfSpaceWarning(store);
         } else {
           showNotification({ type: 'error', title: item.name, body: e.message });

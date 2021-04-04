@@ -6,7 +6,6 @@ interface CssExports {
   'customstat': string;
   'dmg': string;
   'energy': string;
-  'guideLink': string;
   'hasFilter': string;
   'header': string;
   'icon': string;
@@ -14,6 +13,7 @@ interface CssExports {
   'inlineIcon': string;
   'isPerk': string;
   'itemIcon': string;
+  'killTrackerDisplay': string;
   'loadouts': string;
   'locationCell': string;
   'locked': string;

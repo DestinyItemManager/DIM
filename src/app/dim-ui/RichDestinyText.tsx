@@ -1,7 +1,10 @@
-import rT from 'data/d2/objective-richTexts.ts';
+import rT from 'data/d2/objective-richTexts';
+import cabalGold from 'destiny-icons/beyond_light/cabal-gold.svg';
+import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
 import overload from 'destiny-icons/breakers/overload.svg';
 import pierce from 'destiny-icons/breakers/pierce.svg';
 import stagger from 'destiny-icons/breakers/stagger.svg';
+import lostSector from 'destiny-icons/explore/lost_sector.svg';
 import questMarker from 'destiny-icons/explore/quest.svg';
 import lrgBlocker from 'destiny-icons/gambit/blocker_large.svg';
 import medBlocker from 'destiny-icons/gambit/blocker_medium.svg';
@@ -61,6 +64,7 @@ const baseConversionTable: {
   { unicode: '', icon: dmgArc,        objectiveHash: rT['[Arc]']                        },
   { unicode: '', icon: dmgVoid,       objectiveHash: rT['[Void]']                       },
   { unicode: '', icon: dmgSolar,      objectiveHash: rT['[Solar]']                      },
+  { unicode: '', icon: dmgStasis,     objectiveHash: rT['[Stasis]']                     },
   { unicode: '', icon: dmgKinetic,    objectiveHash: rT['[Kill]']                       },
   // Precision
   { unicode: '', icon: headshot,      objectiveHash: rT['[Headshot]']                   },
@@ -93,8 +97,9 @@ const baseConversionTable: {
   { unicode: '', icon: smlBlocker,    objectiveHash: rT['[Small Blocker]']               },
   { unicode: '', icon: medBlocker,    objectiveHash: rT['[Medium Blocker]']              },
   { unicode: '', icon: lrgBlocker,    objectiveHash: rT['[Large Blocker]']               },
-  // Quest Markers
+  // Map Markers
   { unicode: '', icon: questMarker,   objectiveHash: rT['[Quest]']                       },
+  { unicode: '', icon: lostSector,    objectiveHash: rT['[Lost Sector]']                 },
   // Breakers
   { unicode: '', icon: overload,      objectiveHash: rT['[Disruption]']                  },
   { unicode: '', icon: pierce,        objectiveHash: rT['[Shield-Piercing]']             },
@@ -107,7 +112,9 @@ const baseConversionTable: {
   { unicode: '', icon: superAHunter,  objectiveHash: rT['[Hunter: Arcstrider Super]']   },
   { unicode: '', icon: superSHunter,  objectiveHash: rT['[Hunter: Gunslinger Super]']   },
   { unicode: '', icon: superVWarlock, objectiveHash: rT['[Warlock: Voidwalker Super]']  },
-  { unicode: '', icon: superSWarlock, objectiveHash: rT['[Warlock: Dawnblade Super]']   }
+  { unicode: '', icon: superSWarlock, objectiveHash: rT['[Warlock: Dawnblade Super]']   },
+  // New Items
+  { unicode: '', icon: cabalGold,     objectiveHash: rT['[Currency]']                   }
 ]
 
 /**
@@ -140,18 +147,13 @@ const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
   });
 });
 
-const replaceWithIcon = (textSegment: string) => {
+const replaceWithIcon = (textSegment: string, index: number) => {
   const replacement = baseConversionTable.find(
     (r) => r.substring === textSegment || r.unicode === textSegment
   );
   return (
     (replacement && (
-      <img
-        src={replacement.icon}
-        className={styles.inlineSvg}
-        title={textSegment}
-        key={textSegment}
-      />
+      <img src={replacement.icon} className={styles.inlineSvg} title={textSegment} key={index} />
     )) || <span key={textSegment}>{textSegment}</span>
   );
 };
@@ -183,7 +185,7 @@ export default function RichDestinyText({
         (text ?? '')
           .split(iconPlaceholder)
           .filter(Boolean)
-          .map((t) => replaceWithIcon(t))
+          .map((t, index) => replaceWithIcon(t, index))
       }
     </>
   );

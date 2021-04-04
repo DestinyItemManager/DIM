@@ -1,6 +1,7 @@
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
 import {
+  AllDestinyManifestComponents,
   DestinyActivityDefinition,
   DestinyActivityModeDefinition,
   DestinyActivityModifierDefinition,
@@ -41,7 +42,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
-import { ManifestDefinitions } from './definitions';
+import { HashLookupFailure, ManifestDefinitions } from './definitions';
 
 const lazyTables = [
   'InventoryItem',
@@ -138,6 +139,8 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
 }
 
+const allTables = [...eagerTables, ...lazyTables];
+
 /**
  * Manifest database definitions. This returns a promise for an
  * object that has a property named after each of the tables listed
@@ -149,11 +152,12 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
-    const db = await dispatch(getManifest([...eagerTables, ...lazyTables]));
+    const db = await dispatch(getManifest(allTables));
     existingManifest = getState().manifest.d2Manifest;
     if (existingManifest) {
       return existingManifest;
     }
+    enhanceDBWithFakeEntries(db);
     const defs = {
       isDestiny1: () => false,
       isDestiny2: () => true,
@@ -167,18 +171,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
-          if (!dbEntry) {
+          if (!dbEntry && tableShort !== 'Record') {
             const requestingEntryInfo =
               typeof requestor === 'object' ? requestor.hash : String(requestor);
-            reportException(
-              `hashLookupFailure: ${table}[${id}]`,
-              new Error(`hashLookupFailure: ${table}[${id}]`),
-              {
-                requestingEntryInfo,
-                failedHash: id,
-                failedComponent: table,
-              }
-            );
+            reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            });
           }
           return dbEntry;
         },
@@ -195,5 +195,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
 
     dispatch(setD2Manifest(defs as D2ManifestDefinitions));
     return defs as D2ManifestDefinitions;
+  };
+}
+
+/** This adds fake entries to the DB for places where we've had to make stuff up. */
+function enhanceDBWithFakeEntries(db: AllDestinyManifestComponents) {
+  // We made up an item category for special grenade launchers. For now they can just be a copy
+  // of the regular "Grenade Launcher" category but we could patch in localized descriptions if we wanted.
+  db.DestinyItemCategoryDefinition[-153950757] = {
+    ...db.DestinyItemCategoryDefinition[153950757],
   };
 }

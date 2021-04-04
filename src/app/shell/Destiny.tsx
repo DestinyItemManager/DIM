@@ -2,7 +2,6 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
-import { DimError } from 'app/bungie-api/bungie-service-helper';
 import Compare from 'app/compare/Compare';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -11,14 +10,12 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { loadVendorDropsFromIndexedDB } from 'app/vendorEngramsXyzApi/reducer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
-import MoveAmountPopupContainer from '../inventory/MoveAmountPopupContainer';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import ErrorPanel from './ErrorPanel';
@@ -58,9 +55,7 @@ const Organizer = React.lazy(
 const Activities = React.lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
-const Collections = React.lazy(
-  () => import(/* webpackChunkName: "collections" */ 'app/collections/Collections')
-);
+const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -70,7 +65,7 @@ interface ProvidedProps {
 interface StoreProps {
   accountsLoaded: boolean;
   account?: DestinyAccount;
-  profileError?: DimError;
+  profileError?: Error;
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
@@ -107,9 +102,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useEffect(() => {
     if ($featureFlags.wishLists && isD2) {
       dispatch(fetchWishList());
-    }
-    if ($featureFlags.vendorEngrams && isD2) {
-      dispatch(loadVendorDropsFromIndexedDB());
     }
   }, [dispatch, isD2]);
 
@@ -222,7 +214,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
           )}
           {account.destinyVersion === 2 && (
             <Route path={`${path}/records`} exact>
-              <Collections account={account} />
+              <Records account={account} />
             </Route>
           )}
           <Route path={`${path}/optimizer`} exact>
@@ -276,7 +268,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
-      <MoveAmountPopupContainer />
     </>
   );
 }

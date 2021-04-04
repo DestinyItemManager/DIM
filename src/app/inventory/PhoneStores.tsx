@@ -4,8 +4,8 @@ import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import StoreStats from 'app/store-stats/StoreStats';
 import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
+import { motion, PanInfo } from 'framer-motion';
 import React, { useRef, useState } from 'react';
-import Hammer from 'react-hammerjs';
 import { InventoryBuckets } from './inventory-buckets';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { DimStore } from './store-types';
@@ -16,6 +16,7 @@ import './Stores.scss';
 interface Props {
   stores: DimStore[];
   buckets: InventoryBuckets;
+  singleCharacter: boolean;
 }
 
 /**
@@ -23,11 +24,14 @@ interface Props {
  *
  * This is the phone (portrait) view only.
  */
-export default function PhoneStores({ stores, buckets }: Props) {
+export default function PhoneStores({ stores, buckets, singleCharacter }: Props) {
   const vault = getVault(stores)!;
   const currentStore = getCurrentStore(stores)!;
 
-  const [selectedStoreId, setSelectedStoreId] = useState(currentStore?.id);
+  const [{ selectedStoreId, direction }, setSelectedStoreId] = useState({
+    selectedStoreId: currentStore?.id,
+    direction: 1,
+  });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
@@ -35,17 +39,34 @@ export default function PhoneStores({ stores, buckets }: Props) {
     return null;
   }
 
+  let headerStores = stores;
+  if (singleCharacter) {
+    headerStores = [currentStore, vault];
+  }
+
   const selectedStore = selectedStoreId ? getStore(stores, selectedStoreId)! : currentStore;
 
-  const handleSwipe: HammerListener = (e) => {
-    const selectedStoreIndex = selectedStoreId
-      ? stores.findIndex((s) => s.id === selectedStoreId)
-      : stores.findIndex((s) => s.current);
+  const handleSwipe = (_e, info: PanInfo) => {
+    // Velocity is in px/ms
+    if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
+      return;
+    }
 
-    if (e.direction === 2) {
-      setSelectedStoreId(stores[wrap(selectedStoreIndex + 1, stores.length)].id);
-    } else if (e.direction === 4) {
-      setSelectedStoreId(stores[wrap(selectedStoreIndex - 1, stores.length)].id);
+    const direction = -Math.sign(info.velocity.x);
+    const selectedStoreIndex = selectedStoreId
+      ? headerStores.findIndex((s) => s.id === selectedStoreId)
+      : headerStores.findIndex((s) => s.current);
+
+    if (direction > 0) {
+      setSelectedStoreId({
+        selectedStoreId: headerStores[wrap(selectedStoreIndex + 1, headerStores.length)].id,
+        direction: 1,
+      });
+    } else if (direction < 0) {
+      setSelectedStoreId({
+        selectedStoreId: headerStores[wrap(selectedStoreIndex - 1, headerStores.length)].id,
+        direction: -1,
+      });
     }
   };
 
@@ -67,25 +88,27 @@ export default function PhoneStores({ stores, buckets }: Props) {
       <HeaderShadowDiv className="store-row store-header" onTouchStart={(e) => e.stopPropagation()}>
         <PhoneStoresHeader
           selectedStore={selectedStore}
-          stores={stores}
+          direction={direction}
+          stores={headerStores}
           loadoutMenuRef={detachedLoadoutMenu}
-          setSelectedStoreId={setSelectedStoreId}
+          setSelectedStoreId={(selectedStoreId, direction) =>
+            setSelectedStoreId({ selectedStoreId, direction })
+          }
         />
       </HeaderShadowDiv>
 
       <div className="detached" ref={detachedLoadoutMenu} />
 
-      <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
-        <div>
-          <StoresInventory
-            stores={[selectedStore]}
-            selectedCategoryId={selectedCategoryId}
-            vault={vault}
-            currentStore={currentStore}
-            buckets={buckets}
-          />
-        </div>
-      </Hammer>
+      <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
+        <StoresInventory
+          stores={[selectedStore]}
+          selectedCategoryId={selectedCategoryId}
+          vault={vault}
+          currentStore={currentStore}
+          buckets={buckets}
+          singleCharacter={singleCharacter}
+        />
+      </motion.div>
 
       <CategoryStrip
         category={selectedCategoryId}
@@ -115,7 +138,7 @@ function CategoryStrip({
             onClick={() => onCategorySelected(category)}
             className={clsx({ selected: category === selectedCategoryId })}
           >
-            {t(`Bucket.${category}`)}
+            {t(`Bucket.${category}`, { contextList: 'buckets' })}
           </div>
         ))}
     </div>
@@ -128,12 +151,14 @@ function StoresInventory({
   stores,
   currentStore,
   vault,
+  singleCharacter,
 }: {
   selectedCategoryId: string;
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
   vault: DimStore;
+  singleCharacter: boolean;
 }) {
   const showPostmaster =
     (currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory') ||
@@ -153,6 +178,7 @@ function StoresInventory({
             vault={vault}
             currentStore={currentStore}
             labels={true}
+            singleCharacter={singleCharacter}
           />
         ))}
       {buckets.byCategory[selectedCategoryId].map((bucket) => (
@@ -163,6 +189,7 @@ function StoresInventory({
           vault={vault}
           currentStore={currentStore}
           labels={true}
+          singleCharacter={singleCharacter}
         />
       ))}
     </>

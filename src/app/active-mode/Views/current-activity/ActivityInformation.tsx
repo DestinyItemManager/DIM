@@ -2,68 +2,56 @@ import styles from 'app/active-mode/Views/current-activity/ActivityInformation.m
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { ActivityModifier } from 'app/progress/ActivityModifier';
 import { RaidActivity } from 'app/progress/RaidDisplay';
-import { RootState } from 'app/store/types';
-import {
-  DestinyActivityDefinition,
-  DestinyActivityModeType,
-  DestinyMilestone,
-  DestinyProfileResponse,
-} from 'bungie-api-ts/destiny2';
+import { DestinyCharacterActivitiesComponent, DestinyMilestone } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-interface ProvidedProps {
+interface Props {
   defs: D2ManifestDefinitions;
   store: DimStore;
-  activity: DestinyActivityDefinition;
+  activityInfo: DestinyCharacterActivitiesComponent;
 }
 
-interface StoreProps {
-  profileInfo?: DestinyProfileResponse;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    profileInfo: profileResponseSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
+// const WEEKLY_VANGUARD_STRIKES = 1437935813;
 
 /** Find unclaimed vendor bounties based on your current activity */
-function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
-  if (
-    !activity?.activityModeTypes?.length ||
-    activity?.activityModeTypes?.includes(DestinyActivityModeType.Social)
-  ) {
+export default function ActivityInformation({ defs, store, activityInfo }: Props) {
+  const profileInfo = useSelector(profileResponseSelector);
+
+  const activity =
+    activityInfo.currentActivityHash && defs.Activity.get(activityInfo.currentActivityHash);
+
+  if (!activity) {
     return null;
   }
 
   const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
+
   const allMilestones: DestinyMilestone[] = profileMilestoneData
     ? Object.values(profileMilestoneData)
     : [];
 
-  // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
-  const raid = allMilestones.find((milestone) => {
+  const milestones = allMilestones.find((milestone) => {
     const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
     return milestoneActivities?.find(
-      (milesoneActivity) => milesoneActivity.activityHash === activity.hash
+      (milesoneActivity) =>
+        milesoneActivity.activityHash === activityInfo.currentPlaylistActivityHash
     );
   });
 
-  if (!raid) {
-    return null;
-  }
+  const raidPhases = milestones?.activities.filter((activity) => activity.phases);
 
-  const activities = raid.activities.filter((activity) => activity.phases);
+  const milestoneActivity = milestones?.activities.find(
+    (activity) => activity.activityHash === activityInfo.currentPlaylistActivityHash
+  );
 
   return (
     <>
-      {raid && (
+      {raidPhases && raidPhases.length > 0 ? (
         <div className={styles.activityRaid}>
-          {activities.map((raidActivity) => (
+          {raidPhases.map((raidActivity) => (
             <RaidActivity
               activity={raidActivity}
               displayName={''}
@@ -73,9 +61,11 @@ function ActivityInformation({ defs, store, activity, profileInfo }: Props) {
             />
           ))}
         </div>
+      ) : (
+        milestoneActivity?.modifierHashes?.map((modifierHash) => (
+          <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+        ))
       )}
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ActivityInformation);

@@ -119,7 +119,7 @@ export default class Developer extends React.Component<{}, State> {
               <li>
                 Choose a name for your DIM API app (only required to create or recover your API
                 key). This should be in the form of "yourname-dev" and will show up in API audit
-                logs.
+                logs. (min length: 3, chars allowed [a-z0-9-])
                 <br />
                 <input
                   name="dimAppName"
@@ -132,7 +132,7 @@ export default class Developer extends React.Component<{}, State> {
                   type="button"
                   className="dim-button"
                   onClick={this.getDimApiKey}
-                  disabled={!apiKey || !dimAppName || dimAppName.length < 6}
+                  disabled={!apiKey || !dimAppName || !dimAppName.match(/^[a-z0-9-]{3,}$/)}
                 >
                   Get API Key
                 </button>
@@ -173,7 +173,7 @@ export default class Developer extends React.Component<{}, State> {
       localStorage.setItem('dimApiKey', dimApiKey);
       localStorage.removeItem('dimApiToken');
       localStorage.removeItem('authorization');
-      window.location.href = `${window.location.origin}/index.html`;
+      window.location.href = window.location.origin;
     } else {
       alert('You need to fill in the whole form');
     }

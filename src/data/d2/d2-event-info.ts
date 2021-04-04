@@ -11,7 +11,7 @@ export const D2EventInfo = {
   1: {
     name: 'The Dawning',
     shortname: 'dawning',
-    sources: [3952847349, 4054646289],
+    sources: [510530151, 3952847349, 4054646289],
     engram: [1170720694, 3151770741],
   },
   2: {
@@ -41,7 +41,7 @@ export const D2EventInfo = {
   6: {
     name: 'Guardian Games',
     shortname: 'games',
-    sources: [611838069, 3388021959],
+    sources: [611838069, 2011810450, 3388021959],
     engram: [],
   },
 };
@@ -56,6 +56,7 @@ export const D2EventPredicateLookup = {
 };
 
 export const D2SourcesToEvent = {
+  510530151: D2EventEnum.DAWNING,
   3952847349: D2EventEnum.DAWNING,
   4054646289: D2EventEnum.DAWNING,
   2502262376: D2EventEnum.CRIMSON_DAYS,
@@ -68,5 +69,6 @@ export const D2SourcesToEvent = {
   3693722471: D2EventEnum.FESTIVAL_OF_THE_LOST,
   2187511136: D2EventEnum.REVELRY,
   611838069: D2EventEnum.GUARDIAN_GAMES,
+  2011810450: D2EventEnum.GUARDIAN_GAMES,
   3388021959: D2EventEnum.GUARDIAN_GAMES,
 };

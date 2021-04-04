@@ -3,7 +3,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { getAllVendorDrops } from 'app/vendorEngramsXyzApi/vendorEngramsXyzService';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
@@ -29,14 +28,11 @@ export function loadAllVendors(
     // Only load at most once per 30 seconds
     if (
       !force &&
-      Date.now() - (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded.getTime() || 0) <
+      Date.now() -
+        (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded?.getTime() || 0) <
         30 * 1000
     ) {
       return;
-    }
-
-    if ($featureFlags.vendorEngrams) {
-      dispatch(getAllVendorDrops());
     }
 
     try {

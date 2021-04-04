@@ -23,7 +23,7 @@ module.exports = {
         warnOnly: true,
         pathRegex: /\.(spec|test)\.ts$/,
       },
-      tsConfig: {
+      tsconfig: {
         target: 'ES2015',
         jsx: 'react',
         allowJs: true,

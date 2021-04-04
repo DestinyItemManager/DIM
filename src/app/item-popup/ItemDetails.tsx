@@ -3,21 +3,24 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
+import { getStore } from 'app/inventory/stores-helpers';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo } from 'app/utils/item-utils';
+import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, faCheck } from '../shell/icons';
+import { AppIcon, faCheck, faClock } from '../shell/icons';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -59,6 +62,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
     : handCannonIcon;
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
+  const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
@@ -71,9 +75,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <BungieImage src={item.secondaryIcon} width="100%" />
       )}
 
-      <ItemDescription item={item} />
-
-      <ItemExpiration item={item} />
+      <ItemDescription item={item} defs={defs} />
 
       {!item.stats && Boolean(item.collectibleHash) && isD2Manifest(defs) && (
         <div className="item-details">
@@ -100,7 +102,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <KillTrackerInfo
           tracker={killTrackerInfo}
           defs={defs}
-          textLabel={true}
+          showTextLabel
           className="masterwork-progress"
         />
       )}
@@ -158,7 +160,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} defs={defs} />
+            <Reward key={reward.itemHash} reward={reward} defs={defs} store={ownerStore} />
           ))}
         </div>
       )}
@@ -200,6 +202,20 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
           </div>
         )
       )}
+
+      <ItemExpiration item={item} />
+
+      {item.tooltipNotifications?.map((tip) => (
+        <div
+          key={tip.displayString}
+          className={clsx('quest-expiration item-details', {
+            'seasonal-expiration': tip.displayStyle === 'seasonal-expiration',
+          })}
+        >
+          {tip.displayStyle === 'seasonal-expiration' && <AppIcon icon={faClock} />}
+          {tip.displayString}
+        </div>
+      ))}
     </div>
   );
 }

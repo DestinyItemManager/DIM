@@ -1,13 +1,15 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { editLoadout } from 'app/loadout/LoadoutDrawer';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutBuilderAction } from '../loadoutBuilderReducer';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedArmor2ModMap, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, LockedMods, StatTypes } from '../types';
+import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
@@ -22,10 +24,11 @@ interface Props {
   defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
-  lockedArmor2Mods: LockedArmor2ModMap;
+  lockedMods: LockedMods;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
+  halfTierMods: PluggableInventoryItemDefinition[];
 }
 
 /**
@@ -41,10 +44,11 @@ function GeneratedSet({
   defs,
   enabledStats,
   forwardedRef,
-  lockedArmor2Mods,
+  lockedMods,
   loadouts,
   lbDispatch,
   params,
+  halfTierMods,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -61,7 +65,7 @@ function GeneratedSet({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedArmor2Mods
+    lockedMods
   );
 
   const canCompareLoadouts =
@@ -72,42 +76,45 @@ function GeneratedSet({
     set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
   );
 
+  const items = set.armor.map((items) => items[0]);
+
   return (
-    <div className={styles.build} style={style} ref={forwardedRef}>
-      <div className={styles.header}>
-        <SetStats
-          defs={defs}
-          stats={set.stats}
-          items={set.armor.map((items) => items[0])}
-          maxPower={set.maxPower}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-          existingLoadoutName={existingLoadout?.name}
-          characterClass={selectedStore?.classType}
-        />
-      </div>
-      <div className={styles.items}>
-        {set.armor.map((items, index) => (
-          <GeneratedSetItem
-            key={items[0].index}
-            item={items[0]}
+    <div className={styles.container} style={style} ref={forwardedRef}>
+      <div className={styles.build}>
+        <div className={styles.header}>
+          <SetStats
             defs={defs}
-            itemOptions={items}
-            locked={lockedMap[items[0].bucket.hash]}
-            lbDispatch={lbDispatch}
-            statValues={set.statChoices[index]}
-            lockedMods={assignedMods[items[0].id]}
+            stats={set.stats}
+            items={items}
+            maxPower={getPower(items)}
             statOrder={statOrder}
+            enabledStats={enabledStats}
+            existingLoadoutName={existingLoadout?.name}
+            characterClass={selectedStore?.classType}
           />
-        ))}
-        <GeneratedSetButtons
-          set={set}
-          store={selectedStore!}
-          canCompareLoadouts={canCompareLoadouts}
-          onLoadoutSet={setCreateLoadout}
-          onCompareSet={() => lbDispatch({ type: 'openCompareDrawer', set })}
-        />
+        </div>
+        <div className={styles.items}>
+          {set.armor.map((items) => (
+            <GeneratedSetItem
+              key={items[0].index}
+              item={items[0]}
+              defs={defs}
+              itemOptions={items}
+              locked={lockedMap[items[0].bucket.hash]}
+              lbDispatch={lbDispatch}
+              lockedMods={assignedMods[items[0].id]}
+            />
+          ))}
+        </div>
       </div>
+      <GeneratedSetButtons
+        set={set}
+        store={selectedStore!}
+        canCompareLoadouts={canCompareLoadouts}
+        halfTierMods={halfTierMods}
+        onLoadoutSet={setCreateLoadout}
+        lbDispatch={lbDispatch}
+      />
     </div>
   );
 }

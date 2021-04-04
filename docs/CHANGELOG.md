@@ -1,13 +1,232 @@
 ## Next
 
-## 6.40.0 <span className="changelog-date">(2020-11-22)</span>
+* Searching loadouts by exact name now works. For instance, `inloadout:"My PVP Equipment"` will highlight any items that loadout contains.
+* To help with that, loadout names, `perkname`s, and item `name`s are suggested as you type.
+* Search will suggest names of items and perks as you type.
+* Search will also suggest any #hashtags found in your notes, for instance `#pve`.
+* Visual refresh for buttons and some dropdowns.
+* Swiping between characters on mobile by swiping the inventory works again.
+* Swiping the character headers behaves more sensibly now.
+
+## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
+
+* When comparing items, the item you launched Compare from is now highlighted with an orange title.
+* The Compare screen has an "Open in Organizer" button that shows the exact same items in the Organizer which has more options for comparing items.
+* Fixed some mods in Loadout Organizer that weren't applying the right stats.
+* You can now sort inventory by how recently you acquired the item.
+
+## 6.57.1 <span class="changelog-date">(2021-03-22)</span>
+
+* Remove `sunsetsin:` and `sunsetsafter:` filters, and remove power cap display from Compare/Organizer. Organizer gains a new "Sunset" column. Items that are sunset can still be selected with `is:sunset` and have a grey corner.
+* Fix Loadout Optimizer acting as if "Assume Masterworked" was always checked.
+
+## 6.57.0 <span class="changelog-date">(2021-03-21)</span>
+
+* We went back to the old way search worked, reverting the change from v6.56. So now `gnaw rampage zen` searches for three independent properties instead of the literal string `"gnaw rampage zen"`.
+* Clicking on the empty area below Organizer can now close item popups, where it didn't before.
+* Fix an issue where an exotic perk could sometimes be unselectable in Loadout Optimizer.
+* Added a new `is:pinnaclereward` search that searches for pinnacle rewards on the Progress page.
+* DIM Sync now less picky about saving very simple searches.
+* Fix mis-sized kill tracker icons in Organizer.
+* Support addition syntax in stat filters, i.e. `stat:recovery+mobility:>30`
+* Mulligan now shows up as a Wishlisted perk.
+* Search bar expands more readily to replace the top tabs, so the field isn't squished really tiny.
+* Loadout Optimizer
+  * Reposition some misplaced pieces of UI
+  * Performance optimizations and some tweaks that could theoretically include some builds that wouldn't have shown up before.
+  * Fixed an issue that would show builds with more than 100 in a single stat once mods were included.
+  * Removed the minimum power and minimum stat total filters. Minimum power didn't see much use and minimum stat total can be achieved by searching `basestat:total:>52` in the search bar.
+
+## 6.56.1 <span class="changelog-date">(2021-03-14)</span>
+
+* Fix a bug where clicking inside the mod picker would dismiss the popup.
+
+## 6.56.0 <span class="changelog-date">(2021-03-14)</span>
+
+* On the Compare screen, items will update to show their locked or unlocked state.
+* Deleting multiple searches from your search history works now - before there was a bug where only the first delete would succeed.
+* On the Search History page accessible from Settings, you can now clear all non-saved searches with a single button.
+* Deprecated search filters no longer show up in Filter Help.
+* Searches that don't use any special filters now search for the entire string in item names and descriptions and perk names and descriptions. e.g. `gnawing hunger` now searches for the full string "gnawing hunger" as opposed to being equivalent to `"gnawing" and "hunger"`.
+* Invalid searches no longer save to search history.
+* Bright engrams show up correctly in the seasonal progress again.
+* Added an icon for Cabal Gold in objective text.
+* You can sort items by ammo type.
+* There's a new button in the Loadout editor to add all unequipped items, similar to adding all equipped items.
+* The farming mode "stop" button no longer covers the category strip on mobile.
+* Reverting a loadout (the button labeled "Before [LoadoutName]") no longer pulls items from Postmaster.
+
+## 6.55.0 <span class="changelog-date">(2021-03-07)</span>
+
+* You can once again select how much of a stackable item to move, by editing the amount in the move popup before clicking a move button. Holding shift during drag no longer allows you to select the amount - you must do it from the buttons in the popup.
+
+## 6.54.0 <span class="changelog-date">(2021-02-28)</span>
+
+## 6.53.0 <span class="changelog-date">(2021-02-21)</span>
+
+* Pulling from postmaster, applying loadouts, moving searches, moving individual items, and more are now cancel-able. Click the "cancel" button in the notification to prevent any further actions.
+* Bulk tagging in the Organizer no longer shows an "undo" popup. We expect you know what you're doing there!
+
+## 6.52.0 <span class="changelog-date">(2021-02-14)</span>
+
+* Search filters that operate on power levels now accept the keywords "pinnaclecap", "powerfulcap", "softcap", and "powerfloor" to refer to the current season's power limits. e.g "power:>=softcap"
+  * `powerlimit:pinnaclecap` will show items with a power limit that matches this season's limit on all items.
+  * `sunsetsin:next` will show the same items: items whose power limit won't reach next season's limit on all items.
+* Confirm before pulling all items from Postmaster.
+* Added Seasonal Challenges to the Records page. You can track as many of these as you want in DIM and the tracked ones will show up in the Progress page.
+* Quests that expire after a certain season now show that info in the item popup.
+* Quests show which step number on the questline they are.
+* Triumphs that provide rewards for completing a part of the triumph now show that reward.
+
+## 6.51.1 <span class="changelog-date">(2021-02-10)</span>
+
+* Updates for Season of the Chosen
+
+## 6.51.0 <span class="changelog-date">(2021-02-07)</span>
+
+## 6.50.0 <span class="changelog-date">(2021-01-31)</span>
+
+* Some emblem stats have better formatting now.
+* Perks which would grant a bonus in a stat, but which grant zero points due to how stats work, now show +0 instead of just not showing the stat.
+* Bounty guide for special grenade launchers now shows a label and not just an icon.
+* Fixed some issues with Loadout Optimizer on mobile.
+
+## 6.49.0 <span class="changelog-date">(2021-01-24)</span>
+
+* Mod categorization in the Loadout Optimizer mod picker is now driven from game data - it should stay up to date better as new mods appear.
+* Disabled weapon mods no longer contribute to stats.
+* Automatic updates for the latest patch.
+
+## 6.48.0 <span class="changelog-date">(2021-01-17)</span>
+
+* Allow clicking through the loading screen to get to the troubleshooting link.
+
+## 6.47.1 <span class="changelog-date">(2021-01-11)</span>
+
+* Fix a bug that could crash loadout optimizer.
+
+## 6.47.0 <span class="changelog-date">(2021-01-10)</span>
+
+* Show a star icon for favorited finishers rather than a lock icon.
+* Search history truncates huge searches to three lines and aligns the icons and delete button to the first line.
+* Added indicators in the Compare view to show which stat we are sorting by, and in which direction.
+* Fix visuals on the pull from postmaster buttons.
+* Loadout Optimizer now allows selecting up to 5 raid mods, not just 2.
+* Armor mods with conditional stats, like Powerful Friends and Radiant Light, now correctly take into account the conditions that cause their stats to be applied. This only works within a single piece of armor - for example, it will work if you have Powerful Friends and another Arc mod is socketed into that piece of armor, but will not yet correctly identify that the stats should be enabled when you have another Arc Charged With Light mod on *another* piece of armor.
+* Masterworked Adept weapons should show all their stat bonuses.
+* Fix a bug where using the move buttons instead of drag and drop wouldn't show item move progress popups or error popups.
+* The most recent Steam Overlay browser version shouldn't be reported as not supported anymore. Keep in mind we can't really debug any problems that happen in the Steam Overlay.
+* Fixed some event-specific searches, such as source:dawning.
+
+## 6.46.0 <span className="changelog-date">(2021-01-03)</span>
+
+* Base stats no longer cause sort issues in the compare pane, and no longer apply to weapons.
+* Older pieces of Last Wish and Reverie Dawn armor now count as having normal Legacy mod slots.
+* Deep Stone Crypt Raid mods now show up in the Loadout Optimizer mod picker.
+
+## 6.45.2 <span className="changelog-date">(2020-12-30)</span>
+
+* Fixed an issue that could harm the DIM Sync service.
+
+## 6.45.1 <span className="changelog-date">(2020-12-29)</span>
+
+* Fixed an issue where linking directly to any page would redirect to the inventory.
+
+## 6.45.0 <span class="changelog-date">(2020-12-27)</span>
+
+* Faster initial page load for inventory (loading a subset of things from bungie.net api)
+* Wishlists now support multiple URLs
+* Collection items in records now display the intrinsic perk.
+* Fixed an issue with the item popup sidecar on safari.
+* Fixes for compare view on mobile.
+* The optimizer now clears results if a character is changed.
+* Fix typo in energycapacity organizer search
+* Clean up toolbar on organizer page on mobile.
+* Some routes can now be accessed without being logged in (Whats New, Privacy Policy, etc.)
+* What's new page is now rendered at build time instead of run-time, so it should load faster.
+* Various dependency upgrades
+
+## 6.44.0 <span class="changelog-date">(2020-12-20)</span>
+
+* Fixed a bug that could potentially erase some tags/notes if there were errors in DIM.
+* When Bungie.net is undergoing maintenance, item perks won't be shown anymore. Before, we'd show the default/collections roll, which confused people.
+* Fix the element type of items not showing in some cases.
+* Improved the sizing of sheet popups on Android when the keyboard is up.
+* You can no longer transfer Spoils of Conquest anywhere.
+* Hide action buttons on collections/vendors items.
+* Fixed character headers wrapping on non-English locales.
+
+### Beta Only
+
+* We continue to experiment with the order of the list-style perk display on weapons - the most important perks tend to be on the rightmost column of the grid, so now we list the perks in right-to-left order from the original grid.
+
+## 6.43.2 <span class="changelog-date">(2020-12-13)</span>
+
+## 6.43.1 <span class="changelog-date">(2020-12-13)</span>
+
+## 6.43.0 <span class="changelog-date">(2020-12-13)</span>
+
+* New Rich Texts added for Lost Sectors and Stasis.
+* Show reasons why you can't buy vendor items, and grey out bounties that you've already purchased on the vendors screen.
+* Updated the item popup header for mobile and desktop. The buttons on mobile now have larger click targets and should be easier to find/use.
+* Green items can no longer mess up loadout optimizer.
+* Special-ammo grenade launchers are now distinguished from heavy grenade launchers.
+
+## 6.42.3 <span class="changelog-date">(2020-12-07)</span>
+
+* Filter ornaments to the correct class for season pass on progress page.
+* Enable bounty guide on app.destinyitemmanager.com.
+* Spoils of Conquest vault prevention.
+
+### Beta Only
+
+* Re-order sockets putting key traits first.
+
+## 6.42.2 <span class="changelog-date">(2020-12-06)</span>
+
+* Banner Tweaks
+
+## 6.42.1 <span class="changelog-date">(2020-12-06)</span>
+
+* Banner Tweaks
+
+## 6.42.0 <span class="changelog-date">(2020-12-06)</span>
+
+* Farming mode now refreshes only every 30 seconds, instead of every 10 seconds, to reduce load on Bungie.net.
+* When the postmaster section is collapsed, it now shows the number of items in your postmaster so you can keep an eye on it.
+* Fixed an issue where the Game2Give donation banner could sometimes appear in the mobile layout.
+
+### Beta Only
+
+* We're trying out a new display for weapon perks, which displays the name of the active perk and shows details on click, instead of on hover. This is partly to make perks easier to understand, but also to allow for more actions on perks in the future. Let us know what you think! Animations will be added later if this design catches on.
+* Continued improvements to Active mode, incorporating Bounty Guide and better suggested vendor bounties.
+
+## 6.41.1 <span class="changelog-date">(2020-12-02)</span>
+
+## 6.41.0 <span class="changelog-date">(2020-12-02)</span>
+
+* Bounties and Quests sections on the Progress page now show a summary of bounties by their requirement - weapon, location, activity, and element. Click on a category to see bounties that include that category. Other categories will light up to show "synergy" categories that can be worked on while you work on the selected one. Shift-click to select multiple categories. Click the (+) on a weapon type to pull a weapon matching that type.
+* New item sort option to sort sunset items last.
+* Engrams show their power level - click on small engrams to see their power level in the item popup.
+* The checkmark for collectibles is now on the bottom right corner, so it doesn't cover mod cost.
+* Mod costs display correctly on Firefox.
+* Fixed the `is:powerfulreward` search to recognize new powerful/pinnacle engrams.
+* When items are classified (like the new Raid gear was for a bit), any notes added to the item will show on the tile so you can keep track of them.
+* Fixed filter helper only opening the first time it is selected in the search bar
+* Pinnacle/powerful rewards show a more accurate bonus, taking into account your current max power.
+
+### Beta Only
+
+* A new "Single character mode" can be enabled through settings, or the « icon on desktop. This focuses down to a single character, and merges your other characters' inventories into the vault (they're really still on the other characters, we're just displaying them different). This is intended for people who are focused on one character, and always shows the last played character when collapsed.
+
+## 6.40.0 <span class="changelog-date">(2020-11-22)</span>
 
 * Mod and mod slot info in Loadout Optimizer have been updated to handle the new mod slots better.
 * Postmaster items can be dragged over any items on your character to transfer them - they don't need to be dragged to the matching item type.
 * Stop showing extra +3 stats on masterwork weapons. The fix for this means that Adept weapons may not show that bonus when they are released.
 * Progress page now shows more Milestones/Challenges, shows rewards for all of them, includes vendor pictures where available, and gives a hint as to what power pinnacle/powerful engrams can drop at.
 
-## 6.39.1 <span className="changelog-date">(2020-11-16)</span>
+## 6.39.1 <span class="changelog-date">(2020-11-16)</span>
 
 * Farming mode will no longer immediately kick out items you manually move onto your character.
 * The Records page now includes all the Triumps and Collections info that are in the game.
@@ -15,7 +234,7 @@
 * Fixed Active Mode showing up in release version if you'd enabled it in Beta.
 * Fixed a crash when viewing Stasis subclasses.
 
-## 6.39.0 <span className="changelog-date">(2020-11-15)</span>
+## 6.39.0 <span class="changelog-date">(2020-11-15)</span>
 
 * Xur's location is now shown on his entry in the Vendors page.
 * The Raids section is back in Progress, and Garden of Salvation shows up in Milestones.
@@ -37,7 +256,7 @@
 
 * Preview of "Active Mode", an in-progress new view that focuses down to a single character plus your vault, and has easy access to pursuits, farming, max light, and more.
 
-## 6.38.1 <span className="changelog-date">(2020-11-11)</span>
+## 6.38.1 <span class="changelog-date">(2020-11-11)</span>
 
 * Removed character gender from tiles and notifications.
 * Don't show empty archetype bar for items in collections.
@@ -52,21 +271,21 @@
 * Fix errors when selecting mods in Loadout Optimizer.
 * Removed the opaque background from item season icons.
 
-## 6.38.0 <span className="changelog-date">(2020-11-08)</span>
+## 6.38.0 <span class="changelog-date">(2020-11-08)</span>
 
 * New background color theme to tie in with Beyond Light. The character column coloring based on your equipped emblem has been removed.
 * Perk and mod images are once again affected by the item size setting.
 
-## 6.37.2 <span className="changelog-date">(2020-11-03)</span>
+## 6.37.2 <span class="changelog-date">(2020-11-03)</span>
 
 * Fix the item tagging popup not working on mobile by un-fixing the Safari desktop item popup.
 
-## 6.37.1 <span className="changelog-date">(2020-11-02)</span>
+## 6.37.1 <span class="changelog-date">(2020-11-02)</span>
 
 * Fixed not being able to scroll on mobile.
 * Fixed filter help not always showing up.
 
-## 6.37.0 <span className="changelog-date">(2020-11-01)</span>
+## 6.37.0 <span class="changelog-date">(2020-11-01)</span>
 
 * Removed "Color Blind Mode" setting. This didn't help with DIM's accessibility - it just put a filter over the page to *simulate what it would be like* if you had various forms of color blindness.
 * Added `hunt` as valid season synonym.
@@ -78,13 +297,13 @@
 * Hide the "kill tracker" perk column on masterworked weapons.
 * Fixed the tagging dropdown not being attached on desktop Safari.
 
-## 6.36.1 <span className="changelog-date">(2020-10-26)</span>
+## 6.36.1 <span class="changelog-date">(2020-10-26)</span>
 
 * Some more tweaks to the sidecar layout.
 * Put back automatically showing dupes when launching compare.
 * The item popup now closes when you start dragging an item.
 
-## 6.36.0 <span className="changelog-date">(2020-10-25)</span>
+## 6.36.0 <span class="changelog-date">(2020-10-25)</span>
 
 * Rearranged equip/move buttons on sidecar to be horizontal icons instead of menu items.
 * On mobile, you can switch characters in either direction, in a loop.
@@ -99,7 +318,7 @@
 
 * We're experimenting with a new "Search Results" sheet that shows all the items matching your search in one place.
 
-## 6.35.0 <span className="changelog-date">(2020-10-18)</span>
+## 6.35.0 <span class="changelog-date">(2020-10-18)</span>
 
 * Added the "sidecar" for item popup actions on desktop. This lets us have more actions, and they're easier to understand. If you always use drag and drop, you can collapse the sidecar down into a smaller version.
 * On mobile, press and hold on an item to access a quick actions menu, then drag your finger to an option and release to execute it. Move items faster than ever before!
@@ -113,7 +332,7 @@
 * Darkened the keyboard shortcut help overlay (accessed via the ? key).
 * Removed tagging keyboard shortcut tips from places where they wouldn't work.
 
-## 6.34.0 <span className="changelog-date">(2020-10-11)</span>
+## 6.34.0 <span class="changelog-date">(2020-10-11)</span>
 
 * Replaced the tagging dropdown with a nicer one that shows the icon and keyboard shortcut hints.
 * Made the farming mode popup on mobile not overlap the category selector, and made it smaller.
@@ -122,7 +341,7 @@
 * Updated the style and tooltip for wishlist perks to match the thumb icon shown on tiles.
 * Fix some display of masterworked exotics in the CSV export.
 
-## 6.33.0 <span className="changelog-date">(2020-10-04)</span>
+## 6.33.0 <span class="changelog-date">(2020-10-04)</span>
 
 * The Organizer's buttons now show you how many items you have in each category. These counts update when you use a search too!
 * On mobile, the search bar appears below the header, instead of on top of it.
@@ -137,19 +356,19 @@
 * Removed the ability to move a specific amount of a stacked consumable item.
 * Continued updates to our new background style and desktop item actions menu.
 
-## 6.32.2 <span className="changelog-date">(2020-09-29)</span>
+## 6.32.2 <span class="changelog-date">(2020-09-29)</span>
 
 * Actually fixed "Store" buttons not showing for items in Postmaster.
 * Fix wishlists not highlighting the right rolls.
 
-## 6.32.1 <span className="changelog-date">(2020-09-29)</span>
+## 6.32.1 <span class="changelog-date">(2020-09-29)</span>
 
 * Fixed "Store" buttons not showing for items in Postmaster.
 * Fixed masterwork stats for Exotics not displaying correctly.
 * Fixed character stats only displaying the current character's stats on mobile.
 * Fixed Postmaster not appearing on D1 for mobile.
 
-## 6.32.0 <span className="changelog-date">(2020-09-27)</span>
+## 6.32.0 <span class="changelog-date">(2020-09-27)</span>
 
 * In Compare, you can click on perks to see what the new stats would look like if you chose another option.
 * When the item popup is open, hitting the "c" key will open Compare.
@@ -171,11 +390,11 @@
 * We're experimenting with moving the item action buttons to the side of the item popup on desktop - we call it the "sidecar". It moves the actions closer to the mouse, allows room to have clearer labels, and gives more room to add more commands. Plus generally people have screens that are wider than they are tall, so this reduces the height of the popup which could previously put buttons off screen. We'll be tweaking this for a while before it launches fully.
 * Beta now has an early preview of a new theme for DIM.
 
-## 6.31.2 <span className="changelog-date">(2020-09-22)</span>
+## 6.31.2 <span class="changelog-date">(2020-09-22)</span>
 
 * Fix an issue where moving Exotic Cipher to vault with DIM would cause your characters to be filled up with items from your vault.
 
-## 6.31.1 <span className="changelog-date">(2020-09-21)</span>
+## 6.31.1 <span class="changelog-date">(2020-09-21)</span>
 
 * Loadout Optimizer highlights loadouts you've already saved.
 * Add new searches `kills:`, `kills:pvp:`, and `kills:pve:` for Masterwork kill trackers.
@@ -183,7 +402,7 @@
 * Fixed: Item type searches (e.g. is:pulserifle) not working for D1.
 * Fixed: Spreadsheets missing power cap.
 
-## 6.31.0 <span className="changelog-date">(2020-09-20)</span>
+## 6.31.0 <span class="changelog-date">(2020-09-20)</span>
 
 * Added a link to the DIM User Guide to the hamburger menu.
 * "Clear new items" has been moved into the Settings page instead of being a floating button. The "X" keyboard shortcut no longer clears new items.
@@ -211,14 +430,14 @@
 
 * On mobile, there is now a bar to quickly swap between different item categories on the inventory screen.
 
-## 6.30.0 <span className="changelog-date">(2020-09-13)</span>
+## 6.30.0 <span class="changelog-date">(2020-09-13)</span>
 
 * Compare loadouts in Loadout Optimizer to your existing loadout by clicking the "Compare Loadout" button next to a build.
 * Improvements to search performance, and search autocomplete suggestions.
 * Fix cases where some odd stats would show up as kill trackers.
 * Sword-specific stats now show up in `stat:` filters.
 
-## 6.29.1 <span className="changelog-date">(2020-09-11)</span>
+## 6.29.1 <span class="changelog-date">(2020-09-11)</span>
 
 * Improved performance of item transfers. We're still limited by how fast Bungie.net's API can go, though.
 * Fixed a couple of the legacy triumphs that indicated the wrong triumph was being retired.
@@ -228,7 +447,7 @@
 * Tweaks to the display of legacy triumphs.
 * Reduce the number of situations in which we autoscroll the triumph category you clicked into view.
 
-## 6.29.0 <span className="changelog-date">(2020-09-10)</span>
+## 6.29.0 <span class="changelog-date">(2020-09-10)</span>
 
 * Legacy Triumphs are now indicated on the Records page and have their own checklist section. Legacy Triumphs are triumphs that will not be possible to complete after Beyond Light releases. The list of which Triumphs are Legacy Triumphs was provided by Bungie.
 * Mods in the Loadout Optimizer mod picker are now split up by season.
@@ -236,11 +455,11 @@
 * Empty mod slot tooltips spell out which season they're from.
 * Locking/unlocking items in D1 works again.
 
-## 6.28.1 <span className="changelog-date">(2020-09-06)</span>
+## 6.28.1 <span class="changelog-date">(2020-09-06)</span>
 
 * Actually release the Records page
 
-## 6.28.0 <span className="changelog-date">(2020-09-06)</span>
+## 6.28.0 <span class="changelog-date">(2020-09-06)</span>
 
 * Triumphs, Collections, and Stat Trackers are now all together in the new Records page.
 * You can track triumphs in DIM - tracked triumphs are stored and synced with DIM Sync. These show up on both the Progress and Records pages.
@@ -254,7 +473,7 @@
 * Support for `mod:` and `modname:` filters to parallel the `perk:` and `perkname:` ones
 * Use the dark theme for Twitter widget
 
-## 6.27.0 <span className="changelog-date">(2020-08-30)</span>
+## 6.27.0 <span class="changelog-date">(2020-08-30)</span>
 
 * The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
   * A new Mod Picker component to let you choose armor 2.0 mods to lock.
@@ -276,7 +495,7 @@
 * Long-pressing on an item in mobile mode will bring up a quick actions menu - drag and release on a button to apply the action to the item you pressed on.
 * Move Sub-class out of Weapons to the General category
 
-## 6.26.0 <span className="changelog-date">(2020-08-23)</span>
+## 6.26.0 <span class="changelog-date">(2020-08-23)</span>
 
 * Better touchscreen support for drag and drop.
 * Wishlists now support Github gists (raw text URLs), so there's no need to set up an entire repository to host them. If you are making wishlists, you can try out changes easier than ever. If you're not making wishlists, hopefully you're using them. If you don't know what wishlists are, [here you go](https://destinyitemmanager.fandom.com/wiki/Wish_Lists)
@@ -291,7 +510,7 @@
 * In Beta only, the filter search bar has been upgraded to remember recent searches and let you save your favorite searches.
 * Phone/mobile resolutions will now show a mini-popup to make inspecting and moving items much easier.
 
-## 6.25.0 <span className="changelog-date">(2020-08-16)</span>
+## 6.25.0 <span class="changelog-date">(2020-08-16)</span>
 
 * Removed `is:reacquireable` as it is inaccurate in its current state
 * Removed outline from clicked character headers on iOS
@@ -303,12 +522,12 @@
 * Mobile - changes in DIM beta only: different parts of the header now stick with you as you scroll down.
 * Armor CSV export appearing properly on the Organizer tab again.
 
-## 6.24.1 <span className="changelog-date">(2020-08-12)</span>
+## 6.24.1 <span class="changelog-date">(2020-08-12)</span>
 
 * Updated the character tiles, now uses triple dot instead of chevron
 * Solstice of Heroes is back and so is the **Solstice of Heroes** section of the **Progress** tab. Check it out and view your progress toward upgrading armor.
 
-## 6.24.0 <span className="changelog-date">(2020-08-09)</span>
+## 6.24.0 <span class="changelog-date">(2020-08-09)</span>
 
 * Configure a custom armor stat per-class in Settings, and it'll show up in item popups, Organizer, Compare, and the new `stat:custom:` search.
 * Speed improvements to wishlist processing.
@@ -323,16 +542,16 @@
 * Spreadsheet columns slightly adjusted to get them back to their usual column names.
 * Lots going on behind the scenes to clear up errors and get Loadout Optimizer ready for upgrades!
 
-## 6.23.0 <span className="changelog-date">(2020-08-02)</span>
+## 6.23.0 <span class="changelog-date">(2020-08-02)</span>
 
 * You can add tags and notes to shaders! Keep track of your favorites and which shaders you could do without.
 * Searches now support parentheses for grouping, the "and" keyword, and the "not" keyword. Example: `(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)`. "and" has higher precedence than "or", which has higher precedence than just a space (which still means "and").
 * Fixed the size of damage type icons in D1.
 * Our Content Security Policy is more restrictive now, external and injected scripts may fail but this keeps your account and data safer.
 
-## 6.22.1 <span className="changelog-date">(2020-07-27)</span>
+## 6.22.1 <span class="changelog-date">(2020-07-27)</span>
 
-## 6.22.0 <span className="changelog-date">(2020-07-26)</span>
+## 6.22.0 <span class="changelog-date">(2020-07-26)</span>
 
 * New: More detailed gear information is available by hovering or clicking the Maximum Gear Power stat in each character's header.
 * Improved detection that you need to reauthorize DIM to your Bungie account.
@@ -345,7 +564,7 @@
 * Loadout Optimizer
   * Fixed finding slots for seasonal mods.
 
-## 6.21.0 <span className="changelog-date">(2020-07-19)</span>
+## 6.21.0 <span class="changelog-date">(2020-07-19)</span>
 
 * Added support for negative stats on mods. This should be visible in item displays and make loadout optimizer results more accurate.
 * Fix quick item picker not remembering your preference for "equip" vs "store".
@@ -353,7 +572,7 @@
 * Locking or unlocking items from DIM is now reflected immediately on the item tiles.
 * Items with the Arrivals mod slot now match the `holdsmod:dawn` search.
 
-## 6.20.0 <span className="changelog-date">(2020-07-12)</span>
+## 6.20.0 <span class="changelog-date">(2020-07-12)</span>
 
 * Fix sorting by Power Limit in the compare pane.
 * When opening a loadout in the loadout optimizer from the inventory page, the correct character is now selected rather than the last played character.
@@ -361,7 +580,7 @@
 * Exclude subclasses from `is:weapon` filter.
 * Fixed Loadout Optimizer not including all the right tiers when tier filtering was in place.
 
-## 6.19.0 <span className="changelog-date">(2020-07-05)</span>
+## 6.19.0 <span class="changelog-date">(2020-07-05)</span>
 
 * Loadout Optimizer has been... optimized. It now calculates sets in the background, so you can still interact with it while it works.
 * Removed ghosts from loadout optimizer as they don't have enough interesting perks to build into loadouts.
@@ -370,18 +589,18 @@
 * Make it clearer that not having Google Drive set up doesn't matter that much since it's only for importing legacy data.
 * Better handling for if the DIM Sync API is down.
 
-## 6.18.0 <span className="changelog-date">(2020-07-02)</span>
+## 6.18.0 <span class="changelog-date">(2020-07-02)</span>
 
 * Breaker type is now shown on the item popup and in the Organizer.
 * New filter for breaker types on weapons, `breaker:`.
 * Fixed another crash on the vendors screen also caused by the Twitch gift sub shader.
 * Protect against certain weird cases where DIM can get stuck in a non-working state until you really, thoroughly, clear your cache.
 
-## 6.17.1 <span className="changelog-date">(2020-07-01)</span>
+## 6.17.1 <span class="changelog-date">(2020-07-01)</span>
 
 * Fix a crash with the Twitch gift sub shader.
 
-## 6.17.0 <span className="changelog-date">(2020-06-28)</span>
+## 6.17.0 <span class="changelog-date">(2020-06-28)</span>
 
 * You can now filter out armor in the Loadout Optimizer by minimum total stats. This narrows down how many items are considered for builds and speeds up the optimizer.
 * Renamed the "is:reacquireable" filter to "is:reacquirable"
@@ -391,11 +610,11 @@
 * Seasonal mods in the loadout optimizer now force armor to match their element, again.
 * The stat in parentheses in a weapon perk tooltip, is the stat matching the masterwork. UI slightly updated to help show this.
 
-## 6.16.1 <span className="changelog-date">(2020-06-22)</span>
+## 6.16.1 <span class="changelog-date">(2020-06-22)</span>
 
 * Fix a crash when opening some items in Organizer.
 
-## 6.16.0 <span className="changelog-date">(2020-06-21)</span>
+## 6.16.0 <span class="changelog-date">(2020-06-21)</span>
 
 * Remove `is:ikelos` filter
 * Loadout Optimizer: Save stat order and "assume masterworked" choices.
@@ -409,9 +628,9 @@
 * Fix Arrival mods not appearing in the Loadout Optimizer.
 * Fix a bug when DIM Sync is off that could repeatedly show a notification that an import had failed. Please consider enabling DIM Sync though, your data WILL get lost if it's disabled.
 
-## 6.15.1 <span className="changelog-date">(2020-06-15)</span>
+## 6.15.1 <span class="changelog-date">(2020-06-15)</span>
 
-## 6.15.0 <span className="changelog-date">(2020-06-14)</span>
+## 6.15.0 <span class="changelog-date">(2020-06-14)</span>
 
 * Items now show their power limit in the item popup, Compare, and in the Organizer (new column). Keep in mind some power limits may change in upcoming seasons.
 * Try the `sunsetsafter:` or `powerlimit:` filters to find things by their power limit.
@@ -423,20 +642,20 @@
 * Fix non-selected perks not showing on old fixed-roll weapons.
 * Add Charge Rate and Guard Endurance stat to swords.
 
-## 6.14.0 <span className="changelog-date">(2020-06-07)</span>
+## 6.14.0 <span class="changelog-date">(2020-06-07)</span>
 
 * Fixed misdetection of seasonal mods in Compare.
 * Work around a Bungie.net issue that could prevent the Destiny info database from loading.
 * Improved the experience for users who previously had DIM Sync off.
 
-## 6.13.2 <span className="changelog-date">(2020-06-03)</span>
+## 6.13.2 <span class="changelog-date">(2020-06-03)</span>
 
-## 6.13.1 <span className="changelog-date">(2020-06-01)</span>
+## 6.13.1 <span class="changelog-date">(2020-06-01)</span>
 
 * Add a banner to support Black Lives Matter.
 * Avoid an issue where shift-clicking on empty space near perks in the Organizer can enable a useless filter.
 
-## 6.13.0 <span className="changelog-date">(2020-05-31)</span>
+## 6.13.0 <span class="changelog-date">(2020-05-31)</span>
 
 * DIM data (loadouts, tags, settings) can no longer be stored in Google Drive. If you already have things stored there, you can use that data to import into the new storage, but it will no longer be updated. Disabling DIM Sync will now store data locally only.
 * The Vault Organizer is now available for D1.
@@ -449,44 +668,44 @@
 * Fixed loadouts with subclasses not fully transferring to the vault.
 * Don't display "ms" unit on Charge Time stat for D1 fusion rifles.
 
-## 6.12.0 <span className="changelog-date">(2020-05-24)</span>
+## 6.12.0 <span class="changelog-date">(2020-05-24)</span>
 
 * DIM has a new community-driven user guide at https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki
 
-## 6.11.0 <span className="changelog-date">(2020-05-17)</span>
+## 6.11.0 <span class="changelog-date">(2020-05-17)</span>
 
 * Added the Organizer page, which lets you see all your items in a table form, which you can sort and filter (try shift-clicking on a cell!). Add and remove columns and bulk-tag your items to help quickly figure out which items you want to keep and which you can get rid of.
 * Fixed stat calculations for special Taken King class items in D1.
 
-## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
+## 6.10.0 <span class="changelog-date">(2020-05-10)</span>
 
-## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
+## 6.9.0 <span class="changelog-date">(2020-05-03)</span>
 
 * In the Loadout Optimizer, mods have been split into their own menu, separate from perks.
 * Fixed a bug where wishlists would ignore settings and load the default wishlist instead.
 
-## 6.8.0 <span className="changelog-date">(2020-04-26)</span>
+## 6.8.0 <span class="changelog-date">(2020-04-26)</span>
 
 * Added "armor 2.0" column to spreadsheet exports.
 * Fixed a bug that could affect the display of percentage-based objectives.
 
-## 6.7.0 <span className="changelog-date">(2020-04-19)</span>
+## 6.7.0 <span class="changelog-date">(2020-04-19)</span>
 
 * Emblems now show a preview of their equipped stat tracker, and show which types of stat tracker the emblem can use.
 * Certain stat trackers (under "Metrics" in "Collections") had the wrong display value, like KDA. These have been fixed.
 * Loadout Optimizer now allows you to select seasonal mods independent of the gear they go on - it'll try to slot them into any gear.
 
-## 6.6.0 <span className="changelog-date">(2020-04-12)</span>
+## 6.6.0 <span class="changelog-date">(2020-04-12)</span>
 
 * Better handling of logging out and into a different Bungie.net account.
 * Improved error handling for Bungie.net and DIM Sync issues.
 
-## 6.5.0 <span className="changelog-date">(2020-04-10)</span>
+## 6.5.0 <span class="changelog-date">(2020-04-10)</span>
 
 * Improved overall performance and memory usage of DIM - as the game grows, so has DIM's memory usage. If your browser was crashing before, give it a try now.
 * Collectibles now show perks.
 
-## 6.4.0 <span className="changelog-date">(2020-04-05)</span>
+## 6.4.0 <span class="changelog-date">(2020-04-05)</span>
 
 * Added stat trackers to the Collections page (under "Metrics")
 * Improved error handling when Bungie.net is down or something is wrong with your account. Includes helpful tips for D1 users locked out by Twitch-linking bug. If your D1 accounts disappeared, they're in the menu now.
@@ -496,22 +715,22 @@
 * Fix display of collectibles that are tied to one of your alternate characters.
 * Fix the levels that reward Bright Engrams after season rank 100.
 
-## 6.3.1 <span className="changelog-date">(2020-03-29)</span>
+## 6.3.1 <span class="changelog-date">(2020-03-29)</span>
 
 * Fixed a bug where D1 items could fail to display.
 * Fixed a bug where responding "Not now" to the DIM Sync prompt wouldn't cause it to go away forever.
 * Make mod slot for Reverie Dawn armor set detect correctly as outlaw.
 
-## 6.3.0 <span className="changelog-date">(2020-03-29)</span>
+## 6.3.0 <span class="changelog-date">(2020-03-29)</span>
 
 * Removed duplicate Mods section from the top level of the Collections screen - they're still under the normal collections tree.
 * Fixed a missing icon when season rank is over 100.
 
-## 6.2.0 <span className="changelog-date">(2020-03-22)</span>
+## 6.2.0 <span class="changelog-date">(2020-03-22)</span>
 
-## 6.1.1 <span className="changelog-date">(2020-03-22)</span>
+## 6.1.1 <span class="changelog-date">(2020-03-22)</span>
 
-## 6.1.0 <span className="changelog-date">(2020-03-22)</span>
+## 6.1.0 <span class="changelog-date">(2020-03-22)</span>
 
 * Introducing [DIM Sync](https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)), a brand new way for DIM to store your loadouts and tags and sync them between all your devices. This is a big step forward that'll let us build lots of new things and share data between other apps and websites! Plus, you no longer have to log into anything separate, and we should avoid some of the bugs that have in the past led to lost data.
 * External wish lists will be checked daily. Settings menu shows last fetched time.

@@ -1,12 +1,16 @@
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { RootState } from 'app/store/types';
 import { isD1Item } from 'app/utils/item-utils';
-import { UiWishListRoll } from 'app/wishlists/wishlists';
+import { InventoryWishListRoll, UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
+import { getNotes } from './dim-item-info';
 import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
 
@@ -14,17 +18,22 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
+  [DestinyEnergyType.Ghost]: '',
+  [DestinyEnergyType.Subclass]: '',
   [DestinyEnergyType.Any]: '',
 };
 
 interface Props {
   item: DimItem;
   isCapped: boolean;
-  uiWishListRoll?: UiWishListRoll;
+  wishlistRoll?: InventoryWishListRoll;
 }
 
 export function hasBadge(item?: DimItem | null): boolean {
   if (!item) {
+    return false;
+  }
+  if (item.isEngram && item.location.hash === BucketHashes.Engrams) {
     return false;
   }
   return (
@@ -36,13 +45,19 @@ export function hasBadge(item?: DimItem | null): boolean {
   );
 }
 
-export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
+export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
+  const savedNotes = useSelector<RootState, string | undefined>((state) =>
+    getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state))
+  );
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
+  const wishlistRollIcon =
+    wishlistRoll && (wishlistRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good);
 
   const hideBadge = Boolean(
-    (isBounty && (item.complete || item.hidePercentage)) ||
+    (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
+      (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
       (isGeneric && !item.primStat?.value && !item.classified)
   );
@@ -55,7 +70,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
     (isGeneric && item.primStat?.value.toString()) ||
-    (item.classified && '???');
+    (item.classified && (savedNotes ?? '???'));
 
   return (
     <div
@@ -63,6 +78,7 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
+        [styles.engram]: item.isEngram,
       })}
     >
       {isD1Item(item) && item.quality && (
@@ -70,13 +86,13 @@ export default function BadgeInfo({ item, isCapped, uiWishListRoll }: Props) {
           {item.quality.min}%
         </div>
       )}
-      {uiWishListRoll && (
+      {wishlistRollIcon && (
         <div
           className={clsx({
-            [styles.wishlistRoll]: uiWishListRoll,
+            [styles.wishlistRoll]: wishlistRollIcon,
           })}
         >
-          <RatingIcon uiWishListRoll={uiWishListRoll} />
+          <RatingIcon uiWishListRoll={wishlistRollIcon} />
         </div>
       )}
       {item.energy ? (

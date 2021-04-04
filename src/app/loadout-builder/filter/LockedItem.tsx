@@ -1,4 +1,4 @@
-import BungieImageAndAmmo from 'app/dim-ui/BungieImageAndAmmo';
+import BungieImage from 'app/dim-ui/BungieImage';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -33,8 +33,7 @@ export default function LockedItem({
       return (
         <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
           <div className={styles.emptyItem}>
-            <BungieImageAndAmmo
-              hash={lockedItem.perk.hash}
+            <BungieImage
               title={lockedItem.perk.displayProperties.name}
               src={lockedItem.perk.displayProperties.icon}
             />

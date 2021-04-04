@@ -1,13 +1,12 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
-import { getItemPowerCapFinalSeason } from 'app/utils/item-utils';
-import { D2CalculatedSeason } from 'data/d2/d2-season-info';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
-import { FilterDefinition, FilterDeprecation } from '../filter-types';
+import { FilterDefinition } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
-import { generateSuggestionsForFilter } from '../search-utils';
+import { generateSuggestionsForFilter } from '../suggestions-generation';
 import { rangeStringToComparator } from './range-numeric';
 
 /** matches a filterValue that's probably a math check */
@@ -22,11 +21,16 @@ const seasonTagToNumber = {
 // prioritize newer seasons. nobody is looking for "redwar" at this point
 const seasonTagNames = Object.keys(seasonTagToNumber).reverse();
 
-// things can't sunset in season 11 and earlier
-const sunsetSeasonTagNames = Object.entries(seasonTagToNumber)
-  .filter(([_, num]) => num > 11)
-  .map(([tag]) => tag)
-  .reverse();
+// shortcuts for power numbers
+const powerLevelByKeyword = {
+  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
+  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
+  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
+  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
+};
+const powerLevelKeywords = Object.keys(powerLevelByKeyword);
+// TO DATE, things cannot cap at anything but pinnacle limits
+const powerCapKeywords = ['pinnaclecap'];
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word
 
@@ -92,35 +96,28 @@ const overloadedRangeFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: 'sunsetsafter',
-    description: tl('Filter.SunsetAfter'),
+    keywords: ['light', 'power'],
+    description: tl('Filter.PowerLevel'),
     format: 'rangeoverload',
-    destinyVersion: 2,
-    deprecated: FilterDeprecation.Deprecated,
-    suggestions: seasonTagNames,
+    suggestions: powerLevelKeywords,
     filter: ({ filterValue }) => {
-      filterValue = replaceSeasonTagWithNumber(filterValue);
+      filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: DimItem) => {
-        const itemFinalSeason = getItemPowerCapFinalSeason(item);
-        return compareTo(itemFinalSeason ?? 0);
-      };
+      return (item) => item.primStat && compareTo(item.primStat.value);
     },
   },
   {
-    keywords: 'sunsetsin',
-    description: tl('Filter.Sunsets'),
+    keywords: 'powerlimit',
+    description: tl('Filter.PowerLimit'),
     format: 'rangeoverload',
+    suggestions: powerCapKeywords,
     destinyVersion: 2,
-    suggestions: sunsetSeasonTagNames,
     filter: ({ filterValue }) => {
-      filterValue = replaceSeasonTagWithNumber(filterValue);
+      filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item: DimItem) => {
-        // things without a final season will turn into 0 and eval false 2 lines down
-        const sunsetSeason = (getItemPowerCapFinalSeason(item) ?? -1) + 1;
-        return Boolean(sunsetSeason) && compareTo(sunsetSeason);
-      };
+      return (item) =>
+        // anything with no powerCap has no known limit, so treat it like it's 99999999
+        compareTo(item.powerCap ?? 99999999);
     },
   },
 ];
@@ -136,4 +133,14 @@ export default overloadedRangeFilters;
  */
 function replaceSeasonTagWithNumber(s: string) {
   return s.replace(/[a-z]+$/i, (tag) => seasonTagToNumber[tag]);
+}
+
+const powerKeywordMatcher = new RegExp(powerLevelKeywords.join('|'));
+/**
+ * replaces a word with a corresponding power level
+ *
+ * use only on simple filter values where there's not other letters
+ */
+function replacePowerLevelKeyword(s: string) {
+  return s.replace(powerKeywordMatcher, (tag) => powerLevelByKeyword[tag]);
 }

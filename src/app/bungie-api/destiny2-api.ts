@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
@@ -6,6 +7,7 @@ import {
   awaInitializeRequest,
   AwaType,
   BungieMembershipType,
+  DestinyCharacterResponse,
   DestinyComponentType,
   DestinyEquipItemResults,
   DestinyItemResponse,
@@ -16,6 +18,7 @@ import {
   DestinyVendorsResponse,
   equipItem,
   equipItems as equipItemsApi,
+  getCharacter as getCharacterApi,
   getDestinyManifest,
   getItem,
   getLinkedProfiles,
@@ -107,10 +110,28 @@ export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileR
 }
 
 /**
- * Get just character info for all a user's characters on the given platform. No inventory, just enough to refresh activity.
+ * Get character info for on the given platform. No inventory, just enough to refresh activity.
  */
-export function getCurrentActivity(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(platform, DestinyComponentType.CharacterActivities);
+export function getCurrentActivity(
+  platform: DestinyAccount,
+  characterId: string
+): Promise<DestinyCharacterResponse> {
+  return getCharacter(platform, characterId, DestinyComponentType.CharacterActivities);
+}
+
+async function getCharacter(
+  platform: DestinyAccount,
+  characterId: string,
+  ...components: DestinyComponentType[]
+): Promise<DestinyCharacterResponse> {
+  const response = await getCharacterApi(authenticatedHttpClient, {
+    destinyMembershipId: platform.membershipId,
+    characterId,
+    membershipType: platform.originalPlatformType,
+    components,
+  });
+
+  return response.Response;
 }
 
 /**
@@ -128,7 +149,8 @@ async function getProfile(
   });
   // TODO: what does it actually look like to not have an account?
   if (Object.keys(response.Response).length === 0) {
-    throw new Error(
+    throw new DimError(
+      'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
         platform: platform.platformLabel,
       })

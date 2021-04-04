@@ -1,25 +1,26 @@
+import { currentXur } from '@d2api/date';
 import CheckButton from 'app/dim-ui/CheckButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
-import { useSubscription } from 'app/utils/hooks';
-import { VendorDrop } from 'app/vendorEngramsXyzApi/vendorDrops';
+import { useEventBusListener } from 'app/utils/hooks';
 import {
   DestinyCollectibleComponent,
   DestinyCurrenciesComponent,
   DestinyItemPlug,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
+import { motion, PanInfo } from 'framer-motion';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
-import Hammer from 'react-hammerjs';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -58,7 +59,6 @@ interface StoreProps {
   isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
-  vendorEngramDrops: VendorDrop[];
   vendors: VendorsState['vendorsByCharacter'];
   filterItems: ItemFilter;
 }
@@ -75,7 +75,6 @@ function mapStateToProps() {
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendorEngramDrops: state.vendorDrops.vendorDrops,
     vendors: state.vendors.vendorsByCharacter,
   });
 }
@@ -94,7 +93,6 @@ function Vendors({
   searchQuery,
   filterItems,
   profileResponse,
-  vendorEngramDrops,
   vendors,
   dispatch,
   account,
@@ -112,26 +110,37 @@ function Vendors({
     }
   }, [account, selectedStoreId, dispatch]);
 
-  useSubscription(() =>
-    refresh$.subscribe(() => {
-      if (selectedStoreId) {
-        loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
-      }
-    })
+  useEventBusListener(
+    refresh$,
+    useCallback(
+      () => () => {
+        if (selectedStoreId) {
+          loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
+        }
+      },
+      [account, dispatch, selectedStoreId]
+    )
   );
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
 
-  const handleSwipe: HammerListener = (e) => {
+  const handleSwipe = (_e, info: PanInfo) => {
+    // Velocity is in px/ms
+    if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
+      return;
+    }
+
+    const direction = -Math.sign(info.velocity.x);
+
     const characters = stores.filter((s) => !s.isVault);
 
     const selectedStoreIndex = selectedStoreId
       ? characters.findIndex((s) => s.id === selectedStoreId)
       : characters.findIndex((s) => s.current);
 
-    if (e.direction === 2 && selectedStoreIndex < characters.length - 1) {
+    if (direction > 0 && selectedStoreIndex < characters.length - 1) {
       setCharacterId(characters[selectedStoreIndex + 1].id);
-    } else if (e.direction === 4 && selectedStoreIndex > 0) {
+    } else if (direction < 0 && selectedStoreIndex > 0) {
       setCharacterId(characters[selectedStoreIndex - 1].id);
     }
   };
@@ -179,11 +188,34 @@ function Vendors({
   const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
-  if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
-  }
-  if (vendorGroups && searchQuery.length) {
-    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+  if (vendorGroups) {
+    if (filterToUnacquired) {
+      vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
+    }
+    if (searchQuery.length) {
+      vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
+    }
+    if (
+      currentXur()?.start === undefined &&
+      vendorGroups.some((v) => v.def.hash === VENDOR_GROUPS.LIMITED_TIME)
+    ) {
+      const vgIndex = vendorGroups
+        .map(function (v) {
+          return v.def.hash;
+        })
+        .indexOf(VENDOR_GROUPS.LIMITED_TIME);
+      if (vendorGroups[vgIndex].vendors.some((v) => v.def.hash === VENDORS.XUR)) {
+        const xurIndex = vendorGroups[vgIndex].vendors
+          .map(function (v) {
+            return v.def.hash;
+          })
+          .indexOf(VENDORS.XUR);
+        vendorGroups[vgIndex].vendors.splice(xurIndex, 1); // Remove Xur
+      }
+      if (!vendorGroups[vgIndex].vendors.length) {
+        vendorGroups.splice(vgIndex, 1); // Remove "Limited Time" if Xur was only Vendor
+      }
+    }
   }
 
   const fullOwnedItemHashes = enhanceOwnedItemsWithPlugSets(ownedItemHashes, defs, profileResponse);
@@ -200,35 +232,34 @@ function Vendors({
           />
         )}
         {selectedStore && (
-          <CheckButton checked={filterToUnacquired} onChange={setFilterToUnacquired}>
+          <CheckButton
+            name="filter-to-unacquired"
+            checked={filterToUnacquired}
+            onChange={setFilterToUnacquired}
+          >
             {t('Vendors.FilterToUnacquired')}
           </CheckButton>
         )}
-        {!isPhonePortrait && vendorGroups && (
-          <VendorsMenu groups={vendorGroups} vendorEngramDrops={vendorEngramDrops} />
-        )}
+        {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents>
-        <Hammer direction="DIRECTION_HORIZONTAL" onSwipe={handleSwipe}>
-          <div>
-            {vendorGroups && currencyLookups && defs ? (
-              vendorGroups.map((group) => (
-                <VendorGroup
-                  key={group.def.hash}
-                  defs={defs}
-                  group={group}
-                  ownedItemHashes={fullOwnedItemHashes}
-                  currencyLookups={currencyLookups}
-                  filtering={filterToUnacquired || searchQuery.length > 0}
-                  vendorDrops={vendorEngramDrops}
-                  characterId={selectedStore.id}
-                />
-              ))
-            ) : (
-              <ShowPageLoading message={t('Loading.Vendors')} />
-            )}
-          </div>
-        </Hammer>
+        <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
+          {vendorGroups && currencyLookups && defs ? (
+            vendorGroups.map((group) => (
+              <VendorGroup
+                key={group.def.hash}
+                defs={defs}
+                group={group}
+                ownedItemHashes={fullOwnedItemHashes}
+                currencyLookups={currencyLookups}
+                filtering={filterToUnacquired || searchQuery.length > 0}
+                characterId={selectedStore.id}
+              />
+            ))
+          ) : (
+            <ShowPageLoading message={t('Loading.Vendors')} />
+          )}
+        </motion.div>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
@@ -240,7 +271,6 @@ function VendorGroup({
   currencyLookups,
   defs,
   filtering,
-  vendorDrops,
   characterId,
 }: {
   defs: D2ManifestDefinitions;
@@ -248,7 +278,6 @@ function VendorGroup({
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
   filtering: boolean;
-  vendorDrops?: VendorDrop[];
   characterId: string;
 }) {
   return (
@@ -262,7 +291,6 @@ function VendorGroup({
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
             filtering={filtering}
-            vendorDrops={vendorDrops}
             characterId={characterId}
           />
         </ErrorBoundary>

@@ -1,3 +1,7 @@
+import { getGlobalAlerts } from 'app/bungie-api/bungie-core-api';
+import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
+import { GlobalAlert } from 'bungie-api-ts/core';
 import { createAction } from 'typesafe-actions';
 
 /** Set whether we're in phonePortrait view mode. */
@@ -15,9 +19,29 @@ export const setSearchQuery = createAction(
 /**
  * Toggle in or out a specific search query component from the existing search.
  */
-export const toggleSearchQueryComponent = createAction('shell/TOGGLE_SEARCH_QUERY_COMPONENT')<
-  string
->();
+export const toggleSearchQueryComponent = createAction(
+  'shell/TOGGLE_SEARCH_QUERY_COMPONENT'
+)<string>();
+
+/**
+ * Update the known list of Bungie.net alerts.
+ */
+export const updateBungieAlerts = createAction('shell/BUNGIE_ALERTS')<GlobalAlert[]>();
+
+/**
+ * Poll repeatedly for new Bungie alerts
+ */
+export function pollForBungieAlerts(): ThunkResult {
+  return async (dispatch) => {
+    setInterval(async () => {
+      try {
+        dispatch(updateBungieAlerts(await getGlobalAlerts()));
+      } catch (e) {
+        errorLog('BungieAlerts', 'Unable to get Bungie.net alerts: ', e);
+      }
+    }, 10 * 60 * 1000);
+  };
+}
 
 /**
  * Signifies that there is a page-wide loading state, with a message.

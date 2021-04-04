@@ -5,6 +5,7 @@ interface CssExports {
   'buttonItemCount': string;
   'checked': string;
   'level': string;
+  'selected': string;
   'selector': string;
 }
 export const cssExports: CssExports;

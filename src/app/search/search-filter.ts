@@ -31,7 +31,7 @@ import { SearchConfig, searchConfigSelector } from './search-config';
  * depend on every bit of data in FilterContext so that we regenerate the filter
  * function whenever any of them changes.
  */
-export const searchFiltersConfigSelector = createSelector(
+export const filterFactorySelector = createSelector(
   searchConfigSelector,
   sortedStoresSelector,
   allItemsSelector,
@@ -48,7 +48,7 @@ export const searchFiltersConfigSelector = createSelector(
 /** A selector for a function for searching items, given the current search query. */
 export const searchFilterSelector = createSelector(
   querySelector,
-  searchFiltersConfigSelector,
+  filterFactorySelector,
   (query, filterFactory) => filterFactory(query)
 );
 

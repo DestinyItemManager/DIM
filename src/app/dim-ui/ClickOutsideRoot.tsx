@@ -1,5 +1,5 @@
+import { EventBus } from 'app/utils/observable';
 import React, { useState } from 'react';
-import { Subject } from 'rxjs';
 import { ClickOutsideContext } from './ClickOutside';
 
 /**
@@ -11,7 +11,7 @@ import { ClickOutsideContext } from './ClickOutside';
  * spawned through portals from the item popup.
  */
 export default function ClickOutsideRoot({ children }: { children: React.ReactNode }) {
-  const [clickOutsideSubject] = useState(() => new Subject<React.MouseEvent>());
+  const [clickOutsideSubject] = useState(() => new EventBus<React.MouseEvent>());
 
   const onClick = (e: React.MouseEvent) => {
     clickOutsideSubject.next(e);

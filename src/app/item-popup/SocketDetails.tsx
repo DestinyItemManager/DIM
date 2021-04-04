@@ -1,4 +1,3 @@
-import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -7,6 +6,7 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -243,20 +243,27 @@ function SocketDetails({
   const modListRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (modListRef.current) {
-      const firstElement = modListRef.current.querySelector("[tabIndex='0']")! as HTMLDivElement;
-      firstElement?.focus();
+      const firstElement = modListRef.current.querySelector("[tabIndex='0']")!;
+      (firstElement as HTMLInputElement)?.focus();
     }
   }, []);
 
-  const footer = selectedPlug && isPluggableItem(selectedPlug) && (
-    <SocketDetailsSelectedPlug
-      plug={selectedPlug}
-      defs={defs}
-      item={item}
-      socket={socket}
-      currentPlug={socket.plugged}
-    />
-  );
+  const footer =
+    selectedPlug &&
+    isPluggableItem(selectedPlug) &&
+    (({ onClose }: { onClose(): void }) => (
+      <SocketDetailsSelectedPlug
+        plug={selectedPlug}
+        defs={defs}
+        item={item}
+        socket={socket}
+        currentPlug={socket.plugged}
+        equippable={
+          unlockedPlugs.has(selectedPlug.hash) || otherUnlockedPlugs.has(selectedPlug.hash)
+        }
+        closeMenu={onClose}
+      />
+    ));
 
   return (
     <Sheet

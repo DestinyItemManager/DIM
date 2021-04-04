@@ -45,7 +45,7 @@ function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
               })}
               style={bungieBackgroundStyleAdvanced(
                 emptySlotItem.displayProperties.icon,
-                'linear-gradient(#0005, #0005)', // forced dark background to help w/ visibility
+                'linear-gradient(#000b, #000b)', // forced dark background to help w/ visibility
                 2
               )}
             />
@@ -64,7 +64,7 @@ const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|che
 export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
   (item.bucket.inArmor &&
     item.sockets?.allSockets.find((socket) =>
-      socket?.plugged?.plugDef?.plug.plugCategoryIdentifier.match(
+      socket.plugged?.plugDef.plug.plugCategoryIdentifier.match(
         armorSlotSpecificPlugCategoryIdentifier
       )
     )) ||

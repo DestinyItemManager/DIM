@@ -1,14 +1,13 @@
-import { CompareService } from 'app/compare/compare.service';
+import { compareSessionSelector } from 'app/compare/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
+import store from 'app/store/store';
+import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { ConnectDragSource, DragSource, DragSourceConnector, DragSourceSpec } from 'react-dnd';
-import { BehaviorSubject } from 'rxjs';
-import store from '../store/store';
-import { stackableDrag } from './actions';
 import { showDragGhost } from './drag-ghost-item';
 import { DimItem } from './item-types';
 
@@ -43,7 +42,7 @@ export interface DragObject {
   item: DimItem;
 }
 
-export const isDragging$ = new BehaviorSubject(false);
+export const isDragging$ = new Observable<boolean>(false);
 export let isDragging = false;
 
 const LONGPRESS_TIMEOUT = 200;
@@ -53,10 +52,6 @@ let dragTimeout: number | null = null;
 const dragSpec: DragSourceSpec<Props, DragObject> = {
   beginDrag(props) {
     hideItemPopup();
-
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(true));
-    }
 
     dragTimeout = requestAnimationFrame(() => {
       dragTimeout = null;
@@ -68,13 +63,9 @@ const dragSpec: DragSourceSpec<Props, DragObject> = {
     return { item: props.item };
   },
 
-  endDrag(props) {
+  endDrag() {
     if (dragTimeout !== null) {
       cancelAnimationFrame(dragTimeout);
-    }
-
-    if (props.item.maxStackSize > 1 && props.item.amount > 1 && !props.item.uniqueStack) {
-      store.dispatch(stackableDrag(false));
     }
 
     document.body.classList.remove('drag-perf-show');
@@ -100,6 +91,7 @@ function collect(connect: DragSourceConnector): InternalProps {
   };
 }
 
+// TODO: break this out for inspect = true!
 function DraggableInventoryItem({
   connectDragSource,
   inspect,
@@ -122,7 +114,9 @@ function DraggableInventoryItem({
   const onTouch = (e: React.TouchEvent) => {
     setTouchActive(e.type === 'touchstart');
 
-    if (!inspect || loadoutDialogOpen || CompareService.dialogOpen) {
+    // We don't need this to rerender on store / compare changes. But gotta figure out a better way to look at this.
+    // TODO: Do we need these checks at all?
+    if (!inspect || loadoutDialogOpen || Boolean(compareSessionSelector(store.getState()))) {
       return;
     }
 

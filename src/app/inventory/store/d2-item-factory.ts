@@ -20,6 +20,7 @@ import {
   SingleComponentResponse,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
+import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -33,6 +34,7 @@ import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
+import { isSpoils } from './spoils-of-conquest';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
@@ -159,7 +161,7 @@ export function makeItemSingle(
   // Convert a single component response into a dictionary component response
   const empty = { privacy: ComponentPrivacySetting.Public, data: {} };
   const m: <V>(v: SingleComponentResponse<V>) => DictionaryComponentResponse<V> = itemId
-    ? (v) => ({ privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} })
+    ? (v) => (v ? { privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} } : empty)
     : () => empty;
 
   // Make it look like a full response
@@ -264,29 +266,30 @@ export function makeItem(
 
   const itemType = normalBucket.type || 'Unknown';
 
-  // 34 = category hash for engrams
   const isEngram =
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
     normalBucket.hash === BucketHashes.Engrams ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
-  // https://github.com/Bungie-net/api/issues/1079, engrams had a primary stat
+
   const primaryStat: DimItem['primStat'] =
-    !instanceDef?.primaryStat ||
-    itemDef.stats?.disablePrimaryStatDisplay ||
-    itemType === 'Class' ||
-    isEngram
+    !instanceDef?.primaryStat || itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class'
       ? null
       : {
           ...instanceDef.primaryStat,
           stat: defs.Stat.get(instanceDef.primaryStat.statHash),
+          value: isEngram
+            ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
+            : instanceDef.primaryStat.value,
         } || null;
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
     (instanceDef?.damageTypeHash !== undefined &&
       defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (itemDef.defaultDamageTypeHash !== undefined &&
+      defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
     (instanceDef?.energy?.energyTypeHash !== undefined &&
       defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
     null;
@@ -366,7 +369,9 @@ export function makeItem(
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
     notransfer: Boolean(
-      itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
+      itemDef.nonTransferrable ||
+        item.transferStatus === TransferStatuses.NotTransferrable ||
+        isSpoils(itemDef, owner, defs)
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
@@ -402,11 +407,12 @@ export function makeItem(
     collectibleHash: itemDef.collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
-    plug: itemDef.plug?.energyCost && {
-      energyCost: itemDef.plug.energyCost.energyCost,
-      costElementIcon: defs.Stat.get(
-        defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
-      ).displayProperties.icon,
+    plug: itemDef.plug && {
+      energyCost: itemDef.plug.energyCost?.energyCost || 0,
+      costElementIcon: itemDef.plug.energyCost
+        ? defs.Stat.get(defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash)
+            .displayProperties.icon
+        : undefined,
     },
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,
@@ -443,6 +449,13 @@ export function makeItem(
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);
     createdItem.primStat.stat = statDef;
+  }
+
+  if (extendedICH[createdItem.hash]) {
+    createdItem.itemCategoryHashes = [
+      ...createdItem.itemCategoryHashes,
+      extendedICH[createdItem.hash],
+    ];
   }
 
   try {
@@ -584,12 +597,29 @@ export function makeItem(
     reportException('Quest', e, { itemHash: item.itemHash });
   }
 
-  // TODO: Phase out "base power"
   if (createdItem.primStat) {
     createdItem.basePower = createdItem.primStat.value;
   }
 
   createdItem.index = createItemIndex(createdItem);
+
+  // Some items have multiple tooltips, but the item.tooltipNotificationIndexes property that
+  // should tell us which to show is missing: https://github.com/Bungie-net/api/issues/1419
+  if (
+    itemDef.tooltipNotifications?.length === 1 &&
+    itemDef.tooltipNotifications[0].displayString.length
+  ) {
+    createdItem.tooltipNotifications = itemDef.tooltipNotifications
+      .filter((t) =>
+        // displayString is never actually set in the definitions, so we hijack it to set our own. If this contains
+        // numbers it's probably a seasonal expiration notice. All the other tooltips are kind of junk right now.
+        /\d+/.test(t.displayString)
+      )
+      .map((t) => ({
+        displayString: t.displayString,
+        displayStyle: 'seasonal-expiration',
+      }));
+  }
 
   return createdItem;
 }
@@ -621,6 +651,17 @@ function buildPursuitInfo(
       modifierHashes: [],
       ...createdItem.pursuit,
       rewards,
+    };
+  }
+  if (
+    createdItem.pursuit &&
+    createdItem.bucket.hash === BucketHashes.Quests &&
+    itemDef.setData?.itemList
+  ) {
+    createdItem.pursuit = {
+      ...createdItem.pursuit,
+      questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
+      questStepsTotal: itemDef.setData.itemList.length,
     };
   }
 }

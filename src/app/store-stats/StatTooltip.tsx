@@ -31,35 +31,46 @@ function getClassAbilityCooldownTranslation(characterClass?: DestinyClass) {
     case DestinyClass.Titan:
       return tl('Stats.BarricadeCooldown');
     default:
-      return null;
+      return undefined;
   }
 }
 
-function getAbilityTranslation(statHash: number) {
+function getLightAbilityTranslation(statHash: number) {
   switch (statHash) {
-    case D2ArmorStatHashByName.mobility:
-      return tl('Stats.Effect');
-    case D2ArmorStatHashByName.recovery:
-      return tl('Stats.Effect');
-    case D2ArmorStatHashByName.resilience:
-      return tl('Stats.Effect');
     case D2ArmorStatHashByName.intellect:
-      return tl('Stats.SuperCooldown');
+      return tl('Stats.LightSuperCooldown');
     case D2ArmorStatHashByName.discipline:
-      return tl('Stats.GrenadeCooldown');
+      return tl('Stats.LightGrenadeCooldown');
     case D2ArmorStatHashByName.strength:
-      return tl('Stats.MeleeCooldown');
+      return tl('Stats.LightMeleeCooldown');
     default:
-      return null;
+      return undefined;
+  }
+}
+
+function getDarkAbilityTranslation(statHash: number) {
+  switch (statHash) {
+    case D2ArmorStatHashByName.intellect:
+      return tl('Stats.DarkSuperCooldown');
+    case D2ArmorStatHashByName.discipline:
+      return tl('Stats.DarkGrenadeCooldown');
+    case D2ArmorStatHashByName.strength:
+      return tl('Stats.DarkMeleeCooldown');
+    default:
+      return undefined;
   }
 }
 
 function StatTooltip({ stat, characterClass }: Props) {
-  const abilityTranslation = getAbilityTranslation(stat.hash);
+  const lightAbilityTranslation = getLightAbilityTranslation(stat.hash);
+  const darkAbilityTranslation = getDarkAbilityTranslation(stat.hash);
+
   const classAbilityTranslation = getClassAbilityCooldownTranslation(characterClass);
   const tier = statTier(stat.value);
-  const statEffects = getStatEffects(stat.hash);
+  const statEffects = getStatEffects(stat.hash, characterClass);
   const classAbilityEffects = getClassAbilityCooldowns(characterClass);
+  const lightEffect = statEffects?.light?.[tier];
+  const darkEffect = statEffects?.dark?.[tier];
 
   return (
     <div>
@@ -68,18 +79,25 @@ function StatTooltip({ stat, characterClass }: Props) {
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
         <div>{`${stat.value}/100`}</div>
       </div>
-      {abilityTranslation && statEffects ? (
+      {$featureFlags.abilityCooldowns && lightAbilityTranslation && lightEffect ? (
         <div className={styles.values}>
-          <div className={styles.label}>{t(abilityTranslation)}</div>
-          <div className={styles.value}>{`${statEffects.values[tier]}${statEffects.units}`}</div>
+          <div className={styles.label}>{t(lightAbilityTranslation)}</div>
+          <div className={styles.value}>{lightEffect}</div>
         </div>
       ) : null}
-      {classAbilityTranslation &&
+      {$featureFlags.abilityCooldowns && darkAbilityTranslation && darkEffect ? (
+        <div className={styles.values}>
+          <div className={styles.label}>{t(darkAbilityTranslation)}</div>
+          <div className={styles.value}>{darkEffect}</div>
+        </div>
+      ) : null}
+      {$featureFlags.abilityCooldowns &&
+      classAbilityTranslation &&
       classAbilityEffects &&
       isClassAbilityStat(stat.hash, characterClass) ? (
         <div className={styles.values}>
           <div className={styles.label}>{t(classAbilityTranslation)}</div>
-          <div className={styles.value}>{classAbilityEffects.values[tier]}</div>
+          <div className={styles.value}>{classAbilityEffects[tier]}</div>
         </div>
       ) : null}
       <div className={styles.description}>{stat.description}</div>

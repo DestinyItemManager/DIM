@@ -113,7 +113,11 @@ function MainSearchBarActions({
       )}
 
       {showSearchActions && (
-        <ItemActionsDropdown filteredItems={filteredItems} searchActive={showSearchCount} />
+        <ItemActionsDropdown
+          filteredItems={filteredItems}
+          searchActive={showSearchCount}
+          searchQuery={searchQuery}
+        />
       )}
 
       {$featureFlags.searchResults &&

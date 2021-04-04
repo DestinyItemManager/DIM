@@ -234,7 +234,7 @@ body {
     @include phone-portrait {
       display: none;
     }
-    @media (max-width: 1080px) {
+    @media (max-width: 1280px) {
       display: none;
     }
 

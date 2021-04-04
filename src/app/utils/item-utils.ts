@@ -14,6 +14,8 @@ import {
   CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   killTrackerObjectivesByHash,
+  killTrackerSocketTypeHash,
+  modsWithConditionalStats,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
@@ -21,14 +23,20 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import powerCapToSeason from 'data/d2/lightcap-to-season.json';
+import {
+  DestinyClass,
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+} from 'bungie-api-ts/destiny2';
+import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
+import { StatHashes } from 'data/d2/generated-enums';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType or EnergyType into a known english name
-// mainly for most css purposes and the filter names
+// mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
   item.energy
@@ -61,17 +69,20 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
   (modMetadata) => modMetadata.emptyModSocketHash
 );
 
-/** verifies an item is d2 armor and has a specialty mod slot, which is returned */
-export const getSpecialtySockets = (item: DimItem): DimSocket[] | undefined => {
-  if (item.bucket.inArmor) {
-    return item.sockets?.allSockets.filter((socket) =>
+/** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
+export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+  if (item?.bucket.inArmor) {
+    const specialtySockets = item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
+    if (specialtySockets?.length) {
+      return specialtySockets;
+    }
   }
 };
 
-/** returns ModMetadata if the item has a specialty mod slot */
-export const getSpecialtySocketMetadatas = (item: DimItem): ModSocketMetadata[] | undefined =>
+/** returns ModMetadatas if the item has one or more specialty mod slots */
+export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
   getSpecialtySockets(item)
     ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
     .filter(Boolean);
@@ -83,9 +94,7 @@ export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): strin
   modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /**
- * this always returns a string for easy printing purposes
- *
- * `''` if not found, so you can let it stay blank or `||` it
+ * returns, if there are any, the localized names of an item's specialty slots
  */
 export const getItemSpecialtyModSlotDisplayNames = (
   item: DimItem,
@@ -110,10 +119,6 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
-/** given item, get the final season it will be relevant (able to hit max power level) */
-export const getItemPowerCapFinalSeason = (item: DimItem): number | undefined =>
-  item.powerCap ? powerCapToSeason[item.powerCap ?? -99999999] : undefined;
-
 /** accepts a DimMasterwork or lack thereof, & always returns a string */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
   return (
@@ -133,7 +138,7 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
       if (
         stat.statHash !== TOTAL_STAT_HASH &&
         stat.statHash !== CUSTOM_TOTAL_STAT_HASH &&
-        stat.baseMayBeWrong &&
+        stat.statMayBeWrong &&
         stat.displayProperties.name
       ) {
         incorrect.add(stat.displayProperties.name);
@@ -149,6 +154,14 @@ export function getPossiblyIncorrectStats(item: DimItem): string[] {
  */
 export function itemIsInstanced(item: DimItem): boolean {
   return item.id !== '0';
+}
+
+/**
+ * Items that are sunset are always sunset.
+ */
+export function isSunset(item: DimItem): boolean {
+  // 1310 is the last power cap value before sunsetting was sunsetted
+  return item.powerCap !== null && item.powerCap < 1310;
 }
 
 /** Can this item be equipped by the given store? */
@@ -204,13 +217,18 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
 /** verifies an item has kill tracker mod slot, which is returned */
 const getKillTrackerSocket = (item: DimItem): DimSocket | undefined => {
   if (item.bucket.inWeapons) {
-    return item.sockets?.allSockets.find(isKillTrackerSocket);
+    return item.sockets?.allSockets.find(isEnabledKillTrackerSocket);
   }
 };
 
 /** Is this both a kill tracker socket, and the kill tracker is enabled? */
-export function isKillTrackerSocket(socket: DimSocket) {
+function isEnabledKillTrackerSocket(socket: DimSocket) {
   return (socket.plugged?.plugObjectives[0]?.objectiveHash ?? 0) in killTrackerObjectivesByHash;
+}
+
+/** Is this a kill tracker socket */
+export function isKillTrackerSocket(socket: DimSocket) {
+  return socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash;
 }
 
 export type KillTracker = {
@@ -287,6 +305,57 @@ export function getItemYear(item: DimItem) {
     return year;
   } else {
     return undefined;
+  }
+}
+
+/**
+ * This function indicates whether a mod's stat effect is active on the item.
+ *
+ * For example, powerful friends only gives its stat effect if another arc mod is
+ * slotted or some other item has a charged with light arc mod slotted.
+ * This will return true if another arc mod is slotted or if we can pass in the
+ * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
+ *
+ * If the plugHash isn't recognised then the default is to return true.
+ */
+export function isPlugStatActive(
+  item: DimItem,
+  plugHash: number,
+  statHash: number,
+  isConditionallyActive: boolean,
+  modsOnOtherItems?: PluggableInventoryItemDefinition[]
+): boolean {
+  if (!isConditionallyActive) {
+    return true;
+  } else if (
+    plugHash === modsWithConditionalStats.powerfulFriends ||
+    plugHash === modsWithConditionalStats.radiantLight
+  ) {
+    // Powerful Friends & Radiant Light
+    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
+    return Boolean(
+      item.sockets?.allSockets.some(
+        (s) =>
+          s.plugged?.plugDef.hash !== plugHash &&
+          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      ) ||
+        modsOnOtherItems?.some(
+          (plugDef) =>
+            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        )
+    );
+  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
+    // Charge Harvester
+    return (
+      (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
+      (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
+      (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
+    );
+  } else if (masterworksWithCondStats.includes(plugHash)) {
+    return adeptWeaponHashes.includes(item.hash);
+  } else {
+    return true;
   }
 }
 

@@ -1,12 +1,14 @@
-import { useSubscription } from 'app/utils/hooks';
-import React, { useCallback, useContext, useRef } from 'react';
-import { Subject } from 'rxjs';
+import { useEventBusListener } from 'app/utils/hooks';
+import { EventBus } from 'app/utils/observable';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 
-export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
+export const ClickOutsideContext = React.createContext(new EventBus<React.MouseEvent>());
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
-  onClickOutside(event: React.MouseEvent): void;
+  /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
+  extraRef?: React.RefObject<HTMLElement>;
+  onClickOutside(event: React.MouseEvent | MouseEvent): void;
 };
 
 /**
@@ -17,26 +19,39 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * spawned through portals from the item popup.
  */
 export default React.forwardRef(function ClickOutside(
-  { onClickOutside, children, ...other }: Props,
+  { onClickOutside, children, extraRef, onClick, ...other }: Props,
   ref: React.RefObject<HTMLDivElement> | null
 ) {
   const localRef = useRef<HTMLDivElement>(null);
   const wrapperRef = ref || localRef;
-  const context = useContext(ClickOutsideContext);
+  const mouseEvents = useContext(ClickOutsideContext);
 
-  const subscribeFn = useCallback(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    const handleClickOutside = (event: React.MouseEvent) => {
+  /**
+   * Alert if clicked on outside of element
+   */
+  const handleClickOutside = useCallback(
+    (event: React.MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        onClickOutside(event);
+        if (!extraRef?.current || !extraRef.current.contains(event.target as Node)) {
+          onClickOutside(event);
+        }
+      }
+    },
+    [onClickOutside, wrapperRef, extraRef]
+  );
+
+  useEventBusListener(mouseEvents, handleClickOutside);
+
+  // Handle clicks directly on the body as always outside. This handles the case where the ClickoutsideRoot doesn't cover the whole screen.
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (e.target === document.body) {
+        onClickOutside(e);
       }
     };
-    return context.subscribe(handleClickOutside);
-  }, [context, onClickOutside, wrapperRef]);
-
-  useSubscription(subscribeFn);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  });
 
   return (
     <div ref={wrapperRef} {...other}>

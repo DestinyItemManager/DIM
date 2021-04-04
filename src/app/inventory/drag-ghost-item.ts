@@ -1,12 +1,12 @@
 import { DimItem } from 'app/inventory/item-types';
-import { Subject } from 'rxjs';
+import { Observable } from 'app/utils/observable';
 
 export interface DragGhostProps {
   item?: DimItem;
   transform?: string;
 }
 
-export const showDragGhost$ = new Subject<DragGhostProps>();
+export const showDragGhost$ = new Observable<DragGhostProps | undefined>(undefined);
 
 /**
  * Show the drag ghost item

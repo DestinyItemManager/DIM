@@ -18,8 +18,6 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-import _ from 'lodash';
-
 /* **** Parser **** */
 
 /**
@@ -284,8 +282,8 @@ export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018|\u2019|\u201A]/g, "'");
-  query = query.replace(/[\u201C|\u201D|\u201E]/g, '"');
+  query = query.replace(/[\u2018\u2019\u201A]/g, "'");
+  query = query.replace(/[\u201C\u201D\u201E]/g, '"');
 
   let match: string | undefined;
   let i = 0;
@@ -399,11 +397,15 @@ export function canonicalizeQuery(query: QueryAST, depth = 0) {
       return `-${canonicalizeQuery(query.operand, depth + 1)}`;
     case 'and':
     case 'or': {
-      const sortedOperands = _.sortBy(
-        query.operands.map((q) => canonicalizeQuery(q, depth + 1)),
-        (q) => q.replace(/[(-](.*)/, '$1')
-      ).join(query.op === 'and' ? ' ' : ` ${query.op} `);
-      return depth === 0 ? sortedOperands : `(${sortedOperands})`;
+      const joinedOperands = query.operands
+        .map((q) => canonicalizeQuery(q, depth + 1))
+        .join(
+          query.op === 'and' &&
+            !query.operands.some((op) => op.op === 'filter' && op.type === 'keyword')
+            ? ' '
+            : ` ${query.op} `
+        );
+      return depth === 0 ? joinedOperands : `(${joinedOperands})`;
     }
     case 'noop':
       return '';

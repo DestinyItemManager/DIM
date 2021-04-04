@@ -57,6 +57,7 @@ export function makeCharacter(
     isVault: false,
     color: character.emblemColor,
     items: [],
+    hadErrors: false,
   };
 }
 
@@ -82,6 +83,7 @@ export function makeVault(): DimStore {
     race: '',
     genderRace: '',
     stats: [],
+    hadErrors: false,
   };
 }
 
