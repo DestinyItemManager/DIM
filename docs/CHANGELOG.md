@@ -10,7 +10,7 @@
 * Loadout Optimizer
   * Mod groupings have been updated so inconsistent labels don't split them apart.
   * Half-tiers show up in results to warn you when a +5 stat mod might benefit you.
-  * A quick +5 mod picker has been added.
+  * In these cases, a new +5 button can quickly the suggested mods to your loadout.
 
 ## 6.58.0 <span class="changelog-date">(2021-03-28)</span>
 
