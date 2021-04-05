@@ -22,8 +22,7 @@ const loadoutFilters: FilterDefinition[] = [
       // a search like
       // inloadout:"loadout name here"
       if (filterValue !== 'inloadout') {
-        const foundLoadout = loadouts.find((l) => l.name === filterValue);
-        selectedLoadouts = foundLoadout ? [foundLoadout] : [];
+        selectedLoadouts = loadouts.filter((l) => l.name.toLowerCase() === filterValue);
       }
 
       const loadoutItemIds = collectItemsInLoadouts(selectedLoadouts);
