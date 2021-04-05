@@ -94,6 +94,7 @@ interface State {
   isNew: boolean;
   modPicker: {
     show: boolean;
+    /** An initial query to be passed to the mod picker, this will filter the mods shown. */
     query?: string;
   };
 }
