@@ -2,7 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { LockedMods } from 'app/loadout-builder/types';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -78,10 +78,10 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
-    removeModByIndex,
+    removeModByHash,
   }: {
     loadout: Loadout;
-    savedMods: LockedMods;
+    savedMods: PluggableItemsByPlugCategoryHash;
     buckets: InventoryBuckets;
     defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
@@ -91,7 +91,7 @@ export default function LoadoutDrawerContents(
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent): void;
     onOpenModPicker(): void;
-    removeModByIndex(index: number): void;
+    removeModByHash(index: number): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -160,7 +160,7 @@ export default function LoadoutDrawerContents(
           defs={defs}
           savedMods={savedMods}
           onOpenModPicker={onOpenModPicker}
-          removeModByIndex={removeModByIndex}
+          removeModByHash={removeModByHash}
         />
       )}
     </>

@@ -339,7 +339,7 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              lockedMods={lockedMods}
+              lockedMods={_.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))}
               initialQuery={modPicker.initialQuery}
               onAccept={(newLockedMods: PluggableItemsByPlugCategoryHash) =>
                 lbDispatch({

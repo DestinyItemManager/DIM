@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { LockedMod, LockedMods } from 'app/loadout-builder/types';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -12,7 +12,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { Loadout, LoadoutItem } from './loadout-types';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
@@ -247,28 +247,28 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
   return loadout;
 }
 
-const sortMods = chainComparator<LockedMod>(
-  compareBy((mod) => mod.modDef.plug.energyCost?.energyType),
-  compareBy((mod) => mod.modDef.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.modDef.displayProperties.name)
+const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
 );
 
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Loadout
-): LockedMods {
-  const mods: LockedMod[] = [];
+): PluggableItemsByPlugCategoryHash {
+  const mods: PluggableInventoryItemDefinition[] = [];
 
   if (defs.isDestiny2() && loadout.parameters?.mods) {
-    for (const [index, modHash] of loadout.parameters.mods.entries()) {
+    for (const modHash of loadout.parameters.mods) {
       const item = defs.InventoryItem.get(modHash);
       if (isPluggableItem(item)) {
-        mods.push({ modDef: item, key: index });
+        mods.push(item);
       }
     }
   }
 
   const sortedMods = mods.sort(sortMods);
 
-  return _.groupBy(sortedMods, (mod) => mod.modDef.plug.plugCategoryHash);
+  return _.groupBy(sortedMods, (mod) => mod.plug.plugCategoryHash);
 }

@@ -1,7 +1,10 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { knownModPlugCategoryHashes, LockedMods } from 'app/loadout-builder/types';
+import {
+  knownModPlugCategoryHashes,
+  PluggableItemsByPlugCategoryHash,
+} from 'app/loadout-builder/types';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import React, { useMemo } from 'react';
@@ -10,15 +13,15 @@ import styles from './SavedMods.m.scss';
 
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
-  savedMods: LockedMods;
+  savedMods: PluggableItemsByPlugCategoryHash;
   onOpenModPicker(): void;
-  removeModByIndex(index: number): void;
+  removeModByHash(index: number): void;
 }
 
 /**
  * Component for managing mods associated to a loadout.
  */
-function SavedMods({ defs, savedMods, onOpenModPicker, removeModByIndex }: Props) {
+function SavedMods({ defs, savedMods, onOpenModPicker, removeModByHash }: Props) {
   const groupedMods = useMemo(() => {
     if (!defs.isDestiny2()) {
       return [];
@@ -29,12 +32,12 @@ function SavedMods({ defs, savedMods, onOpenModPicker, removeModByIndex }: Props
     return groups.sort(
       chainComparator(
         compareBy((mods) => {
-          const plugCategoryHash = mods?.[0].modDef.plug.plugCategoryHash || -1;
+          const plugCategoryHash = mods?.[0].plug.plugCategoryHash || -1;
           // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
           const knownIndex = knownModPlugCategoryHashes.indexOf(plugCategoryHash);
           return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
         }),
-        compareBy((mods) => mods?.[0]?.modDef.itemTypeDisplayName)
+        compareBy((mods) => mods?.[0]?.itemTypeDisplayName)
       )
     );
   }, [savedMods, defs]);
@@ -54,7 +57,7 @@ function SavedMods({ defs, savedMods, onOpenModPicker, removeModByIndex }: Props
             <SavedModCategory
               defs={defs}
               mods={group}
-              onRemove={(index: number) => removeModByIndex(index)}
+              onRemove={(index: number) => removeModByHash(index)}
               onOpenModPicker={onOpenModPicker}
             />
           ) : null

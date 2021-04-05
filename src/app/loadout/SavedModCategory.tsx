@@ -1,42 +1,65 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
-import { LockedMod } from 'app/loadout-builder/types';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedMods.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  mods: LockedMod[];
-  onRemove(index: number): void;
+  mods: PluggableInventoryItemDefinition[];
+  onRemove(itemHash: number): void;
   onOpenModPicker(): void;
+}
+
+function getModCounts(mods: PluggableInventoryItemDefinition[]) {
+  const counts = {};
+
+  for (const mod of mods) {
+    if (counts[mod.hash]) {
+      counts[mod.hash]++;
+    } else {
+      counts[mod.hash] = 1;
+    }
+  }
+
+  return counts;
 }
 
 function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
   const [width, setWidth] = useState<number | undefined>();
+  const firstMod = mods.length && mods[0];
+
+  const widthSetter = useCallback(
+    (element: HTMLDivElement) => {
+      if (element) {
+        const elementWidth = element.getBoundingClientRect().width;
+        if (elementWidth !== width) {
+          setWidth(elementWidth);
+        }
+      }
+    },
+    [width, setWidth]
+  );
+
+  if (!firstMod) {
+    return null;
+  }
+
+  const modCounts = getModCounts(mods);
 
   return (
-    <div key={mods[0].modDef.plug.plugCategoryHash} className={styles.category}>
+    <div key={mods[0].plug.plugCategoryHash} className={styles.category}>
       <div className={styles.categoryName} style={{ width }}>
-        {mods[0].modDef.itemTypeDisplayName}
+        {mods[0].itemTypeDisplayName}
       </div>
-      <div
-        ref={(element) => {
-          if (element) {
-            const elementWidth = element.getBoundingClientRect().width;
-            if (elementWidth !== width) {
-              setWidth(elementWidth);
-            }
-          }
-        }}
-        className={styles.mods}
-      >
+      <div ref={widthSetter} className={styles.mods}>
         {mods.map((mod) => (
           <LockedModIcon
-            key={mod.key}
+            key={`${mod.hash}-${modCounts[mod.hash]--}`}
             defs={defs}
-            mod={mod.modDef}
-            onModClicked={() => onRemove(mod.key)}
+            mod={mod}
+            onModClicked={() => onRemove(mod.hash)}
           />
         ))}
         <AddButton onClick={onOpenModPicker} />

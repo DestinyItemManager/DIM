@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { knownModPlugCategoryHashes, LockedMods, PluggableItemsByPlugCategoryHash } from '../types';
+import { knownModPlugCategoryHashes, PluggableItemsByPlugCategoryHash } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
@@ -37,7 +37,7 @@ const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 );
 
 interface ProvidedProps {
-  lockedMods: LockedMods;
+  lockedMods: PluggableItemsByPlugCategoryHash;
   classType: DestinyClass;
   initialQuery?: string;
   onAccept(newLockedMods: PluggableItemsByPlugCategoryHash): void;
@@ -155,9 +155,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState(() =>
-    _.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))
-  );
+  const [lockedModsInternal, setLockedModsInternal] = useState(() => ({ ...lockedMods }));
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
