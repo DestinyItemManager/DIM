@@ -4,8 +4,8 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
+import { sortMods } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -246,12 +246,6 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
 
   return loadout;
 }
-
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => mod.plug.energyCost?.energyType),
-  compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
-);
 
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,

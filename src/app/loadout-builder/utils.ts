@@ -1,9 +1,10 @@
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType, statValues } from './types';
+import { knownModPlugCategoryHashes, LockedItemType, statValues } from './types';
 
 /**
  *  Filter out plugs that we don't want to show in the perk picker. We only want exotic perks.
@@ -107,3 +108,18 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
 
   return Math.floor(power / numPoweredItems);
 }
+
+export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
+);
+
+export const sortModGroups = chainComparator(
+  compareBy((mods: PluggableInventoryItemDefinition[]) => {
+    // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
+    const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
+    return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
+  }),
+  compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
+);

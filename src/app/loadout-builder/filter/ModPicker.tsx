@@ -15,7 +15,6 @@ import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -24,17 +23,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { knownModPlugCategoryHashes, PluggableItemsByPlugCategoryHash } from '../types';
-import { isLoadoutBuilderItem } from '../utils';
+import { PluggableItemsByPlugCategoryHash } from '../types';
+import { isLoadoutBuilderItem, sortModGroups, sortMods } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
-
-// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => mod.plug.energyCost?.energyType),
-  compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
-);
 
 interface ProvidedProps {
   lockedMods: PluggableItemsByPlugCategoryHash;
@@ -233,16 +225,7 @@ function ModPicker({
 
   const groupedMods = Object.values(
     _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
-  ).sort(
-    chainComparator(
-      compareBy((mods: PluggableInventoryItemDefinition[]) => {
-        // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
-        const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
-        return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
-      }),
-      compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
-    )
-  );
+  ).sort(sortModGroups);
 
   const plugCategoryHashOrder = groupedMods.map((mods) => mods[0].plug.plugCategoryHash);
 
