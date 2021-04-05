@@ -26,6 +26,11 @@ function getModCounts(mods: PluggableInventoryItemDefinition[]) {
   return counts;
 }
 
+/**
+ * A component for displaying a group of mods categorised by their plugCategoryHash.
+ *
+ * It allows the mods to be added to and removed from the loadout.
+ */
 function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
   const [width, setWidth] = useState<number | undefined>();
   const firstMod = mods.length && mods[0];

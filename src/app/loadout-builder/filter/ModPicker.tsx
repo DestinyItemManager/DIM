@@ -23,8 +23,9 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
+import { sortModGroups, sortMods } from '../mod-utils';
 import { PluggableItemsByPlugCategoryHash } from '../types';
-import { isLoadoutBuilderItem, sortModGroups, sortMods } from '../utils';
+import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 

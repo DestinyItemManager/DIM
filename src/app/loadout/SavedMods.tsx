@@ -1,8 +1,8 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { sortModGroups } from 'app/loadout-builder/mod-utils';
 import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
-import { sortModGroups } from 'app/loadout-builder/utils';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import React, { useMemo } from 'react';
 import SavedModCategory from './SavedModCategory';
