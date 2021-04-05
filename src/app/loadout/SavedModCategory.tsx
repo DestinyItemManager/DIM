@@ -1,15 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
+import { LockedMod } from 'app/loadout-builder/types';
 import React, { useState } from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedMods.m.scss';
 
-type ModDefAndIndex = { def: PluggableInventoryItemDefinition; paramIndex: number };
-
 interface Props {
   defs: D2ManifestDefinitions;
-  mods: ModDefAndIndex[];
+  mods: LockedMod[];
   onRemove(index: number): void;
   onOpenModPicker(): void;
 }
@@ -18,9 +16,9 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
   const [width, setWidth] = useState<number | undefined>();
 
   return (
-    <div key={mods[0].def.plug.plugCategoryHash} className={styles.category}>
+    <div key={mods[0].modDef.plug.plugCategoryHash} className={styles.category}>
       <div className={styles.categoryName} style={{ width }}>
-        {mods[0].def.itemTypeDisplayName}
+        {mods[0].modDef.itemTypeDisplayName}
       </div>
       <div
         ref={(element) => {
@@ -35,10 +33,10 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
       >
         {mods.map((mod) => (
           <LockedModIcon
-            key={mod.paramIndex}
+            key={mod.key}
             defs={defs}
-            mod={mod.def}
-            onModClicked={() => onRemove(mod.paramIndex)}
+            mod={mod.modDef}
+            onModClicked={() => onRemove(mod.key)}
           />
         ))}
         <AddButton onClick={onOpenModPicker} />

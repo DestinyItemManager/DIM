@@ -494,6 +494,8 @@ function LoadoutDrawer({
     close();
   };
 
+  const savedMods = getModsFromLoadout(defs, loadout);
+
   const onUpdateMods = (newMods: PluggableItemsByPlugCategoryHash) => {
     const newLoadout = { ...loadout };
     const mods: number[] = [];
@@ -585,6 +587,7 @@ function LoadoutDrawer({
               <div className="loadout-contents">
                 <LoadoutDrawerContents
                   loadout={loadout}
+                  savedMods={savedMods}
                   items={items}
                   defs={defs}
                   buckets={buckets}
@@ -608,10 +611,7 @@ function LoadoutDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
-            lockedMods={_.groupBy(
-              getModsFromLoadout(defs, loadout),
-              (mod) => mod.modDef.plug.plugCategoryHash
-            )}
+            lockedMods={savedMods}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'openModPicker', modPickerOpen: false })}
           />,

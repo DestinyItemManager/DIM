@@ -2,6 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { LockedMods } from 'app/loadout-builder/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -67,6 +68,7 @@ export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
+    savedMods,
     buckets,
     defs,
     items,
@@ -79,6 +81,7 @@ export default function LoadoutDrawerContents(
     removeModByIndex,
   }: {
     loadout: Loadout;
+    savedMods: LockedMods;
     buckets: InventoryBuckets;
     defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
@@ -155,7 +158,7 @@ export default function LoadoutDrawerContents(
       {$featureFlags.loadoutMods && (
         <SavedMods
           defs={defs}
-          modHashes={loadout.parameters?.mods}
+          savedMods={savedMods}
           onOpenModPicker={onOpenModPicker}
           removeModByIndex={removeModByIndex}
         />

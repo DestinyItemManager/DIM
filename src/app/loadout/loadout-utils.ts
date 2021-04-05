@@ -3,8 +3,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { LockedMod } from 'app/loadout-builder/types';
+import { LockedMod, LockedMods } from 'app/loadout-builder/types';
 import { armorStats } from 'app/search/d2-known-values';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -246,10 +247,16 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
   return loadout;
 }
 
+const sortMods = chainComparator<LockedMod>(
+  compareBy((mod) => mod.modDef.plug.energyCost?.energyType),
+  compareBy((mod) => mod.modDef.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.modDef.displayProperties.name)
+);
+
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Loadout
-) {
+): LockedMods {
   const mods: LockedMod[] = [];
 
   if (defs.isDestiny2() && loadout.parameters?.mods) {
@@ -261,5 +268,7 @@ export function getModsFromLoadout(
     }
   }
 
-  return mods;
+  const sortedMods = mods.sort(sortMods);
+
+  return _.groupBy(sortedMods, (mod) => mod.modDef.plug.plugCategoryHash);
 }
