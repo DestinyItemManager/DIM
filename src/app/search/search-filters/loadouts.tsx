@@ -11,7 +11,7 @@ const loadoutFilters: FilterDefinition[] = [
     suggestionsGenerator: ({ loadouts }) =>
       loadouts
         ?.filter((l) => isQuotable(l.name))
-        .map((l) => quoteFilterString(l.name.toLowerCase())),
+        .map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
@@ -22,8 +22,7 @@ const loadoutFilters: FilterDefinition[] = [
       // a search like
       // inloadout:"loadout name here"
       if (filterValue !== 'inloadout') {
-        const foundLoadout = loadouts.find((l) => l.name === filterValue);
-        selectedLoadouts = foundLoadout ? [foundLoadout] : [];
+        selectedLoadouts = loadouts.filter((l) => l.name.toLowerCase() === filterValue);
       }
 
       const loadoutItemIds = collectItemsInLoadouts(selectedLoadouts);
