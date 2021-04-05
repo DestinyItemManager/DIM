@@ -11,7 +11,7 @@ const loadoutFilters: FilterDefinition[] = [
     suggestionsGenerator: ({ loadouts }) =>
       loadouts
         ?.filter((l) => isQuotable(l.name))
-        .map((l) => quoteFilterString(l.name.toLowerCase())),
+        .map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
