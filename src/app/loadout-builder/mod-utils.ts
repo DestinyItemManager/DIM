@@ -155,9 +155,11 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((mod) => mod.displayProperties.name)
 );
 
-/** Sorts an array of PluggableInventoryItemDefinition[] by the order of hashes in loadout-builder/types#knownModPlugCategoryHashes and then sorts those not found in there by name.
+/** Sorts an array of PluggableInventoryItemDefinition[]'s by the order of hashes in
+ * loadout-builder/types#knownModPlugCategoryHashes and then sorts those not found in there by name.
  *
- * This assumes that each PluggableInventoryItemDefinition in each PluggableInventoryItemDefinition[] has the same plugCategoryHash as it pulls it from the first PluggableInventoryItemDefinition.
+ * This assumes that each PluggableInventoryItemDefinition in each PluggableInventoryItemDefinition[]
+ * has the same plugCategoryHash as it pulls it from the first PluggableInventoryItemDefinition.
  */
 export const sortModGroups = chainComparator(
   compareBy((mods: PluggableInventoryItemDefinition[]) => {
