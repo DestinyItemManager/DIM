@@ -1,5 +1,7 @@
 ## Next
 
+## 6.59.1 <span class="changelog-date">(2021-04-05)</span>
+
 * Correct suggestions & interpretation for `inloadout` filter.
 
 ## 6.59.0 <span class="changelog-date">(2021-04-04)</span>
