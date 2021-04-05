@@ -9,7 +9,7 @@ interface Props {
   defs: D2ManifestDefinitions;
   mods: PluggableInventoryItemDefinition[];
   onRemove(itemHash: number): void;
-  onOpenModPicker(): void;
+  onOpenModPicker(query?: string): void;
 }
 
 function getModCounts(mods: PluggableInventoryItemDefinition[]) {
@@ -54,9 +54,9 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
   const modCounts = getModCounts(mods);
 
   return (
-    <div key={mods[0].plug.plugCategoryHash} className={styles.category}>
+    <div key={firstMod.plug.plugCategoryHash} className={styles.category}>
       <div className={styles.categoryName} style={{ width }}>
-        {mods[0].itemTypeDisplayName}
+        {firstMod.itemTypeDisplayName}
       </div>
       <div ref={widthSetter} className={styles.mods}>
         {mods.map((mod) => (
@@ -67,7 +67,7 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
             onModClicked={() => onRemove(mod.hash)}
           />
         ))}
-        <AddButton onClick={onOpenModPicker} />
+        <AddButton onClick={() => onOpenModPicker(firstMod.itemTypeDisplayName)} />
       </div>
     </div>
   );

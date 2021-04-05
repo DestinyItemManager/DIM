@@ -11,7 +11,7 @@ import styles from './SavedMods.m.scss';
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
   savedMods: PluggableItemsByPlugCategoryHash;
-  onOpenModPicker(): void;
+  onOpenModPicker(query?: string): void;
   removeModByHash(index: number): void;
 }
 

@@ -92,7 +92,10 @@ interface State {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
-  showModPicker: boolean;
+  modPicker: {
+    show: boolean;
+    query?: string;
+  };
 }
 
 type Action =
@@ -113,7 +116,7 @@ type Action =
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
-  | { type: 'openModPicker' }
+  | { type: 'openModPicker'; query?: string }
   | { type: 'closeModPicker' };
 
 /**
@@ -126,7 +129,9 @@ function stateReducer(state: State, action: Action): State {
         showClass: true,
         isNew: false,
         loadout: undefined,
-        showModPicker: false,
+        modPicker: {
+          show: false,
+        },
       };
 
     case 'editLoadout': {
@@ -185,11 +190,12 @@ function stateReducer(state: State, action: Action): State {
     }
 
     case 'openModPicker': {
-      return { ...state, showModPicker: true };
+      const { query } = action;
+      return { ...state, modPicker: { show: true, query } };
     }
 
     case 'closeModPicker': {
-      return { ...state, showModPicker: false };
+      return { ...state, modPicker: { show: false } };
     }
   }
 }
@@ -378,10 +384,12 @@ function LoadoutDrawer({
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, isNew, showModPicker }, stateDispatch] = useReducer(stateReducer, {
+  const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
-    showModPicker: false,
+    modPicker: {
+      show: false,
+    },
   });
 
   // Sync this global variable with our actual state. TODO: move to redux
@@ -603,7 +611,9 @@ function LoadoutDrawer({
                   equip={onEquipItem}
                   remove={onRemoveItem}
                   add={onAddItem}
-                  onOpenModPicker={() => stateDispatch({ type: 'openModPicker' })}
+                  onOpenModPicker={(query?: string) =>
+                    stateDispatch({ type: 'openModPicker', query })
+                  }
                   removeModByHash={removeModByHash}
                 />
               </div>
@@ -611,12 +621,13 @@ function LoadoutDrawer({
           </div>
         </div>
       </Sheet>
-      {showModPicker &&
+      {modPicker.show &&
         defs.isDestiny2() &&
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
             lockedMods={savedMods}
+            initialQuery={modPicker.query}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,
