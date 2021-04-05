@@ -1,5 +1,7 @@
 ## Next
 
+## 6.59.0 <span class="changelog-date">(2021-04-04)</span>
+
 * Visual refresh for buttons and some dropdowns.
 * Swiping between characters on mobile by swiping the inventory works again.
 * Swiping the character headers behaves more sensibly now.
