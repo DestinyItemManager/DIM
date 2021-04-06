@@ -4,8 +4,8 @@
 
 .title {
   font-size: 13px;
-  text-transform: uppercase;
   margin-right: 4px 0;
+  text-transform: uppercase;
 }
 
 .disclaimer {
@@ -30,16 +30,16 @@
 
 .categoryName {
   font-size: 10px;
-  text-transform: uppercase;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .mods {
+  align-items: center;
   display: flex;
   flex-direction: row;
-  align-items: center;
   width: fit-content;
 
   > * {

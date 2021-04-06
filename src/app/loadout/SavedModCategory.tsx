@@ -7,23 +7,12 @@ import styles from './SavedMods.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
+  /** A list of mods that all have the same plugCategoryHash. */
   mods: PluggableInventoryItemDefinition[];
+  /** Removes a mod from the loadout via the mods item hash. */
   onRemove(itemHash: number): void;
+  /** Opens the mod picker sheet with a supplied query to filter the mods. */
   onOpenModPicker(query?: string): void;
-}
-
-function getModCounts(mods: PluggableInventoryItemDefinition[]) {
-  const counts = {};
-
-  for (const mod of mods) {
-    if (counts[mod.hash]) {
-      counts[mod.hash]++;
-    } else {
-      counts[mod.hash] = 1;
-    }
-  }
-
-  return counts;
 }
 
 /**
@@ -51,7 +40,16 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
     return null;
   }
 
-  const modCounts = getModCounts(mods);
+  // Count the occurences of each mod so we can create unique keys for said mods.
+  const modCounts = {};
+
+  for (const mod of mods) {
+    if (modCounts[mod.hash]) {
+      modCounts[mod.hash]++;
+    } else {
+      modCounts[mod.hash] = 1;
+    }
+  }
 
   return (
     <div key={firstMod.plug.plugCategoryHash} className={styles.category}>

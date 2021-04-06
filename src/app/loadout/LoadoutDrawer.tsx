@@ -509,6 +509,7 @@ function LoadoutDrawer({
 
   const savedMods = getModsFromLoadout(defs, loadout);
 
+  /** Updates the loadout replacing it's current mods with all the mods in newMods. */
   const onUpdateMods = (newMods: PluggableItemsByPlugCategoryHash) => {
     const newLoadout = { ...loadout };
     const mods: number[] = [];
@@ -526,6 +527,7 @@ function LoadoutDrawer({
     stateDispatch({ type: 'update', loadout: newLoadout });
   };
 
+  /** Removes a single mod from the loadout with the supplied itemHash. */
   const removeModByHash = (itemHash: number) => {
     const newLoadout = { ...loadout };
     const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];

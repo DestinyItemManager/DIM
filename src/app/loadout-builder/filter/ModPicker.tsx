@@ -32,7 +32,7 @@ import PickerSectionMods from './PickerSectionMods';
 interface ProvidedProps {
   /**
    * An object of plugCatgeoryHashes to mods (PluggableInventoryItemDefinition[])
-   * with that plugCategoryHash
+   * with that plugCategoryHash.
    */
   lockedMods: PluggableItemsByPlugCategoryHash;
   /**

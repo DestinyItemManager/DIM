@@ -91,7 +91,7 @@ export default function LoadoutDrawerContents(
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent): void;
     onOpenModPicker(): void;
-    removeModByHash(index: number): void;
+    removeModByHash(itemHash: number): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);

@@ -10,15 +10,19 @@ import styles from './SavedMods.m.scss';
 
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
+  /** The loadouts saved mods in an object to mod arrays indexed by plugCategoryHash. */
   savedMods: PluggableItemsByPlugCategoryHash;
+  /** Opens the mod picker sheet with a supplied query to filter the mods. */
   onOpenModPicker(query?: string): void;
-  removeModByHash(index: number): void;
+  /** Removes a mod from the loadout via the mods item hash. */
+  removeModByHash(itemHash: number): void;
 }
 
 /**
  * Component for managing mods associated to a loadout.
  */
 function SavedMods({ defs, savedMods, onOpenModPicker, removeModByHash }: Props) {
+  // Turn savedMods into an array of mod groups where each group is
   const groupedMods = useMemo(() => {
     if (!defs.isDestiny2()) {
       return [];

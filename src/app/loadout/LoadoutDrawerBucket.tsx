@@ -69,11 +69,7 @@ export default function LoadoutDrawerBucket({
                 ))}
                 {equippedItems.length > 0 &&
                   unequippedItems.length < bucket.capacity - 1 &&
-                  bucket.type !== 'Class' && (
-                    <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                      <AppIcon icon={addIcon} />
-                    </a>
-                  )}
+                  bucket.type !== 'Class' && <AddButton onClick={() => pickLoadoutItem(bucket)} />}
               </div>
             )}
           </div>
