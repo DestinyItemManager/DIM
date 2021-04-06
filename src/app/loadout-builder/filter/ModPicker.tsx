@@ -30,10 +30,21 @@ import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
 interface ProvidedProps {
+  /**
+   * An object of plugCatgeoryHashes to mods (PluggableInventoryItemDefinition[])
+   * with that plugCategoryHash
+   */
   lockedMods: PluggableItemsByPlugCategoryHash;
+  /**
+   * The DestinyClass instance that is used to filter items on when building up the
+   * set of available mods.
+   */
   classType: DestinyClass;
+  /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
+  /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableItemsByPlugCategoryHash): void;
+  /** Called when the user accepts the new modset of closes the sheet. */
   onClose(): void;
 }
 
@@ -42,6 +53,10 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
+  /**
+   * An array of mods built from looking at the current DestinyClass's
+   * items and finding all the available mods that could be socketed.
+   */
   mods: PluggableInventoryItemDefinition[];
 }
 
