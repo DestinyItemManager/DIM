@@ -137,7 +137,7 @@ export default function LoadoutDrawerContents(
             </a>
           ))}
           <a onClick={onOpenModPicker} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> {'Mods'}
+            <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
           </a>
         </div>
       )}

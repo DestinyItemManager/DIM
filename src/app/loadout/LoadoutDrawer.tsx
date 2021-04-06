@@ -580,50 +580,48 @@ function LoadoutDrawer({
   );
 
   return (
-    <>
-      <Sheet onClose={close} header={header}>
-        <div id="loadout-drawer" className="loadout-create">
-          <div className="loadout-content">
-            <LoadoutDrawerDropTarget
-              bucketTypes={bucketTypes}
-              storeIds={stores.map((s) => s.id)}
-              onDroppedItem={onAddItem}
-            >
-              {warnitems.length > 0 && (
-                <div className="loadout-contents">
-                  <p>{t('Loadouts.VendorsCannotEquip')}</p>
-                  <div className="loadout-warn-items">
-                    {warnitems.map((item) => (
-                      <div key={item.id} className="loadout-item">
-                        <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
-                        <div className="close" onClick={() => onRemoveItem(item)} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+    <Sheet onClose={close} header={header}>
+      <div id="loadout-drawer" className="loadout-create">
+        <div className="loadout-content">
+          <LoadoutDrawerDropTarget
+            bucketTypes={bucketTypes}
+            storeIds={stores.map((s) => s.id)}
+            onDroppedItem={onAddItem}
+          >
+            {warnitems.length > 0 && (
               <div className="loadout-contents">
-                <LoadoutDrawerContents
-                  loadout={loadout}
-                  savedMods={savedMods}
-                  items={items}
-                  defs={defs}
-                  buckets={buckets}
-                  stores={stores}
-                  itemSortOrder={itemSortOrder}
-                  equip={onEquipItem}
-                  remove={onRemoveItem}
-                  add={onAddItem}
-                  onOpenModPicker={(query?: string) =>
-                    stateDispatch({ type: 'openModPicker', query })
-                  }
-                  removeModByHash={removeModByHash}
-                />
+                <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                <div className="loadout-warn-items">
+                  {warnitems.map((item) => (
+                    <div key={item.id} className="loadout-item">
+                      <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                      <div className="close" onClick={() => onRemoveItem(item)} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </LoadoutDrawerDropTarget>
-          </div>
+            )}
+            <div className="loadout-contents">
+              <LoadoutDrawerContents
+                loadout={loadout}
+                savedMods={savedMods}
+                items={items}
+                defs={defs}
+                buckets={buckets}
+                stores={stores}
+                itemSortOrder={itemSortOrder}
+                equip={onEquipItem}
+                remove={onRemoveItem}
+                add={onAddItem}
+                onOpenModPicker={(query?: string) =>
+                  stateDispatch({ type: 'openModPicker', query })
+                }
+                removeModByHash={removeModByHash}
+              />
+            </div>
+          </LoadoutDrawerDropTarget>
         </div>
-      </Sheet>
+      </div>
       {modPicker.show &&
         defs.isDestiny2() &&
         ReactDOM.createPortal(
@@ -636,7 +634,7 @@ function LoadoutDrawer({
           />,
           document.body
         )}
-    </>
+    </Sheet>
   );
 }
 
