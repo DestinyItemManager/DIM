@@ -28,12 +28,18 @@
   margin-right: 16px;
 }
 
+.categoryNameContainer {
+  display: flex;
+}
+
 .categoryName {
+  flex-grow: 1;
   font-size: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+  width: 0;
 }
 
 .mods {

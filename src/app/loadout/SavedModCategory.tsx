@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedMods.m.scss';
 
@@ -21,20 +21,7 @@ interface Props {
  * It allows the mods to be added to and removed from the loadout.
  */
 function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
-  const [width, setWidth] = useState<number | undefined>();
   const firstMod = mods.length && mods[0];
-
-  const widthSetter = useCallback(
-    (element: HTMLDivElement) => {
-      if (element) {
-        const elementWidth = element.getBoundingClientRect().width;
-        if (elementWidth !== width) {
-          setWidth(elementWidth);
-        }
-      }
-    },
-    [width, setWidth]
-  );
 
   if (!firstMod) {
     return null;
@@ -53,10 +40,10 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
 
   return (
     <div key={firstMod.plug.plugCategoryHash} className={styles.category}>
-      <div className={styles.categoryName} style={{ width }}>
-        {firstMod.itemTypeDisplayName}
+      <div className={styles.categoryNameContainer}>
+        <div className={styles.categoryName}>{firstMod.itemTypeDisplayName}</div>
       </div>
-      <div ref={widthSetter} className={styles.mods}>
+      <div className={styles.mods}>
         {mods.map((mod) => (
           <LockedModIcon
             key={`${mod.hash}-${modCounts[mod.hash]--}`}

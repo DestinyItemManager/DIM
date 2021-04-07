@@ -5,6 +5,7 @@ interface CssExports {
   'categories': string;
   'category': string;
   'categoryName': string;
+  'categoryNameContainer': string;
   'container': string;
   'disclaimer': string;
   'mods': string;
