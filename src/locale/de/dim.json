@@ -149,6 +149,7 @@
     "Instructions": "Klicke oder ziehe Dateien"
   },
   "Filter": {
+    "Adept": "(Meister)",
     "AmmoType": "Zeigt Gegenstände basierend auf deren Munitionstyp.",
     "Armor": "Zeigt Gegenstände, die Rüstung sind.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
@@ -476,7 +477,7 @@
     "Any": "Jede Klasse",
     "AppliedError": "Keines der Gegenstände in deiner Ausrüstung konnte übertragen werden.",
     "AppliedWarn": "Deine Ausrüstung wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
-    "ApplySearch": "Suche \"{{query}}\" übertragen",
+    "ApplySearch": "Übertrage Suche \"{{query}}\"",
     "AssumeMaxWeapons": "Annahme von Waffen mit maximalem Powerlevel",
     "Before": "Bevor '{{name}}'",
     "ChooseItem": "{{name}} hinzufügen",

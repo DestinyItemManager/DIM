@@ -149,6 +149,7 @@
     "Instructions": "Cliquer ou glisser des fichiers"
   },
   "Filter": {
+    "Adept": "(expert)",
     "AmmoType": "Affiche les objets en fonction de leur type de munition.",
     "Armor": "Affiche les objets qui sont des armures.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",

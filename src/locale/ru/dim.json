@@ -80,9 +80,9 @@
   "Catalyst": {
     "Source": {
       "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
-      "Mission": "Complete the \"{{title}}\" mission.",
-      "Quest": "Complete the \"{{title}}\" quest.",
-      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
+      "Mission": "Завершите миссию \"{{title}}\".",
+      "Quest": "Завершите задание \"{{title}}\".",
+      "RuinousEffigy": "Побеждайте врагов шарами трансмутации.",
       "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
     }
   },
@@ -149,6 +149,7 @@
     "Instructions": "Выберите или перетащите файлы"
   },
   "Filter": {
+    "Adept": "(адепт)",
     "AmmoType": "По типу используемых боеприпасов.",
     "Armor": "Броню.",
     "ArmorCategory": "Броню по слотам. Шлемы, перчатки, тело, ноги, классовые предметы.",
@@ -213,7 +214,7 @@
     "PartialMatch": "С названием, описанием, бонусами или модификаторами содержащими введенный после фильтра текст. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'. Фильтр \"perk:\" ищет только по бонусам.",
     "Perk": "С бонусом или модификатором содержащим введенный после фильтра текст в названии или описании. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
     "PerkName": "С бонусом или модификатором содержащим введенный после фильтра текст Только В Названии. Для поиска словосочетаний и фраз - заключите 'текст в кавычки'.",
-    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
+    "PinnacleReward": "Испытания со Сверхмощными наградами.",
     "Postmaster": "У Почтмейстера.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
     "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
@@ -267,7 +268,7 @@
     "FilterHelpBrief": "Поиск",
     "FilterHelpMenuItem": "Помощь по Фильтрам...",
     "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
-    "FilterHelpProgress": "Search milestones and bounties",
+    "FilterHelpProgress": "По Испытаниям и Контрактам",
     "FilterHelpRecords": "Поиск по Триумфам и Коллекции",
     "FilterMatchCount": "1 предмет",
     "FilterMatchCount_plural": "{{count}} предметов",
@@ -322,8 +323,8 @@
     "Consolidate": "Собрали {{name}}",
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
     "MovingItem": "В хранилище",
-    "MovingItem_female": "Передать {{target}}",
-    "MovingItem_male": "Передать {{target}}",
+    "MovingItem_female": "Передаем {{target}}",
+    "MovingItem_male": "Передаем {{target}}",
     "ToStore": "Все {{name}} собраны в {{store}}.",
     "ToVault": "Все {{name}} перемещены в хранилище."
   },
@@ -348,7 +349,7 @@
     "PostmasterAlmostFull": "У почтмейстера заканчивается место для вашего барахла! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "У почтмейстера нет места! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Предпросмотр {{type}}",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
+    "ShouldNotBeInVault": "Этот предмет может оказаться под угрозой на Складе. Пожалуйста, передайте его персонажу.",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -419,7 +420,7 @@
     "Vendors": "Загрузка вендоров Destiny..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
+    "AddHalfTierMods": "Добавить +5 Модификаторы",
     "AssumeMasterwork": "Бонусы Абсолюта",
     "AssumeMasterworkDetailed": "Бонус Абсолюта учитывается в Характеристиках всех предметов при генерации предложений.",
     "ChooseAlternate": "Предметы с такими же характеристиками:",
@@ -458,7 +459,7 @@
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "SelectPerks": "Добавить к Обязательным",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
+    "StatIncorrectWarning": "Для точности результатов удалите все модификаторы с отрицательными характеристиками.\n\nИз-за модификаторов с отрицательными характеристиками, DIM не может определить базовое значение или значение {{stats}} для некоторых характеристик. Это ограничение информации передаваемой Bungie.net API.",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",
@@ -514,7 +515,7 @@
     "ModsInfo": "DIM не может устанавливать модификаторы, сделайте это в игре.",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
-    "NoSpace": "You're out of space in the vault and any other characters.",
+    "NoSpace": "Недостаточно места в хранилище и у остальных персонажей.",
     "NotificationMessage": "Отправка сняряжения с одним предметом в хранилище.",
     "NotificationMessage_female": "Экипировка снаряжения с одним предметом для {{store}}",
     "NotificationMessage_female_plural": "Экипировка снаряжения с {{count}} предметами для {{store}}",
@@ -566,7 +567,7 @@
     "Weekly": "Еженедельное Испытание"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "Количество:"
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
@@ -598,10 +599,10 @@
     "Rewards": "Награды:",
     "SendToVault": "В Хранилище",
     "Store": "Передать",
-    "StoreWithName": "Передать {{character}}",
+    "StoreWithName": "Передаем {{character}}",
     "Subtitle": {
       "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
-      "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
+      "QuestProgress": "Этап {{questStepNum}} из {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
     "ToggleSidecar": "Скрыть/Показать действия",
@@ -630,7 +631,7 @@
       "Archetype": "Архетип",
       "BaseStats": "Базовые Характеристики",
       "Breaker": "Воитель",
-      "CustomTotal": "Почти Всего",
+      "CustomTotal": "Своя Сумма",
       "Damage": "Стихия",
       "Element": "Стихия",
       "Energy": "Энергия",
@@ -699,7 +700,7 @@
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф",
-    "Source": "Source: {{sourceInfo}}",
+    "Source": "Источник: {{sourceInfo}}",
     "StatTrackers": "Трекеры",
     "TrackedTriumphs": "Отслеживаемые Триумфы"
   },
@@ -727,7 +728,7 @@
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
     "CsvImport": "Импорт CSV",
-    "CustomStatDesc": "Укажите какие Характеристики суммируются при подсчёте Почти Всего для каждого класса. Цифра Почти Всего доступна во всплывающей подсказке, Органайзере и Сравнении. Чтобы найти все предметы с Почти Всего большим или равным тридцати наберите \"stat:custom:>=30\" в панели поиска.",
+    "CustomStatDesc": "Укажите какие Характеристики суммируются при подсчёте Своей Суммы для каждого класса. Своя Сумма доступна во всплывающей подсказке, Органайзере и Сравнении. Чтобы найти все предметы со Своей Суммой больше или равной тридцати наберите \"stat:custom:>=30\" в панели поиска.",
     "Data": "Таблицы",
     "DefaultItemSizeNote": "При 50px предметы выглядят максимально четко. Ни картинка, ни текст не будут искажаться или размываться.",
     "DontForgetDupes": "Напоминаем, \"is:dupe\" в поисковой строке быстро найдет дубликаты предметов, а Сравнение поможет оценить разницу подобных предметов.",
@@ -753,7 +754,7 @@
     "SingleCharacter": "Только активный персонаж",
     "SingleCharacterExplanation": "DIM скроет персонажей, кроме последнего активного. Предметы в инвентарях скрытых персонажей добавятся к блоку Хранилища.",
     "SizeItem": "Размер предмета",
-    "SortByAmmoType": "Ammo Type",
+    "SortByAmmoType": "Тип боеприпасов",
     "SortByAmount": "Количество",
     "SortByClassType": "Класс",
     "SortByPrimary": "Уровень Cилы",
@@ -773,17 +774,17 @@
   },
   "Stats": {
     "BarricadeCooldown": "Время восстановления Баррикады",
-    "Custom": "Почти Всего",
+    "Custom": "Своя Сумма",
     "CustomDesc": "Сумма заданных Характеристик, без учета модификаторов и абсолюта. Выбрать Характеристики можно в настройках DIM.",
-    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
-    "DarkMeleeCooldown": "Dark Melee Cooldown",
-    "DarkSuperCooldown": "Dark Super Cooldown",
+    "DarkGrenadeCooldown": "Время восстановления гранаты Тьмы",
+    "DarkMeleeCooldown": "Время восстановления способности ближнего боя Тьмы",
+    "DarkSuperCooldown": "Время восстановления суперспобности Тьмы",
     "Discipline": "Дисциплина",
     "DodgeCooldown": "Время восстановления Уклонения",
     "Intellect": "Интеллект",
-    "LightGrenadeCooldown": "Light Grenade Cooldown",
-    "LightMeleeCooldown": "Light Melee Cooldown",
-    "LightSuperCooldown": "Light Super Cooldown",
+    "LightGrenadeCooldown": "Время восстановления гранаты Света",
+    "LightMeleeCooldown": "Время восстановления способности ближнего боя Света",
+    "LightSuperCooldown": "Время восстановления суперспособности Света",
     "MaxGearPower": "Предметы наибольшей Силы, доступные персонажу",
     "MaxGearPowerAll": "Сила мощнейших предметов",
     "MaxTotalPower": "Максимальная Сила",
@@ -797,12 +798,12 @@
     "Quality": "Качество характеристик",
     "RiftCooldown": "Время восстановления Раскола",
     "Strength": "Стойкость",
-    "Sunset": "Sunset",
+    "Sunset": "Сансэт",
     "Tier": "Ранг {{tier}}",
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Сумма",
-    "TotalIncorrectWarning": "Due to mods with negative stat effects, DIM cannot determine the base value or value of {{stats}}. This is a limitation of the information sent by Bungie.net."
+    "TotalIncorrectWarning": "Из-за модификаторов с отрицательными характеристиками, DIM не может определить базовое значение или значение {{stats}} для некоторых характеристик. Это ограничение информации передаваемой Bungie.net API."
   },
   "Storage": {
     "ApiPermissionPrompt": {

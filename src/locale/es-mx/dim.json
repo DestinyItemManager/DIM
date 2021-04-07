@@ -149,6 +149,7 @@
     "Instructions": "Haga click o arrastre archivos"
   },
   "Filter": {
+    "Adept": "(experto)",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
@@ -419,7 +420,7 @@
     "Vendors": "Cargando vendedores de Destiny..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
+    "AddHalfTierMods": "Añadir +5 Mods",
     "AssumeMasterwork": "Asumir Estadísticas de Obra Maestra",
     "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
@@ -463,8 +464,8 @@
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
     "TierNumber": "T{{tier}}",
-    "UnableToAddAllMods": "Unable to add all mods.",
-    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
+    "UnableToAddAllMods": "No se pueden agregar todos los mods.",
+    "UnableToAddAllModsBody": "No había suficientes espacios disponibles para que cupiera el mod de {{mods}}.",
     "UnlockItem": "Desanclar objeto"
   },
   "Loadouts": {

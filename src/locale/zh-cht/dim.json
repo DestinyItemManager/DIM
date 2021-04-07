@@ -149,6 +149,7 @@
     "Instructions": "選擇或拖拽檔案"
   },
   "Filter": {
+    "Adept": "（精通）",
     "AmmoType": "按照彈藥類型顯示物品",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "按照類別顯示防具.",

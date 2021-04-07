@@ -149,6 +149,7 @@
     "Instructions": "Kliknij lub przeciągnij pliki"
   },
   "Filter": {
+    "Adept": "(adept)",
     "AmmoType": "Pokazuje przedmioty na podstawie rodzaju amunicji.",
     "Armor": "Pokazuje przedmioty, które są pancerzem.",
     "ArmorCategory": "Pokazuje zbroje na podstawie ich kategorii.",

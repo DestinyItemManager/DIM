@@ -149,6 +149,7 @@
     "Instructions": "选择或拖拽档案"
   },
   "Filter": {
+    "Adept": "（专家）",
     "AmmoType": "按照弹药类型显示物品",
     "Armor": "显示护甲物品。",
     "ArmorCategory": "按照类别显示防具.",
@@ -419,7 +420,7 @@
     "Vendors": "正在加载命运商人..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
+    "AddHalfTierMods": "添加 +5 模组",
     "AssumeMasterwork": "假定大师之作属性",
     "AssumeMasterworkDetailed": "假定所有物品是大师之作, 生产套装",
     "ChooseAlternate": "选择另一个拥有相同状态的物品：",
@@ -463,8 +464,8 @@
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
     "TierNumber": "T{{tier}}",
-    "UnableToAddAllMods": "Unable to add all mods.",
-    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
+    "UnableToAddAllMods": "无法添加所有模组。",
+    "UnableToAddAllModsBody": "模组插槽不足，无法装下 {{mods}}。",
     "UnlockItem": "取消固定物品"
   },
   "Loadouts": {
