@@ -149,7 +149,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // exact same weapon, judging by name. might span multiple expansions.
     {
       buttonLabel: exampleItem.name,
-      query: `name:"${exampleItem.name}"`,
+      query: `name:"${exampleItem.name.replace(t('Filter.Adept'), '').trim()}"`,
     },
   ]);
 

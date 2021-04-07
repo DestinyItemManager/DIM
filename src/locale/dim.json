@@ -149,6 +149,7 @@
     "Instructions": "Click or drag files"
   },
   "Filter": {
+    "Adept": "(Adept)",
     "AmmoType": "Shows items based on their ammo type.",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "Shows armors based on their category.",
