@@ -111,7 +111,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
   const isAdept = exampleItem.name.includes(t('Filter.Adept'));
-  const nonAdeptVersion = isAdept ? exampleItem.name.replace(t('Filter.Adept'), '') : null;
+  const nonAdeptVersion = isAdept ? exampleItem.name.replace(t('Filter.Adept'), '').trim() : null;
 
   let comparisonSets: CompareButton[] = _.compact([
     // same weapon type
