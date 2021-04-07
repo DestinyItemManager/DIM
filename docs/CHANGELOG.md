@@ -1,5 +1,7 @@
 ## Next
 
+* Show both adept and non-adept weapons when compare is selected.
+
 ## 6.59.1 <span class="changelog-date">(2021-04-05)</span>
 
 * Correct suggestions & interpretation for `inloadout` filter.
