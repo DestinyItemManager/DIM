@@ -139,6 +139,7 @@
     "Instructions": "Click or drag files"
   },
   "Filter": {
+    "Adept": "(Adept)",
     "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
