@@ -120,7 +120,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
     const itemNameQuery = item.bucket.inWeapons
-      ? `name:"${item.name}"`
+      ? `name:"${item.name.replace(t('Filter.Adept'), '').trim()}"`
       : item.bucket.inArmor
       ? // TODO: bring back the much more complicated armor dupes logic?
         item.element
