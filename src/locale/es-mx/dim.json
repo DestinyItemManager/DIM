@@ -149,7 +149,7 @@
     "Instructions": "Haga click o arrastre archivos"
   },
   "Filter": {
-    "Adept": "(adepto)",
+    "Adept": "\\(adepto\\)",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",

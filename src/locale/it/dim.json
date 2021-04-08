@@ -149,7 +149,7 @@
     "Instructions": "Clicca o trascina i files"
   },
   "Filter": {
-    "Adept": "(affinata)",
+    "Adept": "\\(affinata\\)",
     "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "Armor": "Mostra gli oggetti che sono armature.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",

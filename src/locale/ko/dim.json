@@ -149,7 +149,7 @@
     "Instructions": "클릭 또는 파일 끌어서 놓기"
   },
   "Filter": {
-    "Adept": "(숙련자)",
+    "Adept": "\\(숙련자\\)",
     "AmmoType": "탄약 유형에 따른 아이템 표시",
     "Armor": "방어구인 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
