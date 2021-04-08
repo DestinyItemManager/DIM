@@ -40,6 +40,7 @@ import { useProcess } from './process/useProcess';
 import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
+  PluggableItemsByPlugCategoryHash,
   statHashes,
   statHashToType,
   statKeys,
@@ -338,9 +339,14 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              lockedMods={lockedMods}
+              lockedMods={_.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))}
               initialQuery={modPicker.initialQuery}
-              lbDispatch={lbDispatch}
+              onAccept={(newLockedMods: PluggableItemsByPlugCategoryHash) =>
+                lbDispatch({
+                  type: 'lockedModsChanged',
+                  lockedMods: newLockedMods,
+                })
+              }
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
             />,
             document.body

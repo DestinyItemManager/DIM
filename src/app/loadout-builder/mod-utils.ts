@@ -1,7 +1,8 @@
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
   canTakeSlotIndependantMods,
   generateModPermutations,
@@ -146,3 +147,25 @@ export function someModHasEnergyRequirement(mods: LockedMod[]) {
       !mod.modDef.plug.energyCost || mod.modDef.plug.energyCost.energyType !== DestinyEnergyType.Any
   );
 }
+
+/** Sorts PluggableInventoryItemDefinition's by energyType else energyCost else name. */
+export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => mod.plug.energyCost?.energyType),
+  compareBy((mod) => mod.plug.energyCost?.energyCost),
+  compareBy((mod) => mod.displayProperties.name)
+);
+
+/** Sorts an array of PluggableInventoryItemDefinition[]'s by the order of hashes in
+ * loadout-builder/types#knownModPlugCategoryHashes and then sorts those not found in there by name.
+ *
+ * This assumes that each PluggableInventoryItemDefinition in each PluggableInventoryItemDefinition[]
+ * has the same plugCategoryHash as it pulls it from the first PluggableInventoryItemDefinition.
+ */
+export const sortModGroups = chainComparator(
+  compareBy((mods: PluggableInventoryItemDefinition[]) => {
+    // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
+    const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
+    return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
+  }),
+  compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
+);

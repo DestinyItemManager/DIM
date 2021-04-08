@@ -3,7 +3,9 @@ import { InventoryBucket } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
 import { sortItems } from '../shell/filters';
 import { addIcon, AppIcon } from '../shell/icons';
+import { AddButton } from './Buttons';
 import { LoadoutItem } from './loadout-types';
+import styles from './LoadoutDrawerBucket.m.scss';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function LoadoutDrawerBucket({
@@ -53,9 +55,10 @@ export default function LoadoutDrawerBucket({
                     <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
                   ))
                 ) : (
-                  <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                    <AppIcon icon={addIcon} />
-                  </a>
+                  <AddButton
+                    className={styles.equippedAddButton}
+                    onClick={() => pickLoadoutItem(bucket)}
+                  />
                 )}
               </div>
             </div>
@@ -66,11 +69,7 @@ export default function LoadoutDrawerBucket({
                 ))}
                 {equippedItems.length > 0 &&
                   unequippedItems.length < bucket.capacity - 1 &&
-                  bucket.type !== 'Class' && (
-                    <a onClick={() => pickLoadoutItem(bucket)} className="pull-item-button">
-                      <AppIcon icon={addIcon} />
-                    </a>
-                  )}
+                  bucket.type !== 'Class' && <AddButton onClick={() => pickLoadoutItem(bucket)} />}
               </div>
             )}
           </div>

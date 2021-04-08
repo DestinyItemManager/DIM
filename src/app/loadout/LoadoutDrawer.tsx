@@ -1,5 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import ModPicker from 'app/loadout-builder/filter/ModPicker';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -9,6 +11,7 @@ import copy from 'fast-copy';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
@@ -28,7 +31,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import './loadout-drawer.scss';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { getItemsFromLoadoutItems, newLoadout } from './loadout-utils';
+import { getItemsFromLoadoutItems, getModsFromLoadout, newLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
@@ -89,6 +92,11 @@ interface State {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
+  modPicker: {
+    show: boolean;
+    /** An initial query to be passed to the mod picker, this will filter the mods shown. */
+    query?: string;
+  };
 }
 
 type Action =
@@ -108,7 +116,9 @@ type Action =
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
-  | { type: 'equipItem'; item: DimItem; items: DimItem[] };
+  | { type: 'equipItem'; item: DimItem; items: DimItem[] }
+  | { type: 'openModPicker'; query?: string }
+  | { type: 'closeModPicker' };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -120,6 +130,9 @@ function stateReducer(state: State, action: Action): State {
         showClass: true,
         isNew: false,
         loadout: undefined,
+        modPicker: {
+          show: false,
+        },
       };
 
     case 'editLoadout': {
@@ -175,6 +188,15 @@ function stateReducer(state: State, action: Action): State {
             loadout: equipItem(loadout, item, items),
           }
         : state;
+    }
+
+    case 'openModPicker': {
+      const { query } = action;
+      return { ...state, modPicker: { show: true, query } };
+    }
+
+    case 'closeModPicker': {
+      return { ...state, modPicker: { show: false } };
     }
   }
 }
@@ -363,9 +385,12 @@ function LoadoutDrawer({
   dispatch,
 }: Props) {
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, isNew }, stateDispatch] = useReducer(stateReducer, {
+  const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
+    modPicker: {
+      show: false,
+    },
   });
 
   // Sync this global variable with our actual state. TODO: move to redux
@@ -482,6 +507,41 @@ function LoadoutDrawer({
     close();
   };
 
+  const savedMods = getModsFromLoadout(defs, loadout);
+
+  /** Updates the loadout replacing it's current mods with all the mods in newMods. */
+  const onUpdateMods = (newMods: PluggableItemsByPlugCategoryHash) => {
+    const newLoadout = { ...loadout };
+    const mods: number[] = [];
+
+    for (const mod of Object.values(newMods).flat()) {
+      if (mod) {
+        mods.push(mod.hash);
+      }
+    }
+
+    newLoadout.parameters = {
+      ...newLoadout.parameters,
+      mods,
+    };
+    stateDispatch({ type: 'update', loadout: newLoadout });
+  };
+
+  /** Removes a single mod from the loadout with the supplied itemHash. */
+  const removeModByHash = (itemHash: number) => {
+    const newLoadout = { ...loadout };
+    const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
+    const index = newMods.indexOf(itemHash);
+    if (index !== -1) {
+      newMods.splice(index, 1);
+      newLoadout.parameters = {
+        ...newLoadout.parameters,
+        mods: newMods,
+      };
+      stateDispatch({ type: 'update', loadout: newLoadout });
+    }
+  };
+
   const bucketTypes = Object.keys(buckets.byType);
 
   // Find a loadout with the same name that could overlap with this one
@@ -544,6 +604,7 @@ function LoadoutDrawer({
             <div className="loadout-contents">
               <LoadoutDrawerContents
                 loadout={loadout}
+                savedMods={savedMods}
                 items={items}
                 defs={defs}
                 buckets={buckets}
@@ -552,11 +613,27 @@ function LoadoutDrawer({
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
+                onOpenModPicker={(query?: string) =>
+                  stateDispatch({ type: 'openModPicker', query })
+                }
+                removeModByHash={removeModByHash}
               />
             </div>
           </LoadoutDrawerDropTarget>
         </div>
       </div>
+      {modPicker.show &&
+        defs.isDestiny2() &&
+        ReactDOM.createPortal(
+          <ModPicker
+            classType={loadout.classType}
+            lockedMods={savedMods}
+            initialQuery={modPicker.query}
+            onAccept={onUpdateMods}
+            onClose={() => stateDispatch({ type: 'closeModPicker' })}
+          />,
+          document.body
+        )}
     </Sheet>
   );
 }

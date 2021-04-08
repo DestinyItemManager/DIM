@@ -9,6 +9,7 @@ import _ from 'lodash';
 import React from 'react';
 import {
   knownModPlugCategoryHashes,
+  PluggableItemsByPlugCategoryHash,
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from '../types';
@@ -28,8 +29,10 @@ export default function PickerSectionMods({
   onModRemoved,
 }: {
   defs: D2ManifestDefinitions;
+  /** A array of mods where plug.plugCategoryHash's are equal. */
   mods: readonly PluggableInventoryItemDefinition[];
-  locked: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined };
+  /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
+  locked: PluggableItemsByPlugCategoryHash;
   onModSelected(mod: PluggableInventoryItemDefinition);
   onModRemoved(mod: PluggableInventoryItemDefinition);
 }) {

@@ -4,8 +4,8 @@
 
 .title {
   font-size: 13px;
-  text-transform: uppercase;
   margin-right: 4px 0;
+  text-transform: uppercase;
 }
 
 .disclaimer {
@@ -28,14 +28,25 @@
   margin-right: 16px;
 }
 
+.categoryNameContainer {
+  display: flex;
+}
+
 .categoryName {
+  flex-grow: 1;
   font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
+  width: 0;
 }
 
 .mods {
+  align-items: center;
   display: flex;
   flex-direction: row;
+  width: fit-content;
 
   > * {
     margin-right: 4px;
@@ -43,5 +54,23 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.addMod {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  font-size: calc((var(--item-size) / 3));
+  height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+  justify-content: center;
+  margin: 0;
+  opacity: 0.3;
+  text-decoration: none;
+  transition: opacity 0.3s ease-in-out;
+  width: calc(var(--item-size) / 2);
+
+  &:hover {
+    opacity: 1;
   }
 }

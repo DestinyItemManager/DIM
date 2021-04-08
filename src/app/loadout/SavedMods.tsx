@@ -1,54 +1,37 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import Mod from 'app/loadout-builder/generated-sets/Mod';
+import { sortModGroups } from 'app/loadout-builder/mod-utils';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
 import React, { useMemo } from 'react';
+import SavedModCategory from './SavedModCategory';
 import styles from './SavedMods.m.scss';
-
-function modHeaderCleaner(name: string) {
-  return name.replaceAll(/(mod|armor|raid)/gi, '').trim();
-}
 
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
-  modHashes?: number[];
+  /** The loadouts saved mods in an object to mod arrays indexed by plugCategoryHash. */
+  savedMods: PluggableItemsByPlugCategoryHash;
+  /** Opens the mod picker sheet with a supplied query to filter the mods. */
+  onOpenModPicker(query?: string): void;
+  /** Removes a mod from the loadout via the mods item hash. */
+  removeModByHash(itemHash: number): void;
 }
-
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((def) => def.plug.energyCost?.energyType),
-  compareBy((def) => def.plug.energyCost?.energyCost),
-  compareBy((def) => def.displayProperties.name)
-);
 
 /**
  * Component for managing mods associated to a loadout.
  */
-function SavedMods({ defs, modHashes }: Props) {
+function SavedMods({ defs, savedMods, onOpenModPicker, removeModByHash }: Props) {
+  // Turn savedMods into an array of mod groups where each group is
   const groupedMods = useMemo(() => {
-    const mods: PluggableInventoryItemDefinition[] = [];
-
-    if (!modHashes?.length) {
-      return {};
+    if (!defs.isDestiny2()) {
+      return [];
     }
 
-    for (const hash of modHashes) {
-      const def = defs.InventoryItem.get(hash);
-      if (isPluggableItem(def)) {
-        mods.push(def);
-      }
-    }
+    return Object.values(savedMods).sort(sortModGroups);
+  }, [savedMods, defs]);
 
-    mods.sort(sortMods);
-
-    return _.groupBy(mods, (def) => def.itemTypeDisplayName);
-  }, [modHashes, defs]);
-
-  if (!defs.isDestiny2() || !modHashes?.length) {
+  if (!defs.isDestiny2() || !Object.keys(savedMods).length) {
     return null;
   }
 
@@ -58,19 +41,15 @@ function SavedMods({ defs, modHashes }: Props) {
         <div className={styles.title}>{t('Loadouts.Mods')}</div>
       </div>
       <div className={styles.categories}>
-        {Object.entries(groupedMods).map(
-          ([key, group]) =>
-            group && (
-              <div key={key} className={styles.category}>
-                <div className={styles.categoryName}>{modHeaderCleaner(key)}</div>
-                <div className={styles.mods}>
-                  {/* Unfortunately we need to use index here as we may have duplicate mods */}
-                  {groupedMods[key].map((def, index) => (
-                    <Mod key={index} defs={defs} plugDef={def} />
-                  ))}
-                </div>
-              </div>
-            )
+        {groupedMods.map((group) =>
+          group?.length ? (
+            <SavedModCategory
+              defs={defs}
+              mods={group}
+              onRemove={(index: number) => removeModByHash(index)}
+              onOpenModPicker={onOpenModPicker}
+            />
+          ) : null
         )}
       </div>
       <div className={styles.disclaimer}>

@@ -2,6 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -67,6 +68,7 @@ export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
+    savedMods,
     buckets,
     defs,
     items,
@@ -75,8 +77,11 @@ export default function LoadoutDrawerContents(
     equip,
     remove,
     add,
+    onOpenModPicker,
+    removeModByHash,
   }: {
     loadout: Loadout;
+    savedMods: PluggableItemsByPlugCategoryHash;
     buckets: InventoryBuckets;
     defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
@@ -85,6 +90,8 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent): void;
+    onOpenModPicker(): void;
+    removeModByHash(itemHash: number): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -129,6 +136,9 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
+          <a onClick={onOpenModPicker} className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
+          </a>
         </div>
       )}
       <div className="loadout-added-items">
@@ -145,7 +155,14 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      {$featureFlags.loadoutMods && <SavedMods defs={defs} modHashes={loadout.parameters?.mods} />}
+      {$featureFlags.loadoutMods && (
+        <SavedMods
+          defs={defs}
+          savedMods={savedMods}
+          onOpenModPicker={onOpenModPicker}
+          removeModByHash={removeModByHash}
+        />
+      )}
     </>
   );
 }

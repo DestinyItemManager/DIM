@@ -15,33 +15,36 @@ import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { knownModPlugCategoryHashes, LockedMods } from '../types';
+import { sortModGroups, sortMods } from '../mod-utils';
+import { PluggableItemsByPlugCategoryHash } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
-// to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
-const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => mod.plug.energyCost?.energyType),
-  compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
-);
-
 interface ProvidedProps {
-  lockedMods: LockedMods;
+  /**
+   * An object of plugCatgeoryHashes to mods (PluggableInventoryItemDefinition[])
+   * with that plugCategoryHash.
+   */
+  lockedMods: PluggableItemsByPlugCategoryHash;
+  /**
+   * The DestinyClass instance that is used to filter items on when building up the
+   * set of available mods.
+   */
   classType: DestinyClass;
+  /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  /** Called with the new lockedMods when the user accepts the new modset. */
+  onAccept(newLockedMods: PluggableItemsByPlugCategoryHash): void;
+  /** Called when the user accepts the new modset of closes the sheet. */
   onClose(): void;
 }
 
@@ -50,6 +53,10 @@ interface StoreProps {
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
+  /**
+   * An array of mods built from looking at the current DestinyClass's
+   * items and finding all the available mods that could be socketed.
+   */
   mods: PluggableInventoryItemDefinition[];
 }
 
@@ -152,13 +159,11 @@ function ModPicker({
   isPhonePortrait,
   lockedMods,
   initialQuery,
-  lbDispatch,
+  onAccept,
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState(() =>
-    _.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))
-  );
+  const [lockedModsInternal, setLockedModsInternal] = useState(() => ({ ...lockedMods }));
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -204,10 +209,7 @@ function ModPicker({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    lbDispatch({
-      type: 'lockedModsChanged',
-      lockedMods: lockedModsInternal,
-    });
+    onAccept(lockedModsInternal);
     onClose();
   };
 
@@ -239,16 +241,7 @@ function ModPicker({
 
   const groupedMods = Object.values(
     _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
-  ).sort(
-    chainComparator(
-      compareBy((mods: PluggableInventoryItemDefinition[]) => {
-        // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
-        const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
-        return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
-      }),
-      compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
-    )
-  );
+  ).sort(sortModGroups);
 
   const plugCategoryHashOrder = groupedMods.map((mods) => mods[0].plug.plugCategoryHash);
 
