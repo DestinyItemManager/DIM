@@ -110,6 +110,7 @@ const getRpm = (i: DimItem) => {
 export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
+  const adeptStripped = exampleItem.name.toLowerCase().replace(t('Filter.Adept'), '').trim();
 
   let comparisonSets: CompareButton[] = _.compact([
     // same weapon type
@@ -148,8 +149,8 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
 
     // exact same weapon, judging by name. might span multiple expansions.
     {
-      buttonLabel: exampleItem.name,
-      query: `name:"${exampleItem.name.toLowerCase().replace(t('Filter.Adept'), '').trim()}"`,
+      buttonLabel: adeptStripped,
+      query: `name:"${adeptStripped}"`,
     },
   ]);
 
