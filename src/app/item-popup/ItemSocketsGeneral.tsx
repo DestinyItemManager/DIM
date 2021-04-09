@@ -72,16 +72,14 @@ function ItemSocketsGeneral({
     return null;
   }
 
-  const exoticArmorPluggable =
-    item.bucket.inArmor &&
-    item.sockets.allSockets.find((socket) =>
-      socket.plugged?.plugDef.plug.plugCategoryIdentifier.match(/enhancements\.exotic/i)
-    );
-
   const exoticArmorPerk =
     item.sockets.categories.find(
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
-    )?.sockets[0] || exoticArmorPluggable;
+    )?.sockets[0] ||
+    (item.bucket.inArmor &&
+      item.sockets.allSockets.find((socket) =>
+        socket.plugged?.plugDef.plug.plugCategoryIdentifier.match(/enhancements\.exotic/i)
+      ));
 
   // special top level class for styling some specific items' popups differently
   const itemSpecificClass = synthesizerHashes.includes(item.hash)
