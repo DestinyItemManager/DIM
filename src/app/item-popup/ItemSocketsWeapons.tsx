@@ -14,6 +14,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
+import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
 import './ItemSockets.scss';
 import styles from './ItemSocketsWeapons.m.scss';
@@ -100,42 +101,29 @@ function ItemSocketsWeapons({
   };
 
   return (
-    <div
-      className={clsx('item-details', 'sockets', styles.weaponSockets, {
-        [styles.minimal]: minimal,
-      })}
-    >
+    <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
       {(archetype?.plugged || (!minimal && mods.length > 0)) && (
-        <div className={clsx(styles.row, styles.archetype)}>
+        <ArchetypeRow minimal={minimal}>
           {archetype?.plugged && (
-            <>
-              <div className={styles.archetypeMod}>
-                <Socket
-                  key={archetype.socketIndex}
-                  defs={defs}
-                  item={item}
-                  isPhonePortrait={isPhonePortrait}
-                  socket={archetype}
-                  wishlistRoll={wishlistRoll}
-                  onClick={handleSocketClick}
-                />
-              </div>
-              <div className={styles.archetypeInfo}>
-                <div>{archetype.plugged.plugDef.displayProperties.name}</div>
-                {!minimal && keyStats && keyStats.length > 0 && (
-                  <div className={styles.stats}>
-                    {keyStats
-                      ?.map(
-                        (s) =>
-                          `${s.value} ${(
-                            statLabels[s.statHash] || s.displayProperties.name
-                          ).toLowerCase()}`
-                      )
-                      ?.join(' / ')}
-                  </div>
-                )}
-              </div>
-            </>
+            <ArchetypeSocket
+              archetype={archetype}
+              defs={defs}
+              item={item}
+              isPhonePortrait={isPhonePortrait}
+            >
+              {!minimal && keyStats && keyStats.length > 0 && (
+                <div className={styles.stats}>
+                  {keyStats
+                    ?.map(
+                      (s) =>
+                        `${s.value} ${(
+                          statLabels[s.statHash] || s.displayProperties.name
+                        ).toLowerCase()}`
+                    )
+                    ?.join(' / ')}
+                </div>
+              )}
+            </ArchetypeSocket>
           )}
           {!minimal && mods.length > 0 && (
             <div className="item-socket-category-Consumable socket-container">
@@ -153,7 +141,7 @@ function ItemSocketsWeapons({
               ))}
             </div>
           )}
-        </div>
+        </ArchetypeRow>
       )}
       {perks &&
         ($featureFlags.newPerks && !minimal ? (

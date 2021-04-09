@@ -15,7 +15,9 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
+import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import './ItemSockets.scss';
+import styles from './ItemSocketsGeneral.m.scss';
 import Socket from './Socket';
 import SocketDetails from './SocketDetails';
 
@@ -70,6 +72,10 @@ function ItemSocketsGeneral({
     return null;
   }
 
+  const exoticArmorPerk = item.sockets.categories.find(
+    (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
+  )?.sockets[0];
+
   // special top level class for styling some specific items' popups differently
   const itemSpecificClass = synthesizerHashes.includes(item.hash)
     ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
@@ -82,7 +88,9 @@ function ItemSocketsGeneral({
       // hide if there's no sockets in this category
       c.sockets.length > 0 &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
-      c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter
+      c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
+      // we handle exotic perk specially too
+      c.category.hash !== SocketCategoryHashes.ArmorPerks_LargePerk
   );
   if (minimal) {
     // Only show the first of each style of category
@@ -98,6 +106,24 @@ function ItemSocketsGeneral({
 
   return (
     <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
+      {exoticArmorPerk && (
+        <ArchetypeRow>
+          {exoticArmorPerk?.plugged && (
+            <ArchetypeSocket
+              archetype={exoticArmorPerk}
+              defs={defs}
+              item={item}
+              isPhonePortrait={isPhonePortrait}
+            >
+              {!minimal && (
+                <div className={styles.exoticDescription}>
+                  {exoticArmorPerk.plugged.plugDef.displayProperties.description}
+                </div>
+              )}
+            </ArchetypeSocket>
+          )}
+        </ArchetypeRow>
+      )}
       {categories.map((category) => (
         <div
           key={category.category.hash}

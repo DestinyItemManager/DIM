@@ -22,7 +22,7 @@ export default function Socket({
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   isPhonePortrait: boolean;
-  onClick(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
   adjustedPlug?: DimPlug;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
@@ -43,9 +43,7 @@ export default function Socket({
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}
-          onClick={() => {
-            onClick(item, socket, plug, hasMenu);
-          }}
+          onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
           adjustedPlug={adjustedPlug}
         />
       ))}

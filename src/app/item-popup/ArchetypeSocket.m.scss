@@ -1,0 +1,59 @@
+.row {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: flex-start;
+  padding: 6px 10px;
+  background-color: #333;
+  margin: 0 -10px 12px -10px;
+  width: 100%;
+  border-bottom: none;
+
+  &.minimal {
+    background-color: transparent;
+    align-items: center;
+  }
+
+  :global(.socket-container) img {
+    width: calc(26 / 50 * var(--item-size));
+    height: calc(26 / 50 * var(--item-size));
+  }
+
+  :global(.item-socket-category-Consumable) img {
+    width: calc(32 / 50 * var(--item-size));
+    height: calc(32 / 50 * var(--item-size));
+  }
+}
+
+.mod {
+  margin-top: calc(4 / 50 * var(--item-size));
+  .minimal & {
+    margin-top: 0;
+  }
+
+  img {
+    width: calc(26 / 50 * var(--item-size));
+    height: calc(26 / 50 * var(--item-size));
+    transform: scale(1.4);
+    margin-right: 6px;
+    margin-left: 2px;
+
+    .minimal & {
+      width: 16px !important;
+      height: 16px !important;
+      transform: scale(1.4);
+    }
+  }
+}
+
+.info {
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  width: 0%;
+  margin-right: 8px;
+}
+
+.name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
