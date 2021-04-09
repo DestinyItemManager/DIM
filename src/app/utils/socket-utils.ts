@@ -56,3 +56,12 @@ export function isUsedModSocket(socket: DimSocket) {
     socket.socketDefinition.singleInitialItemHash !== socket.plugged?.plugDef.hash
   );
 }
+
+export function getSocketsByPlugCategoryIdentifier(
+  sockets: DimSockets,
+  plugCategoryIdentifier: string
+) {
+  return sockets.allSockets.find((socket) =>
+    socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
+  );
+}
