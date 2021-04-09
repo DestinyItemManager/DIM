@@ -1,11 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
-import { RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
-import {
-  DestinyActivityModeType,
-  DestinyMilestone,
-  DestinyProfileResponse,
-} from 'bungie-api-ts/destiny2';
+import { RAID_ACTIVITY_TYPE_HASH, RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
+import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { Raid } from './Raid';
@@ -33,10 +29,10 @@ export default function Raids({
     const milestoneActivities = defs.Milestone.get(milestone.milestoneHash).activities;
     return (
       RAID_MILESTONE_HASHES.includes(milestone.milestoneHash) ||
-      milestoneActivities?.some((activity) =>
-        defs.Activity.get(activity.activityHash)?.activityModeTypes.includes(
-          DestinyActivityModeType.Raid
-        )
+      milestoneActivities?.some(
+        (activity) =>
+          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE_HASH
+        // prefer to use DestinyActivityModeType.Raid, but it appears inconsistently in activity defs
       )
     );
   });

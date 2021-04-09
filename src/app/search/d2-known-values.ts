@@ -218,9 +218,11 @@ export const ENCOUNTERS_COMPLETED_OBJECTIVE = 1579649637;
 
 export const ARMSMASTER_ACTIVITY_MODIFIER = 3704166961;
 
+export const RAID_ACTIVITY_TYPE_HASH = 2043403989;
+
 // milestones to manually mark as raid, because they don't adequately identify themselves in defs
 export const RAID_MILESTONE_HASHES = [
-  2712317338, // Milestone "Garden of Salvation"
+  2712317338, // Milestone "Garden of Salvation" has no asociated activities to check for raid-ness
 ];
 
 export const VENDORS = {
