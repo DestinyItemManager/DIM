@@ -136,7 +136,7 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
-          <a onClick={onOpenModPicker} className="dim-button loadout-add">
+          <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
           </a>
         </div>
