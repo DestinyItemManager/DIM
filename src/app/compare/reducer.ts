@@ -121,15 +121,9 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
 
     const itemNameQuery = item.bucket.inWeapons
       ? `name:"${item.name.replace(new RegExp(t('Filter.Adept'), 'gi'), '').trim()}"`
-      : item.bucket.inArmor
-      ? // TODO: bring back the much more complicated armor dupes logic?
-        item.element
-        ? `(name:"${item.name}" is:${getItemDamageShortName(item)})`
-        : `name:"${item.name}"`
-      : undefined;
-    if (!itemNameQuery) {
-      throw new Error('Programmer error: Compare only supports weapons and armor');
-    }
+      : item.element
+      ? `(name:"${item.name}" is:${getItemDamageShortName(item)})`
+      : `name:"${item.name}"`;
 
     return {
       ...state,
@@ -195,14 +189,20 @@ function getItemCategoryHashesFromExampleItem(item: DimItem) {
   for (const node of itemSelectionTree.subCategories!) {
     if (item.itemCategoryHashes.includes(node.itemCategoryHash)) {
       hashes.push(node.itemCategoryHash);
-      for (const subNode of node.subCategories!) {
-        if (item.itemCategoryHashes.includes(subNode.itemCategoryHash)) {
-          hashes.push(subNode.itemCategoryHash);
-          break;
+      if (node.subCategories) {
+        for (const subNode of node.subCategories) {
+          if (item.itemCategoryHashes.includes(subNode.itemCategoryHash)) {
+            hashes.push(subNode.itemCategoryHash);
+            break;
+          }
         }
       }
       break;
     }
+  }
+
+  if (hashes.length === 0) {
+    hashes.push(item.itemCategoryHashes[0]);
   }
 
   return hashes;

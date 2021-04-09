@@ -1,10 +1,9 @@
 import { DimItem } from 'app/inventory/item-types';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { CompareButton, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
+import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
 
 /**
  * Display a row of buttons that suggest alternate queries based on an example item.
@@ -26,7 +25,7 @@ export default memo(function CompareSuggestions({
     ? findSimilarArmors(defs, exampleItem)
     : exampleItem.bucket.inWeapons
     ? findSimilarWeapons(exampleItem)
-    : emptyArray<CompareButton>();
+    : defaultComparisons(exampleItem);
 
   // Fill in the items that match each query
   const compareButtonsWithItems = compareButtons.map((button) => ({

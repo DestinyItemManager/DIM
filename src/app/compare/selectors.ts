@@ -4,6 +4,7 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 
 /**
@@ -45,6 +46,12 @@ export const compareItemsSelector = createSelector(
   }
 );
 
+const organizerTypes = [
+  ItemCategoryHashes.Armor,
+  ItemCategoryHashes.Weapon,
+  ItemCategoryHashes.Ghost,
+];
+
 /**
  * Returns a link to the organizer for the current compare search.
  */
@@ -52,7 +59,7 @@ export const compareOrganizerLinkSelector = createSelector(
   currentAccountSelector,
   compareSessionSelector,
   (account, session) => {
-    if (!session || !account) {
+    if (!session || !account || organizerTypes.includes(session.itemCategoryHashes[0])) {
       return undefined;
     }
     return `/${account.membershipId}/d${
