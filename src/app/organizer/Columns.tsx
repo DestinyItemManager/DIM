@@ -48,7 +48,7 @@ import {
   isD1Item,
   isSunset,
 } from 'app/utils/item-utils';
-import { isUsedModSocket } from 'app/utils/socket-utils';
+import { getSocketsByIndexes, isUsedModSocket } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -541,7 +541,7 @@ function PerksCell({
   }
 
   let sockets = item.sockets.categories.flatMap((c) =>
-    c.sockets.filter(
+    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
         s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&

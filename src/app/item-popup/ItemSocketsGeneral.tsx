@@ -4,6 +4,7 @@ import {
   synthesizerHashes,
 } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { getFirstSocketByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -72,9 +73,10 @@ function ItemSocketsGeneral({
     return null;
   }
 
-  const exoticArmorPerk = item.sockets.categories.find(
-    (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
-  )?.sockets[0];
+  const exoticArmorPerk = getFirstSocketByCategoryHash(
+    item.sockets,
+    SocketCategoryHashes.ArmorPerks_LargePerk
+  );
 
   // special top level class for styling some specific items' popups differently
   const itemSpecificClass = synthesizerHashes.includes(item.hash)
@@ -86,7 +88,7 @@ function ItemSocketsGeneral({
   let categories = item.sockets.categories.filter(
     (c) =>
       // hide if there's no sockets in this category
-      c.sockets.length > 0 &&
+      c.socketIndexes.length > 0 &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // we handle exotic perk specially too
@@ -135,7 +137,7 @@ function ItemSocketsGeneral({
             </div>
           )}
           <div className="item-sockets">
-            {category.sockets.map(
+            {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
               (socketInfo) =>
                 socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket

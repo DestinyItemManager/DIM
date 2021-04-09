@@ -7,6 +7,7 @@ import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -86,7 +87,7 @@ export default function EnergyMeter({
     if (!$featureFlags.awa) {
       return;
     }
-    if (!item.energy) {
+    if (!item.energy || !item.sockets) {
       return;
     }
 
@@ -103,11 +104,7 @@ export default function EnergyMeter({
       previewEnergyType,
       previewCapacity
     );
-    const tierSockets = item.sockets!.categories.find(
-      (c) => c.category.hash === SocketCategoryHashes.ArmorTier
-    )!;
-
-    const socket = tierSockets.sockets[0];
+    const socket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier)!;
 
     try {
       for (const modHash of upgradeMods) {

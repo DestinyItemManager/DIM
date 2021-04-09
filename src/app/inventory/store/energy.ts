@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import {
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
@@ -24,9 +25,7 @@ export function energyUpgrade(
   newEnergyType: DestinyEnergyType,
   newEnergyCapacity: number
 ) {
-  const tierSocket = item.sockets!.categories.find(
-    (c) => c.category.hash === SocketCategoryHashes.ArmorTier
-  )!.sockets[0];
+  const tierSocket = getFirstSocketByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorTier)!;
 
   const plugSet = defs.PlugSet.get(tierSocket.socketDefinition.reusablePlugSetHash!);
 

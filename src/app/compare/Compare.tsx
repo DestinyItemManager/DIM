@@ -6,6 +6,7 @@ import Checkbox from 'app/settings/Checkbox';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { getSocketByIndex } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import produce from 'immer';
@@ -319,7 +320,9 @@ function updateSocketComparePlug({
   | undefined {
   const { socketIndex } = socket;
   const currentAdjustedPlug = adjustedPlugs?.[item.id]?.[socketIndex];
-  const pluggedPlug = item.sockets?.allSockets[socketIndex]?.plugged;
+  const pluggedPlug = item.sockets
+    ? getSocketByIndex(item.sockets, socketIndex)?.plugged
+    : undefined;
 
   /**
    * Exit early if this plug / socket isn't a clickable target

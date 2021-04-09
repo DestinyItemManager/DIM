@@ -1,11 +1,10 @@
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 
 export function getWeaponArchetypeSocket(item: DimItem): DimSocket | undefined {
-  if (item.bucket.inWeapons && !item.isExotic) {
-    return item.sockets?.categories.find(
-      (c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits
-    )?.sockets[0];
+  if (item.bucket.inWeapons && !item.isExotic && item.sockets) {
+    return getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.IntrinsicTraits);
   }
 }
 
