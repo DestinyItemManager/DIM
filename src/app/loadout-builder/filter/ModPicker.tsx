@@ -161,7 +161,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState([...lockedMods]);
+  const [lockedModsInternal, setLockedModsInternal] = useState(() => [...lockedMods]);
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
