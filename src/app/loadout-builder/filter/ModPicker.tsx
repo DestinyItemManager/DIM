@@ -239,15 +239,17 @@ function ModPicker({
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = ({ onClose }) => (
-    <ModPickerFooter
-      defs={defs}
-      lockedModsInternal={lockedModsInternal}
-      isPhonePortrait={isPhonePortrait}
-      onSubmit={(e) => onSubmit(e, onClose)}
-      onModSelected={onModRemoved}
-    />
-  );
+  const footer = lockedMods.length
+    ? ({ onClose }) => (
+        <ModPickerFooter
+          defs={defs}
+          lockedModsInternal={lockedModsInternal}
+          isPhonePortrait={isPhonePortrait}
+          onSubmit={(e) => onSubmit(e, onClose)}
+          onModSelected={onModRemoved}
+        />
+      )
+    : undefined;
 
   return (
     <Sheet
