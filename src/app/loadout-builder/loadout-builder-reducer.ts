@@ -177,10 +177,9 @@ function lbStateReducer(
       };
     }
     case 'removeLockedMod': {
-      const indexToRemove = state.lockedMods.findIndex(
-        (mod) => mod.plug.plugCategoryHash === action.mod.plug.plugCategoryHash
-      );
-      const newMods = [...state.lockedMods].splice(indexToRemove, 1);
+      const indexToRemove = state.lockedMods.findIndex((mod) => mod.hash === action.mod.hash);
+      const newMods = [...state.lockedMods];
+      newMods.splice(indexToRemove, 1);
 
       return {
         ...state,
