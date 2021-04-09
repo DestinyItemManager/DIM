@@ -157,3 +157,25 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   comparisonSets = comparisonSets.reverse();
   return comparisonSets;
 }
+/**
+ * Generate possible comparisons for non-armor/weapon, given a reference item
+ */
+export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
+  let comparisonSets: CompareButton[] = _.compact([
+    // same item type
+    {
+      // TODO: replace typeName with a lookup of itemCategoryHash
+      buttonLabel: exampleItem.typeName,
+      query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
+    },
+
+    // exact same item, judging by name. might span multiple expansions.
+    {
+      buttonLabel: exampleItem.name,
+      query: `name:"${exampleItem.name}"`,
+    },
+  ]);
+
+  comparisonSets = comparisonSets.reverse();
+  return comparisonSets;
+}
