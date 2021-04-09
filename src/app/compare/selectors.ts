@@ -59,7 +59,7 @@ export const compareOrganizerLinkSelector = createSelector(
   currentAccountSelector,
   compareSessionSelector,
   (account, session) => {
-    if (!session || !account || organizerTypes.includes(session.itemCategoryHashes[0])) {
+    if (!session || !account || !organizerTypes.includes(session.itemCategoryHashes[0])) {
       return undefined;
     }
     return `/${account.membershipId}/d${
