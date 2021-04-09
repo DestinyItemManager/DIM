@@ -1146,7 +1146,7 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
   return {
     id: dimLoadout.id,
     classType: dimLoadout.classType,
-    name: dimLoadout.name,
+    name: dimLoadout.name.trim(),
     clearSpace: dimLoadout.clearSpace || false,
     equipped,
     unequipped,
