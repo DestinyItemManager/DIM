@@ -23,7 +23,7 @@ const MAX_SLOT_INDEPENDENT_MODS = 5;
 export default function PickerSectionMods({
   defs,
   mods,
-  lockedMods,
+  lockedModsInternal,
   onModSelected,
   onModRemoved,
 }: {
@@ -31,7 +31,7 @@ export default function PickerSectionMods({
   /** A array of mods where plug.plugCategoryHash's are equal. */
   mods: readonly PluggableInventoryItemDefinition[];
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedModsInternal: PluggableInventoryItemDefinition[];
   onModSelected(mod: PluggableInventoryItemDefinition);
   onModRemoved(mod: PluggableInventoryItemDefinition);
 }) {
@@ -47,15 +47,15 @@ export default function PickerSectionMods({
   let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
 
   if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-    associatedLockedMods = lockedMods.filter(
+    associatedLockedMods = lockedModsInternal.filter(
       (mod) => mod.plug.plugCategoryHash === plugCategoryHash
     );
   } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
-    associatedLockedMods = lockedMods.filter((mod) =>
+    associatedLockedMods = lockedModsInternal.filter((mod) =>
       raidPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
     );
   } else {
-    associatedLockedMods = lockedMods.filter(
+    associatedLockedMods = lockedModsInternal.filter(
       (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
     );
   }

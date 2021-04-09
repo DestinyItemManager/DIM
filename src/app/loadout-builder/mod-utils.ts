@@ -140,8 +140,20 @@ export function someModHasEnergyRequirement(mods: PluggableInventoryItemDefiniti
   );
 }
 
-/** Sorts PluggableInventoryItemDefinition's by energyType else energyCost else name. */
+/**
+ * Sorts PluggableInventoryItemDefinition's by the following list of comparators.
+ * 1. The known plug category hashes, see ./types#knownModPlugCategoryHashes for ordering
+ * 2. itemTypeDisplayName, so that legacy and combat mods are ordered alphabetically by their category name
+ * 3. energyType, so mods in each category go Any, Arc, Solar, Void
+ * 4. by energy cost, so cheaper mods come before more expensive mods
+ * 5. by mod name, so mods in the same category with the same energy type and cost are alphabetical
+ */
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
+  compareBy((mod) => {
+    const knownIndex = knownModPlugCategoryHashes.indexOf(mod.plug.plugCategoryHash);
+    return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
+  }),
+  compareBy((mod) => mod.itemTypeDisplayName),
   compareBy((mod) => mod.plug.energyCost?.energyType),
   compareBy((mod) => mod.plug.energyCost?.energyCost),
   compareBy((mod) => mod.displayProperties.name)

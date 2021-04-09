@@ -161,9 +161,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModMap, setlockedModMap] = useState(() =>
-    _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash)
-  );
+  const [lockedModsInternal, setLockedModsInternal] = useState([...lockedMods]);
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -175,41 +173,36 @@ function ModPicker({
   /** Add a new mod to the internal mod picker state */
   const onModSelected = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
-      const { plugCategoryHash } = mod.plug;
-      setlockedModMap((oldState) => ({
-        ...oldState,
-        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod }],
-      }));
+      setLockedModsInternal((oldState) => {
+        const newState = [...oldState];
+        newState.push(mod);
+        return newState.sort(sortMods);
+      });
     },
-    [setlockedModMap]
+    [setLockedModsInternal]
   );
 
   /** Remove a mod from the internal mod picker state */
   const onModRemoved = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
-      const { plugCategoryHash } = mod.plug;
-      setlockedModMap((oldState) => {
-        const firstIndex =
-          oldState[plugCategoryHash]?.findIndex((locked) => locked.hash === mod.hash) ?? -1;
+      setLockedModsInternal((oldState) => {
+        const firstIndex = oldState.findIndex((locked) => locked.hash === mod.hash);
 
         if (firstIndex >= 0) {
-          const newState = [...(oldState[plugCategoryHash] || [])];
+          const newState = [...oldState];
           newState.splice(firstIndex, 1);
-          return {
-            ...oldState,
-            [plugCategoryHash]: newState,
-          };
+          return newState;
         }
 
         return oldState;
       });
     },
-    [setlockedModMap]
+    [setLockedModsInternal]
   );
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(Object.values(lockedModMap).flat());
+    onAccept(lockedModsInternal);
     onClose();
   };
 
@@ -243,23 +236,18 @@ function ModPicker({
     _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
   ).sort(sortModGroups);
 
-  const plugCategoryHashOrder = groupedMods.map((mods) => mods[0].plug.plugCategoryHash);
-
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = Object.values(lockedModMap).some((f) => Boolean(f?.length))
-    ? ({ onClose }) => (
-        <ModPickerFooter
-          defs={defs}
-          groupOrder={plugCategoryHashOrder}
-          locked={lockedModMap}
-          isPhonePortrait={isPhonePortrait}
-          onSubmit={(e) => onSubmit(e, onClose)}
-          onModSelected={onModRemoved}
-        />
-      )
-    : undefined;
+  const footer = ({ onClose }) => (
+    <ModPickerFooter
+      defs={defs}
+      lockedModsInternal={lockedModsInternal}
+      isPhonePortrait={isPhonePortrait}
+      onSubmit={(e) => onSubmit(e, onClose)}
+      onModSelected={onModRemoved}
+    />
+  );
 
   return (
     <Sheet
@@ -295,7 +283,7 @@ function ModPicker({
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
           defs={defs}
-          lockedMods={lockedMods}
+          lockedModsInternal={lockedModsInternal}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />
