@@ -239,7 +239,7 @@ function ModPicker({
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = lockedMods.length
+  const footer = lockedModsInternal.length
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
