@@ -1,4 +1,3 @@
-import { LockedItemType } from 'app/loadout-builder/types';
 import React from 'react';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -12,9 +11,6 @@ interface ProvidedProps {
   minimal?: boolean;
   updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
-  /** Extra CSS classes to apply to perks based on their hash */
-  classesByHash?: { [plugHash: number]: string };
-  onShiftClick?(lockedItem: LockedItemType): void;
 }
 
 type Props = ProvidedProps;
