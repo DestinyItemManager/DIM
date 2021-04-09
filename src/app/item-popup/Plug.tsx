@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { LockedItemType } from 'app/loadout-builder/types';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
@@ -22,11 +21,9 @@ export default function Plug({
   item,
   socketInfo,
   wishlistRoll,
-  className,
   hasMenu,
   isPhonePortrait,
   onClick,
-  onShiftClick,
   adjustedPlug,
 }: {
   defs: D2ManifestDefinitions;
@@ -34,11 +31,9 @@ export default function Plug({
   item: DimItem;
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  className?: string;
   hasMenu: boolean;
   isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
-  onShiftClick?(lockedItem: LockedItemType): void;
   adjustedPlug?: DimPlug;
 }) {
   // Support dragging over plugs items on mobile
@@ -56,21 +51,7 @@ export default function Plug({
 
   const itemCategories = plug?.plugDef.itemCategoryHashes || [];
 
-  const handleShiftClick =
-    (onShiftClick || onClick) &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
-      if (onShiftClick && e.shiftKey) {
-        e.stopPropagation();
-        const lockedItem: LockedItemType = {
-          type: 'perk',
-          perk: plug.plugDef,
-          bucket: item.bucket,
-        };
-        onShiftClick(lockedItem);
-      } else {
-        onClick?.(plug);
-      }
-    });
+  const handleShiftClick = onClick && (() => onClick(plug));
 
   const contents = (
     <div ref={drop}>
@@ -85,7 +66,7 @@ export default function Plug({
   return (
     <div
       key={plug.plugDef.hash}
-      className={clsx('socket-container', className, {
+      className={clsx('socket-container', {
         disabled: !plug.enabled,
         notChosen: plug !== socketInfo.plugged,
         selectable: socketInfo.plugOptions.length > 1 && socketInfo.socketIndex <= 2,

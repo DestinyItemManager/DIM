@@ -1,6 +1,5 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
-import { LockedItemType } from 'app/loadout-builder/types';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -18,7 +17,7 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import ItemPerksList from './ItemPerksList';
 import './ItemSockets.scss';
 import styles from './ItemSocketsWeapons.m.scss';
-import Plug from './Plug';
+import Socket from './Socket';
 import SocketDetails from './SocketDetails';
 
 interface ProvidedProps {
@@ -27,9 +26,6 @@ interface ProvidedProps {
   minimal?: boolean;
   updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   adjustedItemPlugs?: DimAdjustedItemPlug;
-  /** Extra CSS classes to apply to perks based on their hash */
-  classesByHash?: { [plugHash: number]: string };
-  onShiftClick?(lockedItem: LockedItemType): void;
 }
 
 interface StoreProps {
@@ -53,9 +49,7 @@ function ItemSocketsWeapons({
   item,
   minimal,
   wishlistRoll,
-  classesByHash,
   isPhonePortrait,
-  onShiftClick,
   updateSocketComparePlug,
   adjustedItemPlugs,
 }: Props) {
@@ -123,10 +117,7 @@ function ItemSocketsWeapons({
                   isPhonePortrait={isPhonePortrait}
                   socket={archetype}
                   wishlistRoll={wishlistRoll}
-                  classesByHash={classesByHash}
                   onClick={handleSocketClick}
-                  onShiftClick={onShiftClick}
-                  adjustedPlug={adjustedItemPlugs?.[archetype.socketIndex]}
                 />
               </div>
               <div className={styles.archetypeInfo}>
@@ -156,9 +147,7 @@ function ItemSocketsWeapons({
                   isPhonePortrait={isPhonePortrait}
                   socket={socketInfo}
                   wishlistRoll={wishlistRoll}
-                  classesByHash={classesByHash}
                   onClick={handleSocketClick}
-                  onShiftClick={onShiftClick}
                   adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
                 />
               ))}
@@ -188,9 +177,7 @@ function ItemSocketsWeapons({
                       isPhonePortrait={isPhonePortrait}
                       socket={socketInfo}
                       wishlistRoll={wishlistRoll}
-                      classesByHash={classesByHash}
                       onClick={handleSocketClick}
-                      onShiftClick={onShiftClick}
                       adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
                     />
                   )
@@ -208,9 +195,7 @@ function ItemSocketsWeapons({
               isPhonePortrait={isPhonePortrait}
               socket={socketInfo}
               wishlistRoll={wishlistRoll}
-              classesByHash={classesByHash}
               onClick={handleSocketClick}
-              onShiftClick={onShiftClick}
               adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
             />
           ))}
@@ -250,56 +235,4 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
     default:
       return null;
   }
-}
-
-function Socket({
-  defs,
-  item,
-  socket,
-  wishlistRoll,
-  classesByHash,
-  isPhonePortrait,
-  onClick,
-  onShiftClick,
-  adjustedPlug,
-}: {
-  defs: D2ManifestDefinitions;
-  item: DimItem;
-  socket: DimSocket;
-  wishlistRoll?: InventoryWishListRoll;
-  /** Extra CSS classes to apply to perks based on their hash */
-  classesByHash?: { [plugHash: number]: string };
-  isPhonePortrait: boolean;
-  onClick(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
-  onShiftClick?(lockedItem: LockedItemType): void;
-  adjustedPlug?: DimPlug;
-}) {
-  const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
-
-  return (
-    <div
-      className={clsx('item-socket', {
-        hasMenu,
-      })}
-    >
-      {socket.plugOptions.map((plug) => (
-        <Plug
-          key={plug.plugDef.hash}
-          plug={plug}
-          item={item}
-          socketInfo={socket}
-          defs={defs}
-          wishlistRoll={wishlistRoll}
-          hasMenu={hasMenu}
-          isPhonePortrait={isPhonePortrait}
-          className={classesByHash?.[plug.plugDef.hash]}
-          onClick={() => {
-            onClick(item, socket, plug, hasMenu);
-          }}
-          onShiftClick={onShiftClick}
-          adjustedPlug={adjustedPlug}
-        />
-      ))}
-    </div>
-  );
 }
