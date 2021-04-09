@@ -161,7 +161,6 @@ export const D2ItemCategoryHashesByName = {
 // these specific items have socket display exceptions. see ItemSockets.tsx
 // review the need for this after season 12 starts
 export const synthesizerHashes = [1160544508, 1160544509, 1160544511, 3633698719];
-export const CHALICE_OF_OPULENCE = 1115550924;
 
 /** powerful rewards listed in quests or bounties */
 // TODO: generate in d2ai
