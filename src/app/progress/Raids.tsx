@@ -1,7 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
-import { raidOrder, RAID_ACTIVITY_TYPE } from 'app/search/d2-known-values';
-import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
+import {
+  DestinyActivityModeType,
+  DestinyMilestone,
+  DestinyProfileResponse,
+} from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { Raid } from './Raid';
@@ -24,23 +28,20 @@ export default function Raids({
     ? Object.values(profileMilestoneData)
     : [];
 
-  // filter to milestones with child activities of type <ActivityType "Raid" 2043403989>
+  // filter to milestones with child activities that are raids
   const filteredMilestones = allMilestones.filter((milestone) => {
-    const milestoneActivities = (defs.Milestone.get(milestone.milestoneHash) || {}).activities;
+    const milestoneActivities = defs.Milestone.get(milestone.milestoneHash).activities;
     return (
-      milestone.milestoneHash === 2712317338 ||
-      milestoneActivities?.some(
-        (activity) =>
-          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE
+      RAID_MILESTONE_HASHES.includes(milestone.milestoneHash) ||
+      milestoneActivities?.some((activity) =>
+        defs.Activity.get(activity.activityHash)?.activityModeTypes.includes(
+          DestinyActivityModeType.Raid
+        )
       )
     );
   });
 
-  const raids = _.sortBy(filteredMilestones, (f) => {
-    const order = raidOrder.indexOf(f.milestoneHash);
-    // return reverse order by index
-    return order >= 0 ? -order : -999 - f.order;
-  });
+  const raids = _.sortBy(filteredMilestones, (f) => f.order);
 
   return (
     <div className="progress-for-character" key={store.id}>

@@ -5,7 +5,7 @@ import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   armorBuckets,
   armorStats,
-  ARMOR_STAT_CAP,
+  ARMOR_STAT_DISPLAY_CAP,
   CUSTOM_TOTAL_STAT_HASH,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
@@ -213,7 +213,7 @@ function buildClassItemStatsFromMods(
       isConditionallyActive: false,
     };
     const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
-    builtStat.maximumValue = ARMOR_STAT_CAP;
+    builtStat.maximumValue = ARMOR_STAT_DISPLAY_CAP;
     builtStat.base = 0;
     investmentStats.push(builtStat);
   }

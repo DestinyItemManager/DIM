@@ -15,8 +15,11 @@ import {
 // GAME MECHANICS KNOWN VALUES
 //
 
-// mods/masterworks can't push mob/rec/res/dis/int/str above 42
-export const ARMOR_STAT_CAP = 42;
+export const MAX_ARMOR_ENERGY_CAPACITY = 10;
+
+// mods/masterworks can't push the displayed mob/rec/res/dis/int/str above
+// 42 on a single item. it can still have >42 effect on a char's stat totals
+export const ARMOR_STAT_DISPLAY_CAP = 42;
 
 //
 // SOCKETS KNOWN VALUES
@@ -158,10 +161,6 @@ export const D2ItemCategoryHashesByName = {
   reptoken: ItemCategoryHashes.ReputationTokens,
 };
 
-// these specific items have socket display exceptions. see ItemSockets.tsx
-// review the need for this after season 12 starts
-export const synthesizerHashes = [1160544508, 1160544509, 1160544511, 3633698719];
-
 /** powerful rewards listed in quests or bounties */
 // TODO: generate in d2ai
 export const powerfulSources = [
@@ -212,25 +211,17 @@ export const CATALYSTS_ROOT_NODE = 511607103;
 export const RAID_NODE = 4025982223;
 
 //
-// MISC KNOWN VALUES
+// MISC KNOWN HASHES / ENUMS
 //
 
 export const ENCOUNTERS_COMPLETED_OBJECTIVE = 1579649637;
 
 export const ARMSMASTER_ACTIVITY_MODIFIER = 3704166961;
 
-// unfortunately the API's raid .order attribute is odd
-export const raidOrder = [
-  3660836525, // levi
-  2986584050, // eow
-  2683538554, // sos
-  3181387331, // wish
-  1342567285, // scourge
-  2590427074, // crown
+// milestones to manually mark as raid, because they don't adequately identify themselves in defs
+export const RAID_MILESTONE_HASHES = [
+  2712317338, // Milestone "Garden of Salvation"
 ];
-
-/** used for checking if something is a raid */
-export const RAID_ACTIVITY_TYPE = 2043403989;
 
 export const VENDORS = {
   /** "The Spider", from whom we calculate planetmat info */
@@ -289,8 +280,6 @@ export const breakerTypes = {
 };
 
 export const powerCapPlugSetHash = 573;
-
-export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 
 export const modsWithConditionalStats = {
   powerfulFriends: 1484685887,
