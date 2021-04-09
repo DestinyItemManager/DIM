@@ -24,17 +24,15 @@ import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { sortModGroups, sortMods } from '../mod-utils';
-import { PluggableItemsByPlugCategoryHash } from '../types';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
 interface ProvidedProps {
   /**
-   * An object of plugCatgeoryHashes to mods (PluggableInventoryItemDefinition[])
-   * with that plugCategoryHash.
+   * An array of mods that are already locked.
    */
-  lockedMods: PluggableItemsByPlugCategoryHash;
+  lockedMods: PluggableInventoryItemDefinition[];
   /**
    * The DestinyClass instance that is used to filter items on when building up the
    * set of available mods.
@@ -43,7 +41,7 @@ interface ProvidedProps {
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** Called with the new lockedMods when the user accepts the new modset. */
-  onAccept(newLockedMods: PluggableItemsByPlugCategoryHash): void;
+  onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
   onClose(): void;
 }
@@ -163,7 +161,9 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState(() => ({ ...lockedMods }));
+  const [lockedModMap, setlockedModMap] = useState(() =>
+    _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash)
+  );
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -176,19 +176,19 @@ function ModPicker({
   const onModSelected = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
       const { plugCategoryHash } = mod.plug;
-      setLockedModsInternal((oldState) => ({
+      setlockedModMap((oldState) => ({
         ...oldState,
         [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod }],
       }));
     },
-    [setLockedModsInternal]
+    [setlockedModMap]
   );
 
   /** Remove a mod from the internal mod picker state */
   const onModRemoved = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
       const { plugCategoryHash } = mod.plug;
-      setLockedModsInternal((oldState) => {
+      setlockedModMap((oldState) => {
         const firstIndex =
           oldState[plugCategoryHash]?.findIndex((locked) => locked.hash === mod.hash) ?? -1;
 
@@ -204,12 +204,12 @@ function ModPicker({
         return oldState;
       });
     },
-    [setLockedModsInternal]
+    [setlockedModMap]
   );
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(lockedModsInternal);
+    onAccept(Object.values(lockedModMap).flat());
     onClose();
   };
 
@@ -248,12 +248,12 @@ function ModPicker({
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = Object.values(lockedModsInternal).some((f) => Boolean(f?.length))
+  const footer = Object.values(lockedModMap).some((f) => Boolean(f?.length))
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
           groupOrder={plugCategoryHashOrder}
-          locked={lockedModsInternal}
+          locked={lockedModMap}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
           onModSelected={onModRemoved}
@@ -295,7 +295,7 @@ function ModPicker({
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
           defs={defs}
-          locked={lockedModsInternal}
+          lockedMods={lockedMods}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

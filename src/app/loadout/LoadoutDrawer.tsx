@@ -1,7 +1,6 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout-builder/filter/ModPicker';
-import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -21,7 +20,7 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import InventoryItem from '../inventory/InventoryItem';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
@@ -510,19 +509,12 @@ function LoadoutDrawer({
   const savedMods = getModsFromLoadout(defs, loadout);
 
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newMods: PluggableItemsByPlugCategoryHash) => {
+  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
     const newLoadout = { ...loadout };
-    const mods: number[] = [];
-
-    for (const mod of Object.values(newMods).flat()) {
-      if (mod) {
-        mods.push(mod.hash);
-      }
-    }
 
     newLoadout.parameters = {
       ...newLoadout.parameters,
-      mods,
+      mods: newMods.map((mod) => mod.hash),
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
   };

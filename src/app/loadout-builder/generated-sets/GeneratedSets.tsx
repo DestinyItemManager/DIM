@@ -16,7 +16,7 @@ import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { someModHasEnergyRequirement } from '../mod-utils';
-import { ArmorSet, LockedMap, LockedMods, StatTypes } from '../types';
+import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -80,7 +80,7 @@ interface Props {
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
-  lockedMods: LockedMods;
+  lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -156,10 +156,16 @@ export default function GeneratedSets({
 
   let groupingDescription;
 
-  const generalMods = lockedMods[armor2PlugCategoryHashesByName.general] || [];
-  const raidCombatAndLegacyMods = Object.entries(lockedMods).flatMap(([plugCategoryHash, mods]) =>
-    !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
-  );
+  const generalMods: PluggableInventoryItemDefinition[] = [];
+  const raidCombatAndLegacyMods: PluggableInventoryItemDefinition[] = [];
+
+  for (const mod of lockedMods) {
+    if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      generalMods.push(mod);
+    } else if (!armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
+      raidCombatAndLegacyMods.push(mod);
+    }
+  }
 
   if (someModHasEnergyRequirement(raidCombatAndLegacyMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');

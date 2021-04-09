@@ -5,22 +5,13 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import _ from 'lodash';
 import { useReducer } from 'react';
-import {
-  ArmorSet,
-  LockedItemType,
-  LockedMap,
-  LockedMod,
-  LockedMods,
-  MinMaxIgnored,
-  StatTypes,
-} from './types';
+import { ArmorSet, LockedItemType, LockedMap, MinMaxIgnored, StatTypes } from './types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
-  lockedMods: LockedMods;
+  lockedMods: PluggableInventoryItemDefinition[];
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   modPicker: {
@@ -73,7 +64,7 @@ const lbStateInit = ({
       Intellect: { min: 0, max: 10, ignored: false },
       Strength: { min: 0, max: 10, ignored: false },
     },
-    lockedMods: {},
+    lockedMods: [],
     selectedStoreId: selectedStoreId,
     modPicker: {
       open: false,
@@ -92,11 +83,9 @@ export type LoadoutBuilderAction =
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
   | {
       type: 'lockedModsChanged';
-      lockedMods: {
-        [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
-      };
+      lockedMods: PluggableInventoryItemDefinition[];
     }
-  | { type: 'removeLockedArmor2Mod'; mod: LockedMod }
+  | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
@@ -152,29 +141,25 @@ function lbStateReducer(
       };
     }
     case 'lockedModsChanged': {
-      let modKey = 0;
       return {
         ...state,
-        lockedMods: _.mapValues(action.lockedMods, (plugs) =>
-          plugs?.map((plug) => ({ key: modKey++, modDef: plug }))
-        ),
+        lockedMods: action.lockedMods,
       };
     }
     case 'addGeneralMods': {
-      const genrealMods = state.lockedMods[armor2PlugCategoryHashesByName.general];
-      const newGeneralMods = genrealMods?.length ? [...genrealMods] : [];
+      let currentGeneralModsCount = state.lockedMods.filter(
+        (mod) => mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general
+      ).length;
+
+      const newMods = [...state.lockedMods];
       const failures: string[] = [];
-      let largestModKey = Math.max(
-        ...Object.values(state.lockedMods)
-          .flat()
-          .map((locked) => locked?.key || 0)
-      );
 
       for (const mod of action.mods) {
-        if (newGeneralMods.length === 5) {
-          failures.push(mod.displayProperties.name);
+        if (currentGeneralModsCount < 5) {
+          newMods.push(mod);
+          currentGeneralModsCount++;
         } else {
-          newGeneralMods.push({ key: ++largestModKey, modDef: mod });
+          failures.push(mod.displayProperties.name);
         }
       }
 
@@ -188,22 +173,18 @@ function lbStateReducer(
 
       return {
         ...state,
-        lockedMods: {
-          ...state.lockedMods,
-          [armor2PlugCategoryHashesByName.general]: newGeneralMods,
-        },
+        lockedMods: newMods,
       };
     }
-    case 'removeLockedArmor2Mod': {
-      const { plugCategoryHash } = action.mod.modDef.plug;
+    case 'removeLockedMod': {
+      const indexToRemove = state.lockedMods.findIndex(
+        (mod) => mod.plug.plugCategoryHash === action.mod.plug.plugCategoryHash
+      );
+      const newMods = [...state.lockedMods].splice(indexToRemove, 1);
+
       return {
         ...state,
-        lockedMods: {
-          ...state.lockedMods,
-          [plugCategoryHash]: state.lockedMods[plugCategoryHash]?.filter(
-            (locked) => locked.key !== action.mod.key
-          ),
-        },
+        lockedMods: newMods,
       };
     }
     case 'openModPicker':

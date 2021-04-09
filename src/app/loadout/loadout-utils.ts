@@ -4,7 +4,6 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { sortMods } from 'app/loadout-builder/mod-utils';
-import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -251,7 +250,7 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Loadout
-): PluggableItemsByPlugCategoryHash {
+) {
   const mods: PluggableInventoryItemDefinition[] = [];
 
   if (defs.isDestiny2() && loadout.parameters?.mods) {
@@ -263,7 +262,5 @@ export function getModsFromLoadout(
     }
   }
 
-  const sortedMods = mods.sort(sortMods);
-
-  return _.groupBy(sortedMods, (mod) => mod.plug.plugCategoryHash);
+  return mods.sort(sortMods);
 }

@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
@@ -16,14 +16,7 @@ import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
 import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
-import {
-  ArmorSet,
-  LockableBucketHashes,
-  LockedMods,
-  statHashes,
-  statKeys,
-  StatTypes,
-} from '../types';
+import { ArmorSet, LockableBucketHashes, statHashes, statKeys, StatTypes } from '../types';
 import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
@@ -48,7 +41,7 @@ function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
 interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
-  lockedMods: LockedMods;
+  lockedMods: PluggableInventoryItemDefinition[];
   defs: D2ManifestDefinitions;
   classType: DestinyClass;
   statOrder: StatTypes[];
@@ -258,8 +251,8 @@ function CompareDrawer({
                 </div>
               )}
               <div className={styles.unassignedMods}>
-                {loadoutUnassignedMods.map((unassigned) => (
-                  <Mod key={unassigned.key} plugDef={unassigned.modDef} defs={defs} large={true} />
+                {loadoutUnassignedMods.map((unassigned, index) => (
+                  <Mod key={index} plugDef={unassigned} defs={defs} large={true} />
                 ))}
               </div>
             </>
