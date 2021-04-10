@@ -149,7 +149,7 @@
     "Instructions": "Clicca o trascina i files"
   },
   "Filter": {
-    "Adept": "\\(affinata\\)",
+    "Adept": "\\(Affinata\\)",
     "AmmoType": "Mostra gli oggetti basandosi sul tipo di munizioni.",
     "Armor": "Mostra gli oggetti che sono armature.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
@@ -478,6 +478,7 @@
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
+    "ArmorMods": "Modifiche Armatura",
     "AssumeMaxWeapons": "Presupponendo armi al massimo livello di Potere",
     "Before": "Prima '{{name}}'",
     "ChooseItem": "Aggiungi {{name}}",

@@ -478,6 +478,7 @@
     "AppliedError": "Ninguno de los objetos en tu equipo pudo ser transferido.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
+    "ArmorMods": "Modificadores de Armadura",
     "AssumeMaxWeapons": "Asumiendo armas al nivel máximo de poder",
     "Before": "Antes '{{name}}'",
     "ChooseItem": "Añadir {{name}}",

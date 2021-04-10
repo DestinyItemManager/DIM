@@ -478,6 +478,7 @@
     "AppliedError": "没有物品可用于配装.",
     "AppliedWarn": "已为您完成部分配装，但{{total}} 个中有{{failed}} 个物品发生错误。",
     "ApplySearch": "转移搜索 \"{{query}}\"",
+    "ArmorMods": "护甲模组",
     "AssumeMaxWeapons": "假设最大光等武器",
     "Before": "撤销 '{{name}}'",
     "ChooseItem": "添加 {{name}}",

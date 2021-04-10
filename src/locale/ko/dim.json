@@ -478,6 +478,7 @@
     "AppliedError": "로드아웃에 이동할 수 있는 장비가 없습니다.",
     "AppliedWarn": "로드아웃이 부분적으로 옮겨졌으며 {{total}}개의 아이템 중 {{failed}}개에서 오류가 발생하였습니다.",
     "ApplySearch": "\"{{query}}\"로 검색된 아이템 이동",
+    "ArmorMods": "방어구 개조 부품",
     "AssumeMaxWeapons": "최고 전투력 무기 가정",
     "Before": "'{{name}}' 이전",
     "ChooseItem": "{{name}} 추가",

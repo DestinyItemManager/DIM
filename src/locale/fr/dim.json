@@ -478,6 +478,7 @@
     "AppliedError": "Aucun des objets de votre arsenal n'a pu être transféré.",
     "AppliedWarn": "Votre arsenal a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
+    "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Considérer que les armes sont au niveau de puissance maximum",
     "Before": "Avant '{{name}}'",
     "ChooseItem": "Ajouter {{name}}",
