@@ -74,10 +74,11 @@ function ItemSocketsGeneral({
   }
 
   const exoticArmorPerk =
-    item.sockets.categories.find(
+    item.isExotic &&
+    item.bucket.inArmor &&
+    (item.sockets.categories.find(
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
     )?.sockets[0] ||
-    (item.bucket.inArmor &&
       getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic'));
 
   // special top level class for styling some specific items' popups differently
