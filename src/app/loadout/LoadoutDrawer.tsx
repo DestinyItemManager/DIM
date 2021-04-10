@@ -476,7 +476,7 @@ function LoadoutDrawer({
       return;
     }
 
-    // clean the loadout name of whitespace.
+    // clean the loadout name of whitespace as preceding whitespace breaks things.
     loadoutToSave.name = loadoutToSave.name.trim();
 
     dispatch(updateLoadout(loadoutToSave));
