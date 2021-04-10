@@ -2,7 +2,7 @@
 
 * When opening Compare for an Adept weapon, we now also include non-Adept versions of that weapon.
 * We now remove leading or trailing spaces from loadout names when they are saved.
-* In the item popup, exotic armor's exotic perk is now described in full above the mods. Aeon armor doesn't get this benefit because it's weird.
+* In the item popup, exotic armor's exotic perk is now described in full above the mods.
 * You can once again compare ghosts and ships. You can no longer compare emblems.
 * Changing perks on items in Compare now re-sorts the items based on any updated stats.
 
