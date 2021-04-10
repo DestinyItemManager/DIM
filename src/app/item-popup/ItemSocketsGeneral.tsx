@@ -94,9 +94,9 @@ function ItemSocketsGeneral({
   }
 
   return (
-    <div className={clsx('item-details', 'sockets')}>
+    <div className={clsx('item-details', 'sockets', { [styles.minimalSockets]: minimal })}>
       {exoticArmorPerk && (
-        <ArchetypeRow>
+        <ArchetypeRow minimal={minimal}>
           {exoticArmorPerk?.plugged && (
             <ArchetypeSocket
               archetype={exoticArmorPerk}
