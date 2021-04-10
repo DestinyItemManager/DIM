@@ -10,10 +10,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   display: flex;
-
-  &.chalice {
-    flex-direction: column;
-  }
 }
 
 // TODO: different styles for mods and perks
@@ -38,10 +34,6 @@
   flex-direction: column;
   &:last-child {
     margin-right: 0;
-  }
-
-  .chalice & {
-    flex-direction: row;
   }
 
   .disabled {
