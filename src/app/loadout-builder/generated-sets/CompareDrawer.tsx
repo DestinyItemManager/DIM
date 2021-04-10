@@ -14,7 +14,7 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
-import { assignModsToArmorSet } from '../mod-utils';
+import { assignModsToArmorSet, getModRenderKey } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, LockableBucketHashes, statHashes, statKeys, StatTypes } from '../types';
 import { getPower } from '../utils';
@@ -174,6 +174,8 @@ function CompareDrawer({
     );
   }
 
+  const modCounts = {};
+
   return (
     <Sheet onClose={onClose} header={header}>
       <div className={styles.content}>
@@ -251,8 +253,13 @@ function CompareDrawer({
                 </div>
               )}
               <div className={styles.unassignedMods}>
-                {loadoutUnassignedMods.map((unassigned, index) => (
-                  <Mod key={index} plugDef={unassigned} defs={defs} large={true} />
+                {loadoutUnassignedMods.map((unassigned) => (
+                  <Mod
+                    key={getModRenderKey(unassigned, modCounts)}
+                    plugDef={unassigned}
+                    defs={defs}
+                    large={true}
+                  />
                 ))}
               </div>
             </>

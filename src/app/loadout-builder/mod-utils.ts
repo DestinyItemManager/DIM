@@ -173,3 +173,21 @@ export const sortModGroups = chainComparator(
   }),
   compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
 );
+
+/**
+ * Generates a unique key for a mod when rendering. As mods can appear multiple times as
+ * siblings we need to count them and append a number to its hash to make it unique.
+ *
+ * Note that counts is mutated and a new object should be passed in with each render.
+ */
+export const getModRenderKey = (
+  mod: PluggableInventoryItemDefinition,
+  /** A supplied object to store the counts in. This is mutated. */
+  counts: Record<number, number>
+) => {
+  if (!counts[mod.hash]) {
+    counts[mod.hash] = 0;
+  }
+
+  return `${mod.hash}-${counts[mod.hash]++}`;
+};

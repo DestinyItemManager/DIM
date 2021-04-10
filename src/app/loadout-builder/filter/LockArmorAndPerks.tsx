@@ -14,6 +14,7 @@ import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
+import { getModRenderKey } from '../mod-utils';
 import {
   LockableBuckets,
   LockedExclude,
@@ -172,15 +173,15 @@ function LockArmorAndPerks({
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
   const anyLocked = Object.values(lockedMap).some((lockedItems) => Boolean(lockedItems?.length));
-
+  const modCounts = {};
   return (
     <div>
       <div className={styles.area}>
         {Boolean(lockedMods.length) && (
           <div className={styles.itemGrid}>
-            {lockedMods.map((mod, index) => (
+            {lockedMods.map((mod) => (
               <LockedModIcon
-                key={index}
+                key={getModRenderKey(mod, modCounts)}
                 mod={mod}
                 defs={defs}
                 onModClicked={() => onModClicked(mod)}

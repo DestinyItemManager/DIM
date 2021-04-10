@@ -3,6 +3,7 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
+import { getModRenderKey } from '../mod-utils';
 import LockedModIcon from './LockedModIcon';
 import styles from './ModPickerFooter.m.scss';
 
@@ -35,20 +36,14 @@ function ModPickerFooter({
         </button>
       </div>
       <div className={styles.selectedMods}>
-        {lockedModsInternal.map((mod) => {
-          if (!modCounts[mod.hash]) {
-            modCounts[mod.hash] = 0;
-          }
-
-          return (
-            <LockedModIcon
-              key={`${mod.hash}-${++modCounts[mod.hash]}`}
-              mod={mod}
-              defs={defs}
-              onModClicked={() => onModSelected(mod)}
-            />
-          );
-        })}
+        {lockedModsInternal.map((mod) => (
+          <LockedModIcon
+            key={getModRenderKey(mod, modCounts)}
+            mod={mod}
+            defs={defs}
+            onModClicked={() => onModSelected(mod)}
+          />
+        ))}
       </div>
     </div>
   );
