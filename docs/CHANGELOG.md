@@ -6,6 +6,9 @@
 * You can once again compare ghosts and ships. You can no longer compare emblems.
 * Changing perks on items in Compare now re-sorts the items based on any updated stats.
 
+### Beta Only
+* You can now edit a loadout's mods in the loadout drawer.
+
 ## 6.59.1 <span class="changelog-date">(2021-04-05)</span>
 
 * Correct suggestions & interpretation for `inloadout` filter.
