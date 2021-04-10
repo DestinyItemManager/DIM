@@ -76,7 +76,7 @@ function mapStateToProps() {
       classType?: DestinyClass
     ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
-      if (!profileResponse || classType === undefined) {
+      if (!profileResponse) {
         return [];
       }
 
@@ -85,8 +85,11 @@ function mapStateToProps() {
         if (
           !item ||
           !item.sockets ||
+          // Makes sure its an armour 2.0 item
           !isLoadoutBuilderItem(item) ||
-          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+          // If classType is passed in only use items from said class otherwise use
+          // items from all characters. Usefull if in loadouts and only mods and guns.
+          !(classType === DestinyClass.Unknown || item.classType === classType)
         ) {
           continue;
         }
