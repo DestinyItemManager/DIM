@@ -470,14 +470,14 @@ function LoadoutDrawer({
     } catch (e) {}
   };
 
-  const onSaveLoadout = (
-    e: React.MouseEvent,
-    loadoutToSave: Readonly<Loadout> | undefined = loadout
-  ) => {
+  const onSaveLoadout = (e: React.MouseEvent, loadoutToSave: Loadout | undefined = loadout) => {
     e.preventDefault();
     if (!loadoutToSave) {
       return;
     }
+
+    // clean the loadout name of whitespace.
+    loadoutToSave.name = loadoutToSave.name.trim();
 
     dispatch(updateLoadout(loadoutToSave));
     close();
