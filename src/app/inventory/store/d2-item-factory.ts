@@ -376,7 +376,8 @@ export function makeItem(
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
     equipped: Boolean(instanceDef?.isEquipped),
-    equipment: Boolean(itemDef.equippingBlock), // TODO: this has a ton of good info for the item move logic
+    equipment:
+      Boolean(itemDef.equippingBlock) && normalBucket.hash !== BucketHashes.SeasonalArtifact, // TODO: this has a ton of good info for the item move logic
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,
@@ -444,7 +445,11 @@ export function makeItem(
       // Shaders
       createdItem.bucket.hash === BucketHashes.Shaders_Equippable
   );
-  createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
+  createdItem.comparable = Boolean(
+    createdItem.equipment &&
+      createdItem.lockable &&
+      createdItem.bucket.hash !== BucketHashes.Emblems
+  );
 
   if (createdItem.primStat) {
     const statDef = defs.Stat.get(createdItem.primStat.statHash);

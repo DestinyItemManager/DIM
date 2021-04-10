@@ -150,7 +150,12 @@ function Compare(
     dispatch(setSetting(name as any, checked));
   };
 
-  const comparator = sortCompareItemsComparator(sortedHash, sortBetterFirst, doCompareBaseStats);
+  const comparator = sortCompareItemsComparator(
+    sortedHash,
+    sortBetterFirst,
+    doCompareBaseStats,
+    allStats
+  );
   const sortedComparisonItems = !sortedHash
     ? compareItems
     : Array.from(compareItems).sort(comparator);
@@ -264,33 +269,32 @@ function Compare(
 function sortCompareItemsComparator(
   sortedHash: string | number | undefined,
   sortBetterFirst: boolean,
-  compareBaseStats: boolean
+  compareBaseStats: boolean,
+  allStats: StatInfo[]
 ) {
+  const sortStat = allStats.find((s) => s.id === sortedHash);
+
+  if (!sortStat) {
+    return (_a: DimItem, _b: DimItem) => 0;
+  }
+
   return reverseComparator(
     chainComparator(
       compareBy((item: DimItem) => {
-        const stat =
-          item.primStat && sortedHash === item.primStat.statHash
-            ? (item.primStat as MinimalStat)
-            : sortedHash === 'EnergyCapacity'
-            ? {
-                value: item.energy?.energyCapacity || 0,
-                base: undefined,
-              }
-            : (item.stats || []).find((s) => s.statHash === sortedHash);
+        const shouldReverse = sortStat.lowerBetter ? sortBetterFirst : !sortBetterFirst;
 
+        const stat = sortStat.getStat(item);
         if (!stat) {
           return -1;
         }
-
-        const shouldReverse =
-          isDimStat(stat) && stat.smallerIsBetter ? sortBetterFirst : !sortBetterFirst;
-
-        const statValue = (compareBaseStats ? stat.base ?? stat.value : stat.value) || 0;
+        const statValue = compareBaseStats ? stat.base : stat.value;
+        if (statValue === undefined) {
+          return -1;
+        }
         return shouldReverse ? -statValue : statValue;
       }),
-      compareBy((i) => i.index),
-      compareBy((i) => i.name)
+      compareBy((i: DimItem) => i.index),
+      compareBy((i: DimItem) => i.name)
     )
   );
 }
@@ -499,7 +503,19 @@ function getAllStats(
             enabled: false,
             lowerBetter: false,
             getStat(item: DimItem) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
+              const itemStat = item.stats
+                ? item.stats.find((s) => s.statHash === stat.statHash)
+                : undefined;
+              if (itemStat) {
+                const adjustedStatValue = adjustedStats?.[item.id]?.[itemStat.statHash];
+                if (adjustedStatValue) {
+                  return {
+                    ...itemStat,
+                    value: adjustedStatValue,
+                  };
+                }
+              }
+              return itemStat;
             },
           };
           statsByHash[stat.statHash] = statInfo;
