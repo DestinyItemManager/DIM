@@ -76,7 +76,7 @@ function mapStateToProps() {
       classType?: DestinyClass
     ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
-      if (!profileResponse) {
+      if (!profileResponse || classType === undefined) {
         return [];
       }
 
