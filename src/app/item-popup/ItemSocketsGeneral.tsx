@@ -1,8 +1,4 @@
-import {
-  CHALICE_OF_OPULENCE,
-  killTrackerSocketTypeHash,
-  synthesizerHashes,
-} from 'app/search/d2-known-values';
+import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -76,13 +72,6 @@ function ItemSocketsGeneral({
     (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
   )?.sockets[0];
 
-  // special top level class for styling some specific items' popups differently
-  const itemSpecificClass = synthesizerHashes.includes(item.hash)
-    ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
-    : item.hash === CHALICE_OF_OPULENCE
-    ? 'chalice'
-    : null;
-
   let categories = item.sockets.categories.filter(
     (c) =>
       // hide if there's no sockets in this category
@@ -105,7 +94,7 @@ function ItemSocketsGeneral({
   }
 
   return (
-    <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
+    <div className={clsx('item-details', 'sockets')}>
       {exoticArmorPerk && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerk?.plugged && (
