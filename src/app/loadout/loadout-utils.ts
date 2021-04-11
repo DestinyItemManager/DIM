@@ -3,7 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { sortMods } from 'app/loadout-builder/mod-utils';
+import { isInsertableArmor2Mod, sortMods } from 'app/loadout-builder/mod-utils';
+import { isLoadoutBuilderItem } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -22,9 +23,9 @@ const gearSlotOrder = [
 ];
 
 /**
- * Creates a new loadout, with all of the items equipped.
+ * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: number[]): Loadout {
   return {
     id: uuidv4(),
     classType: DestinyClass.Unknown,
@@ -32,6 +33,9 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
     destinyVersion: 2,
     name,
     items,
+    parameters: {
+      mods: modsHashes?.length ? modsHashes : undefined,
+    },
   };
 }
 
@@ -183,6 +187,21 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     amount: item.amount,
     equipped,
   };
+}
+
+/** Extracts the equipped armour 2.0 mod hashes from the item */
+export function extractArmorModHashes(item: DimItem) {
+  if (!isLoadoutBuilderItem(item) || !item.sockets) {
+    return [];
+  }
+  return _.compact(
+    item.sockets.allSockets.map(
+      (socket) =>
+        socket.plugged &&
+        isInsertableArmor2Mod(socket.plugged.plugDef) &&
+        socket.plugged.plugDef.hash
+    )
+  );
 }
 
 /**

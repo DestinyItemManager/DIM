@@ -8,14 +8,12 @@ import {
   bucketsSelector,
   profileResponseSelector,
 } from 'app/inventory/selectors';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -23,7 +21,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { sortModGroups, sortMods } from '../mod-utils';
+import { isInsertableArmor2Mod, sortModGroups, sortMods } from '../mod-utils';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
@@ -122,15 +120,7 @@ function mapStateToProps() {
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
 
-          if (
-            isPluggableItem(def) &&
-            isArmor2Mod(def) &&
-            // Filters out mods that are deprecated.
-            (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
-            // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
-            // My investigation showed that only classified items had this being undefined.
-            def.itemTypeDisplayName !== undefined
-          ) {
+          if (isInsertableArmor2Mod(def)) {
             finalMods.push(def);
           }
         }

@@ -1,6 +1,8 @@
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { isArmor2Mod } from 'app/utils/item-utils';
+import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -191,3 +193,20 @@ export const getModRenderKey = (
 
   return `${mod.hash}-${counts[mod.hash]++}`;
 };
+
+/** Figures out if a definition is an insertable armor 2.0 mod. To do so it does the following
+ * 1. Figures out if the def is pluggable (def.plug exists)
+ * 2. Checks to see if the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
+ * 3. Checks to see if plug.insertionMaterialRequirementHash is non zero or plug.energyCost a thing. This rules out deprecated mods.
+ * 4. Makes sure that itemTypeDisplayName is a thing, this rules out classified items.
+ */
+export function isInsertableArmor2Mod(
+  def: DestinyInventoryItemDefinition
+): def is PluggableInventoryItemDefinition {
+  return Boolean(
+    isPluggableItem(def) &&
+      isArmor2Mod(def) &&
+      (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost) &&
+      def.itemTypeDisplayName !== undefined
+  );
+}
