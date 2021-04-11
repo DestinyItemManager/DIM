@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { allNotesHashtagsSelector } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout/loadout-types';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
@@ -22,6 +23,7 @@ export const suggestionsContextSelector = createSelector(
   loadoutsSelector,
   (state: RootState) => state.manifest.d2Manifest,
   itemInfosSelector,
+  allNotesHashtagsSelector,
   makeSuggestionsContext
 );
 
@@ -29,13 +31,15 @@ function makeSuggestionsContext(
   allItems: DimItem[],
   loadouts: Loadout[],
   d2Manifest: D2ManifestDefinitions,
-  itemInfos: ItemInfos
+  itemInfos: ItemInfos,
+  allNotesHashtags: string[]
 ): SuggestionsContext {
   return {
     allItems,
     loadouts,
     d2Manifest,
     itemInfos,
+    allNotesHashtags,
   };
 }
 

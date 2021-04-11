@@ -42,6 +42,7 @@ export interface SuggestionsContext {
   loadouts?: Loadout[];
   itemInfos?: ItemInfos;
   d2Manifest?: D2ManifestDefinitions;
+  allNotesHashtags?: string[];
 }
 
 // TODO: FilterCategory

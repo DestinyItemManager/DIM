@@ -1,7 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { collectNotesHashtags } from 'app/inventory/note-hashtags';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -69,7 +68,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    suggestionsGenerator: ({ itemInfos }) => itemInfos && collectNotesHashtags(itemInfos),
+    suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
