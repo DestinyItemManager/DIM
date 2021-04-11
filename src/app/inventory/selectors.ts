@@ -8,6 +8,7 @@ import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortSelector } from '../settings/character-sort';
 import { ItemInfos } from './dim-item-info';
+import { collectNotesHashtags } from './note-hashtags';
 import { getCurrentStore, getVault } from './stores-helpers';
 
 /** All stores, unsorted. */
@@ -75,5 +76,13 @@ export const ownedItemsSelector = () =>
 export const itemInfosSelector = (state: RootState): ItemInfos =>
   currentProfileSelector(state)?.tags || emptyObject();
 
+/**
+ * DIM tags which should be applied to matching item hashes (instead of per-instance)
+ */
 export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
+
+/**
+ * all hashtags used in existing item notes
+ */
+export const allNotesHashtagsSelector = createSelector(itemInfosSelector, collectNotesHashtags);

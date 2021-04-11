@@ -4,8 +4,12 @@ import { t } from 'app/i18next-t';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { allNotesHashtagsSelector, getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import {
+  allNotesHashtagsSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+} from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
@@ -130,6 +134,8 @@ function NotesEditor({
           {
             match: /#(\w*)$/,
             search: async (term, callback) => {
+              // need to build this list from the element ref, because relying
+              // on liveNotes state would reinstantiate Textcomplete every keystroke
               const existingTags = getHashtagsFromNote(textArea.current!.value);
               const possibleTags: string[] = [];
               for (const t of tags) {
@@ -148,7 +154,7 @@ function NotesEditor({
               callback(possibleTags);
             },
             replace: (key) => `${key} `,
-            // to-do: for major tags, gonna use this to show what the notes will change to
+            // to-do: for major tags, gonna use this to show what the notes icon will change to
             // template: (key) => `<img src="${url}"/>&nbsp;<small>:${key}:</small>`,
           },
         ],

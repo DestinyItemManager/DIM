@@ -1,11 +1,4 @@
-import { createSelector } from 'reselect';
 import { ItemInfos } from './dim-item-info';
-import { itemInfosSelector } from './selectors';
-
-/**
- * all hashtags used in existing item notes
- */
-export const allNotesHashtagsSelector = createSelector(itemInfosSelector, collectNotesHashtags);
 
 /**
  * collects all hashtags from item notes

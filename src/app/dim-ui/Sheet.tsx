@@ -23,7 +23,8 @@ const spring = {
   clamp: true,
 };
 
-// The sheet is dismissed if it's flicked at a velocity above dismissVelocity or dragged down more than dismissAmount times the height of the sheet.
+// The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
+// or dragged down more than dismissAmount times the height of the sheet.
 const dismissVelocity = 0.8;
 const dismissAmount = 0.5;
 
@@ -33,7 +34,8 @@ const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 const stopPropagation = (e) => e.stopPropagation();
 
 /**
- * A Sheet is a UI element that comes up from the bottom of the scren, and can be dragged to dismiss.
+ * A Sheet is a UI element that comes up from the bottom of the screen,
+ * and can be dragged downward to dismiss
  */
 export default function Sheet({
   header,
