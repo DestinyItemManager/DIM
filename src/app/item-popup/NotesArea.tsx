@@ -158,7 +158,11 @@ function NotesEditor({
             // template: (key) => `<img src="${url}"/>&nbsp;<small>:${key}:</small>`,
           },
         ],
-        { dropdown: { className: 'dropdown-menu textcomplete-dropdown hashtag-suggestions' } }
+        {
+          dropdown: {
+            className: `dropdown-menu textcomplete-dropdown ${styles.hashtagSuggestions}`,
+          },
+        }
       );
       return () => {
         textcomplete.destroy();
