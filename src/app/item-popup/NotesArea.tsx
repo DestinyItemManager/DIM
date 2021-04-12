@@ -133,7 +133,7 @@ function NotesEditor({
         [
           {
             match: /#(\w*)$/,
-            search: async (term, callback) => {
+            search: (term, callback) => {
               // need to build this list from the element ref, because relying
               // on liveNotes state would reinstantiate Textcomplete every keystroke
               const existingTags = getHashtagsFromNote(textArea.current!.value);
