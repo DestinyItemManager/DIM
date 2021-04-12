@@ -113,6 +113,9 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
   return [arcCount, solarCount, voidCount];
 }
 
+// Used for null values
+const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
+
 /**
  * This figures out if all general, other and raid mods can be assigned to an armour set.
  *
@@ -135,29 +138,39 @@ export function canTakeSlotIndependantMods(
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
     otherModPermutations[0]
   );
-  const [arcGeneralMods, solarGeneralModsMods, voidGeneralMods] = getEnergyCounts(
+  const [arcGeneralMods, solarGeneralMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
   );
+  const [arcRaidMods, solarRaidMods, voidRaidlMods] = getEnergyCounts(raidModPermutations[0]);
 
+  // A quick check to see if we have enough of each energy type for the mods
   if (
     voidItems < voidGeneralMods ||
     voidItems < voidSeasonalMods ||
-    solarItems < solarGeneralModsMods ||
+    voidItems < voidRaidlMods ||
+    solarItems < solarGeneralMods ||
     solarItems < solarSeasonalMods ||
+    solarItems < solarRaidMods ||
     arcItems < arcGeneralMods ||
-    arcItems < arcSeasonalMods
+    arcItems < arcSeasonalMods ||
+    arcItems < arcRaidMods
   ) {
     return false;
   }
 
-  const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
-
-  for (const otherP of otherModPermutations) {
+  otherModLoop: for (const otherP of otherModPermutations) {
     let othersFit = true;
-    for (let i = 0; i < sortedItems.length; i++) {
+    otherItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+      const otherMod = otherP[i];
+
+      // If a mod is null there is nothing being socketed into the item so move on
+      if (!otherMod) {
+        continue otherItemLoop;
+      }
+
       const item = sortedItems[i];
-      const tag = otherP[i]?.tag;
-      const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+      const tag = otherMod.tag;
+      const otherEnergy = otherMod.energy || defaultModEnergy;
 
       const noOtherMod = !otherP[i];
       const otherEnergyIsValid =
@@ -169,20 +182,24 @@ export function canTakeSlotIndependantMods(
         noOtherMod || (otherEnergyIsValid && tag && item.compatibleModSeasons?.includes(tag))
       );
 
+      // The other mods wont fit in the item set so move on to the next set of mods
       if (!othersFit) {
-        break;
+        continue otherModLoop;
       }
     }
 
-    if (!othersFit) {
-      continue;
-    }
-
-    for (const generalP of generalModPermutations) {
+    generalModLoop: for (const generalP of generalModPermutations) {
       let generalsFit = true;
-      for (let i = 0; i < sortedItems.length; i++) {
+      generalItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+        const generalMod = generalP[i];
+
+        // If a mod is null there is nothing being socketed into the item so move on
+        if (!generalMod) {
+          continue generalItemLoop;
+        }
+
         const item = sortedItems[i];
-        const generalEnergy = generalP[i]?.energy || defaultModEnergy;
+        const generalEnergy = generalMod.energy || defaultModEnergy;
         const otherEnergy = otherP[i]?.energy || defaultModEnergy;
 
         const noGeneralMod = !generalP[i];
@@ -193,21 +210,28 @@ export function canTakeSlotIndependantMods(
 
         generalsFit &&= Boolean(noGeneralMod || generalEnergyIsValid);
 
+        // The general mods wont fit in the item set so move on to the next set of mods
         if (!generalsFit) {
-          break;
+          continue generalModLoop;
         }
       }
 
-      for (const raidP of raidModPermutations) {
+      raidModLoop: for (const raidP of raidModPermutations) {
         let raidsFit = true;
-        for (let i = 0; i < sortedItems.length; i++) {
+        raidItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+          const raidMod = raidP[i];
+
+          // If a mod is null there is nothing being socketed into the item so move on
+          if (!raidMod) {
+            continue raidItemLoop;
+          }
+
           const item = sortedItems[i];
-          const raidTag = raidP[i]?.tag;
+          const raidTag = raidMod.tag;
           const generalEnergy = generalP[i]?.energy || defaultModEnergy;
           const otherEnergy = otherP[i]?.energy || defaultModEnergy;
-          const raidEnergy = raidP[i]?.energy || defaultModEnergy;
+          const raidEnergy = raidMod.energy || defaultModEnergy;
 
-          const noRaidMod = !raidP[i];
           const raidEnergyIsValid =
             item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
@@ -220,18 +244,20 @@ export function canTakeSlotIndependantMods(
           const notLegacySocketOrLegacyMod = !item.hasLegacyModSocket || !otherP[i];
 
           raidsFit &&= Boolean(
-            noRaidMod ||
-              (raidEnergyIsValid &&
-                notLegacySocketOrLegacyMod &&
-                raidTag &&
-                item.compatibleModSeasons?.includes(raidTag))
+            raidEnergyIsValid &&
+              notLegacySocketOrLegacyMod &&
+              raidTag &&
+              item.compatibleModSeasons?.includes(raidTag)
           );
+
+          // The raid mods wont fit in the item set so move on to the next set of mods
+          if (!raidsFit) {
+            continue raidModLoop;
+          }
         }
 
-        if (!raidsFit) {
-          break;
-        }
-
+        // Once we are finished looping through the items for the set of raid mods
+        // we check to see if all three conditions are satisfied.
         if (raidsFit && generalsFit && othersFit) {
           if (assignments) {
             for (let i = 0; i < sortedItems.length; i++) {
