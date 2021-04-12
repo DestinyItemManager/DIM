@@ -1,5 +1,7 @@
 ## Next
 
+## 6.60.0 <span class="changelog-date">(2021-04-11)</span>
+
 * When opening Compare for an Adept weapon, we now also include non-Adept versions of that weapon.
 * We now remove leading or trailing spaces from loadout names when they are saved.
 * In the item popup, exotic armor's exotic perk is now described in full above the mods.
