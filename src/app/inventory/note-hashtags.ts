@@ -4,7 +4,6 @@ import { ItemInfos } from './dim-item-info';
  * collects all hashtags from item notes
  */
 export function collectNotesHashtags(itemInfos: ItemInfos) {
-  // collect hash tags from item notes
   const hashTags = new Set<string>();
   for (const info of Object.values(itemInfos)) {
     const matches = getHashtagsFromNote(info.notes);
