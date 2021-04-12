@@ -1,5 +1,6 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
+import _ from 'lodash';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
@@ -7,7 +8,6 @@ import {
   LockableBuckets,
   LockedItemType,
   LockedMap,
-  LockedMods,
 } from './types';
 
 /**
@@ -16,7 +16,7 @@ import {
 export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
-  lockedModMap: LockedMods,
+  lockedMods: PluggableInventoryItemDefinition[],
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -24,6 +24,8 @@ export function filterItems(
   if (!items) {
     return filteredItems;
   }
+
+  const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
   Object.keys(items).forEach((bucketStr) => {
     const bucket = parseInt(bucketStr, 10);
@@ -49,14 +51,15 @@ export function filterItems(
   // filter to only include items that are in the locked map and items that have the correct energy
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
-    const lockedMods = lockedModMap[bucketsToCategories[bucket]];
+    const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
-          (!lockedMods || lockedMods.every((mod) => doEnergiesMatch(mod, item)))
+          (!lockedModsByPlugCategoryHash ||
+            lockedModsByPlugCategoryHash.every((mod) => doEnergiesMatch(mod, item)))
       );
     }
   });

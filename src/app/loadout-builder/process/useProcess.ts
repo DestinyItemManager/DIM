@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import {
   armor2PlugCategoryHashes,
@@ -16,8 +16,6 @@ import {
   bucketsToCategories,
   ItemsByBucket,
   LockedMap,
-  LockedMod,
-  LockedMods,
   MinMax,
   MinMaxIgnored,
   statHashes,
@@ -49,7 +47,7 @@ export function useProcess(
   selectedStore: DimStore<DimItem> | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
-  lockedModMap: LockedMods,
+  lockedMods: PluggableInventoryItemDefinition[],
   assumeMasterwork: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
@@ -91,6 +89,7 @@ export function useProcess(
       currentCleanup: cleanup,
     }));
 
+    const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
     const raidCombatAndLegacyMods = Object.entries(
       lockedModMap
@@ -124,9 +123,8 @@ export function useProcess(
       }
     }
 
-    const lockedProcessMods = _.mapValues(
-      lockedModMap,
-      (mods) => mods?.map((mod) => mapArmor2ModToProcessMod(mod)) || []
+    const lockedProcessMods = _.mapValues(lockedModMap, (mods) =>
+      mods.map(mapArmor2ModToProcessMod)
     );
 
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
@@ -134,7 +132,7 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedModMap, selectedStore?.classType),
+        getTotalModStatChanges(lockedMods, selectedStore?.classType),
         lockedProcessMods,
         assumeMasterwork,
         statOrder,
@@ -168,7 +166,7 @@ export function useProcess(
   }, [
     filteredItems,
     lockedItems,
-    lockedModMap,
+    lockedMods,
     assumeMasterwork,
     statOrder,
     statFilters,
@@ -203,8 +201,8 @@ function groupItems(
   items: readonly DimItem[],
   statOrder: StatTypes[],
   assumeMasterwork: boolean,
-  generalMods: LockedMod[],
-  raidCombatAndLegacyMods: LockedMod[]
+  generalMods: PluggableInventoryItemDefinition[],
+  raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];

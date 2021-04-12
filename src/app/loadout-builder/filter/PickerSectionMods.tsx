@@ -9,7 +9,6 @@ import _ from 'lodash';
 import React from 'react';
 import {
   knownModPlugCategoryHashes,
-  PluggableItemsByPlugCategoryHash,
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from '../types';
@@ -24,7 +23,7 @@ const MAX_SLOT_INDEPENDENT_MODS = 5;
 export default function PickerSectionMods({
   defs,
   mods,
-  locked,
+  lockedModsInternal,
   onModSelected,
   onModRemoved,
 }: {
@@ -32,7 +31,7 @@ export default function PickerSectionMods({
   /** A array of mods where plug.plugCategoryHash's are equal. */
   mods: readonly PluggableInventoryItemDefinition[];
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
-  locked: PluggableItemsByPlugCategoryHash;
+  lockedModsInternal: PluggableInventoryItemDefinition[];
   onModSelected(mod: PluggableInventoryItemDefinition);
   onModRemoved(mod: PluggableInventoryItemDefinition);
 }) {
@@ -48,17 +47,16 @@ export default function PickerSectionMods({
   let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
 
   if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-    associatedLockedMods = locked[plugCategoryHash] || [];
+    associatedLockedMods = lockedModsInternal.filter(
+      (mod) => mod.plug.plugCategoryHash === plugCategoryHash
+    );
   } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
-    associatedLockedMods = raidPlugCategoryHashes.flatMap((hash) => locked[hash] || []);
+    associatedLockedMods = lockedModsInternal.filter((mod) =>
+      raidPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+    );
   } else {
-    associatedLockedMods = Object.entries(
-      locked
-    ).flatMap(([lockedPlugCategoryHash, lockedModsByPlugCatHash]) =>
-      lockedModsByPlugCatHash &&
-      !knownModPlugCategoryHashes.includes(Number(lockedPlugCategoryHash))
-        ? lockedModsByPlugCatHash
-        : []
+    associatedLockedMods = lockedModsInternal.filter(
+      (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
     );
   }
 

@@ -9,7 +9,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import { matchLockedItem } from '../item-filter';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType, LockedMod } from '../types';
+import { LockedItemType } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
 
@@ -29,7 +29,7 @@ export default function GeneratedSetItem({
   locked?: readonly LockedItemType[];
   defs: D2ManifestDefinitions;
   itemOptions: DimItem[];
-  lockedMods: LockedMod[];
+  lockedMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });

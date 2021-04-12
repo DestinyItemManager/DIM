@@ -7,7 +7,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimItem } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
@@ -16,29 +16,27 @@ import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/type
 import {
   ArmorSet,
   knownModPlugCategoryHashes,
-  LockedMod,
-  LockedMods,
   raidPlugCategoryHashes,
   statHashToType,
   StatTypes,
 } from '../types';
 
-export function mapArmor2ModToProcessMod(mod: LockedMod): ProcessMod {
+export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
-    hash: mod.modDef.hash,
-    plugCategoryHash: mod.modDef.plug.plugCategoryHash,
-    energy: mod.modDef.plug.energyCost && {
-      type: mod.modDef.plug.energyCost.energyType,
-      val: mod.modDef.plug.energyCost.energyCost,
+    hash: mod.hash,
+    plugCategoryHash: mod.plug.plugCategoryHash,
+    energy: mod.plug.energyCost && {
+      type: mod.plug.energyCost.energyType,
+      val: mod.plug.energyCost.energyCost,
     },
-    investmentStats: mod.modDef.investmentStats,
+    investmentStats: mod.investmentStats,
   };
 
   if (
     raidPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
     !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
   ) {
-    processMod.tag = getModTypeTagByPlugCategoryHash(mod.modDef.plug.plugCategoryHash);
+    processMod.tag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
   }
 
   return processMod;
@@ -48,7 +46,7 @@ function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
   stat: DestinyItemInvestmentStatDefinition,
-  lockedMods: LockedMod[]
+  lockedMods: PluggableInventoryItemDefinition[]
 ): boolean {
   if (!stat.isConditionallyActive) {
     return true;
@@ -64,8 +62,8 @@ function isModStatActive(
     return Boolean(
       lockedMods.find(
         (mod) =>
-          mod.modDef.plug.energyCost?.energyType === DestinyEnergyType.Arc &&
-          chargedWithLightPlugCategoryHashes.includes(mod.modDef.plug.plugCategoryHash)
+          mod.plug.energyCost?.energyType === DestinyEnergyType.Arc &&
+          chargedWithLightPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
       )
     );
   } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
@@ -85,7 +83,10 @@ function isModStatActive(
  * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
  */
-export function getTotalModStatChanges(lockedMods: LockedMods, characterClass?: DestinyClass) {
+export function getTotalModStatChanges(
+  lockedMods: PluggableInventoryItemDefinition[],
+  characterClass?: DestinyClass
+) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
     Recovery: 0,
@@ -100,17 +101,11 @@ export function getTotalModStatChanges(lockedMods: LockedMods, characterClass?: 
     return totals;
   }
 
-  const flatMods = Object.values(lockedMods)
-    .flat()
-    .filter((mod): mod is LockedMod => Boolean(mod));
-
-  for (const mods of Object.values(lockedMods)) {
-    for (const mod of mods || []) {
-      for (const stat of mod.modDef.investmentStats) {
-        const statType = statHashToType[stat.statTypeHash];
-        if (statType && isModStatActive(characterClass, mod.modDef.hash, stat, flatMods)) {
-          totals[statType] += stat.value;
-        }
+  for (const mod of lockedMods) {
+    for (const stat of mod.investmentStats) {
+      const statType = statHashToType[stat.statTypeHash];
+      if (statType && isModStatActive(characterClass, mod.hash, stat, lockedMods)) {
+        totals[statType] += stat.value;
       }
     }
   }
@@ -118,7 +113,10 @@ export function getTotalModStatChanges(lockedMods: LockedMods, characterClass?: 
   return totals;
 }
 
-export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMod[]): ProcessItem {
+export function mapDimItemToProcessItem(
+  dimItem: DimItem,
+  modsForSlot?: PluggableInventoryItemDefinition[]
+): ProcessItem {
   const { bucket, id, type, name, equippingLabel, basePower, stats, energy } = dimItem;
 
   const baseStatMap: { [statHash: number]: number } = {};
@@ -131,7 +129,7 @@ export function mapDimItemToProcessItem(dimItem: DimItem, modsForSlot?: LockedMo
 
   const modMetadatas = getSpecialtySocketMetadatas(dimItem);
   const modsCost = modsForSlot
-    ? _.sumBy(modsForSlot, (mod) => mod.modDef.plug.energyCost?.energyCost || 0)
+    ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
     : 0;
 
   return {
