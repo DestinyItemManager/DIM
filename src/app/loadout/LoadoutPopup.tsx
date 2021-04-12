@@ -40,7 +40,7 @@ import {
 import { applyLoadout } from './loadout-apply';
 import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, newLoadout } from './loadout-utils';
+import { convertToLoadoutItem, extractArmorModHashes, newLoadout } from './loadout-utils';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import {
   makeRoomForPostmaster,
@@ -143,7 +143,8 @@ function LoadoutPopup({
     );
     const loadout = newLoadout(
       '',
-      items.map((i) => convertToLoadoutItem(i, true))
+      items.map((i) => convertToLoadoutItem(i, true)),
+      items.flatMap((i) => extractArmorModHashes(i))
     );
     loadout.classType = classTypeId;
     editLoadout(loadout, { isNew: true });
