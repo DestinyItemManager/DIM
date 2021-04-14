@@ -302,17 +302,12 @@ export function process(
             };
 
             // Calculate the "tiers string" here, since most sets don't make it this far
-            // A string version of the tier-level of each stat, separated by commas
-            // This is an awkward implementation to save garbage allocations.
+            // A string version of the tier-level of each stat, must be lexically comparable
             let tiers = '';
-            let index = 0;
             for (const statKey of orderedConsideredStats) {
               const tier = statTier(stats[statKey]);
-              tiers += tier;
-              if (index < statOrder.length - 1) {
-                tiers += ',';
-              }
-              index++;
+              // Make each stat exactly one code unit so the string compares correctly
+              tiers += tier.toString(11);
             }
 
             numInserted++;
