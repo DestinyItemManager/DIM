@@ -101,6 +101,7 @@ export const raidPlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
   PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
   PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
+  PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
 ];
 
 export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
