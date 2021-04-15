@@ -68,22 +68,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    suggestionsGenerator: ({ itemInfos }) => {
-      if (!itemInfos) {
-        return;
-      }
-      // collect hash tags from item notes
-      const hashTags = new Set<string>();
-      for (const info of Object.values(itemInfos)) {
-        const matches = info.notes?.matchAll(/#\w+/g);
-        if (matches) {
-          for (const match of matches) {
-            hashTags.add(match[0]);
-          }
-        }
-      }
-      return [...hashTags];
-    },
+    suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
