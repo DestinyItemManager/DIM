@@ -96,6 +96,9 @@ const hiddenStatsAllowList = [
   StatHashes.RecoilDirection,
 ];
 
+/** a dictionary to look up StatDisplay info by statHash */
+type StatDisplayLookup = { [statHash: number]: DestinyStatDisplayDefinition | undefined };
+
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: DimItem,
@@ -115,14 +118,18 @@ export function buildStats(
 
   // we re-use this dictionary a bunch of times in subsequent
   // functions to speed up display info lookups
-  const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
+  const statDisplaysByStatHash: StatDisplayLookup = _.keyBy(
+    statGroup.scaledStats,
+    (s) => s.statHash
+  );
 
   // We only use the raw "investment" stats to calculate all item stats.
   // to-do: build armor stats with investment stats from socketed intrinsic plugs
-  let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
+  let investmentStats =
+    buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
   // Include the contributions from perks and mods
-  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplays);
+  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
 
   // For Armor, we always replace the previous stats with live stats, even if they were already created
   // to-do: don't do this
@@ -138,7 +145,7 @@ export function buildStats(
       createdItem,
       defs,
       statGroup,
-      statDisplays
+      statDisplaysByStatHash
     );
 
     if (createdItem.bucket.inArmor) {
@@ -155,7 +162,12 @@ export function buildStats(
 
   // Always build class item stats directly from the mods as we know the base stat values.
   if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
-    investmentStats = buildClassItemStatsFromMods(createdItem, defs, statGroup, statDisplays);
+    investmentStats = buildClassItemStatsFromMods(
+      createdItem,
+      defs,
+      statGroup,
+      statDisplaysByStatHash
+    );
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
@@ -169,7 +181,7 @@ function buildClassItemStatsFromMods(
   item: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ): DimStat[] {
   const statTracker: { stat: number; value: number } | {} = {};
   const investmentStats: DimStat[] = [];
@@ -219,7 +231,12 @@ function buildClassItemStatsFromMods(
       value: Math.max(0, statTracker[statHash]),
       isConditionallyActive: false,
     };
-    const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
+    const builtStat = buildStat(
+      hashAndValue,
+      statGroup,
+      defs.Stat.get(statHash),
+      statDisplaysByStatHash
+    );
     builtStat.maximumValue = ARMOR_STAT_DISPLAY_CAP;
     builtStat.base = 0;
     investmentStats.push(builtStat);
@@ -236,7 +253,7 @@ function buildClassItemStatsFromMods(
 function shouldShowStat(
   itemDef: DestinyInventoryItemDefinition,
   statHash: number,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   // Bows have a charge time stat that nobody asked for
   if (
@@ -253,7 +270,8 @@ function shouldShowStat(
     // Must be on the AllowList
     statAllowList.includes(statHash) &&
     // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
+    (statDisplaysByStatHash[statHash] ||
+      (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
   );
 }
 
@@ -267,14 +285,14 @@ function buildInvestmentStats(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ): DimStat[] | null {
   const itemStats = itemDef.investmentStats || [];
 
   const ret: DimStat[] = [];
   for (const itemStat of itemStats) {
     const statHash = itemStat.statTypeHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
       continue;
     }
 
@@ -283,7 +301,7 @@ function buildInvestmentStats(
       continue;
     }
 
-    ret.push(buildStat(itemStat, statGroup, def, statDisplays));
+    ret.push(buildStat(itemStat, statGroup, def, statDisplaysByStatHash));
   }
 
   return ret;
@@ -292,7 +310,7 @@ function buildInvestmentStats(
 /**
  * builds and returns a single DimStat, using InvestmentStat information,
  * stat def, statgroup def, and the item's StatDisplayDefinition,
- * which determins which stats are displayed and how they are interpolated
+ * which determines which stats are displayed and how they are interpolated
  */
 function buildStat(
   itemStat:
@@ -300,14 +318,14 @@ function buildStat(
     | { statTypeHash: number; value: number; isConditionallyActive: boolean },
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ): DimStat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
   let bar = !statsNoBar.includes(statHash);
   let smallerIsBetter = false;
-  const statDisplay = statDisplays[statHash];
+  const statDisplay = statDisplaysByStatHash[statHash];
   if (statDisplay) {
     const firstInterp = statDisplay.displayInterpolation[0];
     const lastInterp =
@@ -349,7 +367,7 @@ function applyPlugsToStats(
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   if (!createdItem.sockets?.allSockets.length) {
     return;
@@ -391,10 +409,15 @@ function applyPlugsToStats(
         existingStat.investmentValue += investmentChange;
       } else {
         // the stat doesn't exist on the item, but needs modifying, so we generate and add it to the item
-        if (shouldShowStat(itemDef, affectedStatHash, statDisplays)) {
+        if (shouldShowStat(itemDef, affectedStatHash, statDisplaysByStatHash)) {
           if (pluggedInvestmentStat.value) {
             const statDef = defs.Stat.get(affectedStatHash);
-            const newStat = buildStat(pluggedInvestmentStat, statGroup, statDef, statDisplays);
+            const newStat = buildStat(
+              pluggedInvestmentStat,
+              statGroup,
+              statDef,
+              statDisplaysByStatHash
+            );
             // add the generated stat to our temporary dict, and to the item's stats
             existingStatsByHash[affectedStatHash] = newStat;
             existingStats.push(newStat);
@@ -407,9 +430,9 @@ function applyPlugsToStats(
   // Now calculate the actual, interpolated value of all stats after they've been modified
   for (const stat of existingStats) {
     if (modifiedStats.has(stat.statHash)) {
-      const statDisplay = statDisplays[stat.statHash];
+      const statDisplay = statDisplaysByStatHash[stat.statHash];
       stat.value = statDisplay
-        ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
+        ? interpolateStatValue(stat.investmentValue, statDisplay)
         : Math.min(stat.investmentValue, stat.maximumValue);
     }
   }
@@ -419,7 +442,7 @@ function applyPlugsToStats(
   // stats in first.
   const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
-    attachPlugStats(socket, existingStatsByHash, statDisplays);
+    attachPlugStats(socket, existingStatsByHash, statDisplaysByStatHash);
   }
 }
 
@@ -526,7 +549,7 @@ function buildLiveStats(
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   const ret: DimStat[] = [];
 
@@ -565,7 +588,7 @@ function buildLiveStats(
     const itemStat = stats.stats[itemStatKey];
 
     const statHash = itemStat.statHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
       continue;
     }
 
@@ -578,7 +601,7 @@ function buildLiveStats(
     let bar = !statsNoBar.includes(statHash);
     let smallerIsBetter = false;
 
-    const statDisplay = statDisplays[statHash];
+    const statDisplay = statDisplaysByStatHash[statHash];
 
     if (statDisplay) {
       const firstInterp = statDisplay.displayInterpolation[0];
