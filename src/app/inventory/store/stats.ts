@@ -204,8 +204,8 @@ function buildClassItemStatsFromMods(
         isPlugStatActive(
           item,
           socket.plugged.plugDef.hash,
-          investmentStat?.statTypeHash,
-          investmentStat?.isConditionallyActive
+          investmentStat.statTypeHash,
+          investmentStat.isConditionallyActive
         )
       ) {
         statTracker[statHash] += socket.plugged.stats[statHash];
