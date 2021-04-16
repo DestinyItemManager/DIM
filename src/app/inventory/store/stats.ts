@@ -28,7 +28,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
 import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
-import { DimItem, DimPlug, DimStat } from '../item-types';
+import { DimItem, DimSocket, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -389,46 +389,102 @@ function enhanceStatsWithPlugs(
   // stats in first.
   const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
-    for (const plug of socket.plugOptions) {
-      if (plug.plugDef.investmentStats?.length) {
-        plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
-      }
-    }
+    buildPlugStats(socket, statsByHash, statDisplays);
   }
 }
 
 /**
- * For each stat this plug modified, calculate how much it modifies that stat.
- *
- * Returns a map from stat hash to stat value.
+ * Attaches a stats attribute to each plug in the socket which is an object of statTypeHash to the value it
+ * will contribute to the items stats when socketed.
  */
 function buildPlugStats(
-  plug: DimPlug,
+  socket: DimSocket,
   statsByHash: { [statHash: number]: DimStat },
   statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
 ) {
-  const stats: {
-    [statHash: number]: number;
-  } = {};
+  // The plug that is currently inserted into the socket
+  const activePlug = socket.plugged;
 
-  for (const perkStat of plug.plugDef.investmentStats) {
-    let value = perkStat.value;
-    const itemStat = statsByHash[perkStat.statTypeHash];
-    const statDisplay = statDisplays[perkStat.statTypeHash];
-    if (itemStat && statDisplay) {
-      // This is a scaled stat, so we need to scale it in context of the original investment stat.
-      // Figure out what the interpolated stat value would be without this perk's contribution, and
-      // then take the difference between the total value and that to find the contribution.
-      const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
-      value = itemStat.value - valueWithoutPerk;
-    } else if (itemStat) {
-      const valueWithoutPerk = Math.min(itemStat.investmentValue - value, itemStat.maximumValue);
-      value = itemStat.value - valueWithoutPerk;
+  // We need to calculate the base investment stat value for the item so we can correctly
+  // interpolate each plugs effect on the item.
+  const baseItemInvestmentStats: { [statHash: number]: number } = {};
+
+  if (activePlug) {
+    const insertedPlugStats: {
+      [statHash: number]: number;
+    } = {};
+
+    for (const perkStat of activePlug.plugDef.investmentStats) {
+      let value = perkStat.value;
+      const itemStat = statsByHash[perkStat.statTypeHash];
+      const statDisplay = statDisplays[perkStat.statTypeHash];
+
+      if (itemStat) {
+        const baseInvestmentStat = itemStat.investmentValue - value;
+        baseItemInvestmentStats[perkStat.statTypeHash] = baseInvestmentStat;
+
+        // We could do this in the loop below but we are already looping over the stats so lets just do it here.
+        if (statDisplay) {
+          // This is a scaled stat, so we need to scale it in context of the original investment stat.
+          // Figure out what the interpolated stat value would be without this perk's contribution, and
+          // then take the difference between the total value and that to find the contribution.
+          const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
+          value = itemStat.value - valueWithoutPerk;
+        } else {
+          const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
+          value = itemStat.value - valueWithoutPerk;
+        }
+      }
+
+      insertedPlugStats[perkStat.statTypeHash] = value;
     }
-    stats[perkStat.statTypeHash] = value;
+
+    activePlug.stats = insertedPlugStats;
   }
 
-  return stats;
+  for (const plug of socket.plugOptions) {
+    // We already did this plug above and activePlug should be a reference to plug.
+    if (plug === activePlug) {
+      continue;
+    }
+
+    const inactivePlugStats: {
+      [statHash: number]: number;
+    } = {};
+
+    for (const perkStat of plug.plugDef.investmentStats) {
+      let value = perkStat.value;
+      const itemStat = statsByHash[perkStat.statTypeHash];
+      const statDisplay = statDisplays[perkStat.statTypeHash];
+
+      if (itemStat) {
+        // User our calculated baseItemInvestment stat, which is the items investment stat value minus
+        // the active plugs investment stat value
+        const baseInvestmentStat = baseItemInvestmentStats[perkStat.statTypeHash] ?? itemStat.value;
+
+        if (statDisplay) {
+          // This is a scaled stat, so we need to scale it in context of the original investment stat.
+          // This time we use the baseItemInvestment value and calculate the interpolated values with
+          // and without the perks value, using the difference to get its total contribution to the stat.
+          const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
+          const valueWithPerk = interpolateStatValue(baseInvestmentStat + value, statDisplay);
+
+          value = valueWithPerk - valueWithoutPerk;
+        } else {
+          const baseInvestmentStat =
+            baseItemInvestmentStats[perkStat.statTypeHash] ?? itemStat.value;
+          const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
+          const valueWithPerk = Math.min(baseInvestmentStat + value, itemStat.maximumValue);
+
+          value = valueWithPerk - valueWithoutPerk;
+        }
+      }
+
+      inactivePlugStats[perkStat.statTypeHash] = value;
+    }
+
+    plug.stats = inactivePlugStats;
+  }
 }
 
 /**
