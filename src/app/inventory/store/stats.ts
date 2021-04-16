@@ -99,6 +99,9 @@ const hiddenStatsAllowList = [
 /** a dictionary to look up StatDisplay info by statHash */
 type StatDisplayLookup = { [statHash: number]: DestinyStatDisplayDefinition | undefined };
 
+/** a dictionary to look up an item's DimStats by statHash */
+type StatLookup = { [statHash: number]: DimStat | undefined };
+
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: DimItem,
@@ -373,7 +376,10 @@ function applyPlugsToStats(
     return;
   }
 
-  const existingStatsByHash: NodeJS.Dict<DimStat> = _.keyBy(existingStats, (s) => s.statHash);
+  const existingStatsByHash: { [statHash: number]: DimStat | undefined } = _.keyBy(
+    existingStats,
+    (s) => s.statHash
+  );
 
   // track stats whose investmentValue changes, so we can loop back and re-interpolate them
   const modifiedStats = new Set<number>();
@@ -452,8 +458,8 @@ function applyPlugsToStats(
  */
 function attachPlugStats(
   socket: DimSocket,
-  statsByHash: NodeJS.Dict<DimStat>,
-  statDisplays: NodeJS.Dict<DestinyStatDisplayDefinition>
+  statsByHash: StatLookup,
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   // The plug that is currently inserted into the socket
   const activePlug = socket.plugged;
@@ -470,7 +476,7 @@ function attachPlugStats(
     for (const perkStat of activePlug.plugDef.investmentStats) {
       let value = perkStat.value;
       const itemStat = statsByHash[perkStat.statTypeHash];
-      const statDisplay = statDisplays[perkStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[perkStat.statTypeHash];
 
       if (itemStat) {
         const baseInvestmentStat = itemStat.investmentValue - value;
@@ -508,7 +514,7 @@ function attachPlugStats(
     for (const perkStat of plug.plugDef.investmentStats) {
       let value = perkStat.value;
       const itemStat = statsByHash[perkStat.statTypeHash];
-      const statDisplay = statDisplays[perkStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[perkStat.statTypeHash];
 
       if (itemStat) {
         // User our calculated baseItemInvestment stat, which is the items investment stat value minus
