@@ -95,7 +95,13 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
-export function isIntrinsicTypeSocket(socket: DimSocket) {
-  // return socket.socketDefinition.socketTypeHash===965959289; // SocketTypeHash of exotic perks
+/**
+ * the "intrinsic" plug type is:
+ * - weapon frames
+ * - exotic weapon archetypes
+ * - exotic armor special effect plugs
+ * - the special invisible plugs that contribute to armor 2.0 stat rolls
+ */
+export function socketContainsIntrinsicPlug(socket: DimSocket) {
   return socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics;
 }

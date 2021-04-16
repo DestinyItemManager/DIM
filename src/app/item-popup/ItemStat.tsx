@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
-import { getSocketsWithStyle, isIntrinsicTypeSocket } from '../utils/socket-utils';
+import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -45,9 +45,11 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([n]) => n) : 0;
 
   const baseBar = item?.bucket.inArmor
-    ? // if it's armor the bar length should be the shortest of base or resulting, but not below 0
+    ? // if it's armor, the base bar length should be
+      // the shortest of base or resulting value, but not below 0
       Math.max(Math.min(stat.base, stat.value), 0)
-    : // otherwise, for weapons, we just subtract masterwork and consider the "base" to include selected plugs
+    : // otherwise, for weapons, we just subtract masterwork and
+      // consider the "base" to include selected plugs
       stat.value - masterworkValue;
 
   //               amount,className,modName
@@ -76,9 +78,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
     [styles.modded]: Boolean(modEffectsTotal && modEffectsTotal > 0 && stat.value !== stat.base),
-    [styles.negativeModded]: Boolean(
-      modEffectsTotal && modEffectsTotal < 0 && stat.value !== stat.base
-    ),
+    [styles.negativeModded]: Boolean(modEffectsTotal < 0 && stat.value !== stat.base),
     [styles.totalRow]: Boolean(totalDetails),
   };
 
@@ -260,7 +260,7 @@ function getNonReuseableModSockets(item: DimItem) {
   return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
-      !isIntrinsicTypeSocket(s) &&
+      !socketContainsIntrinsicPlug(s) &&
       !s.plugged?.plugDef.plug.plugCategoryIdentifier.includes('masterwork') &&
       _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0
   );
@@ -309,7 +309,7 @@ function getPlugEffects(sockets: DimSocket[], statHashes: number[], item?: DimIt
   const modEffects: [number, string][] = [];
 
   for (const socket of sockets) {
-    if (!socket.plugged?.enabled || !socket.plugged.stats || isIntrinsicTypeSocket(socket)) {
+    if (!socket.plugged?.enabled || !socket.plugged.stats || socketContainsIntrinsicPlug(socket)) {
       continue;
     }
 

@@ -25,7 +25,7 @@ import {
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
-import { isIntrinsicTypeSocket } from '../../utils/socket-utils';
+import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimSocket, DimStat } from '../item-types';
 
 /**
@@ -103,9 +103,7 @@ type StatLookup = { [statHash: number]: DimStat | undefined };
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: DimItem,
-  stats: {
-    [key: string]: DestinyItemStatsComponent;
-  } | null,
+  liveStats: DestinyItemStatsComponent | undefined,
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ) {
@@ -131,10 +129,11 @@ export function buildStats(
   // Include the contributions from perks and mods
   applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
 
-  if (!investmentStats.length && stats?.[createdItem.id] && createdItem.type !== 'ClassItem') {
+  // if we didn't get stats from sockets and item def, fall back to the item's stats reported by the API
+  if (!investmentStats.length && liveStats && createdItem.type !== 'ClassItem') {
     // TODO: build a version of applyPlugsToStats that only calculates plug values
     investmentStats = buildLiveStats(
-      stats[createdItem.id],
+      liveStats,
       itemDef,
       createdItem,
       defs,
@@ -311,7 +310,7 @@ function applyPlugsToStats(
   // we do those first and include them in the stat's base value
   const [intrinsicSockets, otherSockets] = _.partition(
     createdItem.sockets.allSockets,
-    isIntrinsicTypeSocket
+    socketContainsIntrinsicPlug
   );
 
   const socketLists = [
@@ -377,15 +376,6 @@ function applyPlugsToStats(
       }
     }
   }
-  // // Now calculate the actual, interpolated value of all stats after they've been modified
-  // for (const stat of existingStats) {
-  //   if (modifiedStats.has(stat.statHash)) {
-  //     const statDisplay = statDisplays[stat.statHash];
-  //     stat.value = statDisplay
-  //       ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-  //       : Math.min(stat.investmentValue, stat.maximumValue);
-  //   }
-  // }
 
   // We sort the sockets by length so that we count contributions from plugs with fewer options first.
   // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
@@ -665,11 +655,12 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
  * a piecewise linear function mapping input stat values to output stat values.
  */
 export function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
+  // right now, we are not doing stat interpolation for armor.
+  // they're 1:1 in effects, and we are ignoring the clamping
   if (armorStats.includes(statDisplay.statHash)) {
     return value;
   }
   const interp = statDisplay.displayInterpolation;
-  statDisplay.statHash;
   // Clamp the value to prevent overfilling
   value = Math.min(value, statDisplay.maximumValue);
 
