@@ -39,7 +39,7 @@ import { DimItem, DimSocket, DimStat } from '../item-types';
  *
  * buildStats(stats){
  *  stats = buildInvestmentStats(stats)                       // fancy gun math based on fixed info
- *  if (sockets) stats = enhanceStatsWithPlugs(stats){}       // enhance gun math with sockets
+ *  if (sockets) stats = applyPlugsToStats(stats){}       // enhance gun math with sockets
  *  if (no stats or is armor) stats = buildLiveStats(stats){} // just rely on what api tells us
  *  if (is armor) stats = buildBaseStats(stats){}             // determine what mods contributed
  *  if (is armor) stats.push(total)
@@ -113,21 +113,25 @@ export function buildStats(
     return null;
   }
 
+  // we re-use this dictionary a bunch of times in subsequent
+  // functions to speed up display info lookups
   const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
 
   // We only use the raw "investment" stats to calculate all item stats.
+  // to-do: build armor stats with investment stats from socketed intrinsic plugs
   let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
 
   // Include the contributions from perks and mods
-  enhanceStatsWithPlugs(itemDef, investmentStats, createdItem, defs, statGroup, statDisplays);
+  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplays);
 
   // For Armor, we always replace the previous stats with live stats, even if they were already created
+  // to-do: don't do this
   if (
     (!investmentStats.length || createdItem.bucket.inArmor) &&
     stats?.[createdItem.id] &&
     createdItem.type !== 'ClassItem'
   ) {
-    // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
+    // TODO: build a version of applyPlugsToStats that only calculates plug values
     investmentStats = buildLiveStats(
       stats[createdItem.id],
       itemDef,
@@ -138,7 +142,7 @@ export function buildStats(
     );
 
     if (createdItem.bucket.inArmor) {
-      // Add the "Total" stat for armor
+      // synthesize the "Total" stat for armor
       const tStat = totalStat(investmentStats);
       investmentStats.push(tStat);
 
@@ -158,7 +162,8 @@ export function buildStats(
 }
 
 /**
- * This builds a class items stat values from its masterwork and mod sockets.
+ * This builds a class item's stat values from its masterwork and mod sockets.
+ * to-do: can we get rid of this once we aren't using Live Stats for armor?
  */
 function buildClassItemStatsFromMods(
   item: DimItem,
@@ -185,23 +190,25 @@ function buildClassItemStatsFromMods(
   }
 
   for (const socket of modSockets) {
-    if (socket.plugged?.enabled && socket.plugged.stats) {
-      for (const statHash of armorStats) {
-        const investmentStat = socket.plugged.plugDef.investmentStats.find(
-          (s) => s.statTypeHash === statHash
-        );
-        if (
-          socket.plugged.stats[statHash] &&
-          investmentStat &&
-          isPlugStatActive(
-            item,
-            socket.plugged.plugDef.hash,
-            investmentStat?.statTypeHash,
-            investmentStat?.isConditionallyActive
-          )
-        ) {
-          statTracker[statHash] += socket.plugged.stats[statHash];
-        }
+    // skip this socket/plug if it wouldn't or shouldn't affect stats
+    if (!socket.plugged?.enabled || !socket.plugged.stats) {
+      continue;
+    }
+    for (const statHash of armorStats) {
+      const investmentStat = socket.plugged.plugDef.investmentStats.find(
+        (s) => s.statTypeHash === statHash
+      );
+      if (
+        socket.plugged.stats[statHash] &&
+        investmentStat &&
+        isPlugStatActive(
+          item,
+          socket.plugged.plugDef.hash,
+          investmentStat?.statTypeHash,
+          investmentStat?.isConditionallyActive
+        )
+      ) {
+        statTracker[statHash] += socket.plugged.stats[statHash];
       }
     }
   }
@@ -223,6 +230,9 @@ function buildClassItemStatsFromMods(
   return investmentStats;
 }
 
+/**
+ * determine if bungie, or our hardcodings, want this stat to be included with the item
+ */
 function shouldShowStat(
   itemDef: DestinyInventoryItemDefinition,
   statHash: number,
@@ -279,6 +289,11 @@ function buildInvestmentStats(
   return ret;
 }
 
+/**
+ * builds and returns a single DimStat, using InvestmentStat information,
+ * stat def, statgroup def, and the item's StatDisplayDefinition,
+ * which determins which stats are displayed and how they are interpolated
+ */
 function buildStat(
   itemStat:
     | DestinyItemInvestmentStatDefinition
@@ -322,9 +337,15 @@ function buildStat(
   };
 }
 
-function enhanceStatsWithPlugs(
+/**
+ * mutates an item's stats according to the item's plugged sockets
+ * (accounting for mods, masterworks, etc)
+ *
+ * also adds the projected stat changes to non-selected DimPlugs
+ */
+function applyPlugsToStats(
   itemDef: DestinyInventoryItemDefinition,
-  stats: DimStat[], // mutated
+  existingStats: DimStat[], // mutated
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
@@ -334,48 +355,57 @@ function enhanceStatsWithPlugs(
     return;
   }
 
+  const existingStatsByHash: NodeJS.Dict<DimStat> = _.keyBy(existingStats, (s) => s.statHash);
+
+  // track stats whose investmentValue changes, so we can loop back and re-interpolate them
   const modifiedStats = new Set<number>();
-  const statsByHash = _.keyBy(stats, (s) => s.statHash);
 
-  // Add the chosen plugs' investment stats to the item's base investment stats
+  // loop through sockets looking for plugs that modify an item's investmentStats
   for (const socket of createdItem.sockets.allSockets) {
-    if (socket.plugged?.enabled && socket.plugged.plugDef.investmentStats) {
-      for (const perkStat of socket.plugged.plugDef.investmentStats) {
-        const statHash = perkStat.statTypeHash;
-        const itemStat = statsByHash[statHash];
-        const value = perkStat.value;
-        if (
-          !isPlugStatActive(
-            createdItem,
-            socket.plugged.plugDef.hash,
-            statHash,
-            perkStat.isConditionallyActive
-          )
-        ) {
-          continue;
-        }
+    // skip this socket/plug if it wouldn't or shouldn't affect stats
+    if (!socket.plugged?.enabled || !socket.plugged.plugDef.investmentStats) {
+      continue;
+    }
 
-        if (itemStat) {
-          itemStat.investmentValue += value;
-        } else if (shouldShowStat(itemDef, statHash, statDisplays)) {
-          // This stat didn't exist before we modified it, so add it here.
-          const stat = socket.plugged.plugDef.investmentStats.find(
-            (s) => s.statTypeHash === statHash
-          );
+    for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
+      const affectedStatHash = pluggedInvestmentStat.statTypeHash;
+      const existingStat = existingStatsByHash[affectedStatHash];
+      const investmentChange = pluggedInvestmentStat.value;
 
-          if (stat?.value) {
-            const statDef = defs.Stat.get(statHash);
-            statsByHash[statHash] = buildStat(stat, statGroup, statDef, statDisplays);
-            stats.push(statsByHash[statHash]);
+      // check special conditionals
+      if (
+        !isPlugStatActive(
+          createdItem,
+          socket.plugged.plugDef.hash,
+          affectedStatHash,
+          pluggedInvestmentStat.isConditionallyActive
+        )
+      ) {
+        continue;
+      }
+
+      modifiedStats.add(affectedStatHash);
+
+      if (existingStat) {
+        // the stat exists, so we can just adjust it
+        existingStat.investmentValue += investmentChange;
+      } else {
+        // the stat doesn't exist on the item, but needs modifying, so we generate and add it to the item
+        if (shouldShowStat(itemDef, affectedStatHash, statDisplays)) {
+          if (pluggedInvestmentStat.value) {
+            const statDef = defs.Stat.get(affectedStatHash);
+            const newStat = buildStat(pluggedInvestmentStat, statGroup, statDef, statDisplays);
+            // add the generated stat to our temporary dict, and to the item's stats
+            existingStatsByHash[affectedStatHash] = newStat;
+            existingStats.push(newStat);
           }
         }
-        modifiedStats.add(statHash);
       }
     }
   }
 
   // Now calculate the actual, interpolated value of all stats after they've been modified
-  for (const stat of stats) {
+  for (const stat of existingStats) {
     if (modifiedStats.has(stat.statHash)) {
       const statDisplay = statDisplays[stat.statHash];
       stat.value = statDisplay
@@ -389,24 +419,24 @@ function enhanceStatsWithPlugs(
   // stats in first.
   const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
-    buildPlugStats(socket, statsByHash, statDisplays);
+    attachPlugStats(socket, existingStatsByHash, statDisplays);
   }
 }
 
 /**
- * Attaches a stats attribute to each plug in the socket which is an object of statTypeHash to the value it
- * will contribute to the items stats when socketed.
+ * Generates the stat modification map for each DimPlug in a DimSocket
+ * and attaches it to the DimPlug's stats property
  */
-function buildPlugStats(
+function attachPlugStats(
   socket: DimSocket,
-  statsByHash: { [statHash: number]: DimStat },
-  statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
+  statsByHash: NodeJS.Dict<DimStat>,
+  statDisplays: NodeJS.Dict<DestinyStatDisplayDefinition>
 ) {
   // The plug that is currently inserted into the socket
   const activePlug = socket.plugged;
 
   // We need to calculate the base investment stat value for the item so we can correctly
-  // interpolate each plugs effect on the item.
+  // interpolate each plug's effect on the item.
   const baseItemInvestmentStats: { [statHash: number]: number } = {};
 
   if (activePlug) {
@@ -488,8 +518,7 @@ function buildPlugStats(
 }
 
 /**
- * Build the stats that come "live" from the API's data on real instances. This is required
- * for Armor 2.0 since it has random stat rolls.
+ * Build the stats that come "live" from the API's data on real instances
  */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
