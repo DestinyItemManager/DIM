@@ -73,7 +73,7 @@ export function getSocketsByPlugCategoryIdentifier(
 }
 
 export function getWeaponArchetypeSocket(item: DimItem): DimSocket | undefined {
-  if (item.bucket.inWeapons && !item.isExotic) {
+  if (item.bucket.inWeapons) {
     return item.sockets?.categories.find(
       (c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits
     )?.sockets[0];

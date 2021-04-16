@@ -1,14 +1,13 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/filters';
-import { AppIcon, faExclamationTriangle, helpIcon } from 'app/shell/icons';
-import { getPossiblyIncorrectStats, isPlugStatActive } from 'app/utils/item-utils';
+import { AppIcon, helpIcon } from 'app/shell/icons';
+import { isPlugStatActive } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -68,8 +67,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
-  // const displayValue = Math.max(0, );
-
   // Get the values that contribute to the total stat value
   const totalDetails =
     item &&
@@ -84,8 +81,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     ),
     [styles.totalRow]: Boolean(totalDetails),
   };
-
-  const incorrectStats = (item && getPossiblyIncorrectStats(item)) || [];
 
   return (
     <>
@@ -129,7 +124,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       {totalDetails &&
         Boolean(totalDetails.baseTotalValue) &&
         Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-          <StatTotal {...{ totalDetails, incorrectStats, optionalClasses, stat }} />
+          <StatTotal {...{ totalDetails, optionalClasses, stat }} />
         )}
 
       {item && stat.statHash === CUSTOM_TOTAL_STAT_HASH && (
@@ -168,7 +163,6 @@ function StatBar({ segments, stat }: { segments: [number, string?, string?][]; s
 function StatTotal({
   totalDetails,
   optionalClasses,
-  incorrectStats,
   stat,
 }: {
   totalDetails: {
@@ -176,7 +170,6 @@ function StatTotal({
     totalModsValue: number;
     totalMasterworkValue: number;
   };
-  incorrectStats: string[];
   optionalClasses: NodeJS.Dict<boolean>;
   stat: DimStat;
 }) {
@@ -199,16 +192,6 @@ function StatTotal({
         <span className={styles.totalStatMasterwork}>
           {` + ${totalDetails.totalMasterworkValue}`}
         </span>
-      )}
-      {stat.statMayBeWrong && (
-        <PressTip
-          elementType="span"
-          tooltip={t('Stats.TotalIncorrectWarning', {
-            stats: incorrectStats.join('/'),
-          })}
-        >
-          <AppIcon className={styles.totalStatWarn} icon={faExclamationTriangle} />
-        </PressTip>
       )}
     </div>
   );
