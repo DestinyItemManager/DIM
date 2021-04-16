@@ -393,13 +393,7 @@ function buildSocket(
   },
   forThisItem?: DestinyInventoryItemDefinition
 ): DimSocket | undefined {
-  if (
-    !socketDef ||
-    (!socket.isVisible &&
-      // Keep the kill-tracker socket around even though it may not be visible
-      // TODO: does this really happen? I think all these sockets are visible
-      !(socket.plugHash && plugObjectivesData?.[socket.plugHash]?.length))
-  ) {
+  if (!socketDef?.socketTypeHash) {
     return undefined;
   }
 

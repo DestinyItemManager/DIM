@@ -1,6 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import { getWeaponArchetype } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import {
@@ -8,6 +7,7 @@ import {
   getItemSpecialtyModSlotDisplayNames,
   getSpecialtySocketMetadatas,
 } from 'app/utils/item-utils';
+import { getWeaponArchetype } from 'app/utils/socket-utils';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

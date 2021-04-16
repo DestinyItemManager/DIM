@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
-import { getSocketsWithStyle } from '../utils/socket-utils';
+import { getSocketsWithStyle, isIntrinsicTypeSocket } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -32,7 +32,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const armor2MasterworkSockets =
     item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
-    armor2MasterworkSockets && getSumOfArmorStats(armor2MasterworkSockets, [stat.statHash]);
+    armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkIndex =
     item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
@@ -41,44 +41,46 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const masterworkValue = item?.masterworkInfo?.stats?.[masterworkIndex]?.value || 0;
   const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
 
-  const moddedStatValue = item && getModdedStatValue(item, stat);
+  // const moddedStatValue = item && getTotalModEffects(item, stat);
+  const modEffects = item && _.sortBy(getModEffects(item, stat), ([n]) => -n);
+  const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([n]) => n) : 0;
 
   const baseBar = item?.bucket.inArmor
-    ? Math.min(stat.base, stat.value)
-    : stat.value - masterworkValue;
+    ? // if it's armor the bar length should be the shortest of base or resulting, but not below 0
+      Math.max(Math.min(stat.base, stat.value), 0)
+    : // otherwise, for weapons, we just subtract masterwork and consider the "base" to include selected plugs
+      stat.value - masterworkValue;
 
-  const segments: [number, string?][] = [[baseBar]];
+  //               amount,className,modName
+  const segments: [number, string?, string?][] = [[baseBar]];
 
-  if (moddedStatValue && moddedStatValue > 0) {
-    segments.push([moddedStatValue, styles.moddedStatBar]);
+  if (modEffects && modEffectsTotal > 0) {
+    for (const [effectAmount, modName] of modEffects) {
+      segments.push([effectAmount, styles.moddedStatBar, modName]);
+    }
+
     if (masterworkDisplayValue) {
       segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
     }
-  } else if (moddedStatValue && moddedStatValue < 0 && masterworkDisplayValue) {
-    segments.push([
-      _.clamp(masterworkDisplayValue, 0, stat.base + moddedStatValue + masterworkDisplayValue),
-      styles.masterworkStatBar,
-    ]);
+  } else if (modEffectsTotal < 0 && masterworkDisplayValue) {
+    segments.push([_.clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
   } else if (masterworkDisplayValue) {
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
 
-  const displayValue = Math.max(0, stat.value);
+  // const displayValue = Math.max(0, );
 
   // Get the values that contribute to the total stat value
-  let totalDetails:
-    | { baseTotalValue: number; totalModsValue: number; totalMasterworkValue: number }
-    | undefined;
-
-  if (item && stat.statHash === TOTAL_STAT_HASH) {
-    totalDetails = breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
-  }
+  const totalDetails =
+    item &&
+    stat.statHash === TOTAL_STAT_HASH &&
+    breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
+    [styles.modded]: Boolean(modEffectsTotal && modEffectsTotal > 0 && stat.value !== stat.base),
     [styles.negativeModded]: Boolean(
-      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base
+      modEffectsTotal && modEffectsTotal < 0 && stat.value !== stat.base
     ),
     [styles.totalRow]: Boolean(totalDetails),
   };
@@ -96,8 +98,8 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       </div>
 
       <div className={clsx(styles.value, optionalClasses)}>
-        {stat.additive && '+'}
-        {displayValue}
+        {stat.additive && stat.value >= 0 && '+'}
+        {stat.value}
       </div>
 
       {item?.destinyVersion === 2 && statsMs.includes(stat.statHash) && (
@@ -122,58 +124,12 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         </div>
       )}
 
-      {stat.bar && (
-        <div
-          className={styles.statBar}
-          aria-label={stat.displayProperties.name}
-          title={stat.displayProperties.description}
-          aria-hidden="true"
-        >
-          <div className={styles.barContainer}>
-            {segments.map(([val, className], index) => (
-              <div
-                key={index}
-                className={clsx(styles.barInner, className)}
-                style={{ width: percent(val / stat.maximumValue) }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {stat.bar && <StatBar {...{ stat, segments }} />}
 
       {totalDetails &&
         Boolean(totalDetails.baseTotalValue) &&
         Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-          <div
-            className={clsx(styles.totalStatDetailed, optionalClasses)}
-            aria-label={stat.displayProperties.name}
-            title={stat.displayProperties.description}
-          >
-            <span>{totalDetails.baseTotalValue}</span>
-            {Boolean(totalDetails.totalModsValue > 0) && (
-              <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
-            )}
-            {Boolean(totalDetails.totalModsValue < 0) && (
-              <span
-                className={styles.totalStatNegativeModded}
-              >{` - ${-totalDetails.totalModsValue}`}</span>
-            )}
-            {Boolean(totalDetails.totalMasterworkValue) && (
-              <span className={styles.totalStatMasterwork}>
-                {` + ${totalDetails.totalMasterworkValue}`}
-              </span>
-            )}
-            {stat.statMayBeWrong && (
-              <PressTip
-                elementType="span"
-                tooltip={t('Stats.TotalIncorrectWarning', {
-                  stats: incorrectStats.join('/'),
-                })}
-              >
-                <AppIcon className={styles.totalStatWarn} icon={faExclamationTriangle} />
-              </PressTip>
-            )}
-          </div>
+          <StatTotal {...{ totalDetails, incorrectStats, optionalClasses, stat }} />
         )}
 
       {item && stat.statHash === CUSTOM_TOTAL_STAT_HASH && (
@@ -187,6 +143,77 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   );
 }
 
+function StatBar({ segments, stat }: { segments: [number, string?, string?][]; stat: DimStat }) {
+  return (
+    <div
+      className={styles.statBar}
+      aria-label={stat.displayProperties.name}
+      title={stat.displayProperties.description}
+      aria-hidden="true"
+    >
+      <div className={styles.barContainer}>
+        {segments.map(([val, className, description], index) => (
+          <div
+            key={index}
+            title={description}
+            className={clsx(styles.barInner, className)}
+            style={{ width: percent(val / stat.maximumValue) }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatTotal({
+  totalDetails,
+  optionalClasses,
+  incorrectStats,
+  stat,
+}: {
+  totalDetails: {
+    baseTotalValue: number;
+    totalModsValue: number;
+    totalMasterworkValue: number;
+  };
+  incorrectStats: string[];
+  optionalClasses: NodeJS.Dict<boolean>;
+  stat: DimStat;
+}) {
+  return (
+    <div
+      className={clsx(styles.totalStatDetailed, optionalClasses)}
+      aria-label={stat.displayProperties.name}
+      title={stat.displayProperties.description}
+    >
+      <span>{totalDetails.baseTotalValue}</span>
+      {Boolean(totalDetails.totalModsValue > 0) && (
+        <span className={styles.totalStatModded}>{` + ${totalDetails.totalModsValue}`}</span>
+      )}
+      {Boolean(totalDetails.totalModsValue < 0) && (
+        <span
+          className={styles.totalStatNegativeModded}
+        >{` - ${-totalDetails.totalModsValue}`}</span>
+      )}
+      {Boolean(totalDetails.totalMasterworkValue) && (
+        <span className={styles.totalStatMasterwork}>
+          {` + ${totalDetails.totalMasterworkValue}`}
+        </span>
+      )}
+      {stat.statMayBeWrong && (
+        <PressTip
+          elementType="span"
+          tooltip={t('Stats.TotalIncorrectWarning', {
+            stats: incorrectStats.join('/'),
+          })}
+        >
+          <AppIcon className={styles.totalStatWarn} icon={faExclamationTriangle} />
+        </PressTip>
+      )}
+    </div>
+  );
+}
+
 /**
  * A single stat value, for the table view
  */
@@ -196,7 +223,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
 
   const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
 
-  const moddedStatValue = item && getModdedStatValue(item, stat);
+  const moddedStatValue = item && getTotalModEffects(item, stat);
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
@@ -250,6 +277,8 @@ function getNonReuseableModSockets(item: DimItem) {
   return item.sockets.allSockets.filter(
     (s) =>
       !s.isPerk &&
+      !isIntrinsicTypeSocket(s) &&
+      !s.plugged?.plugDef.plug.plugCategoryIdentifier.includes('masterwork') &&
       _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0
   );
 }
@@ -258,24 +287,16 @@ function getNonReuseableModSockets(item: DimItem) {
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
-function getModdedStatValue(item: DimItem, stat: DimStat) {
-  const modSockets = getNonReuseableModSockets(item).filter(
-    (socket) =>
-      socket.plugged?.enabled &&
-      socket.plugged.stats &&
-      String(stat.statHash) in socket.plugged.stats &&
-      isPlugStatActive(
-        item,
-        socket.plugged.plugDef.hash,
-        stat.statHash,
-        Boolean(
-          socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
-            ?.isConditionallyActive
-        )
-      )
-  );
-
-  return _.sumBy(modSockets, (socket) => socket.plugged!.stats![stat.statHash]);
+function getTotalModEffects(item: DimItem, stat: DimStat) {
+  return _.sumBy(getModEffects(item, stat), ([s]) => s);
+}
+/**
+ * Looks through the item sockets to find any weapon/armor mods that modify this stat.
+ * Returns the total value the stat is modified by, or 0 if it is not being modified.
+ */
+function getModEffects(item: DimItem, stat: DimStat) {
+  const modSockets = getNonReuseableModSockets(item);
+  return getPlugEffects(modSockets, [stat.statHash], item);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
@@ -283,42 +304,65 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
 }
 
 /**
- * Sums up all the armor statistics from the plug in the socket.
- * If the item is passed in we check the conditionally applied status of the stats.
- * This is needed for conditional stats on mods such as powerful friends.
+ * check all sockets for plug effects upon specified statHashes, and total them
+ *
+ * includes a check for conditionally active stats.
+ * passing the item parameter will make this more accurate
  */
-function getSumOfArmorStats(sockets: DimSocket[], armorStatHashes: number[], item?: DimItem) {
-  return _.sumBy(sockets, (socket) =>
-    socket.plugged?.enabled && socket.plugged.stats
-      ? _.sumBy(
-          armorStatHashes,
-          (armorStatHash) =>
-            ((!item ||
-              isPlugStatActive(
-                item,
-                socket.plugged!.plugDef.hash,
-                armorStatHash,
-                Boolean(
-                  socket.plugged?.plugDef.investmentStats.find(
-                    (s) => s.statTypeHash === armorStatHash
-                  )?.isConditionallyActive
-                )
-              )) &&
-              socket.plugged!.stats![armorStatHash]) ||
-            0
-        )
-      : 0
-  );
+function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[], item?: DimItem) {
+  return _.sumBy(getPlugEffects(sockets, armorStatHashes, item), ([s]) => s);
 }
 
-function breakDownTotalValue(baseValue: number, item: DimItem, masterworkSockets: DimSocket[]) {
-  const modSockets = getNonReuseableModSockets(item);
-  // Armor 1.0 doesn't increase stats when masterworked
-  const totalModsValue = getSumOfArmorStats(modSockets, armorStats, item);
-  const totalMasterworkValue = masterworkSockets
-    ? getSumOfArmorStats(masterworkSockets, armorStats)
-    : 0;
-  const baseTotalValue = baseValue;
+/**
+ * check all sockets for plug effects upon specified statHashes
+ *
+ * includes a check for conditionally active stats.
+ * passing the item parameter will make this more accurate
+ *
+ * returns a list of tuples of
+ * [ the mod's name, its numeric effect upon selected stats ]
+ */
+function getPlugEffects(sockets: DimSocket[], statHashes: number[], item?: DimItem) {
+  const modEffects: [number, string][] = [];
 
+  for (const socket of sockets) {
+    if (!socket.plugged?.enabled || !socket.plugged.stats || isIntrinsicTypeSocket(socket)) {
+      continue;
+    }
+
+    for (const [statHash_, modificationAmount] of Object.entries(socket.plugged.stats)) {
+      const statHash = Number(statHash_);
+      if (!statHashes.includes(statHash)) {
+        continue;
+      }
+
+      const isConditionallyActive = Boolean(
+        socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === statHash)
+          ?.isConditionallyActive
+      );
+
+      const considerActive =
+        !item ||
+        isPlugStatActive(item, socket.plugged.plugDef.hash, statHash, isConditionallyActive);
+      if (considerActive) {
+        modEffects.push([modificationAmount, socket.plugged.plugDef.displayProperties.name]);
+      }
+    }
+  }
+  return modEffects;
+}
+
+function breakDownTotalValue(
+  baseTotalValue: number,
+  item: DimItem,
+  masterworkSockets: DimSocket[]
+) {
+  const modSockets = getNonReuseableModSockets(item);
+
+  // Armor 1.0 doesn't increase stats when masterworked
+  const totalModsValue = getTotalPlugEffects(modSockets, armorStats, item);
+  const totalMasterworkValue = masterworkSockets
+    ? getTotalPlugEffects(masterworkSockets, armorStats)
+    : 0;
   return { baseTotalValue, totalModsValue, totalMasterworkValue };
 }

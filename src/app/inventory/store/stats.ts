@@ -27,7 +27,11 @@ import {
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
-import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
+import {
+  getSocketsWithPlugCategoryHash,
+  getSocketsWithStyle,
+  isIntrinsicTypeSocket,
+} from '../../utils/socket-utils';
 import { DimItem, DimSocket, DimStat } from '../item-types';
 
 /**
@@ -126,11 +130,7 @@ export function buildStats(
 
   // For Armor, we always replace the previous stats with live stats, even if they were already created
   // to-do: don't do this
-  if (
-    (!investmentStats.length || createdItem.bucket.inArmor) &&
-    stats?.[createdItem.id] &&
-    createdItem.type !== 'ClassItem'
-  ) {
+  if (!investmentStats.length && stats?.[createdItem.id] && createdItem.type !== 'ClassItem') {
     // TODO: build a version of applyPlugsToStats that only calculates plug values
     investmentStats = buildLiveStats(
       stats[createdItem.id],
@@ -140,16 +140,16 @@ export function buildStats(
       statGroup,
       statDisplays
     );
+  }
 
-    if (createdItem.bucket.inArmor) {
-      // synthesize the "Total" stat for armor
-      const tStat = totalStat(investmentStats);
-      investmentStats.push(tStat);
+  if (createdItem.bucket.inArmor) {
+    // synthesize the "Total" stat for armor
+    const tStat = totalStat(investmentStats);
+    investmentStats.push(tStat);
 
-      const cStat = customStat(investmentStats, createdItem.classType);
-      if (cStat) {
-        investmentStats.push(cStat);
-      }
+    const cStat = customStat(investmentStats, createdItem.classType);
+    if (cStat) {
+      investmentStats.push(cStat);
     }
   }
 
@@ -357,62 +357,83 @@ function applyPlugsToStats(
 
   const existingStatsByHash: NodeJS.Dict<DimStat> = _.keyBy(existingStats, (s) => s.statHash);
 
-  // track stats whose investmentValue changes, so we can loop back and re-interpolate them
-  const modifiedStats = new Set<number>();
+  // intrinsic plugs aren't "enhancements", they define the basic stats of armor
+  const [intrinsicSockets, otherSockets] = _.partition(
+    createdItem.sockets.allSockets,
+    isIntrinsicTypeSocket
+  );
 
+  const socketLists = [
+    [true, intrinsicSockets],
+    [false, otherSockets],
+  ] as const;
   // loop through sockets looking for plugs that modify an item's investmentStats
-  for (const socket of createdItem.sockets.allSockets) {
-    // skip this socket/plug if it wouldn't or shouldn't affect stats
-    if (!socket.plugged?.enabled || !socket.plugged.plugDef.investmentStats) {
-      continue;
-    }
-
-    for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
-      const affectedStatHash = pluggedInvestmentStat.statTypeHash;
-      const existingStat = existingStatsByHash[affectedStatHash];
-      const investmentChange = pluggedInvestmentStat.value;
-
-      // check special conditionals
-      if (
-        !isPlugStatActive(
-          createdItem,
-          socket.plugged.plugDef.hash,
-          affectedStatHash,
-          pluggedInvestmentStat.isConditionallyActive
-        )
-      ) {
+  for (const [affectsBase, socketList] of socketLists) {
+    for (const socket of socketList) {
+      // skip this socket/plug if it wouldn't or shouldn't affect stats
+      if (!socket.plugged?.enabled || !socket.plugged.plugDef.investmentStats) {
         continue;
       }
 
-      modifiedStats.add(affectedStatHash);
+      for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
+        const affectedStatHash = pluggedInvestmentStat.statTypeHash;
+        let existingStat = existingStatsByHash[affectedStatHash];
+        const investmentChange = pluggedInvestmentStat.value;
 
-      if (existingStat) {
-        // the stat exists, so we can just adjust it
-        existingStat.investmentValue += investmentChange;
-      } else {
-        // the stat doesn't exist on the item, but needs modifying, so we generate and add it to the item
-        if (shouldShowStat(itemDef, affectedStatHash, statDisplays)) {
-          if (pluggedInvestmentStat.value) {
+        // check special conditionals
+        if (
+          !isPlugStatActive(
+            createdItem,
+            socket.plugged.plugDef.hash,
+            affectedStatHash,
+            pluggedInvestmentStat.isConditionallyActive
+          )
+        ) {
+          continue;
+        }
+
+        if (existingStat) {
+          // the stat exists, so we can just adjust it
+          existingStat.investmentValue += investmentChange;
+        } else {
+          // the stat doesn't exist on the item, but needs modifying, so we generate and add it to the item
+          if (
+            shouldShowStat(itemDef, affectedStatHash, statDisplays) &&
+            pluggedInvestmentStat.value
+          ) {
             const statDef = defs.Stat.get(affectedStatHash);
             const newStat = buildStat(pluggedInvestmentStat, statGroup, statDef, statDisplays);
             // add the generated stat to our temporary dict, and to the item's stats
             existingStatsByHash[affectedStatHash] = newStat;
             existingStats.push(newStat);
+            existingStat = newStat;
+          } else {
+            // stat didn't exist and still doesn't exist. done with this loop
+            continue;
           }
         }
+
+        // finally, re-interpolate the stat value
+        const statDisplay = statDisplays[affectedStatHash];
+        const newStatValue = statDisplay
+          ? interpolateStatValue(existingStat.investmentValue, statDisplay)
+          : Math.min(existingStat.investmentValue, existingStat.maximumValue);
+        if (affectsBase) {
+          existingStat.base = newStatValue;
+        }
+        existingStat.value = newStatValue;
       }
     }
   }
-
-  // Now calculate the actual, interpolated value of all stats after they've been modified
-  for (const stat of existingStats) {
-    if (modifiedStats.has(stat.statHash)) {
-      const statDisplay = statDisplays[stat.statHash];
-      stat.value = statDisplay
-        ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-        : Math.min(stat.investmentValue, stat.maximumValue);
-    }
-  }
+  // // Now calculate the actual, interpolated value of all stats after they've been modified
+  // for (const stat of existingStats) {
+  //   if (modifiedStats.has(stat.statHash)) {
+  //     const statDisplay = statDisplays[stat.statHash];
+  //     stat.value = statDisplay
+  //       ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
+  //       : Math.min(stat.investmentValue, stat.maximumValue);
+  //   }
+  // }
 
   // We sort the sockets by length so that we count contributions from plugs with fewer options first.
   // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
@@ -640,7 +661,7 @@ function totalStat(stats: DimStat[]): DimStat {
     value: total,
     base: baseTotal,
     statMayBeWrong,
-    maximumValue: 100,
+    maximumValue: 1000,
     bar: false,
     smallerIsBetter: false,
     additive: false,
@@ -692,15 +713,18 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
  * a piecewise linear function mapping input stat values to output stat values.
  */
 export function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
+  if (armorStats.includes(statDisplay.statHash)) {
+    return value;
+  }
   const interp = statDisplay.displayInterpolation;
-
+  statDisplay.statHash;
   // Clamp the value to prevent overfilling
   value = Math.min(value, statDisplay.maximumValue);
 
   let endIndex = interp.findIndex((p) => p.value > value);
 
   // value < 0 is for mods with negative stats
-  if (endIndex < 0 || (value < 0 && armorStats.includes(statDisplay.statHash))) {
+  if (endIndex < 0) {
     endIndex = interp.length - 1;
   }
   const startIndex = Math.max(0, endIndex - 1);
