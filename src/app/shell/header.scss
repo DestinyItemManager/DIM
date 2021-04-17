@@ -20,13 +20,11 @@
   }
 }
 body {
-  padding-top: $header-height;
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
   box-sizing: border-box;
   min-height: 100vh;
 
   &.search-open {
-    padding-top: 2 * $header-height;
     padding-top: calc(#{2 * $header-height} + env(safe-area-inset-top));
   }
 }
@@ -142,7 +140,6 @@ body {
     position: absolute;
     display: flex;
     overflow: auto;
-    height: calc(100vh - #{$header-height});
     height: calc(100vh - #{$header-height} - env(safe-area-inset-top));
     left: 0;
     margin: 0;
@@ -150,8 +147,7 @@ body {
     min-width: 150px;
     background-color: black;
     padding-left: env(safe-area-inset-left);
-    padding-bottom: 4px;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: Max(4px, env(safe-area-inset-bottom));
     flex-direction: column;
     z-index: 1000;
 

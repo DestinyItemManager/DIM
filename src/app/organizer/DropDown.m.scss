@@ -20,7 +20,6 @@ $dropdown-menu: 10;
   position: absolute;
   z-index: 5;
   left: 0;
-  max-height: calc(100vh - #{120px + $header-height});
   max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
   overflow: auto;
   margin-top: 2px;

@@ -2,6 +2,5 @@
 
 .searchResults {
   z-index: 10 !important;
-  max-height: calc(100vh - #{2 * $header-height} - 16px);
   max-height: calc(100vh - #{2 * $header-height} - 16px + env(safe-area-inset-top));
 }
