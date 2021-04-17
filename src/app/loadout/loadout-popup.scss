@@ -129,11 +129,9 @@
   .detached & {
     position: fixed;
     top: 54px + $header-height;
-    top: calc(#{54px + $header-height} + constant(safe-area-inset-top));
     top: calc(#{54px + $header-height} + env(safe-area-inset-top));
     z-index: 1000;
     max-height: calc(100vh - #{120px + $header-height});
-    max-height: calc(100vh - #{120px + $header-height} - constant(safe-area-inset-top));
     max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
 
     max-width: calc(100% - 100px);
@@ -146,8 +144,9 @@
       max-width: none;
       padding: 0;
       max-height: calc(100vh - #{54px + $header-height});
-      max-height: calc(100vh - #{54px + $header-height} - constant(safe-area-inset-top));
-      max-height: calc(100vh - #{54px + $header-height} - env(safe-area-inset-top));
+      max-height: calc(
+        100vh - #{54px + $header-height} - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+      );
     }
   }
 }

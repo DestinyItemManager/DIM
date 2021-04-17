@@ -21,14 +21,12 @@
 }
 body {
   padding-top: $header-height;
-  padding-top: calc(#{$header-height} + constant(safe-area-inset-top));
   padding-top: calc(#{$header-height} + env(safe-area-inset-top));
   box-sizing: border-box;
   min-height: 100vh;
 
   &.search-open {
     padding-top: 2 * $header-height;
-    padding-top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
     padding-top: calc(#{2 * $header-height} + env(safe-area-inset-top));
   }
 }
@@ -43,11 +41,8 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: constant(safe-area-inset-left);
   padding-left: env(safe-area-inset-left);
-  padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
-  padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   background: $gradient;
   background-position: center top;
@@ -148,17 +143,14 @@ body {
     display: flex;
     overflow: auto;
     height: calc(100vh - #{$header-height});
-    height: calc(100vh - #{$header-height} - constant(safe-area-inset-top));
     height: calc(100vh - #{$header-height} - env(safe-area-inset-top));
     left: 0;
     margin: 0;
     padding: 0;
     min-width: 150px;
     background-color: black;
-    padding-left: constant(safe-area-inset-left);
     padding-left: env(safe-area-inset-left);
     padding-bottom: 4px;
-    padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     flex-direction: column;
     z-index: 1000;

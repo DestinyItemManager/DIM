@@ -61,11 +61,9 @@ $issue-banner-height: 101px;
 // Position something directly below the header
 @mixin below-header {
   top: $header-height;
-  top: calc(#{$header-height} + constant(safe-area-inset-top));
   top: calc(#{$header-height} + env(safe-area-inset-top));
   .search-open & {
     top: 2 * $header-height;
-    top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
     top: calc(#{2 * $header-height} + env(safe-area-inset-top));
   }
 }
@@ -73,7 +71,6 @@ $issue-banner-height: 101px;
 // The tallest a "full screen" sheet should be
 @mixin max-sheet-height {
   max-height: calc(100% - #{$header-height} - 92px);
-  max-height: calc(100% - #{$header-height} - 92px - constant(safe-area-inset-top));
   max-height: calc(100% - #{$header-height} - 92px - env(safe-area-inset-top));
 }
 

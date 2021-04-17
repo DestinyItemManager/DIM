@@ -37,7 +37,6 @@
     min-width: auto;
     // Give room for the category selector strip (height 53px)
     padding-bottom: 53px + 10px;
-    padding-bottom: calc(53px + 10px + constant(safe-area-inset-bottom));
     padding-bottom: calc(53px + 10px + env(safe-area-inset-bottom));
   }
 
@@ -267,7 +266,6 @@
   right: 0;
   $vpadding: 15px;
   justify-content: space-around;
-  padding-bottom: calc(#{($vpadding - 1)} + constant(safe-area-inset-bottom));
   padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
   z-index: 7;
 
