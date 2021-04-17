@@ -13,6 +13,11 @@
   overflow: hidden;
   background-color: black;
 
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 6px;
+  }
+
   .loadout-type-icon {
     color: #666;
   }
@@ -41,6 +46,10 @@
       width: 12px;
       margin-right: 5px;
       text-align: center;
+      @include phone-portrait {
+        width: 14px;
+        margin-right: 8px;
+      }
     }
   }
 
@@ -103,6 +112,7 @@
   @include visible-scrollbars;
 
   @include phone-portrait {
+    // TODO: use visual viewport API / dropdown class
     max-height: 60vh;
   }
 
@@ -124,5 +134,14 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 0 5px;
+
+    @include phone-portrait {
+      width: 100vw;
+      max-width: none;
+      padding: 0;
+      max-height: calc(100vh - #{54px + $header-height});
+      max-height: calc(100vh - #{54px + $header-height} - constant(safe-area-inset-top));
+      max-height: calc(100vh - #{54px + $header-height} - env(safe-area-inset-top));
+    }
   }
 }
