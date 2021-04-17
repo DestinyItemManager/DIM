@@ -1,0 +1,15 @@
+@import '../variables.scss';
+
+.button {
+  composes: dim-button from global;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  @include horizontal-space-children(4px);
+  &:hover {
+    & :global(.badge) {
+      background-color: black;
+      color: $orange;
+    }
+  }
+}

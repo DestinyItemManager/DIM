@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from '../utils/action-queue';
+import styles from './PullFromPostmaster.m.scss';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 
@@ -31,9 +32,10 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   };
 
   return (
-    <div className="dim-button bucket-button" onClick={onClick}>
-      <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />{' '}
-      <span className="badge">{numPullablePostmasterItems}</span> {t('Loadouts.PullFromPostmaster')}
+    <div className={styles.button} onClick={onClick}>
+      <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
+      <span className="badge">{numPullablePostmasterItems}</span>
+      <span>{t('Loadouts.PullFromPostmaster')}</span>
     </div>
   );
 }
