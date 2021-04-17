@@ -25,7 +25,7 @@
   min-width: 10em;
   padding: 6px 9px;
   @include phone-portrait {
-    padding: 8px 10px;
+    padding: 10px 10px;
   }
 
   :global(.app-icon) {
