@@ -1,5 +1,12 @@
 ## Next
 
+* Fixed the stats for some perks if they would bring a stat above the maximum value.
+* Creating a loadout from existing items will also save the items' current mods in the loadout. Viewing the mods is still Beta-only.
+* Fixed Loadout Optimizer mod assignment for raid mods.
+* Fixed Loadout Optimizer sometimes not handling T10+ stats correctly.
+* Loadout Optimizer knows about Nightmare Mods now.
+* You can now combine stats in search with & to average multiple stats. For example `basestat:intellect&mobility:>=15` shows if the average of intellect & mobility is greater than or equal to 15.
+
 ## 6.60.0 <span class="changelog-date">(2021-04-11)</span>
 
 * When opening Compare for an Adept weapon, we now also include non-Adept versions of that weapon.
@@ -9,6 +16,7 @@
 * Changing perks on items in Compare now re-sorts the items based on any updated stats.
 
 ### Beta Only
+
 * You can now edit a loadout's mods in the loadout drawer.
 
 ## 6.59.1 <span class="changelog-date">(2021-04-05)</span>
