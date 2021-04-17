@@ -266,7 +266,8 @@
   right: 0;
   $vpadding: 15px;
   justify-content: space-around;
-  padding-bottom: calc(#{($vpadding - 1)} + env(safe-area-inset-bottom));
+  // https://css-tricks.com/when-sass-and-new-css-features-collide/
+  padding-bottom: Max(#{($vpadding - 1)}, env(safe-area-inset-bottom));
   z-index: 7;
 
   > div {
