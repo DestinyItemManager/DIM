@@ -52,8 +52,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       // consider the "base" to include selected plugs
       stat.value - masterworkValue;
 
-  //               amount,className,modName
-  const segments: [number, string?, string?][] = [[baseBar]];
+  const segments: [amount: number, classname?: string, modName?: string][] = [[baseBar]];
 
   if (modEffects && modEffectsTotal > 0) {
     for (const [effectAmount, modName] of modEffects) {
@@ -119,12 +118,12 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         </div>
       )}
 
-      {stat.bar && <StatBar {...{ stat, segments }} />}
+      {stat.bar && <StatBar stat={stat} segments={segments} />}
 
       {totalDetails &&
         Boolean(totalDetails.baseTotalValue) &&
         Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
-          <StatTotal {...{ totalDetails, optionalClasses, stat }} />
+          <StatTotal totalDetails={totalDetails} optionalClasses={optionalClasses} stat={stat} />
         )}
 
       {item && stat.statHash === CUSTOM_TOTAL_STAT_HASH && (
