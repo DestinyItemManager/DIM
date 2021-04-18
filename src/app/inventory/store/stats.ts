@@ -36,11 +36,14 @@ import { DimItem, DimSocket, DimStat } from '../item-types';
  * the process looks like this:
  *
  * buildStats(stats){
- *  stats = buildInvestmentStats(stats)                       // fancy gun math based on fixed info
- *  if (sockets) stats = applyPlugsToStats(stats){}       // enhance gun math with sockets
- *  if (no stats or is armor) stats = buildLiveStats(stats){} // just rely on what api tells us
- *  if (is armor) stats = buildBaseStats(stats){}             // determine what mods contributed
- *  if (is armor) stats.push(total)
+ *   stats = buildInvestmentStats(stats)                // based on information from an item's inherent stats
+ *   applyPlugsToStats(stats)                           // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
+ *   if (no stats yet) stats = buildLiveStats(stats)  // fall back to what the api tells us the stats are
+ *   if (is armor) {
+ *     if (any armor stat is missing) fill in missing stats with 0s
+ *     synthesize totalStat and add it
+ *     if (not classitem) synthesize customStat and add it
+ *   }
  * }
  */
 
@@ -497,7 +500,6 @@ function buildLiveStats(
   // the value and base. On armour, the live stat includes all mod stats whether they are active or not.
   const inactivePlugStatValues: { [statHash: number]: number } = {};
   const activePlugStatValues: { [statHash: number]: number } = {};
-  let negativeModStatFound = false;
 
   if (createdItem.sockets) {
     for (const { plugged } of createdItem.sockets.allSockets) {
@@ -517,7 +519,6 @@ function buildLiveStats(
           } else {
             activePlugStatValues[statTypeHash] =
               (activePlugStatValues[statTypeHash] ?? 0) + plugStat;
-            negativeModStatFound ||= plugStat < 0;
           }
         }
       }
@@ -564,11 +565,6 @@ function buildLiveStats(
         createdItem.bucket.hash === armorBuckets.classitem
           ? 0
           : value - (activePlugStatValues[statHash] ?? 0),
-      // base is never wrong for class items as it's 0
-      statMayBeWrong:
-        createdItem.bucket.hash !== armorBuckets.classitem &&
-        negativeModStatFound &&
-        itemStat.value === 0,
       maximumValue,
       bar,
       smallerIsBetter,
@@ -585,12 +581,10 @@ function totalStat(stats: DimStat[]): DimStat {
   // TODO: search terms?
   let total = 0;
   let baseTotal = 0;
-  let statMayBeWrong = false;
 
   for (const stat of stats) {
     total += stat.value;
     baseTotal += stat.base;
-    statMayBeWrong ||= Boolean(stat.statMayBeWrong);
   }
 
   return {
@@ -602,7 +596,6 @@ function totalStat(stats: DimStat[]): DimStat {
     sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
-    statMayBeWrong,
     maximumValue: 1000,
     bar: false,
     smallerIsBetter: false,
@@ -622,12 +615,10 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
 
   // Custom stat is always base stat
   let total = 0;
-  let statMayBeWrong = false;
 
   for (const stat of stats) {
     if (customStatDef.includes(stat.statHash)) {
       total += stat.base;
-      statMayBeWrong ||= Boolean(stat.statMayBeWrong);
     }
   }
 
@@ -641,7 +632,6 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: total,
-    statMayBeWrong,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
