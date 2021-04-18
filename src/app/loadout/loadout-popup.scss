@@ -107,11 +107,10 @@
     var(--item-margin)
   );
   box-sizing: border-box;
-  max-height: calc(var(--viewport-height) - 125px);
+  max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
-  margin-bottom: 10px;
   overscroll-behavior: contain;
   cursor: pointer;
 
