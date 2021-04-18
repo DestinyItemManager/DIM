@@ -53,7 +53,7 @@
   overflow-x: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  max-height: calc(100vh - #{$header-height} - 8px - env(safe-area-inset-top));
+  max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
   @include phone-portrait {
     position: static;

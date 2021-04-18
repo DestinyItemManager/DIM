@@ -128,9 +128,9 @@
 
   .detached & {
     position: fixed;
-    top: calc(#{54px + $header-height} + env(safe-area-inset-top));
+    top: calc(54px + var(--header-height));
     z-index: 1000;
-    max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
+    max-height: calc(var(--viewport-height) - 120px - var(--header-height));
 
     max-width: calc(100% - 100px);
     left: 50%;
@@ -142,7 +142,7 @@
       max-width: none;
       padding: 0;
       max-height: calc(
-        100vh - #{54px + $header-height} - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+        var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
       );
     }
   }

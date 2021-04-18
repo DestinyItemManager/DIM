@@ -7,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
@@ -109,7 +110,6 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     if (searchFilter.current && showSearch) {
       searchFilter.current.focusFilterInput();
     }
-    document.body.classList.toggle('search-open', showSearch);
   }, [showSearch]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -239,13 +239,17 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     setDropdownOpen(false);
   };
 
+  // Calculate the true height of the header, for use in other things
+  const headerRef = useRef<HTMLDivElement>(null);
+  useSetCSSVarToHeight(headerRef, '--header-height');
+
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
     !window.MSStream &&
     (window.navigator as any).standalone !== true;
 
   return (
-    <header id="header" className={showSearch ? 'search-expanded' : ''}>
+    <header id="header" className={showSearch ? 'search-expanded' : ''} ref={headerRef}>
       <a
         className="menu link menuItem"
         ref={dropdownToggler}
@@ -318,7 +322,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
       <div className="header-links">{reverseDestinyLinks}</div>
       <div className="header-right">
         {account && (!isPhonePortrait || showSearch) && (
-          <span className={clsx('search-link menuItem')}>
+          <span className="search-link menuItem">
             <SearchFilter onClear={hideSearch} ref={searchFilter} />
           </span>
         )}

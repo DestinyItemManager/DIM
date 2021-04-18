@@ -44,4 +44,17 @@ export default function updateCSSVariables() {
       );
     }
   );
+
+  // Set a CSS var for the true viewport height. This changes when the keyboard appears/disappears.
+  // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+  const defineVH = (event) => {
+    setCSSVariable('--viewport-height', `${event.target.height}px`);
+  };
+  if (window.visualViewport) {
+    setCSSVariable('--viewportHeight', `${window.visualViewport.height}px`);
+    window.visualViewport.addEventListener('resize', defineVH);
+  } else {
+    setCSSVariable('--viewport-height', `${window.innerHeight}px`);
+    window.addEventListener('resize', defineVH);
+  }
 }

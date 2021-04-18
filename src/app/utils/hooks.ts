@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import useResizeObserver from '@react-hook/resize-observer';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { EventBus, Observable } from './observable';
 
 /**
@@ -33,4 +34,18 @@ export function useShiftHeld() {
   }, []);
 
   return shiftHeld;
+}
+
+/**
+ * Sets a CSS variable to the height of the passed in ref. We could probably use resize observers but
+ * just doing it on re-render seems to work. Don't overuse this.
+ */
+export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
+  const updateVar = (rect: DOMRectReadOnly) => {
+    document.querySelector('html')!.style.setProperty(propertyName, rect.height + 'px');
+  };
+  useLayoutEffect(() => {
+    updateVar(ref.current!.getBoundingClientRect());
+  });
+  useResizeObserver(ref, (entry) => updateVar(entry.contentRect));
 }

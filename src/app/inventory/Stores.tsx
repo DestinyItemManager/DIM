@@ -1,7 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import DesktopStores from './DesktopStores';
 import { InventoryBuckets } from './inventory-buckets';
@@ -38,18 +38,6 @@ type Props = {
  * Display inventory and character headers for all characters and the vault.
  */
 function Stores({ account, stores, buckets, isPhonePortrait, singleCharacter, activeMode }: Props) {
-  useEffect(() => {
-    setTimeout(() => {
-      /* Set a CSS variable so we can style things based on the height of the header */
-      const element = document.querySelector('.store-header');
-      if (element) {
-        document
-          .querySelector('html')!
-          .style.setProperty('--store-header-height', element.clientHeight + 'px');
-      }
-    }, 0);
-  });
-
   if (!stores.length || !buckets) {
     return null;
   }

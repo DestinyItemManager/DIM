@@ -3,7 +3,7 @@
 $control-color: rgba(255, 255, 255, 0.5);
 
 .sheet {
-  max-height: calc(100vh - #{$header-height} - 88px);
+  max-height: calc(var(--viewport-height) - var(--header-height) - 88px);
   left: 0;
   right: 0;
   position: fixed;
@@ -51,7 +51,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   .sheet-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - #{$header-height} - 88px);
+    max-height: calc(var(--viewport-height) - var(--header-height) - 88px);
     position: relative;
   }
 

@@ -20,15 +20,16 @@
   }
 }
 body {
-  padding-top: calc(#{$header-height} + env(safe-area-inset-top));
+  padding-top: var(--header-height);
   box-sizing: border-box;
   min-height: 100vh;
-
-  &.search-open {
-    padding-top: calc(#{2 * $header-height} + env(safe-area-inset-top));
-  }
 }
+
+// The height of the black header bar
+$header-height: 44px;
+
 #header {
+  box-sizing: border-box;
   padding: 0 0 0 2px;
   position: fixed;
   z-index: 1001;
@@ -123,9 +124,15 @@ body {
     height: 100%;
   }
 
-  &.search-expanded .header-right {
-    @include phone-portrait {
-      flex: 1;
+  &.search-expanded {
+    // When search is expanded, the header gains a search bar below it
+    // TODO: the DOM of the header could be restructured to grow automatically instead of doing this
+    height: 2 * $header-height;
+    padding-bottom: $header-height;
+    .header-right {
+      @include phone-portrait {
+        flex: 1;
+      }
     }
   }
 
@@ -140,7 +147,7 @@ body {
     position: absolute;
     display: flex;
     overflow: auto;
-    height: calc(100vh - #{$header-height} - env(safe-area-inset-top));
+    height: calc(var(--viewport-height) - var(--header-height));
     left: 0;
     margin: 0;
     padding: 0;
