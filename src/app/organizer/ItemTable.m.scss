@@ -28,10 +28,10 @@ $content-cells: 5;
   grid-column: 1 / -1;
   position: sticky;
   z-index: $toolbar;
+  box-sizing: border-box;
 
   top: var(--header-height);
   padding: 8px 8px !important;
-  height: 41px - 16px;
 
   border-bottom: none !important;
   > div {

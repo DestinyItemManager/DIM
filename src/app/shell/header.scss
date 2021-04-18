@@ -22,7 +22,7 @@
 body {
   padding-top: var(--header-height);
   box-sizing: border-box;
-  min-height: 100vh;
+  min-height: var(--viewport-height);
 }
 
 // The height of the black header bar

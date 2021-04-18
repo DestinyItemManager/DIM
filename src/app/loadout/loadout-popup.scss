@@ -107,7 +107,7 @@
     var(--item-margin)
   );
   box-sizing: border-box;
-  max-height: calc(100vh - 125px);
+  max-height: calc(var(--viewport-height) - 125px);
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);

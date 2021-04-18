@@ -1,5 +1,5 @@
 import useResizeObserver from '@react-hook/resize-observer';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { EventBus, Observable } from './observable';
 
 /**
@@ -41,11 +41,14 @@ export function useShiftHeld() {
  * just doing it on re-render seems to work. Don't overuse this.
  */
 export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
-  const updateVar = (rect: DOMRectReadOnly) => {
-    document.querySelector('html')!.style.setProperty(propertyName, rect.height + 'px');
-  };
+  const updateVar = useCallback(
+    (height) => {
+      document.querySelector('html')!.style.setProperty(propertyName, height + 'px');
+    },
+    [propertyName]
+  );
   useLayoutEffect(() => {
-    updateVar(ref.current!.getBoundingClientRect());
-  });
-  useResizeObserver(ref, (entry) => updateVar(entry.contentRect));
+    updateVar(ref.current!.offsetHeight);
+  }, [updateVar, ref]);
+  useResizeObserver(ref, (entry) => updateVar((entry.target as HTMLElement).offsetHeight));
 }
