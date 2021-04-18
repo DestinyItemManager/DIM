@@ -1,0 +1,20 @@
+.banner {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  > *:first-child {
+    flex: 1;
+  }
+
+  width: 100%;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  text-decoration: none;
+  background: rgb(30, 32, 43);
+  border-bottom: 1px solid rgb(104, 111, 139);
+}
+
+.hideButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  margin-left: 16px;
+  color: white;
+}

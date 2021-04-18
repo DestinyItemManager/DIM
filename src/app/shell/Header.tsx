@@ -27,6 +27,7 @@ import { default as SearchFilter } from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
+import AppInstallBanner from './AppInstallBanner';
 import styles from './Header.m.scss';
 //import './header.scss';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
@@ -105,8 +106,20 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
         }
         installPrompt$.next(undefined);
       });
+    } else {
+      showInstallPrompt();
     }
   };
+
+  // Is this running as an installed app?
+  const isStandalone =
+    (window.navigator as any).standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+
+  const iosPwaAvailable =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !isStandalone;
+
+  const installable = installPromptEvent || iosPwaAvailable;
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);
@@ -128,10 +141,6 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
-
-  const isStandalone =
-    (window.navigator as any).standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
 
   // Generic links about DIM
   const dimLinks = (
@@ -265,16 +274,8 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
 
-  const iosPwaAvailable =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-    !window.MSStream &&
-    (window.navigator as any).standalone !== true;
-
   return (
-    <header
-      className={clsx(styles.container, { [styles.searchExpanded]: showSearch })}
-      ref={headerRef}
-    >
+    <header className={styles.container} ref={headerRef}>
       <div className={styles.header}>
         <a
           className={clsx(styles.link, styles.menuItem, styles.menu)}
@@ -323,16 +324,10 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
                 >
                   {t('General.UserGuideLink')}
                 </ExternalLink>
-                {installPromptEvent ? (
+                {installable && (
                   <a className={clsx(styles.link, styles.menuItem)} onClick={installDim}>
                     {t('Header.InstallDIM')}
                   </a>
-                ) : (
-                  iosPwaAvailable && (
-                    <a className={clsx(styles.link, styles.menuItem)} onClick={showInstallPrompt}>
-                      {t('Header.InstallDIM')}
-                    </a>
-                  )
                 )}
                 {dimLinks}
                 <MenuAccounts closeDropdown={hideDropdown} />
@@ -351,7 +346,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
         </Link>
         <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
         <div className={styles.headerRight}>
-          {account && (!isPhonePortrait || showSearch) && (
+          {account && !isPhonePortrait && (
             <span className={clsx('search-link', styles.menuItem)}>
               <SearchFilter onClear={hideSearch} ref={searchFilter} />
             </span>
@@ -373,17 +368,20 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
             <AppIcon icon={searchIcon} />
           </span>
         </div>
-        {promptIosPwa &&
-          ReactDOM.createPortal(
-            <Sheet
-              header={<h1>{t('Header.InstallDIM')}</h1>}
-              onClose={() => setPromptIosPwa(false)}
-            >
-              <p className="pwa-prompt">{t('Header.IosPwaPrompt')}</p>
-            </Sheet>,
-            document.body
-          )}
       </div>
+      {account && isPhonePortrait && showSearch && (
+        <span className="mobile-search-link">
+          <SearchFilter onClear={hideSearch} ref={searchFilter} />
+        </span>
+      )}
+      {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
+      {promptIosPwa &&
+        ReactDOM.createPortal(
+          <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
+            <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
+          </Sheet>,
+          document.body
+        )}
     </header>
   );
 }

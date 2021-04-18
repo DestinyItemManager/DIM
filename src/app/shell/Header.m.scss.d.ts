@@ -18,7 +18,7 @@ interface CssExports {
   'logoLink': string;
   'menu': string;
   'menuItem': string;
-  'searchExpanded': string;
+  'pwaPrompt': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
