@@ -27,7 +27,8 @@ import { default as SearchFilter } from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
-import './header.scss';
+import styles from './Header.m.scss';
+//import './header.scss';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import Refresh from './refresh';
@@ -38,6 +39,18 @@ interface StoreProps {
   account?: DestinyAccount;
   isPhonePortrait: boolean;
 }
+
+const logoStyles = {
+  beta: styles.beta,
+  dev: styles.dev,
+};
+
+const transitionClasses = {
+  enter: styles.dropdownEnter,
+  enterActive: styles.dropdownEnterActive,
+  exit: styles.dropdownExit,
+  exitActive: styles.dropdownExitActive,
+};
 
 // TODO: finally time to hack apart the header styles!
 
@@ -123,17 +136,21 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   // Generic links about DIM
   const dimLinks = (
     <>
-      <NavLink to="/about" className="link menuItem">
+      <NavLink
+        to="/about"
+        className={clsx(styles.link, styles.menuItem)}
+        activeClassName={styles.active}
+      >
         {t('Header.About')}
       </NavLink>
       <WhatsNewLink />
       {bugReportLink && (
-        <ExternalLink className="link menuItem" href={bugReport}>
+        <ExternalLink className={clsx(styles.link, styles.menuItem)} href={bugReport}>
           {t('Header.ReportBug')}
         </ExternalLink>
       )}
       {isStandalone && (
-        <a className="link menuItem" onClick={() => window.location.reload()}>
+        <a className={clsx(styles.link, styles.menuItem)} onClick={() => window.location.reload()}>
           {t('Header.ReloadApp')}
         </a>
       )}
@@ -184,7 +201,12 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   }
 
   const linkNodes = links.map((link) => (
-    <NavLink className="link menuItem" key={link.to} to={link.to}>
+    <NavLink
+      className={clsx(styles.link, styles.menuItem)}
+      key={link.to}
+      to={link.to}
+      activeClassName={styles.active}
+    >
       {link.badge}
       {link.text}
     </NavLink>
@@ -249,100 +271,120 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     (window.navigator as any).standalone !== true;
 
   return (
-    <header id="header" className={showSearch ? 'search-expanded' : ''} ref={headerRef}>
-      <a
-        className="menu link menuItem"
-        ref={dropdownToggler}
-        onClick={toggleDropdown}
-        role="button"
-        aria-haspopup="menu"
-        aria-label={t('Header.Menu')}
-        aria-expanded={dropdownOpen}
-      >
-        <AppIcon icon={menuIcon} />
-        <MenuBadge />
-      </a>
-      <TransitionGroup component={null}>
-        {dropdownOpen && (
-          <CSSTransition
-            nodeRef={dropdownRef}
-            classNames="dropdown"
-            timeout={{ enter: 500, exit: 500 }}
-          >
-            <ClickOutside
-              ref={dropdownRef}
-              extraRef={dropdownToggler}
-              key="dropdown"
-              className="dropdown"
-              onClickOutside={hideDropdown}
-              role="menu"
+    <header
+      id="header"
+      className={clsx(styles.container, { [styles.searchExpanded]: showSearch })}
+      ref={headerRef}
+    >
+      <div className={styles.header}>
+        <a
+          className={clsx(styles.link, styles.menuItem, styles.menu)}
+          ref={dropdownToggler}
+          onClick={toggleDropdown}
+          role="button"
+          aria-haspopup="menu"
+          aria-label={t('Header.Menu')}
+          aria-expanded={dropdownOpen}
+        >
+          <AppIcon icon={menuIcon} />
+          <MenuBadge />
+        </a>
+        <TransitionGroup component={null}>
+          {dropdownOpen && (
+            <CSSTransition
+              nodeRef={dropdownRef}
+              classNames={transitionClasses}
+              timeout={{ enter: 500, exit: 500 }}
             >
-              {destinyLinks}
-              <hr />
-              <NavLink className="link menuItem" to="/settings">
-                {t('Settings.Settings')}
-              </NavLink>
-              {!isPhonePortrait && (
-                <a className="link menuItem" onClick={showKeyboardHelp}>
-                  {t('Header.KeyboardShortcuts')}
-                </a>
-              )}
-              <ExternalLink
-                className="link menuItem"
-                href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
+              <ClickOutside
+                ref={dropdownRef}
+                extraRef={dropdownToggler}
+                key="dropdown"
+                className={styles.dropdown}
+                onClickOutside={hideDropdown}
+                role="menu"
               >
-                {t('General.UserGuideLink')}
-              </ExternalLink>
-              {installPromptEvent ? (
-                <a className="link menuItem" onClick={installDim}>
-                  {t('Header.InstallDIM')}
-                </a>
-              ) : (
-                iosPwaAvailable && (
-                  <a className="link menuItem" onClick={showInstallPrompt}>
+                {destinyLinks}
+                <hr />
+                <NavLink
+                  className={clsx(styles.link, styles.menuItem)}
+                  to="/settings"
+                  activeClassName={styles.active}
+                >
+                  {t('Settings.Settings')}
+                </NavLink>
+                {!isPhonePortrait && (
+                  <a className={clsx(styles.link, styles.menuItem)} onClick={showKeyboardHelp}>
+                    {t('Header.KeyboardShortcuts')}
+                  </a>
+                )}
+                <ExternalLink
+                  className={clsx(styles.link, styles.menuItem)}
+                  href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
+                >
+                  {t('General.UserGuideLink')}
+                </ExternalLink>
+                {installPromptEvent ? (
+                  <a className={clsx(styles.link, styles.menuItem)} onClick={installDim}>
                     {t('Header.InstallDIM')}
                   </a>
-                )
-              )}
-              {dimLinks}
-              <MenuAccounts closeDropdown={hideDropdown} />
-            </ClickOutside>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
-      <Link to="/" className="link menuItem logoLink">
-        <img
-          className={clsx('logo', $DIM_FLAVOR)}
-          title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-          src={logo}
-          alt="DIM"
-          aria-label="dim"
-        />
-      </Link>
-      <div className="header-links">{reverseDestinyLinks}</div>
-      <div className="header-right">
-        {account && (!isPhonePortrait || showSearch) && (
-          <span className="search-link menuItem">
-            <SearchFilter onClear={hideSearch} ref={searchFilter} />
+                ) : (
+                  iosPwaAvailable && (
+                    <a className={clsx(styles.link, styles.menuItem)} onClick={showInstallPrompt}>
+                      {t('Header.InstallDIM')}
+                    </a>
+                  )
+                )}
+                {dimLinks}
+                <MenuAccounts closeDropdown={hideDropdown} />
+              </ClickOutside>
+            </CSSTransition>
+          )}
+        </TransitionGroup>
+        <Link to="/" className={clsx(styles.link, styles.menuItem, styles.logoLink)}>
+          <img
+            className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
+            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+            src={logo}
+            alt="DIM"
+            aria-label="dim"
+          />
+        </Link>
+        <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
+        <div className={styles.headerRight}>
+          {account && (!isPhonePortrait || showSearch) && (
+            <span className={clsx('search-link', styles.menuItem)}>
+              <SearchFilter onClear={hideSearch} ref={searchFilter} />
+            </span>
+          )}
+          <Refresh className={clsx(styles.menuItem, styles.link)} />
+          {!isPhonePortrait && (
+            <Link
+              className={clsx(styles.link, styles.menuItem)}
+              to="/settings"
+              title={t('Settings.Settings')}
+            >
+              <AppIcon icon={settingsIcon} />
+            </Link>
+          )}
+          <span
+            className={clsx(styles.link, styles.menuItem, 'search-button menuItem')}
+            onClick={toggleSearch}
+          >
+            <AppIcon icon={searchIcon} />
           </span>
-        )}
-        <Refresh />
-        {!isPhonePortrait && (
-          <Link className="link menuItem" to="/settings" title={t('Settings.Settings')}>
-            <AppIcon icon={settingsIcon} />
-          </Link>
-        )}
-        <span className="link search-button menuItem" onClick={toggleSearch}>
-          <AppIcon icon={searchIcon} />
-        </span>
+        </div>
+        {promptIosPwa &&
+          ReactDOM.createPortal(
+            <Sheet
+              header={<h1>{t('Header.InstallDIM')}</h1>}
+              onClose={() => setPromptIosPwa(false)}
+            >
+              <p className="pwa-prompt">{t('Header.IosPwaPrompt')}</p>
+            </Sheet>,
+            document.body
+          )}
       </div>
-      {promptIosPwa &&
-        ReactDOM.createPortal(
-          <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
-            <p className="pwa-prompt">{t('Header.IosPwaPrompt')}</p>
-          </Sheet>,
-          document.body
-        )}
     </header>
   );
 }

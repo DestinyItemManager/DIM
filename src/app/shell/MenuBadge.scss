@@ -1,17 +1,14 @@
 @import '../variables.scss';
 
-.menu {
-  position: relative;
-  .badge-new {
-    margin: 0 !important;
-    position: absolute;
-    bottom: 0px;
-    right: -5px;
-  }
-  .upgrade {
-    margin: 0 !important;
-    position: absolute;
-    bottom: -8px;
-    right: -12px;
-  }
+.badge-new {
+  margin: 0 !important;
+  position: absolute;
+  bottom: 0px;
+  right: -5px;
+}
+.upgrade {
+  margin: 0 !important;
+  position: absolute;
+  bottom: -8px;
+  right: -12px;
 }
