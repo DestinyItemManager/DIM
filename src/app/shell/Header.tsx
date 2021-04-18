@@ -272,7 +272,6 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
 
   return (
     <header
-      id="header"
       className={clsx(styles.container, { [styles.searchExpanded]: showSearch })}
       ref={headerRef}
     >
