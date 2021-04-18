@@ -34,7 +34,7 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   return (
     <div className={styles.button} onClick={onClick}>
       <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
-      <span className="badge">{numPullablePostmasterItems}</span>
+      <span className={styles.badge}>{numPullablePostmasterItems}</span>
       <span>{t('Loadouts.PullFromPostmaster')}</span>
     </div>
   );

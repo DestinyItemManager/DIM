@@ -104,6 +104,10 @@
     }
   }
 
+  &.widePostmaster {
+    grid-column: 1 / -1;
+  }
+
   > div {
     white-space: normal;
   }

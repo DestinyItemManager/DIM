@@ -365,6 +365,10 @@
     "StoreName": "{{genderRace}} {{className}}",
     "TooMuch": "Looks like you requested to move more of this item than exists in the source!"
   },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
+  },
   "LB": {
     "AdvancedOptions": "Advanced Options",
     "Chest": "Chest",

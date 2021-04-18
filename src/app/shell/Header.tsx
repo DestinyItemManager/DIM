@@ -32,6 +32,7 @@ import styles from './Header.m.scss';
 //import './header.scss';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
+import PostmasterWarningBanner from './PostmasterWarningBanner';
 import Refresh from './refresh';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -354,6 +355,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
           <SearchFilter onClear={hideSearch} ref={searchFilter} />
         </span>
       )}
+      <PostmasterWarningBanner />
       {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
       {promptIosPwa &&
         ReactDOM.createPortal(

@@ -684,6 +684,10 @@
     },
     "Unlock": "Unlock"
   },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
+  },
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
