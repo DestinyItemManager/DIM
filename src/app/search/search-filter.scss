@@ -57,6 +57,11 @@
 
 .search-link {
   flex: 1;
+  font-size: 13px;
+  margin: 0 8px;
+  @include phone-portrait {
+    margin: 0 12px;
+  }
 
   .search-filter {
     background: rgba(0, 0, 0, 0.4);

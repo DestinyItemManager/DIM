@@ -75,9 +75,7 @@ $header-height: 44px;
   @include phone-portrait {
     margin: 0 12px;
   }
-}
 
-.link {
   color: white;
   cursor: pointer;
 
@@ -141,7 +139,7 @@ $header-height: 44px;
     display: none;
   }
 
-  .link {
+  .menuItem {
     height: 26px;
     display: flex;
     align-items: center;
@@ -183,7 +181,7 @@ $header-height: 44px;
     letter-spacing: 1px;
   }
 
-  .link {
+  .menuItem {
     display: block;
     padding: 4px 2rem 4px 1rem;
     font-size: 16px;

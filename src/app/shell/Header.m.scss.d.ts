@@ -13,7 +13,6 @@ interface CssExports {
   'header': string;
   'headerLinks': string;
   'headerRight': string;
-  'link': string;
   'logo': string;
   'logoLink': string;
   'menu': string;

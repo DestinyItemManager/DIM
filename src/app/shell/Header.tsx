@@ -145,21 +145,17 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   // Generic links about DIM
   const dimLinks = (
     <>
-      <NavLink
-        to="/about"
-        className={clsx(styles.link, styles.menuItem)}
-        activeClassName={styles.active}
-      >
+      <NavLink to="/about" className={styles.menuItem} activeClassName={styles.active}>
         {t('Header.About')}
       </NavLink>
-      <WhatsNewLink />
+      <WhatsNewLink className={styles.menuItem} />
       {bugReportLink && (
-        <ExternalLink className={clsx(styles.link, styles.menuItem)} href={bugReport}>
+        <ExternalLink className={styles.menuItem} href={bugReport}>
           {t('Header.ReportBug')}
         </ExternalLink>
       )}
       {isStandalone && (
-        <a className={clsx(styles.link, styles.menuItem)} onClick={() => window.location.reload()}>
+        <a className={styles.menuItem} onClick={() => window.location.reload()}>
           {t('Header.ReloadApp')}
         </a>
       )}
@@ -210,12 +206,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   }
 
   const linkNodes = links.map((link) => (
-    <NavLink
-      className={clsx(styles.link, styles.menuItem)}
-      key={link.to}
-      to={link.to}
-      activeClassName={styles.active}
-    >
+    <NavLink className={styles.menuItem} key={link.to} to={link.to} activeClassName={styles.active}>
       {link.badge}
       {link.text}
     </NavLink>
@@ -278,7 +269,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     <header className={styles.container} ref={headerRef}>
       <div className={styles.header}>
         <a
-          className={clsx(styles.link, styles.menuItem, styles.menu)}
+          className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}
           onClick={toggleDropdown}
           role="button"
@@ -306,26 +297,22 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
               >
                 {destinyLinks}
                 <hr />
-                <NavLink
-                  className={clsx(styles.link, styles.menuItem)}
-                  to="/settings"
-                  activeClassName={styles.active}
-                >
+                <NavLink className={styles.menuItem} to="/settings" activeClassName={styles.active}>
                   {t('Settings.Settings')}
                 </NavLink>
                 {!isPhonePortrait && (
-                  <a className={clsx(styles.link, styles.menuItem)} onClick={showKeyboardHelp}>
+                  <a className={styles.menuItem} onClick={showKeyboardHelp}>
                     {t('Header.KeyboardShortcuts')}
                   </a>
                 )}
                 <ExternalLink
-                  className={clsx(styles.link, styles.menuItem)}
+                  className={styles.menuItem}
                   href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
                 >
                   {t('General.UserGuideLink')}
                 </ExternalLink>
                 {installable && (
-                  <a className={clsx(styles.link, styles.menuItem)} onClick={installDim}>
+                  <a className={styles.menuItem} onClick={installDim}>
                     {t('Header.InstallDIM')}
                   </a>
                 )}
@@ -335,7 +322,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
             </CSSTransition>
           )}
         </TransitionGroup>
-        <Link to="/" className={clsx(styles.link, styles.menuItem, styles.logoLink)}>
+        <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
           <img
             className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
@@ -347,24 +334,17 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
         <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
         <div className={styles.headerRight}>
           {account && !isPhonePortrait && (
-            <span className={clsx('search-link', styles.menuItem)}>
+            <span className="search-link">
               <SearchFilter onClear={hideSearch} ref={searchFilter} />
             </span>
           )}
-          <Refresh className={clsx(styles.menuItem, styles.link)} />
+          <Refresh className={clsx(styles.menuItem)} />
           {!isPhonePortrait && (
-            <Link
-              className={clsx(styles.link, styles.menuItem)}
-              to="/settings"
-              title={t('Settings.Settings')}
-            >
+            <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
               <AppIcon icon={settingsIcon} />
             </Link>
           )}
-          <span
-            className={clsx(styles.link, styles.menuItem, 'search-button menuItem')}
-            onClick={toggleSearch}
-          >
+          <span className={clsx(styles.menuItem, 'search-button')} onClick={toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
         </div>
