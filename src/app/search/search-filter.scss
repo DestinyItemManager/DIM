@@ -68,7 +68,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(var(--header-height) - 44px);
+    top: calc(var(--header-height));
     height: 44px;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);

@@ -521,7 +521,7 @@
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
     "Create": "Create Loadout",
-    "Delete": "Delete Loadout",
+    "Delete": "Delete",
     "Edit": "Edit Loadout",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
