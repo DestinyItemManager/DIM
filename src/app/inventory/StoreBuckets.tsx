@@ -1,6 +1,5 @@
 import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
@@ -61,7 +60,6 @@ export function StoreBuckets({
             bucket.sort === 'Postmaster' &&
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),
-          widePostmaster: bucket.hash === BucketHashes.LostItems && singleCharacter,
         })}
       >
         {(!store.isVault || bucket.vaultBucket) && (
