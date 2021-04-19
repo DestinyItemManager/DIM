@@ -12,11 +12,7 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import {
-  ItemCategoryHashes,
-  PlugCategoryHashes,
-  SocketCategoryHashes,
-} from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   DimPlug,
@@ -94,11 +90,17 @@ export function buildInstancedSockets(
     [key: number]: DestinyObjectiveProgress[];
   }
 ): DimSockets | null {
-  if (!item.itemInstanceId || !itemDef.sockets?.socketEntries.length || !sockets?.length) {
+  if (
+    !item.itemInstanceId ||
+    !itemDef.sockets ||
+    !itemDef.sockets.socketEntries.length ||
+    !sockets ||
+    !sockets.length
+  ) {
     return null;
   }
 
-  const createdSockets: (DimSocket | undefined)[] = [];
+  const realSockets: (DimSocket | undefined)[] = [];
   for (let i = 0; i < sockets.length; i++) {
     const built = buildSocket(
       defs,
@@ -110,7 +112,7 @@ export function buildInstancedSockets(
       itemDef
     );
 
-    createdSockets.push(built);
+    realSockets.push(built);
   }
 
   const categories: DimSocketCategory[] = [];
@@ -118,7 +120,7 @@ export function buildInstancedSockets(
   for (const category of itemDef.sockets.socketCategories) {
     const sockets: DimSocket[] = [];
     for (const index of category.socketIndexes) {
-      const s = createdSockets[index];
+      const s = realSockets[index];
       if (s) {
         sockets.push(s);
       }
@@ -131,7 +133,7 @@ export function buildInstancedSockets(
   }
 
   return {
-    allSockets: _.compact(createdSockets), // Flat list of sockets
+    allSockets: _.compact(realSockets), // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category?.index)), // Sockets organized by category
   };
 }
@@ -144,17 +146,17 @@ function buildDefinedSockets(
   itemDef: DestinyInventoryItemDefinition
 ): DimSockets | null {
   // if we made it here, item has sockets
-  const socketDefEntries = itemDef.sockets!.socketEntries;
-  if (!socketDefEntries || !socketDefEntries.length) {
+  const sockets = itemDef.sockets!.socketEntries;
+  if (!sockets || !sockets.length) {
     return null;
   }
 
-  const createdSockets: (DimSocket | undefined)[] = [];
+  const realSockets: (DimSocket | undefined)[] = [];
   // TODO: check out intrinsicsockets as well
 
-  for (let i = 0; i < socketDefEntries.length; i++) {
-    const socketDef = socketDefEntries[i];
-    createdSockets.push(buildDefinedSocket(defs, socketDef, i, itemDef));
+  for (let i = 0; i < sockets.length; i++) {
+    const socket = sockets[i];
+    realSockets.push(buildDefinedSocket(defs, socket, i, itemDef));
   }
 
   const categories: DimSocketCategory[] = [];
@@ -163,7 +165,7 @@ function buildDefinedSockets(
     const sockets: DimSocket[] = [];
 
     for (const index of category.socketIndexes) {
-      const s = createdSockets[index];
+      const s = realSockets[index];
       if (s?.plugOptions.length) {
         sockets.push(s);
       }
@@ -176,7 +178,7 @@ function buildDefinedSockets(
   }
 
   return {
-    allSockets: _.compact(createdSockets), // Flat list of sockets
+    allSockets: _.compact(realSockets), // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
   };
 }
@@ -246,15 +248,6 @@ function buildDefinedSocket(
         }
       }
     }
-    if (
-      socketDef.singleInitialItemHash &&
-      !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
-    ) {
-      const built = buildDefinedPlug(defs, { plugItemHash: socketDef.singleInitialItemHash });
-      if (built) {
-        reusablePlugs.unshift(built);
-      }
-    }
   }
 
   const plugOptions: DimPlug[] = [];
@@ -269,13 +262,7 @@ function buildDefinedSocket(
 
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
   let plugged: DimPlug | null = null;
-  if (
-    plugOptions.length === 1 &&
-    // this covers weapon intrinsices
-    (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits ||
-      // this covers exotic armor perks and stats
-      plugOptions[0].plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
-  ) {
+  if (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits && plugOptions.length) {
     plugged = plugOptions[0];
   }
 
