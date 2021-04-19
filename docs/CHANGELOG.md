@@ -6,6 +6,8 @@
 * Fixed Loadout Optimizer sometimes not handling T10+ stats correctly.
 * Loadout Optimizer knows about Nightmare Mods now.
 * You can now combine stats in search with & to average multiple stats. For example `basestat:intellect&mobility:>=15` shows if the average of intellect & mobility is greater than or equal to 15.
+* Notes field now suggests your previously-used hashtags as you type.
+* Collect Postmaster button is looking as slick as the rest of the app now.
 
 ## 6.60.0 <span class="changelog-date">(2021-04-11)</span>
 
