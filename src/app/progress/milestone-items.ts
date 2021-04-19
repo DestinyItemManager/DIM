@@ -65,8 +65,6 @@ export function milestoneToItems(
     );
     return item ? [item] : [];
   }
-
-  return [];
 }
 
 function availableQuestToItem(

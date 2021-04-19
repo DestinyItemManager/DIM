@@ -85,10 +85,7 @@ function statRange(
     if (adjustedStatValue) {
       return (
         (100 *
-          (statInfo.max -
-            (compareBaseStats
-              ? stat.base ?? adjustedStatValue
-              : adjustedStatValue || statInfo.max))) /
+          (statInfo.max - (compareBaseStats ? stat.base ?? adjustedStatValue : statInfo.max))) /
         (statInfo.max - statInfo.min)
       );
     }
@@ -104,8 +101,7 @@ function statRange(
   if (adjustedStatValue) {
     return (
       (100 *
-        ((compareBaseStats ? stat.base ?? adjustedStatValue : adjustedStatValue || 0) -
-          statInfo.min)) /
+        ((compareBaseStats ? stat.base ?? adjustedStatValue : adjustedStatValue) - statInfo.min)) /
       (statInfo.max - statInfo.min)
     );
   }

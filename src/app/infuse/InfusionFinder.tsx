@@ -340,19 +340,16 @@ function isInfusable(target: DimItem, source: DimItem) {
 
   if (source.destinyVersion === 1 && target.destinyVersion === 1) {
     return source.type === target.type && target.primStat!.value < source.primStat!.value;
-  } else {
-    return (
-      source.infusionQuality &&
-      target.infusionQuality &&
-      target.infusionQuality.infusionCategoryHashes.some((h) =>
-        source.infusionQuality!.infusionCategoryHashes.includes(h)
-      ) &&
-      target.basePower < source.basePower
-    );
   }
 
-  // Don't try to apply logic for unknown Destiny versions.
-  return false;
+  return (
+    source.infusionQuality &&
+    target.infusionQuality &&
+    target.infusionQuality.infusionCategoryHashes.some((h) =>
+      source.infusionQuality!.infusionCategoryHashes.includes(h)
+    ) &&
+    target.basePower < source.basePower
+  );
 }
 
 async function transferItems(
