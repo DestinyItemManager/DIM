@@ -1,5 +1,7 @@
 ## Next
 
+## 6.61.0 <span class="changelog-date">(2021-04-18)</span>
+
 * Fixed the stats for some perks if they would bring a stat above the maximum value.
 * Creating a loadout from existing items will also save the items' current mods in the loadout. Viewing the mods is still Beta-only.
 * Fixed Loadout Optimizer mod assignment for raid mods.
