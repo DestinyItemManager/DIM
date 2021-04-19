@@ -9,19 +9,19 @@ import Socket from './Socket';
  * A special socket display for the "archetype" socket (or exotic perk) and
  */
 export default function ArchetypeSocket({
-  archetype,
+  archetypeSocket,
   defs,
   item,
   isPhonePortrait,
   children,
 }: {
-  archetype?: DimSocket;
+  archetypeSocket?: DimSocket;
   item: DimItem;
   defs: D2ManifestDefinitions;
   isPhonePortrait: boolean;
   children?: React.ReactNode;
 }) {
-  if (!archetype?.plugged) {
+  if (!archetypeSocket?.plugged) {
     return null;
   }
 
@@ -29,15 +29,15 @@ export default function ArchetypeSocket({
     <>
       <div className={styles.mod}>
         <Socket
-          key={archetype.socketIndex}
+          key={archetypeSocket.socketIndex}
           defs={defs}
           item={item}
           isPhonePortrait={isPhonePortrait}
-          socket={archetype}
+          socket={archetypeSocket}
         />
       </div>
       <div className={styles.info}>
-        <div className={styles.name}>{archetype.plugged.plugDef.displayProperties.name}</div>
+        <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>
         {children}
       </div>
     </>

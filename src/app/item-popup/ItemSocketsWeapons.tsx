@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -73,9 +74,7 @@ function ItemSocketsWeapons({
   }
 
   // Separate out sockets. This gives us better display for things we know, but isn't as flexible to changes in how D2 works.
-  const archetype = item.sockets.categories.find(
-    (c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits
-  )?.sockets[0];
+  const archetypeSocket = getWeaponArchetypeSocket(item);
   const perks = item.sockets.categories.find(
     (c) =>
       c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
@@ -85,7 +84,7 @@ function ItemSocketsWeapons({
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
     .reverse()
-    .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetype));
+    .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetypeSocket));
 
   const keyStats =
     item.stats &&
@@ -102,11 +101,11 @@ function ItemSocketsWeapons({
 
   return (
     <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
-      {(archetype?.plugged || (!minimal && mods.length > 0)) && (
+      {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal}>
-          {archetype?.plugged && (
+          {archetypeSocket?.plugged && (
             <ArchetypeSocket
-              archetype={archetype}
+              archetypeSocket={archetypeSocket}
               defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}

@@ -8,7 +8,6 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { t } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem } from 'app/inventory/item-types';
@@ -48,7 +47,11 @@ import {
   isD1Item,
   isSunset,
 } from 'app/utils/item-utils';
-import { isUsedModSocket } from 'app/utils/socket-utils';
+import {
+  getWeaponArchetype,
+  getWeaponArchetypeSocket,
+  isUsedModSocket,
+} from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

@@ -1,6 +1,6 @@
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { getSocketsByPlugCategoryIdentifier } from 'app/utils/socket-utils';
+import { getArmorExoticPerkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -69,13 +69,7 @@ function ItemSocketsGeneral({
     return null;
   }
 
-  const exoticArmorPerk =
-    item.isExotic &&
-    item.bucket.inArmor &&
-    (item.sockets.categories.find(
-      (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
-    )?.sockets[0] ||
-      getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic'));
+  const exoticArmorPerkSocket = getArmorExoticPerkSocket(item);
 
   let categories = item.sockets.categories.filter(
     (c) =>
@@ -100,18 +94,18 @@ function ItemSocketsGeneral({
 
   return (
     <div className={clsx('item-details', 'sockets', { [styles.minimalSockets]: minimal })}>
-      {exoticArmorPerk && (
+      {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
-          {exoticArmorPerk?.plugged && (
+          {exoticArmorPerkSocket?.plugged && (
             <ArchetypeSocket
-              archetype={exoticArmorPerk}
+              archetypeSocket={exoticArmorPerkSocket}
               defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}
             >
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  {exoticArmorPerk.plugged.plugDef.displayProperties.description}
+                  {exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
                 </div>
               )}
             </ArchetypeSocket>

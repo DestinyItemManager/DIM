@@ -1,5 +1,11 @@
-import { DimSocketCategory } from 'app/inventory/item-types';
+import {
+  DimItem,
+  DimSocketCategory,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory/item-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
 
@@ -64,4 +70,38 @@ export function getSocketsByPlugCategoryIdentifier(
   return sockets.allSockets.find((socket) =>
     socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
   );
+}
+
+export function getWeaponArchetypeSocket(item: DimItem): DimSocket | undefined {
+  if (item.bucket.inWeapons) {
+    return item.sockets?.categories.find(
+      (c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits
+    )?.sockets[0];
+  }
+}
+
+export const getWeaponArchetype = (item: DimItem): PluggableInventoryItemDefinition | undefined =>
+  getWeaponArchetypeSocket(item)?.plugged?.plugDef;
+
+export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
+  if (item.isExotic && item.bucket.inArmor && item.sockets) {
+    const largePerkCategory = item.sockets.categories.find(
+      (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
+    );
+    if (largePerkCategory) {
+      return _.nth(largePerkCategory.sockets, -1);
+    }
+    return getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic');
+  }
+}
+
+/**
+ * the "intrinsic" plug type is:
+ * - weapon frames
+ * - exotic weapon archetypes
+ * - exotic armor special effect plugs
+ * - the special invisible plugs that contribute to armor 2.0 stat rolls
+ */
+export function socketContainsIntrinsicPlug(socket: DimSocket) {
+  return socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics;
 }

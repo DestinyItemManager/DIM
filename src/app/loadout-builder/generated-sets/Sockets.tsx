@@ -52,7 +52,8 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
     if (
       toSave &&
       isPluggableItem(toSave) &&
-      !undesireablePlugs.includes(toSave.plug.plugCategoryHash)
+      !undesireablePlugs.includes(toSave.plug.plugCategoryHash) &&
+      toSave.itemTypeDisplayName // account for plugs that look exotic-ish but are nothings
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,
