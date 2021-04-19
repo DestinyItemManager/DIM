@@ -321,7 +321,6 @@ function LoadoutBuilder({
             sets={filteredSets}
             combos={combos}
             combosWithoutCaps={combosWithoutCaps}
-            isPhonePortrait={isPhonePortrait}
             lockedMap={lockedMap}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
