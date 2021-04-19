@@ -107,14 +107,14 @@ export default function GeneratedSets({
   }, [recalcTrigger]);
 
   useEffect(() => {
-    const handleWindowResize = () =>
-      _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
-        leading: false,
-        trailing: true,
-      });
+    const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
+      leading: false,
+      trailing: true,
+    });
+
     window.addEventListener('resize', handleWindowResize);
-    () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, [setRowSize]);
 
   useEffect(() => {
     windowScroller.current?.updatePosition();
