@@ -217,7 +217,7 @@ function buildInvestmentStats(
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplaysByStatHash: StatDisplayLookup
-): DimStat[] | null {
+): DimStat[] {
   const itemStats = itemDef.investmentStats || [];
 
   const ret: DimStat[] = [];

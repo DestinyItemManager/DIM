@@ -17,9 +17,7 @@ export function compareBy<T, V>(fn: (arg: T) => V): Comparator<T> {
         ? 0
         : -1
       : bVal === undefined
-      ? aVal === undefined
-        ? 0
-        : 1
+      ? 1
       : aVal < bVal
       ? -1
       : aVal > bVal
