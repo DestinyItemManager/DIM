@@ -282,7 +282,7 @@ export function makeItem(
           value: isEngram
             ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
             : instanceDef.primaryStat.value,
-        } || null;
+        };
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =

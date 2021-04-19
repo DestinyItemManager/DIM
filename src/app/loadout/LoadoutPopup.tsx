@@ -308,14 +308,14 @@ function LoadoutPopup({
                 </span>
               )}
             </li>
-            {!hideFarming && (
+            {
               <li className="loadout-set">
                 <span onClick={onStartFarming}>
                   <AppIcon icon={engramIcon} />
                   <span>{t('FarmingMode.FarmingMode')}</span>
                 </span>
               </li>
-            )}
+            }
           </>
         )}
 
