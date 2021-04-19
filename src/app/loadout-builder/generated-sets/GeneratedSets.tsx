@@ -11,7 +11,7 @@ import {
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -100,7 +100,7 @@ export default function GeneratedSets({
   }>({ rowHeight: 0, rowWidth: 0 });
 
   // eslint-disable-next-line prefer-const
-  let [measureSet, recalcTrigger] = getMeasureSet(sets);
+  let [measureSet, recalcTrigger] = useMemo(() => getMeasureSet(sets), [sets]);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
