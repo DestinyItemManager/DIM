@@ -302,6 +302,13 @@ select {
   font-family: 'Open Sans', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
+
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 6px 32px 6px 16px;
+    height: 35px;
+  }
+
   &:hover,
   &:active {
     background-color: $orange;
@@ -338,6 +345,12 @@ select {
   border: 1px solid transparent;
   transition: all 150ms ease-out;
   box-sizing: border-box;
+
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
   &:hover,
   &:active,
   &.selected {
