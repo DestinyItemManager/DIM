@@ -256,23 +256,21 @@ export function canTakeSlotIndependantMods(
           }
         }
 
-        // Once we are finished looping through the items for the set of raid mods
-        // we check to see if all three conditions are satisfied.
-        if (raidsFit && generalsFit && othersFit) {
-          if (assignments) {
-            for (let i = 0; i < sortedItems.length; i++) {
-              const generalMod = generalP[i];
-              const otherMod = otherP[i];
-              const raidMod = raidP[i];
-              if (generalMod) {
-                assignments[sortedItems[i].id].push(generalMod.hash);
-              }
-              if (otherMod) {
-                assignments[sortedItems[i].id].push(otherMod.hash);
-              }
-              if (raidMod) {
-                assignments[sortedItems[i].id].push(raidMod.hash);
-              }
+        // At this point all three assignments have been satisfied, so we can create the assignments
+        // if necessary and break out of the function
+        if (assignments) {
+          for (let i = 0; i < sortedItems.length; i++) {
+            const generalMod = generalP[i];
+            const otherMod = otherP[i];
+            const raidMod = raidP[i];
+            if (generalMod) {
+              assignments[sortedItems[i].id].push(generalMod.hash);
+            }
+            if (otherMod) {
+              assignments[sortedItems[i].id].push(otherMod.hash);
+            }
+            if (raidMod) {
+              assignments[sortedItems[i].id].push(raidMod.hash);
             }
           }
 
