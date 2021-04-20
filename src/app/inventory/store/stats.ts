@@ -401,49 +401,45 @@ function attachPlugStats(
   // The plug that is currently inserted into the socket
   const activePlug = socket.plugged;
 
-  /** This holds the item's 'base' investment stat values without any plug additions. */
+  // This holds the item's 'base' investment stat values without any plug additions.
   const baseItemInvestmentStats: { [statHash: number]: number } = {};
 
-  /*
-   * The active plug is already contributing to the items stats in statsByHash. Thus we treat it seperately
-   * here for two reasons,
-   * 1. we need to calculate the 'base' investment stat value for the item's stats so that we can calculate
-   * correct values for the inactive plugs.
-   * 2. By utilising the fact that the items stats already include this, we can do one less interpolation
-   * per stat to figure out the plugs stat contribution.
-   */
+  // The active plug is already contributing to the item's stats in statsByHash. Thus we treat it separately
+  // here for two reasons,
+  // 1. We need to calculate the 'base' investment stat value (without this plug's contribution) for the
+  // item's stats so that we can calculate correct values for the inactive plugs.
+  // 2. By utilizing the fact that the item's stats already include this, we can do one less interpolation
+  // per stat to figure out the active plug's stat contribution.
   if (activePlug) {
-    const insertedPlugStats: {
+    const activePlugStats: {
       [statHash: number]: number;
     } = {};
 
-    for (const perkStat of activePlug.plugDef.investmentStats) {
-      let perkInvestmentValue = perkStat.value;
-      const itemStat = statsByHash[perkStat.statTypeHash];
-      const statDisplay = statDisplaysByStatHash[perkStat.statTypeHash];
+    for (const plugInvestmentStat of activePlug.plugDef.investmentStats) {
+      let plugStatValue = plugInvestmentStat.value;
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       if (itemStat) {
-        const baseInvestmentStat = itemStat.investmentValue - perkInvestmentValue;
-        baseItemInvestmentStats[perkStat.statTypeHash] = baseInvestmentStat;
+        const baseInvestmentStat = itemStat.investmentValue - plugStatValue;
+        baseItemInvestmentStats[plugInvestmentStat.statTypeHash] = baseInvestmentStat;
 
-        /*
-         * Figure out what the interpolated stat value would be without this perk's contribution
-         * and then take the difference between the total value and that to find the contribution.
-         */
+        // Figure out what the interpolated stat value would be without the active perk's contribution
+        // and then take the difference between that and the original stat value to find the perk's contribution.
         if (statDisplay) {
-          //This is a scaled stat, so we need to scale it in context of the original investment stat.
+          // This is an interpolated stat type, so we need to compare interpolated values with and without this perk
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
-          perkInvestmentValue = itemStat.value - valueWithoutPerk;
+          plugStatValue = itemStat.value - valueWithoutPerk;
         } else {
           const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
-          perkInvestmentValue = itemStat.value - valueWithoutPerk;
+          plugStatValue = itemStat.value - valueWithoutPerk;
         }
       }
 
-      insertedPlugStats[perkStat.statTypeHash] = perkInvestmentValue;
+      activePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
-    activePlug.stats = insertedPlugStats;
+    activePlug.stats = activePlugStats;
   }
 
   for (const plug of socket.plugOptions) {
@@ -456,45 +452,40 @@ function attachPlugStats(
       [statHash: number]: number;
     } = {};
 
-    for (const perkStat of plug.plugDef.investmentStats) {
-      let perkInvestmentValue = perkStat.value;
-      const itemStat = statsByHash[perkStat.statTypeHash];
-      const statDisplay = statDisplaysByStatHash[perkStat.statTypeHash];
+    for (const plugInvestmentStat of plug.plugDef.investmentStats) {
+      let plugStatValue = plugInvestmentStat.value;
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       if (itemStat) {
         // User our calculated baseItemInvestment stat, which is the items investment stat value minus
         // the active plugs investment stat value
-        const baseInvestmentStat = baseItemInvestmentStats[perkStat.statTypeHash] ?? itemStat.value;
+        const baseInvestmentStat =
+          baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
 
-        /*
-         * This time we use the baseItemInvestment value and calculate the interpolated values with
-         * and without the perks value, using the difference to get its total contribution to the stat.
-         *
-         * These calculations are equivalent to the one use for the active plugs stats.
-         */
+        // This time we use the baseItemInvestment value we computed earlier to calculate the interpolated stat value with
+        // and without the perk's value, using the difference to get its individual contribution to the stat.
+        // These calculations are equivalent to the ones used for the active plug's stats.
         if (statDisplay) {
-          //This is a scaled stat, so we need to scale it in context of the original investment stat.
+          // This is an interpolated stat type, so we need to compare interpolated values with and without this perk
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
           const valueWithPerk = interpolateStatValue(
-            baseInvestmentStat + perkInvestmentValue,
+            baseInvestmentStat + plugStatValue,
             statDisplay
           );
 
-          perkInvestmentValue = valueWithPerk - valueWithoutPerk;
+          plugStatValue = valueWithPerk - valueWithoutPerk;
         } else {
           const baseInvestmentStat =
-            baseItemInvestmentStats[perkStat.statTypeHash] ?? itemStat.value;
+            baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
           const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
-          const valueWithPerk = Math.min(
-            baseInvestmentStat + perkInvestmentValue,
-            itemStat.maximumValue
-          );
+          const valueWithPerk = Math.min(baseInvestmentStat + plugStatValue, itemStat.maximumValue);
 
-          perkInvestmentValue = valueWithPerk - valueWithoutPerk;
+          plugStatValue = valueWithPerk - valueWithoutPerk;
         }
       }
 
-      inactivePlugStats[perkStat.statTypeHash] = perkInvestmentValue;
+      inactivePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
     plug.stats = inactivePlugStats;
