@@ -426,13 +426,12 @@ function attachPlugStats(
         const baseInvestmentStat = itemStat.investmentValue - perkInvestmentValue;
         baseItemInvestmentStats[perkStat.statTypeHash] = baseInvestmentStat;
 
+        /*
+         * Figure out what the interpolated stat value would be without this perk's contribution
+         * and then take the difference between the total value and that to find the contribution.
+         */
         if (statDisplay) {
-          /*
-           * This is a scaled stat, so we need to scale it in context of the original investment stat.
-           *
-           * Figure out what the interpolated stat value would be without this perk's contribution
-           * and then take the difference between the total value and that to find the contribution.
-           */
+          //This is a scaled stat, so we need to scale it in context of the original investment stat.
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
           perkInvestmentValue = itemStat.value - valueWithoutPerk;
         } else {
@@ -468,14 +467,13 @@ function attachPlugStats(
         const baseInvestmentStat = baseItemInvestmentStats[perkStat.statTypeHash] ?? itemStat.value;
 
         /*
-         * This is a scaled stat, so we need to scale it in context of the original investment stat.
-
          * This time we use the baseItemInvestment value and calculate the interpolated values with
          * and without the perks value, using the difference to get its total contribution to the stat.
          *
-         * This calculation is equivalent to the one use for the active plugs stats.
+         * These calculations are equivalent to the one use for the active plugs stats.
          */
         if (statDisplay) {
+          //This is a scaled stat, so we need to scale it in context of the original investment stat.
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
           const valueWithPerk = interpolateStatValue(
             baseInvestmentStat + perkInvestmentValue,
