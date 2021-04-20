@@ -52,7 +52,7 @@ module.exports = {
         separator: false,
       },
       catalysts: {
-        list: ['Quest', 'Mission', 'LeviathansBreath', 'RuinousEffigy', 'TheFourthHorseman'],
+        list: ['Quest', 'Mission', 'LeviathansBreath', 'RuinousEffigy', 'TheFourthHorseman', 'HeirApparent'],
         fallback: false,
         separator: false,
       },
