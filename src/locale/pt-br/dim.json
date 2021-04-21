@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Encontrado durante os Jogos dos Guardiões 2021.",
       "LeviathansBreath": "Encontrado ao derrotar inimigos poderosos com esta arma.",
       "Mission": "Complete a missão \"{{title}}\".",
       "Quest": "Complete a jornada \"{{title}}.",

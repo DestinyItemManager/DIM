@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Found during Guardian Games 2021.",
       "LeviathansBreath": "Trouvé en battant des ennemis puissants avec cette arme.",
       "Mission": "Terminez la mission \"{{title}}\".",
       "Quest": "Terminez la quête \"{{title}}\".",
