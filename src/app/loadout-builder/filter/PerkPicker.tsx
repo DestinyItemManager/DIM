@@ -30,6 +30,7 @@ import {
 } from '../utils';
 import styles from './PerkPicker.m.scss';
 import PickerSectionPerks from './PickerSectionPerks';
+import { BucketHashes } from 'data/d2/generated-enums';
 
 interface ProvidedProps {
   lockedMap: LockedMap;
@@ -225,7 +226,7 @@ function PerkPicker({
 
   for (const lockedBucket of Object.values(selectedPerks)) {
     for (const locked of lockedBucket || []) {
-      if (locked.type === 'perk') {
+      if (locked.type === 'perk' && locked.bucket.hash !== BucketHashes.ClassArmor) {
         lockedExoticPerk = locked;
         break;
       }
