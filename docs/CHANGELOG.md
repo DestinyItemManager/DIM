@@ -1,5 +1,12 @@
 ## Next
 
+* Exotic class item perks don't prevent selecting another exotic perk in Loadout Optimizer.
+* Buttons and menus are bigger and easier to tap on mobile.
+* Armor stats have been revamped and show their actual game effect, including going beyond the 42-stat limit or going negative.
+* We now always know the base stats of items, and are not confused by the mods that are applied to armor.
+* Multiple mods that affect the same stat now show in the stat bar as different shades of blue.
+* Items in collections now show stats and perks in many cases.
+
 ## 6.61.0 <span class="changelog-date">(2021-04-18)</span>
 
 * Fixed the stats for some perks if they would bring a stat above the maximum value.
