@@ -86,7 +86,7 @@ function ItemSocketsWeapons({
     (c) =>
       c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
       c.socketIndexes.length &&
-      getSocketByIndex(item.sockets!, c.socketIndexes[0])!.isPerk
+      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
   );
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
