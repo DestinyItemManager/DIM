@@ -30,7 +30,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
 
   const [{ selectedStoreId, direction }, setSelectedStoreId] = useState({
     selectedStoreId: currentStore?.id,
-    direction: 1,
+    direction: 0,
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);

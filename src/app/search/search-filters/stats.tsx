@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
@@ -106,27 +106,47 @@ function statFilterFromString(
 
   // a special case filter where we check for any single stat matching the comparator
   if (statNames === 'any') {
-    return (item) =>
-      Boolean(
-        item.stats?.find(
-          (s) =>
-            armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue])
-        )
-      );
+    const statMatches = (s: DimStat) =>
+      armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue]);
+    return (item) => Boolean(item.stats?.find(statMatches));
   }
 
-  // convert stat names to stathashes and verify they all resolved to a valid hash
-  const statHashes: number[] = statNames.split('+').map((s) => statHashByName[s]);
-  if (!statHashes.every((s) => s)) {
-    throw new Error(`stathash lookup failed: ${statNames}`);
-  }
+  const statCombiner = createStatCombiner(statNames, byWhichValue);
+  // the filter computes combined values of requested stats and runs the total against comparator
+  return (item) => numberComparisonFunction(statCombiner(item));
+}
 
-  // the filter tallies combined values of requested stats and runs the total against comparator
-  return (item) => {
-    const matchingStats = item.stats?.filter((s) => statHashes.includes(s.statHash));
-    const total = _.sumBy(matchingStats, (s) => s[byWhichValue]);
-    return numberComparisonFunction(total);
+// converts the string "mobility+strength&discipline" into a function which
+// returns an item's MOB + average( STR, DIS )
+function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') {
+  // an array of arrays of stat hashes. inner arrays are averaged, then outer array totaled
+  const nestedAddends = statString.split('+').map((addendString) => {
+    const averagedHashes = addendString.split('&').map((statName) => {
+      const statHash = statHashByName[statName];
+      if (!statHash) {
+        throw new Error(`invalid stat name: "${statName}"`);
+      }
+      return statHash;
+    });
+    return averagedHashes;
+  });
+
+  return (item: DimItem) => {
+    const statValuesByHash = getStatValuesByHash(item, byWhichValue);
+    return _.sumBy(nestedAddends, (averageGroup) =>
+      // would ideally be "?? 0" but polyfills are big and || works fine
+      _.meanBy(averageGroup, (statHash) => statValuesByHash[statHash] || 0)
+    );
   };
+}
+
+// this seems worth doing instead of multiple array.find
+function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
+  const output: NodeJS.Dict<number> = {};
+  for (const stat of item.stats ?? []) {
+    output[stat.statHash] = stat[byWhichValue];
+  }
+  return output;
 }
 
 function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: string) {

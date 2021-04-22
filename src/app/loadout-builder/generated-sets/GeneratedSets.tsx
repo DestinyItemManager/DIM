@@ -11,12 +11,12 @@ import {
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { someModHasEnergyRequirement } from '../mod-utils';
-import { ArmorSet, LockedMap, LockedMods, StatTypes } from '../types';
+import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -32,40 +32,29 @@ function hasExoticPerkOrSwapIcon(items: DimItem[]) {
  * It figures out the tallest row by looking at items with exotic perks and swap icons.
  * Exotic perks add another row to the mod icons and the swap icon sits below the item image.
  * The height they add is roughly equivalent so we treat both conditions equally.
+ *
+ * This algorithm is built from the portrait mobile layout but will work for any other layout
+ * as well. Landscape ipad has two rows, desktop can be 1, 2, or 3 rows depending on browser
+ * width.
  */
-function getMeasureSet(sets, isPhonePortrait): [ArmorSet | undefined, number] {
+function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number] {
   // In phone portrait we have 2 columns and 3 rows of items.
-  let measureSet: ArmorSet | undefined;
   let recalcTrigger = 0;
-  if (isPhonePortrait) {
-    measureSet = _.maxBy(sets, (set) => {
-      let countWithExoticPerkOrSwapIcon = 0;
-      // So we look on those rows for items with the swap icon or an exotic perk.
-      for (const indexes of [[0, 1], [2, 3], [4]]) {
-        if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
-          countWithExoticPerkOrSwapIcon++;
-        }
+  const measureSet = _.maxBy(sets, (set) => {
+    let countWithExoticPerkOrSwapIcon = 0;
+    // So we look on those rows for items with the swap icon or an exotic perk.
+    for (const indexes of [[0, 1], [2, 3], [4]]) {
+      if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+        countWithExoticPerkOrSwapIcon++;
       }
+    }
 
-      if (countWithExoticPerkOrSwapIcon > recalcTrigger) {
-        recalcTrigger = countWithExoticPerkOrSwapIcon;
-      }
+    if (countWithExoticPerkOrSwapIcon > recalcTrigger) {
+      recalcTrigger = countWithExoticPerkOrSwapIcon;
+    }
 
-      return countWithExoticPerkOrSwapIcon;
-    });
-  } else {
-    // when not in phone portrait we just find one set that has a taller item.
-    measureSet =
-      sets.find((set) =>
-        set.armor.some((items) => {
-          const hasTaller = hasExoticPerkOrSwapIcon(items);
-          if (!recalcTrigger && hasTaller) {
-            recalcTrigger = 1;
-          }
-          return hasTaller;
-        })
-      ) || sets[0];
-  }
+    return countWithExoticPerkOrSwapIcon;
+  });
 
   return [measureSet, recalcTrigger];
 }
@@ -75,12 +64,11 @@ interface Props {
   sets: readonly ArmorSet[];
   combos: number;
   combosWithoutCaps: number;
-  isPhonePortrait: boolean;
   lockedMap: LockedMap;
   statOrder: StatTypes[];
   defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
-  lockedMods: LockedMods;
+  lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -104,7 +92,6 @@ export default function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  isPhonePortrait,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -113,21 +100,21 @@ export default function GeneratedSets({
   }>({ rowHeight: 0, rowWidth: 0 });
 
   // eslint-disable-next-line prefer-const
-  let [measureSet, recalcTrigger] = getMeasureSet(sets, isPhonePortrait);
+  let [measureSet, recalcTrigger] = useMemo(() => getMeasureSet(sets), [sets]);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
   }, [recalcTrigger]);
 
   useEffect(() => {
-    const handleWindowResize = () =>
-      _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
-        leading: false,
-        trailing: true,
-      });
+    const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
+      leading: false,
+      trailing: true,
+    });
+
     window.addEventListener('resize', handleWindowResize);
-    () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, [setRowSize]);
 
   useEffect(() => {
     windowScroller.current?.updatePosition();
@@ -156,10 +143,16 @@ export default function GeneratedSets({
 
   let groupingDescription;
 
-  const generalMods = lockedMods[armor2PlugCategoryHashesByName.general] || [];
-  const raidCombatAndLegacyMods = Object.entries(lockedMods).flatMap(([plugCategoryHash, mods]) =>
-    !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) && mods ? mods : []
-  );
+  const generalMods: PluggableInventoryItemDefinition[] = [];
+  const raidCombatAndLegacyMods: PluggableInventoryItemDefinition[] = [];
+
+  for (const mod of lockedMods) {
+    if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      generalMods.push(mod);
+    } else if (!armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
+      raidCombatAndLegacyMods.push(mod);
+    }
+  }
 
   if (someModHasEnergyRequirement(raidCombatAndLegacyMods)) {
     groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');

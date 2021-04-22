@@ -68,22 +68,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    suggestionsGenerator: ({ itemInfos }) => {
-      if (!itemInfos) {
-        return;
-      }
-      // collect hash tags from item notes
-      const hashTags = new Set<string>();
-      for (const info of Object.values(itemInfos)) {
-        const matches = info.notes?.matchAll(/#\w+/g);
-        if (matches) {
-          for (const match of matches) {
-            hashTags.add(match[0]);
-          }
-        }
-      }
-      return [...hashTags];
-    },
+    suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
@@ -150,7 +135,7 @@ const freeformFilters: FilterDefinition[] = [
       if (d2Manifest && allItems) {
         const myPerks = allItems
           .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
-          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.isPerk) ?? []);
+          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.plugged && s.isPerk) ?? []);
         const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
         const allPerkNames = getPerkNamesFromManifest(
           Object.values(d2Manifest.InventoryItem.getAll())

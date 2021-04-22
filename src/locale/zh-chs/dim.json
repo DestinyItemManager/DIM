@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "可于 2021 守护者游戏期间获得。",
       "LeviathansBreath": "通过使用此武器击败强大的敌人获得。",
       "Mission": "完成“{{title}}”任务。",
       "Quest": "完成“{{title}}”任务。",
@@ -478,6 +479,7 @@
     "AppliedError": "没有物品可用于配装.",
     "AppliedWarn": "已为您完成部分配装，但{{total}} 个中有{{failed}} 个物品发生错误。",
     "ApplySearch": "转移搜索 \"{{query}}\"",
+    "ArmorMods": "护甲模组",
     "AssumeMaxWeapons": "假设最大光等武器",
     "Before": "撤销 '{{name}}'",
     "ChooseItem": "添加 {{name}}",

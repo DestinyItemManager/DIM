@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Found during Guardian Games 2021.",
       "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
       "Mission": "Complete the \"{{title}}\" mission.",
       "Quest": "Complete the \"{{title}}\" quest.",
@@ -478,6 +479,7 @@
     "AppliedError": "沒有物品可用於配裝.",
     "AppliedWarn": "已為您完成部分配裝，但{{total}} 個中有{{failed}} 個物品發生錯誤。",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
+    "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "撤銷 '{{name}}'",
     "ChooseItem": "添加 {{name}}",

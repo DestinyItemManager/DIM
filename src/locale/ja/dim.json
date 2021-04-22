@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "ガーディアン・ゲーム 2021 で発見",
       "LeviathansBreath": "この武器で強力な敵を倒すことにより発見されます。",
       "Mission": "\"{{title}}\" ミッションを完了。",
       "Quest": "\"{{title}}\" クエストを完了。",
@@ -478,6 +479,7 @@
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}} の{{failed}} アイテムにエラーがありました。",
     "ApplySearch": "検索 {{query}} を転送",
+    "ArmorMods": "防具の Mod",
     "AssumeMaxWeapons": "最大パワーレベルの武器を仮定する",
     "Before": "前 '{{name}}'",
     "ChooseItem": "{{name}} を追加します。",

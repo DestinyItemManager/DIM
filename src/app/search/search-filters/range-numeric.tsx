@@ -3,7 +3,7 @@ import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
 import { generateSuggestionsForFilter } from '../suggestions-generation';
 
-const rangeStringRegex = /^([<=>]{0,2})(\d+)$/;
+const rangeStringRegex = /^([<=>]{0,2})(\d+(?:\.\d+)?)$/;
 
 export function rangeStringToComparator(rangeString?: string) {
   if (!rangeString) {

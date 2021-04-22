@@ -327,7 +327,8 @@ export function isPlugStatActive(
 ): boolean {
   if (!isConditionallyActive) {
     return true;
-  } else if (
+  }
+  if (
     plugHash === modsWithConditionalStats.powerfulFriends ||
     plugHash === modsWithConditionalStats.radiantLight
   ) {
@@ -345,18 +346,19 @@ export function isPlugStatActive(
             plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
         )
     );
-  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
+  }
+  if (plugHash === modsWithConditionalStats.chargeHarvester) {
     // Charge Harvester
     return (
       (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
       (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
       (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
     );
-  } else if (masterworksWithCondStats.includes(plugHash)) {
-    return adeptWeaponHashes.includes(item.hash);
-  } else {
-    return true;
   }
+  if (masterworksWithCondStats.includes(plugHash)) {
+    return adeptWeaponHashes.includes(item.hash);
+  }
+  return true;
 }
 
 /**

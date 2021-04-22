@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Encontrado durante os Jogos dos Guardiões 2021.",
       "LeviathansBreath": "Encontrado ao derrotar inimigos poderosos com esta arma.",
       "Mission": "Complete a missão \"{{title}}\".",
       "Quest": "Complete a jornada \"{{title}}.",
@@ -478,6 +479,7 @@
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
+    "ArmorMods": "Mods de Armadura",
     "AssumeMaxWeapons": "Assumindo o nível máximo de poder das armas",
     "Before": "Antes de '{{name}}'",
     "ChooseItem": "Adicionar {{name}}",

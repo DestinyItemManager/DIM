@@ -19,6 +19,8 @@
 }
 
 .loadout-drawer-header {
+  width: 100%;
+
   .stat-bars.destiny2 {
     cursor: default;
     max-width: 280px;
@@ -70,6 +72,10 @@
 }
 
 .loadout-options {
+  @include phone-portrait {
+    font-size: 14px;
+  }
+
   form {
     display: flex;
     flex-direction: row;
@@ -88,6 +94,11 @@
     border-bottom: 1px solid #555;
     color: white;
     width: 100%;
+
+    @include phone-portrait {
+      font-size: 14px;
+      height: 32px;
+    }
 
     &:hover,
     &:focus {

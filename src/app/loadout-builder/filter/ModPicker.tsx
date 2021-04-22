@@ -8,14 +8,12 @@ import {
   bucketsSelector,
   profileResponseSelector,
 } from 'app/inventory/selectors';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -23,18 +21,16 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { sortModGroups, sortMods } from '../mod-utils';
-import { PluggableItemsByPlugCategoryHash } from '../types';
+import { isInsertableArmor2Mod, sortModGroups, sortMods } from '../mod-utils';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import PickerSectionMods from './PickerSectionMods';
 
 interface ProvidedProps {
   /**
-   * An object of plugCatgeoryHashes to mods (PluggableInventoryItemDefinition[])
-   * with that plugCategoryHash.
+   * An array of mods that are already locked.
    */
-  lockedMods: PluggableItemsByPlugCategoryHash;
+  lockedMods: PluggableInventoryItemDefinition[];
   /**
    * The DestinyClass instance that is used to filter items on when building up the
    * set of available mods.
@@ -43,7 +39,7 @@ interface ProvidedProps {
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** Called with the new lockedMods when the user accepts the new modset. */
-  onAccept(newLockedMods: PluggableItemsByPlugCategoryHash): void;
+  onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
   onClose(): void;
 }
@@ -85,8 +81,11 @@ function mapStateToProps() {
         if (
           !item ||
           !item.sockets ||
+          // Makes sure its an armour 2.0 item
           !isLoadoutBuilderItem(item) ||
-          !(item.classType === DestinyClass.Unknown || item.classType === classType)
+          // If classType is passed in only use items from said class otherwise use
+          // items from all characters. Usefull if in loadouts and only mods and guns.
+          !(classType === DestinyClass.Unknown || item.classType === classType)
         ) {
           continue;
         }
@@ -121,15 +120,7 @@ function mapStateToProps() {
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
 
-          if (
-            isPluggableItem(def) &&
-            isArmor2Mod(def) &&
-            // Filters out mods that are deprecated.
-            (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost?.energyCost) &&
-            // This string can be empty so let those cases through in the event a mod hasn't been given a itemTypeDisplayName.
-            // My investigation showed that only classified items had this being undefined.
-            def.itemTypeDisplayName !== undefined
-          ) {
+          if (isInsertableArmor2Mod(def)) {
             finalMods.push(def);
           }
         }
@@ -163,7 +154,7 @@ function ModPicker({
   onClose,
 }: Props) {
   const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState(() => ({ ...lockedMods }));
+  const [lockedModsInternal, setLockedModsInternal] = useState(() => [...lockedMods]);
   const filterInput = useRef<SearchFilterRef | null>(null);
 
   useEffect(() => {
@@ -175,11 +166,11 @@ function ModPicker({
   /** Add a new mod to the internal mod picker state */
   const onModSelected = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
-      const { plugCategoryHash } = mod.plug;
-      setLockedModsInternal((oldState) => ({
-        ...oldState,
-        [plugCategoryHash]: [...(oldState[plugCategoryHash] || []), { ...mod }],
-      }));
+      setLockedModsInternal((oldState) => {
+        const newState = [...oldState];
+        newState.push(mod);
+        return newState.sort(sortMods);
+      });
     },
     [setLockedModsInternal]
   );
@@ -187,18 +178,13 @@ function ModPicker({
   /** Remove a mod from the internal mod picker state */
   const onModRemoved = useCallback(
     (mod: PluggableInventoryItemDefinition) => {
-      const { plugCategoryHash } = mod.plug;
       setLockedModsInternal((oldState) => {
-        const firstIndex =
-          oldState[plugCategoryHash]?.findIndex((locked) => locked.hash === mod.hash) ?? -1;
+        const firstIndex = oldState.findIndex((locked) => locked.hash === mod.hash);
 
         if (firstIndex >= 0) {
-          const newState = [...(oldState[plugCategoryHash] || [])];
+          const newState = [...oldState];
           newState.splice(firstIndex, 1);
-          return {
-            ...oldState,
-            [plugCategoryHash]: newState,
-          };
+          return newState;
         }
 
         return oldState;
@@ -243,17 +229,14 @@ function ModPicker({
     _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
   ).sort(sortModGroups);
 
-  const plugCategoryHashOrder = groupedMods.map((mods) => mods[0].plug.plugCategoryHash);
-
   const autoFocus =
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
-  const footer = Object.values(lockedModsInternal).some((f) => Boolean(f?.length))
+  const footer = lockedModsInternal.length
     ? ({ onClose }) => (
         <ModPickerFooter
           defs={defs}
-          groupOrder={plugCategoryHashOrder}
-          locked={lockedModsInternal}
+          lockedModsInternal={lockedModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
           onModSelected={onModRemoved}
@@ -295,7 +278,7 @@ function ModPicker({
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
           defs={defs}
-          locked={lockedModsInternal}
+          lockedModsInternal={lockedModsInternal}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}
         />

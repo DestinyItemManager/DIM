@@ -1,13 +1,20 @@
+import { Textcomplete } from '@textcomplete/core';
+import { TextareaEditor } from '@textcomplete/textarea';
 import { t } from 'app/i18next-t';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import {
+  allNotesHashtagsSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+} from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './NotesArea.m.scss';
 
@@ -77,6 +84,7 @@ function NotesEditor({
   const onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setLiveNotes(e.target.value);
   };
+  const tags = useSelector(allNotesHashtagsSelector);
 
   // track the Text Area so we can get its contents once, at time of save,
   // without relying on the constantly refreshing liveNotes value
@@ -116,6 +124,51 @@ function NotesEditor({
   const onClick = (e: React.MouseEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    if (textArea.current) {
+      const editor = new TextareaEditor(textArea.current);
+      const textcomplete = new Textcomplete(
+        editor,
+        [
+          {
+            match: /#(\w*)$/,
+            search: (term, callback) => {
+              // need to build this list from the element ref, because relying
+              // on liveNotes state would reinstantiate Textcomplete every keystroke
+              const existingTags = getHashtagsFromNote(textArea.current!.value);
+              const possibleTags: string[] = [];
+              for (const t of tags) {
+                // don't suggest duplicate tags
+                if (existingTags.includes(t)) {
+                  continue;
+                }
+                // favor startswith
+                if (t.startsWith('#' + term)) {
+                  possibleTags.unshift(t);
+                  // over full text search
+                } else if (t.includes(term)) {
+                  possibleTags.push(t);
+                }
+              }
+              callback(possibleTags);
+            },
+            replace: (key) => `${key} `,
+            // to-do: for major tags, gonna use this to show what the notes icon will change to
+            // template: (key) => `<img src="${url}"/>&nbsp;<small>:${key}:</small>`,
+          },
+        ],
+        {
+          dropdown: {
+            className: `dropdown-menu textcomplete-dropdown ${styles.hashtagSuggestions}`,
+          },
+        }
+      );
+      return () => {
+        textcomplete.destroy();
+      };
+    }
+  }, [textArea, tags]);
 
   return (
     <form name="notes">

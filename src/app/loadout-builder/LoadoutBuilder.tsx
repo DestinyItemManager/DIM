@@ -40,7 +40,6 @@ import { useProcess } from './process/useProcess';
 import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
-  PluggableItemsByPlugCategoryHash,
   statHashes,
   statHashToType,
   statKeys,
@@ -239,7 +238,7 @@ function LoadoutBuilder({
           return stat;
         })
       ),
-      mods: Object.values(lockedMods).flatMap((mods) => mods?.map((m) => m.modDef.hash) || []),
+      mods: lockedMods.map((mod) => mod.hash),
       query: searchQuery,
       assumeMasterworked: assumeMasterwork,
     }),
@@ -322,7 +321,6 @@ function LoadoutBuilder({
             sets={filteredSets}
             combos={combos}
             combosWithoutCaps={combosWithoutCaps}
-            isPhonePortrait={isPhonePortrait}
             lockedMap={lockedMap}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
@@ -339,9 +337,9 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={selectedStore.classType}
-              lockedMods={_.mapValues(lockedMods, (mods) => mods?.map((mod) => mod.modDef))}
+              lockedMods={lockedMods}
               initialQuery={modPicker.initialQuery}
-              onAccept={(newLockedMods: PluggableItemsByPlugCategoryHash) =>
+              onAccept={(newLockedMods: PluggableInventoryItemDefinition[]) =>
                 lbDispatch({
                   type: 'lockedModsChanged',
                   lockedMods: newLockedMods,

@@ -1,10 +1,6 @@
-import {
-  CHALICE_OF_OPULENCE,
-  killTrackerSocketTypeHash,
-  synthesizerHashes,
-} from 'app/search/d2-known-values';
+import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { getFirstSocketByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -73,17 +69,7 @@ function ItemSocketsGeneral({
     return null;
   }
 
-  const exoticArmorPerk = getFirstSocketByCategoryHash(
-    item.sockets,
-    SocketCategoryHashes.ArmorPerks_LargePerk
-  );
-
-  // special top level class for styling some specific items' popups differently
-  const itemSpecificClass = synthesizerHashes.includes(item.hash)
-    ? 'chalice' // to-do, maybe, someday: this should be 'synthesizer' but they share classes rn
-    : item.hash === CHALICE_OF_OPULENCE
-    ? 'chalice'
-    : null;
+  const exoticArmorPerkSocket = getArmorExoticPerkSocket(item);
 
   let categories = item.sockets.categories.filter(
     (c) =>
@@ -107,19 +93,19 @@ function ItemSocketsGeneral({
   }
 
   return (
-    <div className={clsx('item-details', 'sockets', { itemSpecificClass })}>
-      {exoticArmorPerk && (
-        <ArchetypeRow>
-          {exoticArmorPerk?.plugged && (
+    <div className={clsx('item-details', 'sockets', { [styles.minimalSockets]: minimal })}>
+      {exoticArmorPerkSocket && (
+        <ArchetypeRow minimal={minimal}>
+          {exoticArmorPerkSocket?.plugged && (
             <ArchetypeSocket
-              archetype={exoticArmorPerk}
+              archetypeSocket={exoticArmorPerkSocket}
               defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}
             >
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  {exoticArmorPerk.plugged.plugDef.displayProperties.description}
+                  {exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
                 </div>
               )}
             </ArchetypeSocket>

@@ -159,7 +159,7 @@ function makeItem(
     );
   }
 
-  if (!itemDef || !itemDef.itemName) {
+  if (!itemDef.itemName) {
     return null;
   }
 

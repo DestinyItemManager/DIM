@@ -3,16 +3,14 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
+import { getModRenderKey } from '../mod-utils';
 import LockedModIcon from './LockedModIcon';
 import styles from './ModPickerFooter.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;
-  groupOrder: number[];
   isPhonePortrait: boolean;
-  locked: {
-    [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
-  };
+  lockedModsInternal: PluggableInventoryItemDefinition[];
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   onModSelected(item: PluggableInventoryItemDefinition): void;
 }
@@ -20,8 +18,7 @@ interface Props {
 function ModPickerFooter({
   defs,
   isPhonePortrait,
-  groupOrder,
-  locked,
+  lockedModsInternal,
   onSubmit,
   onModSelected,
 }: Props) {
@@ -39,27 +36,14 @@ function ModPickerFooter({
         </button>
       </div>
       <div className={styles.selectedMods}>
-        {groupOrder.map(
-          (pch) =>
-            pch in locked && (
-              <React.Fragment key={pch}>
-                {locked[pch]?.map((mod) => {
-                  if (!modCounts[mod.hash]) {
-                    modCounts[mod.hash] = 0;
-                  }
-
-                  return (
-                    <LockedModIcon
-                      key={`${mod.hash}-${++modCounts[mod.hash]}`}
-                      mod={mod}
-                      defs={defs}
-                      onModClicked={() => onModSelected(mod)}
-                    />
-                  );
-                })}
-              </React.Fragment>
-            )
-        )}
+        {lockedModsInternal.map((mod) => (
+          <LockedModIcon
+            key={getModRenderKey(mod, modCounts)}
+            mod={mod}
+            defs={defs}
+            onModClicked={() => onModSelected(mod)}
+          />
+        ))}
       </div>
     </div>
   );

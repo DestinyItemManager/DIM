@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Found during Guardian Games 2021.",
       "LeviathansBreath": "Gefunden, indem du mächtige Gegner mit dieser Waffe besiegst.",
       "Mission": "Schließe die \"{{title}}\" Mission ab.",
       "Quest": "Schließe die \"{{title}}\" Quest ab.",
@@ -478,6 +479,7 @@
     "AppliedError": "Keines der Gegenstände in deiner Ausrüstung konnte übertragen werden.",
     "AppliedWarn": "Deine Ausrüstung wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
     "ApplySearch": "Übertrage Suche \"{{query}}\"",
+    "ArmorMods": "Rüstungs-Mods",
     "AssumeMaxWeapons": "Annahme von Waffen mit maximalem Powerlevel",
     "Before": "Bevor '{{name}}'",
     "ChooseItem": "{{name}} hinzufügen",

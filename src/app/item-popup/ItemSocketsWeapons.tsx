@@ -3,9 +3,9 @@ import { statsMs } from 'app/inventory/store/stats';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import {
-  getFirstSocketByCategoryHash,
   getSocketByIndex,
   getSocketsByIndexes,
+  getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -78,10 +78,7 @@ function ItemSocketsWeapons({
   }
 
   // Separate out sockets. This gives us better display for things we know, but isn't as flexible to changes in how D2 works.
-  const archetype = getFirstSocketByCategoryHash(
-    item.sockets,
-    SocketCategoryHashes.IntrinsicTraits
-  );
+  const archetypeSocket = getWeaponArchetypeSocket(item);
   const perks = item.sockets.categories.find(
     (c) =>
       c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
@@ -93,7 +90,7 @@ function ItemSocketsWeapons({
     .reverse()
     .flatMap((c) =>
       getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-        (s) => !s.isPerk && s !== archetype
+        (s) => !s.isPerk && s !== archetypeSocket
       )
     );
 
@@ -112,11 +109,11 @@ function ItemSocketsWeapons({
 
   return (
     <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
-      {(archetype?.plugged || (!minimal && mods.length > 0)) && (
+      {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal}>
-          {archetype?.plugged && (
+          {archetypeSocket?.plugged && (
             <ArchetypeSocket
-              archetype={archetype}
+              archetypeSocket={archetypeSocket}
               defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}

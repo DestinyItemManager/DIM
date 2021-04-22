@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Found during Guardian Games 2021.",
       "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
       "Mission": "Завершите миссию \"{{title}}\".",
       "Quest": "Завершите задание \"{{title}}\".",
@@ -478,6 +479,7 @@
     "AppliedError": "Ни один предмет набора не может быть передан.",
     "AppliedWarn": "Набор передан частично, по {{failed}} предметам из {{total}} возникли ошибки.",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
+    "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Оружие наибольшей Силы",
     "Before": "Перед '{{name}}'",
     "ChooseItem": "Добавить {{name}}",

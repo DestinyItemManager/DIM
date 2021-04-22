@@ -1,17 +1,18 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { sortModGroups } from 'app/loadout-builder/mod-utils';
-import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
+import _ from 'lodash';
 import React, { useMemo } from 'react';
 import SavedModCategory from './SavedModCategory';
 import styles from './SavedMods.m.scss';
 
 interface Props {
   defs: D1ManifestDefinitions | D2ManifestDefinitions;
-  /** The loadouts saved mods in an object to mod arrays indexed by plugCategoryHash. */
-  savedMods: PluggableItemsByPlugCategoryHash;
+  /** The loadouts saved mods hydrated. */
+  savedMods: PluggableInventoryItemDefinition[];
   /** Opens the mod picker sheet with a supplied query to filter the mods. */
   onOpenModPicker(query?: string): void;
   /** Removes a mod from the loadout via the mods item hash. */
@@ -28,7 +29,9 @@ function SavedMods({ defs, savedMods, onOpenModPicker, removeModByHash }: Props)
       return [];
     }
 
-    return Object.values(savedMods).sort(sortModGroups);
+    const indexedMods = _.groupBy(savedMods, (mod) => mod.plug.plugCategoryHash);
+
+    return Object.values(indexedMods).sort(sortModGroups);
   }, [savedMods, defs]);
 
   if (!defs.isDestiny2() || !Object.keys(savedMods).length) {

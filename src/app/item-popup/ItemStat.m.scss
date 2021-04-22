@@ -73,6 +73,12 @@
 }
 .moddedStatBar {
   background-color: $blue;
+  & + .moddedStatBar {
+    background-color: adjust-color($blue, $lightness: -10);
+    & + .moddedStatBar {
+      background-color: adjust-color($blue, $lightness: -20);
+    }
+  }
 }
 
 .masterworked {

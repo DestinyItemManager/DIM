@@ -85,24 +85,14 @@
   }
 
   :global(.dim-button.bucket-button) {
-    border-radius: 5px;
-    padding: 8px 0;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    background: rgba(0, 0, 0, 0.4);
-
-    &:hover {
-      background: $orange;
-      color: black;
-    }
-    :global(.badge) {
-      margin: 0 5px;
-    }
+    margin-bottom: 4px;
+    margin-right: 10px;
+    @include horizontal-space-children(4px);
   }
-
   @include phone-portrait {
     margin-top: 15px;
   }

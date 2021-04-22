@@ -2,14 +2,13 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { PluggableItemsByPlugCategoryHash } from 'app/loadout-builder/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
@@ -81,7 +80,7 @@ export default function LoadoutDrawerContents(
     removeModByHash,
   }: {
     loadout: Loadout;
-    savedMods: PluggableItemsByPlugCategoryHash;
+    savedMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
     defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
@@ -136,7 +135,7 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
-          <a onClick={onOpenModPicker} className="dim-button loadout-add">
+          <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
           </a>
         </div>

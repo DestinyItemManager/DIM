@@ -122,7 +122,7 @@ function Progress({
     ? getStore(stores, selectedStoreId)!
     : getCurrentStore(stores)!;
 
-  if (!defs || !buckets) {
+  if (!buckets) {
     return null;
   }
 

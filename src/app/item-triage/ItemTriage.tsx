@@ -9,11 +9,11 @@ import SpecialtyModSlotIcon, {
   getArmorSlotSpecificModSocketDisplayName,
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/dim-ui/WeaponArchetype';
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';

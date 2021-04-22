@@ -53,17 +53,6 @@ export type LockedMap = Readonly<{
   [bucketHash: number]: readonly LockedItemType[] | undefined;
 }>;
 
-export interface LockedMod {
-  /** Essentially an identifier for each mod, as a single mod definition can be selected multiple times.*/
-  key: number;
-  modDef: PluggableInventoryItemDefinition;
-}
-
-/** An object of plugCategoryHashes to arrays of locked mods with said plugCategoryHash. */
-export type LockedMods = {
-  [plugCategoryHash: number]: LockedMod[] | undefined;
-};
-
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
@@ -112,6 +101,7 @@ export const raidPlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
   PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
   PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
+  PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
 ];
 
 export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];

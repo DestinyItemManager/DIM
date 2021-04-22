@@ -123,6 +123,14 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHashes: [2493100093],
     emptyModSocketHash: 2493100093,
   },
+  {
+    slotTag: 'nightmare',
+    compatibleModTags: ['nightmare'],
+    socketTypeHashes: [2701840022],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
+    emptyModSocketHashes: [1180997867],
+    emptyModSocketHash: 1180997867,
+  },
 ];
 
 export default modSocketMetadata;

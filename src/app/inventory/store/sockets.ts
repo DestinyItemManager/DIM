@@ -12,7 +12,11 @@ import {
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   DimPlug,
@@ -90,17 +94,11 @@ export function buildInstancedSockets(
     [key: number]: DestinyObjectiveProgress[];
   }
 ): DimSockets | null {
-  if (
-    !item.itemInstanceId ||
-    !itemDef.sockets ||
-    !itemDef.sockets.socketEntries.length ||
-    !sockets ||
-    !sockets.length
-  ) {
+  if (!item.itemInstanceId || !itemDef.sockets?.socketEntries.length || !sockets?.length) {
     return null;
   }
 
-  const realSockets: DimSocket[] = [];
+  const createdSockets: DimSocket[] = [];
   for (let i = 0; i < sockets.length; i++) {
     const built = buildSocket(
       defs,
@@ -114,7 +112,7 @@ export function buildInstancedSockets(
 
     // There are a bunch of garbage sockets that we ignore
     if (built) {
-      realSockets.push(built);
+      createdSockets.push(built);
     }
   }
 
@@ -128,8 +126,8 @@ export function buildInstancedSockets(
   }
 
   return {
-    allSockets: realSockets,
-    categories: categories.sort(compareBy((c) => c.category?.index)),
+    allSockets: createdSockets, // Flat list of sockets
+    categories: categories.sort(compareBy((c) => c.category?.index)), // Sockets organized by category
   };
 }
 
@@ -141,21 +139,21 @@ function buildDefinedSockets(
   itemDef: DestinyInventoryItemDefinition
 ): DimSockets | null {
   // if we made it here, item has sockets
-  const sockets = itemDef.sockets!.socketEntries;
-  if (!sockets || !sockets.length) {
+  const socketDefEntries = itemDef.sockets!.socketEntries;
+  if (!socketDefEntries || !socketDefEntries.length) {
     return null;
   }
 
-  const realSockets: DimSocket[] = [];
+  const createdSockets: DimSocket[] = [];
   // TODO: check out intrinsicsockets as well
 
-  for (let i = 0; i < sockets.length; i++) {
-    const socket = sockets[i];
+  for (let i = 0; i < socketDefEntries.length; i++) {
+    const socket = socketDefEntries[i];
     const built = buildDefinedSocket(defs, socket, i, itemDef);
 
     // There are a bunch of garbage sockets that we ignore
     if (built) {
-      realSockets.push();
+      createdSockets.push();
     }
   }
 
@@ -169,8 +167,8 @@ function buildDefinedSockets(
   }
 
   return {
-    allSockets: realSockets,
-    categories: categories.sort(compareBy((c) => c.category.index)),
+    allSockets: createdSockets, // Flat list of sockets
+    categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
   };
 }
 
@@ -239,6 +237,15 @@ function buildDefinedSocket(
         }
       }
     }
+    if (
+      socketDef.singleInitialItemHash &&
+      !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
+    ) {
+      const built = buildDefinedPlug(defs, { plugItemHash: socketDef.singleInitialItemHash });
+      if (built) {
+        reusablePlugs.unshift(built);
+      }
+    }
   }
 
   const plugOptions: DimPlug[] = [];
@@ -253,7 +260,13 @@ function buildDefinedSocket(
 
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
   let plugged: DimPlug | null = null;
-  if (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits && plugOptions.length) {
+  if (
+    plugOptions.length === 1 &&
+    // this covers weapon intrinsices
+    (socketCategoryDef.hash === SocketCategoryHashes.IntrinsicTraits ||
+      // this covers exotic armor perks and stats
+      plugOptions[0].plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
+  ) {
     plugged = plugOptions[0];
   }
 
@@ -384,13 +397,7 @@ function buildSocket(
   },
   forThisItem?: DestinyInventoryItemDefinition
 ): DimSocket | undefined {
-  if (
-    !socketDef ||
-    (!socket.isVisible &&
-      // Keep the kill-tracker socket around even though it may not be visible
-      // TODO: does this really happen? I think all these sockets are visible
-      !(socket.plugHash && plugObjectivesData?.[socket.plugHash]?.length))
-  ) {
+  if (!socketDef?.socketTypeHash) {
     return undefined;
   }
 

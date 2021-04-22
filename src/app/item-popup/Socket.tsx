@@ -26,7 +26,9 @@ export default function Socket({
   adjustedPlug?: DimPlug;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
-
+  if (!socket.plugOptions.length) {
+    return null;
+  }
   return (
     <div
       className={clsx('item-socket', {

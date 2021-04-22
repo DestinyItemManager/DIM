@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Found during Guardian Games 2021.",
       "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
       "Mission": "Complete the \"{{title}}\" mission.",
       "Quest": "Complete the \"{{title}}\" quest.",
@@ -478,6 +479,7 @@
     "AppliedError": "Nie można było przenieść żadnego przedmiotu z twojego uzbrojenia.",
     "AppliedWarn": "Twoje uzbrojenie zostało częściowo przeniesione, ale {{failed}} z {{total}} przedmiotów miało błędy.",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
+    "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Zakładając, że bronie mają maksymalny poziom mocy",
     "Before": "Przed '{{name}}'",
     "ChooseItem": "Dodaj {{name}}",

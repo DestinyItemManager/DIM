@@ -302,6 +302,13 @@ select {
   font-family: 'Open Sans', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
+
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 6px 32px 6px 16px;
+    height: 35px;
+  }
+
   &:hover,
   &:active {
     background-color: $orange;
@@ -337,11 +344,18 @@ select {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   transition: all 150ms ease-out;
+  box-sizing: border-box;
+
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
   &:hover,
   &:active,
   &.selected {
-    background-color: $orange;
-    color: black;
+    background-color: $orange !important;
+    color: black !important;
     img {
       filter: invert(1) drop-shadow(0 0 1px black);
     }

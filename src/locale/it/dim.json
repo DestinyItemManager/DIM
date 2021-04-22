@@ -79,6 +79,7 @@
   },
   "Catalyst": {
     "Source": {
+      "HeirApparent": "Trovato durante i Giochi dei Guardiani 2021.",
       "LeviathansBreath": "Trovato sconfiggendo potenti nemici con quest'arma.",
       "Mission": "Completa la missione \"{{title}}\".",
       "Quest": "Completa l'impresa \"{{title}}\".",
@@ -478,6 +479,7 @@
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
+    "ArmorMods": "Modifiche Armatura",
     "AssumeMaxWeapons": "Presupponendo armi al massimo livello di Potere",
     "Before": "Prima '{{name}}'",
     "ChooseItem": "Aggiungi {{name}}",

@@ -5,7 +5,6 @@ import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   armorBuckets,
   armorStats,
-  ARMOR_STAT_CAP,
   CUSTOM_TOTAL_STAT_HASH,
   TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
@@ -17,7 +16,6 @@ import {
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,
   DestinyItemStatsComponent,
-  DestinySocketCategoryStyle,
   DestinyStatAggregationType,
   DestinyStatCategory,
   DestinyStatDefinition,
@@ -27,8 +25,8 @@ import {
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
-import { getSocketsWithPlugCategoryHash, getSocketsWithStyle } from '../../utils/socket-utils';
-import { DimItem, DimPlug, DimStat } from '../item-types';
+import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
+import { DimItem, DimSocket, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -38,11 +36,14 @@ import { DimItem, DimPlug, DimStat } from '../item-types';
  * the process looks like this:
  *
  * buildStats(stats){
- *  stats = buildInvestmentStats(stats)                       // fancy gun math based on fixed info
- *  if (sockets) stats = enhanceStatsWithPlugs(stats){}       // enhance gun math with sockets
- *  if (no stats or is armor) stats = buildLiveStats(stats){} // just rely on what api tells us
- *  if (is armor) stats = buildBaseStats(stats){}             // determine what mods contributed
- *  if (is armor) stats.push(total)
+ *   stats = buildInvestmentStats(stats)                // based on information from an item's inherent stats
+ *   applyPlugsToStats(stats)                           // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
+ *   if (no stats yet) stats = buildLiveStats(stats)  // fall back to what the api tells us the stats are
+ *   if (is armor) {
+ *     if (any armor stat is missing) fill in missing stats with 0s
+ *     synthesize totalStat and add it
+ *     if (not classitem) synthesize customStat and add it
+ *   }
  * }
  */
 
@@ -96,12 +97,16 @@ const hiddenStatsAllowList = [
   StatHashes.RecoilDirection,
 ];
 
+/** a dictionary to look up StatDisplay info by statHash */
+type StatDisplayLookup = { [statHash: number]: DestinyStatDisplayDefinition | undefined };
+
+/** a dictionary to look up an item's DimStats by statHash */
+type StatLookup = { [statHash: number]: DimStat | undefined };
+
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: DimItem,
-  stats: {
-    [key: string]: DestinyItemStatsComponent;
-  } | null,
+  liveStats: DestinyItemStatsComponent | undefined,
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ) {
@@ -113,120 +118,73 @@ export function buildStats(
     return null;
   }
 
-  const statDisplays = _.keyBy(statGroup.scaledStats, (s) => s.statHash);
+  // we re-use this dictionary a bunch of times in subsequent
+  // functions to speed up display info lookups
+  const statDisplaysByStatHash: StatDisplayLookup = _.keyBy(
+    statGroup.scaledStats,
+    (s) => s.statHash
+  );
 
   // We only use the raw "investment" stats to calculate all item stats.
-  let investmentStats = buildInvestmentStats(itemDef, defs, statGroup, statDisplays) || [];
+  let investmentStats =
+    buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
   // Include the contributions from perks and mods
-  enhanceStatsWithPlugs(itemDef, investmentStats, createdItem, defs, statGroup, statDisplays);
+  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
 
-  // For Armor, we always replace the previous stats with live stats, even if they were already created
-  if (
-    (!investmentStats.length || createdItem.bucket.inArmor) &&
-    stats?.[createdItem.id] &&
-    createdItem.type !== 'ClassItem'
-  ) {
-    // TODO: build a version of enhanceStatsWithPlugs that only calculates plug values
+  // if we didn't get stats from sockets and item def, fall back to the item's stats reported by the API
+  if (!investmentStats.length && liveStats && createdItem.type !== 'ClassItem') {
+    // TODO: build a version of applyPlugsToStats that only calculates plug values
     investmentStats = buildLiveStats(
-      stats[createdItem.id],
+      liveStats,
       itemDef,
       createdItem,
       defs,
       statGroup,
-      statDisplays
+      statDisplaysByStatHash
     );
-
-    if (createdItem.bucket.inArmor) {
-      // Add the "Total" stat for armor
-      const tStat = totalStat(investmentStats);
-      investmentStats.push(tStat);
-
-      const cStat = customStat(investmentStats, createdItem.classType);
-      if (cStat) {
-        investmentStats.push(cStat);
-      }
-    }
   }
 
-  // Always build class item stats directly from the mods as we know the base stat values.
-  if (createdItem.type === 'ClassItem' && createdItem.energy && createdItem.sockets) {
-    investmentStats = buildClassItemStatsFromMods(createdItem, defs, statGroup, statDisplays);
+  if (createdItem.bucket.inArmor) {
+    // one last check for missing stats on armor
+    const existingStatHashes = investmentStats.map((s) => s.statHash);
+    for (const armorStat of armorStats) {
+      if (!existingStatHashes.includes(armorStat)) {
+        investmentStats.push(
+          buildStat(
+            {
+              statTypeHash: armorStat,
+              value: 0,
+              isConditionallyActive: false,
+            },
+            statGroup,
+            defs.Stat.get(armorStat),
+            statDisplaysByStatHash
+          )
+        );
+      }
+    }
+
+    // synthesize the "Total" stat for armor
+    const tStat = totalStat(investmentStats);
+    investmentStats.push(tStat);
+    const cStat =
+      createdItem.type !== 'ClassItem' && customStat(investmentStats, createdItem.classType);
+    if (cStat) {
+      investmentStats.push(cStat);
+    }
   }
 
   return investmentStats.length ? investmentStats.sort(compareBy((s) => s.sort)) : null;
 }
 
 /**
- * This builds a class items stat values from its masterwork and mod sockets.
+ * determine if bungie, or our hardcodings, want this stat to be included with the item
  */
-function buildClassItemStatsFromMods(
-  item: DimItem,
-  defs: D2ManifestDefinitions,
-  statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): DimStat[] {
-  const statTracker: { stat: number; value: number } | {} = {};
-  const investmentStats: DimStat[] = [];
-  const modSockets = item.sockets
-    ? getSocketsWithPlugCategoryHash(item.sockets, ItemCategoryHashes.ArmorMods)
-    : [];
-  const masterworkSockets = item.sockets
-    ? getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter)
-    : [];
-
-  for (const statHash of armorStats) {
-    statTracker[statHash] = 0;
-  }
-
-  // there should only be one masterwork socket
-  if (masterworkSockets.length) {
-    modSockets.push(masterworkSockets[0]);
-  }
-
-  for (const socket of modSockets) {
-    if (socket.plugged?.enabled && socket.plugged.stats) {
-      for (const statHash of armorStats) {
-        const investmentStat = socket.plugged.plugDef.investmentStats.find(
-          (s) => s.statTypeHash === statHash
-        );
-        if (
-          socket.plugged.stats[statHash] &&
-          investmentStat &&
-          isPlugStatActive(
-            item,
-            socket.plugged.plugDef.hash,
-            investmentStat?.statTypeHash,
-            investmentStat?.isConditionallyActive
-          )
-        ) {
-          statTracker[statHash] += socket.plugged.stats[statHash];
-        }
-      }
-    }
-  }
-
-  for (const statHash of armorStats) {
-    const hashAndValue = {
-      statTypeHash: statHash,
-      value: Math.max(0, statTracker[statHash]),
-      isConditionallyActive: false,
-    };
-    const builtStat = buildStat(hashAndValue, statGroup, defs.Stat.get(statHash), statDisplays);
-    builtStat.maximumValue = ARMOR_STAT_CAP;
-    builtStat.base = 0;
-    investmentStats.push(builtStat);
-  }
-
-  investmentStats.push(totalStat(investmentStats));
-
-  return investmentStats;
-}
-
 function shouldShowStat(
   itemDef: DestinyInventoryItemDefinition,
   statHash: number,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   // Bows have a charge time stat that nobody asked for
   if (
@@ -239,11 +197,12 @@ function shouldShowStat(
   // Swords shouldn't show any hidden stats
   const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(D1ItemCategoryHashes.sword);
 
-  return (
+  return Boolean(
     // Must be on the AllowList
     statAllowList.includes(statHash) &&
-    // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplays[statHash] || (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
+      // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
+      (statDisplaysByStatHash[statHash] ||
+        (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
   );
 }
 
@@ -257,14 +216,14 @@ function buildInvestmentStats(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
-): DimStat[] | null {
+  statDisplaysByStatHash: StatDisplayLookup
+): DimStat[] {
   const itemStats = itemDef.investmentStats || [];
 
   const ret: DimStat[] = [];
   for (const itemStat of itemStats) {
     const statHash = itemStat.statTypeHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
       continue;
     }
 
@@ -273,26 +232,31 @@ function buildInvestmentStats(
       continue;
     }
 
-    ret.push(buildStat(itemStat, statGroup, def, statDisplays));
+    ret.push(buildStat(itemStat, statGroup, def, statDisplaysByStatHash));
   }
 
   return ret;
 }
 
+/**
+ * builds and returns a single DimStat, using InvestmentStat information,
+ * stat def, statgroup def, and the item's StatDisplayDefinition,
+ * which determines which stats are displayed and how they are interpolated
+ */
 function buildStat(
   itemStat:
     | DestinyItemInvestmentStatDefinition
     | { statTypeHash: number; value: number; isConditionallyActive: boolean },
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ): DimStat {
   const statHash = itemStat.statTypeHash;
   let value = itemStat.value || 0;
   let maximumValue = statGroup.maximumValue;
   let bar = !statsNoBar.includes(statHash);
   let smallerIsBetter = false;
-  const statDisplay = statDisplays[statHash];
+  const statDisplay = statDisplaysByStatHash[statHash];
   if (statDisplay) {
     const firstInterp = statDisplay.displayInterpolation[0];
     const lastInterp =
@@ -322,65 +286,97 @@ function buildStat(
   };
 }
 
-function enhanceStatsWithPlugs(
+/**
+ * mutates an item's stats according to the item's plugged sockets
+ * (accounting for mods, masterworks, etc)
+ *
+ * also adds the projected stat changes to non-selected DimPlugs
+ */
+function applyPlugsToStats(
   itemDef: DestinyInventoryItemDefinition,
-  stats: DimStat[], // mutated
+  existingStats: DimStat[], // mutated
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   if (!createdItem.sockets?.allSockets.length) {
     return;
   }
 
-  const modifiedStats = new Set<number>();
-  const statsByHash = _.keyBy(stats, (s) => s.statHash);
+  const existingStatsByHash: { [statHash: number]: DimStat | undefined } = _.keyBy(
+    existingStats,
+    (s) => s.statHash
+  );
 
-  // Add the chosen plugs' investment stats to the item's base investment stats
-  for (const socket of createdItem.sockets.allSockets) {
-    if (socket.plugged?.enabled && socket.plugged.plugDef.investmentStats) {
-      for (const perkStat of socket.plugged.plugDef.investmentStats) {
-        const statHash = perkStat.statTypeHash;
-        const itemStat = statsByHash[statHash];
-        const value = perkStat.value;
+  // intrinsic plugs aren't "enhancements", they define the basic stats of armor
+  // we do those first and include them in the stat's base value
+  const [intrinsicSockets, otherSockets] = _.partition(
+    createdItem.sockets.allSockets,
+    socketContainsIntrinsicPlug
+  );
+
+  const socketLists = [
+    [true, intrinsicSockets],
+    [false, otherSockets],
+  ] as const;
+
+  // loop through sockets looking for plugs that modify an item's investmentStats
+  for (const [affectsBase, socketList] of socketLists) {
+    for (const socket of socketList) {
+      // skip this socket+plug if it's disabled or doesn't affect stats
+      if (!socket.plugged?.enabled || !socket.plugged.plugDef.investmentStats) {
+        continue;
+      }
+
+      for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
+        const affectedStatHash = pluggedInvestmentStat.statTypeHash;
+
+        if (!shouldShowStat(itemDef, affectedStatHash, statDisplaysByStatHash)) {
+          continue;
+        }
+
+        let existingStat = existingStatsByHash[affectedStatHash];
+        // in case this stat should appear but hasn't been built yet, create and attach it first
+        if (!existingStat) {
+          const statDef = defs.Stat.get(affectedStatHash);
+          const newStat = buildStat(
+            { ...pluggedInvestmentStat, value: 0 },
+            statGroup,
+            statDef,
+            statDisplaysByStatHash
+          );
+          // add the newly generated stat to our temporary dict, and to the item's stats
+          existingStatsByHash[affectedStatHash] = newStat;
+          existingStats.push(newStat);
+          existingStat = newStat;
+        }
+
+        // check special conditionals
         if (
           !isPlugStatActive(
             createdItem,
             socket.plugged.plugDef.hash,
-            statHash,
-            perkStat.isConditionallyActive
+            affectedStatHash,
+            pluggedInvestmentStat.isConditionallyActive
           )
         ) {
           continue;
         }
 
-        if (itemStat) {
-          itemStat.investmentValue += value;
-        } else if (shouldShowStat(itemDef, statHash, statDisplays)) {
-          // This stat didn't exist before we modified it, so add it here.
-          const stat = socket.plugged.plugDef.investmentStats.find(
-            (s) => s.statTypeHash === statHash
-          );
+        // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
+        existingStat.investmentValue += pluggedInvestmentStat.value;
 
-          if (stat?.value) {
-            const statDef = defs.Stat.get(statHash);
-            statsByHash[statHash] = buildStat(stat, statGroup, statDef, statDisplays);
-            stats.push(statsByHash[statHash]);
-          }
+        // finally, re-interpolate the stat value
+        const statDisplay = statDisplaysByStatHash[affectedStatHash];
+        const newStatValue = statDisplay
+          ? interpolateStatValue(existingStat.investmentValue, statDisplay)
+          : Math.min(existingStat.investmentValue, existingStat.maximumValue);
+        if (affectsBase) {
+          existingStat.base = newStatValue;
         }
-        modifiedStats.add(statHash);
+        existingStat.value = newStatValue;
       }
-    }
-  }
-
-  // Now calculate the actual, interpolated value of all stats after they've been modified
-  for (const stat of stats) {
-    if (modifiedStats.has(stat.statHash)) {
-      const statDisplay = statDisplays[stat.statHash];
-      stat.value = statDisplay
-        ? interpolateStatValue(stat.investmentValue, statDisplays[stat.statHash])
-        : Math.min(stat.investmentValue, stat.maximumValue);
     }
   }
 
@@ -389,51 +385,115 @@ function enhanceStatsWithPlugs(
   // stats in first.
   const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
   for (const socket of sortedSockets) {
-    for (const plug of socket.plugOptions) {
-      if (plug.plugDef.investmentStats?.length) {
-        plug.stats = buildPlugStats(plug, statsByHash, statDisplays);
-      }
-    }
+    attachPlugStats(socket, existingStatsByHash, statDisplaysByStatHash);
   }
 }
 
 /**
- * For each stat this plug modified, calculate how much it modifies that stat.
- *
- * Returns a map from stat hash to stat value.
+ * Generates the stat modification map for each DimPlug in a DimSocket
+ * and attaches it to the DimPlug's stats property
  */
-function buildPlugStats(
-  plug: DimPlug,
-  statsByHash: { [statHash: number]: DimStat },
-  statDisplays: { [statHash: number]: DestinyStatDisplayDefinition }
+function attachPlugStats(
+  socket: DimSocket,
+  statsByHash: StatLookup,
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
-  const stats: {
-    [statHash: number]: number;
-  } = {};
+  // The plug that is currently inserted into the socket
+  const activePlug = socket.plugged;
 
-  for (const perkStat of plug.plugDef.investmentStats) {
-    let value = perkStat.value;
-    const itemStat = statsByHash[perkStat.statTypeHash];
-    const statDisplay = statDisplays[perkStat.statTypeHash];
-    if (itemStat && statDisplay) {
-      // This is a scaled stat, so we need to scale it in context of the original investment stat.
-      // Figure out what the interpolated stat value would be without this perk's contribution, and
-      // then take the difference between the total value and that to find the contribution.
-      const valueWithoutPerk = interpolateStatValue(itemStat.investmentValue - value, statDisplay);
-      value = itemStat.value - valueWithoutPerk;
-    } else if (itemStat) {
-      const valueWithoutPerk = Math.min(itemStat.investmentValue - value, itemStat.maximumValue);
-      value = itemStat.value - valueWithoutPerk;
+  // This holds the item's 'base' investment stat values without any plug additions.
+  const baseItemInvestmentStats: { [statHash: number]: number } = {};
+
+  // The active plug is already contributing to the item's stats in statsByHash. Thus we treat it separately
+  // here for two reasons,
+  // 1. We need to calculate the 'base' investment stat value (without this plug's contribution) for the
+  // item's stats so that we can calculate correct values for the inactive plugs.
+  // 2. By utilizing the fact that the item's stats already include this, we can do one less interpolation
+  // per stat to figure out the active plug's stat contribution.
+  if (activePlug) {
+    const activePlugStats: {
+      [statHash: number]: number;
+    } = {};
+
+    for (const plugInvestmentStat of activePlug.plugDef.investmentStats) {
+      let plugStatValue = plugInvestmentStat.value;
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
+
+      if (itemStat) {
+        const baseInvestmentStat = itemStat.investmentValue - plugStatValue;
+        baseItemInvestmentStats[plugInvestmentStat.statTypeHash] = baseInvestmentStat;
+
+        // Figure out what the interpolated stat value would be without the active perk's contribution
+        // and then take the difference between that and the original stat value to find the perk's contribution.
+        if (statDisplay) {
+          // This is an interpolated stat type, so we need to compare interpolated values with and without this perk
+          const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
+          plugStatValue = itemStat.value - valueWithoutPerk;
+        } else {
+          const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
+          plugStatValue = itemStat.value - valueWithoutPerk;
+        }
+      }
+
+      activePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
-    stats[perkStat.statTypeHash] = value;
+
+    activePlug.stats = activePlugStats;
   }
 
-  return stats;
+  for (const plug of socket.plugOptions) {
+    // We already did this plug above and activePlug should be a reference to plug.
+    if (plug === activePlug) {
+      continue;
+    }
+
+    const inactivePlugStats: {
+      [statHash: number]: number;
+    } = {};
+
+    for (const plugInvestmentStat of plug.plugDef.investmentStats) {
+      let plugStatValue = plugInvestmentStat.value;
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
+
+      if (itemStat) {
+        // User our calculated baseItemInvestment stat, which is the items investment stat value minus
+        // the active plugs investment stat value
+        const baseInvestmentStat =
+          baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
+
+        // This time we use the baseItemInvestment value we computed earlier to calculate the interpolated stat value with
+        // and without the perk's value, using the difference to get its individual contribution to the stat.
+        // These calculations are equivalent to the ones used for the active plug's stats.
+        if (statDisplay) {
+          // This is an interpolated stat type, so we need to compare interpolated values with and without this perk
+          const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
+          const valueWithPerk = interpolateStatValue(
+            baseInvestmentStat + plugStatValue,
+            statDisplay
+          );
+
+          plugStatValue = valueWithPerk - valueWithoutPerk;
+        } else {
+          const baseInvestmentStat =
+            baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
+          const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
+          const valueWithPerk = Math.min(baseInvestmentStat + plugStatValue, itemStat.maximumValue);
+
+          plugStatValue = valueWithPerk - valueWithoutPerk;
+        }
+      }
+
+      inactivePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
+    }
+
+    plug.stats = inactivePlugStats;
+  }
 }
 
 /**
- * Build the stats that come "live" from the API's data on real instances. This is required
- * for Armor 2.0 since it has random stat rolls.
+ * Build the stats that come "live" from the API's data on real instances
  */
 function buildLiveStats(
   stats: DestinyItemStatsComponent,
@@ -441,7 +501,7 @@ function buildLiveStats(
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplays: { [key: number]: DestinyStatDisplayDefinition }
+  statDisplaysByStatHash: StatDisplayLookup
 ) {
   const ret: DimStat[] = [];
 
@@ -449,7 +509,6 @@ function buildLiveStats(
   // the value and base. On armour, the live stat includes all mod stats whether they are active or not.
   const inactivePlugStatValues: { [statHash: number]: number } = {};
   const activePlugStatValues: { [statHash: number]: number } = {};
-  let negativeModStatFound = false;
 
   if (createdItem.sockets) {
     for (const { plugged } of createdItem.sockets.allSockets) {
@@ -469,7 +528,6 @@ function buildLiveStats(
           } else {
             activePlugStatValues[statTypeHash] =
               (activePlugStatValues[statTypeHash] ?? 0) + plugStat;
-            negativeModStatFound ||= plugStat < 0;
           }
         }
       }
@@ -480,7 +538,7 @@ function buildLiveStats(
     const itemStat = stats.stats[itemStatKey];
 
     const statHash = itemStat.statHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplays)) {
+    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
       continue;
     }
 
@@ -493,7 +551,7 @@ function buildLiveStats(
     let bar = !statsNoBar.includes(statHash);
     let smallerIsBetter = false;
 
-    const statDisplay = statDisplays[statHash];
+    const statDisplay = statDisplaysByStatHash[statHash];
 
     if (statDisplay) {
       const firstInterp = statDisplay.displayInterpolation[0];
@@ -516,11 +574,6 @@ function buildLiveStats(
         createdItem.bucket.hash === armorBuckets.classitem
           ? 0
           : value - (activePlugStatValues[statHash] ?? 0),
-      // base is never wrong for class items as it's 0
-      statMayBeWrong:
-        createdItem.bucket.hash !== armorBuckets.classitem &&
-        negativeModStatFound &&
-        itemStat.value === 0,
       maximumValue,
       bar,
       smallerIsBetter,
@@ -537,12 +590,10 @@ function totalStat(stats: DimStat[]): DimStat {
   // TODO: search terms?
   let total = 0;
   let baseTotal = 0;
-  let statMayBeWrong = false;
 
   for (const stat of stats) {
     total += stat.value;
     baseTotal += stat.base;
-    statMayBeWrong ||= Boolean(stat.statMayBeWrong);
   }
 
   return {
@@ -554,8 +605,7 @@ function totalStat(stats: DimStat[]): DimStat {
     sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
-    statMayBeWrong,
-    maximumValue: 100,
+    maximumValue: 1000,
     bar: false,
     smallerIsBetter: false,
     additive: false,
@@ -574,12 +624,10 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
 
   // Custom stat is always base stat
   let total = 0;
-  let statMayBeWrong = false;
 
   for (const stat of stats) {
     if (customStatDef.includes(stat.statHash)) {
       total += stat.base;
-      statMayBeWrong ||= Boolean(stat.statMayBeWrong);
     }
   }
 
@@ -593,7 +641,6 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
     sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: total,
-    statMayBeWrong,
     maximumValue: 100,
     bar: false,
     smallerIsBetter: false,
@@ -607,15 +654,19 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
  * a piecewise linear function mapping input stat values to output stat values.
  */
 export function interpolateStatValue(value: number, statDisplay: DestinyStatDisplayDefinition) {
+  // right now, we are not doing stat interpolation for armor.
+  // they're 1:1 in effects, and we are ignoring the clamping
+  if (armorStats.includes(statDisplay.statHash)) {
+    return value;
+  }
   const interp = statDisplay.displayInterpolation;
-
   // Clamp the value to prevent overfilling
   value = Math.min(value, statDisplay.maximumValue);
 
   let endIndex = interp.findIndex((p) => p.value > value);
 
   // value < 0 is for mods with negative stats
-  if (endIndex < 0 || (value < 0 && armorStats.includes(statDisplay.statHash))) {
+  if (endIndex < 0) {
     endIndex = interp.length - 1;
   }
   const startIndex = Math.max(0, endIndex - 1);

@@ -227,22 +227,6 @@ function computeNewItems(oldStores: DimStore[], oldNewItems: Set<string>, newSto
     }
   }
 
-  let equal = true;
-  for (const itemId of newItems) {
-    if (!oldNewItems.has(itemId)) {
-      equal = false;
-      break;
-    }
-  }
-  if (equal) {
-    for (const itemId of oldNewItems) {
-      if (!newItems.has(itemId)) {
-        equal = false;
-        break;
-      }
-    }
-  }
-
   return setsEqual(newItems, oldNewItems) ? oldNewItems : newItems;
 }
 
