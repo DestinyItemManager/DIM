@@ -229,7 +229,7 @@ export function makeItem(
     );
   }
 
-  if (!itemDef || !itemDef.displayProperties.name) {
+  if (!itemDef || !(itemDef.displayProperties.name || itemDef.setData?.questLineName)) {
     return null;
   }
 
