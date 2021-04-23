@@ -55,6 +55,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;
     position: relative;
+    max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
   }
 
   .sheet-contents {
