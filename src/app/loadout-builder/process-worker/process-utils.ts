@@ -141,13 +141,13 @@ export function canTakeSlotIndependantMods(
   const [arcGeneralMods, solarGeneralMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
   );
-  const [arcRaidMods, solarRaidMods, voidRaidlMods] = getEnergyCounts(raidModPermutations[0]);
+  const [arcRaidMods, solarRaidMods, voidRaidMods] = getEnergyCounts(raidModPermutations[0]);
 
   // A quick check to see if we have enough of each energy type for the mods
   if (
     voidItems < voidGeneralMods ||
     voidItems < voidSeasonalMods ||
-    voidItems < voidRaidlMods ||
+    voidItems < voidRaidMods ||
     solarItems < solarGeneralMods ||
     solarItems < solarSeasonalMods ||
     solarItems < solarRaidMods ||
@@ -159,7 +159,6 @@ export function canTakeSlotIndependantMods(
   }
 
   otherModLoop: for (const otherP of otherModPermutations) {
-    let othersFit = true;
     otherItemLoop: for (let i = 0; i < sortedItems.length; i++) {
       const otherMod = otherP[i];
 
@@ -169,27 +168,24 @@ export function canTakeSlotIndependantMods(
       }
 
       const item = sortedItems[i];
-      const tag = otherMod.tag;
+      const tag = otherMod.tag!;
       const otherEnergy = otherMod.energy || defaultModEnergy;
 
-      const noOtherMod = !otherP[i];
       const otherEnergyIsValid =
         item.energy &&
-        item.energy.val + (otherEnergy.val || 0) <= MAX_ARMOR_ENERGY_CAPACITY &&
+        item.energy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
         (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any);
 
-      othersFit &&= Boolean(
-        noOtherMod || (otherEnergyIsValid && tag && item.compatibleModSeasons?.includes(tag))
-      );
-
       // The other mods wont fit in the item set so move on to the next set of mods
-      if (!othersFit) {
+      if (!(
+        otherEnergyIsValid &&
+        item.compatibleModSeasons?.includes(tag)
+      )) {
         continue otherModLoop;
       }
     }
 
     generalModLoop: for (const generalP of generalModPermutations) {
-      let generalsFit = true;
       generalItemLoop: for (let i = 0; i < sortedItems.length; i++) {
         const generalMod = generalP[i];
 
@@ -202,22 +198,18 @@ export function canTakeSlotIndependantMods(
         const generalEnergy = generalMod.energy || defaultModEnergy;
         const otherEnergy = otherP[i]?.energy || defaultModEnergy;
 
-        const noGeneralMod = !generalP[i];
         const generalEnergyIsValid =
           item.energy &&
           item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
           (item.energy.type === generalEnergy.type || generalEnergy.type === DestinyEnergyType.Any);
 
-        generalsFit &&= Boolean(noGeneralMod || generalEnergyIsValid);
-
         // The general mods wont fit in the item set so move on to the next set of mods
-        if (!generalsFit) {
+        if (!generalEnergyIsValid) {
           continue generalModLoop;
         }
       }
 
       raidModLoop: for (const raidP of raidModPermutations) {
-        let raidsFit = true;
         raidItemLoop: for (let i = 0; i < sortedItems.length; i++) {
           const raidMod = raidP[i];
 
@@ -227,7 +219,7 @@ export function canTakeSlotIndependantMods(
           }
 
           const item = sortedItems[i];
-          const raidTag = raidMod.tag;
+          const raidTag = raidMod.tag!;
           const generalEnergy = generalP[i]?.energy || defaultModEnergy;
           const otherEnergy = otherP[i]?.energy || defaultModEnergy;
           const raidEnergy = raidMod.energy || defaultModEnergy;
@@ -235,7 +227,7 @@ export function canTakeSlotIndependantMods(
           const raidEnergyIsValid =
             item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
-              MAX_ARMOR_ENERGY_CAPACITY &&
+            MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any);
 
           // Due to raid mods overlapping with legacy mods for last wish we need to ensure
@@ -243,15 +235,12 @@ export function canTakeSlotIndependantMods(
           // for this socket.
           const notLegacySocketOrLegacyMod = !item.hasLegacyModSocket || !otherP[i];
 
-          raidsFit &&= Boolean(
-            raidEnergyIsValid &&
-              notLegacySocketOrLegacyMod &&
-              raidTag &&
-              item.compatibleModSeasons?.includes(raidTag)
-          );
-
           // The raid mods wont fit in the item set so move on to the next set of mods
-          if (!raidsFit) {
+          if (!(
+            raidEnergyIsValid &&
+            notLegacySocketOrLegacyMod &&
+            item.compatibleModSeasons?.includes(raidTag)
+          )) {
             continue raidModLoop;
           }
         }
@@ -273,9 +262,9 @@ export function canTakeSlotIndependantMods(
               assignments[sortedItems[i].id].push(raidMod.hash);
             }
           }
-
-          return true;
         }
+
+        return true;
       }
     }
   }
