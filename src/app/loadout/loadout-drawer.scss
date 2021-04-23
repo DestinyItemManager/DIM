@@ -1,12 +1,10 @@
 @import '../variables.scss';
 
 #loadout-drawer {
-  max-height: calc(50vh - 75px);
+  max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
   @include phone-portrait {
     @include max-sheet-height;
   }
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
   .dim-stats {
     display: block;
     width: 300px;

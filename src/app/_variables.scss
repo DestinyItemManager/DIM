@@ -43,9 +43,6 @@ $equipped-item-total-outset: #{2 * ($equipped-item-border + $equipped-item-paddi
 $badge-font-size: '(var(--item-size) / 5)';
 $badge-height: '(#{$badge-font-size} + 4px)';
 
-// The height of the black header bar
-$header-height: 44px;
-
 // The height of our "issue banner" for charities/causes
 $issue-banner-height: 101px;
 
@@ -60,21 +57,12 @@ $issue-banner-height: 101px;
 
 // Position something directly below the header
 @mixin below-header {
-  top: $header-height;
-  top: calc(#{$header-height} + constant(safe-area-inset-top));
-  top: calc(#{$header-height} + env(safe-area-inset-top));
-  .search-open & {
-    top: 2 * $header-height;
-    top: calc(#{2 * $header-height} + constant(safe-area-inset-top));
-    top: calc(#{2 * $header-height} + env(safe-area-inset-top));
-  }
+  top: var(--header-height);
 }
 
 // The tallest a "full screen" sheet should be
 @mixin max-sheet-height {
-  max-height: calc(100% - #{$header-height} - 92px);
-  max-height: calc(100% - #{$header-height} - 92px - constant(safe-area-inset-top));
-  max-height: calc(100% - #{$header-height} - 92px - env(safe-area-inset-top));
+  max-height: calc(var(--viewport-height) - var(--header-height) - 92px);
 }
 
 // A header for items or perks that matches the in-game display

@@ -17,7 +17,10 @@ export function scrollToPosition(options: ScrollToOptions) {
  */
 export function scrollToElement(elem: Element | null) {
   if (elem) {
-    const headerHeight = document.getElementById('header')!.clientHeight;
+    const headerHeight = parseInt(
+      document.querySelector('html')!.style.getPropertyValue('--header-height'),
+      10
+    );
     const rect = elem.getBoundingClientRect();
     scrollToPosition({
       top: window.scrollY + rect.top - (headerHeight + 6),

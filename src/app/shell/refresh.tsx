@@ -21,7 +21,7 @@ export function refresh(e?) {
   refresh$.next(undefined);
 }
 
-export default function Refresh() {
+export default function Refresh({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
 
   const handleChanges = useCallback(
@@ -45,7 +45,7 @@ export default function Refresh() {
 
   return (
     <a
-      className={clsx('link menuItem', { disabled })}
+      className={clsx(className, { disabled })}
       onClick={refresh}
       title={t('Header.Refresh')}
       role="button"

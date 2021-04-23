@@ -9,6 +9,7 @@ $content-cells: 5;
 
 :root {
   --table-header-height: 30px;
+  --item-table-toolbar-height: 0;
 }
 
 .table {
@@ -27,10 +28,10 @@ $content-cells: 5;
   grid-column: 1 / -1;
   position: sticky;
   z-index: $toolbar;
+  box-sizing: border-box;
 
-  top: $header-height;
+  top: var(--header-height);
   padding: 8px 8px !important;
-  height: 41px - 16px;
 
   border-bottom: none !important;
   > div {
@@ -43,7 +44,6 @@ $content-cells: 5;
     @include horizontal-space-children(4px);
   }
 }
-$toolbarHeight: 41px - 16px + 8px;
 
 .importButton {
   @media (max-width: 1000px) {
@@ -60,7 +60,7 @@ $toolbarHeight: 41px - 16px + 8px;
   position: sticky;
   z-index: $header-cells;
 
-  top: $header-height + $toolbarHeight;
+  top: calc(var(--header-height) + var(--item-table-toolbar-height));
   white-space: nowrap;
   padding-top: 4px !important;
 
@@ -105,9 +105,9 @@ $toolbarHeight: 41px - 16px + 8px;
   min-width: 20px;
   left: 0;
   position: sticky;
-  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
+  top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
   &.header {
-    top: $header-height + $toolbarHeight;
+    top: calc(var(--header-height) + var(--item-table-toolbar-height));
   }
   z-index: $header-cells;
 }
@@ -150,9 +150,9 @@ $toolbarHeight: 41px - 16px + 8px;
   min-width: calc(var(--item-size) * 0.75);
   left: 30px;
   position: sticky;
-  top: calc(#{$header-height} + var(--table-header-height) + #{$toolbarHeight});
+  top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
   &.header {
-    top: $header-height + $toolbarHeight;
+    top: calc(var(--header-height) + var(--item-table-toolbar-height));
     padding-top: 0;
   }
   z-index: $header-cells;

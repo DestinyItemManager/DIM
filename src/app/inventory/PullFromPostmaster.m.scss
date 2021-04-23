@@ -7,9 +7,18 @@
   align-items: center;
   @include horizontal-space-children(4px);
   &:hover {
-    & :global(.badge) {
+    & .badge {
       background-color: black;
       color: $orange;
     }
   }
+}
+
+.badge {
+  border-radius: 50%;
+  border-radius: 10px;
+  background: $orange;
+  padding: 0 4px;
+  color: black;
+  font-size: 9px;
 }

@@ -45,8 +45,8 @@
 
 .content {
   position: sticky;
-  top: $header-height;
-  height: calc(100vh - #{$header-height});
+  top: var(--header-height);
+  height: calc(var(--viewport-height) - var(--header-height));
   overflow-y: auto;
   padding: 0 15px;
   z-index: 10;

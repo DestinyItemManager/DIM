@@ -26,7 +26,7 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
-import { useShiftHeld } from 'app/utils/hooks';
+import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -456,6 +456,9 @@ function ItemTable({
     }
   };
 
+  const toolbarRef = useRef(null);
+  useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
+
   return (
     <div
       className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
@@ -463,7 +466,7 @@ function ItemTable({
       role="table"
       ref={tableRef}
     >
-      <div className={styles.toolbar}>
+      <div className={styles.toolbar} ref={toolbarRef}>
         <div>
           <ItemActions
             itemsAreSelected={Boolean(selectedItems.length)}

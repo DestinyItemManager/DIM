@@ -1,14 +1,12 @@
 @import '../variables.scss';
 
 .shadow {
-  @include below-header;
-
   height: 1px;
   box-shadow: 0 1px 4px 0px black;
   width: 100%;
   position: sticky;
   left: 0;
-  top: calc(var(--store-header-height) + #{$header-height} - 1px);
+  top: calc(var(--store-header-height) + var(--header-height) - 1px);
   z-index: 9;
 }
 

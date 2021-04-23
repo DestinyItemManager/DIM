@@ -107,7 +107,7 @@ export function canBePulledFromPostmaster(i: DimItem, store: DimStore, stores: D
 export const POSTMASTER_SIZE = 21;
 
 export function postmasterAlmostFull(store: DimStore) {
-  return postmasterSpaceLeft(store) < 4;
+  return postmasterSpaceLeft(store) < 6; // I think you can get 6 drops at once in some activities
 }
 
 export function postmasterSpaceLeft(store: DimStore) {

@@ -27,6 +27,9 @@
 
   @include phone-portrait {
     top: calc(100% + 1px);
+    overflow-y: auto;
+    overscroll-behavior: none;
+    max-height: calc(var(--viewport-height) - var(--header-height));
   }
 }
 

@@ -1,0 +1,24 @@
+@import '../variables.scss';
+
+.banner {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+
+  width: 100%;
+  padding: 0px 14px;
+  box-sizing: border-box;
+  background: rgb(151, 4, 1);
+  font-size: 14px;
+
+  > *:first-child {
+    margin-right: 16px;
+  }
+
+  @include phone-portrait {
+    flex-direction: column-reverse;
+    > *:first-child {
+      margin-right: 0;
+      margin-top: 8px;
+    }
+  }
+}

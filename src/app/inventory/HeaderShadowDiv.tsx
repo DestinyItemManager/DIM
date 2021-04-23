@@ -1,11 +1,18 @@
-import React from 'react';
+import { useSetCSSVarToHeight } from 'app/utils/hooks';
+import React, { useRef } from 'react';
 import styles from './HeaderShadowDiv.m.scss';
 
-// Requires `--store-header-height` to be set
-export default React.memo(({ children, ...divProps }: React.HTMLAttributes<HTMLDivElement>) => (
-  <>
-    <div {...divProps}>{children}</div>
-    <div className={styles.shadow}></div>
-    <div className={styles.cover}></div>
-  </>
-));
+// Also sets `--store-header-height` to the height of `children`
+export default React.memo(({ children, ...divProps }: React.HTMLAttributes<HTMLDivElement>) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useSetCSSVarToHeight(ref, '--store-header-height');
+  return (
+    <>
+      <div {...divProps} ref={ref}>
+        {children}
+      </div>
+      <div className={styles.shadow}></div>
+      <div className={styles.cover}></div>
+    </>
+  );
+});

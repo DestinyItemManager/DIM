@@ -1,7 +1,233 @@
-.vendorEngramBadge {
-  height: 12px;
-  width: 12px;
-  margin: 0 4px 0 0px !important;
-  filter: invert(100%) invert(71%) sepia(96%) saturate(475%) hue-rotate(333deg) brightness(95%)
-    contrast(91%);
+@import '../variables.scss';
+@import 'ceaser-easing';
+
+body {
+  padding-top: var(--header-height);
+  box-sizing: border-box;
+  min-height: var(--viewport-height);
+}
+
+// The height of the black header bar
+$header-height: 44px;
+
+.container {
+  position: fixed;
+  z-index: 1001;
+  top: 0;
+  left: 0;
+  right: 0;
+  @include phone-portrait {
+    background: #000;
+  }
+}
+
+// The actual header contents - the header element is just a container
+.header {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 0 0 2px;
+  height: $header-height;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
+  background: $gradient;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  @include phone-portrait {
+    background: #000;
+  }
+
+  :global(.app-icon) {
+    font-size: 1.33em;
+    @include phone-portrait {
+      font-size: 24px;
+    }
+    &:hover {
+      color: $orange;
+      cursor: pointer;
+      transition: color 0.2s linear;
+    }
+  }
+}
+
+.logoLink {
+  height: 24px;
+  @include phone-portrait {
+    height: 44px;
+    margin: 0 4px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.menuItem {
+  margin: 0 8px;
+  text-decoration: none;
+  font-size: 13px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  outline: none;
+  white-space: nowrap;
+  @include phone-portrait {
+    margin: 0 12px;
+  }
+
+  color: white;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    color: $orange;
+    transition: color 0.2s linear;
+  }
+}
+
+.headerRight {
+  cursor: default;
+  display: flex;
+  flex: 1;
+  margin: 0 6px 0 8px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+  height: 100%;
+}
+
+.menu {
+  position: relative;
+  margin-right: none !important;
+  margin-left: 16px !important;
+}
+
+.logo {
+  height: 24px;
+  width: 68px;
+  @include phone-portrait {
+    height: 24px * 1.2;
+    width: 68px * 1.2;
+  }
+  color: $orange !important;
+  font-size: 16px !important;
+  font-weight: bold;
+  font-weight: 400;
+  &.dev {
+    filter: grayscale(100%) brightness(150%);
+  }
+  &.beta {
+    filter: hue-rotate(160deg) brightness(107%);
+  }
+}
+
+.headerLinks {
+  display: flex;
+  flex-direction: row;
+  height: $header-height;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow: hidden;
+  direction: rtl;
+  justify-content: flex-end;
+
+  @include phone-portrait {
+    display: none;
+  }
+  @media (max-width: 1280px) {
+    display: none;
+  }
+
+  .menuItem {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    direction: ltr;
+    border-bottom: 2px solid transparent;
+    box-sizing: border-box;
+
+    &.active {
+      border-bottom: 2px solid $orange;
+    }
+  }
+}
+
+.dropdown {
+  @include below-header;
+  position: absolute;
+  display: flex;
+  overflow: auto;
+  height: calc(var(--viewport-height) - var(--header-height));
+  left: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 150px;
+  background-color: black;
+  padding-left: env(safe-area-inset-left);
+  padding-bottom: Max(4px, env(safe-area-inset-bottom));
+  flex-direction: column;
+  z-index: 1000;
+
+  hr {
+    margin: 4px 0 2px 0;
+    border: none;
+    border-top: 1px solid #333;
+  }
+
+  h3 {
+    margin: 16px 2rem 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .menuItem {
+    display: block;
+    padding: 4px 2rem 4px 1rem;
+    font-size: 16px;
+    margin: 0;
+
+    &.active {
+      color: white;
+      border-left: 4px solid $orange;
+      padding-left: calc(1rem - 4px);
+    }
+
+    @include phone-portrait {
+      font-size: 18px;
+      padding: 6px 2rem;
+      &.active {
+        padding-left: calc(2rem - 4px);
+      }
+    }
+
+    &:hover,
+    &:focus {
+      background-color: #3f3f3f;
+      color: white;
+      transition: none;
+    }
+  }
+}
+.dropdownEnter {
+  transform: translateX(-250px);
+}
+
+.dropdownEnter.dropdownEnterActive {
+  transform: translateX(0);
+  transition: transform 200ms $easeOutCubic;
+}
+
+.dropdownExit {
+  transform: translateX(0);
+}
+
+.dropdownExit.dropdownExitActive {
+  transform: translateX(-250px);
+  transition: transform 200ms $easeInCubic;
+}
+
+.pwaPrompt {
+  margin: 1em 10px;
+  font-size: 14px;
 }

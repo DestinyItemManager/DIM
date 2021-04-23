@@ -107,11 +107,10 @@
     var(--item-margin)
   );
   box-sizing: border-box;
-  max-height: calc(100vh - 125px);
+  max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
   overflow: auto;
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
-  margin-bottom: 10px;
   overscroll-behavior: contain;
   cursor: pointer;
 
@@ -128,13 +127,9 @@
 
   .detached & {
     position: fixed;
-    top: 54px + $header-height;
-    top: calc(#{54px + $header-height} + constant(safe-area-inset-top));
-    top: calc(#{54px + $header-height} + env(safe-area-inset-top));
+    top: calc(54px + var(--header-height));
     z-index: 1000;
-    max-height: calc(100vh - #{120px + $header-height});
-    max-height: calc(100vh - #{120px + $header-height} - constant(safe-area-inset-top));
-    max-height: calc(100vh - #{120px + $header-height} - env(safe-area-inset-top));
+    max-height: calc(var(--viewport-height) - 120px - var(--header-height));
 
     max-width: calc(100% - 100px);
     left: 50%;
@@ -145,9 +140,9 @@
       width: 100vw;
       max-width: none;
       padding: 0;
-      max-height: calc(100vh - #{54px + $header-height});
-      max-height: calc(100vh - #{54px + $header-height} - constant(safe-area-inset-top));
-      max-height: calc(100vh - #{54px + $header-height} - env(safe-area-inset-top));
+      max-height: calc(
+        var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
+      );
     }
   }
 }

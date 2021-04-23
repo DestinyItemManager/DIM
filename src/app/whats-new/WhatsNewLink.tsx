@@ -13,7 +13,7 @@ import './WhatsNewLink.scss';
 /**
  * A link/button to the "What's New" page that highlights the most important action.
  */
-export default function WhatsNewLink() {
+export default function WhatsNewLink({ className }: { className?: string }) {
   const showChangelog = useSubscription(DimVersions.showChangelog$);
   const alerts = useSelector(bungieAlertsSelector);
   const dimNeedsUpdate = useSubscription(dimNeedsUpdate$);
@@ -23,7 +23,7 @@ export default function WhatsNewLink() {
 
   if (dimNeedsUpdate) {
     return (
-      <a className="link menuItem" onClick={reloadDIM}>
+      <a className={className} onClick={reloadDIM}>
         <AppIcon className="upgrade" icon={updateIcon} />
         {t('Header.UpgradeDIM')}
       </a>
@@ -32,7 +32,7 @@ export default function WhatsNewLink() {
 
   if (alerts.length) {
     return (
-      <NavLink to="/whats-new" className="link menuItem">
+      <NavLink to="/whats-new" className={className}>
         <span
           className={`badge-new bungie-alert-${
             GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]
@@ -45,14 +45,14 @@ export default function WhatsNewLink() {
 
   if (showChangelog) {
     return (
-      <NavLink to="/whats-new" className="link menuItem">
+      <NavLink to="/whats-new" className={className}>
         <span className="badge-new" /> {t('Header.WhatsNew')}
       </NavLink>
     );
   }
 
   return (
-    <NavLink to="/whats-new" className="link menuItem">
+    <NavLink to="/whats-new" className={className}>
       {t('Header.WhatsNew')}
     </NavLink>
   );

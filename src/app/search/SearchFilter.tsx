@@ -36,6 +36,9 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
+/**
+ * The main search filter that's in the header.
+ */
 export function SearchFilter(
   { isPhonePortrait, setSearchQuery, searchQuery, searchQueryVersion, onClear }: Props,
   ref: React.Ref<SearchFilterRef>
