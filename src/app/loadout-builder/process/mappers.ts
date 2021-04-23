@@ -117,7 +117,7 @@ export function mapDimItemToProcessItem(
   dimItem: DimItem,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
-  const { bucket, id, type, name, equippingLabel, basePower, stats, energy } = dimItem;
+  const { bucket, id, hash, type, name, equippingLabel, basePower, stats, energy } = dimItem;
 
   const baseStatMap: { [statHash: number]: number } = {};
 
@@ -135,6 +135,7 @@ export function mapDimItemToProcessItem(
   return {
     bucketHash: bucket.hash,
     id,
+    hash,
     type,
     name,
     equippingLabel,

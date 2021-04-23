@@ -29,7 +29,6 @@ import { DimStore } from '../inventory/store-types';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import ModPicker from './filter/ModPicker';
-import PerkPicker from './filter/PerkPicker';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
@@ -40,6 +39,7 @@ import { useProcess } from './process/useProcess';
 import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
+  LockableBucketHashes,
   statHashes,
   statHashToType,
   statKeys,
@@ -182,7 +182,7 @@ function LoadoutBuilder({
   halfTierMods,
 }: Props) {
   const [
-    { lockedMap, lockedMods, selectedStoreId, statFilters, modPicker, perkPicker, compareSet },
+    { lockedMap, lockedMods, lockedExotic, selectedStoreId, statFilters, modPicker, compareSet },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
 
@@ -198,12 +198,28 @@ function LoadoutBuilder({
   const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
-  const filteredItems = useMemo(() => filterItems(characterItems, lockedMap, lockedMods, filter), [
-    characterItems,
-    lockedMap,
-    lockedMods,
-    filter,
-  ]);
+  const filteredItems = useMemo(
+    () => filterItems(characterItems, lockedMap, lockedMods, lockedExotic?.hash, filter),
+    [characterItems, lockedMap, lockedMods, lockedExotic?.hash, filter]
+  );
+
+  const availableExotics = useMemo(() => {
+    const exoticHashes: number[] = [];
+
+    if (selectedStore) {
+      const itemsForClass = items[selectedStore.classType];
+
+      for (const bucketHash of LockableBucketHashes) {
+        for (const item of itemsForClass[bucketHash]) {
+          if (item.equippingLabel) {
+            exoticHashes.push(item.hash);
+          }
+        }
+      }
+
+      return _.uniq(exoticHashes);
+    }
+  }, [selectedStore, items]);
 
   const { result, processing } = useProcess(
     selectedStore,
@@ -278,6 +294,8 @@ function LoadoutBuilder({
         selectedStore={selectedStore}
         lockedMap={lockedMap}
         lockedMods={lockedMods}
+        exoticHashes={availableExotics}
+        lockedExotic={lockedExotic}
         lbDispatch={lbDispatch}
       />
     </div>
@@ -346,17 +364,6 @@ function LoadoutBuilder({
                 })
               }
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
-            />,
-            document.body
-          )}
-        {perkPicker.open &&
-          ReactDOM.createPortal(
-            <PerkPicker
-              classType={selectedStore.classType}
-              lockedMap={lockedMap}
-              initialQuery={perkPicker.initialQuery}
-              onClose={() => lbDispatch({ type: 'closePerkPicker' })}
-              lbDispatch={lbDispatch}
             />,
             document.body
           )}

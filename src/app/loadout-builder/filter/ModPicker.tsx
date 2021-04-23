@@ -24,7 +24,7 @@ import '../../item-picker/ItemPicker.scss';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from '../mod-utils';
 import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
-import PickerSectionMods from './PickerSectionMods';
+import ModPickerSection from './ModPickerSection';
 
 interface ProvidedProps {
   /**
@@ -274,7 +274,7 @@ function ModPicker({
       freezeInitialHeight={true}
     >
       {groupedMods.map((mods) => (
-        <PickerSectionMods
+        <ModPickerSection
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
           defs={defs}

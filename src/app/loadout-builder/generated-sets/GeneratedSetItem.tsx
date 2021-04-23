@@ -66,7 +66,7 @@ export default function GeneratedSetItem({
     const { plugCategoryHash } = plugDef.plug;
 
     if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
-      lbDispatch({ type: 'openPerkPicker', initialQuery: plugDef.displayProperties.name });
+      // lbDispatch({ type: 'lockExotic', hash: item.hash });
     } else {
       lbDispatch({
         type: 'openModPicker',

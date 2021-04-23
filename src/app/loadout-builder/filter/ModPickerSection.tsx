@@ -12,7 +12,7 @@ import {
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from '../types';
-import styles from './PickerSection.m.scss';
+import styles from './ModPickerSection.m.scss';
 import { SelectableMod } from './SelectableBungieImage';
 
 /** Slot specific mods can have at most 2 mods. */

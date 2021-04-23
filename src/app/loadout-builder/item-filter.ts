@@ -17,6 +17,7 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
+  exoticItemHash: number | undefined,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -54,8 +55,12 @@ export function filterItems(
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (filteredItems[bucket]) {
+      const containsExotic =
+        exoticItemHash !== undefined &&
+        filteredItems[bucket].some((item) => item.hash === exoticItemHash);
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
+          (!containsExotic || item.hash === exoticItemHash) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||

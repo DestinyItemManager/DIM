@@ -11,6 +11,7 @@ export interface ProcessPlug {
 export interface ProcessItem {
   bucketHash: number;
   id: string;
+  hash: number;
   type: string;
   name: string;
   equippingLabel?: string;

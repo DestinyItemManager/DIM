@@ -5,6 +5,7 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { useReducer } from 'react';
 import { ArmorSet, LockedItemType, LockedMap, MinMaxIgnored, StatTypes } from './types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
@@ -12,13 +13,10 @@ import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
+  lockedExotic?: DestinyInventoryItemDefinition;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   modPicker: {
-    open: boolean;
-    initialQuery?: string;
-  };
-  perkPicker: {
     open: boolean;
     initialQuery?: string;
   };
@@ -69,9 +67,6 @@ const lbStateInit = ({
     modPicker: {
       open: false,
     },
-    perkPicker: {
-      open: false,
-    },
   };
 };
 
@@ -87,10 +82,10 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
+  | { type: 'lockExotic'; def: DestinyInventoryItemDefinition }
+  | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
-  | { type: 'openPerkPicker'; initialQuery?: string }
-  | { type: 'closePerkPicker' }
   | { type: 'openCompareDrawer'; set: ArmorSet }
   | { type: 'closeCompareDrawer' };
 
@@ -105,6 +100,7 @@ function lbStateReducer(
         ...state,
         selectedStoreId: action.storeId,
         lockedMap: {},
+        lockedExotic: undefined,
         statFilters: {
           Mobility: { min: 0, max: 10, ignored: false },
           Resilience: { min: 0, max: 10, ignored: false },
@@ -186,6 +182,12 @@ function lbStateReducer(
         lockedMods: newMods,
       };
     }
+    case 'lockExotic': {
+      return { ...state, lockedExotic: action.def };
+    }
+    case 'removeLockedExotic': {
+      return { ...state, lockedExotic: undefined };
+    }
     case 'openModPicker':
       return {
         ...state,
@@ -196,10 +198,6 @@ function lbStateReducer(
       };
     case 'closeModPicker':
       return { ...state, modPicker: { open: false } };
-    case 'openPerkPicker':
-      return { ...state, perkPicker: { open: true, initialQuery: action.initialQuery } };
-    case 'closePerkPicker':
-      return { ...state, perkPicker: { open: false } };
     case 'openCompareDrawer':
       return { ...state, compareSet: action.set };
     case 'closeCompareDrawer':
