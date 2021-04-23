@@ -134,20 +134,22 @@ function NotesEditor({
           {
             match: /#(\w*)$/,
             search: (term, callback) => {
+              const termLower = term.toLowerCase();
               // need to build this list from the element ref, because relying
               // on liveNotes state would reinstantiate Textcomplete every keystroke
               const existingTags = getHashtagsFromNote(textArea.current!.value);
               const possibleTags: string[] = [];
               for (const t of tags) {
+                const tagLower = t.toLowerCase();
                 // don't suggest duplicate tags
-                if (existingTags.includes(t)) {
+                if (existingTags.includes(tagLower)) {
                   continue;
                 }
                 // favor startswith
-                if (t.startsWith('#' + term)) {
+                if (tagLower.startsWith('#' + termLower)) {
                   possibleTags.unshift(t);
                   // over full text search
-                } else if (t.includes(term)) {
+                } else if (tagLower.includes(termLower)) {
                   possibleTags.push(t);
                 }
               }
