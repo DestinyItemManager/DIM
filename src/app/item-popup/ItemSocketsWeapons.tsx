@@ -2,7 +2,11 @@ import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { getWeaponArchetypeSocket } from 'app/utils/socket-utils';
+import {
+  getSocketByIndex,
+  getSocketsByIndexes,
+  getWeaponArchetypeSocket,
+} from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -78,13 +82,17 @@ function ItemSocketsWeapons({
   const perks = item.sockets.categories.find(
     (c) =>
       c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
-      c.sockets.length &&
-      c.sockets[0].isPerk
+      c.socketIndexes.length &&
+      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
   );
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
     .reverse()
-    .flatMap((c) => c.sockets.filter((s) => !s.isPerk && s !== archetypeSocket));
+    .flatMap((c) =>
+      getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
+        (s) => !s.isPerk && s !== archetypeSocket
+      )
+    );
 
   const keyStats =
     item.stats &&
@@ -154,7 +162,7 @@ function ItemSocketsWeapons({
             )}
           >
             <div className="item-sockets">
-              {perks.sockets.map(
+              {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
                 (socketInfo) =>
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket

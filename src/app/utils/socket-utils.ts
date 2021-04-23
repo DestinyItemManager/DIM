@@ -10,18 +10,20 @@ import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
 
 export function getMasterworkSocketHashes(
-  itemSockets: DimSockets,
+  sockets: DimSockets,
   style: DestinySocketCategoryStyle
 ): number[] {
-  const masterworkSocketCategory = itemSockets.categories.find(
+  const masterworkSocketCategory = sockets.categories.find(
     (category) => category.category.categoryStyle === style
   );
 
-  return (masterworkSocketCategory && getPlugHashesFromCategory(masterworkSocketCategory)) || [];
+  return (
+    (masterworkSocketCategory && getPlugHashesFromCategory(sockets, masterworkSocketCategory)) || []
+  );
 }
 
-function getPlugHashesFromCategory(category: DimSocketCategory) {
-  return category.sockets
+function getPlugHashesFromCategory(sockets: DimSockets, category: DimSocketCategory) {
+  return getSocketsByIndexes(sockets, category.socketIndexes)
     .map((socket) => socket.plugged?.plugDef.hash ?? NaN)
     .filter((val) => !isNaN(val));
 }
@@ -63,6 +65,38 @@ export function isUsedModSocket(socket: DimSocket) {
   );
 }
 
+/** Given an item and a list of socketIndexes, find all the sockets that match those indices, in the order the indexes were provided */
+export function getSocketsByIndexes(sockets: DimSockets, socketIndexes: number[]) {
+  return _.compact(socketIndexes.map((i) => getSocketByIndex(sockets, i)));
+}
+
+/** Given a socketIndex, find the socket that matches that index */
+export function getSocketByIndex(sockets: DimSockets, socketIndex: number) {
+  return sockets.allSockets.find((s) => s.socketIndex === socketIndex);
+}
+
+/** Find all sockets on the item that belong to the given category hash */
+export function getSocketsByCategoryHash(sockets: DimSockets, categoryHash: SocketCategoryHashes) {
+  const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
+  if (!category) {
+    return [];
+  }
+  return getSocketsByIndexes(sockets, category.socketIndexes);
+}
+
+/** Special case of getSocketsByCategoryHash that returns the first (presumably only) socket that matches the category hash */
+export function getFirstSocketByCategoryHash(
+  sockets: DimSockets,
+  categoryHash: SocketCategoryHashes
+) {
+  const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
+  if (!category) {
+    return undefined;
+  }
+  const socketIndex = category.socketIndexes[0];
+  return sockets.allSockets.find((s) => s.socketIndex === socketIndex);
+}
+
 export function getSocketsByPlugCategoryIdentifier(
   sockets: DimSockets,
   plugCategoryIdentifier: string
@@ -73,10 +107,8 @@ export function getSocketsByPlugCategoryIdentifier(
 }
 
 export function getWeaponArchetypeSocket(item: DimItem): DimSocket | undefined {
-  if (item.bucket.inWeapons) {
-    return item.sockets?.categories.find(
-      (c) => c.category.hash === SocketCategoryHashes.IntrinsicTraits
-    )?.sockets[0];
+  if (item.bucket.inWeapons && item.sockets) {
+    return getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.IntrinsicTraits);
   }
 }
 
@@ -89,7 +121,10 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
     );
     if (largePerkCategory) {
-      return _.nth(largePerkCategory.sockets, -1);
+      return getSocketByIndex(
+        item.sockets,
+        largePerkCategory.socketIndexes[largePerkCategory.socketIndexes.length - 1]
+      );
     }
     return getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic');
   }

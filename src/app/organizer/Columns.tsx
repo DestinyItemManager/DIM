@@ -48,6 +48,7 @@ import {
   isSunset,
 } from 'app/utils/item-utils';
 import {
+  getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isUsedModSocket,
@@ -544,7 +545,7 @@ function PerksCell({
   }
 
   let sockets = item.sockets.categories.flatMap((c) =>
-    c.sockets.filter(
+    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
         s.plugged && // ignore empty sockets
         s.plugOptions.length > 0 &&

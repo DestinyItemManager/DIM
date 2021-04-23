@@ -98,7 +98,7 @@ export function buildInstancedSockets(
     return null;
   }
 
-  const createdSockets: (DimSocket | undefined)[] = [];
+  const createdSockets: DimSocket[] = [];
   for (let i = 0; i < sockets.length; i++) {
     const built = buildSocket(
       defs,
@@ -110,28 +110,23 @@ export function buildInstancedSockets(
       itemDef
     );
 
-    createdSockets.push(built);
+    // There are a bunch of garbage sockets that we ignore
+    if (built) {
+      createdSockets.push(built);
+    }
   }
 
   const categories: DimSocketCategory[] = [];
 
   for (const category of itemDef.sockets.socketCategories) {
-    const sockets: DimSocket[] = [];
-    for (const index of category.socketIndexes) {
-      const s = createdSockets[index];
-      if (s) {
-        sockets.push(s);
-      }
-    }
-
     categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash, itemDef),
-      sockets,
+      socketIndexes: category.socketIndexes,
     });
   }
 
   return {
-    allSockets: _.compact(createdSockets), // Flat list of sockets
+    allSockets: createdSockets, // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category?.index)), // Sockets organized by category
   };
 }
@@ -149,34 +144,30 @@ function buildDefinedSockets(
     return null;
   }
 
-  const createdSockets: (DimSocket | undefined)[] = [];
+  const createdSockets: DimSocket[] = [];
   // TODO: check out intrinsicsockets as well
 
   for (let i = 0; i < socketDefEntries.length; i++) {
-    const socketDef = socketDefEntries[i];
-    createdSockets.push(buildDefinedSocket(defs, socketDef, i, itemDef));
+    const socket = socketDefEntries[i];
+    const built = buildDefinedSocket(defs, socket, i, itemDef);
+
+    // There are a bunch of garbage sockets that we ignore
+    if (built) {
+      createdSockets.push();
+    }
   }
 
   const categories: DimSocketCategory[] = [];
 
   for (const category of itemDef.sockets!.socketCategories) {
-    const sockets: DimSocket[] = [];
-
-    for (const index of category.socketIndexes) {
-      const s = createdSockets[index];
-      if (s?.plugOptions.length) {
-        sockets.push(s);
-      }
-    }
-
     categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash),
-      sockets,
+      socketIndexes: category.socketIndexes,
     });
   }
 
   return {
-    allSockets: _.compact(createdSockets), // Flat list of sockets
+    allSockets: createdSockets, // Flat list of sockets
     categories: categories.sort(compareBy((c) => c.category.index)), // Sockets organized by category
   };
 }

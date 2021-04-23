@@ -394,12 +394,15 @@ export interface DimSocket {
 export interface DimSocketCategory {
   /** A grouping of sockets. */
   category: DestinySocketCategoryDefinition;
-  /** The sockets in the group. */
-  sockets: DimSocket[];
+  /** The indexes (from the original definitions) of sockets that belong to this group. */
+  socketIndexes: number[];
 }
 
 export interface DimSockets {
-  /** A flat list of all sockes on the item. */
+  /**
+   * A flat list of all sockes on the item.
+   * Note that this list cannot be indexed by socketIndex - it must be *searched* by socketIndex, because some sockets have been removed.
+   */
   allSockets: DimSocket[];
   /** Sockets grouped by category. */
   categories: DimSocketCategory[];

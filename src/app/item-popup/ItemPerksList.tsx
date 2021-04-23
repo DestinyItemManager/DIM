@@ -4,6 +4,7 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
+import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { default as React, useState } from 'react';
 import { connect } from 'react-redux';
@@ -51,11 +52,12 @@ function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
     }
   };
 
-  if (!perks.sockets || !defs) {
+  if (!perks.socketIndexes || !defs || !item.sockets) {
     return null;
   }
 
-  const sockets = [...perks.sockets].reverse();
+  const socketIndices = [...perks.socketIndexes].reverse();
+  const sockets = getSocketsByIndexes(item.sockets, socketIndices);
 
   return (
     <div className={styles.sockets}>
