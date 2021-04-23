@@ -19,6 +19,7 @@ const missingSources: { [key: string]: number[] } = {
     3144980977, // Unethical Experiments Cloak
     3144980978, // Orobas Vectura Cloak
   ],
+  battlegrounds: [],
   blackarmory: [
     78664642, // Annealed Shaper Gloves
     133093143, // Forged Machinist Greaves
@@ -203,6 +204,293 @@ const missingSources: { [key: string]: number[] } = {
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
   ],
+  campaign: [
+    24387532, // Refugee Boots
+    26544805, // Cry Defiance
+    30960615, // Wastelander Vest
+    67798808, // Atonement Tau
+    88132800, // Raven Shard
+    104646086, // Raven Shard
+    126602378, // Primal Siege Type 1
+    158570410, // Vector Home
+    164131571, // Vector Home
+    170778879, // Raven Shard
+    185766709, // Scavenger Cloak
+    201644247, // Hardcase Battleplate
+    202783988, // Black Shield Mark
+    235325823, // Makeshift Suit
+    255520209, // Cloak of Retelling
+    295856360, // Chiron's Cure
+    320174990, // Bond of Chiron
+    324169111, // Fortress Field
+    330458218, // Raven Shard
+    341343759, // Prophet Snow
+    352016976, // Homeward
+    392489920, // Primal Siege Type 1
+    402937789, // Shadow Specter
+    406995961, // Stagnatious Rebuke
+    418611312, // Shadow Specter
+    420937712, // War Mantis Cloak
+    436836011, // Cosmic Wind III
+    460400687, // Farseeker's Reach
+    463563656, // Primal Siege Type 1
+    482091581, // Hardcase Stompers
+    482198005, // Shadow Specter
+    503306433, // Mythos Hack 4.1
+    549246985, // Hardcase Helm
+    558125905, // Frumious Mask
+    570143750, // The Outlander's Steps
+    590089148, // Renegade Helm
+    593627314, // Shadow Specter
+    595755242, // Atgeir 2T1
+    600059642, // The Outlander's Cloak
+    610443345, // Farseeker's March
+    615077791, // Refugee Cloak
+    617314000, // Mark of the Longest Line
+    622291842, // Farseeker's March
+    643145875, // Legion-Bane
+    674335586, // Chiron's Cure
+    691207248, // Bond of Refuge
+    702133035, // Fortress Field
+    716764559, // Hood of Tallies
+    730116261, // Primal Siege Type 1
+    732520437, // Baseline Mark
+    735669834, // Shadow Specter
+    746458358, // Renegade Hood
+    747210772, // Mythos Hack 4.1
+    748214628, // The Outlander's Heart
+    750431904, // Chiron's Cure
+    765644916, // Cry Defiance
+    803939997, // War Mantis
+    833626649, // Chiron's Cure
+    856745412, // War Mantis
+    860993270, // Refugee Vest
+    867963905, // Hardcase Brawlers
+    881194063, // Prophet Snow
+    897275209, // The Outlander's Heart
+    905249529, // Shadow Specter
+    914653197, // The Outlander's Cover
+    944303735, // Mythos Hack 4.1
+    955082419, // Mechanik 1.2
+    958165756, // Mechanik 1.1
+    967275899, // Bond of the Raven Shard
+    984002469, // Mark of Confrontation
+    1033095234, // Mark of the Renegade
+    1045948748, // Mythos Hack 4.1
+    1053383550, // Cry Defiance
+    1059980443, // Shadow Specter
+    1070180272, // Hardcase Helm
+    1117103511, // Kit Fox 1.4
+    1133807721, // RPC Valiant
+    1176024513, // Rite of Refusal
+    1232004606, // Farseeker's Casque
+    1232572923, // Atgeir Mark
+    1285811484, // Cloak of Retelling
+    1300106409, // Prophet Snow
+    1328755281, // Farseeker's Casque
+    1330563002, // Hardcase Stompers
+    1365739620, // Mythos Hack 4.1
+    1365979278, // Legion-Bane
+    1377391809, // Kit Fox 2.1
+    1386133900, // Legion-Bane
+    1441321537, // Mark of the Fire
+    1442064747, // Primal Siege Type 1
+    1442860559, // RPC Valiant
+    1455694321, // Prophet Snow
+    1484009400, // RPC Valiant
+    1486292360, // Chiron's Cure
+    1488618333, // Chiron's Cure
+    1515214785, // Bond of Insight
+    1522478103, // Cosmic Wind III
+    1532961133, // Atonement Tau
+    1556652797, // The Outlander's Grip
+    1567215868, // The Outlander's Grip
+    1576992137, // Farseeker's Intuition
+    1611221278, // Prophet Snow
+    1621184880, // Kit Fox 1.5
+    1630079134, // Bond of Forgotten Wars
+    1688240188, // Fortress Field
+    1691784182, // Mythos Hack 4.1
+    1701236611, // The Outlander's Heart
+    1715842350, // Generalist Shell
+    1736993473, // Legion-Bane
+    1775781229, // Prophet Snow
+    1775818231, // Legion-Bane
+    1790272280, // Scavenger Suit
+    1855729254, // Prophet Snow
+    1912568536, // Primal Siege Type 1
+    1915498345, // Cloak of Retelling
+    1916502201, // The Outlander's Cloak
+    1930343846, // Mythos Hack 4.1
+    1944863285, // Renegade Gauntlets
+    1965476837, // War Mantis
+    1981225397, // Shadow Specter
+    1988790493, // Stagnatious Rebuke
+    1992338980, // The Outlander's Cover
+    1997953733, // Bond of Chiron
+    2031866166, // Legion-Bane
+    2058937521, // RPC Valiant
+    2086640064, // Refugee Boots
+    2102523394, // Primal Siege Type 1
+    2103153350, // Refugee Gloves
+    2151724216, // Prophet Snow
+    2159062493, // Mythos Hack 4.1
+    2165661157, // Baseline Mark
+    2169286143, // Refugee Helm
+    2183384906, // War Mantis
+    2190967049, // Prophet Snow
+    2211544324, // The Outlander's Cloak
+    2230522771, // War Mantis
+    2231988704, // Wastelander Mask
+    2252742528, // Hardcase Brawlers
+    2268087176, // War Mantis
+    2329963686, // Mark of Confrontation
+    2362809459, // Hardcase Stompers
+    2441435355, // Prophet Snow
+    2447779891, // Kit Fox 1.1
+    2447973668, // Mark of Inquisition
+    2459075622, // RPC Valiant
+    2466525328, // RPC Valiant
+    2521855144, // Fatum Praevaricator
+    2533822333, // Primal Siege Type 1
+    2541019576, // Mark of Confrontation
+    2570001258, // Refugee Plate
+    2616464530, // Atonement Tau
+    2638921950, // RPC Valiant
+    2640935765, // Memory of Cayde
+    2657403961, // Makeshift Suit
+    2676379051, // Renegade Plate
+    2689896341, // Mythos Hack 4.1
+    2739875972, // RPC Valiant
+    2742817008, // Scavenger Suit
+    2742930797, // Fatum Praevaricator
+    2745108287, // War Mantis
+    2752838425, // Mythos Hack 4.1
+    2803481901, // RPC Valiant
+    2813695893, // Fatum Praevaricator
+    2815743359, // Legion-Bane
+    2822154467, // Refugee Mask
+    2822491218, // Atonement Tau
+    2825160682, // RPC Valiant
+    2833813592, // Bond of Chiron
+    2840140116, // Legion-Bane
+    2854973517, // Farseeker's Casque
+    2866378043, // Dreamer's Bond
+    2871824910, // Mythos Hack 4.1
+    2886549180, // Cosmic Wind
+    2893448006, // Farseeker's March
+    2894481116, // Prophet Snow
+    2906174660, // Prophet Snow
+    2923601949, // Legion-Bane
+    2940586724, // Dreamer's Mark
+    2943629439, // Chiron's Cure
+    2959022889, // Chiron's Cure
+    2983961673, // Primal Siege Type 1
+    2994740249, // RPC Valiant
+    2995743813, // Fieldplate Type 10
+    3017526077, // War Mantis Cloak
+    3043014325, // Fortress Field
+    3059875530, // Scavenger Suit
+    3061532064, // Farseeker's Intuition
+    3065200837, // Refugee Boots
+    3080409700, // Bond of Forgotten Wars
+    3080529038, // Makeshift Suit
+    3082920955, // Atonement Tau
+    3088519490, // Bond of Symmetry
+    3102366928, // Atonement Tau
+    3123203109, // Firebreak Field
+    3144980976, // Dreamer's Cloak
+    3152414792, // Hardcase Battleplate
+    3160437036, // Shadow Specter
+    3164547673, // Atonement Tau
+    3174394351, // The Outlander's Grip
+    3183585337, // Legion-Bane
+    3184791104, // Atgeir 2T1
+    3184996381, // Vector Home
+    3192660133, // Aspirant Helm
+    3201304390, // Atgeir 2T1
+    3206818939, // Refugee Mark
+    3208987202, // Mechanik 1.1
+    3212340413, // War Mantis
+    3229455225, // Scavenger Suit
+    3238267532, // Cry Defiance
+    3238424670, // Memory of Cayde Mark
+    3245422950, // Sly Cloak
+    3255228714, // Fieldplate Type 10
+    3260789875, // Fieldplate Type 10
+    3264653916, // Mythos Hack 4.1
+    3267437183, // Atgeir 2T1
+    3294503240, // Memory of Cayde
+    3302420523, // Hardcase Brawlers
+    3309120116, // Shadow Specter
+    3324685738, // Refugee Helm
+    3330246899, // Refugee Gloves
+    3353816514, // Mark of the Golden Citadel
+    3357295428, // Stagnatious Rebuke
+    3369426530, // War Mantis
+    3382396922, // Primal Siege Type 1
+    3391214896, // Atonement Tau
+    3399906133, // Atonement Tau
+    3419425578, // Atonement Tau
+    3437155610, // War Mantis Cloak
+    3438103366, // Black Shield Mark
+    3450293405, // Fieldplate Type 10
+    3451543233, // Makeshift Suit
+    3456147612, // RPC Valiant
+    3483602905, // Mark of Inquisition
+    3493659058, // Refugee Gloves
+    3503564556, // Firebreak Field
+    3507639356, // Farseeker's Reach
+    3520985367, // Renegade Greaves
+    3524186653, // Refugee Vest
+    3524846593, // Atonement Tau
+    3554672786, // Memory of Cayde Cloak
+    3577457804, // Aspirant Robes
+    3585730968, // Shadow Specter
+    3625546921, // Black Shield Mark
+    3651432497, // War Mantis
+    3665810048, // War Mantis
+    3725709067, // Chiron's Cure
+    3740338778, // Chiron's Cure
+    3748997649, // The Outlander's Steps
+    3810010787, // Memory of Cayde Mark
+    3857537480, // Shadow Specter
+    3862303220, // Firebreak Field
+    3867725217, // Legion-Bane
+    3880804895, // The Outlander's Steps
+    3885104741, // Hardcase Battleplate
+    3904524734, // The Outlander's Cover
+    3931760244, // Aspirant Gloves
+    3958133156, // Farseeker's Intuition
+    3962776002, // Hardcase Helm
+    3965755651, // Wastelander Boots
+    3971569908, // At Least It's a Cape
+    4035217656, // Atonement Tau
+    4052950089, // Shadow Specter
+    4062934448, // Primal Siege Type 1
+    4069941456, // Legion-Bane
+    4116038937, // Bond of Forgotten Wars
+    4134502833, // Wastelander Wraps
+    4135938411, // Last City Shell (Damaged)
+    4147032568, // Baseline Mark
+    4150041854, // Firebreak Field
+    4155348771, // War Mantis
+    4166795065, // Primal Siege Type 1
+    4174470997, // Mark of Inquisition
+    4177795589, // Chiron's Cure
+    4194052805, // Vector Home
+    4210833117, // Memory of Cayde Cloak
+    4219498878, // Aspirant Boots
+    4229548557, // Shadow Specter
+    4230626646, // Shadow Specter
+    4241323317, // Cosmic Wind
+    4248632159, // Frumious Mask
+    4267370571, // Chiron's Cure
+    4269283110, // Mechanik 2.1
+    4281850920, // Farseeker's Reach
+  ],
+  cayde6: [],
+  cipher: [],
   crownofsorrow: [
     4450861, // Shadow's Greaves
     256904954, // Shadow's Grips
@@ -343,6 +631,9 @@ const missingSources: { [key: string]: number[] } = {
     4269346472, // Binary Phoenix Bond
   ],
   deepstonecrypt: [],
+  deluxe: [
+    2683682447, // Traitor's Fate
+  ],
   do: [
     102368695, // Anti-Extinction Mask
     245450812, // Anti-Extinction Hood
@@ -455,6 +746,7 @@ const missingSources: { [key: string]: number[] } = {
     4255727106, // Ancient Apocalypse Hood
   ],
   dsc: [],
+  dungeon: [],
   edz: [
     226467547, // Wildwood Robes
     321260461, // Wildwood Cloak
@@ -528,6 +820,116 @@ const missingSources: { [key: string]: number[] } = {
     4286845987, // Midnight Exigent Mark
   ],
   europa: [],
+  events: [
+    116784191, // Solstice Boots (Renewed)
+    140842223, // Solstice Mask (Drained)
+    143299650, // Solstice Plate (Renewed)
+    153144587, // Solstice Cloak (Drained)
+    226436555, // Solstice Mask (Renewed)
+    231432261, // Solstice Bond (Resplendent)
+    234970842, // Solstice Boots (Resplendent)
+    250513201, // Solstice Greaves (Resplendent)
+    335763433, // Solstice Plate (Resplendent)
+    346065606, // Solstice Cloak (Rekindled)
+    391889347, // Solstice Robes (Drained)
+    419435523, // Inaugural Revelry Grips
+    450844637, // Solstice Robes (Majestic)
+    492834021, // Inaugural Revelry Hood
+    518930465, // Solstice Grasps (Rekindled)
+    531005896, // Solstice Cloak (Resplendent)
+    540653483, // Solstice Vest (Scorched)
+    574167778, // Solstice Gauntlets (Drained)
+    574790717, // Solstice Gloves (Drained)
+    627596132, // Solstice Hood (Drained)
+    677939288, // Solstice Helm (Scorched)
+    721146704, // Solstice Mask (Rekindled)
+    784499738, // Solstice Bond (Renewed)
+    830497630, // Solstice Helm (Resplendent)
+    929148730, // Solstice Vest (Drained)
+    967650555, // Solstice Greaves (Scorched)
+    1056992393, // Inaugural Revelry Plate
+    1141639721, // Solstice Gauntlets (Scorched)
+    1229961870, // Solstice Vest (Renewed)
+    1273510836, // Inaugural Revelry Wraps
+    1288683596, // Solstice Plate (Majestic)
+    1341471164, // Solstice Mask (Scorched)
+    1361620030, // Solstice Mark (Scorched)
+    1365491398, // Solstice Plate (Drained)
+    1376763596, // Inaugural Revelry Robes
+    1450633717, // Solstice Vest (Resplendent)
+    1502692899, // Solstice Robes (Renewed)
+    1510405477, // Solstice Helm (Majestic)
+    1540031264, // Solstice Gloves (Resplendent)
+    1548056407, // Solstice Cloak (Renewed)
+    1556831535, // Inaugural Revelry Gauntlets
+    1561249470, // Inaugural Revelry Boots
+    1589318419, // Solstice Strides (Rekindled)
+    1649929380, // Solstice Mark (Resplendent)
+    1651275175, // Solstice Helm (Renewed)
+    1683482799, // Solstice Mark (Drained)
+    1706764072, // Quilted Winter Mark
+    1706874193, // Inaugural Revelry Greaves
+    1775707016, // Solstice Grasps (Majestic)
+    1812385587, // Festive Winter Bond
+    1862324869, // Solstice Boots (Majestic)
+    1897528210, // Solstice Robes (Scorched)
+    2105409832, // Solstice Greaves (Renewed)
+    2111111693, // Solstice Strides (Resplendent)
+    2120905920, // Inaugural Revelry Cloak
+    2127474099, // Solstice Gloves (Majestic)
+    2150778206, // Solstice Gloves (Scorched)
+    2155928170, // Solstice Mark (Rekindled)
+    2156817213, // Solstice Cloak (Majestic)
+    2287277682, // Solstice Robes (Rekindled)
+    2291082292, // Solstice Gauntlets (Majestic)
+    2328435454, // Inaugural Revelry Helm
+    2337290000, // Solstice Bond (Majestic)
+    2419100474, // Solstice Grasps (Renewed)
+    2470583197, // Solstice Gloves (Renewed)
+    2477028154, // Inaugural Revelry Mask
+    2492769187, // Solstice Bond (Scorched)
+    2523388612, // Solstice Hood (Renewed)
+    2546370410, // Solstice Hood (Majestic)
+    2578820926, // Solstice Greaves (Majestic)
+    2618313500, // Solstice Greaves (Drained)
+    2685001662, // Solstice Gloves (Rekindled)
+    2696245301, // Solstice Grasps (Scorched)
+    2720534902, // Solstice Grasps (Drained)
+    2764769717, // Inaugural Revelry Strides
+    2770157746, // Solstice Mask (Resplendent)
+    2777913564, // Warm Winter Cloak
+    2805101184, // Solstice Vest (Majestic)
+    2824302184, // Solstice Robes (Resplendent)
+    2837295684, // Inaugural Revelry Mark
+    2877046370, // Solstice Strides (Majestic)
+    2924095235, // Solstice Bond (Rekindled)
+    2940416351, // Solstice Boots (Drained)
+    2978747767, // Solstice Vest (Rekindled)
+    2994721336, // Solstice Boots (Scorched)
+    3015197581, // Solstice Gauntlets (Rekindled)
+    3039687635, // Solstice Helm (Drained)
+    3077367255, // Solstice Hood (Scorched)
+    3104384024, // Solstice Boots (Rekindled)
+    3159052337, // Solstice Mask (Majestic)
+    3192336962, // Solstice Cloak (Scorched)
+    3236510875, // Solstice Grasps (Resplendent)
+    3611487543, // Solstice Hood (Rekindled)
+    3685996623, // Solstice Greaves (Rekindled)
+    3748622249, // Solstice Hood (Resplendent)
+    3892841518, // Solstice Gauntlets (Renewed)
+    3929403535, // Solstice Gauntlets (Resplendent)
+    3932814032, // Solstice Strides (Drained)
+    3943394479, // Solstice Plate (Scorched)
+    3965417933, // Inaugural Revelry Vest
+    3968560442, // Solstice Bond (Drained)
+    3987442049, // Solstice Mark (Majestic)
+    4075522049, // Inaugural Revelry Bond
+    4100029812, // Solstice Strides (Renewed)
+    4128297107, // Solstice Mark (Renewed)
+    4142792564, // Solstice Helm (Rekindled)
+    4245469491, // Solstice Plate (Rekindled)
+    4272367383, // Solstice Strides (Scorched)
+  ],
   eververse: [
     138961800, // Helm of Optimacy
     163660481, // Bond of Optimacy
@@ -580,6 +982,7 @@ const missingSources: { [key: string]: number[] } = {
     3947596543, // Green Dawning Lanterns
     4059030097, // Winterhart Mask
   ],
+  exoticcipher: [],
   fwc: [
     79417130, // Simulator Grips
     248302381, // Simulator Robes
@@ -859,6 +1262,7 @@ const missingSources: { [key: string]: number[] } = {
     4177973942, // Vest of Transcendence
   ],
   gunsmith: [],
+  harbinger: [],
   ikora: [
     89175653, // Noble Constant Mark
     185326970, // Noble Constant Type 2
@@ -1442,6 +1846,7 @@ const missingSources: { [key: string]: number[] } = {
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
   ],
+  lostsectors: [],
   mars: [
     425390008, // Midnight Exigent Greaves
     508035927, // Midnight Exigent Helm
@@ -1582,6 +1987,7 @@ const missingSources: { [key: string]: number[] } = {
     3060679667, // Sovereign Vest
     4119718816, // Sovereign Helm
   ],
+  presage: [],
   prestige: [],
   prophecy: [],
   raid: [
@@ -1811,6 +2217,8 @@ const missingSources: { [key: string]: number[] } = {
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
   ],
+  rasputin: [],
+  saint14: [],
   scourge: [
     96643258, // Bladesmith's Memory Mask
     300528205, // Bladesmith's Memory Vest
@@ -1891,6 +2299,7 @@ const missingSources: { [key: string]: number[] } = {
     4078925541, // Substitutional Alloy Mask
     4078925542, // Substitutional Alloy Mask
   ],
+  shatteredthrone: [],
   shaxx: [
     85800627, // Ankaa Seeker IV
     87665893, // Binary Phoenix Cloak
@@ -2207,7 +2616,9 @@ const missingSources: { [key: string]: number[] } = {
     4177448932, // Focusing Wraps
     4177448933, // Channeling Wraps
   ],
+  umbral: [],
   vexoffensive: [],
+  wartable: [],
   wrathborn: [],
   zavala: [
     178749005, // Vigil of Heroes
