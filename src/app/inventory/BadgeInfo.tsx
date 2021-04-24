@@ -1,5 +1,3 @@
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
-import { RootState } from 'app/store/types';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, UiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -10,7 +8,7 @@ import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
-import { getNotes } from './dim-item-info';
+import { itemNoteSelector } from './dim-item-info';
 import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
 
@@ -46,9 +44,7 @@ export function hasBadge(item?: DimItem | null): boolean {
 }
 
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
-  const savedNotes = useSelector<RootState, string | undefined>((state) =>
-    getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state))
-  );
+  const savedNotes = useSelector(itemNoteSelector(item));
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;

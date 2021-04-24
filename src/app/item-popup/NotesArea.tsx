@@ -2,16 +2,11 @@ import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
 import { t } from 'app/i18next-t';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
-import { getNotes } from 'app/inventory/dim-item-info';
+import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import {
-  allNotesHashtagsSelector,
-  itemHashTagsSelector,
-  itemInfosSelector,
-} from 'app/inventory/selectors';
+import { allNotesHashtagsSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
-import { RootState } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -29,9 +24,7 @@ export default function NotesArea({
   className?: string;
   minimal?: boolean;
 }) {
-  const savedNotes = useSelector<RootState, string>(
-    (state) => getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state)) ?? ''
-  );
+  const savedNotes = useSelector(itemNoteSelector(item));
   const [notesOpen, setNotesOpen] = useState(false);
 
   // nothing to do if it can't be tagged (/noted)

@@ -83,6 +83,6 @@ export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: It
   state.dimApi.itemHashTags;
 
 /**
- * all hashtags used in existing item notes
+ * all hashtags used in existing item notes, with (case-insensitive) dupes removed
  */
 export const allNotesHashtagsSelector = createSelector(itemInfosSelector, collectNotesHashtags);
