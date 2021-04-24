@@ -1,7 +1,6 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { getNotes } from 'app/inventory/dim-item-info';
-import { itemInfosSelector } from 'app/inventory/selectors';
+import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import clsx from 'clsx';
 import React from 'react';
@@ -40,8 +39,7 @@ export default function CompareItem({
   adjustedItemStats?: DimAdjustedItemStat;
   isInitialItem: boolean;
 }) {
-  const itemInfos = useSelector(itemInfosSelector);
-  const itemNotes = getNotes(item, itemInfos);
+  const itemNotes = useSelector(itemNoteSelector(item));
   return (
     <div className="compare-item">
       <div className="compare-item-header">
