@@ -1,7 +1,10 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import clsx from 'clsx';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
@@ -36,6 +39,7 @@ export default function CompareItem({
   adjustedItemStats?: DimAdjustedItemStat;
   isInitialItem: boolean;
 }) {
+  const itemNotes = useSelector(itemNoteSelector(item));
   return (
     <div className="compare-item">
       <div className="compare-item-header">
@@ -49,7 +53,14 @@ export default function CompareItem({
       >
         {item.name} <AppIcon icon={searchIcon} />
       </div>
-      <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
+      <PressTip
+        elementType="span"
+        className="itemAside"
+        tooltip={itemNotes}
+        allowClickThrough={true}
+      >
+        <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
+      </PressTip>
       {stats.map((stat) => (
         <CompareStat
           key={stat.id}
