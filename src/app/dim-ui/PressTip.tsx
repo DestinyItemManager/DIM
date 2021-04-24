@@ -54,7 +54,7 @@ function Control({
   });
 
   if (!tooltip) {
-    return <Component>{children}</Component>;
+    return <Component className={rest.className}>{children}</Component>;
   }
 
   // TODO: if we reuse a stable tooltip container instance we could animate between them

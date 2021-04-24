@@ -76,7 +76,8 @@
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
 
-  .item {
+  // targets the presstip wrapper
+  & > .itemAside {
     float: right;
     padding: 0;
     margin-right: 4px;
