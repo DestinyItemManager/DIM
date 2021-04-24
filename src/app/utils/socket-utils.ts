@@ -121,10 +121,13 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
     );
     if (largePerkCategory) {
-      return getSocketByIndex(
+      const largePerkSocket = getSocketByIndex(
         item.sockets,
-        largePerkCategory.socketIndexes[largePerkCategory.socketIndexes.length - 1]
+        _.nth(largePerkCategory.socketIndexes, -1)!
       );
+      if (largePerkSocket?.plugged?.plugDef.displayProperties.name) {
+        return largePerkSocket;
+      }
     }
     return getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic');
   }
