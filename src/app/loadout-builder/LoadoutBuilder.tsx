@@ -10,6 +10,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -111,7 +112,7 @@ function mapStateToProps() {
   /** A selector to pull out all half tier general mods so we can quick add them to sets. */
   const halfTierModsSelector = createSelector(
     (state: RootState) => settingsSelector(state).loStatSortOrder,
-    (state: RootState) => state.manifest.d2Manifest,
+    d2ManifestSelector,
     (statOrder, defs) => {
       const halfTierMods: PluggableInventoryItemDefinition[] = [];
 

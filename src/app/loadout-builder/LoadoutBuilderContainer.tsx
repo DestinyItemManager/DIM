@@ -3,6 +3,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout/loadout-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { Location } from 'history';
 import React from 'react';
@@ -32,7 +33,7 @@ type Props = ProvidedProps &
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
   });
 }
 

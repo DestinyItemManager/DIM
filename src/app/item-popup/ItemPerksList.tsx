@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -29,7 +30,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: inventoryWishListsSelector(state)[item.id],
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
   };
 }
 

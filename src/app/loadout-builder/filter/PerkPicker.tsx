@@ -6,11 +6,13 @@ import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import React, { Dispatch, useEffect, useRef, useState } from 'react';
@@ -30,7 +32,6 @@ import {
 } from '../utils';
 import styles from './PerkPicker.m.scss';
 import PickerSectionPerks from './PickerSectionPerks';
-import { BucketHashes } from 'data/d2/generated-enums';
 
 interface ProvidedProps {
   lockedMap: LockedMap;
@@ -96,7 +97,7 @@ function mapStateToProps() {
     buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     perks: perksSelector(state, props),
-    defs: state.manifest.d2Manifest!,
+    defs: d2ManifestSelector(state)!,
   });
 }
 

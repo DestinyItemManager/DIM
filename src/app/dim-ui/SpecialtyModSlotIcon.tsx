@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -22,7 +23,7 @@ interface StoreProps {
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    defs: state.manifest.d2Manifest!,
+    defs: d2ManifestSelector(state)!,
   });
 }
 
