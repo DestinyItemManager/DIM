@@ -137,7 +137,9 @@ function NotesEditor({
               const termLower = term.toLowerCase();
               // need to build this list from the element ref, because relying
               // on liveNotes state would reinstantiate Textcomplete every keystroke
-              const existingTags = getHashtagsFromNote(textArea.current!.value);
+              const existingTags = getHashtagsFromNote(textArea.current!.value).map((t) =>
+                t.toLowerCase()
+              );
               const possibleTags: string[] = [];
               for (const t of tags) {
                 const tagLower = t.toLowerCase();

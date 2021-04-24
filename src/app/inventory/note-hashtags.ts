@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { ItemInfos } from './dim-item-info';
 
 /**
@@ -13,7 +14,7 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
       }
     }
   }
-  return [...hashTags];
+  return _.uniqBy([...hashTags], (t) => t.toLowerCase());
 }
 
 export function getHashtagsFromNote(note?: string | null) {
