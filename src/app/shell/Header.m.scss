@@ -16,6 +16,9 @@ $header-height: 44px;
   top: 0;
   left: 0;
   right: 0;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
   @include phone-portrait {
     background: #000;
   }
@@ -30,9 +33,6 @@ $header-height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-top: env(safe-area-inset-top);
   background: $gradient;
   background-position: center top;
   background-repeat: no-repeat;
