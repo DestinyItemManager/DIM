@@ -11,6 +11,7 @@ interface Props {
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ElementType;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 type ControlProps = Props &
@@ -54,7 +55,12 @@ function Control({
   });
 
   if (!tooltip) {
-    return <Component className={rest.className}>{children}</Component>;
+    const { className, style } = rest;
+    return (
+      <Component className={className} style={style}>
+        {children}
+      </Component>
+    );
   }
 
   // TODO: if we reuse a stable tooltip container instance we could animate between them
