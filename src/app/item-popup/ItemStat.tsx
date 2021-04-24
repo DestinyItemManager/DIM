@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
@@ -139,20 +140,17 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
 function StatBar({ segments, stat }: { segments: [number, string?, string?][]; stat: DimStat }) {
   return (
-    <div
-      className={styles.statBar}
-      aria-label={stat.displayProperties.name}
-      title={stat.displayProperties.description}
-      aria-hidden="true"
-    >
+    <div className={styles.statBar} aria-label={stat.displayProperties.name} aria-hidden="true">
       <div className={styles.barContainer}>
         {segments.map(([val, className, description], index) => (
-          <div
+          <PressTip
             key={index}
-            title={description}
+            tooltip={[description, val].filter(Boolean).join(': ') || undefined}
             className={clsx(styles.barInner, className)}
             style={{ width: percent(val / stat.maximumValue) }}
-          />
+          >
+            <React.Fragment />
+          </PressTip>
         ))}
       </div>
     </div>
