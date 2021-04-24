@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
     "InstallDIM": "Zainstaluj jako aplikację",
+    "InstallDIMBanner": "Install DIM as an app on your home screen",
     "Inventory": "Ekwipunek",
-    "IosPwaPrompt": "W Mobilnym Safari, kliknij ikonę udostępniania (środkowy przycisk u dołu) i wybierz \"Dodaj do Ekranu Domowego\".",
+    "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Skróty Klawiszowe",
     "Menu": "Menu",
     "Refresh": "Odśwież Dane Destiny [R]",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "Czy na pewno chcesz usunąć '{{name}}'?",
     "CouldNotEquip": "Nie można założyć {{itemname}}",
     "Create": "Utwórz Uzbrojenie",
-    "Delete": "Usuń Uzbrojenie",
+    "Delete": "Delete",
     "Edit": "Edytuj Uzbrojenie",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
     "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów/potężnych/szczytowych nagród.",
@@ -683,6 +684,10 @@
       "Reload": "Przeładowanie"
     },
     "Unlock": "Odblokuj"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Zlecenia",

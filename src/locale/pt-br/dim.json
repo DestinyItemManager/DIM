@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} itens",
     "Filters": "Filtros",
     "InstallDIM": "Instalar como um App",
+    "InstallDIMBanner": "Instale o DIM como um aplicativo em sua tela inicial",
     "Inventory": "Inventário",
-    "IosPwaPrompt": "No Safari para celular, clique no ícone compartilhar (botão do meio na parte inferior) e selecione \"Adicionar à Tela Inicial\".",
+    "IosPwaPrompt": "No Safari, clique no ícone de compartilhamento (botão do meio, na parte inferior) e selecione \"Adicionar à Tela Inicial\".",
     "KeyboardShortcuts": "Atalhos do teclado",
     "Menu": "Menu",
     "Refresh": "Atualizar dados do Destiny [R]",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "Tem certeza que deseja excluir '{{name}}'?",
     "CouldNotEquip": "Não foi possível equipar {{itemname}}",
     "Create": "Criar set",
-    "Delete": "Excluir set",
+    "Delete": "Remover",
     "Edit": "Editar set",
     "EquippableDifferent1": "Múltiplos itens exóticos foram usados para calcular seu Poder Máximo. Então o número mostrado pode não ser alcançável ao equipar seus itens no jogo.",
     "EquippableDifferent2": "O Poder Máximo não se restringe pela regra de \"Um Exótico\" ao determinar o Poder dos seus itens comuns, poderosos ou pináculo.",
@@ -683,6 +684,10 @@
       "Reload": "Recarregamento"
     },
     "Unlock": "Destravar"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "O Chefe do Correio está quase cheio! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "O Chefe do Correio está cheio! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Contratos",

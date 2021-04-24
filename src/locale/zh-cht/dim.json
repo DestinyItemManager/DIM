@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} 個物品",
     "Filters": "篩檢程式",
     "InstallDIM": "Install as an App",
+    "InstallDIMBanner": "Install DIM as an app on your home screen",
     "Inventory": "背包",
-    "IosPwaPrompt": "在使用移動端Safari流覽器時，請點擊螢幕底部中間的分享按鈕並選擇“添加到主螢幕”。",
+    "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Keyboard Shortcuts",
     "Menu": "菜單",
     "Refresh": "Refresh Destiny Data [R]",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "你確認要刪除'{{name}}'?",
     "CouldNotEquip": "無法裝備{{itemname}}",
     "Create": "創建配裝",
-    "Delete": "刪除配裝",
+    "Delete": "Delete",
     "Edit": "編輯配裝",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
@@ -683,6 +684,10 @@
       "Reload": "Reload"
     },
     "Unlock": "Unlock"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "賞金單",

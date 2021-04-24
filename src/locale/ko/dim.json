@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "아이템 {{count}}개",
     "Filters": "필터",
     "InstallDIM": "앱으로 설치",
+    "InstallDIMBanner": "DIM을 홈 화면에 앱으로 설치",
     "Inventory": "소지품",
-    "IosPwaPrompt": "모바일 사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
+    "IosPwaPrompt": "사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
     "KeyboardShortcuts": "키보드 단축키",
     "Menu": "메뉴",
     "Refresh": "데스티니 데이터 새로고침 [R]",
@@ -347,7 +348,7 @@
     "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮길 공간을 만들기 위해 움직일 수 있는 아이템이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
-    "PostmasterAlmostFull": "거의 꽉 참! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "거의 꽉 찼습니다! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "꽉 참! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "ShouldNotBeInVault": "이 아이템은 금고에 있을 경우 위험할 수 있습니다. 캐릭터로 옮겨주세요.",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "'{{name}}'을(를) 삭제하시겠습니까?",
     "CouldNotEquip": "{{itemname}}을(를) 장착할 수 없습니다.",
     "Create": "로드아웃 생성",
-    "Delete": "로드아읏 지우기",
+    "Delete": "삭제",
     "Edit": "로드아웃 편집",
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
     "EquippableDifferent2": "최대 전투력은 획득한 아이템/강력한 장비/최고조 보상의 전투력을 결정할 때 \"하나의 경이\" 규칙에 의해 제한되지 않습니다.",
@@ -683,6 +684,10 @@
       "Reload": "재장전"
     },
     "Unlock": "잠금 해제"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "우편함이 거의 꽉 찼습니다! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "우편함이 꽉 찼습니다! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "현상금",

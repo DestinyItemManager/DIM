@@ -20,8 +20,8 @@
     "ButtonOn": "主动模式",
     "ChangeFilter": "更改过滤器",
     "Farming": "最近项目",
-    "FarmingStart": "开始肝",
-    "FarmingStop": "停止肝",
+    "FarmingStart": "开始收集",
+    "FarmingStop": "停止收集",
     "Loading": "当前活动",
     "Loadouts": "配装",
     "NoQuests": "您没有跟踪任何任务",
@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} 个物品",
     "Filters": "过滤器",
     "InstallDIM": "安装为 App",
+    "InstallDIMBanner": "将 DIM 安装为主屏幕上的 App",
     "Inventory": "背包",
-    "IosPwaPrompt": "在使用移动端Safari浏览器时，请点击屏幕底部中间的分享按钮并选择“添加到主屏幕”。",
+    "IosPwaPrompt": "在 Safari 中，轻触分享图标（位于屏幕底部中央），并选择“添加到主屏幕”。",
     "KeyboardShortcuts": "键盘快捷键",
     "Menu": "菜单",
     "Refresh": "刷新命运数据 [R]",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "你确认要删除'{{name}}'?",
     "CouldNotEquip": "无法装备{{itemname}}",
     "Create": "创建配装",
-    "Delete": "删除配装",
+    "Delete": "删除",
     "Edit": "编辑配装",
     "EquippableDifferent1": "计算你的最大能量等级时使用了多件异域装备，所以在游戏内配装时可能达不到这个数值。",
     "EquippableDifferent2": "在计算你的掉落/强力/巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
@@ -683,6 +684,10 @@
       "Reload": "重新装弹"
     },
     "Unlock": "解锁​​​​"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "邮政官快满了！({{number}}/{{postmasterSize}}）",
+    "PostmasterFull": "邮政官全满了！（{{number}}/{{postmasterSize}}）"
   },
   "Progress": {
     "Bounties": "赏金单",
