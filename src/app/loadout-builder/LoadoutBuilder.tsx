@@ -199,12 +199,12 @@ function LoadoutBuilder({
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
-    () => filterItems(characterItems, lockedMap, lockedMods, lockedExotic?.hash, filter),
-    [characterItems, lockedMap, lockedMods, lockedExotic?.hash, filter]
+    () => filterItems(characterItems, lockedMap, lockedMods, lockedExotic, filter),
+    [characterItems, lockedMap, lockedMods, lockedExotic, filter]
   );
 
   const availableExotics = useMemo(() => {
-    const exoticHashes: number[] = [];
+    const exotics: DimItem[] = [];
 
     if (selectedStore) {
       const itemsForClass = items[selectedStore.classType];
@@ -212,12 +212,12 @@ function LoadoutBuilder({
       for (const bucketHash of LockableBucketHashes) {
         for (const item of itemsForClass[bucketHash]) {
           if (item.equippingLabel) {
-            exoticHashes.push(item.hash);
+            exotics.push(item);
           }
         }
       }
 
-      return _.uniq(exoticHashes);
+      return exotics;
     }
   }, [selectedStore, items]);
 
@@ -294,7 +294,7 @@ function LoadoutBuilder({
         selectedStore={selectedStore}
         lockedMap={lockedMap}
         lockedMods={lockedMods}
-        exoticHashes={availableExotics}
+        availableExotics={availableExotics}
         lockedExotic={lockedExotic}
         lbDispatch={lbDispatch}
       />

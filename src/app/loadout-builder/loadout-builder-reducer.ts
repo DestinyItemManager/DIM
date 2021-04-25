@@ -6,14 +6,22 @@ import { Loadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { useReducer } from 'react';
-import { ArmorSet, LockedItemType, LockedMap, MinMaxIgnored, StatTypes } from './types';
+import {
+  ArmorSet,
+  LockedExotic,
+  LockedItemType,
+  LockedMap,
+  MinMaxIgnored,
+  StatTypes,
+} from './types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
-  lockedExotic?: DestinyInventoryItemDefinition;
+  lockedExotic?: LockedExotic;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   modPicker: {
@@ -82,7 +90,7 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; def: DestinyInventoryItemDefinition }
+  | { type: 'lockExotic'; def: DestinyInventoryItemDefinition; bucketHash: BucketHashes }
   | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
@@ -183,7 +191,8 @@ function lbStateReducer(
       };
     }
     case 'lockExotic': {
-      return { ...state, lockedExotic: action.def };
+      const { def, bucketHash } = action;
+      return { ...state, lockedExotic: { def, bucketHash } };
     }
     case 'removeLockedExotic': {
       return { ...state, lockedExotic: undefined };

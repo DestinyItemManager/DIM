@@ -1,6 +1,7 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
 import _ from 'lodash';
+import { LoadoutBuilderState } from './loadout-builder-reducer';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
@@ -17,7 +18,7 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
-  exoticItemHash: number | undefined,
+  lockedExotic: LoadoutBuilderState['lockedExotic'],
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -55,12 +56,9 @@ export function filterItems(
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (filteredItems[bucket]) {
-      const containsExotic =
-        exoticItemHash !== undefined &&
-        filteredItems[bucket].some((item) => item.hash === exoticItemHash);
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
-          (!containsExotic || item.hash === exoticItemHash) &&
+          (bucket !== lockedExotic?.bucketHash || item.hash === lockedExotic.def.hash) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||

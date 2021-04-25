@@ -5,7 +5,8 @@ import {
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
@@ -44,6 +45,11 @@ export interface LockedExclude {
   type: 'exclude';
   item: DimItem;
   bucket: InventoryBucket;
+}
+
+export interface LockedExotic {
+  def: DestinyInventoryItemDefinition;
+  bucketHash: BucketHashes;
 }
 
 export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;

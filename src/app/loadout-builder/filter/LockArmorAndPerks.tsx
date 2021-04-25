@@ -10,7 +10,6 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useState } from 'react';
 import ReactDom from 'react-dom';
@@ -22,6 +21,7 @@ import { getModRenderKey } from '../mod-utils';
 import {
   LockableBuckets,
   LockedExclude,
+  LockedExotic,
   LockedItemCase,
   LockedItemType,
   LockedMap,
@@ -36,8 +36,8 @@ interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
-  lockedExotic?: DestinyInventoryItemDefinition;
-  exoticHashes?: number[];
+  lockedExotic?: LockedExotic;
+  availableExotics?: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -69,7 +69,7 @@ function LockArmorAndPerks({
   lockedMods,
   buckets,
   stores,
-  exoticHashes,
+  availableExotics,
   lockedExotic,
   lbDispatch,
 }: Props) {
@@ -215,7 +215,7 @@ function LockArmorAndPerks({
               showCloseIconOnHover={true}
               onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
             >
-              <DefItemIcon itemDef={lockedExotic} />
+              <DefItemIcon itemDef={lockedExotic.def} />
             </ClosableContainer>
           </div>
         )}
@@ -283,7 +283,7 @@ function LockArmorAndPerks({
         ReactDom.createPortal(
           <ExoticPicker
             defs={defs}
-            exoticHashes={exoticHashes}
+            availableExotics={availableExotics}
             lbDispatch={lbDispatch}
             onClose={() => setShowExoticPicker(false)}
           />,
