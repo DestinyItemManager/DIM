@@ -1,12 +1,13 @@
 import { dimNeedsUpdate$ } from 'app/register-service-worker';
 import { GlobalAlertLevelsToToastLevels } from 'app/whats-new/BungieAlerts';
 import { DimVersions } from 'app/whats-new/versions';
+import { GlobalAlertLevel } from 'bungie-api-ts/core';
+import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
-import '../whats-new/WhatsNewLink.scss';
 import { AppIcon, updateIcon } from './icons';
-import './MenuBadge.scss';
+import styles from './MenuBadge.m.scss';
 import { bungieAlertsSelector } from './selectors';
 
 /**
@@ -21,19 +22,22 @@ export default function MenuBadge() {
   const dimNeedsUpdate = useSubscription(dimNeedsUpdate$);
 
   if (dimNeedsUpdate) {
-    return <AppIcon className="upgrade" icon={updateIcon} />;
+    return <AppIcon className={styles.upgrade} icon={updateIcon} />;
   }
 
   if (alerts.length) {
     return (
       <span
-        className={`badge-new bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`}
+        className={clsx(
+          styles.badgeNew,
+          `bungie-alert-${GlobalAlertLevelsToToastLevels[GlobalAlertLevel.Blue]}`
+        )}
       />
     );
   }
 
   if (showChangelog) {
-    return <span className="badge-new" />;
+    return <span className={styles.badgeNew} />;
   }
 
   return null;

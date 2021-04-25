@@ -1,14 +1,21 @@
 @import '../variables.scss';
 
-.badge-new {
+.badgeNew {
   margin: 0 !important;
   position: absolute;
   bottom: 0px;
   right: -5px;
+  display: block;
+  background-color: $orange;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
 }
 .upgrade {
   margin: 0 !important;
   position: absolute;
   bottom: -8px;
   right: -12px;
+  color: $orange !important;
+  font-size: 18px !important;
 }
