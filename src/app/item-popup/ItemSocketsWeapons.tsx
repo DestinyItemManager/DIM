@@ -110,7 +110,7 @@ function ItemSocketsWeapons({
   return (
     <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
       {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
-        <ArchetypeRow minimal={minimal}>
+        <ArchetypeRow minimal={minimal} isWeapons={true}>
           {archetypeSocket?.plugged && (
             <ArchetypeSocket
               archetypeSocket={archetypeSocket}

@@ -48,12 +48,21 @@ export function ArchetypeRow({
   className,
   children,
   minimal,
+  isWeapons,
 }: {
   className?: string;
   children: React.ReactNode;
   minimal?: boolean;
+  isWeapons?: boolean;
 }) {
   return (
-    <div className={clsx(className, styles.row, { [styles.minimal]: minimal })}>{children}</div>
+    <div
+      className={clsx(className, styles.row, {
+        [styles.minimal]: minimal,
+        [styles.isWeapons]: isWeapons,
+      })}
+    >
+      {children}
+    </div>
   );
 }
