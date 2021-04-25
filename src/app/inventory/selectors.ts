@@ -18,7 +18,7 @@ export const storesSelector = (state: RootState) => state.inventory.stores;
 export const bucketsSelector = createSelector(
   destinyVersionSelector,
   (state: RootState) => state.manifest.d1Manifest,
-  (state: RootState) => d2ManifestSelector(state),
+  d2ManifestSelector,
   (destinyVersion, d1Manifest, d2Manifest) =>
     destinyVersion === 2
       ? d2Manifest && getBucketsD2(d2Manifest)
