@@ -25,6 +25,8 @@
   --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
   // The height of the visible viewport, taking into account virutal keyboards on iOS. Set by JS. This is more accurate than 100vh!
   --viewport-height: 100vh;
+  // The bottom offset of the visual viewport from the layout viewport. Set by JS. This can help attach things to virtual keyboards.
+  --viewport-bottom-offset: 0px;
   // The height of the header including padding that may be added on rounded-corner phones. Set by JS.
   --header-height: 44px;
   // The height of the inventory store header section. Set by JS.
