@@ -355,8 +355,10 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
           <SearchFilter onClear={hideSearch} ref={searchFilter} />
         </span>
       )}
-      <PostmasterWarningBanner />
-      {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
+      {$featureFlags.installBanner && isPhonePortrait && installable && (
+        <AppInstallBanner onClick={installDim} />
+      )}
+      {$featureFlags.postmasterBanner && <PostmasterWarningBanner />}
       {promptIosPwa &&
         ReactDOM.createPortal(
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>

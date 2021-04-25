@@ -46,6 +46,10 @@ declare const $featureFlags: {
   bountyGuide: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
+  /** Install prompt banners for mobile */
+  installBanner: boolean;
+  /** Header banner when postmaster is full */
+  postmasterBanner: boolean;
 };
 
 declare namespace React {

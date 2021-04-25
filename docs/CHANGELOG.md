@@ -7,6 +7,11 @@
 * Multiple mods that affect the same stat now show in the stat bar as different shades of blue.
 * Items in collections now show stats and perks in many cases.
 
+### Beta Only
+
+* If your postmaster is getting full, we'll show a banner if you're on a page where you wouldn't otherwise notice your full postmaster. Hopefully this helps avoid some lost items.
+* On mobile, if you're using DIM through a browser, we prompt to install the app. Not trying to be annoying, but DIM is way better installed!
+
 ## 6.61.0 <span class="changelog-date">(2021-04-18)</span>
 
 * Fixed the stats for some perks if they would bring a stat above the maximum value.

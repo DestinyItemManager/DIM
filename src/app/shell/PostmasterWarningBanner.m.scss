@@ -16,6 +16,7 @@
 
   @include phone-portrait {
     flex-direction: column-reverse;
+    padding: 8px 14px;
     > *:first-child {
       margin-right: 0;
       margin-top: 8px;
