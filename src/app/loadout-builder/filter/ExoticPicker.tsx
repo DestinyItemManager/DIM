@@ -37,7 +37,7 @@ function ExoticPicker({ defs, availableExotics, lbDispatch, onClose }: Props) {
     <Sheet
       header={
         <div>
-          <h1>{t('LB.SelectExotic')}</h1>
+          <h1>{t('LB.ChooseAnExotic')}</h1>
         </div>
       }
       onClose={onClose}
