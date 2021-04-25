@@ -116,7 +116,7 @@ export const getWeaponArchetype = (item: DimItem): PluggableInventoryItemDefinit
   getWeaponArchetypeSocket(item)?.plugged?.plugDef;
 
 export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
-  if (item.isExotic && item.bucket.inArmor && item.sockets) {
+  if (item.bucket.inArmor && item.sockets) {
     const largePerkCategory = item.sockets.categories.find(
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
     );
