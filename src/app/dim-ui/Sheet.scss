@@ -4,11 +4,6 @@ $control-color: rgba(255, 255, 255, 0.5);
 
 .sheet {
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
-  /*
-  @media all and (display-mode: standalone) {
-    padding-bottom: calc(100vh - var(--header-height) - 8px);
-  }
-  */
   left: 0;
   right: 0;
   position: fixed;
@@ -60,10 +55,6 @@ $control-color: rgba(255, 255, 255, 0.5);
     flex-direction: column;
     position: relative;
     max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
-
-    @media all and (display-mode: standalone) {
-      padding-bottom: env(safe-area-inset-bottom);
-    }
   }
 
   .sheet-contents {
