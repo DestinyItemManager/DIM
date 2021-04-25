@@ -9,6 +9,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -25,7 +26,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
   };
 }
 

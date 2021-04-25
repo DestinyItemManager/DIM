@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout-builder/filter/ModPicker';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -364,7 +365,7 @@ function mapStateToProps() {
     allItems: allItemsSelector(state),
     buckets: bucketsSelector(state)!,
     defs:
-      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
+      destinyVersionSelector(state) === 2 ? d2ManifestSelector(state)! : state.manifest.d1Manifest!,
     loadouts: loadoutsSelector(state),
   });
 }

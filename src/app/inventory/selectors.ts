@@ -1,6 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
 import { createSelector } from 'reselect';
@@ -17,7 +18,7 @@ export const storesSelector = (state: RootState) => state.inventory.stores;
 export const bucketsSelector = createSelector(
   destinyVersionSelector,
   (state: RootState) => state.manifest.d1Manifest,
-  (state: RootState) => state.manifest.d2Manifest,
+  d2ManifestSelector,
   (destinyVersion, d1Manifest, d2Manifest) =>
     destinyVersion === 2
       ? d2Manifest && getBucketsD2(d2Manifest)

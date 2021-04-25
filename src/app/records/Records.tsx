@@ -5,7 +5,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -56,7 +56,7 @@ function mapStateToProps() {
     const settings = settingsSelector(state);
     return {
       buckets: bucketsSelector(state),
-      defs: state.manifest.d2Manifest,
+      defs: d2ManifestSelector(state),
       ownedItemHashes: ownedItemsSelectorInstance(state),
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),

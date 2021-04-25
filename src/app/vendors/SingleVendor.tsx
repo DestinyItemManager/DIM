@@ -2,6 +2,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -52,7 +53,7 @@ function mapStateToProps() {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
     profileResponse: profileResponseSelector(state),
     vendors: state.vendors.vendorsByCharacter,
   });

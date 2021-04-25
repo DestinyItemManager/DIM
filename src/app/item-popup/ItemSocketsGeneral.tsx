@@ -1,3 +1,4 @@
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -34,7 +35,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: inventoryWishListsSelector(state)[item.id],
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
   };
 }

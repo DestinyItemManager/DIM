@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout/loadout-types';
-import { RootState } from 'app/store/types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import {
   allItemsSelector,
@@ -24,7 +24,7 @@ import { FilterDefinition, SuggestionsContext } from './filter-types';
 export const suggestionsContextSelector = createSelector(
   allItemsSelector,
   loadoutsSelector,
-  (state: RootState) => state.manifest.d2Manifest,
+  d2ManifestSelector,
   itemInfosSelector,
   allNotesHashtagsSelector,
   makeSuggestionsContext

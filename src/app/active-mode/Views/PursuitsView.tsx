@@ -7,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import Pursuit from 'app/progress/Pursuit';
 import { sortPursuits } from 'app/progress/Pursuits';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
@@ -30,7 +31,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
     trackedTriumphs: trackedTriumphsSelector(state),
     profileResponse: profileResponseSelector(state),
   };

@@ -4,6 +4,7 @@ import { getCurrentActivity } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { refresh } from 'app/shell/refresh';
 import { RootState } from 'app/store/types';
 import { toVendor } from 'app/vendors/d2-vendors';
@@ -75,7 +76,7 @@ export const purchasableBountiesSelector = (store: DimStore) =>
     bucketsSelector,
     currentAccountSelector,
     (state: RootState) => state.vendors.vendorsByCharacter[store.id]?.vendorsResponse,
-    (state: RootState) => state.manifest.d2Manifest,
+    d2ManifestSelector,
     (buckets, account, vendorsResponse, defs) => {
       if (!vendorsResponse) {
         return [];

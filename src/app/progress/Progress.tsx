@@ -13,7 +13,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -62,7 +62,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     stores: sortedStoresSelector(state),
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
