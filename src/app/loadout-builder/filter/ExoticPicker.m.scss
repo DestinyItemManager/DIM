@@ -1,0 +1,8 @@
+.container {
+  composes: subBucket from '../../inventory/StoreBucket.scss';
+}
+
+.defIcon {
+  position: relative;
+  cursor: pointer;
+}

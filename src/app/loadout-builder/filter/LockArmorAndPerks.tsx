@@ -1,4 +1,3 @@
-import DefPicker from 'app/def-picker/DefPicker';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
@@ -28,6 +27,7 @@ import {
   LockedMap,
 } from '../types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
+import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import LockedModIcon from './LockedModIcon';
@@ -73,7 +73,7 @@ function LockArmorAndPerks({
   lockedExotic,
   lbDispatch,
 }: Props) {
-  const [itemDefPickerOpen, setItemDefPickerOpen] = useState(false);
+  const [showExoticPicker, setShowExoticPicker] = useState(false);
   /**
    * Lock currently equipped items on a character
    * Recomputes matched sets
@@ -220,8 +220,8 @@ function LockArmorAndPerks({
           </div>
         )}
         <div className={styles.buttons}>
-          <button type="button" className="dim-button" onClick={() => setItemDefPickerOpen(true)}>
-            <AppIcon icon={addIcon} /> {t('Lock Exotic')}
+          <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
+            <AppIcon icon={addIcon} /> {t('LB.SelectExotic')}
           </button>
         </div>
       </div>
@@ -279,15 +279,13 @@ function LockArmorAndPerks({
           {t('LoadoutBuilder.ResetLocked')}
         </button>
       )}
-      {itemDefPickerOpen &&
+      {showExoticPicker &&
         ReactDom.createPortal(
-          <DefPicker
-            hashes={exoticHashes || []}
-            title={'Lock Exotic'}
-            onClose={() => setItemDefPickerOpen(false)}
-            onDefintionSelected={(def: DestinyInventoryItemDefinition) =>
-              lbDispatch({ type: 'lockExotic', def })
-            }
+          <ExoticPicker
+            defs={defs}
+            exoticHashes={exoticHashes}
+            lbDispatch={lbDispatch}
+            onClose={() => setShowExoticPicker(false)}
           />,
           document.body
         )}
