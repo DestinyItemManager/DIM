@@ -62,7 +62,7 @@ $issue-banner-height: 101px;
 
 // The tallest a "full screen" sheet should be
 @mixin max-sheet-height {
-  max-height: calc(var(--viewport-height) - var(--header-height) - 92px);
+  max-height: calc(100vh - var(--header-height) - 92px);
 }
 
 // A header for items or perks that matches the in-game display

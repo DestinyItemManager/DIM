@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { bungieAlertsSelector } from 'app/shell/selectors';
+import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -8,7 +9,7 @@ import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { GlobalAlertLevelsToToastLevels } from './BungieAlerts';
 import { DimVersions } from './versions';
-import './WhatsNewLink.scss';
+import styles from './WhatsNewLink.m.scss';
 
 /**
  * A link/button to the "What's New" page that highlights the most important action.
@@ -24,7 +25,7 @@ export default function WhatsNewLink({ className }: { className?: string }) {
   if (dimNeedsUpdate) {
     return (
       <a className={className} onClick={reloadDIM}>
-        <AppIcon className="upgrade" icon={updateIcon} />
+        <AppIcon className={styles.upgrade} icon={updateIcon} />
         {t('Header.UpgradeDIM')}
       </a>
     );
@@ -34,9 +35,10 @@ export default function WhatsNewLink({ className }: { className?: string }) {
     return (
       <NavLink to="/whats-new" className={className}>
         <span
-          className={`badge-new bungie-alert-${
-            GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]
-          }`}
+          className={clsx(
+            styles.badgeNew,
+            `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`
+          )}
         />{' '}
         {t('Header.BungieNetAlert')}
       </NavLink>
@@ -46,7 +48,7 @@ export default function WhatsNewLink({ className }: { className?: string }) {
   if (showChangelog) {
     return (
       <NavLink to="/whats-new" className={className}>
-        <span className="badge-new" /> {t('Header.WhatsNew')}
+        <span className={styles.badgeNew} /> {t('Header.WhatsNew')}
       </NavLink>
     );
   }
