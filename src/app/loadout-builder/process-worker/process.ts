@@ -68,8 +68,7 @@ export function process(
   // TODO: replace with stat hashes
   statOrder: StatTypes[],
   // TODO: maps, eradicate StatTypes
-  statFilters: { [stat in StatTypes]: MinMaxIgnored },
-  lockedExoticItemHash?: number
+  statFilters: { [stat in StatTypes]: MinMaxIgnored }
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -198,28 +197,22 @@ export function process(
   let numInserted = 0;
   let numRejectedAfterInsert = 0;
   let numDoubleExotic = 0;
-  // If we dont need the exotic item we initialise it to true
-  let hasLockedExoticItem = lockedExoticItemHash === undefined;
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
 
   for (const helm of helms) {
-    hasLockedExoticItem ||= helm.hash === lockedExoticItemHash;
     for (const gaunt of gaunts) {
-      hasLockedExoticItem ||= gaunt.hash === lockedExoticItemHash;
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (helm.equippingLabel && gaunt.equippingLabel) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
-        hasLockedExoticItem ||= chest.hash === lockedExoticItemHash;
         if (chest.equippingLabel && (helm.equippingLabel || gaunt.equippingLabel)) {
           numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
-          hasLockedExoticItem ||= leg.hash === lockedExoticItemHash;
           if (
             leg.equippingLabel &&
             (chest.equippingLabel || helm.equippingLabel || gaunt.equippingLabel)
@@ -227,11 +220,7 @@ export function process(
             numDoubleExotic += classItems.length;
             continue;
           }
-          // At this stage if the locked exotic item requirements are not met we skip the set(s) as exotic class items
-          // dont exist in D2
-          if (!hasLockedExoticItem) {
-            continue;
-          }
+
           for (const classItem of classItems) {
             const armor = [helm, gaunt, chest, leg, classItem];
 
