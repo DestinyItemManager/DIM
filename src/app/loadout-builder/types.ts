@@ -35,11 +35,6 @@ export interface LockedItemCase {
   item: DimItem;
   bucket: InventoryBucket;
 }
-export interface LockedPerk {
-  type: 'perk';
-  perk: PluggableInventoryItemDefinition;
-  bucket: InventoryBucket;
-}
 
 export interface LockedExclude {
   type: 'exclude';
@@ -52,7 +47,7 @@ export interface LockedExotic {
   bucketHash: BucketHashes;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
+export type LockedItemType = LockedItemCase | LockedExclude;
 
 /** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{

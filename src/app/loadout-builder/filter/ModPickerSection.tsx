@@ -13,7 +13,7 @@ import {
   slotSpecificPlugCategoryHashes,
 } from '../types';
 import styles from './ModPickerSection.m.scss';
-import { SelectableMod } from './SelectableBungieImage';
+import SelectableMod from './SelectableMod';
 
 /** Slot specific mods can have at most 2 mods. */
 const MAX_SLOT_SPECIFIC_MODS = 2;

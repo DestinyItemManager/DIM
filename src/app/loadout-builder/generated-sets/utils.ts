@@ -1,7 +1,6 @@
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import { count } from '../../utils/util';
-import { ArmorSet, LockedMap, statKeys, StatTypes } from '../types';
+import { ArmorSet, statKeys, StatTypes } from '../types';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats: Set<StatTypes>) {
@@ -19,7 +18,6 @@ function getComparatorsForMatchedSetSorting(statOrder: StatTypes[], enabledStats
 }
 
 export function sortGeneratedSets(
-  lockedMap: LockedMap,
   statOrder: StatTypes[],
   enabledStats: Set<StatTypes>,
   sets?: readonly ArmorSet[]
@@ -28,57 +26,9 @@ export function sortGeneratedSets(
     return;
   }
 
-  // TODO Can these two sorts be merged?
-  let matchedSets = Array.from(sets).sort(
+  return Array.from(sets).sort(
     chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats))
   );
-
-  matchedSets = sortSetsByMostMatchedPerks(matchedSets, lockedMap);
-
-  return matchedSets;
-}
-
-/**
- * Sort sets by set with most number of matched perks
- */
-function sortSetsByMostMatchedPerks(setMap: readonly ArmorSet[], lockedMap: LockedMap): ArmorSet[] {
-  let sortedSets: ArmorSet[] = Array.from(setMap);
-
-  // Prioritize list based on number of matched perks
-  Object.keys(lockedMap).forEach((bucket) => {
-    const bucketHash = parseInt(bucket, 10);
-    const locked = lockedMap[bucketHash];
-    // if there are locked perks for this bucket
-    if (!locked) {
-      return;
-    }
-    const lockedPerks = locked.filter((lockedItem) => lockedItem.type === 'perk');
-    if (!lockedPerks.length) {
-      return;
-    }
-    // Sort based on what sets have the most matched perks
-    sortedSets = _.sortBy(
-      sortedSets,
-      (set) =>
-        -_.sumBy(set.armor, (items) => {
-          const item = items?.[0];
-          if (!item || !item.sockets) {
-            return 0;
-          }
-
-          return count(item.sockets.allSockets, (slot) =>
-            slot.plugOptions.some((perk) =>
-              lockedPerks.some(
-                (lockedPerk) =>
-                  lockedPerk.type === 'perk' && lockedPerk.perk.hash === perk.plugDef.hash
-              )
-            )
-          );
-        })
-    );
-  });
-
-  return sortedSets;
 }
 
 /**

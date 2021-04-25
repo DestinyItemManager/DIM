@@ -64,8 +64,6 @@ export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) 
       return second.type === 'item' && first.item.id === second.item.id;
     case 'exclude':
       return second.type === 'exclude' && first.item.id === second.item.id;
-    case 'perk':
-      return second.type === 'perk' && first.perk.hash === second.perk.hash;
   }
 }
 

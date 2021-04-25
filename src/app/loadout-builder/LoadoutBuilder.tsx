@@ -265,8 +265,7 @@ function LoadoutBuilder({
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
   const sets = result?.sets;
 
-  const filteredSets = useMemo(() => sortGeneratedSets(lockedMap, statOrder, enabledStats, sets), [
-    lockedMap,
+  const filteredSets = useMemo(() => sortGeneratedSets(statOrder, enabledStats, sets), [
     statOrder,
     enabledStats,
     sets,
