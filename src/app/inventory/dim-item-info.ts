@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { tagCleanup } from './actions';
 import { DimItem } from './item-types';
-import { itemInfosSelector } from './selectors';
+import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 import { DimStore } from './store-types';
 
 // sortOrder: orders items within a bucket, ascending
@@ -173,4 +173,4 @@ export function getNotes(
 
 /** given an item, returns a selector which monitors that item's notes */
 export const itemNoteSelector = (item: DimItem) => (state: RootState): string | undefined =>
-  getNotes(item, itemInfosSelector(state));
+  getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state));
