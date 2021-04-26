@@ -1,5 +1,7 @@
 ## Next
 
+## 6.62.0 <span class="changelog-date">(2021-04-25)</span>
+
 * Exotic class item perks don't prevent selecting another exotic perk in Loadout Optimizer.
 * Buttons and menus are bigger and easier to tap on mobile.
 * Fixes to the heights of Loadout Optimizer result sets.
