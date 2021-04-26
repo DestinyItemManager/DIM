@@ -491,6 +491,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   cayde6: [],
   cipher: [],
+  contact: [],
   crownofsorrow: [
     4450861, // Shadow's Greaves
     256904954, // Shadow's Grips
@@ -1845,6 +1846,9 @@ const missingSources: { [key: string]: number[] } = {
     3950028839, // Shadow's Cloak
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
+  ],
+  limited: [
+    2683682447, // Traitor's Fate
   ],
   lostsectors: [],
   mars: [
