@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import {
@@ -43,7 +44,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: inventoryWishListsSelector(state)[item.id],
-    defs: state.manifest.d2Manifest,
+    defs: d2ManifestSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
@@ -110,7 +111,7 @@ function ItemSocketsWeapons({
   return (
     <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
       {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
-        <ArchetypeRow minimal={minimal}>
+        <ArchetypeRow minimal={minimal} isWeapons={true}>
           {archetypeSocket?.plugged && (
             <ArchetypeSocket
               archetypeSocket={archetypeSocket}

@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -33,7 +34,7 @@ interface StoreProps {
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     defs:
-      destinyVersionSelector(state) === 2 ? state.manifest.d2Manifest! : state.manifest.d1Manifest!,
+      destinyVersionSelector(state) === 2 ? d2ManifestSelector(state)! : state.manifest.d1Manifest!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: querySelector(state),

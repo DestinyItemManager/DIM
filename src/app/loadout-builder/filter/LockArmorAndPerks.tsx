@@ -7,6 +7,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -55,7 +56,7 @@ function mapStateToProps() {
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     language: settingsSelector(state).language,
-    defs: state.manifest.d2Manifest!,
+    defs: d2ManifestSelector(state)!,
   });
 }
 

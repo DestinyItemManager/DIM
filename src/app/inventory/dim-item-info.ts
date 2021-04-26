@@ -1,7 +1,7 @@
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tl } from 'app/i18next-t';
-import { ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -170,3 +170,7 @@ export function getNotes(
         undefined
     : undefined;
 }
+
+/** given an item, returns a selector which monitors that item's notes */
+export const itemNoteSelector = (item: DimItem) => (state: RootState): string | undefined =>
+  getNotes(item, itemInfosSelector(state));

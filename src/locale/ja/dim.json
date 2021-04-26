@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} アイテム",
     "Filters": "フィルター",
     "InstallDIM": "アプリとしてインストールします。",
+    "InstallDIMBanner": "DIM をホーム画面のアプリとしてインストール",
     "Inventory": "所持品",
-    "IosPwaPrompt": "Mobile Safariで共有アイコン(下部の中央ボタン) をクリックし、「ホーム画面に追加」を選択します。",
+    "IosPwaPrompt": "Safariで共有アイコン(下の真ん中のボタン)をクリックし、\"ホーム画面に追加\"を選択します。",
     "KeyboardShortcuts": "キーボード ショート カット",
     "Menu": "メニュー",
     "Refresh": "Destiny データ [R] を更新",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "本当に「{{name}}」を削除しますか？",
     "CouldNotEquip": "{{itemname}} を装備できませんでした",
     "Create": "ロードアウトを作成",
-    "Delete": "ロードアウトを削除",
+    "Delete": "削除",
     "Edit": "ロードアウトを編集",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
     "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは「1つのエキゾチック」ルールによって制限されません。",
@@ -683,6 +684,10 @@
       "Reload": "リロード"
     },
     "Unlock": "ロックを解除する"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "ポストマスターがほぼいっぱいです! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "ポストマスターがいっぱいです! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "バウンティ",

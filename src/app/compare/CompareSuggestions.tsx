@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
-import { RootState } from 'app/store/types';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
@@ -17,7 +17,7 @@ export default memo(function CompareSuggestions({
   categoryItems: DimItem[];
   onQueryChanged(query: string): void;
 }) {
-  const defs = useSelector((state: RootState) => state.manifest.d2Manifest);
+  const defs = useSelector(d2ManifestSelector);
   const filterFactory = useSelector(filterFactorySelector);
 
   // Find all possible buttons

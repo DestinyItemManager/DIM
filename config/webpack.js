@@ -415,6 +415,10 @@ module.exports = (env) => {
         '$featureFlags.bountyGuide': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
+        // Install prompt banners for mobile
+        '$featureFlags.installBanner': JSON.stringify(!env.release),
+        // Header banner when postmaster is full
+        '$featureFlags.postmasterBanner': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

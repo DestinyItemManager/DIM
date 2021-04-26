@@ -148,12 +148,12 @@ function buildDefinedSockets(
   // TODO: check out intrinsicsockets as well
 
   for (let i = 0; i < socketDefEntries.length; i++) {
-    const socket = socketDefEntries[i];
-    const built = buildDefinedSocket(defs, socket, i, itemDef);
+    const socketDef = socketDefEntries[i];
+    const built = buildDefinedSocket(defs, socketDef, i, itemDef);
 
     // There are a bunch of garbage sockets that we ignore
     if (built) {
-      createdSockets.push();
+      createdSockets.push(built);
     }
   }
 

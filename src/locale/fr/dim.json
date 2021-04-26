@@ -79,7 +79,7 @@
   },
   "Catalyst": {
     "Source": {
-      "HeirApparent": "Found during Guardian Games 2021.",
+      "HeirApparent": "Trouvé durant les Jeux des Gardiens 2021.",
       "LeviathansBreath": "Trouvé en battant des ennemis puissants avec cette arme.",
       "Mission": "Terminez la mission \"{{title}}\".",
       "Quest": "Terminez la quête \"{{title}}\".",
@@ -160,8 +160,8 @@
     "BulkClear_plural": "Suppression des étiquettes de {{count}} objets.",
     "BulkRevert": "Rajout de l'étiquette sur 1 objet.",
     "BulkRevert_plural": "Rajout des étiquettes sur {{count}} objets.",
-    "BulkTag": "Élément sélectionné balisé comme {{tag}}.",
-    "BulkTag_plural": "{{count}} Éléments sélectionnés balisés comme {{tag}}.",
+    "BulkTag": "Élément sélectionné étiqueté {{tag}}.",
+    "BulkTag_plural": "{{count}} Éléments sélectionnés étiquetés {{tag}}.",
     "Class": "Affiche les objets en fonction de leur affinité de classe.",
     "Combine": "Les filtres peuvent être combinés ou groupés avec des parenthèses, \"or\" et \"and\" pour affiner votre recherche, par exemple \"{{example}}\".",
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
@@ -275,8 +275,9 @@
     "FilterMatchCount_plural": "{{count}} objets",
     "Filters": "Filtres",
     "InstallDIM": "Installer en tant qu'application",
+    "InstallDIMBanner": "Installez DIM comme application sur votre écran d'accueil",
     "Inventory": "Inventaire",
-    "IosPwaPrompt": "Dans Safari Mobile, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
+    "IosPwaPrompt": "Dans Safari, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
     "KeyboardShortcuts": "Raccourcis Clavier",
     "Menu": "Menu",
     "Refresh": "Rafraîchir les données de Destiny [R]",
@@ -285,7 +286,7 @@
     "SaveSearch": "Enregistrer la recherche",
     "SearchResults": "Afficher les Objets",
     "Shop": "Boutique",
-    "TagAs": "Étiquetter comme '{{tag}}'",
+    "TagAs": "Étiqueter comme '{{tag}}'",
     "UpgradeDIM": "Mettre à jour DIM",
     "WhatsNew": "Quoi de neuf"
   },
@@ -297,7 +298,7 @@
   "Hotkey": {
     "CheatSheetTitle": "Raccourcis Clavier:",
     "ClearDialog": "Fermer le dialogue",
-    "ClearNewItems": "Effacer les nouveaux objets",
+    "ClearNewItems": "Vider la liste de nouveaux objets",
     "Enter": "ENTRER",
     "LockUnlock": "Verrouiller ou déverrouiller un objet",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
@@ -385,7 +386,7 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
-    "LB": "Optimiseur D'Arsenal",
+    "LB": "Optimiseur",
     "LightMode": {
       "HelpCurrent": "Calcule les arsenaux aux niveaux de défense actuels.",
       "HelpScaled": "Calcule les arsenaux comme si tous les objets avaient 350 de défense.",
@@ -421,8 +422,8 @@
     "Vendors": "Chargement des marchands Destiny..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
-    "AssumeMasterwork": "Considérer comme ayant les statistiques de Pièce Maîtresse",
+    "AddHalfTierMods": "Ajouter les mods +5",
+    "AssumeMasterwork": "Supposer statistiques de Pièce Maîtresse",
     "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets sont une pièce maîtresse.",
     "ChooseAlternate": "Choisissez un autre objet avec les mêmes statistiques:",
     "ChooseAlternateTitle": "Choisissez un autre objet",
@@ -441,7 +442,7 @@
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaison d'armure possible, mais DIM n'a regardé que les {{combos, number}} meilleurs combos de statistiques pour s'assurer que votre navigateur n'aies pas d'erreur. Sélectionnez des attributs, utiliser la recherche, ou démantelez de vieilles armures pour réduire le nombre de combos. Épingler des mods généraux ou saisonniers augmente le nombre de combos.",
     "LockEquipped": "Épingler objets équipés",
     "LockItem": "Épingler objet",
-    "LockPerk": "Sélectionner l'attribut",
+    "LockPerk": "Sélectionner un attribut",
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFoundExoticsAndMods": "Vous avec un exotique et 5 mods saisonniers sélectionnés.",
     "NoBuildsFoundModsAreTooExpensive": "Les besoins énergétiques des mods sélectionnés sont trop élevés.",
@@ -465,8 +466,8 @@
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
     "TierNumber": "T{{tier}}",
-    "UnableToAddAllMods": "Unable to add all mods.",
-    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
+    "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
+    "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
     "UnlockItem": "Désépingler Objet"
   },
   "Loadouts": {
@@ -479,8 +480,8 @@
     "AppliedError": "Aucun des objets de votre arsenal n'a pu être transféré.",
     "AppliedWarn": "Votre arsenal a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
-    "ArmorMods": "Armor Mods",
-    "AssumeMaxWeapons": "Considérer que les armes sont au niveau de puissance maximum",
+    "ArmorMods": "Mods d'armure",
+    "AssumeMaxWeapons": "Supposer armes au niveau de puissance maximum",
     "Before": "Avant '{{name}}'",
     "ChooseItem": "Ajouter {{name}}",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
     "CouldNotEquip": "Impossible d'équiper {{itemname}}",
     "Create": "Créer Arsenal",
-    "Delete": "Effacer Arsenal",
+    "Delete": "Supprimer",
     "Edit": "Modifier Arsenal",
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
     "EquippableDifferent2": "La puissance maximale n'est pas limité par la règle de '\"Un seul exotique\" lors du calcul de la puissance de vos récompenses puissantes/de prestige.",
@@ -526,7 +527,7 @@
     "NotificationMessage_plural": "Équipement d'un arsenal de {{count}} objets sur {{store}}",
     "NotificationTitle": "Arsenal: {{name}}",
     "OnlyItems": "Seuls les objets équipables, matériaux et consommables peuvent être ajoutés à un arsenal.",
-    "OpenInOptimizer": "Ouvrir dans L'Optimiseur D'Arsenal",
+    "OpenInOptimizer": "Ouvrir dans L'Optimiseur",
     "PullFromPostmaster": "Collecter le commis des postes",
     "PullFromPostmasterError": "Impossible de récupérer du commis des postes: {{error}}.",
     "PullFromPostmasterGeneralError": "Impossible de récupérer tous les objets du commis des postes.",
@@ -628,7 +629,7 @@
   "Organizer": {
     "BulkMove": "Déplacer vers",
     "BulkMoveLoadoutName": "Sélectionné dans l'organisateur",
-    "BulkTag": "Étiquetter",
+    "BulkTag": "Étiqueter",
     "Columns": {
       "Archetype": "Archétype",
       "BaseStats": "Statistiques de Base",
@@ -670,7 +671,7 @@
     "NoMobile": "Tournez votre téléphone sur le côté pour utiliser l'Organisateur.",
     "Note": "Définir la Note",
     "NotePrompt": "Note:",
-    "OpenIn": "Show in Organizer",
+    "OpenIn": "Afficher dans l'organisateur",
     "Organizer": "Organisateur",
     "SelectAll": "Tout sélectionner",
     "SelectItem": "Sélectionner ou désélectionner {{name}}",
@@ -683,6 +684,10 @@
       "Reload": "Recharger"
     },
     "Unlock": "Déverrouiller"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "Le commis des postes est presque plein ! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Le commis des postes est plein ! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Contrats",
@@ -750,7 +755,7 @@
     "Ratings": "Notes",
     "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",
-    "SetSort": "Trier les objets par:",
+    "SetSort": "Trier les objets par :",
     "Settings": "Paramètres",
     "ShowNewItems": "Indiquer les nouveaux objets avec un point rouge",
     "SingleCharacter": "Afficher uniquement le personnage actuel",
@@ -858,7 +863,7 @@
     "Junk": "Camelote",
     "Keep": "Garder",
     "LockAll": "Verouiller les objets",
-    "TagItem": "Étiquetter",
+    "TagItem": "Étiqueter l'objet",
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triumphs": {

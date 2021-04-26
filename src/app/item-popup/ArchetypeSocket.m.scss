@@ -12,9 +12,13 @@
     align-items: center;
   }
 
+  &.isWeapons {
+    align-items: center;
+  }
+
   :global(.socket-container) img {
-    width: calc(26 / 50 * var(--item-size));
-    height: calc(26 / 50 * var(--item-size));
+    width: calc(24 / 50 * var(--item-size));
+    height: calc(24 / 50 * var(--item-size));
   }
 
   :global(.item-socket-category-Consumable) img {
@@ -25,15 +29,18 @@
 
 .mod {
   margin-top: calc(4 / 50 * var(--item-size));
-  .minimal & {
+  margin-right: 2px;
+  .minimal &,
+  .isWeapons & {
     margin-top: 0;
+    margin-right: 0;
   }
 
   img {
-    width: calc(26 / 50 * var(--item-size));
-    height: calc(26 / 50 * var(--item-size));
+    width: calc(24 / 50 * var(--item-size));
+    height: calc(24 / 50 * var(--item-size));
     transform: scale(1.4);
-    margin-right: 6px;
+    margin-right: 7px;
     margin-left: 2px;
 
     .minimal & {

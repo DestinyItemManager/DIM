@@ -9,6 +9,7 @@ import {
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
@@ -63,7 +64,7 @@ function mapStateToProps() {
   const unlockedModsSelector = createSelector(
     profileResponseSelector,
     allItemsSelector,
-    (state: RootState) => state.manifest.d2Manifest!,
+    d2ManifestSelector,
     (_: RootState, props: ProvidedProps) => props.classType,
     (
       profileResponse: DestinyProfileResponse,
@@ -135,7 +136,7 @@ function mapStateToProps() {
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
-    defs: state.manifest.d2Manifest!,
+    defs: d2ManifestSelector(state)!,
     mods: unlockedModsSelector(state, props),
   });
 }

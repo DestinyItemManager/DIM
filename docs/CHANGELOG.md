@@ -1,11 +1,25 @@
 ## Next
 
+## 6.62.0 <span class="changelog-date">(2021-04-25)</span>
+
 * Exotic class item perks don't prevent selecting another exotic perk in Loadout Optimizer.
 * Buttons and menus are bigger and easier to tap on mobile.
-* Armor stats have been revamped and show their actual game effect, including going beyond the 42-stat limit or going negative.
-* We now always know the base stats of items, and are not confused by the mods that are applied to armor.
-* Multiple mods that affect the same stat now show in the stat bar as different shades of blue.
-* Items in collections now show stats and perks in many cases.
+* Fixes to the heights of Loadout Optimizer result sets.
+* Aeon perks are highlighted as their armor's exotic effect.
+* Notes field hashtag suggestions tuned a bit to be more helpful.
+* Item notes are displayed in Compare sheet when hovering or holding down on an item icon.
+* Improvements to how drawer-style elements size themselves and interact with mobile keyboard popups.
+* Some quests were being skipped, but now display on the Progress page (catalyst quests, Guardian Games cards, Medal Case).
+* Armor stats changes
+  * Stats have been revamped and show their actual game effect, including stats past the in-game display caps of 0 and 42.
+  * Base stats are no longer confused by very large or very low current values.
+  * Multiple mods affecting the same stat now display as separate stat bar segments. You can hover or tap these for more information.
+  * Armor in collections now includes default stats and their exotic perks.
+
+### Beta Only
+
+* If your postmaster is getting full, we'll show a banner if you're on a page where you wouldn't otherwise notice your full postmaster. Hopefully this helps avoid some lost items.
+* On mobile, if you're using DIM through a browser, we prompt to install the app. Not trying to be annoying, but DIM is way better installed!
 
 ## 6.61.0 <span class="changelog-date">(2021-04-18)</span>
 

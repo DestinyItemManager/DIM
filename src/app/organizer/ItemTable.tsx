@@ -18,6 +18,7 @@ import { applyLoadout } from 'app/loadout/loadout-apply';
 import { Loadout } from 'app/loadout/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
 import { loadoutsSelector } from 'app/loadout/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -107,7 +108,7 @@ function mapStateToProps() {
     const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
     return {
       items,
-      defs: state.manifest.d2Manifest!,
+      defs: d2ManifestSelector(state)!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
       wishList: inventoryWishListsSelector(state),

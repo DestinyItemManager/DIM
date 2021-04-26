@@ -79,7 +79,7 @@
   },
   "Catalyst": {
     "Source": {
-      "HeirApparent": "Found during Guardian Games 2021.",
+      "HeirApparent": "Gefunden während der Hüterspiele 2021.",
       "LeviathansBreath": "Gefunden, indem du mächtige Gegner mit dieser Waffe besiegst.",
       "Mission": "Schließe die \"{{title}}\" Mission ab.",
       "Quest": "Schließe die \"{{title}}\" Quest ab.",
@@ -275,6 +275,7 @@
     "FilterMatchCount_plural": "{{count}} Gegenstände",
     "Filters": "Filter",
     "InstallDIM": "Als App installieren",
+    "InstallDIMBanner": "Installiere DIM als App auf dem Startbildschirm",
     "Inventory": "Inventar",
     "IosPwaPrompt": "Klicke im mobilen Safari auf das Teilen-Symbol (mittlere Taste unten) und wähle \"Zu Home Screen hinzufügen\".",
     "KeyboardShortcuts": "Tastaturkürzel",
@@ -488,7 +489,7 @@
     "ConfirmDelete": "'{{name}}' wirklich löschen?",
     "CouldNotEquip": "{{itemname}} konnte nicht ausgerüstet werden",
     "Create": "Ausrüstung erstellen",
-    "Delete": "Ausrüstung löschen",
+    "Delete": "Löschen",
     "Edit": "Ausrüstung bearbeiten",
     "EquippableDifferent1": "Mehrere Exotische Gegenstände wurden verwendet, um dein maximales Powerlevel zu berechnen, so dass die angezeigte Anzahl bei der Ausrüstung deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
     "EquippableDifferent2": "Das maximale Powerlevel ist nicht durch die Regel \"Ein exotischer Gegenstand\" begrenzt, wenn die Höhe deiner Drops/Mächtiger Loot/Pinnacle-Belohnungen festgelegt wird.",
@@ -683,6 +684,10 @@
       "Reload": "Nachladen"
     },
     "Unlock": "Entsperren"
+  },
+  "PostmasterWarningBanner": {
+    "PostmasterAlmostFull": "Die Poststelle ist fast voll! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Die Poststelle ist voll! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Beutezüge",
