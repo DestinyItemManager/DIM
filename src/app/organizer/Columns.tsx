@@ -547,8 +547,7 @@ function PerksCell({
   let sockets = item.sockets.categories.flatMap((c) =>
     getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
-        s.plugged && // ignore empty sockets
-        s.plugOptions.length > 0 &&
+        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
           isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
