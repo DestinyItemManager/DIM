@@ -104,6 +104,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2130345705, // Source: Unlocked by default.
       2242939082, // Requires Hunter Class
       2308290458, // Requires 1,000 Warlock Kills
+      2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
       2895784523, // Source: Pledge to all factions on a single character.
       2929562373, // Source: Fully upgrade your Solar subclass.
@@ -129,6 +130,12 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     itemHashes: [],
     sourceHashes: [
       4155903822, // Source: Obtained from Master Cryptarch Rahool.
+    ],
+  },
+  contact: {
+    itemHashes: [],
+    sourceHashes: [
+      2039343154, // Source: Contact public event.
     ],
   },
   crownofsorrow: {
@@ -196,6 +203,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2968206374, // Source: Earned as a Deluxe Edition bonus.
       2985242208, // Source: Earned from a charity promotion.
       3212282221, // Source: Forsaken Annual Pass
+      4069355515, // Source: Handed out at US events in 2019.
       4166998204, // Source: Earned as a pre-order bonus.
     ],
   },
@@ -323,12 +331,8 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       1677921161, // Source: Festival of the Lost 2018.
       1919933822, // Source: Festival of the Lost 2020.
       2011810450, // Source: Season 13 Guardian Games
-      2039343154, // Source: Contact public event.
       2187511136, // Source: Earned during the seasonal Revelry event.
-      2230358252, // Source: End-of-Season event.
       2502262376, // Source: Earned during the seasonal Crimson Days event.
-      2723305286, // Source: Raid Ring promotional event.
-      2744321951, // Source: Complete a heroic Public Event.
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019.
       3388021959, // Source: Earned during the Guardian Games event.
@@ -337,7 +341,6 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       3736521079, // Reached level 1 in the Ages of Triumph record book.
       3952847349, // Source: The Dawning.
       4054646289, // Source: Earned during the seasonal Dawning event.
-      4069355515, // Source: Handed out at US events in 2019.
     ],
   },
   eververse: {
@@ -483,6 +486,21 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
       2653618435, // Source: Leviathan raid.
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       4009509410, // Source: Complete challenges in the Leviathan raid.
+    ],
+  },
+  limited: {
+    itemHashes: [],
+    sourceHashes: [
+      639650067, // Source: Limited Edition of Destiny 2.
+      1358645302, // Source: Unlocked by a special offer.
+      1412777465, // Source: Forsaken Refer-a-Friend
+      1743434737, // Source: Destiny 2 "Forsaken" preorder bonus gift.
+      1866448829, // Source: Deluxe Edition Bonus
+      2968206374, // Source: Earned as a Deluxe Edition bonus.
+      2985242208, // Source: Earned from a charity promotion.
+      3212282221, // Source: Forsaken Annual Pass
+      4069355515, // Source: Handed out at US events in 2019.
+      4166998204, // Source: Earned as a pre-order bonus.
     ],
   },
   lostsectors: {
@@ -660,6 +678,7 @@ const D2Sources: { [key: string]: { itemHashes: number[]; sourceHashes: number[]
     sourceHashes: [
       1126234343, // Source: Witness Rasputin's Full Power
       1497107113, // Source: Seasonal Quest, "Seraph Warsat Network".
+      2230358252, // Source: End-of-Season event.
       3492941398, // Source: Complete quest "The Lie"
       3937492340, // Source: Complete Seraph bounties.
     ],
