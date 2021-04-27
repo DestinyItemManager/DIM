@@ -3,6 +3,8 @@
 interface CssExports {
   'container': string;
   'defIcon': string;
+  'header': string;
+  'items': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

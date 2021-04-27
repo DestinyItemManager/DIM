@@ -5,8 +5,6 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { useReducer } from 'react';
 import {
   ArmorSet,
@@ -90,7 +88,7 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; def: DestinyInventoryItemDefinition; bucketHash: BucketHashes }
+  | { type: 'lockExotic'; lockedExotic: LockedExotic }
   | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
@@ -191,8 +189,8 @@ function lbStateReducer(
       };
     }
     case 'lockExotic': {
-      const { def, bucketHash } = action;
-      return { ...state, lockedExotic: { def, bucketHash } };
+      const { lockedExotic } = action;
+      return { ...state, lockedExotic };
     }
     case 'removeLockedExotic': {
       return { ...state, lockedExotic: undefined };

@@ -55,7 +55,7 @@ export default function GeneratedSetItem({
 
     if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
       const def = defs.InventoryItem.get(item.hash);
-      lbDispatch({ type: 'lockExotic', def, bucketHash: item.bucket.hash });
+      lbDispatch({ type: 'lockExotic', lockedExotic: { def, bucketHash: item.bucket.hash } });
     } else {
       lbDispatch({
         type: 'openModPicker',

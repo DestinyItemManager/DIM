@@ -1,8 +1,23 @@
 .container {
-  composes: subBucket from '../../inventory/StoreBucket.scss';
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.header {
+  font-weight: 600;
+  font-size: 20px;
+  margin: 8px 0 4px 0;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .defIcon {
   position: relative;
   cursor: pointer;
+  margin: 4px;
 }

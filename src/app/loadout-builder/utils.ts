@@ -8,7 +8,7 @@ import { LockedItemType, statValues } from './types';
 /**
  *  Filter out plugs that we don't want to show in the perk picker. We only want exotic perks.
  */
-export function filterPlugs(socket: DimSocket) {
+export function filterExoticPerks(socket: DimSocket) {
   if (!socket.plugged) {
     return false;
   }

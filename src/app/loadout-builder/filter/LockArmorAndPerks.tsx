@@ -43,6 +43,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
+  isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   stores: DimStore[];
   language: string;
@@ -53,6 +54,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
+    isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     language: settingsSelector(state).language,
@@ -72,6 +74,8 @@ function LockArmorAndPerks({
   stores,
   availableExotics,
   lockedExotic,
+  isPhonePortrait,
+  language,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -285,6 +289,8 @@ function LockArmorAndPerks({
           <ExoticPicker
             defs={defs}
             availableExotics={availableExotics}
+            isPhonePortrait={isPhonePortrait}
+            language={language}
             lbDispatch={lbDispatch}
             onClose={() => setShowExoticPicker(false)}
           />,
