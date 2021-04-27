@@ -92,7 +92,7 @@ function ExoticPicker({
                 autoCorrect="off"
                 autoCapitalize="off"
                 autoFocus={autoFocus}
-                placeholder={t('LB.SearchAMod')}
+                placeholder={t('LB.SearchAnExotic')}
                 type="text"
                 name="filter"
                 value={query}
