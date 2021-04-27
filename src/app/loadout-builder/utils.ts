@@ -1,28 +1,7 @@
-import { DimItem, DimSocket } from 'app/inventory/item-types';
-import { TierType } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { DimItem } from 'app/inventory/item-types';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 import { LockedItemType, statValues } from './types';
-
-/**
- *  Filter out plugs that we don't want to show in the perk picker. We only want exotic perks.
- */
-export function filterExoticPerks(socket: DimSocket) {
-  if (!socket.plugged) {
-    return false;
-  }
-
-  const plugItem = socket.plugged.plugDef;
-  if (!plugItem || !plugItem.plug) {
-    return false;
-  }
-
-  return (
-    plugItem.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-    plugItem.inventory!.tierType === TierType.Exotic
-  );
-}
 
 /**
  * Add a locked item to the locked item list for a bucket.

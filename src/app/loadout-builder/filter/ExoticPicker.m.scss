@@ -16,8 +16,16 @@
   flex-wrap: wrap;
 }
 
-.defIcon {
-  position: relative;
+.exotic {
   cursor: pointer;
   margin: 4px;
+  width: min-content;
+}
+
+.itemImage {
+  position: relative;
+}
+
+.perk {
+  border: none;
 }

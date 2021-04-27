@@ -2,9 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'container': string;
-  'defIcon': string;
+  'exotic': string;
   'header': string;
+  'itemImage': string;
   'items': string;
+  'perk': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

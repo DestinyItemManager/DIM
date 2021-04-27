@@ -1,16 +1,22 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
+import { TierType } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LockedExotic } from '../types';
 import styles from './ExoticPicker.m.scss';
+
+interface LockedExoticWithPerk extends LockedExotic {
+  exoticPerk: PluggableInventoryItemDefinition;
+}
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -34,16 +40,22 @@ function ExoticPicker({
   const [query, setQuery] = useState('');
 
   const lockableExotics = useMemo(() => {
-    const rtn: LockedExotic[] = [];
+    const rtn: LockedExoticWithPerk[] = [];
 
     if (availableExotics?.length) {
       const uniqueExotics = _.uniqBy(availableExotics, (item) => item.hash);
 
       for (const item of uniqueExotics) {
         const def = defs.InventoryItem.get(item.hash);
+        const exoticPerk = item.sockets?.allSockets.find(
+          (socket) =>
+            socket.plugged &&
+            socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+            socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
+        )?.plugged?.plugDef;
 
-        if (def?.displayProperties.hasIcon) {
-          rtn.push({ def, bucketHash: item.bucket.hash });
+        if (def?.displayProperties.hasIcon && exoticPerk) {
+          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk });
         }
       }
     }
@@ -61,7 +73,9 @@ function ExoticPicker({
       ? lockableExotics.filter(
           (exotic) =>
             regexp.test(exotic.def.displayProperties.name) ||
-            regexp.test(exotic.def.displayProperties.description)
+            regexp.test(exotic.def.displayProperties.description) ||
+            regexp.test(exotic.exoticPerk.displayProperties.name) ||
+            regexp.test(exotic.exoticPerk.displayProperties.description)
         )
       : lockableExotics;
 
@@ -111,16 +125,22 @@ function ExoticPicker({
             <div key={exotics[0].def.itemTypeDisplayName}>
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
               <div className={styles.items}>
-                {exotics.map((lockedExotic) => (
+                {exotics.map((exotic) => (
                   <div
-                    key={lockedExotic.def.hash}
-                    className={styles.defIcon}
+                    key={exotic.def.hash}
+                    className={styles.exotic}
                     onClick={() => {
-                      lbDispatch({ type: 'lockExotic', lockedExotic });
+                      lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
                       onClose();
                     }}
                   >
-                    <DefItemIcon itemDef={lockedExotic.def} />
+                    <div>{exotic.def.displayProperties.name}</div>
+                    <div className={styles.itemImage}>
+                      <DefItemIcon itemDef={exotic.def} defs={defs} />
+                    </div>
+                    <div>{exotic.exoticPerk.displayProperties.name}</div>
+                    <DefItemIcon className={styles.perk} itemDef={exotic.exoticPerk} defs={defs} />
+                    <div>{exotic.exoticPerk.displayProperties.description}</div>
                   </div>
                 ))}
               </div>
