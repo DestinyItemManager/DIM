@@ -21,6 +21,7 @@
 .categories {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .category {
@@ -46,6 +47,7 @@
   align-items: center;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: fit-content;
 
   > * {
