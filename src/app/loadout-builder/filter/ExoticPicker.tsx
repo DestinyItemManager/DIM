@@ -1,8 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DimItem } from 'app/inventory/item-types';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
@@ -11,13 +10,8 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { LockedExotic } from '../types';
 import styles from './ExoticPicker.m.scss';
-
-interface LockedExoticWithPerk extends LockedExotic {
-  exoticPerk: PluggableInventoryItemDefinition;
-  shortPerkDescription?: string;
-}
+import ExoticTile, { LockedExoticWithPerk } from './ExoticTile';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -137,34 +131,13 @@ function ExoticPicker({
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
               <div className={styles.items}>
                 {exotics.map((exotic) => (
-                  <div
+                  <ExoticTile
                     key={exotic.def.hash}
-                    className={styles.exotic}
-                    onClick={() => {
-                      lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
-                      onClose();
-                    }}
-                  >
-                    <div className={styles.itemName}>{exotic.def.displayProperties.name}</div>
-                    <div className={styles.details}>
-                      <div className={styles.itemImage}>
-                        <DefItemIcon itemDef={exotic.def} defs={defs} />
-                      </div>
-                      <div className={styles.info}>
-                        <div className={styles.perkNameAndImage}>
-                          <DefItemIcon
-                            className={styles.perkImage}
-                            itemDef={exotic.exoticPerk}
-                            defs={defs}
-                          />
-                          <div className={styles.perkName}>
-                            {exotic.exoticPerk.displayProperties.name}
-                          </div>
-                        </div>
-                        <div className={styles.perkDescription}>{exotic.shortPerkDescription}</div>
-                      </div>
-                    </div>
-                  </div>
+                    defs={defs}
+                    exotic={exotic}
+                    lbDispatch={lbDispatch}
+                    onClose={onClose}
+                  />
                 ))}
               </div>
             </div>
