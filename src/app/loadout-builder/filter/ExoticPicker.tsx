@@ -16,6 +16,7 @@ import styles from './ExoticPicker.m.scss';
 
 interface LockedExoticWithPerk extends LockedExotic {
   exoticPerk: PluggableInventoryItemDefinition;
+  shortPerkDescription?: string;
 }
 
 interface Props {
@@ -54,14 +55,24 @@ function ExoticPicker({
             socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
         )?.plugged?.plugDef;
 
+        let shortPerkDescription;
+
+        for (const perk of exoticPerk?.perks || []) {
+          const description = defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description;
+          if (description) {
+            shortPerkDescription = description;
+            break;
+          }
+        }
+
         if (def?.displayProperties.hasIcon && exoticPerk) {
-          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk });
+          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk, shortPerkDescription });
         }
       }
     }
 
     return rtn;
-  }, [availableExotics, defs.InventoryItem]);
+  }, [availableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
     // Only some languages effectively use the \b regex word boundary
@@ -134,13 +145,23 @@ function ExoticPicker({
                       onClose();
                     }}
                   >
-                    <div>{exotic.def.displayProperties.name}</div>
                     <div className={styles.itemImage}>
                       <DefItemIcon itemDef={exotic.def} defs={defs} />
                     </div>
-                    <div>{exotic.exoticPerk.displayProperties.name}</div>
-                    <DefItemIcon className={styles.perk} itemDef={exotic.exoticPerk} defs={defs} />
-                    <div>{exotic.exoticPerk.displayProperties.description}</div>
+                    <div className={styles.info}>
+                      <div className={styles.itemName}>{exotic.def.displayProperties.name}</div>
+                      <div className={styles.perkNameAndImage}>
+                        <DefItemIcon
+                          className={styles.perkImage}
+                          itemDef={exotic.exoticPerk}
+                          defs={defs}
+                        />
+                        <div className={styles.perkName}>
+                          {exotic.exoticPerk.displayProperties.name}
+                        </div>
+                      </div>
+                      <div className={styles.perkDescription}>{exotic.shortPerkDescription}</div>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -11,21 +11,65 @@
 }
 
 .items {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin: 0 4px 16px 4px;
 }
 
 .exotic {
+  > * {
+    margin-right: 8px;
+  }
+
+  border: 1px solid #666;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
   cursor: pointer;
-  margin: 4px;
-  width: min-content;
+  height: 100%;
+  box-sizing: border-box;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .itemImage {
   position: relative;
+  height: var(--item-size);
+  width: var(--item-size);
 }
 
-.perk {
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemName {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.perkNameAndImage {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.perkImage {
   border: none;
+  height: calc(var(--item-size) / 2);
+  width: calc(var(--item-size) / 2);
+}
+
+.perkName {
+  font-weight: bold;
+  font-size: 13px;
+  margin: 0 4px 4px 4px;
+}
+
+.perkDescription {
+  grid-column: 2;
+  grid-row: 4;
 }

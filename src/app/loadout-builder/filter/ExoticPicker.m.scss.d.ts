@@ -4,9 +4,14 @@ interface CssExports {
   'container': string;
   'exotic': string;
   'header': string;
+  'info': string;
   'itemImage': string;
+  'itemName': string;
   'items': string;
-  'perk': string;
+  'perkDescription': string;
+  'perkImage': string;
+  'perkName': string;
+  'perkNameAndImage': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
