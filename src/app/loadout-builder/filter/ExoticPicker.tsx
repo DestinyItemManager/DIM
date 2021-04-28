@@ -145,22 +145,24 @@ function ExoticPicker({
                       onClose();
                     }}
                   >
-                    <div className={styles.itemImage}>
-                      <DefItemIcon itemDef={exotic.def} defs={defs} />
-                    </div>
-                    <div className={styles.info}>
-                      <div className={styles.itemName}>{exotic.def.displayProperties.name}</div>
-                      <div className={styles.perkNameAndImage}>
-                        <DefItemIcon
-                          className={styles.perkImage}
-                          itemDef={exotic.exoticPerk}
-                          defs={defs}
-                        />
-                        <div className={styles.perkName}>
-                          {exotic.exoticPerk.displayProperties.name}
-                        </div>
+                    <div className={styles.itemName}>{exotic.def.displayProperties.name}</div>
+                    <div className={styles.details}>
+                      <div className={styles.itemImage}>
+                        <DefItemIcon itemDef={exotic.def} defs={defs} />
                       </div>
-                      <div className={styles.perkDescription}>{exotic.shortPerkDescription}</div>
+                      <div className={styles.info}>
+                        <div className={styles.perkNameAndImage}>
+                          <DefItemIcon
+                            className={styles.perkImage}
+                            itemDef={exotic.exoticPerk}
+                            defs={defs}
+                          />
+                          <div className={styles.perkName}>
+                            {exotic.exoticPerk.displayProperties.name}
+                          </div>
+                        </div>
+                        <div className={styles.perkDescription}>{exotic.shortPerkDescription}</div>
+                      </div>
                     </div>
                   </div>
                 ))}
