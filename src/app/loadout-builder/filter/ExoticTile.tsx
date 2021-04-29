@@ -1,15 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import React, { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { LockedExotic } from '../types';
+import { LockedExoticWithPerk } from '../types';
 import styles from './ExoticTile.m.scss';
-
-export interface LockedExoticWithPerk extends LockedExotic {
-  exoticPerk: PluggableInventoryItemDefinition;
-  shortPerkDescription?: string;
-}
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -18,7 +12,18 @@ interface Props {
   onClose(): void;
 }
 
+/** A square tile container the exotic name, icon, and perk details. */
 function ExoticTile({ defs, exotic, lbDispatch, onClose }: Props) {
+  let shortPerkDescription = exotic.exoticPerk.displayProperties.description;
+
+  for (const perk of exotic.exoticPerk.perks || []) {
+    const description = defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description;
+    if (description) {
+      shortPerkDescription = description;
+      break;
+    }
+  }
+
   return (
     <div
       className={styles.exotic}
@@ -37,7 +42,7 @@ function ExoticTile({ defs, exotic, lbDispatch, onClose }: Props) {
             <DefItemIcon className={styles.perkImage} itemDef={exotic.exoticPerk} defs={defs} />
             <div className={styles.perkName}>{exotic.exoticPerk.displayProperties.name}</div>
           </div>
-          <div className={styles.perkDescription}>{exotic.shortPerkDescription}</div>
+          <div className={styles.perkDescription}>{shortPerkDescription}</div>
         </div>
       </div>
     </div>

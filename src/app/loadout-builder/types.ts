@@ -47,6 +47,10 @@ export interface LockedExotic {
   bucketHash: BucketHashes;
 }
 
+export interface LockedExoticWithPerk extends LockedExotic {
+  exoticPerk: PluggableInventoryItemDefinition;
+}
+
 export type LockedItemType = LockedItemCase | LockedExclude;
 
 /** A map from bucketHash to the list of locked and excluded perks, items, and burns. */

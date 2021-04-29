@@ -10,8 +10,9 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { LockedExoticWithPerk } from '../types';
 import styles from './ExoticPicker.m.scss';
-import ExoticTile, { LockedExoticWithPerk } from './ExoticTile';
+import ExoticTile from './ExoticTile';
 
 interface Props {
   defs: D2ManifestDefinitions;
@@ -49,18 +50,8 @@ function ExoticPicker({
             socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
         )?.plugged?.plugDef;
 
-        let shortPerkDescription;
-
-        for (const perk of exoticPerk?.perks || []) {
-          const description = defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description;
-          if (description) {
-            shortPerkDescription = description;
-            break;
-          }
-        }
-
         if (def?.displayProperties.hasIcon && exoticPerk) {
-          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk, shortPerkDescription });
+          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk });
         }
       }
     }
