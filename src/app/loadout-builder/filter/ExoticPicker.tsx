@@ -111,6 +111,11 @@ function ExoticPicker({
       compareBy((exotics) => filteredExotics.indexOf(exotics[0]))
     );
 
+    // Sort each of the individual groups by name
+    for (const group of orderedAndGroupedExotics) {
+      group.sort(compareBy((exotic) => exotic.def.displayProperties.name));
+    }
+
     return orderedAndGroupedExotics;
   }, [language, query, lockableExotics]);
 
