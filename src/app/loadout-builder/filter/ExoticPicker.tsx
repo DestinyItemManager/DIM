@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { escapeRegExp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
@@ -10,7 +11,7 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { LockedExoticWithPerk } from '../types';
+import { LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile from './ExoticTile';
 
@@ -36,22 +37,44 @@ function ExoticPicker({
   const [query, setQuery] = useState('');
 
   const lockableExotics = useMemo(() => {
-    const rtn: LockedExoticWithPerk[] = [];
+    const rtn: LockedExoticWithPlugs[] = [];
 
     if (availableExotics?.length) {
       const uniqueExotics = _.uniqBy(availableExotics, (item) => item.hash);
 
       for (const item of uniqueExotics) {
         const def = defs.InventoryItem.get(item.hash);
-        const exoticPerk = item.sockets?.allSockets.find(
-          (socket) =>
-            socket.plugged &&
-            socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-            socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
-        )?.plugged?.plugDef;
 
-        if (def?.displayProperties.hasIcon && exoticPerk) {
-          rtn.push({ def, bucketHash: item.bucket.hash, exoticPerk });
+        if (def?.displayProperties.hasIcon) {
+          const exoticPerk = item.sockets?.allSockets.find(
+            (socket) =>
+              socket.plugged &&
+              socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+              socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
+          )?.plugged?.plugDef;
+
+          const exoticModSetHash =
+            item.sockets?.allSockets.find(
+              (socket) =>
+                socket.plugged?.plugDef.plug.plugCategoryHash ===
+                PlugCategoryHashes.EnhancementsExoticAeonCult
+            )?.socketDefinition.reusablePlugSetHash || -1;
+
+          const exoticMods = _.compact(
+            defs.PlugSet.get(exoticModSetHash)?.reusablePlugItems.map((item) => {
+              const modDef = defs.InventoryItem.get(item.plugItemHash);
+              if (isPluggableItem(modDef)) {
+                return modDef;
+              }
+            })
+          );
+
+          rtn.push({
+            def,
+            bucketHash: item.bucket.hash,
+            exoticPerk,
+            exoticMods,
+          });
         }
       }
     }
@@ -65,13 +88,19 @@ function ExoticPicker({
       ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
       : new RegExp(escapeRegExp(query), 'i');
 
+    // We filter items by looking at name and description of items, perks and exotic mods.
     const filteredExotics = query.length
       ? lockableExotics.filter(
           (exotic) =>
             regexp.test(exotic.def.displayProperties.name) ||
             regexp.test(exotic.def.displayProperties.description) ||
-            regexp.test(exotic.exoticPerk.displayProperties.name) ||
-            regexp.test(exotic.exoticPerk.displayProperties.description)
+            regexp.test(exotic.exoticPerk?.displayProperties.name || '') ||
+            regexp.test(exotic.exoticPerk?.displayProperties.description || '') ||
+            exotic.exoticMods?.some(
+              (exoticMod) =>
+                regexp.test(exoticMod.displayProperties.name) ||
+                regexp.test(exoticMod.displayProperties.description)
+            )
         )
       : lockableExotics;
 

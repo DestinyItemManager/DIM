@@ -35,24 +35,29 @@
   margin-bottom: 4px;
 }
 
-.perkInfo {
+.mods {
   display: flex;
   flex-direction: column;
 }
 
-.perkNameAndImage {
+.perkOrModInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.perkOrModNameAndImage {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.perkImage {
+.perkOrModImage {
   border: none;
   height: calc(var(--item-size) / 2);
   width: calc(var(--item-size) / 2);
 }
 
-.perkName {
+.perkOrModName {
   font-weight: bold;
   font-size: 13px;
   margin: 0 4px 4px 4px;

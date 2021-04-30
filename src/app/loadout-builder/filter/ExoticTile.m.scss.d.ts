@@ -5,11 +5,12 @@ interface CssExports {
   'exotic': string;
   'itemImage': string;
   'itemName': string;
+  'mods': string;
   'perkDescription': string;
-  'perkImage': string;
-  'perkInfo': string;
-  'perkName': string;
-  'perkNameAndImage': string;
+  'perkOrModImage': string;
+  'perkOrModInfo': string;
+  'perkOrModName': string;
+  'perkOrModNameAndImage': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

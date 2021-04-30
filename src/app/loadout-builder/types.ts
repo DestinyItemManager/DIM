@@ -44,11 +44,15 @@ export interface LockedExclude {
 
 export interface LockedExotic {
   def: DestinyInventoryItemDefinition;
+  /** The bucket has the exotic belongs to (e.g. arms). */
   bucketHash: BucketHashes;
 }
 
-export interface LockedExoticWithPerk extends LockedExotic {
-  exoticPerk: PluggableInventoryItemDefinition;
+export interface LockedExoticWithPlugs extends LockedExotic {
+  /** The intrinsic perk that is unique to this exotic. */
+  exoticPerk?: PluggableInventoryItemDefinition;
+  /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
+  exoticMods?: PluggableInventoryItemDefinition[];
 }
 
 export type LockedItemType = LockedItemCase | LockedExclude;
