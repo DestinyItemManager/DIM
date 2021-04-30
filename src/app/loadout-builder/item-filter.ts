@@ -1,6 +1,7 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
 import _ from 'lodash';
+import { LoadoutBuilderState } from './loadout-builder-reducer';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
@@ -17,6 +18,7 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
+  lockedExotic: LoadoutBuilderState['lockedExotic'],
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -56,6 +58,7 @@ export function filterItems(
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
+          (bucket !== lockedExotic?.bucketHash || item.hash === lockedExotic.def.hash) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||
@@ -71,10 +74,6 @@ export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
   switch (lockedItem.type) {
     case 'exclude':
       return item.id !== lockedItem.item.id;
-    case 'perk':
-      return item.sockets?.allSockets.some((slot) =>
-        slot.plugOptions.some((plug) => lockedItem.perk.hash === plug.plugDef.hash)
-      );
     case 'item':
       return item.id === lockedItem.item.id;
   }

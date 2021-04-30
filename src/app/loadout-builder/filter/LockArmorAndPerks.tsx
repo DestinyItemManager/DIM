@@ -3,6 +3,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
@@ -11,20 +12,23 @@ import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useState } from 'react';
+import ReactDom from 'react-dom';
 import { connect } from 'react-redux';
+import ClosableContainer from '../ClosableContainer';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { getModRenderKey } from '../mod-utils';
 import {
   LockableBuckets,
   LockedExclude,
+  LockedExotic,
   LockedItemCase,
   LockedItemType,
   LockedMap,
-  LockedPerk,
 } from '../types';
 import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
+import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import LockedModIcon from './LockedModIcon';
@@ -33,10 +37,13 @@ interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
+  lockedExotic?: LockedExotic;
+  availableExotics?: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
 interface StoreProps {
+  isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   stores: DimStore[];
   language: string;
@@ -47,6 +54,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
+    isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     language: settingsSelector(state).language,
@@ -64,8 +72,13 @@ function LockArmorAndPerks({
   lockedMods,
   buckets,
   stores,
+  availableExotics,
+  lockedExotic,
+  isPhonePortrait,
+  language,
   lbDispatch,
 }: Props) {
+  const [showExoticPicker, setShowExoticPicker] = useState(false);
   /**
    * Lock currently equipped items on a character
    * Recomputes matched sets
@@ -201,26 +214,19 @@ function LockArmorAndPerks({
         </div>
       </div>
       <div className={styles.area}>
-        {(Boolean(flatLockedMap.perk?.length) ||
-          Boolean(flatLockedMap.mod?.length) ||
-          Boolean(flatLockedMap.burn?.length)) && (
+        {lockedExotic && (
           <div className={styles.itemGrid}>
-            {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
-              <LockedItem
-                key={`${lockedItem.bucket?.hash}.${lockedItem.perk.hash}`}
-                lockedItem={lockedItem}
-                onRemove={removeLockedItemType}
-              />
-            ))}
+            <ClosableContainer
+              showCloseIconOnHover={true}
+              onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
+            >
+              <DefItemIcon itemDef={lockedExotic.def} />
+            </ClosableContainer>
           </div>
         )}
         <div className={styles.buttons}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => lbDispatch({ type: 'openPerkPicker' })}
-          >
-            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.LockPerk')}
+          <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
+            <AppIcon icon={addIcon} /> {t('LB.SelectExotic')}
           </button>
         </div>
       </div>
@@ -278,6 +284,18 @@ function LockArmorAndPerks({
           {t('LoadoutBuilder.ResetLocked')}
         </button>
       )}
+      {showExoticPicker &&
+        ReactDom.createPortal(
+          <ExoticPicker
+            defs={defs}
+            availableExotics={availableExotics}
+            isPhonePortrait={isPhonePortrait}
+            language={language}
+            lbDispatch={lbDispatch}
+            onClose={() => setShowExoticPicker(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }

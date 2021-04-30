@@ -5,7 +5,8 @@ import {
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
@@ -34,11 +35,6 @@ export interface LockedItemCase {
   item: DimItem;
   bucket: InventoryBucket;
 }
-export interface LockedPerk {
-  type: 'perk';
-  perk: PluggableInventoryItemDefinition;
-  bucket: InventoryBucket;
-}
 
 export interface LockedExclude {
   type: 'exclude';
@@ -46,7 +42,20 @@ export interface LockedExclude {
   bucket: InventoryBucket;
 }
 
-export type LockedItemType = LockedItemCase | LockedPerk | LockedExclude;
+export interface LockedExotic {
+  def: DestinyInventoryItemDefinition;
+  /** The bucket has the exotic belongs to (e.g. arms). */
+  bucketHash: BucketHashes;
+}
+
+export interface LockedExoticWithPlugs extends LockedExotic {
+  /** The intrinsic perk that is unique to this exotic. */
+  exoticPerk?: PluggableInventoryItemDefinition;
+  /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
+  exoticMods?: PluggableInventoryItemDefinition[];
+}
+
+export type LockedItemType = LockedItemCase | LockedExclude;
 
 /** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
 export type LockedMap = Readonly<{

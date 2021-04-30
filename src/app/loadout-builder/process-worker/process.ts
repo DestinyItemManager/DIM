@@ -220,9 +220,8 @@ export function process(
             numDoubleExotic += classItems.length;
             continue;
           }
-          for (const classItem of classItems) {
-            // Exotic class items don't exist in D2, and if they did (like in D1) they wouldn't conflict with other exotics
 
+          for (const classItem of classItems) {
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // TODO: why not just another ordered list?

@@ -5,7 +5,8 @@
   background-color: rgba(200, 200, 200, 0.2);
 }
 
-.sub-bucket {
+.sub-bucket,
+.subBucket {
   min-height: var(--item-size);
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));

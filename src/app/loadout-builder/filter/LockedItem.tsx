@@ -1,12 +1,9 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import React from 'react';
-import ArmorBucketIcon from '../ArmorBucketIcon';
 import ClosableContainer from '../ClosableContainer';
 import { LockedItemType } from '../types';
-import styles from './LockedItem.m.scss';
 
 export default function LockedItem({
   lockedItem,
@@ -27,18 +24,6 @@ export default function LockedItem({
               )}
             </ItemPopupTrigger>
           </DraggableInventoryItem>
-        </ClosableContainer>
-      );
-    case 'perk':
-      return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.perk.hash}>
-          <div className={styles.emptyItem}>
-            <BungieImage
-              title={lockedItem.perk.displayProperties.name}
-              src={lockedItem.perk.displayProperties.icon}
-            />
-            <ArmorBucketIcon bucket={lockedItem.bucket} className={styles.armorIcon} />
-          </div>
         </ClosableContainer>
       );
   }
