@@ -38,6 +38,10 @@
 .mods {
   display: flex;
   flex-direction: column;
+
+  > :not(:last-child) {
+    margin-bottom: 4px;
+  }
 }
 
 .perkOrModInfo {
