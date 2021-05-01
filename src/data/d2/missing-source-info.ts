@@ -631,6 +631,284 @@ const missingSources: { [key: string]: number[] } = {
     4211218181, // Ankaa Seeker IV
     4269346472, // Binary Phoenix Bond
   ],
+  dcv: [
+    4450861, // Shadow's Greaves
+    36900384, // Opulent Scholar Gloves
+    60076357, // Opulent Scholar Bond
+    61987238, // Kairos Function Mask
+    64543268, // Boots of the Emperor's Minister
+    64543269, // Boots of the Fulminator
+    66047450, // Lost Pacific Gloves
+    75025442, // Boots of Feltroc
+    78664642, // Annealed Shaper Gloves
+    80067121, // Opulent Stalker Vest
+    88873628, // Gauntlets of Nohr
+    91896851, // Equitis Shade Boots
+    96643258, // Bladesmith's Memory Mask
+    133093143, // Forged Machinist Greaves
+    161336786, // Mask of Sekris
+    165966230, // Insigne Shade Gloves
+    256904954, // Shadow's Grips
+    300528205, // Bladesmith's Memory Vest
+    308676790, // Opulent Stalker Mask
+    311429764, // Shadow's Mark
+    311429765, // Mark of the Emperor's Champion
+    325125949, // Shadow's Helm
+    325434398, // Vest of the Ace-Defiant
+    325434399, // Vest of the Emperor's Agent
+    326149062, // Shadow's Mask
+    336656482, // Boots of the Fulminator
+    336656483, // Boots of the Emperor's Minister
+    384384821, // Bladesmith's Memory Strides
+    425390008, // Midnight Exigent Greaves
+    452177303, // Kairos Function Crown
+    455108040, // Helm of the Emperor's Champion
+    455108041, // Mask of Rull
+    503773817, // Insigne Shade Gloves
+    508035927, // Midnight Exigent Helm
+    563606995, // Woven Firesmith Boots
+    574916072, // Bond of Sekris
+    581908796, // Bond of the Emperor's Minister
+    581908797, // Shadow's Bond
+    583145321, // Gunsmith's Devotion Crown
+    588627781, // Bond of Sekris
+    608074492, // Robes of the Emperor's Minister
+    608074493, // Robes of the Fulminator
+    612065993, // Penumbral Mark
+    618662448, // Headpiece of the Emperor's Minister
+    618662449, // Mask of the Fulminator
+    620774353, // BrayTech Sn0Mask
+    627690043, // Wraps of Sekris
+    631885885, // Gensym Knight Cuirass
+    641933202, // Helm of the Ace-Defiant
+    641933203, // Mask of the Emperor's Agent
+    648456777, // Opulent Stalker Strides
+    688564517, // Lost Pacific Vest
+    720656969, // Yuga Sundown Robes
+    727401524, // Lost Pacific Mark
+    748485514, // Mask of the Fulminator
+    748485515, // Headpiece of the Emperor's Minister
+    754149842, // Wraps of the Emperor's Minister
+    754149843, // Wraps of the Fulminator
+    781488881, // Mask of Feltroc
+    813277303, // Equitis Shade Rig
+    815611257, // Gensym Knight Plate
+    845536715, // Vest of Feltroc
+    853543290, // Greaves of Rull
+    853543291, // Greaves of the Emperor's Champion
+    874272413, // Shadow's Robes
+    884481817, // Kairos Function Boots
+    917591018, // Grips of the Ace-Defiant
+    917591019, // Gloves of the Emperor's Agent
+    935022405, // Opulent Duelist Greaves
+    940003738, // Gunsmith's Devotion Boots
+    942205921, // Shadow's Vest
+    977326564, // Bulletsmith's Ire Mark
+    1005587287, // BrayTech Researcher's Gloves
+    1035112834, // Turris Shade Mark
+    1107067065, // Shadow's Strides
+    1108389626, // Gloves of the Emperor's Agent
+    1108389627, // Grips of the Ace-Defiant
+    1117243014, // Woven Firesmith Cape
+    1129634130, // Shadow's Helm
+    1156439528, // Insigne Shade Cover
+    1178920188, // Turris Shade Helm
+    1194507306, // Opulent Duelist Helm
+    1200068467, // Opulent Duelist Gauntlets
+    1230192768, // Robes of the Fulminator
+    1230192769, // Robes of the Emperor's Minister
+    1256688732, // Mask of Feltroc
+    1319515713, // Penumbral Bond
+    1322519316, // Lost Pacific Boots
+    1339632007, // Turris Shade Helm
+    1354679720, // Shadow's Cloak
+    1354679721, // Cloak of the Emperor's Agent
+    1378348656, // Insigne Shade Boots
+    1390282760, // Chassis of Rull
+    1390282761, // Cuirass of the Emperor's Champion
+    1421936449, // BrayTech Absolute Zero Mark
+    1445420672, // Mindbreaker Boots
+    1471193607, // Opulent Stalker Grips
+    1497164220, // Forged Machinist Helm
+    1499503877, // Gunsmith's Devotion Bond
+    1505338369, // Lost Pacific Greaves
+    1511235307, // Lost Pacific Grips
+    1512129090, // Forged Machinist Mark
+    1558884814, // Lost Pacific Helm
+    1589569999, // Songbreaker Gauntlets
+    1595987387, // Shadow's Gauntlets
+    1743790315, // Lost Pacific Helmet
+    1752028469, // Gensym Knight Bond
+    1756558505, // Mask of Sekris
+    1793869832, // Turris Shade Greaves
+    1877424533, // Robes of Sekris
+    1886391430, // Songbreaker Gloves
+    1908254109, // Opulent Duelist Plate
+    1934647691, // Shadow's Mask
+    1937834292, // Shadow's Strides
+    1989682895, // Bulletsmith's Ire Gauntlets
+    1991627398, // BrayTech Researcher's Hood
+    2025523685, // Mindbreaker Boots
+    2032088577, // Gensym Knight Greaves
+    2034926084, // Yuga Sundown Bond
+    2070062384, // Shadow's Bond
+    2070062385, // Bond of the Emperor's Minister
+    2085635022, // Gensym Knight Helm
+    2104205416, // Penumbral Mark
+    2114894938, // Abhorrent Imperative Grasps
+    2119727155, // Annealed Shaper Crown
+    2122810492, // Annealed Shaper Boots
+    2128823667, // Turris Shade Mark
+    2135450480, // Gensym Knight Cloak
+    2149271612, // Penumbral Cloak
+    2153222031, // Shadow's Gloves
+    2158603584, // Gauntlets of Rull
+    2158603585, // Gauntlets of the Emperor's Champion
+    2164070257, // Mindbreaker Boots
+    2171693954, // Lost Pacific Mask
+    2183861870, // Gauntlets of the Emperor's Champion
+    2183861871, // Gauntlets of Rull
+    2232730708, // Vest of the Emperor's Agent
+    2232730709, // Vest of the Ace-Defiant
+    2245491369, // Opulent Scholar Hood
+    2275496908, // Opulent Stalker Cloak
+    2286640864, // Gunsmith's Devotion Gloves
+    2287801693, // BrayTech Winter Cloak
+    2290569619, // Songbreaker Grips
+    2295412715, // Turris Shade Plate
+    2305801487, // Insigne Shade Cover
+    2320951982, // Abhorrent Imperative Vest
+    2334017923, // Bladesmith's Memory Grips
+    2369496221, // Plate of Nohr
+    2395959535, // Yuga Sundown Gloves
+    2472794149, // Shadow's Mind
+    2475562438, // Equitis Shade Cloak
+    2507934309, // Gensym Knight Strides
+    2529023928, // Kairos Function Mark
+    2537874394, // Boots of Sekris
+    2552158692, // Equitis Shade Rig
+    2554337844, // Gensym Knight Mark
+    2564183153, // Bulletsmith's Ire Greaves
+    2575374197, // Turris Shade Gauntlets
+    2584088255, // Lost Pacific Gauntlets
+    2602992893, // Lost Pacific Strides
+    2620001759, // Insigne Shade Robes
+    2639046519, // Abhorrent Imperative Cloak
+    2652946280, // Opulent Scholar Robes
+    2653039573, // Grips of Feltroc
+    2672101104, // Gensym Knight Gloves
+    2673599019, // Kairos Function Gauntlets
+    2719710110, // Bulletsmith's Ire Helm
+    2722103686, // Equitis Shade Boots
+    2725842378, // Gensym Knight Casque
+    2748513874, // Kairos Function Robes
+    2750983488, // Bladesmith's Memory Cloak
+    2758465168, // Greaves of the Emperor's Champion
+    2758465169, // Greaves of Rull
+    2769298993, // Shadow's Boots
+    2772980243, // Gensym Knight Grips
+    2814122105, // BrayTech Researcher's Boots
+    2851938357, // Forged Machinist Gauntlets
+    2904930850, // Turris Shade Plate
+    2913992254, // Mask of Rull
+    2913992255, // Helm of the Emperor's Champion
+    2938125956, // Plate of Nohr
+    2970562833, // Yuga Sundown Boots
+    2989159626, // Gensym Knight Boots
+    3026807258, // Opulent Scholar Boots
+    3066613133, // Equitis Shade Cowl
+    3082625196, // Shadow's Gauntlets
+    3092380260, // Mark of the Emperor's Champion
+    3092380261, // Shadow's Mark
+    3099636805, // Greaves of Nohr
+    3108321700, // Penumbral Bond
+    3110838463, // Gensym Knight Gauntlets
+    3126089918, // Yuga Sundown Helmet
+    3155412907, // Forged Machinist Plate
+    3158739321, // Gensym Knight Hood
+    3168014845, // Cloak of Feltroc
+    3181497704, // Robes of Sekris
+    3188870561, // BrayTech Researcher's Robes
+    3211894260, // Shadow's Gloves
+    3240387365, // BrayTech Sn0Helm
+    3283642233, // Lost Pacific Plate
+    3283890999, // Woven Firesmith Vest
+    3292127944, // Cuirass of the Emperor's Champion
+    3292127945, // Chassis of Rull
+    3316476193, // Equitis Shade Grips
+    3322192806, // Annealed Shaper Robes
+    3331120813, // Boots of Sekris
+    3333954498, // Kairos Function Helm
+    3349283422, // Shadow's Mind
+    3356534040, // Gensym Knight Robes
+    3359121706, // Mask of Nohr
+    3360543264, // BrayTech Combat Vest
+    3363625697, // Woven Firesmith Grips
+    3364682867, // Gauntlets of Nohr
+    3370242000, // Opulent Duelist Mark
+    3370914423, // Kairos Function Grips
+    3371366804, // Abhorrent Imperative Strides
+    3381758732, // Shadow's Robes
+    3385331555, // Kairos Function Bond
+    3386768934, // Greaves of Nohr
+    3395856235, // Insigne Shade Boots
+    3406713877, // Shadow's Plate
+    3416618798, // Lost Pacific Robes
+    3469837505, // Kairos Function Vest
+    3484179468, // BrayTech Iron-Heart Engine
+    3491990569, // Bulletsmith's Ire Plate
+    3497220322, // Cloak of Feltroc
+    3499632894, // Shadow's Boots
+    3517729518, // Shadow's Vest
+    3518193943, // Penumbral Cloak
+    3518692432, // Equitis Shade Cowl
+    3530284424, // Wraps of the Fulminator
+    3530284425, // Wraps of the Emperor's Minister
+    3573869992, // BrayTech Survival Mitts
+    3581198350, // Turris Shade Gauntlets
+    3607521808, // Woven Firesmith Mask
+    3681852889, // Mark of Nohr
+    3691605010, // Midnight Exigent Plate
+    3693007688, // Grips of Feltroc
+    3711700026, // Mask of the Emperor's Agent
+    3711700027, // Helm of the Ace-Defiant
+    3719175804, // Equitis Shade Grips
+    3720446265, // Equitis Shade Cloak
+    3731175213, // Mask of Nohr
+    3734713335, // Lost Pacific Bond
+    3759659288, // Shadow's Plate
+    3792637803, // Abhorrent Imperative Mask
+    3820658718, // Kairos Function Wraps
+    3831484112, // Mark of Nohr
+    3842934816, // Wraps of Sekris
+    3853397100, // Boots of the Emperor's Agent
+    3853397101, // Boots of the Ace-Defiant
+    3862230571, // Insigne Shade Bond
+    3867160430, // Insigne Shade Bond
+    3873109093, // Kairos Function Plate
+    3876414174, // Midnight Exigent Gauntlets
+    3950028838, // Cloak of the Emperor's Agent
+    3950028839, // Shadow's Cloak
+    3971375612, // BrayTech Researcher's Bond
+    3979487476, // BrayTech Thermal Grips
+    4017853847, // Shadow's Grips
+    4064641551, // Annealed Shaper Bond
+    4092373800, // Gunsmith's Devotion Robes
+    4105480824, // Lost Pacific Cape
+    4148237373, // Kairos Function Greaves
+    4151496279, // Turris Shade Greaves
+    4152814806, // Shadow's Greaves
+    4209278210, // BrayTech Sn0Treads
+    4213777114, // Insigne Shade Robes
+    4229161783, // Boots of Feltroc
+    4240041208, // Kairos Function Boots
+    4240859456, // Vest of Feltroc
+    4251770244, // Boots of the Ace-Defiant
+    4251770245, // Boots of the Emperor's Agent
+    4252342556, // Kairos Function Cloak
+    4267226110, // BrayTech Sn0Boots
+    4286845987, // Midnight Exigent Mark
+  ],
   deepstonecrypt: [],
   deluxe: [
     2683682447, // Traitor's Fate
@@ -1991,6 +2269,7 @@ const missingSources: { [key: string]: number[] } = {
     3060679667, // Sovereign Vest
     4119718816, // Sovereign Helm
   ],
+  pit: [],
   presage: [],
   prestige: [],
   prophecy: [],
