@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "高级选项",
     "ChooseAMod": "选择你的模组",
-    "ChooseAPerk": "选择一个特性",
+    "ChooseAnExotic": "Choose your exotic",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -408,6 +408,8 @@
     },
     "Scaled": "缩放",
     "SearchAMod": "搜索模组或描述",
+    "SearchAnExotic": "Search an exotic or description",
+    "SelectExotic": "Select exotic",
     "SelectMods": "选择模组",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -442,7 +444,6 @@
     "LimitedCombos": "你有 {{combosWithoutCaps, number}} 种可能的护甲组合，但是 DIM 只检索了 {{combos, number}} 个属性最高的组合以避免浏览器崩溃。选择一些特性，进行搜索，或拆解旧护甲便可减少组合数量。固定通用或赛季模组会增加组合数量。",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
-    "LockPerk": "选择特性",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundExoticsAndMods": "你选择了一件异域装备与五个赛季模组。",
     "NoBuildsFoundModsAreTooExpensive": "所选模组的能量需求过高。",
@@ -460,7 +461,6 @@
     "SaveAs": "保存为",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "SelectPerks": "选择特性",
     "StatIncorrectWarning": "为了获得精确结果，请移除任何带有属性惩罚的模组。\n\n鉴于有属性惩罚的模组，DIM 无法为一些包含的物品确定基础数值或 {{stats}} 的数值。这是因为 Bungie.net 的数据限制。",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
@@ -809,8 +809,7 @@
     "Tier": "{{tier}} 阶",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
-    "Total": "总计",
-    "TotalIncorrectWarning": "因为 Bungie.net 的数据限制，鉴于有属性惩罚的模组，DIM 无法确定基础数值或 {{stats}} 的数值。"
+    "Total": "总计"
   },
   "Storage": {
     "ApiPermissionPrompt": {

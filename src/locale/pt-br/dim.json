@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Opções avançadas",
     "ChooseAMod": "Escolha seus mods",
-    "ChooseAPerk": "Escolha um perk",
+    "ChooseAnExotic": "Escolha seu exótico",
     "ClearLocked": "Limpar itens travados",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
     "Current": "Atual",
@@ -408,6 +408,8 @@
     },
     "Scaled": "Nivelado",
     "SearchAMod": "Procurar um mod ou descrição",
+    "SearchAnExotic": "Procurar um exótico ou descrição",
+    "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
@@ -442,7 +444,6 @@
     "LimitedCombos": "Você tem {{combosWithoutCaps, number}} combinações de armaduras possíveis, mas o DIM só checou os {{combos, number}} combos com os atributos mais altos para impedir que seu navegador trave. Selecione alguns perks, use uma busca ou desmonte armaduras antigas para reduzir o número de combos. Fixar mods gerais ou sazonais aumentará o número de combos.",
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
-    "LockPerk": "Selecionar perk",
     "NewEmptyLoadout": "Criar set vazio",
     "NoBuildsFoundExoticsAndMods": "Você possui um exótico e cinco mods sazonais selecionados.",
     "NoBuildsFoundModsAreTooExpensive": "As exigências de energia dos mods selecionados são altas demais.",
@@ -460,7 +461,6 @@
     "SaveAs": "Salvar como",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
-    "SelectPerks": "Selecionar perks",
     "StatIncorrectWarning": "Por favor, remova quaisquer mods com efeitos negativos em atributos para obter resultados mais precisos.\n\nDevido a estes modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}} em alguns dos itens incluídos. Esta é uma limitação das informações recebidas da Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -809,8 +809,7 @@
     "Tier": "Nível {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total",
-    "TotalIncorrectWarning": "Devido a modificadores com efeitos negativos, o DIM não é capaz de determinar o valor base de {{stats}}. Esta é uma limitação das informações recebidas da Bungie.net."
+    "Total": "Total"
   },
   "Storage": {
     "ApiPermissionPrompt": {

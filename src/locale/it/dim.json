@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
     "ChooseAMod": "Scegli le tue Modifiche",
-    "ChooseAPerk": "Scegli un perk",
+    "ChooseAnExotic": "Scegli la tua esotica",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
@@ -408,6 +408,8 @@
     },
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica o descrizione",
+    "SearchAnExotic": "Cerca una esotica o descrizione",
+    "SelectExotic": "Seleziona esotica",
     "SelectMods": "Seleziona Modifiche",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -442,7 +444,6 @@
     "LimitedCombos": "Ci sono {{combosWithoutCaps, number}} possibili combinazioni di armature, ma DIM ha considerato solo le {{combos, number}} con le combinazioni di statistiche più alte per evitare che il tuo browser crashi. Seleziona perk, utilizza la ricerca oppure smantella le armature vecchie per ridurre il numero di combinazioni possibili. Bloccare Modifiche generiche o stagionali aumenta il numero di combinazioni.",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
-    "LockPerk": "Seleziona perk",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFoundExoticsAndMods": "Hai una esotica e cinque Modifiche stagionali selezionate.",
     "NoBuildsFoundModsAreTooExpensive": "I requisiti energetici della Modifica selezionata sono troppo alti.",
@@ -460,7 +461,6 @@
     "SaveAs": "Salva come",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectPerks": "Seleziona Perks",
     "StatIncorrectWarning": "Per ottenere risultati accurati, rimuovi qualsiasi Modifica con effetti negativi sulle statistiche.\n\nA causa delle Modifiche con valori negativi, DIM non può determinare il valore di base o il valore di {{stats}} su alcuni oggetti inclusi. È un limite delle informazioni inviate da Bungie.net.",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
@@ -809,8 +809,7 @@
     "Tier": "Grado {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Totale",
-    "TotalIncorrectWarning": "A causa delle Modifiche con effetti negativi sulle statistiche, DIM non può determinare il valore base o il valore di {{stats}}. Questo è un limite delle informazioni inviate da Bungie.net."
+    "Total": "Totale"
   },
   "Storage": {
     "ApiPermissionPrompt": {

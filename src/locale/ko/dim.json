@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "고급 옵션",
     "ChooseAMod": "개조 부품 선택",
-    "ChooseAPerk": "특성 선택",
+    "ChooseAnExotic": "경이 선택",
     "ClearLocked": "잠금 해제",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
     "Current": "현재",
@@ -407,7 +407,9 @@
       "ProcessingMode": "처리 모드"
     },
     "Scaled": "확대 됨",
-    "SearchAMod": "개조 부품이나 설명 검색",
+    "SearchAMod": "개조 부품 또는 설명으로 검색",
+    "SearchAnExotic": "경이 또는 설명으로 검색",
+    "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -442,7 +444,6 @@
     "LimitedCombos": "총 {{combosWithoutCaps, number}}개의 방어구 능력치 조합이 있으나, DIM은 브라우저가 충돌하는 것을 막기 위해 {{combos, number}}개의 가장 높은 능력치의 조합만 살펴보았습니다. 조합의 수를 줄이려면 특성을 선택하거나 검색을 사용하고 오래된 방어구를 분해하세요. 일반이나 시즌 개조 부품을 고정하면 조합의 수가 늘어납니다.",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
-    "LockPerk": "특성 선택",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFoundExoticsAndMods": "경이 아이템과 다섯 개의 시즌 개조 부품이 선택되었습니다.",
     "NoBuildsFoundModsAreTooExpensive": "선택된 개조 부품의 에너지 요구량이 너무 많습니다.",
@@ -460,7 +461,6 @@
     "SaveAs": "다른 이름으로 저장",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
-    "SelectPerks": "특성 선택",
     "StatIncorrectWarning": "정확한 결과를 얻으시려면 능력치를 감소시키는 모든 개조 부품을 제거하십시오.\n\n개조 부품의 능력치 페널티로 인하여 DIM에서 일부 아이템의 {{stats}} 능력치의 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다.",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
@@ -809,8 +809,7 @@
     "Tier": "{{tier}}단계",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
-    "Total": "총",
-    "TotalIncorrectWarning": "개조 부품의 능력치 페널티로 인하여 DIM에서 {{stats}} 능력치 기본 값을 계산하지 못했습니다. 이는 Bungie.net에서 전송한 정보의 한계입니다."
+    "Total": "총"
   },
   "Storage": {
     "ApiPermissionPrompt": {

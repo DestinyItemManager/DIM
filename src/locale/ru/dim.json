@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
     "ChooseAMod": "Выберите Модификаторы",
-    "ChooseAPerk": "Выберите Бонус",
+    "ChooseAnExotic": "Choose your exotic",
     "ClearLocked": "Очистить Обязательное",
     "ContainsVendorItems": "Этот Набор содержит предметы вендоров",
     "Current": "Текущий",
@@ -408,6 +408,8 @@
     },
     "Scaled": "Масштабированный",
     "SearchAMod": "Текстовый поиск",
+    "SearchAnExotic": "Search an exotic or description",
+    "SelectExotic": "Select exotic",
     "SelectMods": "Добавить",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
@@ -442,7 +444,6 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible armor combinations, but DIM only looked at the {{combos, number}} highest stat combos to keep your browser from crashing. Select some perks, use a search, or dismantle old armor to reduce the number of combos. Pinning general or seasonal mods increases the number of combos.",
     "LockEquipped": "Надетые",
     "LockItem": "Обязательные Предметы",
-    "LockPerk": "Обязательный Бонус",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFoundExoticsAndMods": "Выбраны Обязательные Бонус и Пять сезонных Модификаторов.",
     "NoBuildsFoundModsAreTooExpensive": "Модификаторы требуют слишком много Энергии.",
@@ -460,7 +461,6 @@
     "SaveAs": "Сохранить как",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
-    "SelectPerks": "Добавить к Обязательным",
     "StatIncorrectWarning": "Для точности результатов удалите все модификаторы с отрицательными характеристиками.\n\nИз-за модификаторов с отрицательными характеристиками, DIM не может определить базовое значение или значение {{stats}} для некоторых характеристик. Это ограничение информации передаваемой Bungie.net API.",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
@@ -809,8 +809,7 @@
     "Tier": "Ранг {{tier}}",
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Сумма",
-    "TotalIncorrectWarning": "Из-за модификаторов с отрицательными характеристиками, DIM не может определить базовое значение или значение {{stats}} для некоторых характеристик. Это ограничение информации передаваемой Bungie.net API."
+    "Total": "Сумма"
   },
   "Storage": {
     "ApiPermissionPrompt": {

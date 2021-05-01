@@ -277,7 +277,7 @@
     "InstallDIM": "Instalar como aplicación",
     "InstallDIMBanner": "Instalar DIM como app en tu pantalla de inicio",
     "Inventory": "Inventario",
-    "IosPwaPrompt": "En Safari, haga click en el icono compartir (botón central en la parte abajo) y selecciona \"Añadir a la Pantalla de Inicio\".",
+    "IosPwaPrompt": "En Safari Móvil, haz click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
     "KeyboardShortcuts": "Atajos de Teclado",
     "Menu": "Menú",
     "Refresh": "Actualizar Datos de Destiny [R]",
@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
     "ChooseAMod": "Elige tus mods",
-    "ChooseAPerk": "Elige una ventaja",
+    "ChooseAnExotic": "Elige tu exótico",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Este equipamiento contiene objetos de vendedores",
     "Current": "Actual",
@@ -408,6 +408,8 @@
     },
     "Scaled": "Escalado",
     "SearchAMod": "Buscar un mod o descripción",
+    "SearchAnExotic": "Busca un exótico o descripción",
+    "SelectExotic": "Selecciona exótico",
     "SelectMods": "Selecciona Mods",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -442,7 +444,6 @@
     "LimitedCombos": "Tienes {{combosWithoutCaps, number}} de combinaciones posibles, pero DIM sólo mostró las {{combos, number}} combinaciones de estadísticas más altas para prevenir que tu navegador se bloquee. Selecciona algunos perks, usa una búsqueda, o desmantela armadura antigua para reducir el número de combinaciones. Anclar modificadores generales o de temporada incremeneta el número de combinaciones.",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
-    "LockPerk": "Seleccionar Perk",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFoundExoticsAndMods": "Tienes un exótico y cinco mods de temporada seleccionados.",
     "NoBuildsFoundModsAreTooExpensive": "Los requisitos de energía de los modificadores seleccionados son muy altos.",
@@ -460,7 +461,6 @@
     "SaveAs": "Guardar como",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
-    "SelectPerks": "Seleccionar Perks",
     "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimina cualquier modificador con efectos de estado negativos.\n\nDebido a mods con modificadores de estadísticas negativas, DIM no puede determinar el valor base o el valor de las {{stats}} en algunos de los objetos incluidos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -489,7 +489,7 @@
     "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
     "CouldNotEquip": "No se pudo equipar {{itemname}}",
     "Create": "Crear equipación",
-    "Delete": "Borrar",
+    "Delete": "Eliminar",
     "Edit": "Editar equipación",
     "EquippableDifferent1": "Múltiples objetos Exóticos fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
     "EquippableDifferent2": "El Poder Máximo no está limitado por la regla del \"Exótico Único\" cuando se determina el Poder de tus recompensas de botines/poderosos/pináculo.",
@@ -687,7 +687,7 @@
   },
   "PostmasterWarningBanner": {
     "PostmasterAlmostFull": "¡La Administración está casi llena! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "¡Administración está lleno! ({{number}}/{{postmasterSize}})"
+    "PostmasterFull": "¡La Administración está llena! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Contratos",
@@ -809,8 +809,7 @@
     "Tier": "Nivel {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total",
-    "TotalIncorrectWarning": "Debido a mods con efectos de estadística negativos, DIM no puede determinar el valor base o el valor de las {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
+    "Total": "Total"
   },
   "Storage": {
     "ApiPermissionPrompt": {

@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
     "ChooseAMod": "Elige tus modificadores",
-    "ChooseAPerk": "Elige una ventaja",
+    "ChooseAnExotic": "Elige tu exótico",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Esta equipación contiene objetos de vendedores",
     "Current": "Actual",
@@ -408,6 +408,8 @@
     },
     "Scaled": "Escalado",
     "SearchAMod": "Busca un modificador o una descripción",
+    "SearchAnExotic": "Busca un exótico o descripción",
+    "SelectExotic": "Selecciona exótico",
     "SelectMods": "Seleccione Modificadores",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -442,7 +444,6 @@
     "LimitedCombos": "Tienes {{combosWithoutCaps, number}} de combinaciones posibles, pero DIM sólo mostró las {{combos, number}} combinaciones de estadísticas más altas para prevenir que tu navegador se bloquee. Selecciona algunas ventajas, usa una búsqueda, o desmantela armadura antigua para reducir el número de combinaciones. Anclar modificadores generales o de temporada incremeneta el número de combinaciones.",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
-    "LockPerk": "Seleccionar ventaja",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFoundExoticsAndMods": "Tiene un exótico y cinco modificadores de temporada seleccionados.",
     "NoBuildsFoundModsAreTooExpensive": "Los requisitos de energía de los modificadores seleccionados son muy altos.",
@@ -460,7 +461,6 @@
     "SaveAs": "Guardar como",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
-    "SelectPerks": "Seleccionar Ventajas",
     "StatIncorrectWarning": "Para obtener resultados precisos, por favor elimine cualquier modificador con efectos de estado negativos.\n\nDebido a modificadores con modificadores de estadísticas negativos, DIM no puede determinar el valor base o el valor de las {{stats}} en algunos objetos incluidos. Esto es una limitación de la información enviada por Bungie.net.",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -809,8 +809,7 @@
     "Tier": "Nivel {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total",
-    "TotalIncorrectWarning": "Debido a modificadores con efectos de estadística negativos, DIM no puede determinar el valor base o el valor de las {{stats}}. Esto es una limitación de la información enviada por Bungie.net."
+    "Total": "Total"
   },
   "Storage": {
     "ApiPermissionPrompt": {

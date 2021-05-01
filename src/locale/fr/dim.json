@@ -358,7 +358,7 @@
   "LB": {
     "AdvancedOptions": "Options avancées",
     "ChooseAMod": "Choisissez vos mods",
-    "ChooseAPerk": "Choisissez un attribut",
+    "ChooseAnExotic": "Choose your exotic",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Cet arsenal contient des objets de marchand",
     "Current": "Actuel",
@@ -408,6 +408,8 @@
     },
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un mod ou une description",
+    "SearchAnExotic": "Search an exotic or description",
+    "SelectExotic": "Select exotic",
     "SelectMods": "Sélectionner les Mods",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -442,7 +444,6 @@
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaison d'armure possible, mais DIM n'a regardé que les {{combos, number}} meilleurs combos de statistiques pour s'assurer que votre navigateur n'aies pas d'erreur. Sélectionnez des attributs, utiliser la recherche, ou démantelez de vieilles armures pour réduire le nombre de combos. Épingler des mods généraux ou saisonniers augmente le nombre de combos.",
     "LockEquipped": "Épingler objets équipés",
     "LockItem": "Épingler objet",
-    "LockPerk": "Sélectionner un attribut",
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFoundExoticsAndMods": "Vous avec un exotique et 5 mods saisonniers sélectionnés.",
     "NoBuildsFoundModsAreTooExpensive": "Les besoins énergétiques des mods sélectionnés sont trop élevés.",
@@ -460,7 +461,6 @@
     "SaveAs": "Enregistrer sous",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "SelectPerks": "Sélectionner des attributs",
     "StatIncorrectWarning": "Pour obtenir des résultats précis, veuillez retirer les mods avec des modificateurs de statistique négatifs.\n\nÀ cause de modificateurs de statistiques négatifs, DIM ne peut pas déterminer la valeur ou la valeur de base de {{stats}} de certains objets inclus. C'est une limitation des informations envoyées par Bungie.net.",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
@@ -809,8 +809,7 @@
     "Tier": "Palier {{tier}}",
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total",
-    "TotalIncorrectWarning": "À cause de mods aux effets négatifs, DIM ne peut pas déterminer la valeur ou valeur de base de {{stats}}. C'est une limitation des informations envoyées par Bungie.net."
+    "Total": "Total"
   },
   "Storage": {
     "ApiPermissionPrompt": {
