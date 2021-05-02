@@ -4,7 +4,7 @@ import { SearchConfig } from './search-config';
 /**
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter.
  */
-export function validateQuery(query: QueryAST, searchConfig: SearchConfig) {
+export function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
   if (query.error) {
     return false;
   }

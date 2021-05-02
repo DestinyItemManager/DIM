@@ -104,7 +104,12 @@ export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorT
   };
 }
 
-export function genSetHash(armorPieces) {
+export function genSetHash(
+  armorPieces: {
+    item: D1ItemWithNormalStats;
+    bonusType: string;
+  }[]
+) {
   let hash = '';
   for (const armorPiece of armorPieces) {
     hash += armorPiece.item.id;
@@ -133,7 +138,7 @@ export function getBestArmor(
   const armor = {};
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
   let curbest;
-  let bestCombs;
+  let bestCombs: { item: D1ItemWithNormalStats; bonusType: string }[];
   let armortype: ArmorTypes;
 
   const excludedIndices = new Set(excluded.map((i) => i.index));
@@ -163,7 +168,7 @@ export function getBestArmor(
           if (!orPerkHashes.length && !andPerkHashes.length) {
             return true;
           }
-          function matchNode(perkHash) {
+          function matchNode(perkHash: number) {
             return item.talentGrid?.nodes.some((n) => n.hash === perkHash);
           }
           return Boolean(

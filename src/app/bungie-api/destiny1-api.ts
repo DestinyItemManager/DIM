@@ -1,3 +1,4 @@
+import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
@@ -58,7 +59,7 @@ export async function getStores(platform: DestinyAccount): Promise<any[]> {
   return data[0];
 }
 
-function processInventoryResponse(character, response: ServerResponse<any>) {
+function processInventoryResponse(character: any, response: ServerResponse<any>) {
   const payload = response.Response;
 
   payload.id = character.id;
@@ -102,7 +103,7 @@ export function getDestinyProgression(platform: DestinyAccount, characters: any[
     return processProgressionResponse(character, response);
   });
 
-  function processProgressionResponse(character, response: ServerResponse<any>) {
+  function processProgressionResponse(character: any, response: ServerResponse<any>) {
     character.progression = response.Response.data;
     return character;
   }
@@ -122,7 +123,7 @@ export function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) 
 
   return Promise.all(promises);
 
-  function processAdvisorsResponse(character, response: ServerResponse<any>) {
+  function processAdvisorsResponse(character: any, response: ServerResponse<any>) {
     character.advisors = response.Response.data;
     return character;
   }
@@ -132,7 +133,7 @@ export async function getVendorForCharacter(
   account: DestinyAccount,
   character: D1Store,
   vendorHash: number
-) {
+): Promise<Vendor> {
   const response = await authenticatedHttpClient(
     bungieApiQuery(
       `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
@@ -180,7 +181,7 @@ export async function equipItems(account: DestinyAccount, store: D1Store, items:
   );
   const data = response.Response;
   return items.filter((i) => {
-    const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
+    const item = data.equipResults.find((r: any) => r.itemInstanceId === i.id);
     return item?.equipStatus === 1;
   });
 }

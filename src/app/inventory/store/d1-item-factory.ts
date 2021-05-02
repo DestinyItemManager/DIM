@@ -10,7 +10,7 @@ import {
 import missingSources from 'data/d1/missing_sources.json';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
-import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
+import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
@@ -432,7 +432,16 @@ function getAmmoType(itemType: string) {
   return DestinyAmmunitionType.None;
 }
 
-function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
+function buildTalentGrid(
+  item: {
+    talentGridHash: number;
+    progression: { progressionHash: number; currentProgress: any; level: number };
+    nodes: string | any[];
+    primaryStat: any;
+  },
+  talentDefs: DefinitionTable<any>,
+  progressDefs: DefinitionTable<any>
+): D1TalentGrid | null {
   const talentGridDef = item.talentGridHash && talentDefs.get(item.talentGridHash);
   if (
     !item.progression ||
@@ -451,7 +460,7 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   // the last element repeating infinitely.
   const progressSteps = progressDefs.get(item.progression.progressionHash).steps;
   // Total XP to get to specified level
-  function xpToReachLevel(level) {
+  function xpToReachLevel(level: number) {
     if (level === 0) {
       return 0;
     }
@@ -619,13 +628,19 @@ function buildTalentGrid(item, talentDefs, progressDefs): D1TalentGrid | null {
   };
 }
 
-function buildStats(item, itemDef, statDefs, grid: D1TalentGrid | null, type): D1Stat[] | null {
+function buildStats(
+  item: any,
+  itemDef: { stats: any },
+  statDefs: DefinitionTable<any>,
+  grid: D1TalentGrid | null,
+  type: string
+): D1Stat[] | null {
   if (!item.stats || !item.stats.length || !itemDef.stats) {
     return null;
   }
 
   let armorNodes: D1GridNode[] = [];
-  let activeArmorNode;
+  let activeArmorNode: D1GridNode | { hash: number };
   if (grid?.nodes && item.primaryStat?.statHash === 3897883278) {
     armorNodes = grid.nodes.filter(
       (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']

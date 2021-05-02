@@ -147,3 +147,8 @@ declare module '*dim.json' {
   const value: string;
   export default value;
 }
+
+declare module 'voca/latinise' {
+  const latinise: (subject?: string) => string;
+  export default latinise;
+}

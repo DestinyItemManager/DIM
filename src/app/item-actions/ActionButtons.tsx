@@ -164,7 +164,7 @@ export function LoadoutActionButton({ item, label }: ActionButtonProps) {
   if (!itemCanBeInLoadout(item) || item.owner === 'unknown') {
     return null;
   }
-  const addToLoadout = (e) => {
+  const addToLoadout = (e: React.MouseEvent) => {
     hideItemPopup();
     addItemToLoadout(item, e);
   };

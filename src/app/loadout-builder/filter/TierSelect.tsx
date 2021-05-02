@@ -154,10 +154,21 @@ function MinMaxSelectInner({
   max: number;
   ignored: boolean;
   stats: { [statType in StatTypes]: MinMaxIgnored };
-  handleTierChange(which: string, changed: any): void;
+  handleTierChange(
+    which: string,
+    changed: {
+      min: number;
+      max: number;
+      ignored: boolean;
+    }
+  ): void;
 }) {
-  function handleChange(e) {
-    let update;
+  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    let update: {
+      min: number;
+      max: number;
+      ignored: boolean;
+    };
     if (e.target.value === IGNORE || e.target.value === INCLUDE) {
       update = {
         min: stats[stat].min,
@@ -173,7 +184,7 @@ function MinMaxSelectInner({
         [opposite]:
           opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value),
         ignored: false,
-      };
+      } as typeof update;
     }
 
     handleTierChange(stat, update);

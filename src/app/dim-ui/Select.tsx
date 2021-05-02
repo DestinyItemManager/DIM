@@ -105,6 +105,7 @@ export default function Select<T>({
                   {...getItemProps({
                     item,
                     index,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     onClick: (e: any) => {
                       e.nativeEvent.preventDownshiftDefault = item.disabled;
                     },

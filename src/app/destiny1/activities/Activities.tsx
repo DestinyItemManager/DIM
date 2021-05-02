@@ -126,7 +126,7 @@ function Activities({ account, defs, stores }: Props) {
   const processActivities = (
     defs: D1ManifestDefinitions,
     stores: D1Store[],
-    rawActivity
+    rawActivity: any
   ): Activity => {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
@@ -145,7 +145,7 @@ function Activities({ account, defs, stores }: Props) {
     };
 
     if (rawActivity.extended) {
-      activity.skulls = rawActivity.extended.skullCategories.map((s) => s.skulls.flat());
+      activity.skulls = rawActivity.extended.skullCategories.map((s: any) => s.skulls.flat());
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
@@ -162,7 +162,7 @@ function Activities({ account, defs, stores }: Props) {
       activity.skulls = activity.skulls.flat();
     }
 
-    activity.tiers = rawActivity.activityTiers.map((r, i) =>
+    activity.tiers = rawActivity.activityTiers.map((r: any, i: number) =>
       processActivity(defs, rawActivity.identifier, stores, r, i)
     );
 

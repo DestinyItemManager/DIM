@@ -30,7 +30,7 @@ export interface MoveAmountPopupOptions {
   targetStore: DimStore;
   amount: number;
   maximum: number;
-  onAmountSelected(amount: number);
+  onAmountSelected(amount: number): void;
   onCancel(): void;
 }
 

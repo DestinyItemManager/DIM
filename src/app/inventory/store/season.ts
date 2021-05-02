@@ -1,4 +1,4 @@
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
+import { D2EventIndex, D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -12,7 +12,7 @@ import { DimItem } from '../item-types';
 /** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
 
-const SourceToD2Season = D2SeasonFromSource.sources;
+const SourceToD2Season: Record<number, number> = D2SeasonFromSource.sources;
 
 export function getSeason(item: DimItem): number {
   if (item.classified) {
@@ -36,17 +36,21 @@ export function getSeason(item: DimItem): number {
   }
 
   return overlay
-    ? Number(D2SeasonFromOverlay[overlay]) || D2SeasonBackup[item.hash]
-    : D2Season[item.hash] || D2CalculatedSeason;
+    ? Number((D2SeasonFromOverlay as Record<string, number>)[overlay]) ||
+        (D2SeasonBackup as Record<number, number>)[item.hash]
+    : (D2Season as Record<number, number>)[item.hash] || D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
-export function getEvent(item: DimItem) {
+export function getEvent(item: DimItem): D2EventIndex {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
   const D2EventBackup = item.source
-    ? D2SourcesToEvent[item.source] || D2Events[item.hash]
-    : D2Events[item.hash];
+    ? (D2SourcesToEvent as Record<number, D2EventIndex>)[item.source] ||
+      (D2Events as Record<number, D2EventIndex>)[item.hash]
+    : (D2Events as Record<number, D2EventIndex>)[item.hash];
 
-  return overlay ? Number(D2EventFromOverlay[overlay]) || D2EventBackup : D2EventBackup;
+  return overlay
+    ? (D2EventFromOverlay as Record<string, D2EventIndex>)[overlay] || D2EventBackup
+    : D2EventBackup;
 }

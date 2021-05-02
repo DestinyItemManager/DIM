@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -249,8 +248,7 @@ function limitToBucketSize(items: DimItem[], isVault: boolean) {
 function addUpStackables(items: DimItem[]) {
   return Object.values(_.groupBy(items, (t) => t.hash)).flatMap((items) => {
     if (items[0].maxStackSize > 1) {
-      const item = copy(items[0]);
-      item.amount = _.sumBy(items, (i) => i.amount);
+      const item = { ...items[0], amount: _.sumBy(items, (i) => i.amount) };
       return [item];
     } else {
       return items;

@@ -164,15 +164,15 @@ const d1Filters: FilterDefinition[] = [
     filter: ({ filterValue }) => (item: D1Item) => {
       if (vendorHashes.restricted[filterValue]) {
         return (
-          vendorHashes.required[filterValue].some((vendorHash) =>
+          vendorHashes.required[filterValue].some((vendorHash: number) =>
             item.sourceHashes.includes(vendorHash)
           ) &&
-          !vendorHashes.restricted[filterValue].some((vendorHash) =>
+          !vendorHashes.restricted[filterValue].some((vendorHash: number) =>
             item.sourceHashes.includes(vendorHash)
           )
         );
       } else {
-        return vendorHashes.required[filterValue].some((vendorHash) =>
+        return vendorHashes.required[filterValue].some((vendorHash: number) =>
           item.sourceHashes.includes(vendorHash)
         );
       }

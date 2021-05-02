@@ -14,7 +14,7 @@ interface ExternalProps {
   bucketTypes: string[];
   storeIds: string[];
   children?: React.ReactNode;
-  onDroppedItem(item: DimItem);
+  onDroppedItem(item: DimItem): void;
 }
 
 // These are all provided by the DropTarget HOC function

@@ -182,12 +182,14 @@ function searchForSimilarItem(
 
   // TODO: unify this value function w/ the others!
   const sortedCandidates = _.sortBy(candidates, (i) => {
-    let value: number = {
+    let value = {
       Legendary: 4,
       Rare: 3,
       Uncommon: 2,
       Common: 1,
       Exotic: 0,
+      Currency: 0,
+      Unknown: 0,
     }[i.tier];
     if (item.isExotic && i.isExotic) {
       value += 5;

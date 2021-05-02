@@ -629,7 +629,7 @@ export function makeItem(
   return createdItem;
 }
 
-function isLegendaryOrBetter(item) {
+function isLegendaryOrBetter(item: DimItem) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 

@@ -7,7 +7,6 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import copy from 'fast-copy';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
@@ -49,7 +48,7 @@ export const editLoadout$ = new EventBus<{
 }>();
 export const addItem$ = new EventBus<{
   item: DimItem;
-  clickEvent: MouseEvent;
+  clickEvent: MouseEvent | React.MouseEvent;
 }>();
 
 /**
@@ -66,7 +65,7 @@ export function editLoadout(loadout: Loadout, { showClass = true, isNew = true }
 /**
  * Add an item to the loadout we're currently editing. This is driven by clicks in Inventory.
  */
-export function addItemToLoadout(item: DimItem, $event) {
+export function addItemToLoadout(item: DimItem, $event: MouseEvent | React.MouseEvent) {
   addItem$.next({
     item,
     clickEvent: $event,
@@ -419,7 +418,7 @@ function LoadoutDrawer({
   ]);
 
   const onAddItem = useCallback(
-    (item: DimItem, e?: MouseEvent) =>
+    (item: DimItem, e?: MouseEvent | React.MouseEvent) =>
       stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items }),
     [items]
   );
@@ -490,7 +489,7 @@ function LoadoutDrawer({
       return;
     }
     const newLoadout = {
-      ...copy(loadout),
+      ...loadout,
       id: uuidv4(), // Let it be a new ID
     };
     onSaveLoadout(e, newLoadout);

@@ -599,7 +599,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       _.forIn(vendorPerks, (perksWithType, classType) => {
         _.forIn(perksWithType, (perkArr, type) => {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
-            perks[classType][type].map((i) => i.hash).includes(perk.hash)
+            perks[classType][type].map((i: D1GridNode) => i.hash).includes(perk.hash)
           );
         });
       });

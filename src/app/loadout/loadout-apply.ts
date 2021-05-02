@@ -28,7 +28,6 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -120,7 +119,8 @@ function doApplyLoadout(
       );
     }
 
-    let items: LoadoutItem[] = copy(loadout.items);
+    // Shallow copy all items so we can mutate equipped
+    let items: LoadoutItem[] = Array.from(loadout.items, (i) => ({ ...i }));
 
     const loadoutItemIds = items.map((i) => ({
       id: i.id,

@@ -26,10 +26,10 @@ export default function LoadoutDrawerOptions({
     label: string;
     value: DestinyClass;
   }[];
-  updateLoadout(loadout: Loadout);
-  saveLoadout(e);
-  saveAsNew(e);
-  deleteLoadout(e);
+  updateLoadout(loadout: Loadout): void;
+  saveLoadout(e: React.FormEvent): void;
+  saveAsNew(e: React.MouseEvent): void;
+  deleteLoadout(e: React.MouseEvent): void;
 }) {
   if (!loadout) {
     return null;

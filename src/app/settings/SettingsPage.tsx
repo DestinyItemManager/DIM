@@ -282,7 +282,11 @@ function SettingsPage({
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} tag="favorite" />
+              <InventoryItem
+                item={(fakeWeapon as unknown) as DimItem}
+                isNew={true}
+                tag="favorite"
+              />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
@@ -439,8 +443,8 @@ function SettingsPage({
           <section id="ratings">
             <h2>{t('Settings.Ratings')}</h2>
             <div className="examples sub-bucket">
-              <InventoryItem item={(fakeWeapon as any) as DimItem} isNew={true} />
-              <InventoryItem item={(fakeArmor as any) as DimItem} isNew={true} />
+              <InventoryItem item={(fakeWeapon as unknown) as DimItem} isNew={true} />
+              <InventoryItem item={(fakeArmor as unknown) as DimItem} isNew={true} />
             </div>
 
             <Checkbox

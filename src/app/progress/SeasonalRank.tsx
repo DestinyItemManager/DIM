@@ -37,7 +37,7 @@ export default function SeasonalRank({
   }
 
   const prestigeRewardHash = 1620506139; // this hash does not matter as long as it exists and is not class exclusive
-  const brightEngramHash = brightEngrams[season.seasonNumber];
+  const brightEngramHash: number = brightEngrams[season.seasonNumber];
   const prestigeRewardLevel = 9999; // fake reward level for fake item for prestige level
   const brightEngramRewardLevel = 9998; // fake reward level for seasonal bright engram
 

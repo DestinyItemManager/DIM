@@ -4,7 +4,7 @@
  * of cancelable functions should catch CanceledError.
  */
 export interface CancelToken {
-  readonly canceled;
+  readonly canceled: boolean;
   checkCanceled(): void;
 }
 

@@ -3,6 +3,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -58,7 +59,14 @@ interface RecordBookPage {
   name: string;
   description: string;
   rewardsPage: boolean;
-  records: any[];
+  records: {
+    hash: number;
+    complete: boolean;
+    icon: string;
+    name: string;
+    description: string;
+    objectives: DestinyObjectiveProgress[];
+  }[];
   complete: boolean;
   completedCount: number;
 }
@@ -79,7 +87,7 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: 
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  const processRecordBook = (defs: D1ManifestDefinitions, rawRecordBook): RecordBook => {
+  const processRecordBook = (defs: D1ManifestDefinitions, rawRecordBook: any): RecordBook => {
     // TODO: rewards are in "spotlights"
     // TODO: rank
 
@@ -98,7 +106,7 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: 
       percentComplete: undefined as number | undefined,
     };
 
-    const processRecord = (defs: D1ManifestDefinitions, record) => {
+    const processRecord = (defs: D1ManifestDefinitions, record: any) => {
       const recordDef = defs.Record.get(record.recordHash);
 
       return {
@@ -107,7 +115,7 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: 
         description: recordDef.description,
         name: recordDef.displayName,
         objectives: record.objectives,
-        complete: record.objectives.every((o) => o.isComplete),
+        complete: record.objectives.every((o: any) => o.isComplete),
       };
     };
 
@@ -115,13 +123,13 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: 
     const recordByHash = _.keyBy(records, (r) => r.hash);
 
     let i = 0;
-    recordBook.pages = recordBookDef.pages.map((page) => {
+    recordBook.pages = recordBookDef.pages.map((page: any) => {
       const createdPage: RecordBookPage = {
         id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
-        records: page.records.map((r) => recordByHash[r.recordHash]),
+        records: page.records.map((r: any) => recordByHash[r.recordHash]),
         // rewards - map to items!
         // ItemFactory.processItems({ id: null }
         // may have to extract store service bits...

@@ -83,19 +83,21 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
 function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
   try {
-    return rawStores[0].character.base.inventory.currencies.map((c) => {
-      const itemDef = defs.InventoryItem.get(c.itemHash);
-      return {
-        itemHash: c.itemHash,
-        quantity: c.value,
-        displayProperties: {
-          name: itemDef.itemName,
-          description: itemDef.itemDescription,
-          icon: itemDef.icon,
-          hasIcon: Boolean(itemDef.icon),
-        },
-      };
-    });
+    return rawStores[0].character.base.inventory.currencies.map(
+      (c: { itemHash: number; value: any }) => {
+        const itemDef = defs.InventoryItem.get(c.itemHash);
+        return {
+          itemHash: c.itemHash,
+          quantity: c.value,
+          displayProperties: {
+            name: itemDef.itemName,
+            description: itemDef.itemDescription,
+            icon: itemDef.icon,
+            hasIcon: Boolean(itemDef.icon),
+          },
+        };
+      }
+    );
   } catch (e) {
     infoLog('d1-stores', 'error processing currencies', e);
   }
@@ -106,7 +108,15 @@ function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
  * Process a single store from its raw form to a DIM store, with all the items.
  */
 function processStore(
-  raw,
+  raw: {
+    id: string;
+    data: { buckets: any };
+    character: {
+      base: any;
+      progression: { progressions: never[] };
+      advisors: any;
+    };
+  },
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   lastPlayedDate: Date

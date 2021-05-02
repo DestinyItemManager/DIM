@@ -109,7 +109,7 @@ export function getColumns(
   };
 
   // Some stat labels are long. This lets us replace them with i18n
-  const statLabels = {
+  const statLabels: Record<number, string> = {
     [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
     [StatHashes.ReloadSpeed]: t('Organizer.Stats.Reload'), // Reload Speed
     [StatHashes.AimAssistance]: t('Organizer.Stats.Aim'), // Aim Assistance
@@ -348,13 +348,7 @@ export function getColumns(
             ?.map((m) => m.slotTag)
             .join(','),
         cell: (value, item) =>
-          value && (
-            <SpecialtyModSlotIcon
-              className={styles.modslotIcon}
-              item={item}
-              showAllSupportedSeasons={true}
-            />
-          ),
+          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
         filter: (_, item) => {
           const modSlotMetadata = getSpecialtySocketMetadatas(item);
           return `modslot:${modSlotMetadata?.[0].slotTag || 'none'}`;

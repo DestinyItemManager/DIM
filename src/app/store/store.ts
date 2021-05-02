@@ -21,7 +21,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     })
   : compose;
 
-const store = createStore<RootState, AnyAction, {}, {}>(
+const store = createStore<RootState, any, {}, {}>(
   allReducers,
   composeEnhancers(applyMiddleware(thunk))
 );

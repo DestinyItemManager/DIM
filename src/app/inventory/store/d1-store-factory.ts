@@ -24,7 +24,11 @@ const progressionMeta = {
 };
 
 export function makeCharacter(
-  raw,
+  raw: {
+    character: { base: any; progression: { progressions: never[] }; advisors: any };
+    id: any;
+    data: { buckets: any };
+  },
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date
 ): {
@@ -122,9 +126,9 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(
-  raw
-): {
+export function makeVault(raw: {
+  data: { buckets: any };
+}): {
   store: D1Store;
   items: any[];
 } {

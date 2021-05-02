@@ -19,7 +19,7 @@ export default function AppInstallBanner({ onClick }: { onClick: React.MouseEven
     return null;
   }
 
-  const hide = (e) => {
+  const hide = (e: React.MouseEvent) => {
     e.stopPropagation();
     setLastDismissed(Date.now());
   };

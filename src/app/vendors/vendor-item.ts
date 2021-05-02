@@ -98,7 +98,7 @@ export class VendorItem {
   readonly canBeSold: boolean;
   readonly displayCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
-  readonly previewVendorHash: number;
+  readonly previewVendorHash?: number;
 
   constructor(
     defs: D2ManifestDefinitions,

@@ -30,9 +30,9 @@ interface Props {
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
-  onClick?(e);
-  onShiftClick?(e): void;
-  onDoubleClick?(e);
+  onClick?(e: React.MouseEvent): void;
+  onShiftClick?(e: React.MouseEvent): void;
+  onDoubleClick?(e: React.MouseEvent): void;
 }
 
 export default function InventoryItem({

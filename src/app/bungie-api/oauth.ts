@@ -57,7 +57,17 @@ export function getAccessTokenFromCode(code: string): Promise<Tokens> {
   );
 }
 
-function handleAccessToken(response): Tokens {
+function handleAccessToken(
+  response:
+    | {
+        access_token: string;
+        expires_in: number;
+        membership_id: string;
+        refresh_token?: string;
+        refresh_expires_in: number;
+      }
+    | undefined
+): Tokens {
   if (response?.access_token) {
     const data = response;
     const inception = Date.now();

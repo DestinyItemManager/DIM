@@ -49,7 +49,7 @@ export const armorAnyStatHashes = Object.values(D2ArmorStatHashByName);
 export const armorStatHashes = Object.values(dimArmorStatHashByName);
 
 /** all-stat table, for looking up stat hashes given a queried stat name */
-export const statHashByName = {
+export const statHashByName: Record<string, number> = {
   ...D2WeaponStatHashByName,
   ...swordStatsByName,
   ...dimArmorStatHashByName,

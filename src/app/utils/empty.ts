@@ -9,7 +9,7 @@ export function emptyObject<T extends object>(): T {
   return EMPTY_OBJ as T;
 }
 
-const EMPTY_ARRAY = [];
+const EMPTY_ARRAY: unknown[] = [];
 export function emptyArray<T>(): T[] {
   return EMPTY_ARRAY as T[];
 }

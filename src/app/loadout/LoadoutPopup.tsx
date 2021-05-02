@@ -53,7 +53,7 @@ import { loadoutsSelector, previousLoadoutSelector } from './selectors';
 interface ProvidedProps {
   dimStore: DimStore;
   hideFarming?: boolean;
-  onClick?(e): void;
+  onClick?(e: React.MouseEvent): void;
 }
 
 interface StoreProps {
@@ -82,7 +82,7 @@ function mapStateToProps() {
 
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
-    (_, { dimStore }: ProvidedProps) => dimStore,
+    (_: RootState, { dimStore }: ProvidedProps) => dimStore,
     (loadouts, dimStore) =>
       _.sortBy(
         loadouts.filter(
@@ -152,7 +152,7 @@ function LoadoutPopup({
 
   // TODO: move all these fancy loadouts to a new service
 
-  const onApplyLoadout = (loadout: Loadout, e, filterToEquipped = false) => {
+  const onApplyLoadout = (loadout: Loadout, e: React.MouseEvent, filterToEquipped = false) => {
     e.preventDefault();
 
     if (filterToEquipped) {
@@ -163,13 +163,16 @@ function LoadoutPopup({
   };
 
   // A dynamic loadout set up to level weapons and armor
-  const makeItemLevelingLoadout = (e) => {
+  const makeItemLevelingLoadout = (e: React.MouseEvent) => {
     const loadout = itemLevelingLoadout(allItems, dimStore);
     onApplyLoadout(loadout, e);
   };
 
   // A dynamic loadout set up to level weapons and armor
-  const applyGatherEngramsLoadout = (e, options: { exotics: boolean } = { exotics: false }) => {
+  const applyGatherEngramsLoadout = (
+    e: React.MouseEvent,
+    options: { exotics: boolean } = { exotics: false }
+  ) => {
     let loadout;
     try {
       loadout = gatherEngramsLoadout(allItems, options);
@@ -180,7 +183,7 @@ function LoadoutPopup({
     onApplyLoadout(loadout, e);
   };
 
-  const applyRandomLoadout = (e, weaponsOnly = false) => {
+  const applyRandomLoadout = (e: React.MouseEvent, weaponsOnly = false) => {
     if (
       !window.confirm(
         weaponsOnly
@@ -209,7 +212,7 @@ function LoadoutPopup({
   };
 
   // Move items matching the current search. Max 9 per type.
-  const applySearchLoadout = (e) => {
+  const applySearchLoadout = (e: React.MouseEvent) => {
     const loadout = searchLoadout(allItems, dimStore, searchFilter);
     onApplyLoadout(loadout, e);
   };

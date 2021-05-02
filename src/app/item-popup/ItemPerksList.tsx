@@ -95,7 +95,7 @@ function PerkSocket({
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   selectedPerk?: { socket: DimSocket; perk: DimPlug };
-  onPerkSelected(socketInfo: DimSocket, plug: DimPlug);
+  onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
   return (
     <div className={styles.socket}>
@@ -135,7 +135,7 @@ function PerkPlug({
   // TODO: maybe use an enum
   selectedSocket: boolean;
   selectedPerk: boolean;
-  onPerkSelected(socketInfo: DimSocket, plug: DimPlug);
+  onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
   if (!plug.plugDef.plug) {
     return null;
