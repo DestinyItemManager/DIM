@@ -128,30 +128,27 @@ export function loadStores(
   components?: DestinyComponentType[]
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
-    const promise = (async () => {
-      let account = currentAccountSelector(getState());
+    let account = currentAccountSelector(getState());
+    if (!account) {
+      // TODO: throw here?
+      await dispatch(getPlatforms());
+      account = currentAccountSelector(getState());
       if (!account) {
-        // TODO: throw here?
-        await dispatch(getPlatforms());
-        account = currentAccountSelector(getState());
-        if (!account) {
-          return;
-        }
+        return;
       }
+    }
 
-      const stores = await dispatch(loadStoresData(account, isFirstLoad ? components : undefined));
+    const stores = await dispatch(loadStoresData(account, isFirstLoad ? components : undefined));
 
-      if (isFirstLoad) {
-        isFirstLoad = false;
-        if (components) {
-          // async load the rest (no await)
-          dispatch(loadStoresData(account));
-        }
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      if (components) {
+        // async load the rest (no await)
+        dispatch(loadStoresData(account));
       }
+    }
 
-      return stores;
-    })();
-    return promise;
+    return stores;
   };
 }
 

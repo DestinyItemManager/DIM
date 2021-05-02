@@ -690,29 +690,28 @@ function buildStats(
         let base = val;
         let bonus = 0;
 
-        if (item.primaryStat?.stat.statIdentifier === 'STAT_DEFENSE') {
-          if (
-            (identifier === 'STAT_INTELLECT' &&
-              armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
+        if (
+          item.primaryStat?.stat.statIdentifier === 'STAT_DEFENSE' &&
+          ((identifier === 'STAT_INTELLECT' &&
+            armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
             (identifier === 'STAT_DISCIPLINE' &&
               armorNodes.find((n) => n.hash === 1263323987 /* Increase Discipline */)) ||
             (identifier === 'STAT_STRENGTH' &&
-              armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */))
-          ) {
-            bonus = getBonus(item.primaryStat.value, type);
+              armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */)))
+        ) {
+          bonus = getBonus(item.primaryStat.value, type);
 
-            if (
-              activeArmorNode &&
-              ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
-                (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
-                (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))
-            ) {
-              base = Math.max(0, val - bonus);
-            }
+          if (
+            activeArmorNode &&
+            ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+              (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+              (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))
+          ) {
+            base = Math.max(0, val - bonus);
           }
         }
 
-        const dimStat: D1Stat = {
+        return {
           base,
           bonus,
           investmentValue: base,
@@ -729,8 +728,6 @@ function buildStats(
           additive: item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE',
           isConditionallyActive: false,
         };
-
-        return dimStat;
       })
     ),
     (s) => s.sort

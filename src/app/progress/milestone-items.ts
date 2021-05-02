@@ -228,8 +228,8 @@ function makeFakePursuitItem(
   hash: number,
   typeName: string,
   store: DimStore
-) {
-  const dimItem: DimItem = {
+): DimItem {
+  return {
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -292,8 +292,6 @@ function makeFakePursuitItem(
     energy: null,
     powerCap: null,
   };
-
-  return dimItem;
 }
 
 function makeMilestonePursuitItem(

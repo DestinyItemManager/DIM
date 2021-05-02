@@ -188,8 +188,7 @@ async function fetchVendor(
   );
   const nonNullVendors = _.compact(vendorsForCharacters);
   if (nonNullVendors.length) {
-    const mergedVendor = mergeVendors(_.compact(nonNullVendors));
-    return mergedVendor;
+    return mergeVendors(_.compact(nonNullVendors));
   } else {
     return null;
   }

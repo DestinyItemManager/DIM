@@ -189,14 +189,13 @@ async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount
   try {
     const response = await getCharacters(account);
     if (response?.length) {
-      const result: DestinyAccount = {
+      return {
         ...account,
         destinyVersion: 1,
         // D1 didn't support cross-save!
         platforms: [account.originalPlatformType],
         lastPlayed: getLastPlayedD1Character(response),
       };
-      return result;
     }
     return null;
   } catch (e) {

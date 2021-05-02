@@ -226,7 +226,7 @@ function moveItemsToVault(
       const vaultSpaceLeft = spaceLeftForItem(vault, item, stores);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
-        const otherStores = stores.filter((store) => !store.isVault && store.id !== store.id);
+        const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
         const otherStoresWithSpace = otherStores.filter((store) =>
           spaceLeftForItem(store, item, stores)
         );

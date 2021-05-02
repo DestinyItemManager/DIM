@@ -142,19 +142,26 @@ export async function getVendorForCharacter(
   return response.Response.data;
 }
 
-export function transfer(account: DestinyAccount, item: D1Item, store: D1Store, amount: number) {
-  const promise = authenticatedHttpClient(
-    bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
-      characterId: store.isVault ? item.owner : store.id,
-      membershipType: account.originalPlatformType,
-      itemId: item.id,
-      itemReferenceHash: item.hash,
-      stackSize: amount || item.amount,
-      transferToVault: store.isVault,
-    })
-  ).catch((e) => handleUniquenessViolation(e, item, store));
-
-  return promise;
+export async function transfer(
+  account: DestinyAccount,
+  item: D1Item,
+  store: D1Store,
+  amount: number
+) {
+  try {
+    return await authenticatedHttpClient(
+      bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
+        characterId: store.isVault ? item.owner : store.id,
+        membershipType: account.originalPlatformType,
+        itemId: item.id,
+        itemReferenceHash: item.hash,
+        stackSize: amount || item.amount,
+        transferToVault: store.isVault,
+      })
+    );
+  } catch (e) {
+    return handleUniquenessViolation(e, item, store);
+  }
 }
 
 export function equip(account: DestinyAccount, item: DimItem) {

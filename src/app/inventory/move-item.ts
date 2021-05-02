@@ -105,10 +105,12 @@ export function moveItemTo(
       throw new DimError('Help.CannotMove');
     }
 
-    if (item.owner === store.id && !item.location.inPostmaster) {
-      if ((item.equipped && equip) || (!item.equipped && !equip)) {
-        return item;
-      }
+    if (
+      item.owner === store.id &&
+      !item.location.inPostmaster &&
+      ((item.equipped && equip) || (!item.equipped && !equip))
+    ) {
+      return item;
     }
 
     const moveAmount = amount || 1;

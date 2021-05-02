@@ -45,7 +45,7 @@ function format(hotkey: Hotkey) {
   // of usecase here, so open a ticket if my assumptions are wrong
   const combo = hotkey.combo;
 
-  const sequence = combo.split(/[\s]/);
+  const sequence = combo.split(/\s/);
   for (let i = 0; i < sequence.length; i++) {
     sequence[i] = symbolize(sequence[i]);
   }

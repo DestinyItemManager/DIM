@@ -18,13 +18,8 @@ export function validateQuery(query: QueryAST, searchConfig: SearchConfig): bool
         filterName = filterValue;
       }
 
-      const filterDef = searchConfig.filters[filterName];
-      if (filterDef) {
-        // TODO: validate that filterValue is correct
-        return true;
-      } else {
-        return false;
-      }
+      // TODO: validate that filterValue is correct
+      return Boolean(searchConfig.filters[filterName]);
     }
     case 'not':
       return validateQuery(query.operand, searchConfig);

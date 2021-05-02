@@ -437,7 +437,7 @@ function calculateUpdatedStats({
     return adjustedStats;
   }
 
-  const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+  return produce(adjustedStats ?? {}, (draft) => {
     for (const statHash in plugStats) {
       const itemStatIndex = itemStats.findIndex((stat) => stat.statHash === parseInt(statHash));
       const calcStat: number = draft?.[statHash] ?? itemStats[itemStatIndex]?.value;
@@ -448,8 +448,6 @@ function calculateUpdatedStats({
       }
     }
   });
-
-  return updatedStats;
 }
 
 function getAllStats(

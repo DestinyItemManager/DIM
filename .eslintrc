@@ -50,7 +50,8 @@
     "lodash",
     "jsx-a11y",
     "array-func",
-    "react-redux"
+    "react-redux",
+    "radar"
   ],
   "rules": {
     "no-console": "error",
@@ -170,6 +171,10 @@
     "array-func/prefer-array-from": "off",
     "react-redux/mapStateToProps-prefer-hoisted": "error",
     "react-redux/no-unused-prop-types": "error",
-    "react/no-unused-prop-types": "off"
+    "react/no-unused-prop-types": "off",
+    "radar/cognitive-complexity": "off",
+    "radar/no-small-switch": "off",
+    "radar/no-duplicate-string": "off",
+    "radar/prefer-immediate-return": "off"
   }
 }

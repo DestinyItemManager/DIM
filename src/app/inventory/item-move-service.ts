@@ -205,11 +205,7 @@ function searchForSimilarItem(
       if (result.equippingLabel) {
         const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
         // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
-        if (!otherExotic || otherExotic.id === item.id) {
-          return true;
-        } else {
-          return false;
-        }
+        return !otherExotic || otherExotic.id === item.id;
       } else {
         return true;
       }
