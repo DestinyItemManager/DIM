@@ -43,20 +43,13 @@ function PursuitItem(
       ref={ref}
       title={item.name}
     >
-      {showProgressBar && (
-        <div className={styles.progress}>
-          <div className={styles.progressAmount} style={{ width: percent(item.percentComplete) }} />
-        </div>
-      )}
+      {showProgressBar && <ProgressBar percentComplete={item.percentComplete} />}
       <BungieImage src={item.icon} className={styles.image} alt="" />
       {item.maxStackSize > 1 && item.amount > 1 && (
-        <div
-          className={clsx(styles.amount, {
-            [styles.fullstack]: item.maxStackSize > 1 && item.amount === item.maxStackSize,
-          })}
-        >
-          {item.amount.toString()}
-        </div>
+        <StackAmount
+          amount={item.amount}
+          full={item.maxStackSize > 1 && item.amount === item.maxStackSize}
+        />
       )}
       {isNew && <div className={styles.newItem} />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
@@ -67,3 +60,29 @@ function PursuitItem(
 }
 
 export default forwardRef(PursuitItem);
+
+export function ProgressBar({
+  percentComplete,
+  className,
+}: {
+  percentComplete: number;
+  className?: string;
+}) {
+  return (
+    <div className={clsx(styles.progress, className)}>
+      <div className={styles.progressAmount} style={{ width: percent(percentComplete) }} />
+    </div>
+  );
+}
+
+export function StackAmount({ amount, full }: { amount: number; full?: boolean }) {
+  return (
+    <div
+      className={clsx(styles.amount, {
+        [styles.fullstack]: full,
+      })}
+    >
+      {amount}
+    </div>
+  );
+}

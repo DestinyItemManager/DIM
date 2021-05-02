@@ -43,6 +43,7 @@ import { getColumns, getColumnSelectionId } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { itemIncludesCategories } from './filtering-utils';
 import ItemActions from './ItemActions';
+// eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';

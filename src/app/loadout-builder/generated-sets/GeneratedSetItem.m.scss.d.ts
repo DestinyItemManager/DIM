@@ -3,7 +3,6 @@
 interface CssExports {
   'item': string;
   'lockedSockets': string;
-  'lockedSocketsRow': string;
   'swapButton': string;
   'swapButtonContainer': string;
 }

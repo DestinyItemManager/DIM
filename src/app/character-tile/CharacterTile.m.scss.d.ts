@@ -9,10 +9,8 @@ interface CssExports {
   'classIcon': string;
   'emblem': string;
   'level': string;
-  'light': string;
   'maxTotalPower': string;
   'powerLevel': string;
-  'raceGender': string;
   'top': string;
 }
 export const cssExports: CssExports;

@@ -1,8 +1,7 @@
+import { VendorIcon, VendorLocation } from 'app/vendors/Vendor';
 import React from 'react';
-import BungieImage from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import Countdown from '../../dim-ui/Countdown';
-import styles from '../../vendors/Vendor.m.scss';
 import D1VendorItems from './D1VendorItems';
 import { Vendor } from './vendor.service';
 
@@ -23,9 +22,9 @@ export default function D1Vendor({ vendor, totalCoins, ownedItemHashes }: Props)
       <CollapsibleTitle
         title={
           <>
-            <BungieImage src={vendor.icon} className={styles.icon} />
+            <VendorIcon src={vendor.icon} />
             <span>{vendor.name}</span>
-            <span className={styles.location}>{vendor.location}</span>
+            <VendorLocation>{vendor.location}</VendorLocation>
           </>
         }
         extra={<Countdown endTime={new Date(vendor.nextRefreshDate)} />}

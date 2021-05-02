@@ -12,7 +12,6 @@ interface CssExports {
   'inspectActive': string;
   'inspectRow': string;
   'itemImg': string;
-  'locations': string;
   'mobileInspectSheet': string;
   'moveLocations': string;
   'sheetBackground': string;

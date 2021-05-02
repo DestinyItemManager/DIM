@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
-import styles from './ActionButton.m.scss';
+import styles from './ActionButtons.m.scss';
 
 interface ActionButtonProps {
   item: DimItem;
@@ -61,7 +61,7 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
       : t('MovePopup.TrackUntrack.Untracked');
 
   return (
-    <LockButton className={styles.actionButton} item={item} type={type}>
+    <LockButton item={item} type={type}>
       {label && <span className={styles.label}>{title}</span>}
     </LockButton>
   );

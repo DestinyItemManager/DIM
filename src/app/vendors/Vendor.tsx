@@ -12,6 +12,14 @@ import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
 import VendorItems from './VendorItems';
 
+export function VendorLocation({ children }: { children: React.ReactNode }) {
+  return <span className={styles.location}>{children}</span>;
+}
+
+export function VendorIcon({ src }: { src: string }) {
+  return <BungieImage src={src} className={styles.icon} />;
+}
+
 /**
  * An individual Vendor in the "all vendors" page. Use SingleVendor for a page that only has one vendor on it.
  */
@@ -61,7 +69,7 @@ export default function Vendor({
             </span>
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
-              <div className={styles.location}>{placeString}</div>
+              <VendorLocation>{placeString}</VendorLocation>
             </div>
           </>
         }

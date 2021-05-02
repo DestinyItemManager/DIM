@@ -1,7 +1,6 @@
 import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { percent } from 'app/shell/filters';
 import {
   DestinyCharacterProgressionComponent,
   DestinyClass,
@@ -15,7 +14,8 @@ import _ from 'lodash';
 import React from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
-import styles from './PursuitItem.m.scss';
+import { ProgressBar, StackAmount } from './PursuitItem';
+import styles from './SeasonalRank.m.scss';
 
 export default function SeasonalRank({
   store,
@@ -124,12 +124,12 @@ export default function SeasonalRank({
 
   return (
     <div
-      className={clsx('seasonal-rank', 'milestone-quest', {
-        'has-premium-rewards': hasPremiumRewards,
+      className={clsx(styles.seasonalRank, 'milestone-quest', {
+        [styles.hasPremiumRewards]: hasPremiumRewards,
       })}
     >
       <div className="milestone-icon">
-        <div className="seasonal-rewards">
+        <div className={styles.seasonalRewards}>
           {nextRewardItems.map((item) => {
             // Don't show premium reward if player doesn't own the season pass
             if (!hasPremiumRewards && item.uiDisplayStyle === 'premium') {
@@ -145,9 +145,9 @@ export default function SeasonalRank({
 
             return (
               <div
-                className={clsx('seasonal-reward-wrapper', styles.pursuit, {
-                  free: item.uiDisplayStyle === 'free',
-                  premium: item.uiDisplayStyle === 'premium',
+                className={clsx(styles.seasonalRewardWrapper, {
+                  [styles.free]: item.uiDisplayStyle === 'free',
+                  [styles.premium]: item.uiDisplayStyle === 'premium',
                 })}
                 key={itemInfo.hash}
               >
@@ -156,18 +156,16 @@ export default function SeasonalRank({
                   src={itemInfo.displayProperties.icon}
                   title={itemInfo.displayProperties.description}
                 />
-                {item.quantity > 1 && <div className={clsx(styles.amount)}>{item.quantity}</div>}
+                {item.quantity > 1 && <StackAmount amount={item.quantity} />}
               </div>
             );
           })}
         </div>
-        <div className="progress">
-          <div className={clsx(styles.progress, 'custom-progress-bar')}>
-            <div
-              className={styles.progressAmount}
-              style={{ width: percent(progressToNextLevel / nextLevelAt) }}
-            />
-          </div>
+        <div className={styles.progress}>
+          <ProgressBar
+            percentComplete={progressToNextLevel / nextLevelAt}
+            className={styles.progressBar}
+          />
           <span>
             {progressToNextLevel.toLocaleString()}
             <wbr />/<wbr />
@@ -182,7 +180,7 @@ export default function SeasonalRank({
         <div className="milestone-description">
           {seasonNameDisplay}
           {seasonEnd && (
-            <div className="season-end">
+            <div className={styles.seasonEnd}>
               {t('Milestone.SeasonEnds')}
               <Countdown endTime={new Date(seasonEnd)} compact={true} />
             </div>

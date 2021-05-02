@@ -30,7 +30,7 @@ import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
 import type { VendorsState } from './reducer';
 import styles from './SingleVendor.m.scss';
-import vendorStyles from './Vendor.m.scss';
+import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
 
 interface ProvidedProps {
@@ -170,8 +170,7 @@ function SingleVendor({
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
-            {d2Vendor.def.displayProperties.name}{' '}
-            <span className={vendorStyles.location}>{placeString}</span>
+            {d2Vendor.def.displayProperties.name} <VendorLocation>{placeString}</VendorLocation>
           </h1>
           <div>{d2Vendor.def.displayProperties.description}</div>
           {d2Vendor.component && (

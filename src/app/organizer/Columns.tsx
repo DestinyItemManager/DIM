@@ -21,7 +21,6 @@ import { statAllowList } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
-import itemStatStyle from 'app/item-popup/ItemStat.m.scss';
 import NotesArea from 'app/item-popup/NotesArea';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -62,6 +61,7 @@ import _ from 'lodash';
 /* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
 import { useSelector } from 'react-redux';
+// eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
 
@@ -164,7 +164,7 @@ export function getColumns(
           id: `base_${column.statHash}`,
           columnGroup: baseStatsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
-          cell: (value) => <div className={itemStatStyle.value}>{value}</div>,
+          cell: (value) => <div className={styles.statValue}>{value}</div>,
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
       : [];

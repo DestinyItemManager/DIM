@@ -47,9 +47,6 @@
   background-color: #555;
   background-color: white;
   color: black;
-  &.rating-chart-bar-color {
-    background-color: $orange;
-  }
 }
 
 .qualitySummary {
@@ -125,11 +122,6 @@
 
 .totalStatMasterwork {
   color: $orange;
-}
-
-.totalStatWarn {
-  color: yellow;
-  margin-left: 8px;
 }
 
 .smallStatToggle {
