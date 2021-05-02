@@ -134,7 +134,7 @@ function Records({
   const otherHashes = destiny2CoreSettings
     ? Object.keys(destiny2CoreSettings)
         .filter((k) => k.includes('RootNode'))
-        .map((k) => destiny2CoreSettings[k])
+        .map((k) => destiny2CoreSettings[k] as number)
         .filter((n) => !profileHashes.includes(n))
     : [];
 

@@ -240,7 +240,7 @@ function MoveLocations({
     return null;
   }
 
-  function moveLocation(store) {
+  function moveLocation(store: DimStore) {
     if (!isDisplayedCheck(store)) {
       return null;
     }

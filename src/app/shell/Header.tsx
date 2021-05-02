@@ -45,14 +45,15 @@ interface StoreProps {
 const logoStyles = {
   beta: styles.beta,
   dev: styles.dev,
-};
+  release: undefined,
+} as const;
 
 const transitionClasses = {
   enter: styles.dropdownEnter,
   enterActive: styles.dropdownEnterActive,
   exit: styles.dropdownExit,
   exitActive: styles.dropdownExitActive,
-};
+} as const;
 
 // TODO: finally time to hack apart the header styles!
 
@@ -114,8 +115,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
 
   // Is this running as an installed app?
   const isStandalone =
-    (window.navigator as any).standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
+    window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
 
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !isStandalone;
@@ -214,7 +214,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   ));
 
   // Links about the current Destiny version
-  const destinyLinks = <>{linkNodes}</>;
+  const destinyLinks = linkNodes;
   const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
   const hotkeys: Hotkey[] = [
@@ -255,7 +255,7 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
   ];
   useHotkeys(hotkeys);
 
-  const showKeyboardHelp = (e) => {
+  const showKeyboardHelp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     Mousetrap.trigger('?');

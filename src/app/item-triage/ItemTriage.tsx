@@ -26,7 +26,7 @@ import { getValueColors, KeepJunkDial } from './ValueDial';
 interface Factor {
   id: string;
   /** bother checking this factor, if the seed item returns truthy */
-  runIf(item: DimItem): any;
+  runIf(item: DimItem): unknown;
   render(item: DimItem): React.ReactElement;
   value(item: DimItem): string | number;
 }

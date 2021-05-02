@@ -107,6 +107,8 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
       case DestinyEnergyType.Void:
         voidCount += 1;
         break;
+      default:
+        break;
     }
   }
 
@@ -177,10 +179,7 @@ export function canTakeSlotIndependantMods(
         (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any);
 
       // The other mods wont fit in the item set so move on to the next set of mods
-      if (!(
-        otherEnergyIsValid &&
-        item.compatibleModSeasons?.includes(tag)
-      )) {
+      if (!(otherEnergyIsValid && item.compatibleModSeasons?.includes(tag))) {
         continue otherModLoop;
       }
     }
@@ -227,7 +226,7 @@ export function canTakeSlotIndependantMods(
           const raidEnergyIsValid =
             item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
-            MAX_ARMOR_ENERGY_CAPACITY &&
+              MAX_ARMOR_ENERGY_CAPACITY &&
             (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any);
 
           // Due to raid mods overlapping with legacy mods for last wish we need to ensure
@@ -236,11 +235,13 @@ export function canTakeSlotIndependantMods(
           const notLegacySocketOrLegacyMod = !item.hasLegacyModSocket || !otherP[i];
 
           // The raid mods wont fit in the item set so move on to the next set of mods
-          if (!(
-            raidEnergyIsValid &&
-            notLegacySocketOrLegacyMod &&
-            item.compatibleModSeasons?.includes(raidTag)
-          )) {
+          if (
+            !(
+              raidEnergyIsValid &&
+              notLegacySocketOrLegacyMod &&
+              item.compatibleModSeasons?.includes(raidTag)
+            )
+          ) {
             continue raidModLoop;
           }
         }

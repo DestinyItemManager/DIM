@@ -105,7 +105,13 @@ const stats = [
 /**
  * Compute character-level stats (int, dis, str).
  */
-export function getCharacterStatsData(defs: D1ManifestDefinitions, data) {
+export function getCharacterStatsData(
+  defs: D1ManifestDefinitions,
+  data: {
+    stats: { [x: string]: { statHash: number; value: number } | undefined };
+    peerView: { equipment: { itemHash: number }[] };
+  }
+) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   stats.forEach((statId) => {
     const rawStat = data.stats[statId];
@@ -189,6 +195,7 @@ export function getClass(type: DestinyClass) {
       return 'hunter';
     case DestinyClass.Warlock:
       return 'warlock';
+    case DestinyClass.Unknown:
+      return 'unknown';
   }
-  return 'unknown';
 }

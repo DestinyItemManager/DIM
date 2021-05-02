@@ -10,7 +10,7 @@ export function observeStore<T>(
   select: (state: RootState) => T,
   onChange: (currentState: T, newState: T, state: RootState) => void
 ) {
-  let currentState;
+  let currentState: T;
 
   function handleChange() {
     const state = store.getState();

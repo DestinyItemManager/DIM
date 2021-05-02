@@ -387,7 +387,7 @@ export function* lexer(query: string): Generator<Token> {
  * Example: 'is:weapon and is:sniperrifle or not is:armor and modslot:arrival' =>
  *          '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)'
  */
-export function canonicalizeQuery(query: QueryAST, depth = 0) {
+export function canonicalizeQuery(query: QueryAST, depth = 0): string {
   switch (query.op) {
     case 'filter':
       return query.type === 'keyword'

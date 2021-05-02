@@ -6,7 +6,7 @@ import { usePopper } from './usePopper';
 
 interface Props {
   tooltip: React.ReactNode;
-  children: React.ReactElement<any, any>;
+  children: React.ReactElement;
   allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ElementType;
@@ -105,7 +105,7 @@ function PressTip({ allowClickThrough, ...rest }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  const closeToolTip = (e) => {
+  const closeToolTip = (e: React.MouseEvent | React.TouchEvent) => {
     allowClickThrough || e.preventDefault();
     allowClickThrough || e.stopPropagation();
     setOpen(false);
@@ -118,7 +118,7 @@ function PressTip({ allowClickThrough, ...rest }: Props) {
     }, 100);
   };
 
-  const press = (e) => {
+  const press = (e: React.MouseEvent | React.TouchEvent) => {
     allowClickThrough || e.preventDefault();
     allowClickThrough || e.stopPropagation();
     setOpen(true);

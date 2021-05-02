@@ -12,7 +12,7 @@ export default function LoadoutDrawerItem({
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
 }) {
-  const onClose = (e) => {
+  const onClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     remove(item, e);
   };

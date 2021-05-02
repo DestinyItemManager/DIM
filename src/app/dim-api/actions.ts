@@ -1,3 +1,4 @@
+import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { compareAccounts } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
@@ -248,7 +249,7 @@ let flushUpdatesBackoff = 0;
 /**
  * Process the queue of updates by sending them to the server
  */
-export function flushUpdates(): ThunkResult<any> {
+export function flushUpdates(): ThunkResult {
   return async (dispatch, getState) => {
     let dimApiState = getState().dimApi;
 
@@ -321,7 +322,7 @@ export function flushUpdates(): ThunkResult<any> {
   };
 }
 
-export function loadProfileFromIndexedDB(): ThunkResult<any> {
+export function loadProfileFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
     // If we already got it from the server, don't bother
     if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
@@ -355,7 +356,7 @@ function subtractObject<T>(obj: T | undefined, defaults: T): Partial<T> {
 /**
  * Wipe out all data in the DIM Sync cloud storage. Not recoverable!
  */
-export function deleteAllApiData(): ThunkResult<any> {
+export function deleteAllApiData(): ThunkResult<DeleteAllResponse['deleted']> {
   return async (dispatch, getState) => {
     const result = await deleteAllData();
 

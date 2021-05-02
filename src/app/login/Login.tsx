@@ -17,14 +17,13 @@ export default function Login() {
   const clientId = oauthClientId();
 
   const isStandalone =
-    (window.navigator as any).standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
+    window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
   // iOS versions before 12.2 don't support logging in via standalone mode.
   const isOldiOS =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
     !/(OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)/.test(navigator.userAgent);
 
-  const authorizationURL = (reauth) => {
+  const authorizationURL = (reauth: string | null) => {
     const queryParams = new URLSearchParams({
       client_id: clientId,
       response_type: 'code',
@@ -88,7 +87,7 @@ export default function Login() {
           </a>
         </p>
         <p className="help">
-          <a rel="noopener noreferrer" href={authorizationURL(true)}>
+          <a rel="noopener noreferrer" href={authorizationURL('true')}>
             {t('Views.Login.NewAccount')}
           </a>
         </p>

@@ -12,7 +12,7 @@ export interface NotifyInput {
   /** Some content to show to the right of the notification */
   trailer?: React.ReactNode;
   /** The notification will stay up while the promise is not complete, and for a duration afterwards. Throw NotificationError to customize the error screen. */
-  promise?: Promise<any>;
+  promise?: Promise<unknown>;
   /** The notification will show for the given number of milliseconds. */
   duration?: number;
   /** Return false to not close the notification on click. */
@@ -27,7 +27,7 @@ export interface Notify {
   body?: React.ReactNode;
   icon?: React.ReactNode;
   trailer?: React.ReactNode;
-  promise?: Promise<any>;
+  promise?: Promise<unknown>;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: number;
   onClick?(event: React.MouseEvent): boolean | void;

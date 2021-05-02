@@ -11,7 +11,7 @@ interface State {
 }
 
 export default class Developer extends React.Component<{}, State> {
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
     // we ask typescript to trust that we won't do array values as URL params
     const urlParams = new URLSearchParams(window.location.search);
@@ -162,7 +162,7 @@ export default class Developer extends React.Component<{}, State> {
     );
   }
 
-  private save = (e) => {
+  private save = (e: React.FormEvent) => {
     e.preventDefault();
     const { apiKey, clientId, clientSecret, dimAppName, dimApiKey } = this.state;
     if (apiKey && clientId && clientSecret && dimAppName && dimApiKey) {
@@ -187,7 +187,7 @@ export default class Developer extends React.Component<{}, State> {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  private getDimApiKey = async (e) => {
+  private getDimApiKey = async (e: React.MouseEvent) => {
     e.preventDefault();
     const { apiKey, dimAppName } = this.state;
     try {

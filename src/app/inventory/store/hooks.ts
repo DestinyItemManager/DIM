@@ -36,7 +36,7 @@ export function useLoadStores(
     refresh$,
     useCallback(() => {
       if (account) {
-        queueAction<any>(() => {
+        queueAction(() => {
           if (account?.destinyVersion === 2) {
             return dispatch(d2LoadStores());
           } else {

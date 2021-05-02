@@ -1,5 +1,5 @@
 import useResizeObserver from '@react-hook/resize-observer';
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { EventBus, Observable } from './observable';
 
 /**
@@ -19,10 +19,10 @@ export function useEventBusListener<T>(
 export function useShiftHeld() {
   const [shiftHeld, setShiftHeld] = useState(false);
   useEffect(() => {
-    const shiftTrue = (e) => {
+    const shiftTrue = (e: KeyboardEvent) => {
       e.shiftKey && setShiftHeld(true);
     };
-    const shiftFalse = (e) => {
+    const shiftFalse = (e: KeyboardEvent) => {
       !e.shiftKey && setShiftHeld(false);
     };
     document.addEventListener('keydown', shiftTrue);
@@ -72,7 +72,7 @@ export function useLocalStorage<T>(
       }
     }
   );
-  const setValue = (value: T) => {
+  const setValue = (value: T | ((storedValue: T) => T)) => {
     // Allow value to be a function so we have same API as useState
     const valueToStore = value instanceof Function ? value(storedValue) : value;
     setStoredValue(valueToStore);

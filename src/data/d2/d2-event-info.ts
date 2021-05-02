@@ -46,6 +46,8 @@ export const D2EventInfo = {
   },
 };
 
+export type D2EventIndex = keyof typeof D2EventInfo;
+
 export const D2EventPredicateLookup = {
   dawning: D2EventEnum.DAWNING,
   crimsondays: D2EventEnum.CRIMSON_DAYS,

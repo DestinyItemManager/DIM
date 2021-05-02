@@ -18,7 +18,7 @@ export default function RecentItems() {
   const allItems = useSelector(allItemsSelector);
   const filters = useSelector(filterFactorySelector);
   const savedSearches = useSelector(recentSearchesSelector).filter(({ saved }) => saved);
-  const [query, setQuery] = useState<string>(savedSearches?.[0]?.query);
+  const [query, setQuery] = useState<string | undefined>(savedSearches[0]?.query);
   const options: Option[] = savedSearches.map(({ query }) => ({
     key: query,
     content: query,
@@ -40,7 +40,7 @@ export default function RecentItems() {
       className={styles.collapseTitle}
       defaultCollapsed={true}
     >
-      {options.length > 0 && (
+      {options.length > 0 && query && (
         <div className={styles.options}>
           <Dropdown options={options}>{t('ActiveMode.ChangeFilter')}</Dropdown>
           <ItemActionsDropdown

@@ -12,7 +12,7 @@ export function count<T>(
 
 /** A shallow copy (just top level properties) of an object, preserving its prototype. */
 export function shallowCopy<T>(o: T): T {
-  return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
+  return Object.assign(Object.create(Object.getPrototypeOf(o) as object), o);
 }
 
 export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
@@ -69,7 +69,7 @@ export function weakMemoize<T extends object, R>(func: (arg0: T) => R): (arg1: T
  * Transform an async function into a version that will only execute once at a time - if there's already
  * a version going, the existing promise will be returned instead of running it again.
  */
-export function dedupePromise<T extends any[], K>(
+export function dedupePromise<T extends unknown[], K>(
   func: (...args: T) => Promise<K>
 ): (...args: T) => Promise<K> {
   let promiseCache: Promise<K> | null = null;

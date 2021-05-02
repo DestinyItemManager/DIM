@@ -22,7 +22,7 @@ export class BungieError extends Error {
   code?: PlatformErrorCodes;
   status?: string;
   endpoint: string;
-  constructor(response: Partial<ServerResponse<any>>, request: Request) {
+  constructor(response: Partial<ServerResponse<unknown>>, request: Request) {
     super(response.Message);
     this.name = 'BungieError';
     this.code = response.ErrorCode;
@@ -48,10 +48,12 @@ function throwHttpError(response: Response) {
  * this is a non-affecting pass-through for successful API interactions,
  * but throws JS errors for "successful" fetches with Bungie error information
  */
-function throwBungieError<T>(serverResponse: ServerResponse<T>, request: Request) {
+function throwBungieError<T>(
+  serverResponse: ServerResponse<T> & { error?: string; error_description?: string },
+  request: Request
+) {
   // There's an alternate error response that can be returned during maintenance
-  const eMessage =
-    serverResponse && (serverResponse as any).error && (serverResponse as any).error_description;
+  const eMessage = serverResponse?.error && serverResponse.error_description;
   if (eMessage) {
     throw new BungieError(
       {
@@ -146,7 +148,7 @@ export function createHttpClient(
       for (const key in config.params) {
         typeof config.params[key] === 'undefined' && delete config.params[key];
       }
-      url = `${url}?${new URLSearchParams(config.params).toString()}`;
+      url = `${url}?${new URLSearchParams(config.params as Record<string, string>).toString()}`;
     }
 
     const fetchOptions = new Request(url, {
@@ -156,7 +158,7 @@ export function createHttpClient(
       credentials: withCredentials ? 'include' : 'omit',
     });
     const response = await fetchFunction(fetchOptions);
-    const data: ServerResponse<any> = await response.json();
+    const data: ServerResponse<unknown> = await response.json();
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
     // then throw errors on generic http error codes
@@ -204,6 +206,8 @@ export function responsivelyThrottleHttpClient(
           case PlatformErrorCodes.PerUserThrottleExceeded:
           case PlatformErrorCodes.SystemDisabled:
             timesThrottled++;
+            break;
+          default:
             break;
         }
       }

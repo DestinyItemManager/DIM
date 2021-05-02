@@ -3,6 +3,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
+import { Settings } from 'app/settings/initial-settings';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -147,8 +148,8 @@ function Compare(
     }
   };
 
-  const onChangeSetting = (checked: boolean, name: string) => {
-    dispatch(setSetting(name as any, checked));
+  const onChangeSetting = (checked: boolean, name: keyof Settings) => {
+    dispatch(setSetting(name, checked));
   };
 
   const comparator = sortCompareItemsComparator(
@@ -531,7 +532,7 @@ function getAllStats(
   for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
-      const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
+      const adjustedStatValue: number | undefined = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
@@ -554,7 +555,7 @@ function getAllStats(
   return stats;
 }
 
-function isDimStat(stat: DimStat | any): stat is DimStat {
+function isDimStat(stat: DimStat | unknown): stat is DimStat {
   return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 

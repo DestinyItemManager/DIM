@@ -6,12 +6,6 @@ import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import './storage.scss';
 
-declare global {
-  interface Window {
-    MSStream: any;
-  }
-}
-
 const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const supportsExport = !iOS;
 
@@ -20,7 +14,7 @@ export default function ImportExport({
   onImportData,
 }: {
   onExportData(): void;
-  onImportData(data: ExportResponse): Promise<any>;
+  onImportData(data: ExportResponse): Promise<void>;
 }) {
   if (!supportsExport) {
     return null;
@@ -41,7 +35,7 @@ export default function ImportExport({
       if (reader.result && typeof reader.result === 'string') {
         try {
           // dispatch action here?
-          const data = JSON.parse(reader.result);
+          const data = JSON.parse(reader.result) as ExportResponse;
 
           await onImportData(data);
         } catch (e) {
@@ -59,7 +53,7 @@ export default function ImportExport({
     return false;
   };
 
-  const exportData = (e) => {
+  const exportData = (e: React.MouseEvent) => {
     e.preventDefault();
     onExportData();
   };

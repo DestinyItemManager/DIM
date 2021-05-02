@@ -171,7 +171,7 @@ function loadStoresData(
 
       try {
         const [defs, , profileInfo] = await Promise.all([
-          (dispatch(getDefinitions()) as any) as Promise<D2ManifestDefinitions>,
+          dispatch(getDefinitions())!,
           dispatch(loadNewItems(account)),
           getStores(account, components),
         ]);

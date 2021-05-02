@@ -9,7 +9,6 @@ import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types'
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import copy from 'fast-copy';
 import React, { useCallback, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -223,8 +222,13 @@ function InfusionFinder({
   let result: DimItem | undefined;
   if (effectiveSource?.primStat && effectiveTarget?.primStat) {
     const infused = effectiveSource.primStat?.value || 0;
-    result = copy(effectiveTarget);
-    (result as any).primStat.value = infused;
+    result = {
+      ...effectiveTarget,
+      primStat: {
+        ...effectiveTarget.primStat,
+        value: infused,
+      },
+    };
   }
 
   const missingItem = (

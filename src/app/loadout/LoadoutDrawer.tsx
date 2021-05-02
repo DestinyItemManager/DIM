@@ -483,7 +483,7 @@ function LoadoutDrawer({
     close();
   };
 
-  const saveAsNew = (e) => {
+  const saveAsNew = (e: React.MouseEvent) => {
     e.preventDefault();
 
     if (!loadout) {

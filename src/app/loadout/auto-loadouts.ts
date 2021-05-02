@@ -15,9 +15,10 @@ import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from
 export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loadout {
   const applicableItems = allItems.filter(
     (i) =>
+      isD1Item(i) &&
       itemCanBeEquippedBy(i, store) &&
       i.talentGrid &&
-      !(i.talentGrid as any).xpComplete && // Still need XP
+      !i.talentGrid.xpComplete && // Still need XP
       i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
       i.hash !== 3783480580 &&
       i.hash !== 2576945954 &&

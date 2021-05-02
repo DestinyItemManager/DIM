@@ -87,7 +87,7 @@ function mapStateToProps() {
   const itemsSelector = createSelector(
     allItemsSelector,
     searchFilterSelector,
-    (_, props: ProvidedProps) => props.categories,
+    (_: RootState, props: ProvidedProps) => props.categories,
     (allItems, searchFilter, categories) => {
       const terminal = Boolean(_.last(categories)?.terminal);
       if (!terminal) {
@@ -423,7 +423,7 @@ function ItemTable({
       downloadCsvFiles(stores, itemInfos, type);
       ga('send', 'event', 'Download CSV', type);
     };
-    const downloadHandler = (e) => {
+    const downloadHandler = (e: React.MouseEvent) => {
       e.preventDefault();
       downloadCsv(downloadButtonSetting.csvType);
       return false;

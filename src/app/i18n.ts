@@ -54,7 +54,7 @@ export function initi18n(): Promise<unknown> {
         load: 'currentOnly',
         interpolation: {
           escapeValue: false,
-          format(val, format) {
+          format(val: string, format) {
             switch (format) {
               case 'pct':
                 return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
@@ -62,12 +62,13 @@ export function initi18n(): Promise<unknown> {
                 return humanBytes(parseInt(val, 10));
               case 'number':
                 return parseInt(val, 10).toLocaleString();
+              default:
+                return val;
             }
-            return val;
           },
         },
         backend: {
-          loadPath(lng) {
+          loadPath(lng: string) {
             const path = {
               en,
               it,

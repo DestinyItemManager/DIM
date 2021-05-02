@@ -137,7 +137,6 @@ interface InventoryContainerProps {
   currentStore: DimStore;
   vault: DimStore;
   singleCharacter: boolean;
-  hidePostmaster: boolean;
 }
 
 function CollapsibleContainer({
@@ -176,7 +175,11 @@ function CollapsibleContainer({
   );
 }
 
-function StoresInventory(props: InventoryContainerProps) {
+function StoresInventory(
+  props: {
+    hidePostmaster: boolean;
+  } & InventoryContainerProps
+) {
   const { buckets, stores, hidePostmaster } = props;
 
   return (

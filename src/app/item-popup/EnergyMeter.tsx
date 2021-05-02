@@ -51,7 +51,7 @@ export default function EnergyMeter({
   const minCapacity = previewEnergyType === energyType ? energyCapacity : 1;
 
   // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array(10)
+  const meterIncrements: string[] = Array(10)
     .fill(styles.disabled)
     .fill(
       styles.unused,

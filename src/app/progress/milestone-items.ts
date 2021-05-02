@@ -357,8 +357,9 @@ function milestoneTypeName(milestoneType: DestinyMilestoneType) {
       return t('Milestone.Tutorial');
     case DestinyMilestoneType.OneTime:
       return t('Milestone.OneTime');
+    case DestinyMilestoneType.Unknown:
+      return t('Milestone.Unknown');
   }
-  return t('Milestone.Unknown');
 }
 
 export function recordToPursuitItem(

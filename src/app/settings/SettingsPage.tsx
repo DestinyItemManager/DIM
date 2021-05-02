@@ -129,7 +129,7 @@ function SettingsPage({
 }: Props) {
   useLoadStores(currentAccount, storesLoaded);
 
-  const onCheckChange = (checked, name) => {
+  const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
     }
@@ -142,13 +142,13 @@ function SettingsPage({
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      dispatch(setSetting(e.target.name as any, e.target.checked));
+      dispatch(setSetting(e.target.name as keyof Settings, e.target.checked));
     } else {
-      dispatch(setSetting(e.target.name as any, e.target.value));
+      dispatch(setSetting(e.target.name as keyof Settings, e.target.value));
     }
   };
 
-  const changeLanguage = (e) => {
+  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     languageChanged = true;
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
@@ -157,13 +157,13 @@ function SettingsPage({
     });
   };
 
-  const resetItemSize = (e) => {
+  const resetItemSize = (e: React.MouseEvent) => {
     e.preventDefault();
     dispatch(setSetting('itemSize', 50));
     return false;
   };
 
-  const reloadDim = (e) => {
+  const reloadDim = (e: React.MouseEvent) => {
     e.preventDefault();
     window.location.reload(false);
     return false;
