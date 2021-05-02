@@ -22,7 +22,7 @@ interface Props {
 }
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
-const CharacterHeader = ({
+function CharacterHeader({
   store,
   loadoutMenuOpen,
   menuRef,
@@ -32,28 +32,30 @@ const CharacterHeader = ({
   loadoutMenuOpen: boolean;
   menuRef: React.RefObject<HTMLDivElement>;
   onClick: () => void;
-}) => (
-  <div
-    className={clsx('character', {
-      current: store.current,
-      destiny1: store.destinyVersion === 1,
-      destiny2: store.destinyVersion === 2,
-      vault: store.isVault,
-    })}
-    ref={menuRef}
-    onClick={onClick}
-  >
-    <CharacterTile store={store} />
+}) {
+  return (
     <div
-      className={clsx('loadout-button', {
-        'loadout-open': loadoutMenuOpen,
+      className={clsx('character', {
+        current: store.current,
+        destiny1: store.destinyVersion === 1,
+        destiny2: store.destinyVersion === 2,
+        vault: store.isVault,
       })}
+      ref={menuRef}
+      onClick={onClick}
     >
-      <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
+      <CharacterTile store={store} />
+      <div
+        className={clsx('loadout-button', {
+          'loadout-open': loadoutMenuOpen,
+        })}
+      >
+        <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
+      </div>
+      {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
     </div>
-    {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
-  </div>
-);
+  );
+}
 
 /**
  * This is the character dropdown used at the top of the inventory page.

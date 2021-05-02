@@ -198,13 +198,13 @@ export function getBestArmor(
       if (obj.bonusType === '') {
         bestCombs.push({ item: obj.item, bonusType: '' });
       }
-      if (obj.bonusType.indexOf('int') > -1) {
+      if (obj.bonusType.includes('int')) {
         bestCombs.push({ item: obj.item, bonusType: 'int' });
       }
-      if (obj.bonusType.indexOf('dis') > -1) {
+      if (obj.bonusType.includes('dis')) {
         bestCombs.push({ item: obj.item, bonusType: 'dis' });
       }
-      if (obj.bonusType.indexOf('str') > -1) {
+      if (obj.bonusType.includes('str')) {
         bestCombs.push({ item: obj.item, bonusType: 'str' });
       }
     });

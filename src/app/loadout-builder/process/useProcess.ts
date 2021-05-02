@@ -44,7 +44,7 @@ interface ProcessState {
  */
 // TODO: introduce params object
 export function useProcess(
-  selectedStore: DimStore<DimItem> | undefined,
+  selectedStore: DimStore | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],

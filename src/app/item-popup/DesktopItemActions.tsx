@@ -61,7 +61,7 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     const reposition = () => {
       if (containerRef.current) {
         const parent = containerRef.current.closest('.item-popup');
-        const arrow = parent?.querySelector('.arrow') as HTMLDivElement;
+        const arrow = parent?.querySelector('.arrow');
         if (!arrow || !parent) {
           return;
         }

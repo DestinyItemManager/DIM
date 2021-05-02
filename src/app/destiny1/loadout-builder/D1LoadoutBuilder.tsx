@@ -354,7 +354,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               {t('Stats.Strength')}):{' '}
               <select name="activesets" onChange={this.onActiveSetsChange} value={activesets}>
                 {allSetTiers.map((val) => (
-                  <option key={val} disabled={val.charAt(0) === '-'} value={val}>
+                  <option key={val} disabled={val.startsWith('-')} value={val}>
                     {val}
                   </option>
                 ))}

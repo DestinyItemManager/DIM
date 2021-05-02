@@ -20,12 +20,14 @@ interface Props {
   singleCharacter: boolean;
 }
 
-const CharacterTile = ({ store }: { store: DimStore }) => (
-  <>
-    <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
-    <div>{store.className}</div>
-  </>
-);
+function CharacterTile({ store }: { store: DimStore }) {
+  return (
+    <>
+      <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
+      <div>{store.className}</div>
+    </>
+  );
+}
 
 /**
  * Display current activity, selected character, and entire inventory

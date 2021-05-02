@@ -6,9 +6,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';
 
-const CharacterEmblem = ({ store }: { store: DimStore }) => (
-  <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
-);
+function CharacterEmblem({ store }: { store: DimStore }) {
+  return <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />;
+}
 
 /**
  * Render a basic character tile without any event handlers

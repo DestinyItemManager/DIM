@@ -313,7 +313,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     }
     if (item.destinyVersion === 2) {
       const masterworkType = getMasterworkStatNames(item.masterworkInfo);
-      const index = masterworkType?.indexOf(',') === -1 ? undefined : masterworkType?.indexOf(',');
+      const index = !masterworkType?.includes(',') ? undefined : masterworkType?.indexOf(',');
       row['Masterwork Type'] = masterworkType.slice(0, index) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }

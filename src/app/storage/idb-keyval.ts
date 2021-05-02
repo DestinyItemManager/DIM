@@ -37,7 +37,7 @@ export class Store {
     callback: (store: IDBObjectStore) => void
   ): Promise<void> {
     this._init();
-    return (this._dbp as Promise<IDBDatabase>).then(
+    return this._dbp!.then(
       (db) =>
         new Promise<void>((resolve, reject) => {
           const transaction = db.transaction(this.storeName, type);
@@ -50,7 +50,7 @@ export class Store {
 
   _close(): Promise<void> {
     this._init();
-    return (this._dbp as Promise<IDBDatabase>).then((db) => {
+    return this._dbp!.then((db) => {
       db.close();
       this._dbp = undefined;
     });

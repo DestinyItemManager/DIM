@@ -5,7 +5,6 @@ import type { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { showNotification } from '../../notifications/notifications';
-import type { DimItem } from '../item-types';
 import type { DimStore } from '../store-types';
 
 const warnSpoilsInVault = _.debounce(
@@ -34,7 +33,7 @@ const warnSpoilsInVault = _.debounce(
  */
 export function isSpoils(
   itemDef: DestinyInventoryItemDefinition,
-  owner: DimStore<DimItem> | undefined,
+  owner: DimStore | undefined,
   defs: D2ManifestDefinitions
 ) {
   if (itemDef.hash === 3702027555) {

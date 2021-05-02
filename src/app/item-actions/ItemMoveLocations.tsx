@@ -295,9 +295,9 @@ function PullButtons({
   vault,
 }: {
   item: DimItem;
-  itemOwner: DimStore<DimItem>;
+  itemOwner: DimStore;
   submitMoveTo: MoveSubmit;
-  vault?: DimStore<DimItem>;
+  vault?: DimStore;
 }) {
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
   const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
