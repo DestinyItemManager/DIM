@@ -104,7 +104,7 @@ export async function getAwaToken(
     }
 
     if (!info || !tokenValid(info)) {
-      throw new Error('Unable to get a token: ' + info ? info.developerNote : 'no response');
+      throw new Error('Unable to get a token: ' + (info ? info.developerNote : 'no response'));
     }
   }
 

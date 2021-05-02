@@ -61,7 +61,6 @@ function ListCharacterSelect({
 }: {
   stores: DimStore[];
   selectedStore: DimStore;
-  vertical?: boolean;
   onCharacterChanged(storeId: string): void;
 }) {
   return (
