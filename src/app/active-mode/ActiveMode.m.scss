@@ -1,30 +1,5 @@
 @import '../variables.scss';
 
-.closedBar {
-  position: fixed;
-  z-index: 10;
-  width: 22px;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  cursor: pointer;
-  &:hover {
-    background-color: #666;
-  }
-}
-
-.closedBarText {
-  transform: rotate(-90deg);
-  white-space: nowrap;
-  padding-right: 315px;
-  :global(.app-icon) {
-    margin-left: 17px;
-    font-size: 17px;
-  }
-}
-
 .header {
   display: flex;
   align-content: center;

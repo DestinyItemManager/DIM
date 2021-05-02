@@ -1,26 +1,5 @@
 @import '../../variables.scss';
 
-.item {
-  margin: 0 4px 4px 0;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  width: calc(0.59 * var(--item-size));
-  height: calc(0.59 * var(--item-size));
-
-  &:nth-child(even) {
-    margin-right: 0;
-  }
-
-  img {
-    -webkit-touch-callout: none;
-    width: calc(0.59 * var(--item-size));
-    height: calc(0.59 * var(--item-size));
-    display: block;
-  }
-}
-
 .largeItem {
   width: var(--item-size);
   height: var(--item-size);

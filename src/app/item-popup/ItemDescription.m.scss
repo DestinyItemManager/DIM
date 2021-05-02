@@ -1,14 +1,5 @@
 @import '../variables.scss';
 
-// TODO: composes itemDetails for that padding
-
-.descriptionTools {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  margin: 5px 10px;
-
-  @include horizontal-space-children(10px);
-}
-
 .description {
   margin: 5px 10px 5px;
   white-space: pre-wrap;

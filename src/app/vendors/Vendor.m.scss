@@ -48,20 +48,6 @@
 .vendorIconWrapper {
   position: relative;
 }
-.xyz-active-throb {
-  opacity: 0.9 !important;
-  border-radius: 100px;
-  animation: glow 1s infinite alternate;
-}
-
-.xyz-engram {
-  width: 14px;
-  height: 14px;
-  opacity: 0.5;
-  position: absolute;
-  left: 26px;
-  top: 6px;
-}
 
 @keyframes glow {
   from {
