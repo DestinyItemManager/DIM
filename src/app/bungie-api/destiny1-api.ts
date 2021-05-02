@@ -2,7 +2,7 @@ import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
-import { DestinyManifest, ServerResponse } from 'bungie-api-ts/destiny2';
+import { ServerResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D1Item, DimItem } from '../inventory/item-types';
@@ -15,11 +15,6 @@ import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-ser
  *
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
-
-export async function getManifest(): Promise<DestinyManifest> {
-  const response = await authenticatedHttpClient(bungieApiQuery('/D1/Platform/Destiny/Manifest/'));
-  return response.Response;
-}
 
 export async function getCharacters(platform: DestinyAccount) {
   const response = await authenticatedHttpClient(

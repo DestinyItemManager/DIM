@@ -38,12 +38,6 @@ export function getSocketsWithStyle(
   );
 }
 
-export function getSocketsWithPlugCategoryHash(sockets: DimSockets, categoryHash: number) {
-  return sockets.allSockets.filter((socket) =>
-    socket.plugged?.plugDef.itemCategoryHashes?.includes(categoryHash)
-  );
-}
-
 /** whether a socket is a mod socket. i.e. those grey things. not perks, not reusables, not shaders */
 export function isModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);

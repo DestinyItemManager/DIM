@@ -25,15 +25,6 @@ import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
-export interface MoveAmountPopupOptions {
-  item: DimItem;
-  targetStore: DimStore;
-  amount: number;
-  maximum: number;
-  onAmountSelected(amount: number): void;
-  onCancel(): void;
-}
-
 /**
  * Move the item to the currently active store. Used for double-click action.
  */

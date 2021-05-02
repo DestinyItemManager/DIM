@@ -10,11 +10,6 @@ export function count<T>(
   return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 
-/** A shallow copy (just top level properties) of an object, preserving its prototype. */
-export function shallowCopy<T>(o: T): T {
-  return Object.assign(Object.create(Object.getPrototypeOf(o) as object), o);
-}
-
 export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
   return !isNaN(testValue) ? testValue : defaultValue;
 }
@@ -92,7 +87,7 @@ export function delay(ms: number) {
 }
 
 /** Copy a string to the clipboard */
-export default function copyString(str: string) {
+export function copyString(str: string) {
   function listener(e: ClipboardEvent) {
     e.clipboardData?.setData('text/plain', str);
     e.preventDefault();

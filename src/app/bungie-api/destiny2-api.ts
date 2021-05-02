@@ -235,20 +235,6 @@ export async function getVendors(
   return response.Response;
 }
 
-/** Just get the vendors, for seasonal rank */
-export async function getVendorsMinimal(
-  account: DestinyAccount,
-  characterId: string
-): Promise<DestinyVendorsResponse> {
-  const response = await getVendorsApi(authenticatedHttpClient, {
-    characterId,
-    destinyMembershipId: account.membershipId,
-    membershipType: account.originalPlatformType,
-    components: [DestinyComponentType.Vendors],
-  });
-  return response.Response;
-}
-
 /**
  * Transfer an item to another store.
  */

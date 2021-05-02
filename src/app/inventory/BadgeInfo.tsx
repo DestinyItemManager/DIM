@@ -1,8 +1,8 @@
 import { isD1Item } from 'app/utils/item-utils';
-import { InventoryWishListRoll, UiWishListRoll } from 'app/wishlists/wishlists';
+import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
@@ -27,29 +27,12 @@ interface Props {
   wishlistRoll?: InventoryWishListRoll;
 }
 
-export function hasBadge(item?: DimItem | null): boolean {
-  if (!item) {
-    return false;
-  }
-  if (item.isEngram && item.location.hash === BucketHashes.Engrams) {
-    return false;
-  }
-  return (
-    Boolean(item.primStat?.value) ||
-    item.classified ||
-    (item.objectives && !item.complete && !item.hidePercentage) ||
-    (item.maxStackSize > 1 && item.amount > 1) ||
-    item.itemCategoryHashes?.includes(ItemCategoryHashes.Ghost)
-  );
-}
-
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const savedNotes = useSelector(itemNoteSelector(item));
   const isBounty = Boolean(!item.primStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
-  const wishlistRollIcon =
-    wishlistRoll && (wishlistRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good);
+  const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
 
   const hideBadge = Boolean(
     (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
