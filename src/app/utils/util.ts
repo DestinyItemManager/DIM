@@ -26,26 +26,23 @@ export function preventNaN<T extends number | string>(testValue: number, default
  */
 export function objectifyArray<T>(
   array: T[],
-  key: string | ((obj: any) => string) | ((obj: any) => number)
+  key: keyof T | ((obj: T) => keyof T)
 ): NodeJS.Dict<T> {
-  return array.reduce((acc, val) => {
-    if (typeof key === 'string') {
-      const keyName =
-        typeof val[key] === 'string'
-          ? val[key]
-          : !Array.isArray(val[key])
-          ? JSON.stringify(val[key])
-          : false;
-
-      if (keyName !== false) {
-        acc[keyName] = val;
-      } else {
-        for (const eachKeyName of val[key]) {
+  return array.reduce<NodeJS.Dict<T>>((acc, val) => {
+    if (_.isFunction(key)) {
+      acc[key(val) as string] = val;
+    } else {
+      const prop = val[key];
+      if (typeof prop === 'string') {
+        acc[prop] = val;
+      } else if (Array.isArray(prop)) {
+        for (const eachKeyName of prop) {
           acc[eachKeyName] = val;
         }
+      } else {
+        const keyName = JSON.stringify(prop);
+        acc[keyName] = val;
       }
-    } else {
-      acc[key(val)] = val;
     }
     return acc;
   }, {});

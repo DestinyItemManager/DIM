@@ -50,8 +50,6 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 
-export const modMetadataByTag = objectifyArray(modSocketMetadata, 'tag');
-
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
 export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
