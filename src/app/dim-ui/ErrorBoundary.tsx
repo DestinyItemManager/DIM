@@ -12,21 +12,26 @@ interface State {
 }
 
 export default class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
-  componentDidCatch(error: Error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: object) {
+    const { name } = this.props;
+
     this.setState({ error });
-    errorLog(this.props.name, error, errorInfo);
-    reportException(this.props.name, error, errorInfo);
+    errorLog(name, error, errorInfo);
+    reportException(name, error, errorInfo);
   }
 
   render() {
-    if (this.state.error) {
-      return <ErrorPanel error={this.state.error} />;
+    const { error } = this.state;
+    const { children } = this.props;
+
+    if (error) {
+      return <ErrorPanel error={error} />;
     }
-    return this.props.children;
+    return children;
   }
 }

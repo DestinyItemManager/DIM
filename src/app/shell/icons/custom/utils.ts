@@ -1,7 +1,12 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition, IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
-export const makeCustomIcon = (name, width, height, pathData): IconDefinition => ({
-  iconName: `dim${name}` as any,
-  prefix: 'dim' as any,
+export const makeCustomIcon = (
+  name: string,
+  width: number,
+  height: number,
+  pathData: string
+): IconDefinition => ({
+  iconName: `dim${name}` as IconName,
+  prefix: 'dim' as IconPrefix,
   icon: [width, height, [], '', pathData],
 });

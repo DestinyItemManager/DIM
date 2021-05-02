@@ -185,7 +185,7 @@ async function generatePlatforms(
   return _.compact(await allPromise);
 }
 
-async function findD1Characters(account: DestinyAccount): Promise<any | null> {
+async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
   try {
     const response = await getCharacters(account);
     if (response?.length) {
