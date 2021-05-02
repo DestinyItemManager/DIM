@@ -19,16 +19,15 @@ export default function updateCSSVariables() {
     if (currentState.itemSize !== nextState.itemSize) {
       setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
     }
-    if (currentState.charCol !== nextState.charCol) {
-      if (!state.shell.isPhonePortrait) {
-        setCSSVariable('--tiles-per-char-column', nextState.charCol);
-      }
+    if (currentState.charCol !== nextState.charCol && !state.shell.isPhonePortrait) {
+      setCSSVariable('--tiles-per-char-column', nextState.charCol);
     }
-    if (currentState.charColMobile !== nextState.charColMobile) {
+    if (
+      currentState.charColMobile !== nextState.charColMobile &&
       // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-      if (state.shell.isPhonePortrait) {
-        setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
-      }
+      state.shell.isPhonePortrait
+    ) {
+      setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
   });
 

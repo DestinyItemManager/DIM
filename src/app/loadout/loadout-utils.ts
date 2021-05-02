@@ -219,9 +219,10 @@ export function getItemsFromLoadoutItems(
 
   const findItem = (loadoutItem: LoadoutItem) => {
     for (const item of allItems) {
-      if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-        return item;
-      } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+      if (
+        (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
+        ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
+      ) {
         return item;
       }
     }

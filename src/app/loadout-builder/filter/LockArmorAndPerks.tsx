@@ -187,7 +187,11 @@ function LockArmorAndPerks({
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
 
   const anyLocked = Object.values(lockedMap).some((lockedItems) => Boolean(lockedItems?.length));
-  const modCounts = {};
+  const modCounts: Record<number, number> = {};
+
+  const renderLockedItem = (lockedItem: LockedExclude) => (
+    <LockedItem key={lockedItem.item.id} lockedItem={lockedItem} onRemove={removeLockedItemType} />
+  );
   return (
     <div>
       <div className={styles.area}>
@@ -237,15 +241,7 @@ function LockArmorAndPerks({
         onItemLocked={addLockItem}
       >
         {Boolean(flatLockedMap.item?.length) && (
-          <div className={styles.itemGrid}>
-            {(flatLockedMap.item || []).map((lockedItem: LockedItemCase) => (
-              <LockedItem
-                key={lockedItem.item.id}
-                lockedItem={lockedItem}
-                onRemove={removeLockedItemType}
-              />
-            ))}
-          </div>
+          <div className={styles.itemGrid}>{flatLockedMap.item.map(renderLockedItem)}</div>
         )}
         <div className={styles.buttons}>
           <button type="button" className="dim-button" onClick={chooseLockItem}>
@@ -263,15 +259,7 @@ function LockArmorAndPerks({
         onItemLocked={addExcludeItem}
       >
         {Boolean(flatLockedMap.exclude?.length) && (
-          <div className={styles.itemGrid}>
-            {(flatLockedMap.exclude || []).map((lockedItem: LockedExclude) => (
-              <LockedItem
-                key={lockedItem.item.id}
-                lockedItem={lockedItem}
-                onRemove={removeLockedItemType}
-              />
-            ))}
-          </div>
+          <div className={styles.itemGrid}>{flatLockedMap.exclude.map(renderLockedItem)}</div>
         )}
         <div className={styles.buttons}>
           <button type="button" className="dim-button" onClick={chooseExcludeItem}>

@@ -108,6 +108,19 @@ function ItemSocketsWeapons({
     [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
   };
 
+  const renderSocket = (socketInfo: DimSocket) => (
+    <Socket
+      key={socketInfo.socketIndex}
+      defs={defs}
+      item={item}
+      isPhonePortrait={isPhonePortrait}
+      socket={socketInfo}
+      wishlistRoll={wishlistRoll}
+      onClick={handleSocketClick}
+      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
+    />
+  );
+
   return (
     <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
       {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
@@ -135,18 +148,7 @@ function ItemSocketsWeapons({
           )}
           {!minimal && mods.length > 0 && (
             <div className="item-socket-category-Consumable socket-container">
-              {mods.map((socketInfo) => (
-                <Socket
-                  key={socketInfo.socketIndex}
-                  defs={defs}
-                  item={item}
-                  isPhonePortrait={isPhonePortrait}
-                  socket={socketInfo}
-                  wishlistRoll={wishlistRoll}
-                  onClick={handleSocketClick}
-                  adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-                />
-              ))}
+              {mods.map(renderSocket)}
             </div>
           )}
         </ArchetypeRow>
@@ -183,18 +185,7 @@ function ItemSocketsWeapons({
         ))}
       {minimal && mods.length > 0 && (
         <div className="item-socket-category-Consumable socket-container">
-          {mods.map((socketInfo) => (
-            <Socket
-              key={socketInfo.socketIndex}
-              defs={defs}
-              item={item}
-              isPhonePortrait={isPhonePortrait}
-              socket={socketInfo}
-              wishlistRoll={wishlistRoll}
-              onClick={handleSocketClick}
-              adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
-            />
-          ))}
+          {mods.map(renderSocket)}
         </div>
       )}
       {socketInMenu &&

@@ -296,33 +296,23 @@ function InfusionFinder({
     </div>
   );
 
+  const renderItem = (item: DimItem) => (
+    <div
+      key={item.id}
+      className={clsx({ 'infuse-selected': item === target })}
+      onClick={() => selectItem(item)}
+    >
+      <ConnectedInventoryItem item={item} />
+    </div>
+  );
+
   return (
     <Sheet onClose={reset} header={header} sheetClassName="infuseDialog" freezeInitialHeight={true}>
       <div className="infuseSources">
         {items.length > 0 || dupes.length > 0 ? (
           <>
-            <div className="sub-bucket">
-              {dupes.map((item) => (
-                <div
-                  key={item.id}
-                  className={clsx({ 'infuse-selected': item === target })}
-                  onClick={() => selectItem(item)}
-                >
-                  <ConnectedInventoryItem item={item} />
-                </div>
-              ))}
-            </div>
-            <div className="sub-bucket">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className={clsx({ 'infuse-selected': item === target })}
-                  onClick={() => selectItem(item)}
-                >
-                  <ConnectedInventoryItem item={item} />
-                </div>
-              ))}
-            </div>
+            <div className="sub-bucket">{dupes.map(renderItem)}</div>
+            <div className="sub-bucket">{items.map(renderItem)}</div>
           </>
         ) : (
           <strong>{t('Infusion.NoItems')}</strong>

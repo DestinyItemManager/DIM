@@ -369,11 +369,7 @@ function storeButtonEnabled(
     }
   } else if (store.id !== buttonStore.id || item.equipped) {
     // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
+    return item.bucket?.accountWide && !buttonStore.current;
   }
 
   return false;
@@ -406,11 +402,7 @@ function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
     }
   } else {
     // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
+    return item.bucket?.accountWide && !buttonStore.current;
   }
 
   return false;

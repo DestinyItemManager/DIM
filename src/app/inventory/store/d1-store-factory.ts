@@ -100,24 +100,21 @@ export function makeCharacter(
   };
 
   let items: any[] = [];
-  _.forIn(raw.data.buckets, (bucket: any) => {
-    _.forIn(bucket, (pail: any) => {
-      _.forIn(pail.items, (item: any) => {
-        item.bucket = pail.bucketHash;
-      });
 
-      items = items.concat(pail.items);
+  const bucketize = (pail: any) => {
+    _.forIn(pail.items, (item: any) => {
+      item.bucket = pail.bucketHash;
     });
+
+    items = items.concat(pail.items);
+  };
+
+  _.forIn(raw.data.buckets, (bucket: any) => {
+    _.forIn(bucket, bucketize);
   });
 
   if (_.has(character.inventory.buckets, 'Invisible')) {
-    _.forIn(character.inventory.buckets.Invisible, (pail: any) => {
-      _.forIn(pail.items, (item: any) => {
-        item.bucket = pail.bucketHash;
-      });
-
-      items = items.concat(pail.items);
-    });
+    _.forIn(character.inventory.buckets.Invisible, bucketize);
   }
 
   return {

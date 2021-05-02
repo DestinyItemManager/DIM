@@ -6,7 +6,7 @@ import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
 import { motion, PanInfo } from 'framer-motion';
 import React, { useRef, useState } from 'react';
-import { InventoryBuckets } from './inventory-buckets';
+import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
@@ -164,34 +164,25 @@ function StoresInventory({
     (currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory') ||
     (currentStore.destinyVersion === 1 && selectedCategoryId === 'General');
 
+  const renderBucket = (bucket: InventoryBucket) => (
+    <StoreBuckets
+      key={bucket.hash}
+      bucket={bucket}
+      stores={stores}
+      vault={vault}
+      currentStore={currentStore}
+      labels={true}
+      singleCharacter={singleCharacter}
+    />
+  );
+
   return (
     <>
       {selectedCategoryId === 'Armor' && (
         <StoreStats store={stores[0]} style={{ paddingBottom: 8 }} />
       )}
-      {showPostmaster &&
-        buckets.byCategory['Postmaster'].map((bucket) => (
-          <StoreBuckets
-            key={bucket.hash}
-            bucket={bucket}
-            stores={stores}
-            vault={vault}
-            currentStore={currentStore}
-            labels={true}
-            singleCharacter={singleCharacter}
-          />
-        ))}
-      {buckets.byCategory[selectedCategoryId].map((bucket) => (
-        <StoreBuckets
-          key={bucket.hash}
-          bucket={bucket}
-          stores={stores}
-          vault={vault}
-          currentStore={currentStore}
-          labels={true}
-          singleCharacter={singleCharacter}
-        />
-      ))}
+      {showPostmaster && buckets.byCategory['Postmaster'].map(renderBucket)}
+      {buckets.byCategory[selectedCategoryId].map(renderBucket)}
     </>
   );
 }
