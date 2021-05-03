@@ -1,5 +1,7 @@
 ## Next
 
+## 6.63.0 <span class="changelog-date">(2021-05-02)</span>
+
 ## 6.62.0 <span class="changelog-date">(2021-04-25)</span>
 
 * Exotic class item perks don't prevent selecting another exotic perk in Loadout Optimizer.
