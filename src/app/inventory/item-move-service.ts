@@ -182,12 +182,14 @@ function searchForSimilarItem(
 
   // TODO: unify this value function w/ the others!
   const sortedCandidates = _.sortBy(candidates, (i) => {
-    let value: number = {
+    let value = {
       Legendary: 4,
       Rare: 3,
       Uncommon: 2,
       Common: 1,
       Exotic: 0,
+      Currency: 0,
+      Unknown: 0,
     }[i.tier];
     if (item.isExotic && i.isExotic) {
       value += 5;
@@ -203,11 +205,7 @@ function searchForSimilarItem(
       if (result.equippingLabel) {
         const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
         // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
-        if (!otherExotic || otherExotic.id === item.id) {
-          return true;
-        } else {
-          return false;
-        }
+        return !otherExotic || otherExotic.id === item.id;
       } else {
         return true;
       }
@@ -748,7 +746,7 @@ function canMoveToStore(
       // Move starting from the vault (which is always last)
       const moves = Object.entries(movesNeeded)
         .reverse()
-        .find(([_, moveAmount]) => moveAmount > 0)!;
+        .find(([_storeId, moveAmount]) => moveAmount > 0)!;
       const moveAsideSource = getStore(stores, moves[0])!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,

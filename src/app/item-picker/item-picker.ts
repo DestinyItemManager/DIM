@@ -9,7 +9,7 @@ export interface ItemPickerOptions {
   /** Optionally restrict items to a particular subset. */
   filterItems?(item: DimItem): boolean;
   /** An extra sort function that items will be sorted by (beyond the default sort chosen by the user)  */
-  sortBy?(item: DimItem): any;
+  sortBy?(item: DimItem): unknown;
 }
 
 interface ItemSelectResult {

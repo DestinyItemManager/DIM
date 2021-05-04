@@ -32,7 +32,7 @@ export function symbolize(combo: string) {
     .map((part) => {
       // try to resolve command / ctrl based on OS:
       if (part === 'mod') {
-        part = window.navigator?.platform.indexOf('Mac') >= 0 ? 'command' : 'ctrl';
+        part = window.navigator?.platform.includes('Mac') ? 'command' : 'ctrl';
       }
 
       return keyi18n[part] ? t(keyi18n[part]) : map[part] || part;
@@ -45,7 +45,7 @@ function format(hotkey: Hotkey) {
   // of usecase here, so open a ticket if my assumptions are wrong
   const combo = hotkey.combo;
 
-  const sequence = combo.split(/[\s]/);
+  const sequence = combo.split(/\s/);
   for (let i = 0; i < sequence.length; i++) {
     sequence[i] = symbolize(sequence[i]);
   }

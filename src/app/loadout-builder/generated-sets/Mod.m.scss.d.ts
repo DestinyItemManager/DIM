@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'clickable': string;
-  'item': string;
   'largeItem': string;
   'perk': string;
 }

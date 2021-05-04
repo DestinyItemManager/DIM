@@ -44,7 +44,7 @@ function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,
-    (_: RootState, props: ProvidedProps) =>
+    (_state: RootState, props: ProvidedProps) =>
       props.socket.socketDefinition.reusablePlugSetHash ||
       props.socket.socketDefinition.randomizedPlugSetHash,
     (profileResponse, plugSetHash) => {
@@ -64,7 +64,7 @@ function mapStateToProps() {
 
   const inventoryPlugs = createSelector(
     allItemsSelector,
-    (_: RootState, props: ProvidedProps) => props.socket,
+    (_state: RootState, props: ProvidedProps) => props.socket,
     d2ManifestSelector,
     (allItems, socket, defs) => {
       const socketType = defs!.SocketType.get(socket.socketDefinition.socketTypeHash);

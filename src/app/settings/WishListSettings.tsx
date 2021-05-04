@@ -72,7 +72,7 @@ function WishListSettings({
     setLiveWishListSource(wishListSource);
   }, [wishListSource]);
 
-  const reloadWishList = async (reloadWishListSource) => {
+  const reloadWishList = async (reloadWishListSource: string | undefined) => {
     try {
       await dispatch(fetchWishList(reloadWishListSource));
       ga('send', 'event', 'WishList', 'From URL');

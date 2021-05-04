@@ -1,13 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import {
-  allItemsSelector,
-  bucketsSelector,
-  profileResponseSelector,
-} from 'app/inventory/selectors';
+import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
@@ -49,7 +44,6 @@ interface StoreProps {
   language: string;
   isPhonePortrait: boolean;
   defs: D2ManifestDefinitions;
-  buckets: InventoryBuckets;
   /**
    * An array of mods built from looking at the current DestinyClass's
    * items and finding all the available mods that could be socketed.
@@ -65,7 +59,7 @@ function mapStateToProps() {
     profileResponseSelector,
     allItemsSelector,
     d2ManifestSelector,
-    (_: RootState, props: ProvidedProps) => props.classType,
+    (_state: RootState, props: ProvidedProps) => props.classType,
     (
       profileResponse: DestinyProfileResponse,
       allItems: DimItem[],
@@ -134,7 +128,6 @@ function mapStateToProps() {
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
-    buckets: bucketsSelector(state)!,
     language: settingsSelector(state).language,
     defs: d2ManifestSelector(state)!,
     mods: unlockedModsSelector(state, props),
@@ -234,7 +227,7 @@ function ModPicker({
     !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const footer = lockedModsInternal.length
-    ? ({ onClose }) => (
+    ? ({ onClose }: { onClose(): void }) => (
         <ModPickerFooter
           defs={defs}
           lockedModsInternal={lockedModsInternal}

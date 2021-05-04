@@ -68,8 +68,7 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
     }
 
     const membershipId = bungieAccount.membershipId;
-    const accounts = await loadingTracker.addPromise(dispatch(loadPlatforms(membershipId)));
-    return accounts;
+    return loadingTracker.addPromise(dispatch(loadPlatforms(membershipId)));
   }
 );
 
@@ -103,8 +102,7 @@ function loadPlatforms(membershipId: string): ThunkResult<readonly DestinyAccoun
         throw e;
       }
     }
-    const destinyAccounts = accountsSelector(getState());
-    return destinyAccounts;
+    return accountsSelector(getState());
   };
 }
 

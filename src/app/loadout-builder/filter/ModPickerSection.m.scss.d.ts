@@ -4,7 +4,6 @@ interface CssExports {
   'bucket': string;
   'header': string;
   'items': string;
-  'subheader': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -110,7 +110,7 @@ interface CSVRow {
   Id: string;
 }
 
-export function importTagsNotesFromCsv(files: File[]): ThunkResult<any> {
+export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | undefined> {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState());
     if (!account) {
@@ -251,7 +251,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, ite
   const maxPerks = getMaxPerks(items);
 
   const data = items.map((item) => {
-    const row: any = {
+    const row = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
@@ -297,7 +297,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
   // key is omitted from the first object, it won't show up.
   // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
-    const row: any = {
+    const row: Record<string, unknown> = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
@@ -313,7 +313,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     }
     if (item.destinyVersion === 2) {
       const masterworkType = getMasterworkStatNames(item.masterworkInfo);
-      const index = masterworkType?.indexOf(',') === -1 ? undefined : masterworkType?.indexOf(',');
+      const index = !masterworkType?.includes(',') ? undefined : masterworkType?.indexOf(',');
       row['Masterwork Type'] = masterworkType.slice(0, index) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }
@@ -405,7 +405,7 @@ function downloadWeapons(
   // key is omitted from the first object, it won't show up.
   // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
-    const row: any = {
+    const row: Record<string, unknown> = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,

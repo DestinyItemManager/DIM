@@ -162,19 +162,13 @@ const d1Filters: FilterDefinition[] = [
     description: tl('Filter.Vendor'),
     destinyVersion: 1,
     filter: ({ filterValue }) => (item: D1Item) => {
-      if (vendorHashes.restricted[filterValue]) {
-        return (
-          vendorHashes.required[filterValue].some((vendorHash) =>
-            item.sourceHashes.includes(vendorHash)
-          ) &&
-          !vendorHashes.restricted[filterValue].some((vendorHash) =>
-            item.sourceHashes.includes(vendorHash)
-          )
-        );
+      const restricted = vendorHashes.restricted[filterValue];
+      const required = vendorHashes.required[filterValue];
+      const match = (vendorHash: number) => item.sourceHashes.includes(vendorHash);
+      if (restricted) {
+        return (!required || required.some(match)) && !restricted.some(match);
       } else {
-        return vendorHashes.required[filterValue].some((vendorHash) =>
-          item.sourceHashes.includes(vendorHash)
-        );
+        return required?.some(match);
       }
     },
   },

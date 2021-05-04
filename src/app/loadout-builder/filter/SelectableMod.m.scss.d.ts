@@ -4,7 +4,6 @@ interface CssExports {
   'iconContainer': string;
   'lockedPerk': string;
   'perk': string;
-  'perkDescription': string;
   'perkInfo': string;
   'perkTitle': string;
   'plugStats': string;

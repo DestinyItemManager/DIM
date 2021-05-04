@@ -231,10 +231,6 @@ export function getStringsFromAllSockets(item: DimItem, includeDescription = tru
     }) || []
   );
 }
-/** includes name and description unless you set the arg2 flag */
-export function getStringsFromTalentGrid(item: DimItem, includeDescription = true) {
-  return getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, includeDescription);
-}
 
 // we can't properly quote a search string if it contains both ' and ", so.. we use this
 // to filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user

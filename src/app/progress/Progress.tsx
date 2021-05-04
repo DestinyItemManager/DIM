@@ -15,8 +15,6 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
-import { ItemFilter } from 'app/search/filter-types';
-import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
@@ -51,7 +49,6 @@ interface StoreProps {
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
   trackedTriumphs: number[];
-  searchFilter?: ItemFilter;
   allItems: DimItem[];
   coreSettings?: Destiny2CoreSettings;
 }
@@ -66,7 +63,6 @@ function mapStateToProps(state: RootState): StoreProps {
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
-    searchFilter: searchFilterSelector(state),
     trackedTriumphs: trackedTriumphsSelector(state),
     allItems: allItemsSelector(state),
     coreSettings: destiny2CoreSettingsSelector(state),
@@ -97,7 +93,7 @@ function Progress({
   // TODO: search/filter by activity
   // TODO: dropdowns for searches (reward, activity)
 
-  const handleSwipe = (_e, info: PanInfo) => {
+  const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms
     if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
       return;

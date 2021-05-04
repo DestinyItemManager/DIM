@@ -63,8 +63,7 @@
   }
 }
 
-.class,
-.raceGender {
+.class {
   flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -73,10 +72,6 @@
 .powerLevel {
   font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
   font-weight: 500;
-}
-
-.powerLevel,
-.light {
   color: $power;
   margin-top: 1px;
 

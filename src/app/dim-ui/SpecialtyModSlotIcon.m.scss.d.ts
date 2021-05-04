@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'lowRes': string;
-  'secondarySeason': string;
   'specialtyModIcon': string;
 }
 export const cssExports: CssExports;

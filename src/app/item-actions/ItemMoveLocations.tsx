@@ -240,7 +240,7 @@ function MoveLocations({
     return null;
   }
 
-  function moveLocation(store) {
+  function moveLocation(store: DimStore) {
     if (!isDisplayedCheck(store)) {
       return null;
     }
@@ -295,9 +295,9 @@ function PullButtons({
   vault,
 }: {
   item: DimItem;
-  itemOwner: DimStore<DimItem>;
+  itemOwner: DimStore;
   submitMoveTo: MoveSubmit;
-  vault?: DimStore<DimItem>;
+  vault?: DimStore;
 }) {
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
   const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
@@ -369,11 +369,7 @@ function storeButtonEnabled(
     }
   } else if (store.id !== buttonStore.id || item.equipped) {
     // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
+    return item.bucket?.accountWide && !buttonStore.current;
   }
 
   return false;
@@ -406,11 +402,7 @@ function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
     }
   } else {
     // Only show one store for account wide items
-    if (item.bucket?.accountWide && !buttonStore.current) {
-      return false;
-    } else {
-      return true;
-    }
+    return item.bucket?.accountWide && !buttonStore.current;
   }
 
   return false;

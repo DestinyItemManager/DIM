@@ -11,7 +11,6 @@ interface CssExports {
   'negativeModded': string;
   'quality': string;
   'qualitySummary': string;
-  'ratingChartBarColor': string;
   'smallStatToggle': string;
   'statBar': string;
   'statName': string;
@@ -20,7 +19,6 @@ interface CssExports {
   'totalStatMasterwork': string;
   'totalStatModded': string;
   'totalStatNegativeModded': string;
-  'totalStatWarn': string;
   'value': string;
 }
 export const cssExports: CssExports;

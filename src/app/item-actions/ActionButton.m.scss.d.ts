@@ -4,8 +4,6 @@ interface CssExports {
   'actionButton': string;
   'disabled': string;
   'entry': string;
-  'label': string;
-  'tagSelectorLabelHidden': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

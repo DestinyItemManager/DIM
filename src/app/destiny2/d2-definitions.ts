@@ -94,7 +94,7 @@ export interface DefinitionTable<T> {
    * and sentry can gather info about the source of the invalid hash.
    * `requestor` ideally a string/number, or a definition including a "hash" key
    */
-  get(hash: number, requestor?: any): T;
+  get(hash: number, requestor?: { hash: number } | string | number): T;
   getAll(): { [hash: number]: T };
 }
 
@@ -165,15 +165,14 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     lazyTables.forEach((tableShort) => {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = {
-        get(id: number, requestor?: any) {
+        get(id: number, requestor?: { hash: number } | string | number) {
           const dbTable = db[table];
           if (!dbTable) {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
           const dbEntry = dbTable[id];
           if (!dbEntry && tableShort !== 'Record') {
-            const requestingEntryInfo =
-              typeof requestor === 'object' ? requestor.hash : String(requestor);
+            const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
             reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
               requestingEntryInfo,
               failedHash: id,

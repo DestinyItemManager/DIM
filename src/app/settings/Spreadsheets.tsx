@@ -49,19 +49,19 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
     ga('send', 'event', 'Download CSV', type);
   };
 
-  const downloadWeaponCsv = (e) => {
+  const downloadWeaponCsv = (e: React.MouseEvent) => {
     e.preventDefault();
     downloadCsv('Weapons');
     return false;
   };
 
-  const downloadArmorCsv = (e) => {
+  const downloadArmorCsv = (e: React.MouseEvent) => {
     e.preventDefault();
     downloadCsv('Armor');
     return false;
   };
 
-  const downloadGhostCsv = (e) => {
+  const downloadGhostCsv = (e: React.MouseEvent) => {
     e.preventDefault();
     downloadCsv('Ghost');
     return false;

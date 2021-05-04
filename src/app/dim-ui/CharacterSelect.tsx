@@ -61,7 +61,6 @@ function ListCharacterSelect({
 }: {
   stores: DimStore[];
   selectedStore: DimStore;
-  vertical?: boolean;
   onCharacterChanged(storeId: string): void;
 }) {
   return (
@@ -120,7 +119,7 @@ function SwipableCharacterSelect({
     startOffset.current = offset.get();
   };
 
-  const onPan = (_e, info: PanInfo) => {
+  const onPan = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (!trackRef.current) {
       return;
     }
@@ -140,7 +139,7 @@ function SwipableCharacterSelect({
     offset.set(newValue);
   };
 
-  const onPanEnd = (_e, info: PanInfo) => {
+  const onPanEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Animate to one of the settled whole-number indexes
     let newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
     const scale = trackRef.current!.clientWidth / numSegments;

@@ -19,7 +19,7 @@ class PromiseTracker {
   }
 
   /** Convert a function that returns a promise into a function that tracks that promise then returns it. */
-  trackPromise = <T extends any[], K>(
+  trackPromise = <T extends unknown[], K>(
     promiseFn: (...args: T) => Promise<K>
   ): ((...args: T) => Promise<K>) => (...args: T) => {
     const promise = promiseFn(...args);

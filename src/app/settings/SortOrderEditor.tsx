@@ -70,8 +70,8 @@ export default function SortOrderEditor(
     onSortOrderChanged(orderArr);
   };
 
-  const onClick = (e) => {
-    const target: HTMLElement = e.target;
+  const onClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
     const getIndex = () => parseInt(target.parentElement!.dataset.index!, 10);
 
     if (target.classList.contains('sort-up')) {

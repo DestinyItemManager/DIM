@@ -83,10 +83,6 @@ $content-cells: 5;
   z-index: $content-cells;
 }
 
-.alternateRow {
-  background-color: #464748 !important;
-}
-
 .name {
   font-weight: bold;
   white-space: nowrap;
@@ -291,4 +287,15 @@ $modslotSize: 30px;
 
 .itemIcon {
   cursor: pointer;
+}
+
+// The numeric value of the stat
+.statValue {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  > svg {
+    vertical-align: middle;
+    margin-left: 4px;
+  }
 }

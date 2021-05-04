@@ -294,7 +294,7 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         compareBy((word) => word.split(':').length),
 
         // prioritize terms we are typing the beginning of (guessing at user intention)
-        compareBy((word) => word.indexOf(typedToLower) !== 0),
+        compareBy((word) => !word.startsWith(typedToLower)),
         // and terms where we are typing the beginning of, ignoring the stem.
         // "is:armor" over "is:sidearm" if you've typed "arm"
         compareBy((word) => word.indexOf(typedToLower) !== word.indexOf(':') + 1),

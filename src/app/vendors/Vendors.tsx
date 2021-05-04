@@ -125,7 +125,7 @@ function Vendors({
 
   const onCharacterChanged = (storeId: string) => setCharacterId(storeId);
 
-  const handleSwipe = (_e, info: PanInfo) => {
+  const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms
     if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
       return;

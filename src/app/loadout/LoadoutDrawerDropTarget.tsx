@@ -1,3 +1,4 @@
+import { DragObject } from 'app/inventory/DraggableInventoryItem';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
@@ -14,7 +15,7 @@ interface ExternalProps {
   bucketTypes: string[];
   storeIds: string[];
   children?: React.ReactNode;
-  onDroppedItem(item: DimItem);
+  onDroppedItem(item: DimItem): void;
 }
 
 // These are all provided by the DropTarget HOC function
@@ -33,20 +34,23 @@ function dragType(props: ExternalProps) {
 }
 
 // This determines the behavior of dropping on this target
-const dropSpec: DropTargetSpec<Props> = {
+const dropSpec: DropTargetSpec<Props, DragObject> = {
   drop(props, monitor) {
-    const item = monitor.getItem().item as DimItem;
+    const item = monitor.getItem().item;
     props.onDroppedItem(item);
   },
-  canDrop(_, monitor) {
+  canDrop(_props, monitor) {
     // But equipping has requirements
-    const item = monitor.getItem().item as DimItem;
+    const item = monitor.getItem().item;
     return itemCanBeInLoadout(item);
   },
 };
 
 // This forwards drag and drop state into props on the component
-function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
+function collect(
+  connect: DropTargetConnector,
+  monitor: DropTargetMonitor<DragObject>
+): InternalProps {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver() && monitor.canDrop(),

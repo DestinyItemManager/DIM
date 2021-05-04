@@ -24,7 +24,7 @@ export async function getGlobalSettings() {
 }
 
 export async function getDimApiProfile(account?: DestinyAccount) {
-  const response = await authenticatedApi<ProfileResponse>({
+  return authenticatedApi<ProfileResponse>({
     url: '/profile',
     method: 'GET',
     params: account
@@ -37,16 +37,14 @@ export async function getDimApiProfile(account?: DestinyAccount) {
           components: 'settings',
         },
   });
-  return response;
 }
 
 export async function importData(data: ExportResponse) {
-  const response = await authenticatedApi<ImportResponse>({
+  return authenticatedApi<ImportResponse>({
     url: '/import',
     method: 'POST',
     body: data,
   });
-  return response;
 }
 
 export async function postUpdates(
@@ -84,9 +82,8 @@ export async function deleteAllData() {
 }
 
 export async function exportDimApiData() {
-  const response = await authenticatedApi<ExportResponse>({
+  return authenticatedApi<ExportResponse>({
     url: '/export',
     method: 'GET',
   });
-  return response;
 }

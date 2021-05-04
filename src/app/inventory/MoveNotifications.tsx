@@ -18,7 +18,7 @@ const lingerMs = 2000;
 export function moveItemNotification(
   item: DimItem,
   target: DimStore,
-  movePromise: Promise<any>,
+  movePromise: Promise<unknown>,
   cancel: () => void
 ): NotifyInput {
   return {
@@ -42,7 +42,7 @@ export function moveItemNotification(
 export function loadoutNotification(
   loadout: Loadout,
   store: DimStore,
-  loadoutPromise: Promise<any>,
+  loadoutPromise: Promise<unknown>,
   cancel: () => void
 ): NotifyInput {
   const count = loadout.items.length;
@@ -71,7 +71,7 @@ export function loadoutNotification(
 export function postmasterNotification(
   count: number,
   store: DimStore,
-  promise: Promise<any>,
+  promise: Promise<unknown>,
   cancel: () => void
 ): NotifyInput {
   // TODO: pass in a state updater that can communicate application state
@@ -101,7 +101,7 @@ const moveStateClasses = {
   [MoveState.Succeeded]: styles.succeeded,
 };
 
-function MoveItemNotificationIcon({ completion }: { completion: Promise<any> }) {
+function MoveItemNotificationIcon({ completion }: { completion: Promise<unknown> }) {
   const [inProgress, setInProgress] = useState(MoveState.InProgress);
   useEffect(() => {
     let cancel = false;

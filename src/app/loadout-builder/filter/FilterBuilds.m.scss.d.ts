@@ -3,7 +3,6 @@
 interface CssExports {
   'assumeMasterwork': string;
   'filters': string;
-  'powerSelect': string;
   'row': string;
 }
 export const cssExports: CssExports;

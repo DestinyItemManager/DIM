@@ -4,7 +4,7 @@ import { SearchConfig } from './search-config';
 /**
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter.
  */
-export function validateQuery(query: QueryAST, searchConfig: SearchConfig) {
+export function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
   if (query.error) {
     return false;
   }
@@ -18,13 +18,8 @@ export function validateQuery(query: QueryAST, searchConfig: SearchConfig) {
         filterName = filterValue;
       }
 
-      const filterDef = searchConfig.filters[filterName];
-      if (filterDef) {
-        // TODO: validate that filterValue is correct
-        return true;
-      } else {
-        return false;
-      }
+      // TODO: validate that filterValue is correct
+      return Boolean(searchConfig.filters[filterName]);
     }
     case 'not':
       return validateQuery(query.operand, searchConfig);

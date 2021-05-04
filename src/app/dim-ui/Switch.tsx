@@ -9,7 +9,6 @@ export default function Switch({
   className,
   disabled = false,
 }: {
-  label?: React.ReactNode;
   checked: boolean;
   name: string;
   className?: string;

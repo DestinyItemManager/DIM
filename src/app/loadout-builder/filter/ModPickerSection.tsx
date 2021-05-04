@@ -32,8 +32,8 @@ export default function PickerSectionMods({
   mods: readonly PluggableInventoryItemDefinition[];
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
   lockedModsInternal: PluggableInventoryItemDefinition[];
-  onModSelected(mod: PluggableInventoryItemDefinition);
-  onModRemoved(mod: PluggableInventoryItemDefinition);
+  onModSelected(mod: PluggableInventoryItemDefinition): void;
+  onModRemoved(mod: PluggableInventoryItemDefinition): void;
 }) {
   if (!mods.length) {
     return null;

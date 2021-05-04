@@ -331,11 +331,9 @@ function itemMoved(
 
       const amountToRemove = Math.min(removeAmount, sourceItem.amount);
       sourceItem.amount -= amountToRemove;
-      if (sourceItem.amount <= 0) {
-        // Completely remove the source item
-        if (removeItem(source, sourceItem)) {
-          removedSourceItem = sourceItem.index === item.index;
-        }
+      // Completely remove the source item
+      if (sourceItem.amount <= 0 && removeItem(source, sourceItem)) {
+        removedSourceItem = sourceItem.index === item.index;
       }
 
       removeAmount -= amountToRemove;

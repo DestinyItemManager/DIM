@@ -49,13 +49,10 @@ export function StatTotalToggle({
     <div className={clsx(className)}>
       {addDividers(
         [
-          { className: 'activeStatLabels', includesCheck: true },
-          { className: 'inactiveStatLabels', includesCheck: false },
+          { className: styles.activeStatLabels, includesCheck: true },
+          { className: styles.inactiveStatLabels, includesCheck: false },
         ].map(({ className, includesCheck }) => (
-          <span
-            key={className}
-            className={clsx(styles[className], { [styles.readOnly]: readOnly })}
-          >
+          <span key={className} className={clsx(className, { [styles.readOnly]: readOnly })}>
             {addDividers(
               armorStats
                 .filter((statHash) => activeStats.includes(statHash) === includesCheck)

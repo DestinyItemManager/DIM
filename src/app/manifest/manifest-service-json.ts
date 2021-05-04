@@ -99,7 +99,7 @@ export const warnMissingDefinition = _.debounce(
 );
 
 const getManifestAction = memoizeOne(
-  (tableAllowList): ThunkResult<AllDestinyManifestComponents> =>
+  (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
     dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
 );
 
@@ -150,7 +150,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
   };
 }
 
-function loadManifest(tableAllowList: string[]): ThunkResult<any> {
+function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch, getState) => {
     let components: {
       [key: string]: string;
@@ -193,7 +193,7 @@ function loadManifestRemote(
     [key: string]: string;
   },
   tableAllowList: string[]
-): ThunkResult<object> {
+): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
     try {
@@ -211,7 +211,7 @@ function loadManifestRemote(
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
           let response: Response | null = null;
-          let error: any = null;
+          let error = null;
 
           for (const query of cacheBusterStrings) {
             try {
@@ -232,7 +232,7 @@ function loadManifestRemote(
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version, tableAllowList);
-      return manifest;
+      return manifest as AllDestinyManifestComponents;
     } finally {
       dispatch(loadingEnd(t('Manifest.Download')));
     }
@@ -269,7 +269,10 @@ function deleteManifestFile() {
  * Returns a promise for the cached manifest of the specified
  * version as a Uint8Array, or rejects.
  */
-async function loadManifestFromCache(version: string, tableAllowList: string[]): Promise<object> {
+async function loadManifestFromCache(
+  version: string,
+  tableAllowList: string[]
+): Promise<AllDestinyManifestComponents> {
   if (alwaysLoadRemote) {
     throw new Error('Testing - always load remote');
   }
@@ -277,7 +280,7 @@ async function loadManifestFromCache(version: string, tableAllowList: string[]):
   const currentManifestVersion = localStorage.getItem(localStorageKey);
   const currentAllowList = JSON.parse(localStorage.getItem(localStorageKey + '-whitelist') || '[]');
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
-    const manifest = await get<object>(idbKey);
+    const manifest = await get<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {
       await deleteManifestFile();
       throw new Error('Empty cached manifest file');

@@ -104,7 +104,12 @@ export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorT
   };
 }
 
-export function genSetHash(armorPieces) {
+export function genSetHash(
+  armorPieces: {
+    item: D1ItemWithNormalStats;
+    bonusType: string;
+  }[]
+) {
   let hash = '';
   for (const armorPiece of armorPieces) {
     hash += armorPiece.item.id;
@@ -133,7 +138,7 @@ export function getBestArmor(
   const armor = {};
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
   let curbest;
-  let bestCombs;
+  let bestCombs: { item: D1ItemWithNormalStats; bonusType: string }[];
   let armortype: ArmorTypes;
 
   const excludedIndices = new Set(excluded.map((i) => i.index));
@@ -148,7 +153,7 @@ export function getBestArmor(
     } else {
       best = [];
 
-      let hasPerks: (item: D1Item) => boolean = () => true;
+      let hasPerks: (item: D1Item) => boolean = (_i) => true;
 
       if (!_.isEmpty(lockedPerks[armortype])) {
         const lockedPerkKeys = Object.keys(lockedPerks[armortype]);
@@ -163,7 +168,7 @@ export function getBestArmor(
           if (!orPerkHashes.length && !andPerkHashes.length) {
             return true;
           }
-          function matchNode(perkHash) {
+          function matchNode(perkHash: number) {
             return item.talentGrid?.nodes.some((n) => n.hash === perkHash);
           }
           return Boolean(
@@ -198,13 +203,13 @@ export function getBestArmor(
       if (obj.bonusType === '') {
         bestCombs.push({ item: obj.item, bonusType: '' });
       }
-      if (obj.bonusType.indexOf('int') > -1) {
+      if (obj.bonusType.includes('int')) {
         bestCombs.push({ item: obj.item, bonusType: 'int' });
       }
-      if (obj.bonusType.indexOf('dis') > -1) {
+      if (obj.bonusType.includes('dis')) {
         bestCombs.push({ item: obj.item, bonusType: 'dis' });
       }
-      if (obj.bonusType.indexOf('str') > -1) {
+      if (obj.bonusType.includes('str')) {
         bestCombs.push({ item: obj.item, bonusType: 'str' });
       }
     });

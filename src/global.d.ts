@@ -1,5 +1,5 @@
 declare const $DIM_VERSION: string;
-declare const $DIM_FLAVOR: string;
+declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test';
 declare const $DIM_BUILD_DATE: string;
 declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;
@@ -52,29 +52,20 @@ declare const $featureFlags: {
   postmasterBanner: boolean;
 };
 
-declare namespace React {
-  interface ImgHTMLAttributes {
-    loading?: 'lazy';
-  }
-}
-
 declare function ga(...params: string[]);
 
 interface Window {
-  CSS: {
-    supports(propertyName: string);
-  };
-  BroadcastChannel?: BroadcastChannel;
-  OC?: any;
+  OC?: unknown;
 
   // Service worker stuff
-  __precacheManifest: string[];
+  __precacheManifest: string[] | undefined;
   __WB_MANIFEST: string[];
   skipWaiting(): void;
 }
 
 interface Navigator {
-  storage: any;
+  /** iOS-only: True if the app is running in installed mode */
+  standalone?: boolean;
 }
 
 /**
@@ -138,7 +129,7 @@ declare module '*.html' {
 }
 
 declare module '*.m.scss' {
-  const value: any;
+  const value: { [className: string]: string };
   export default value;
 }
 
@@ -155,4 +146,9 @@ declare module 'file-loader?*' {
 declare module '*dim.json' {
   const value: string;
   export default value;
+}
+
+declare module 'voca/latinise' {
+  const latinise: (subject?: string) => string;
+  export default latinise;
 }

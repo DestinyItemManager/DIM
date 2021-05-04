@@ -146,9 +146,9 @@ function makeSearchFilterFactory(
           // TODO: mark invalid - fill out what didn't make sense and where it was in the string
           return () => true;
         }
+        case 'noop':
+          return () => true;
       }
-
-      return () => true;
     };
 
     return transformAST(parsedQuery);

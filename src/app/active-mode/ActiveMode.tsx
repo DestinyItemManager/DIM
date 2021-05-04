@@ -20,12 +20,14 @@ interface Props {
   singleCharacter: boolean;
 }
 
-const CharacterTile = ({ store }: { store: DimStore }) => (
-  <>
-    <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
-    <div>{store.className}</div>
-  </>
-);
+function CharacterTile({ store }: { store: DimStore }) {
+  return (
+    <>
+      <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />
+      <div>{store.className}</div>
+    </>
+  );
+}
 
 /**
  * Display current activity, selected character, and entire inventory
@@ -55,7 +57,7 @@ export default function ActiveMode({
       </div>
       <FarmingTools store={currentStore} />
       {singleCharacter && <PostmasterView store={currentStore} vault={vault} buckets={buckets} />}
-      <CurrentActivity account={account} store={currentStore} buckets={buckets} />
+      <CurrentActivity account={account} store={currentStore} />
       <PursuitsView store={currentStore} />
       <RecentItems />
     </div>

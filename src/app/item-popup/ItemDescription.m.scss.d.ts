@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'description': string;
-  'descriptionTools': string;
   'flavorText': string;
   'loreLink': string;
   'officialDescription': string;

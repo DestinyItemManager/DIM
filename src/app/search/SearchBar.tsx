@@ -9,7 +9,7 @@ import { t } from 'app/i18next-t';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
-import { useCombobox } from 'downshift';
+import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
 import _ from 'lodash';
 import React, {
   Suspense,
@@ -123,7 +123,7 @@ const Row = React.memo(
     item: SearchItem;
     isPhonePortrait: boolean;
     isTabAutocompleteItem: boolean;
-    onClick(e: React.MouseEvent, item: SearchItem);
+    onClick(e: React.MouseEvent, item: SearchItem): void;
   }) => (
     <>
       <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
@@ -261,7 +261,10 @@ function SearchBar(
   });
 
   // special click handling for filter helper
-  function stateReducer(state, actionAndChanges) {
+  function stateReducer(
+    state: UseComboboxState<SearchItem>,
+    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
+  ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
       case useCombobox.stateChangeTypes.ItemClick:

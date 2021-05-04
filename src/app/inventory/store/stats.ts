@@ -599,9 +599,9 @@ function totalStat(stats: DimStat[]): DimStat {
   return {
     investmentValue: total,
     statHash: TOTAL_STAT_HASH,
-    displayProperties: ({
+    displayProperties: {
       name: t('Stats.Total'),
-    } as any) as DestinyDisplayPropertiesDefinition,
+    } as DestinyDisplayPropertiesDefinition,
     sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
@@ -634,10 +634,10 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
   return {
     investmentValue: total,
     statHash: CUSTOM_TOTAL_STAT_HASH,
-    displayProperties: ({
+    displayProperties: {
       name: t('Stats.Custom'),
       description: t('Stats.CustomDesc'),
-    } as any) as DestinyDisplayPropertiesDefinition,
+    } as DestinyDisplayPropertiesDefinition,
     sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: total,

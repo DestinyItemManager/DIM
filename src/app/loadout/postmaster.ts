@@ -41,12 +41,14 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
           const candidates = _.sortBy(
             items.filter((i) => !i.equipped && !i.notransfer),
             (i) => {
-              let value: number = {
+              let value = {
                 Common: 0,
                 Uncommon: 1,
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4,
+                Currency: 5,
+                Unknown: 6,
               }[i.tier];
               // And low-stat
               if (i.primStat) {
@@ -224,7 +226,7 @@ function moveItemsToVault(
       const vaultSpaceLeft = spaceLeftForItem(vault, item, stores);
       if (vaultSpaceLeft <= 1) {
         // If we're down to one space, try putting it on other characters
-        const otherStores = stores.filter((store) => !store.isVault && store.id !== store.id);
+        const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
         const otherStoresWithSpace = otherStores.filter((store) =>
           spaceLeftForItem(store, item, stores)
         );

@@ -68,7 +68,10 @@ export function Reward({
 }
 
 function getEngramPowerBonus(item: DestinyInventoryItemDefinition, maxPower?: number) {
-  const engramInfo = engrams[item.hash];
+  const engramInfo: {
+    cap: PowerCap;
+    bonus: number;
+  } = engrams[item.hash];
   if (!engramInfo) {
     return undefined;
   }

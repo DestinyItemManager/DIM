@@ -11,6 +11,7 @@ import {
   DestinyMilestone,
   DestinyMilestoneDefinition,
   DestinyMilestoneQuest,
+  DestinyMilestoneRewardCategory,
   DestinyMilestoneRewardCategoryDefinition,
   DestinyMilestoneRewardEntry,
   DestinyMilestoneType,
@@ -131,13 +132,7 @@ function availableQuestToItem(
         .map((v) => ({ itemHash: v.itemHash, quantity: v.quantity || 1 }));
     }
   } else if (milestone.rewards) {
-    const rewards = milestone.rewards.flatMap((reward) =>
-      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
-        (entry) => entry.items
-      )
-    );
-
-    dimItem.pursuit.rewards = rewards;
+    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   }
 
   return dimItem;
@@ -171,13 +166,7 @@ function activityMilestoneToItem(
     rewards: [],
   };
   if (milestone.rewards) {
-    const rewards = milestone.rewards.flatMap((reward) =>
-      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
-        (entry) => entry.items
-      )
-    );
-
-    dimItem.pursuit.rewards = rewards;
+    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   } else {
     const activity = defs.Activity.get(milestone.activities[0].activityHash);
     if (activity) {
@@ -228,8 +217,8 @@ function makeFakePursuitItem(
   hash: number,
   typeName: string,
   store: DimStore
-) {
-  const dimItem: DimItem = {
+): DimItem {
+  return {
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
@@ -292,8 +281,6 @@ function makeFakePursuitItem(
     energy: null,
     powerCap: null,
   };
-
-  return dimItem;
 }
 
 function makeMilestonePursuitItem(
@@ -314,15 +301,7 @@ function makeMilestonePursuitItem(
 
   if (objectives) {
     dimItem.objectives = objectives;
-
-    const length = dimItem.objectives.length;
-    dimItem.percentComplete = _.sumBy(dimItem.objectives, (objective) => {
-      if (objective.completionValue) {
-        return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
-      } else {
-        return 0;
-      }
-    });
+    dimItem.percentComplete = calculatePercentComplete(dimItem.objectives);
   }
 
   dimItem.pursuit = {
@@ -333,13 +312,7 @@ function makeMilestonePursuitItem(
   };
 
   if (milestone.rewards) {
-    const rewards = milestone.rewards.flatMap((reward) =>
-      Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
-        (entry) => entry.items
-      )
-    );
-
-    dimItem.pursuit.rewards = rewards;
+    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   }
 
   return dimItem;
@@ -357,8 +330,9 @@ function milestoneTypeName(milestoneType: DestinyMilestoneType) {
       return t('Milestone.Tutorial');
     case DestinyMilestoneType.OneTime:
       return t('Milestone.OneTime');
+    case DestinyMilestoneType.Unknown:
+      return t('Milestone.Unknown');
   }
-  return t('Milestone.Unknown');
 }
 
 export function recordToPursuitItem(
@@ -377,15 +351,7 @@ export function recordToPursuitItem(
 
   if (record.recordComponent.objectives) {
     dimItem.objectives = record.recordComponent.objectives;
-
-    const length = dimItem.objectives.length;
-    dimItem.percentComplete = _.sumBy(dimItem.objectives, (objective) => {
-      if (objective.completionValue) {
-        return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
-      } else {
-        return 0;
-      }
-    });
+    dimItem.percentComplete = calculatePercentComplete(dimItem.objectives);
   }
 
   const state = record.recordComponent.state;
@@ -403,4 +369,26 @@ export function recordToPursuitItem(
   }
 
   return dimItem;
+}
+
+function calculatePercentComplete(objectives: DestinyObjectiveProgress[]) {
+  const length = objectives.length;
+  return _.sumBy(objectives, (objective) => {
+    if (objective.completionValue) {
+      return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
+    } else {
+      return 0;
+    }
+  });
+}
+
+function processRewards(
+  rewards: DestinyMilestoneRewardCategory[],
+  milestoneDef: DestinyMilestoneDefinition
+) {
+  return rewards.flatMap((reward) =>
+    Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
+      (entry) => entry.items
+    )
+  );
 }

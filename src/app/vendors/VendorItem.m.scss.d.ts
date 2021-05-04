@@ -3,8 +3,6 @@
 interface CssExports {
   'acquiredIcon': string;
   'cost': string;
-  'currency': string;
-  'notEnough': string;
   'ownedIcon': string;
   'ownershipIcon': string;
   'tile': string;

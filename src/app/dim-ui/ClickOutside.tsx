@@ -31,10 +31,13 @@ export default React.forwardRef(function ClickOutside(
    */
   const handleClickOutside = useCallback(
     (event: React.MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        if (!extraRef?.current || !extraRef.current.contains(event.target as Node)) {
-          onClickOutside(event);
-        }
+      const target = event.target as Node;
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(target) &&
+        (!extraRef?.current || !extraRef.current.contains(target))
+      ) {
+        onClickOutside(event);
       }
     },
     [onClickOutside, wrapperRef, extraRef]

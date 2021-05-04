@@ -17,10 +17,6 @@ import {
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 
-// mods/masterworks can't push the displayed mob/rec/res/dis/int/str above
-// 42 on a single item. it can still have >42 effect on a char's stat totals
-export const ARMOR_STAT_DISPLAY_CAP = 42;
-
 //
 // SOCKETS KNOWN VALUES
 //
@@ -55,8 +51,6 @@ export const DEFAULT_ORNAMENTS: number[] = [
   1959648454, // InventoryItem "Default Ornament"
   702981643, // InventoryItem "Default Ornament"
 ];
-
-export const UPGRADE_MASTERWORK = 3547298846; // InventoryItem "Upgrade Masterwork"
 
 /** if a socket contains these, consider it empty */
 export const emptySocketHashes = [
@@ -207,7 +201,6 @@ export const armorBuckets = {
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const CATALYSTS_ROOT_NODE = 511607103;
 export const RAID_NODE = 4025982223;
 
 //

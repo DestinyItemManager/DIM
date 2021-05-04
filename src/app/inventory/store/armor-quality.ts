@@ -144,7 +144,7 @@ function getQualityRange(light: number, quality: { min: number; max: number }): 
   }%`;
 }
 
-function fitValue(light) {
+function fitValue(light: number) {
   if (light > 300) {
     return 0.2546 * light - 23.825;
   } else if (light > 200) {
@@ -154,7 +154,7 @@ function fitValue(light) {
   }
 }
 
-function getScaledStat(base, light) {
+function getScaledStat(base: number, light: number) {
   const max = 335;
 
   if (light > 335) {

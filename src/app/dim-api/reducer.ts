@@ -648,6 +648,9 @@ function compactUpdate(
       }
       break;
     }
+    case 'search':
+    case 'delete_search':
+      break;
   }
 
   if (combinedUpdate) {

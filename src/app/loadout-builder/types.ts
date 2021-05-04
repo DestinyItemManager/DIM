@@ -136,7 +136,3 @@ export const statHashToType = _.invert(statHashes) as { [hash: number]: StatType
  * TODO: Find a way to generate this in d2ai.
  */
 export const generalSocketReusablePlugSetHash = 3559124992;
-
-export type PluggableItemsByPlugCategoryHash = {
-  [plugCategoryHash: number]: PluggableInventoryItemDefinition[] | undefined;
-};

@@ -3,7 +3,6 @@
 interface CssExports {
   'collapseButton': string;
   'collapsed': string;
-  'hideWhenCollapsed': string;
   'interaction': string;
 }
 export const cssExports: CssExports;

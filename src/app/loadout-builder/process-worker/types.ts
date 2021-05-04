@@ -1,13 +1,6 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { StatTypes } from '../types';
 
-export interface ProcessPlug {
-  stats: {
-    [statHash: number]: number;
-  } | null;
-  plugItemHash: number;
-}
-
 export interface ProcessItem {
   bucketHash: number;
   id: string;

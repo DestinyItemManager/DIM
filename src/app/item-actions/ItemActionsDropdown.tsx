@@ -80,11 +80,9 @@ function ItemActionsDropdown({
 
   const bulkNote = () => {
     const note = prompt(t('Organizer.NotePrompt'));
-    if (note !== null) {
-      if (filteredItems.length) {
-        for (const item of filteredItems) {
-          dispatch(setItemNote({ itemId: item.id, note: note || undefined }));
-        }
+    if (note !== null && filteredItems.length) {
+      for (const item of filteredItems) {
+        dispatch(setItemNote({ itemId: item.id, note: note || undefined }));
       }
     }
   };

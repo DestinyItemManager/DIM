@@ -3,6 +3,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
+import { Settings } from 'app/settings/initial-settings';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -147,8 +148,8 @@ function Compare(
     }
   };
 
-  const onChangeSetting = (checked: boolean, name: string) => {
-    dispatch(setSetting(name as any, checked));
+  const onChangeSetting = (checked: boolean, name: keyof Settings) => {
+    dispatch(setSetting(name, checked));
   };
 
   const comparator = sortCompareItemsComparator(
@@ -436,7 +437,7 @@ function calculateUpdatedStats({
     return adjustedStats;
   }
 
-  const updatedStats = produce(adjustedStats ?? {}, (draft) => {
+  return produce(adjustedStats ?? {}, (draft) => {
     for (const statHash in plugStats) {
       const itemStatIndex = itemStats.findIndex((stat) => stat.statHash === parseInt(statHash));
       const calcStat: number = draft?.[statHash] ?? itemStats[itemStatIndex]?.value;
@@ -447,14 +448,12 @@ function calculateUpdatedStats({
       }
     }
   });
-
-  return updatedStats;
 }
 
 function getAllStats(
   comparisonItems: DimItem[],
   compareBaseStats: boolean,
-  adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
+  adjustedStats?: DimAdjustedStats
 ): StatInfo[] {
   if (!comparisonItems.length) {
     return emptyArray<StatInfo>();
@@ -554,7 +553,7 @@ function getAllStats(
   return stats;
 }
 
-function isDimStat(stat: DimStat | any): stat is DimStat {
+function isDimStat(stat: DimStat | unknown): stat is DimStat {
   return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 

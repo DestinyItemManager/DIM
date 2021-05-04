@@ -8,7 +8,7 @@ import { isLoadoutBuilderItem } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
@@ -80,7 +80,7 @@ export function getArmorStats(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   items: DimItem[]
 ): { [hash: number]: DimCharacterStat } {
-  const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
+  const statDefs = armorStats.map((hash) => defs.Stat.get(hash) as DestinyStatDefinition);
 
   // Construct map of stat hash to DimCharacterStat
   const statsByArmorHash: { [hash: number]: DimCharacterStat } = {};
@@ -219,9 +219,10 @@ export function getItemsFromLoadoutItems(
 
   const findItem = (loadoutItem: LoadoutItem) => {
     for (const item of allItems) {
-      if (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) {
-        return item;
-      } else if ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash) {
+      if (
+        (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
+        ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
+      ) {
         return item;
       }
     }

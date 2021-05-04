@@ -68,7 +68,7 @@ export default function PhoneStoresHeader({
     startOffset.current = offset.get();
   };
 
-  const onPan = (_e, info: PanInfo) => {
+  const onPan = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (!trackRef.current) {
       return;
     }
@@ -79,7 +79,7 @@ export default function PhoneStoresHeader({
     offset.set(newValue);
   };
 
-  const onPanEnd = (_e, info: PanInfo) => {
+  const onPanEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Animate to one of the settled whole-number indexes
     let newIndex = Math.round(offset.get());
     const scale = trackRef.current!.clientWidth / numSegments;

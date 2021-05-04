@@ -10,11 +10,6 @@ export function count<T>(
   return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 
-/** A shallow copy (just top level properties) of an object, preserving its prototype. */
-export function shallowCopy<T>(o: T): T {
-  return Object.assign(Object.create(Object.getPrototypeOf(o)), o);
-}
-
 export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
   return !isNaN(testValue) ? testValue : defaultValue;
 }
@@ -26,26 +21,23 @@ export function preventNaN<T extends number | string>(testValue: number, default
  */
 export function objectifyArray<T>(
   array: T[],
-  key: string | ((obj: any) => string) | ((obj: any) => number)
+  key: keyof T | ((obj: T) => keyof T)
 ): NodeJS.Dict<T> {
-  return array.reduce((acc, val) => {
-    if (typeof key === 'string') {
-      const keyName =
-        typeof val[key] === 'string'
-          ? val[key]
-          : !Array.isArray(val[key])
-          ? JSON.stringify(val[key])
-          : false;
-
-      if (keyName !== false) {
-        acc[keyName] = val;
-      } else {
-        for (const eachKeyName of val[key]) {
+  return array.reduce<NodeJS.Dict<T>>((acc, val) => {
+    if (_.isFunction(key)) {
+      acc[key(val) as string] = val;
+    } else {
+      const prop = val[key];
+      if (typeof prop === 'string') {
+        acc[prop] = val;
+      } else if (Array.isArray(prop)) {
+        for (const eachKeyName of prop) {
           acc[eachKeyName] = val;
         }
+      } else {
+        const keyName = JSON.stringify(prop);
+        acc[keyName] = val;
       }
-    } else {
-      acc[key(val)] = val;
     }
     return acc;
   }, {});
@@ -72,7 +64,7 @@ export function weakMemoize<T extends object, R>(func: (arg0: T) => R): (arg1: T
  * Transform an async function into a version that will only execute once at a time - if there's already
  * a version going, the existing promise will be returned instead of running it again.
  */
-export function dedupePromise<T extends any[], K>(
+export function dedupePromise<T extends unknown[], K>(
   func: (...args: T) => Promise<K>
 ): (...args: T) => Promise<K> {
   let promiseCache: Promise<K> | null = null;
@@ -95,7 +87,7 @@ export function delay(ms: number) {
 }
 
 /** Copy a string to the clipboard */
-export default function copyString(str: string) {
+export function copyString(str: string) {
   function listener(e: ClipboardEvent) {
     e.clipboardData?.setData('text/plain', str);
     e.preventDefault();

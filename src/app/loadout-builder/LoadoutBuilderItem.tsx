@@ -18,7 +18,7 @@ export default function LoadoutBuilderItem({
   locked?: readonly LockedItemType[];
   addLockedItem(lockedItem: LockedItemType): void;
 }) {
-  const handleShiftClick = (e) => {
+  const handleShiftClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     addLockedItem({ type: 'exclude', item, bucket: item.bucket });
   };

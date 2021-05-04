@@ -63,19 +63,17 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
   }
 
   return (
-    <>
-      <div className={styles.lockedItems}>
-        {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
-          <Mod
-            key={index}
-            gridColumn={(index % 2) + 1}
-            plugDef={plugDef}
-            defs={defs}
-            onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
-          />
-        ))}
-      </div>
-    </>
+    <div className={styles.lockedItems}>
+      {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
+        <Mod
+          key={index}
+          gridColumn={(index % 2) + 1}
+          plugDef={plugDef}
+          defs={defs}
+          onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
+        />
+      ))}
+    </div>
   );
 }
 

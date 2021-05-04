@@ -1,5 +1,4 @@
 import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -50,7 +49,6 @@ import {
 import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
-  account: DestinyAccount;
   defs: D2ManifestDefinitions;
   stores: DimStore[];
   preloadedLoadout?: Loadout;

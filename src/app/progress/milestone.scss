@@ -132,53 +132,6 @@
   }
 }
 
-.well-rested,
-.seasonal-rank {
+.well-rested {
   cursor: default;
-}
-
-.seasonal-rank {
-  &.has-premium-rewards {
-    .milestone-icon {
-      max-width: calc(var(--item-size) * 2.1);
-    }
-  }
-
-  .seasonal-rewards {
-    display: flex;
-    flex-direction: row;
-    @include horizontal-space-children(2px);
-  }
-
-  .seasonal-reward-wrapper {
-    width: var(--item-size);
-    height: var(--item-size) !important;
-    cursor: default;
-    img {
-      border: $item-border-width solid #666;
-      box-sizing: border-box;
-    }
-    &.free {
-      background: #2b2f33;
-    }
-    &.premium {
-      background: #016062;
-    }
-  }
-
-  .season-end {
-    font-style: italic;
-  }
-
-  .progress {
-    width: 90%;
-    text-align: center;
-  }
-
-  .custom-progress-bar {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    margin-top: 5px;
-  }
 }

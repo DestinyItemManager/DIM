@@ -108,7 +108,7 @@ function App({
       className={clsx('app', `lang-${language}`, `char-cols-${charColMobile}`, {
         itemQuality: itemQuality,
         'show-new-items': showNewItems,
-        'ms-edge': /Edge/.test(navigator.userAgent),
+        'ms-edge': navigator.userAgent.includes('Edge'),
         ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       })}
     >

@@ -13,7 +13,7 @@ export const saveItemInfosOnStateChange = _.once(() => {
   // Sneak in another observer for saving new-items to IDB
   observeStore(
     (state: RootState) => state.inventory.newItems,
-    _.debounce(async (_, newItems, rootState) => {
+    _.debounce(async (_prev, newItems: Set<string>, rootState: RootState) => {
       const account = currentAccountSelector(rootState);
       if (account) {
         const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;

@@ -43,7 +43,7 @@ function handleAuthReturn() {
     });
 }
 
-function setError(error) {
+function setError(error: string) {
   document.getElementById('error-message')!.innerText = error;
   document.getElementById('error-display')!.style.display = 'block';
   document.getElementById('loading')!.style.display = 'none';

@@ -282,8 +282,8 @@ export function* lexer(query: string): Generator<Token> {
   query = query.trim().toLowerCase();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018\u2019\u201A]/g, "'");
-  query = query.replace(/[\u201C\u201D\u201E]/g, '"');
+  query = query.replace(/[\u2018-\u201A]/g, "'");
+  query = query.replace(/[\u201C-\u201E]/g, '"');
 
   let match: string | undefined;
   let i = 0;
@@ -387,7 +387,7 @@ export function* lexer(query: string): Generator<Token> {
  * Example: 'is:weapon and is:sniperrifle or not is:armor and modslot:arrival' =>
  *          '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)'
  */
-export function canonicalizeQuery(query: QueryAST, depth = 0) {
+export function canonicalizeQuery(query: QueryAST, depth = 0): string {
   switch (query.op) {
     case 'filter':
       return query.type === 'keyword'

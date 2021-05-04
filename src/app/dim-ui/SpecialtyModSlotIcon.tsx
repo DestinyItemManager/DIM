@@ -14,7 +14,6 @@ interface ProvidedProps {
   item: DimItem;
   className?: string;
   lowRes?: boolean;
-  showAllSupportedSeasons?: boolean;
 }
 
 interface StoreProps {

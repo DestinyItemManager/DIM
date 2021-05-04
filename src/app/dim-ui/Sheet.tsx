@@ -31,7 +31,7 @@ const dismissAmount = 0.5;
 // Disable body scroll on mobile
 const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
-const stopPropagation = (e) => e.stopPropagation();
+const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
 
 /**
  * A Sheet is a UI element that comes up from the bottom of the screen,

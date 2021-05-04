@@ -128,7 +128,7 @@ export default connect<StoreProps>(mapStateToProps)(DimApiSettings);
  * Export the local IDB data to a format the DIM API could import.
  */
 function exportLocalData(): ThunkResult<ExportResponse> {
-  return async (_, getState) => {
+  return async (_dispatch, getState) => {
     const dimApiState = getState().dimApi;
     const exportResponse: ExportResponse = {
       settings: dimApiState.settings,

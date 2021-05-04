@@ -20,7 +20,7 @@ export function bulkTagItems(
   notification = true
 ): ThunkResult {
   return async (dispatch, getState) => {
-    const appliedTagInfo = tagConfig[selectedTag];
+    const appliedTagInfo: { label: string } = tagConfig[selectedTag];
     const itemInfos = itemInfosSelector(getState());
     const itemHashTags = itemHashTagsSelector(getState());
 

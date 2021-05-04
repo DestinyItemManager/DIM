@@ -1,4 +1,3 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import {
   getBountiesForActivity,
   purchasableBountiesSelector,
@@ -7,7 +6,6 @@ import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ownedItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -20,9 +18,7 @@ import { connect } from 'react-redux';
 
 interface ProvidedProps {
   defs: D2ManifestDefinitions;
-  account: DestinyAccount;
   store: DimStore;
-  buckets: InventoryBuckets;
   activityInfo: DestinyCharacterActivitiesComponent;
 }
 

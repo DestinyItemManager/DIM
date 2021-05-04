@@ -58,10 +58,6 @@
   flex-direction: column;
 }
 
-.lockedSocketsRow {
-  margin-bottom: 4px;
-}
-
 .swapButton {
   composes: dim-button from global;
   justify-self: center;

@@ -10,7 +10,9 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:array-func/all"
+    "plugin:array-func/all",
+    "plugin:css-modules/recommended",
+    "plugin:radar/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -50,7 +52,9 @@
     "lodash",
     "jsx-a11y",
     "array-func",
-    "react-redux"
+    "react-redux",
+    "css-modules",
+    "radar"
   ],
   "rules": {
     "no-console": "error",
@@ -89,6 +93,11 @@
     "react/no-unused-state": "error",
     "react/button-has-type": "error",
     "react/prop-types": "off",
+    "react/function-component-definition": "error",
+    "react/no-redundant-should-component-update": "error",
+    "react/no-unsafe": "error",
+    "react/jsx-no-constructed-context-values": "error",
+    "react/jsx-pascal-case": "error",
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",
@@ -136,25 +145,40 @@
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-extraneous-class": "error",
     "@typescript-eslint/no-this-alias": "error",
+    "@typescript-eslint/no-unnecessary-type-constraint": "error",
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
     "@typescript-eslint/no-unnecessary-qualifier": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "@typescript-eslint/no-unnecessary-type-arguments": "error",
     "@typescript-eslint/prefer-function-type": "error",
     "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/prefer-optional-chain": "error",
-    "@typescript-eslint/array-type": "error",
-    "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/prefer-as-const": "error",
     "@typescript-eslint/prefer-reduce-type-parameter": "error",
+    "@typescript-eslint/prefer-includes": "error",
+    "@typescript-eslint/prefer-string-starts-ends-with": "error",
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/unified-signatures": "error",
+    "@typescript-eslint/no-base-to-string": "error",
+    "@typescript-eslint/non-nullable-type-assertion-style": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "varsIgnorePattern": "(^_|[iI]gnored)",
-        "argsIgnorePattern": "(^_|[iI]gnored)",
+        "varsIgnorePattern": "^_.",
+        "argsIgnorePattern": "^_.",
         "ignoreRestSiblings": true
       }
     ],
     "array-func/prefer-array-from": "off",
-    "react-redux/mapStateToProps-prefer-hoisted": "error"
+    "react-redux/mapStateToProps-prefer-hoisted": "error",
+    "react-redux/no-unused-prop-types": "error",
+    "react/no-unused-prop-types": "off",
+    "css-modules/no-undef-class": "off",
+    "radar/cognitive-complexity": "off",
+    "radar/no-small-switch": "off",
+    "radar/no-duplicate-string": "off",
+    "radar/prefer-immediate-return": "off"
   }
 }

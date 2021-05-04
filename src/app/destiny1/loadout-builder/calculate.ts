@@ -100,7 +100,17 @@ export function getSetBucketsStep(
   }
 
   return new Promise((resolve) => {
-    function step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount) {
+    function step(
+      activeGuardian: D1Store,
+      h: number,
+      g: number,
+      c: number,
+      l: number,
+      ci: number,
+      gh: number,
+      ar: number,
+      processedCount: number
+    ) {
       for (; h < helms.length; ++h) {
         for (; g < gaunts.length; ++g) {
           for (; c < chests.length; ++c) {

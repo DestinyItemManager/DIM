@@ -3,7 +3,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
 import React from 'react';
 import { AddButton } from './Buttons';
-import styles from './SavedMods.m.scss';
+import styles from './SavedModCategory.m.scss';
 
 interface Props {
   defs: D2ManifestDefinitions;

@@ -84,7 +84,7 @@ async function responseIndicatesBadToken(response: Response) {
  * A fatal token error means we have to log in again.
  */
 export class FatalTokenError extends Error {
-  constructor(msg) {
+  constructor(msg: string) {
     super(msg);
     this.name = 'FatalTokenError';
   }
@@ -177,7 +177,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       }
     }
   }
-  throw new Error('Unknown error getting response token: ' + response);
+  throw new Error('Unknown error getting response token: ' + JSON.stringify(response));
 }
 
 export function goToLoginPage() {

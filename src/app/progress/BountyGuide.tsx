@@ -63,7 +63,7 @@ export default function BountyGuide({
   selectedFilters: BountyFilter[];
   onSelectedFiltersChanged(filters: BountyFilter[]): void;
   skipTypes?: DefType[]; // Filter to show only specific bounty types
-  pursuitsInfo?: any;
+  pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
@@ -256,7 +256,7 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
 export function matchBountyFilters(
   item: DimItem,
   filters: BountyFilter[],
-  pursuitsInfo: any = pursuitsInfoFile
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } } = pursuitsInfoFile
 ) {
   if (filters.length === 0) {
     return true;

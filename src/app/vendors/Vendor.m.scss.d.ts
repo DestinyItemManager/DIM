@@ -7,8 +7,6 @@ interface CssExports {
   'title': string;
   'titleDetails': string;
   'vendorIconWrapper': string;
-  'xyzActiveThrob': string;
-  'xyzEngram': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

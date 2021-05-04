@@ -74,7 +74,7 @@ export const supplies = [
 ];
 
 /** for D1 items: used to calculate which vendor an item could have come from */
-export const vendorHashes = {
+export const vendorHashes: Record<'required' | 'restricted', NodeJS.Dict<number[]>> = {
   required: {
     fwc: [995344558], // SOURCE_VENDOR_FUTURE_WAR_CULT / Future War Cult
     do: [103311758], // SOURCE_VENDOR_DEAD_ORBIT / Dead Orbit

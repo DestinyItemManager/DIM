@@ -29,6 +29,7 @@ import { findItemsByBucket } from './stores-helpers';
 
 // Props provided from parents
 interface ProvidedProps {
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   store: DimStore;
   bucket: InventoryBucket;
   singleCharacter: boolean;

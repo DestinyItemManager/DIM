@@ -11,12 +11,6 @@ import React from 'react';
 import './CharacterStats.scss';
 import StatTooltip from './StatTooltip';
 
-interface Props {
-  stats: DimStore['stats'];
-  storeId?: string;
-  characterClass?: DestinyClass;
-}
-
 interface CharacterStatProps {
   stats: {
     stat: DimCharacterStat;
@@ -69,7 +63,7 @@ function CharacterStat({ stats, storeId, className }: CharacterStatProps) {
   );
 }
 
-export function PowerFormula({ stats, storeId }: Props) {
+export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; storeId?: string }) {
   const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
     <>
       {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
@@ -97,7 +91,15 @@ export function PowerFormula({ stats, storeId }: Props) {
   return <CharacterStat stats={statInfos} storeId={storeId} className="powerFormula" />;
 }
 
-export function LoadoutStats({ stats, storeId, characterClass }: Props) {
+export function LoadoutStats({
+  stats,
+  storeId,
+  characterClass,
+}: {
+  stats: DimStore['stats'];
+  storeId?: string;
+  characterClass?: DestinyClass;
+}) {
   const statInfos = armorStats
     .map((h) => stats[h])
     .map((stat) => ({

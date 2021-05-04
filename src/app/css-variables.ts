@@ -1,7 +1,7 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { observeStore } from './utils/redux-utils';
 
-function setCSSVariable(property: string, value: any) {
+function setCSSVariable(property: string, value: { toString(): string }) {
   if (value) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
   }
@@ -19,16 +19,15 @@ export default function updateCSSVariables() {
     if (currentState.itemSize !== nextState.itemSize) {
       setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
     }
-    if (currentState.charCol !== nextState.charCol) {
-      if (!state.shell.isPhonePortrait) {
-        setCSSVariable('--tiles-per-char-column', nextState.charCol);
-      }
+    if (currentState.charCol !== nextState.charCol && !state.shell.isPhonePortrait) {
+      setCSSVariable('--tiles-per-char-column', nextState.charCol);
     }
-    if (currentState.charColMobile !== nextState.charColMobile) {
+    if (
+      currentState.charColMobile !== nextState.charColMobile &&
       // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-      if (state.shell.isPhonePortrait) {
-        setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
-      }
+      state.shell.isPhonePortrait
+    ) {
+      setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
   });
 
@@ -36,7 +35,7 @@ export default function updateCSSVariables() {
   // or a user on desktop shrinks the browser window below isphoneportrait treshold value
   observeStore(
     (state) => state.shell.isPhonePortrait,
-    (_, isPhonePortrait, state) => {
+    (_prev, isPhonePortrait, state) => {
       const settings = settingsSelector(state);
       setCSSVariable(
         '--tiles-per-char-column',

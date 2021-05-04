@@ -1,5 +1,6 @@
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { RootState } from 'app/store/types';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { isDragging } from '../inventory/DraggableInventoryItem';
@@ -44,7 +45,7 @@ type Props = StoreProps;
 class ActivityTracker extends React.Component<Props> {
   private lastRefreshTimestamp = 0;
   private refreshAccountDataInterval?: number;
-  private refreshSubscription: () => void;
+  private refreshSubscription: () => void = _.noop;
 
   componentDidMount() {
     document.addEventListener('visibilitychange', this.visibilityHandler);

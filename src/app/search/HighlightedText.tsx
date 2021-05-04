@@ -16,7 +16,7 @@ export default function HighlightedText({
   const end = text.slice(endIndex);
 
   if (!middle) {
-    return text as any;
+    return <>{text}</>;
   }
 
   return (

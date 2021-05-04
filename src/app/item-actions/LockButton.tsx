@@ -6,16 +6,16 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
+import ActionButton from './ActionButton';
 import styles from './LockButton.m.scss';
 
 interface Props {
   item: DimItem;
   type: 'lock' | 'track';
   children?: React.ReactNode;
-  className?: string;
 }
 
-export default function LockButton({ type, item, className, children }: Props) {
+export default function LockButton({ type, item, children }: Props) {
   const [locking, setLocking] = useState(false);
   const dispatch = useThunkDispatch();
 
@@ -56,7 +56,7 @@ export default function LockButton({ type, item, className, children }: Props) {
   const iconElem = <AppIcon className={clsx({ [styles.inProgress]: locking })} icon={icon} />;
 
   return (
-    <div onClick={lockUnlock} title={title} className={className}>
+    <ActionButton onClick={lockUnlock} title={title}>
       {children ? (
         <>
           {iconElem} {children}
@@ -64,7 +64,7 @@ export default function LockButton({ type, item, className, children }: Props) {
       ) : (
         iconElem
       )}
-    </div>
+    </ActionButton>
   );
 }
 

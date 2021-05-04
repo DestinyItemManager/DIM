@@ -25,15 +25,6 @@ import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
-export interface MoveAmountPopupOptions {
-  item: DimItem;
-  targetStore: DimStore;
-  amount: number;
-  maximum: number;
-  onAmountSelected(amount: number);
-  onCancel(): void;
-}
-
 /**
  * Move the item to the currently active store. Used for double-click action.
  */
@@ -105,10 +96,12 @@ export function moveItemTo(
       throw new DimError('Help.CannotMove');
     }
 
-    if (item.owner === store.id && !item.location.inPostmaster) {
-      if ((item.equipped && equip) || (!item.equipped && !equip)) {
-        return item;
-      }
+    if (
+      item.owner === store.id &&
+      !item.location.inPostmaster &&
+      ((item.equipped && equip) || (!item.equipped && !equip))
+    ) {
+      return item;
     }
 
     const moveAmount = amount || 1;

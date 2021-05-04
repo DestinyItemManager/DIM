@@ -26,7 +26,7 @@ interface Props {
   };
   items: DestinyItemPlug[];
   path: number[];
-  onNodePathSelected(nodePath: number[]);
+  onNodePathSelected(nodePath: number[]): void;
 }
 
 /**

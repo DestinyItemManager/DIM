@@ -79,7 +79,11 @@ function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefini
   return progressDef.steps[stepIndex].progressTotal;
 }
 
-function xpTotalRequiredForLevel(totalLevel, seasonProgressDef, WELL_RESTED_LEVELS) {
+function xpTotalRequiredForLevel(
+  totalLevel: number,
+  seasonProgressDef: DestinyProgressionDefinition,
+  WELL_RESTED_LEVELS: number
+) {
   let totalXP = 0;
   for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
     totalXP += xpRequiredForLevel(totalLevel - i, seasonProgressDef);

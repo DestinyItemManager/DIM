@@ -18,11 +18,11 @@ import React, { useState } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './EnergyMeter.m.scss';
 
-export const energyStyles = {
+export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
-};
+} as const;
 
 const swappableEnergyTypes = [
   DestinyEnergyType.Arc,
@@ -51,7 +51,7 @@ export default function EnergyMeter({
   const minCapacity = previewEnergyType === energyType ? energyCapacity : 1;
 
   // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array(10)
+  const meterIncrements = Array<string>(10)
     .fill(styles.disabled)
     .fill(
       styles.unused,

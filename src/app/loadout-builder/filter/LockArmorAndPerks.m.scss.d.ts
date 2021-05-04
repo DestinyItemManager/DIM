@@ -3,7 +3,6 @@
 interface CssExports {
   'area': string;
   'buttons': string;
-  'dragHelp': string;
   'itemGrid': string;
 }
 export const cssExports: CssExports;

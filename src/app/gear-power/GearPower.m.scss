@@ -89,17 +89,17 @@
       }
     }
 
-    .Kinetic,
-    .Energy,
-    .Power {
+    .kinetic,
+    .energy,
+    .power {
       grid-column-start: 1;
     }
 
-    .Helmet,
-    .Gauntlets,
-    .Chest,
-    .Leg,
-    .ClassItem {
+    .helmet,
+    .gauntlets,
+    .chest,
+    .leg,
+    .classItem {
       grid-column-start: 2;
 
       &.gearItem,
@@ -108,28 +108,28 @@
       }
     }
 
-    .Kinetic {
+    .kinetic {
       grid-row-start: 3;
     }
-    .Energy {
+    .energy {
       grid-row-start: 5;
     }
-    .Power {
+    .power {
       grid-row-start: 7;
     }
-    .Helmet {
+    .helmet {
       grid-row-start: 1;
     }
-    .Gauntlets {
+    .gauntlets {
       grid-row-start: 3;
     }
-    .Chest {
+    .chest {
       grid-row-start: 5;
     }
-    .Leg {
+    .leg {
       grid-row-start: 7;
     }
-    .ClassItem {
+    .classItem {
       grid-row-start: 9;
     }
   }

@@ -37,7 +37,7 @@ export class Store {
     callback: (store: IDBObjectStore) => void
   ): Promise<void> {
     this._init();
-    return (this._dbp as Promise<IDBDatabase>).then(
+    return this._dbp!.then(
       (db) =>
         new Promise<void>((resolve, reject) => {
           const transaction = db.transaction(this.storeName, type);
@@ -50,7 +50,7 @@ export class Store {
 
   _close(): Promise<void> {
     this._init();
-    return (this._dbp as Promise<IDBDatabase>).then((db) => {
+    return this._dbp!.then((db) => {
       db.close();
       this._dbp = undefined;
     });
@@ -75,7 +75,7 @@ export function get<Type>(key: IDBValidKey, store = getDefaultStore()): Promise<
     .then(() => req.result);
 }
 
-export function set(key: IDBValidKey, value: any, store = getDefaultStore()): Promise<void> {
+export function set(key: IDBValidKey, value: unknown, store = getDefaultStore()): Promise<void> {
   return store._withIDBStore('readwrite', (store) => {
     store.put(value, key);
   });

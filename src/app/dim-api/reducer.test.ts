@@ -29,7 +29,7 @@ describe('setSetting', () => {
     const updatedState = dimApi(state, setSetting('showNewItems', true));
 
     expect(updatedState.settings.showNewItems).toBe(true);
-    expect(copy(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'setting',
         payload: {

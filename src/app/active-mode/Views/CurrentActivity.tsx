@@ -7,7 +7,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
@@ -17,7 +16,6 @@ import { connect } from 'react-redux';
 interface ProvidedProps {
   account: DestinyAccount;
   store: DimStore;
-  buckets: InventoryBuckets;
 }
 
 interface StoreProps {
@@ -32,7 +30,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-function CurrentActivity({ account, store, defs, buckets }: Props) {
+function CurrentActivity({ account, store, defs }: Props) {
   const activityInfo = useActivityInfo({ account, store });
 
   if (!defs) {
@@ -74,13 +72,7 @@ function CurrentActivity({ account, store, defs, buckets }: Props) {
         <>
           {activityName?.length > 0 && <div className={styles.title}>{activityName}</div>}
           <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
-          <VendorBounties
-            account={account}
-            store={store}
-            activityInfo={activityInfo}
-            buckets={buckets}
-            defs={defs}
-          />
+          <VendorBounties store={store} activityInfo={activityInfo} defs={defs} />
         </>
       )}
     </CollapsibleTitle>
