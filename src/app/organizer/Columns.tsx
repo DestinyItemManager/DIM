@@ -138,7 +138,7 @@ export function getColumns(
           statHash,
           columnGroup: statsGroup,
           value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
-          cell: (_, item: DimItem) => {
+          cell: (_val, item: DimItem) => {
             const stat = item.stats?.find((s) => s.statHash === statHash);
             if (!stat) {
               return null;
@@ -211,7 +211,7 @@ export function getColumns(
       id: 'icon',
       header: t('Organizer.Columns.Icon'),
       value: (i) => i.icon,
-      cell: (_, item) => (
+      cell: (_val, item) => (
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
@@ -250,8 +250,8 @@ export function getColumns(
         id: 'dmg',
         header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
         value: (item) => item.element?.displayProperties.name,
-        cell: (_, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
-        filter: (_, item) => `is:${getItemDamageShortName(item)}`,
+        cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
+        filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
       },
     isArmor &&
       destinyVersion === 2 && {
@@ -349,7 +349,7 @@ export function getColumns(
             .join(','),
         cell: (value, item) =>
           value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
-        filter: (_, item) => {
+        filter: (_val, item) => {
           const modSlotMetadata = getSpecialtySocketMetadatas(item);
           return `modslot:${modSlotMetadata?.[0].slotTag || 'none'}`;
         },
@@ -396,14 +396,14 @@ export function getColumns(
             src={item.breakerType!.displayProperties.icon}
           />
         ),
-      filter: (_, item) => `is:${getItemDamageShortName(item)}`,
+      filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
     },
     {
       id: 'perks',
       header:
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
-      cell: (_, item) =>
+      cell: (_val, item) =>
         isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
@@ -414,7 +414,7 @@ export function getColumns(
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
-        cell: (_, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
+        cell: (_val, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -466,7 +466,7 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return killTrackerInfo?.count;
         },
-        cell: (_, item) => {
+        cell: (_val, item) => {
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
@@ -484,13 +484,13 @@ export function getColumns(
       id: 'location',
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
-      cell: (_, item) => <StoreLocation storeId={item.owner} />,
+      cell: (_val, item) => <StoreLocation storeId={item.owner} />,
     },
     {
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
       value: () => 0,
-      cell: (_, item) => {
+      cell: (_val, item) => {
         const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
         return (
           inloadouts.length > 0 && (
@@ -508,7 +508,7 @@ export function getColumns(
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
       value: (item) => getNotes(item, itemInfos),
-      cell: (_, item) => <NotesArea item={item} minimal={true} />,
+      cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:"${value}"`,
     },
