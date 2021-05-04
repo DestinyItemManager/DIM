@@ -10,7 +10,7 @@ export default function HighlightedText({
   startIndex: number;
   endIndex: number;
   className: string;
-}): JSX.Element {
+}) {
   const start = text.slice(0, startIndex);
   const middle = text.slice(startIndex, endIndex);
   const end = text.slice(endIndex);
@@ -18,7 +18,7 @@ export default function HighlightedText({
   if (!middle) {
     // Returning a string works, but types complain. Not sure how to fix this.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return text as any;
+    return <>{text}</>;
   }
 
   return (

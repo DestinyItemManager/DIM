@@ -88,7 +88,7 @@ function mapStateToProps() {
   const itemsSelector = createSelector(
     allItemsSelector,
     searchFilterSelector,
-    (_: RootState, props: ProvidedProps) => props.categories,
+    (_state: RootState, props: ProvidedProps) => props.categories,
     (allItems, searchFilter, categories) => {
       const terminal = Boolean(_.last(categories)?.terminal);
       if (!terminal) {

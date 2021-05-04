@@ -46,7 +46,7 @@ const installApiPermissionObserver = _.once(() => {
   // We could also use a thunk action instead of an observer... either way
   observeStore(
     (state) => state.dimApi.apiPermissionGranted,
-    (_, apiPermissionGranted) => {
+    (_prev, apiPermissionGranted) => {
       if (apiPermissionGranted !== null) {
         // Save the permission preference to local storage
         localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
@@ -84,7 +84,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
   // Watch the update queue and flush updates
   observeStore(
     (state) => state.dimApi.updateQueue,
-    _.debounce((_, queue: ProfileUpdateWithRollback[]) => {
+    _.debounce((_prev, queue: ProfileUpdateWithRollback[]) => {
       if (queue.length) {
         dispatch(flushUpdates());
       }

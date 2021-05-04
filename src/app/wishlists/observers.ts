@@ -4,7 +4,7 @@ import { set } from 'idb-keyval';
 export function saveWishListToIndexedDB() {
   return observeStore(
     (state) => state.wishLists,
-    (_, nextState) => {
+    (_prev, nextState) => {
       if (nextState.loaded) {
         set('wishlist', {
           wishListAndInfo: nextState.wishListAndInfo,

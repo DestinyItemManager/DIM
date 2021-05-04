@@ -35,7 +35,7 @@ export default function updateCSSVariables() {
   // or a user on desktop shrinks the browser window below isphoneportrait treshold value
   observeStore(
     (state) => state.shell.isPhonePortrait,
-    (_, isPhonePortrait, state) => {
+    (_prev, isPhonePortrait, state) => {
       const settings = settingsSelector(state);
       setCSSVariable(
         '--tiles-per-char-column',

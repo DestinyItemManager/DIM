@@ -109,7 +109,7 @@ export function getColumns(
   };
 
   // Some stat labels are long. This lets us replace them with i18n
-  const statLabels: Record<number, string> = {
+  const statLabels: Record<number, string | undefined> = {
     [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
     [StatHashes.ReloadSpeed]: t('Organizer.Stats.Reload'), // Reload Speed
     [StatHashes.AimAssistance]: t('Organizer.Stats.Aim'), // Aim Assistance

@@ -137,6 +137,7 @@ export function ObjectiveValue({
     case DestinyUnlockValueUIStyle.Checkbox:
       return <></>;
     default:
+      break;
   }
 
   // Default

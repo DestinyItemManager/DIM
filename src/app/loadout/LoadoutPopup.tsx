@@ -82,7 +82,7 @@ function mapStateToProps() {
 
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
-    (_: RootState, { dimStore }: ProvidedProps) => dimStore,
+    (_state: RootState, { dimStore }: ProvidedProps) => dimStore,
     (loadouts, dimStore) =>
       _.sortBy(
         loadouts.filter(

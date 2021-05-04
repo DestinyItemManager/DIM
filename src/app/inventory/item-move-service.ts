@@ -746,7 +746,7 @@ function canMoveToStore(
       // Move starting from the vault (which is always last)
       const moves = Object.entries(movesNeeded)
         .reverse()
-        .find(([_, moveAmount]) => moveAmount > 0)!;
+        .find(([_storeId, moveAmount]) => moveAmount > 0)!;
       const moveAsideSource = getStore(stores, moves[0])!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,

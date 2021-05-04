@@ -59,7 +59,7 @@ function mapStateToProps() {
     profileResponseSelector,
     allItemsSelector,
     d2ManifestSelector,
-    (_: RootState, props: ProvidedProps) => props.classType,
+    (_state: RootState, props: ProvidedProps) => props.classType,
     (
       profileResponse: DestinyProfileResponse,
       allItems: DimItem[],

@@ -453,7 +453,7 @@ function calculateUpdatedStats({
 function getAllStats(
   comparisonItems: DimItem[],
   compareBaseStats: boolean,
-  adjustedStats?: { [itemId: string]: { [statHash: number]: number } }
+  adjustedStats?: DimAdjustedStats
 ): StatInfo[] {
   if (!comparisonItems.length) {
     return emptyArray<StatInfo>();
@@ -530,7 +530,7 @@ function getAllStats(
   for (const stat of stats) {
     for (const item of comparisonItems) {
       const itemStat = stat.getStat(item);
-      const adjustedStatValue: number | undefined = adjustedStats?.[item.id]?.[stat.id];
+      const adjustedStatValue = adjustedStats?.[item.id]?.[stat.id];
       if (itemStat) {
         stat.min = Math.min(
           stat.min,

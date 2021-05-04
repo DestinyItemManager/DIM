@@ -149,7 +149,7 @@ function waitForProfileLoad() {
   return new Promise((resolve) => {
     const unsubscribe = observeStore(
       (state) => state.dimApi.profileLoaded,
-      (_, loaded) => {
+      (_prev, loaded) => {
         if (loaded) {
           unsubscribe();
           resolve(undefined);

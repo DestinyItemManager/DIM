@@ -153,7 +153,7 @@ export function getBestArmor(
     } else {
       best = [];
 
-      let hasPerks: (item: D1Item) => boolean = (_) => true;
+      let hasPerks: (item: D1Item) => boolean = (_i) => true;
 
       if (!_.isEmpty(lockedPerks[armortype])) {
         const lockedPerkKeys = Object.keys(lockedPerks[armortype]);

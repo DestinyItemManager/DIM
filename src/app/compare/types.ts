@@ -13,6 +13,7 @@ export interface DimAdjustedPlugs {
 export interface DimAdjustedItemStat {
   /** An updated stat value when plug effects are being compared */
   [statHash: number]: number;
+  [statId: string]: number;
 }
 
 export interface DimAdjustedStats {
