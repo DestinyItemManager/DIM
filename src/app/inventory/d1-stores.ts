@@ -1,3 +1,4 @@
+import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { ThunkResult } from 'app/store/types';
@@ -63,6 +64,9 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       } catch (e) {
         errorLog('d1-stores', 'Error loading stores', e);
         reportException('D1StoresService', e);
+
+        dispatch(handleAuthErrors(e));
+
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));

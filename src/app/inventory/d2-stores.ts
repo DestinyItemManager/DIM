@@ -1,4 +1,5 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
@@ -254,6 +255,9 @@ function loadStoresData(
       } catch (e) {
         errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);
+
+        dispatch(handleAuthErrors(e));
+
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));

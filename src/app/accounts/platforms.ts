@@ -4,7 +4,6 @@ import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { del, get } from 'idb-keyval';
 import _ from 'lodash';
-import { goToLoginPage } from '../bungie-api/authenticated-fetch';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
@@ -63,7 +62,7 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
     const bungieAccount = getBungieAccount();
     if (!bungieAccount) {
       // We're not logged in, don't bother
-      goToLoginPage();
+      dispatch(actions.loggedOut());
       return [];
     }
 
