@@ -354,7 +354,6 @@ function SearchBar(
     } else if (e.key === 'Home' || e.key === 'End') {
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (e.nativeEvent as any).preventDownshiftDefault = true;
     } else if (
       (e.key === 'Delete' || e.key === 'Backspace') &&

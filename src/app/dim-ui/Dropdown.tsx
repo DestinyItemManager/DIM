@@ -99,8 +99,7 @@ export default function Dropdown({
                     index,
                     onClick: !item.disabled
                       ? item.onSelected
-                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (e: any) => {
+                      : (e: any) => {
                           e.nativeEvent.preventDownshiftDefault = true;
                         },
                   })}

@@ -18,13 +18,10 @@ import React, { useState } from 'react';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './EnergyMeter.m.scss';
 
-export const energyStyles: { [energy in DestinyEnergyType]: string | undefined } = {
+export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
-  [DestinyEnergyType.Any]: undefined,
-  [DestinyEnergyType.Ghost]: undefined,
-  [DestinyEnergyType.Subclass]: undefined,
 } as const;
 
 const swappableEnergyTypes = [

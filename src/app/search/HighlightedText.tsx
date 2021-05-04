@@ -16,8 +16,6 @@ export default function HighlightedText({
   const end = text.slice(endIndex);
 
   if (!middle) {
-    // Returning a string works, but types complain. Not sure how to fix this.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <>{text}</>;
   }
 
