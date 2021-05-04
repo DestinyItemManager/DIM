@@ -232,6 +232,7 @@ module.exports = (env) => {
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
+          exclude: [/testing/, /\.test\.ts$/],
           use: _.compact([
             {
               loader: 'babel-loader',

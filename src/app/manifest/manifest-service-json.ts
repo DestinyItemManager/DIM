@@ -207,6 +207,8 @@ function loadManifestRemote(
         '?dim',
         `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
       ];
+      // Load the manifest tables we want table-by-table, in parallel. This is
+      // faster and downloads less data than the single huge file.
       const futures = tableAllowList
         .map((t) => `Destiny${t}Definition`)
         .map(async (table) => {
