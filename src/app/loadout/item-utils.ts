@@ -1,10 +1,8 @@
 import { DimItem } from 'app/inventory/item-types';
 import { armorStatHashes } from './known-values';
 
-/** Whether this item is eligible for being in loadout builder. Now only armour 2.0 and only items that have all the stats. */
-
+/** Checks if the item is Armor 2.0 and whether it has stats present for all 6 armor stats. */
 export function isArmor2WithStats(item: DimItem) {
-  // Armor and Ghosts
   return (
     item.bucket.inArmor &&
     item.energy &&
