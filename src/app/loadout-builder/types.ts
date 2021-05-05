@@ -1,12 +1,11 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import {
-  armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   armorBuckets,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 
@@ -96,24 +95,6 @@ export const bucketsToCategories = {
   [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
   [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
 };
-
-export const slotSpecificPlugCategoryHashes = [
-  armor2PlugCategoryHashesByName.helmet,
-  armor2PlugCategoryHashesByName.gauntlets,
-  armor2PlugCategoryHashesByName.chest,
-  armor2PlugCategoryHashesByName.leg,
-  armor2PlugCategoryHashesByName.classitem,
-];
-
-// TODO generate this somehow so we dont need to maintain it
-export const raidPlugCategoryHashes = [
-  PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
-  PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
-  PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
-  PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
-];
-
-export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
 
 // to-do: deduplicate this and use D2ArmorStatHashByName instead
 export const statHashes: { [type in StatTypes]: number } = {

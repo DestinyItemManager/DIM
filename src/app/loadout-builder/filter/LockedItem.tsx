@@ -1,8 +1,8 @@
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ClosableContainer from 'app/loadout/loadout-ui/ClosableContainer';
 import React from 'react';
-import ClosableContainer from '../ClosableContainer';
 import { LockedItemType } from '../types';
 
 export default function LockedItem({

@@ -26,9 +26,10 @@ import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
+import { isArmor2WithStats } from '../loadout/item-utils';
+import ModPicker from '../loadout/mod-picker/ModPicker';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
-import ModPicker from './filter/ModPicker';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
@@ -46,7 +47,6 @@ import {
   StatTypes,
   statValues,
 } from './types';
-import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
   defs: D2ManifestDefinitions;
@@ -82,7 +82,7 @@ function mapStateToProps() {
         [classType: number]: { [bucketHash: number]: DimItem[] };
       } = {};
       for (const item of allItems) {
-        if (!item || !isLoadoutBuilderItem(item)) {
+        if (!item || !isArmor2WithStats(item)) {
           continue;
         }
         const { classType, bucket } = item;

@@ -3,8 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isInsertableArmor2Mod, sortMods } from 'app/loadout-builder/mod-utils';
-import { isLoadoutBuilderItem } from 'app/loadout-builder/utils';
+import { isArmor2WithStats } from 'app/loadout/item-utils';
+import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -191,7 +191,7 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
 
 /** Extracts the equipped armour 2.0 mod hashes from the item */
 export function extractArmorModHashes(item: DimItem) {
-  if (!isLoadoutBuilderItem(item) || !item.sockets) {
+  if (!isArmor2WithStats(item) || !item.sockets) {
     return [];
   }
   return _.compact(

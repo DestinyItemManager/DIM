@@ -7,6 +7,9 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import ClosableContainer from 'app/loadout/loadout-ui/ClosableContainer';
+import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
+import { getModRenderKey } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
@@ -15,10 +18,9 @@ import _ from 'lodash';
 import React, { Dispatch, useState } from 'react';
 import ReactDom from 'react-dom';
 import { connect } from 'react-redux';
-import ClosableContainer from '../ClosableContainer';
+import { isArmor2WithStats } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import { getModRenderKey } from '../mod-utils';
 import {
   LockableBuckets,
   LockedExclude,
@@ -27,11 +29,10 @@ import {
   LockedItemType,
   LockedMap,
 } from '../types';
-import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from '../utils';
+import { addLockedItem, removeLockedItem } from '../utils';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
-import LockedModIcon from './LockedModIcon';
 
 interface ProvidedProps {
   selectedStore: DimStore;
@@ -86,7 +87,7 @@ function LockArmorAndPerks({
   const lockEquipped = () => {
     const newLockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     selectedStore.items.forEach((item) => {
-      if (item.equipped && isLoadoutBuilderItem(item)) {
+      if (item.equipped && isArmor2WithStats(item)) {
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
@@ -118,7 +119,7 @@ function LockArmorAndPerks({
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
           Boolean(
-            isLoadoutBuilderItem(item) &&
+            isArmor2WithStats(item) &&
               itemCanBeEquippedBy(item, selectedStore, true) &&
               (!filter || filter(item))
           ),

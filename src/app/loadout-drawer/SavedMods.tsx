@@ -2,7 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { sortModGroups } from 'app/loadout-builder/mod-utils';
+import { sortModGroups } from 'app/loadout/mod-utils';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import _ from 'lodash';
 import React, { useMemo } from 'react';

@@ -6,6 +6,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { useReducer } from 'react';
+import { isArmor2WithStats } from '../loadout/item-utils';
 import {
   ArmorSet,
   LockedExotic,
@@ -14,7 +15,7 @@ import {
   MinMaxIgnored,
   StatTypes,
 } from './types';
-import { addLockedItem, isLoadoutBuilderItem, removeLockedItem } from './utils';
+import { addLockedItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
@@ -46,7 +47,7 @@ const lbStateInit = ({
     for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
-        if (item && isLoadoutBuilderItem(item)) {
+        if (item && isArmor2WithStats(item)) {
           lockedMap = {
             ...lockedMap,
             [item.bucket.hash]: addLockedItem(

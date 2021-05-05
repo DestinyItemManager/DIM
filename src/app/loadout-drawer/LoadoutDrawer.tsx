@@ -1,6 +1,6 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import ModPicker from 'app/loadout-builder/filter/ModPicker';
+import ModPicker from 'app/loadout/mod-picker/ModPicker';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
