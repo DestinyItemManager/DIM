@@ -22,8 +22,11 @@ import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
-import * as loadoutActions from '../loadout/actions';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from '../loadout/loadout-types';
+import * as loadoutActions from '../loadout-drawer/actions';
+import {
+  Loadout as DimLoadout,
+  LoadoutItem as DimLoadoutItem,
+} from '../loadout-drawer/loadout-types';
 import * as settingsActions from '../settings/actions';
 import { initialSettingsState, Settings } from '../settings/initial-settings';
 import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';

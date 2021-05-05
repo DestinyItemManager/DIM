@@ -9,7 +9,7 @@ import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
-import { addItemToLoadout } from 'app/loadout/LoadoutDrawer';
+import { addItemToLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';

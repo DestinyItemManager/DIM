@@ -10,7 +10,7 @@ import { amountOfItem, getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
-import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
+import { canBePulledFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
