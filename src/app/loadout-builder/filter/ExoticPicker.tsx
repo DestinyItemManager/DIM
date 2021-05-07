@@ -58,16 +58,16 @@ function ExoticPicker({
               (socket) =>
                 socket.plugged?.plugDef.plug.plugCategoryHash ===
                 PlugCategoryHashes.EnhancementsExoticAeonCult
-            )?.socketDefinition.reusablePlugSetHash || -1;
+            )?.socketDefinition.reusablePlugSetHash;
 
-          const exoticMods = _.compact(
-            defs.PlugSet.get(exoticModSetHash)?.reusablePlugItems.map((item) => {
+          const exoticMods = exoticModSetHash ? _.compact(
+            defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
               const modDef = defs.InventoryItem.get(item.plugItemHash);
               if (isPluggableItem(modDef)) {
                 return modDef;
               }
             })
-          );
+          ) : [];
 
           rtn.push({
             def,
