@@ -139,7 +139,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
 }
 
-const allTables = [...eagerTables, ...lazyTables];
+export const allTables = [...eagerTables, ...lazyTables];
 
 /**
  * Manifest database definitions. This returns a promise for an

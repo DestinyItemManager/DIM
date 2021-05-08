@@ -1,4 +1,5 @@
-import { buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
+import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
+import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import _ from 'lodash';
@@ -30,10 +31,13 @@ export async function getTestManifestJson() {
   }
 
   await fs.mkdir(cacheDir, { recursive: true });
-  const response = await fetch(`https://www.bungie.net${enManifestUrl}`);
-  const data = await response.text();
-  await fs.writeFile(filename, data, 'utf-8');
-  return JSON.parse(data);
+
+  const manifestDb = await downloadManifestComponents(
+    manifest.jsonWorldComponentContentPaths.en,
+    allTables
+  );
+  await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
+  return manifestDb;
 }
 
 export const getTestDefinitions = _.once(async () => {
