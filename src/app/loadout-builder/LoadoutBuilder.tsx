@@ -209,7 +209,9 @@ function LoadoutBuilder({
       const itemsForClass = items[selectedStore.classType];
 
       for (const bucketHash of LockableBucketHashes) {
-        for (const item of itemsForClass[bucketHash]) {
+        // There should always be items for a bucket hash but we have seen a sentry report where
+        // itemsForClass[bucketHash] is not iterable, this assumes it's because it's falsey.
+        for (const item of itemsForClass[bucketHash] || []) {
           if (item.equippingLabel) {
             exotics.push(item);
           }
