@@ -1,10 +1,14 @@
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
+import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
+import { RootState } from 'app/store/types';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
+import profile from './data/profile-2021-05-08.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -45,14 +49,33 @@ export const getTestDefinitions = _.once(async () => {
   return buildDefinitionsFromManifest(manifestJson);
 });
 
-export function getProfile() {
-  // use a stored profile
-}
+export const testAccount = {
+  displayName: 'VidBoi-BMC',
+  originalPlatformType: 2,
+  membershipId: '4611686018433092312',
+  platformLabel: 'PlayStation',
+  destinyVersion: 2,
+  platforms: [1, 3, 5, 2],
+  lastPlayed: '2021-05-08T03:34:26.000Z',
+};
 
-export function getStores() {
-  // get processed stores
-}
+export const getTestStores = _.once(async () => {
+  const manifest = await getTestDefinitions();
 
-export function getExampleItems() {
-  // tricky items
-}
+  const stores = buildStores(
+    _.noop,
+    () =>
+      (({
+        accounts: {
+          currentAccount: 0,
+          accounts: [testAccount],
+        },
+        manifest: {
+          d2Manifest: manifest,
+        },
+      } as unknown) as RootState),
+    manifest,
+    (profile as any).Response as DestinyProfileResponse
+  );
+  return stores;
+});
