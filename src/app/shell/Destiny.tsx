@@ -235,7 +235,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
                 <SingleVendor
                   key={match.params.vendorId}
                   account={account}
-                  vendorHash={match.params.vendorId}
+                  vendorHash={parseInt(match.params.vendorId!, 10)}
                 />
               )}
             />
