@@ -454,98 +454,101 @@ function ItemTable({
   useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
 
   return (
-    <div
-      className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
-      style={{ gridTemplateColumns: gridSpec }}
-      role="table"
-      ref={tableRef}
-    >
-      <div className={styles.toolbar} ref={toolbarRef}>
-        <div>
-          <ItemActions
-            itemsAreSelected={Boolean(selectedItems.length)}
-            onLock={onLock}
-            onNote={onNote}
-            stores={stores}
-            onTagSelectedItems={onTagSelectedItems}
-            onMoveSelectedItems={onMoveSelectedItems}
-          />
-          <UserGuideLink topic="Organizer" />
-          <Dropzone onDrop={importCsv} accept=".csv">
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()} className={styles.importButton}>
-                <input {...getInputProps()} />
-                <div className="dim-button">
-                  <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+    <div className={styles.container}>
+      <div
+        className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
+        style={{ gridTemplateColumns: gridSpec }}
+        role="table"
+        ref={tableRef}
+      >
+        <div className={styles.toolbar} ref={toolbarRef}>
+          <div>
+            <ItemActions
+              itemsAreSelected={Boolean(selectedItems.length)}
+              onLock={onLock}
+              onNote={onNote}
+              stores={stores}
+              onTagSelectedItems={onTagSelectedItems}
+              onMoveSelectedItems={onMoveSelectedItems}
+            />
+            <UserGuideLink topic="Organizer" />
+            <Dropzone onDrop={importCsv} accept=".csv">
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps()} className={styles.importButton}>
+                  <input {...getInputProps()} />
+                  <div className="dim-button">
+                    <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+                  </div>
                 </div>
-              </div>
-            )}
-          </Dropzone>
-          {downloadAction}
-          <EnabledColumnsSelector
-            columns={columns}
-            enabledColumns={enabledColumns}
-            onChangeEnabledColumn={onChangeEnabledColumn}
-            forClass={classIfAny}
-          />
-        </div>
-        {ReactDOM.createPortal(<style>{rowStyle}</style>, document.head)}
-      </div>
-      <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-        <div>
-          <input
-            name="selectAll"
-            title={t('Organizer.SelectAll')}
-            type="checkbox"
-            checked={selectedItems.length === rows.length}
-            ref={(el) =>
-              el &&
-              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
-            }
-            onChange={selectAllItems}
-          />
-        </div>
-      </div>
-      {filteredColumns.map((column: ColumnDefinition) => (
-        <div
-          key={column.id}
-          className={clsx(styles[column.id], styles.header)}
-          role="columnheader"
-          aria-sort="none"
-        >
-          <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
-            {column.header}
-            {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-              <AppIcon
-                className={styles.sorter}
-                icon={
-                  columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                    ? faCaretUp
-                    : faCaretDown
-                }
-              />
-            )}
-          </div>
-        </div>
-      ))}
-      {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
-      {rows.map((row) => (
-        <React.Fragment key={row.item.id}>
-          <div className={styles.selection} role="cell">
-            <input
-              type="checkbox"
-              title={t('Organizer.SelectItem', { name: row.item.name })}
-              checked={selectedItemIds.includes(row.item.id)}
-              onChange={(e) => selectItem(e, row.item)}
+              )}
+            </Dropzone>
+            {downloadAction}
+            <EnabledColumnsSelector
+              columns={columns}
+              enabledColumns={enabledColumns}
+              onChangeEnabledColumn={onChangeEnabledColumn}
+              forClass={classIfAny}
             />
           </div>
-          <MemoRow
-            row={row}
-            filteredColumns={filteredColumns}
-            narrowQueryFunction={narrowQueryFunction}
-          />
-        </React.Fragment>
-      ))}
+          {ReactDOM.createPortal(<style>{rowStyle}</style>, document.head)}
+        </div>
+        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+          <div>
+            <input
+              name="selectAll"
+              title={t('Organizer.SelectAll')}
+              type="checkbox"
+              checked={selectedItems.length === rows.length}
+              ref={(el) =>
+                el &&
+                (el.indeterminate =
+                  selectedItems.length !== rows.length && selectedItems.length > 0)
+              }
+              onChange={selectAllItems}
+            />
+          </div>
+        </div>
+        {filteredColumns.map((column: ColumnDefinition) => (
+          <div
+            key={column.id}
+            className={clsx(styles[column.id], styles.header)}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {column.header}
+              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                <AppIcon
+                  className={styles.sorter}
+                  icon={
+                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                      ? faCaretUp
+                      : faCaretDown
+                  }
+                />
+              )}
+            </div>
+          </div>
+        ))}
+        {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
+        {rows.map((row) => (
+          <React.Fragment key={row.item.id}>
+            <div className={styles.selection} role="cell">
+              <input
+                type="checkbox"
+                title={t('Organizer.SelectItem', { name: row.item.name })}
+                checked={selectedItemIds.includes(row.item.id)}
+                onChange={(e) => selectItem(e, row.item)}
+              />
+            </div>
+            <MemoRow
+              row={row}
+              filteredColumns={filteredColumns}
+              narrowQueryFunction={narrowQueryFunction}
+            />
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 }

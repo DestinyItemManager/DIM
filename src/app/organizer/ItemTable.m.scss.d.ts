@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
+  'container': string;
   'customstat': string;
   'dmg': string;
   'energy': string;
