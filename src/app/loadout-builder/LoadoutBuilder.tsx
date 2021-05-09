@@ -209,7 +209,8 @@ function LoadoutBuilder({
       const itemsForClass = items[selectedStore.classType];
 
       for (const bucketHash of LockableBucketHashes) {
-        for (const item of itemsForClass[bucketHash]) {
+        // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
+        for (const item of itemsForClass[bucketHash] || []) {
           if (item.equippingLabel) {
             exotics.push(item);
           }
