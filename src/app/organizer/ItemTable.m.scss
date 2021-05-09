@@ -107,6 +107,7 @@ $content-cells: 5;
   &.header {
     top: var(--item-table-toolbar-height);
   }
+  // We want this to sit over the other columns as it sticks
   z-index: $header-cells + 1;
 }
 
