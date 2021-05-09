@@ -153,7 +153,7 @@ $content-cells: 5;
     top: var(--item-table-toolbar-height);
     padding-top: 0;
   }
-  // We want this to sit over the other columsn as it sticks
+  // We want this to sit over the other columns as it sticks
   z-index: $header-cells + 1;
   --icon-item-size: calc(var(--item-size) * 0.75);
   > :global(.item) {
