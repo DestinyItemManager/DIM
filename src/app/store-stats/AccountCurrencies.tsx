@@ -22,7 +22,7 @@ export default React.memo(function AccountCurrency() {
           </div>
         </React.Fragment>
       ))}
-      {_.times(4 - currencies.length, (i) => (
+      {_.times(4 - (currencies.length % 4), (i) => (
         <React.Fragment key={i}>
           <div />
           <div />
