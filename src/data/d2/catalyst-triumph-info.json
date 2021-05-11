@@ -53,6 +53,12 @@
     "key": null,
     "titleHash": null
   },
+  "507778024": {
+    "icon": "/common/destiny2_content/icons/750539326d20c65f2c61ded7b552b07b.jpg",
+    "source": null,
+    "key": null,
+    "titleHash": null
+  },
   "591600693": {
     "icon": "/common/destiny2_content/icons/c013e41cdb32779bc2322337614ea06b.jpg",
     "source": null,
@@ -160,6 +166,12 @@
     "source": null,
     "key": "Quest",
     "titleHash": 2652352679
+  },
+  "2254190310": {
+    "icon": "/common/destiny2_content/icons/15acb140a9b88315b4539f3d98d9c435.jpg",
+    "source": null,
+    "key": null,
+    "titleHash": null
   },
   "2383994221": {
     "icon": "/common/destiny2_content/icons/1d38c8d82f1bd1d22bf76314fe8764f9.jpg",
@@ -302,6 +314,12 @@
   "3968841949": {
     "icon": "/common/destiny2_content/icons/5106f4624da0a5ff26b97702547fc282.jpg",
     "source": 3020272562,
+    "key": null,
+    "titleHash": null
+  },
+  "3972260545": {
+    "icon": "/common/destiny2_content/icons/10eb188aae222806131864097a012b57.jpg",
+    "source": null,
     "key": null,
     "titleHash": null
   },

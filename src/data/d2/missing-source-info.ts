@@ -22,20 +22,35 @@ const missingSources: { [key: string]: number[] } = {
   battlegrounds: [],
   blackarmory: [
     78664642, // Annealed Shaper Gloves
+    89175933, // Forged Machinist Gauntlets
+    91359169, // Annealed Shaper Bond
     133093143, // Forged Machinist Greaves
+    240988159, // Woven Firesmith Grips
+    524862116, // Forged Machinist Helm
     563606995, // Woven Firesmith Boots
+    866063619, // Forged Machinist Plate
     1117243014, // Woven Firesmith Cape
     1497164220, // Forged Machinist Helm
     1512129090, // Forged Machinist Mark
     2119727155, // Annealed Shaper Crown
     2122810492, // Annealed Shaper Boots
+    2153602188, // Annealed Shaper Robes
+    2389815461, // Annealed Shaper Crown
+    2413328031, // Forged Machinist Greaves
+    2791841721, // Woven Firesmith Vest
     2851938357, // Forged Machinist Gauntlets
+    3086191374, // Woven Firesmith Mask
+    3128915572, // Annealed Shaper Gloves
     3155412907, // Forged Machinist Plate
     3283890999, // Woven Firesmith Vest
     3322192806, // Annealed Shaper Robes
     3363625697, // Woven Firesmith Grips
+    3416654206, // Annealed Shaper Boots
+    3457205569, // Woven Firesmith Boots
     3607521808, // Woven Firesmith Mask
+    4059853946, // Forged Machinist Mark
     4064641551, // Annealed Shaper Bond
+    4106007668, // Woven Firesmith Cape
   ],
   calus: [
     4450861, // Shadow's Greaves
@@ -643,11 +658,14 @@ const missingSources: { [key: string]: number[] } = {
     78664642, // Annealed Shaper Gloves
     80067121, // Opulent Stalker Vest
     88873628, // Gauntlets of Nohr
+    89175933, // Forged Machinist Gauntlets
+    91359169, // Annealed Shaper Bond
     91896851, // Equitis Shade Boots
     96643258, // Bladesmith's Memory Mask
     133093143, // Forged Machinist Greaves
     161336786, // Mask of Sekris
     165966230, // Insigne Shade Gloves
+    240988159, // Woven Firesmith Grips
     256904954, // Shadow's Grips
     300528205, // Bladesmith's Memory Vest
     308676790, // Opulent Stalker Mask
@@ -666,6 +684,7 @@ const missingSources: { [key: string]: number[] } = {
     455108041, // Mask of Rull
     503773817, // Insigne Shade Gloves
     508035927, // Midnight Exigent Helm
+    524862116, // Forged Machinist Helm
     563606995, // Woven Firesmith Boots
     574916072, // Bond of Sekris
     581908796, // Bond of the Emperor's Minister
@@ -696,6 +715,7 @@ const missingSources: { [key: string]: number[] } = {
     845536715, // Vest of Feltroc
     853543290, // Greaves of Rull
     853543291, // Greaves of the Emperor's Champion
+    866063619, // Forged Machinist Plate
     874272413, // Shadow's Robes
     884481817, // Kairos Function Boots
     917591018, // Grips of the Ace-Defiant
@@ -762,6 +782,7 @@ const missingSources: { [key: string]: number[] } = {
     2135450480, // Gensym Knight Cloak
     2149271612, // Penumbral Cloak
     2153222031, // Shadow's Gloves
+    2153602188, // Annealed Shaper Robes
     2158603584, // Gauntlets of Rull
     2158603585, // Gauntlets of the Emperor's Champion
     2164070257, // Mindbreaker Boots
@@ -780,7 +801,9 @@ const missingSources: { [key: string]: number[] } = {
     2320951982, // Abhorrent Imperative Vest
     2334017923, // Bladesmith's Memory Grips
     2369496221, // Plate of Nohr
+    2389815461, // Annealed Shaper Crown
     2395959535, // Yuga Sundown Gloves
+    2413328031, // Forged Machinist Greaves
     2472794149, // Shadow's Mind
     2475562438, // Equitis Shade Cloak
     2507934309, // Gensym Knight Strides
@@ -807,6 +830,7 @@ const missingSources: { [key: string]: number[] } = {
     2758465169, // Greaves of Rull
     2769298993, // Shadow's Boots
     2772980243, // Gensym Knight Grips
+    2791841721, // Woven Firesmith Vest
     2814122105, // BrayTech Researcher's Boots
     2851938357, // Forged Machinist Gauntlets
     2904930850, // Turris Shade Plate
@@ -818,12 +842,14 @@ const missingSources: { [key: string]: number[] } = {
     3026807258, // Opulent Scholar Boots
     3066613133, // Equitis Shade Cowl
     3082625196, // Shadow's Gauntlets
+    3086191374, // Woven Firesmith Mask
     3092380260, // Mark of the Emperor's Champion
     3092380261, // Shadow's Mark
     3099636805, // Greaves of Nohr
     3108321700, // Penumbral Bond
     3110838463, // Gensym Knight Gauntlets
     3126089918, // Yuga Sundown Helmet
+    3128915572, // Annealed Shaper Gloves
     3155412907, // Forged Machinist Plate
     3158739321, // Gensym Knight Hood
     3168014845, // Cloak of Feltroc
@@ -854,6 +880,8 @@ const missingSources: { [key: string]: number[] } = {
     3395856235, // Insigne Shade Boots
     3406713877, // Shadow's Plate
     3416618798, // Lost Pacific Robes
+    3416654206, // Annealed Shaper Boots
+    3457205569, // Woven Firesmith Boots
     3469837505, // Kairos Function Vest
     3484179468, // BrayTech Iron-Heart Engine
     3491990569, // Bulletsmith's Ire Plate
@@ -892,9 +920,11 @@ const missingSources: { [key: string]: number[] } = {
     3971375612, // BrayTech Researcher's Bond
     3979487476, // BrayTech Thermal Grips
     4017853847, // Shadow's Grips
+    4059853946, // Forged Machinist Mark
     4064641551, // Annealed Shaper Bond
     4092373800, // Gunsmith's Devotion Robes
     4105480824, // Lost Pacific Cape
+    4106007668, // Woven Firesmith Cape
     4148237373, // Kairos Function Greaves
     4151496279, // Turris Shade Greaves
     4152814806, // Shadow's Greaves
@@ -1027,27 +1057,27 @@ const missingSources: { [key: string]: number[] } = {
   dsc: [],
   dungeon: [],
   edz: [
-    226467547, // Wildwood Robes
-    321260461, // Wildwood Cloak
-    539497618, // Wildwood Strides
-    754826572, // Wildwood Cover
-    1226000828, // Wildwood Plate
-    1423524548, // Wildwood Gauntlets
-    1435681904, // Wildwood Vest
+    10307688, // Wildwood Plate
+    872284448, // Wildwood Gauntlets
+    1304122208, // Wildwood Bond
     1589569998, // Gearhead Gauntlets
-    1666413633, // Wildwood Mask
+    1664741411, // Wildwood Gloves
+    1712405061, // Wildwood Mark
     1886391431, // Gearhead Gloves
     2290569618, // Gearhead Grips
-    2504333144, // Wildwood Grips
-    2747681397, // Wildwood Helm
+    2724176749, // Wildwood Robes
+    2729740202, // Wildwood Vest
     2866378041, // Orobas Vectura Bond
     2940586726, // Orobas Vectura Mark
-    2977868593, // Wildwood Mark
+    3080875433, // Wildwood Helm
     3144980978, // Orobas Vectura Cloak
-    3261135090, // Wildwood Bond
-    3354170606, // Wildwood Greaves
-    4126963847, // Wildwood Boots
-    4204091653, // Wildwood Gloves
+    3366557883, // Wildwood Cloak
+    3466255616, // Wildwood Strides
+    3764013786, // Wildwood Cover
+    3862191322, // Wildwood Greaves
+    3907226374, // Wildwood Grips
+    3973359167, // Wildwood Mask
+    4051755349, // Wildwood Boots
   ],
   eow: [
     75025442, // Boots of Feltroc
@@ -1540,7 +1570,9 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
-  gunsmith: [],
+  gunsmith: [
+    4132945795, // Rocket Launcher Scavenger
+  ],
   harbinger: [],
   ikora: [
     89175653, // Noble Constant Mark
@@ -1594,11 +1626,9 @@ const missingSources: { [key: string]: number[] } = {
   ],
   ironbanner: [
     21320325, // Bond of Remembrance
-    23061005, // Iron Truage Greaves
     63725907, // Iron Remembrance Plate
     75550387, // Iron Truage Legs
     92135663, // Iron Remembrance Vest
-    108286515, // Timur's Iron Bond
     125833536, // Iron Fellowship Gloves
     130221063, // Iron Truage Vestments
     131359121, // Iron Fellowship Casque
@@ -1608,84 +1638,83 @@ const missingSources: { [key: string]: number[] } = {
     198946996, // Iron Symmachy Helm
     219816655, // Iron Fellowship Bond
     228784708, // Iron Symmachy Robes
-    230314682, // Iron Will Plate
-    267960270, // Iron Truage Gloves
     297009581, // Iron Remembrance Gloves
     307912519, // Iron Truage Hood
     337692872, // Iron Truage Legs
     344804890, // Iron Fellowship Cloak
-    390139894, // Iron Will Gauntlets
     391384020, // Iron Fellowship Helm
     423204919, // Iron Truage Hood
     425007249, // Iron Remembrance Plate
-    459833058, // Iron Truage Vestments
     473526496, // Iron Fellowship Vest
     478854451, // Timur's Iron Bond
+    481390023, // Iron Truage Casque
     500363457, // Iron Symmachy Grips
     510020159, // Iron Fellowship Strides
+    511170376, // Iron Truage Boots
     559176540, // Iron Symmachy Gloves
     561808153, // Mantle of Efrideet
     665784782, // Mantle of Efrideet
-    682107058, // Iron Truage Helm
     706104224, // Iron Truage Gauntlets
     713182381, // Iron Remembrance Gauntlets
     738836759, // Iron Truage Vestments
     739655237, // Iron Truage Helm
     744156528, // Iron Symmachy Mask
+    770140877, // Iron Will Greaves
     808693674, // Iron Symmachy Mark
     830400994, // Iron Truage Vestments
-    860168648, // Radegast's Iron Sash
-    863163983, // Iron Truage Vest
+    863444264, // Iron Will Gloves
     892360677, // Iron Fellowship Helm
     935677805, // Iron Truage Casque
     996946801, // Iron Symmachy Robes
     1009385327, // Iron Remembrance Legs
     1015625830, // Iron Truage Boots
     1027482647, // Iron Fellowship Boots
+    1058936857, // Iron Will Vest
     1062998051, // Iron Fellowship Vest
+    1098138990, // Iron Will Mask
     1105558158, // Iron Truage Helm
     1125953881, // Iron Truage Grips
-    1148460187, // Iron Truage Gauntlets
+    1166260237, // Iron Truage Vestments
     1173846338, // Iron Fellowship Bond
     1177873348, // Iron Remembrance Plate
     1181560527, // Iron Truage Vest
     1233689371, // Iron Remembrance Hood
+    1234228360, // Iron Will Mark
     1245456047, // Iron Fellowship Gauntlets
     1248530160, // Iron Fellowship Cloak
     1311649814, // Timur's Iron Bond
     1313089081, // Iron Truage Plate
     1313767877, // Radegast's Iron Sash
     1325838922, // Iron Symmachy Gauntlets
-    1329892341, // Iron Will Cloak
     1339294334, // Cloak of Remembrance
     1342036510, // Iron Truage Greaves
     1349302244, // Iron Remembrance Legs
     1352108388, // Radegast's Iron Sash
     1395498705, // Iron Fellowship Greaves
-    1412970845, // Iron Will Vestments
     1425558127, // Iron Remembrance Greaves
     1438648985, // Iron Symmachy Bond
     1452894389, // Mantle of Efrideet
     1465485698, // Iron Fellowship Gloves
     1466284308, // Iron Remembrance Hood
+    1469050017, // Iron Will Boots
     1473724751, // Iron Truage Gauntlets
     1476572353, // Iron Truage Greaves
     1478755348, // Iron Truage Gauntlets
-    1495869176, // Iron Truage Casque
+    1498852482, // Iron Will Steps
     1570751539, // Iron Symmachy Strides
     1571959827, // Iron Fellowship Plate
-    1602419024, // Iron Will Greaves
     1604601714, // Iron Truage Vestments
     1631733639, // Bond of Remembrance
     1631922345, // Iron Remembrance Greaves
     1673037492, // Iron Fellowship Gauntlets
     1675022998, // Iron Remembrance Helm
+    1717896437, // Iron Truage Legs
     1778619592, // Iron Truage Casque
-    1779796469, // Iron Truage Plate
+    1854612346, // Iron Truage Hood
     1876007169, // Iron Fellowship Mark
     1882457108, // Iron Remembrance Helm
     1889355043, // Iron Truage Legs
-    1959672649, // Iron Truage Grips
+    1895324274, // Iron Will Helm
     1960776126, // Iron Fellowship Greaves
     1990315366, // Iron Symmachy Cloak
     2017059966, // Iron Fellowship Helm
@@ -1693,27 +1722,25 @@ const missingSources: { [key: string]: number[] } = {
     2054377692, // Iron Truage Grips
     2058205265, // Iron Truage Gloves
     2096711562, // Bond of Remembrance
-    2105414511, // Iron Will Helm
     2181242591, // Cloak of Remembrance
     2203751966, // Iron Truage Helm
+    2205315921, // Iron Will Hood
     2241419267, // Timur's Iron Bond
-    2251614491, // Iron Truage Boots
+    2266122060, // Iron Truage Gauntlets
     2274205961, // Iron Fellowship Plate
-    2295273904, // Iron Will Sleeves
     2302106622, // Iron Remembrance Vestments
     2310625418, // Mark of Remembrance
-    2321258055, // Iron Truage Hood
-    2351038408, // Iron Truage Legs
+    2320100699, // Iron Will Gauntlets
     2368311917, // Iron Remembrance Helm
     2387737625, // Mark of Remembrance
     2391553724, // Iron Fellowship Hood
-    2399134521, // Iron Will Mask
+    2414679508, // Iron Will Cloak
     2448259942, // Iron Remembrance Greaves
     2500327265, // Radegast's Iron Sash
     2509918852, // Iron Symmachy Grips
-    2509940440, // Iron Will Vest
     2522706952, // Iron Fellowship Robes
-    2534676958, // Mantle of Efrideet
+    2536633781, // Iron Will Plate
+    2547799775, // Iron Will Sleeves
     2549582030, // Iron Truage Gloves
     2555322239, // Iron Truage Gauntlets
     2580822279, // Iron Symmachy Mark
@@ -1722,14 +1749,15 @@ const missingSources: { [key: string]: number[] } = {
     2620437164, // Mark of Remembrance
     2627255028, // Radegast's Iron Sash
     2645763830, // Iron Symmachy Hood
-    2653909130, // Iron Will Boots
     2692970954, // Iron Remembrance Gloves
     2717305289, // Iron Fellowship Hood
+    2723059534, // Iron Truage Grips
     2758933481, // Iron Remembrance Hood
     2772262012, // Iron Symmachy Vest
     2810038838, // Iron Remembrance Vest
     2817130155, // Iron Fellowship Robes
     2845071512, // Iron Remembrance Casque
+    2850783764, // Iron Truage Plate
     2853073502, // Mantle of Efrideet
     2863819165, // Iron Fellowship Grips
     2867156198, // Timur's Iron Bond
@@ -1737,23 +1765,23 @@ const missingSources: { [key: string]: number[] } = {
     2885394189, // Iron Remembrance Strides
     2898234995, // Iron Symmachy Plate
     2900181965, // Iron Symmachy Gauntlets
-    2914474757, // Iron Will Steps
+    2911957494, // Iron Truage Greaves
     2914695209, // Iron Truage Helm
     2916624580, // Iron Fellowship Casque
     2936230179, // Iron Remembrance Casque
     3042878056, // Iron Fellowship Grips
+    3055410141, // Iron Will Bond
     3057399960, // Iron Truage Vest
     3115740538, // Iron Fellowship Boots
     3115791898, // Iron Remembrance Legs
     3150799884, // Iron Symmachy Bond
-    3179623987, // Iron Will Gloves
     3251195262, // Iron Symmachy Plate
     3292445816, // Iron Truage Casque
-    3299416208, // Iron Will Bond
     3300129601, // Iron Truage Gloves
     3308875113, // Iron Remembrance Grips
     3329206472, // Cloak of Remembrance
     3369424240, // Iron Truage Grips
+    3379235805, // Iron Truage Helm
     3406291173, // Iron Fellowship Strides
     3472216012, // Iron Fellowship Plate
     3487011804, // Iron Remembrance Gauntlets
@@ -1762,9 +1790,9 @@ const missingSources: { [key: string]: number[] } = {
     3544440242, // Iron Remembrance Casque
     3551208252, // Iron Fellowship Boots
     3570981007, // Iron Symmachy Greaves
-    3598520298, // Iron Will Hood
     3600816955, // Iron Remembrance Strides
     3624199242, // Iron Fellowship Casque
+    3625849667, // Iron Truage Gloves
     3646911172, // Iron Truage Vest
     3671337107, // Iron Fellowship Grips
     3686482762, // Iron Truage Boots
@@ -1772,11 +1800,11 @@ const missingSources: { [key: string]: number[] } = {
     3713593535, // Iron Truage Vest
     3735443949, // Iron Symmachy Hood
     3746327861, // Iron Fellowship Gloves
-    3749277835, // Iron Will Mark
     3756249289, // Iron Truage Grips
     3763521327, // Iron Fellowship Greaves
     3791686334, // Iron Truage Gloves
     3815391974, // Iron Symmachy Boots
+    3818295475, // Mantle of Efrideet
     3849754183, // Iron Symmachy Gloves
     3856062457, // Iron Truage Casque
     3866772393, // Iron Truage Plate
@@ -1785,18 +1813,22 @@ const missingSources: { [key: string]: number[] } = {
     3972479219, // Iron Fellowship Hood
     4010793371, // Iron Remembrance Grips
     4018139467, // Iron Truage Boots
+    4019071337, // Radegast's Iron Sash
     4032295410, // Iron Remembrance Grips
     4039932861, // Iron Fellowship Vest
+    4041069824, // Timur's Iron Bond
     4048191131, // Iron Truage Boots
     4054509252, // Iron Fellowship Mark
     4057580974, // Iron Symmachy Strides
     4058198769, // Iron Symmachy Cloak
     4078529821, // Iron Fellowship Cloak
     4096639276, // Iron Truage Plate
+    4128151712, // Iron Will Vestments
     4144217282, // Iron Fellowship Strides
     4144779347, // Iron Remembrance Vestments
     4156963223, // Iron Symmachy Vest
     4161524635, // Iron Symmachy Helm
+    4169842018, // Iron Truage Vest
     4196689510, // Iron Fellowship Robes
     4201843274, // Iron Fellowship Mark
     4211068696, // Iron Truage Legs
@@ -2163,30 +2195,23 @@ const missingSources: { [key: string]: number[] } = {
   ],
   menagerie: [
     36900384, // Opulent Scholar Gloves
-    56157064, // Exodus Down Gauntlets
     60076357, // Opulent Scholar Bond
     80067121, // Opulent Stalker Vest
     308676790, // Opulent Stalker Mask
-    569251271, // Exodus Down Gloves
     648456777, // Opulent Stalker Strides
     935022405, // Opulent Duelist Greaves
     1194507306, // Opulent Duelist Helm
     1200068467, // Opulent Duelist Gauntlets
-    1316205184, // Exodus Down Plate
     1471193607, // Opulent Stalker Grips
-    1539014368, // Exodus Down Grips
     1908254109, // Opulent Duelist Plate
     2245491369, // Opulent Scholar Hood
     2275496908, // Opulent Stalker Cloak
     2652946280, // Opulent Scholar Robes
-    2947629004, // Exodus Down Grips
+    2953649850, // Exodus Down Strides
     3026807258, // Opulent Scholar Boots
     3370242000, // Opulent Duelist Mark
-    3617024265, // Exodus Down Boots
-    3654781892, // Exodus Down Plate
-    3742350309, // Exodus Down Boots
-    3855512540, // Exodus Down Gauntlets
-    4007396243, // Exodus Down Gloves
+    3593464438, // Exodus Down Strides
+    3807183801, // Exodus Down Strides
   ],
   mercury: [
     61987238, // Kairos Function Mask
@@ -2223,32 +2248,54 @@ const missingSources: { [key: string]: number[] } = {
     3692187003, // Dreambane Robes
   ],
   nessus: [
-    192377242, // Exodus Down Strides
+    56157064, // Exodus Down Gauntlets
+    126418248, // Exodus Down Vest
+    177493699, // Exodus Down Plate
     472691604, // Exodus Down Vest
-    569678873, // Exodus Down Mark
+    527652447, // Exodus Down Mark
+    582151075, // Exodus Down Helm
     667921213, // Exodus Down Mark
-    853736709, // Exodus Down Cloak
+    874856664, // Exodus Down Bond
+    957928253, // Exodus Down Gauntlets
+    1010733668, // Exodus Down Helm
+    1156448694, // Exodus Down Plate
     1157496418, // Exodus Down Greaves
     1160283433, // Shieldbreaker Plate
+    1316205184, // Exodus Down Plate
+    1427620200, // Exodus Down Gloves
     1439502385, // Exodus Down Helm
     1640979177, // Exodus Down Cloak
     1641416381, // Shieldbreaker Vest
-    1810569868, // Exodus Down Bond
+    1669675549, // Exodus Down Bond
+    1678216306, // Exodus Down Gauntlets
+    2029766091, // Exodus Down Gloves
     2032811197, // Exodus Down Robes
+    2079454604, // Exodus Down Greaves
+    2172333833, // Exodus Down Mask
+    2218838661, // Exodus Down Robes
     2229560362, // Shieldbreaker Robes
-    2736812653, // Exodus Down Helm
-    2816760678, // Exodus Down Greaves
+    2252973221, // Exodus Down Cloak
+    2359639520, // Exodus Down Robes
+    2423003287, // Exodus Down Grips
+    2462524641, // Exodus Down Vest
+    2528959426, // Exodus Down Boots
+    2731698402, // Exodus Down Hood
+    2811068561, // Exodus Down Hood
     2866378042, // Unethical Experiments Bond
     2940586725, // Unethical Experiments Mark
+    2947629004, // Exodus Down Grips
+    3026265798, // Exodus Down Mask
     3144980977, // Unethical Experiments Cloak
-    3446606632, // Exodus Down Vest
+    3323553887, // Exodus Down Greaves
     3536375792, // Exodus Down Bond
-    3593464438, // Exodus Down Strides
-    3660228214, // Exodus Down Hood
-    3951684081, // Exodus Down Robes
+    3545981149, // Exodus Down Boots
+    3669590332, // Exodus Down Cloak
+    3742350309, // Exodus Down Boots
+    3754164794, // Exodus Down Mark
+    3875829376, // Exodus Down Grips
     3960258378, // Exodus Down Hood
+    4007396243, // Exodus Down Gloves
     4060742749, // Exodus Down Mask
-    4130486121, // Exodus Down Mask
   ],
   nightfall: [],
   nightmare: [],
@@ -2805,25 +2852,40 @@ const missingSources: { [key: string]: number[] } = {
   sundial: [],
   tangled: [
     64566999, // Torobatl Celebration Mask
+    177829853, // Scatterhorn Bond
+    218523139, // Scatterhorn Grasps
+    307138509, // Scatterhorn Vest
     411850804, // Scatterhorn Wraps
     694120634, // Scatterhorn Mark
     699589438, // Scatterhorn Boots
     902989307, // Scorned Baron Vest
     988607392, // Scorned Baron Vest
+    1069453608, // Scatterhorn Wraps
+    1250571424, // Scatterhorn Robe
+    1347463276, // Scatterhorn Mark
     1407026808, // Torobatl Celebration Mask
     1412416835, // Scatterhorn Plate
     1467355683, // Scatterhorn Strides
     1566911695, // Scorned Baron Plate
     1636205905, // Scatterhorn Grasps
+    1704861826, // Scatterhorn Boots
+    1862088022, // Scatterhorn Helm
     1863170823, // Scatterhorn Vest
     1989103583, // Scatterhorn Greaves
+    2243444841, // Scatterhorn Greaves
+    2276115770, // Scatterhorn Mask
+    2411325265, // Scatterhorn Hood
+    2563857333, // Scatterhorn Strides
     2571396481, // Scatterhorn Bond
+    2757593792, // Scatterhorn Cloak
     2944336620, // Nea-Thonis Breather
     3044599574, // Scatterhorn Cloak
+    3066181671, // Scatterhorn Gauntlets
     3124726865, // Nea-Thonis Breather
     3214769810, // Scorned Baron Plate
     3523809305, // Eimin-Tin Ritual Mask
     3634942770, // Eimin-Tin Ritual Mask
+    3871458129, // Scatterhorn Plate
     3918445245, // Scatterhorn Gauntlets
     3926141285, // Scatterhorn Hood
     3971250660, // Scatterhorn Helm

@@ -192,6 +192,8 @@ const D2Sources: {
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
       2915991372, // Source: Crucible
+      3020288414, // Source: Crucible
+      3226099405, // Source: Crucible Seasonal Ritual Rank Reward
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -364,12 +366,14 @@ const D2Sources: {
       4060882457, // Snakeskin Wrap (Ornament)
     ],
     sourceHashes: [
+      186854335, // Source: Gambit
       571102497, // Source: Complete this weapon's associated Gambit quest.
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
+      2364933290, // Source: Gambit Seasonal Ritual Rank Reward
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
@@ -481,6 +485,7 @@ const D2Sources: {
     sourceHashes: [
       269962496, // Source: Eververse package.
       860688654, // Source: Eververse
+      2882367429, // Source: Eververse - Complete the "Vault of Glass" raid to unlock this in Eververse.
       4036739795, // Source: Bright Engrams.
     ],
     searchString: [],
@@ -515,12 +520,14 @@ const D2Sources: {
       4060882457, // Snakeskin Wrap (Ornament)
     ],
     sourceHashes: [
+      186854335, // Source: Gambit
       571102497, // Source: Complete this weapon's associated Gambit quest.
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
+      2364933290, // Source: Gambit Seasonal Ritual Rank Reward
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
@@ -602,6 +609,7 @@ const D2Sources: {
       1027607603, // Source: Complete this reward's associated Iron Banner quest.
       1312894505, // Source: Iron Banner.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
+      2520862847, // Source: Iron Banner Iron-Handed Diplomacy
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
       3966667255, // Source: Complete Iron Banner's Season 9 Seasonal Pursuit.
@@ -735,14 +743,16 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
+      277706045, // Source: Season of the Splicer Nightfall Grandmaster
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
-      1749037998, // Source: Nightfall: The Ordeal
+      1749037998, // Source: Nightfall
+      1850609592, // Source: Nightfall
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
-      2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing Nightfall: The Ordeal on Master difficulty.
+      2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing a Nightfall strike on Master difficulty
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
@@ -750,7 +760,7 @@ const D2Sources: {
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
-      3528789901, // Source: Season of the Chosen Nightfall: The Ordeal Grandmaster
+      3528789901, // Source: Season of the Chosen Nightfall Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4208190159, // Source: Complete a Nightfall strike.
@@ -816,15 +826,16 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
-      158391786, // Guide 10 encounters
       557146120, // Source: Complete a Guided Game as a guide or seeker.
+      654652973, // Guide 25 Last Wish encounters
+      707740602, // Guide 10 Last Wish encounters
       866530798, // Source: Not a Scratch.
-      1051097308, // Guide 50 encounters
       1405897559, // Source: "Deep Stone Crypt" raid.
       1483048674, // Source: Complete the "Scourge of the Past" raid.
       1491707941, // Source: "Garden of Salvation" raid.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       1692165595, // Source: Rock Bottom.
+      2065138144, // Source: Venus Raid
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
@@ -832,10 +843,11 @@ const D2Sources: {
       2723305286, // Source: Raid Ring promotional event.
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
+      2882367429, // Source: Eververse - Complete the "Vault of Glass" raid to unlock this in Eververse.
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
       3098906085, // Source: Complete a Guided Game raid as a guide.
       3147603678, // Acquired from the raid "Crown of Sorrow."
-      3985423665, // Guide 25 encounters
+      3390269646, // Source: Guided Games Final Encounters
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4246883461, // Source: Found in the "Scourge of the Past" raid.
@@ -932,6 +944,8 @@ const D2Sources: {
       2669524419, // Source: Crucible.
       2821852478, // Source: Complete this weapon's associated Crucible quest.
       2915991372, // Source: Crucible
+      3020288414, // Source: Crucible
+      3226099405, // Source: Crucible Seasonal Ritual Rank Reward
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -967,7 +981,9 @@ const D2Sources: {
     sourceHashes: [
       288436121, // Source: Complete this weapon's associated Vanguard quest.
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
+      412991783, // Source: Strikes
       539840256, // Source: Complete this reward's associated Vanguard quest.
+      681989555, // Source: Complete 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
@@ -1142,7 +1158,9 @@ const D2Sources: {
     sourceHashes: [
       288436121, // Source: Complete this weapon's associated Vanguard quest.
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
+      412991783, // Source: Strikes
       539840256, // Source: Complete this reward's associated Vanguard quest.
+      681989555, // Source: Complete 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
