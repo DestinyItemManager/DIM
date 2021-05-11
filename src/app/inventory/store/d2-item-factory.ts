@@ -125,6 +125,7 @@ export function makeFakeItem(
       location: ItemLocation.Vendor,
       bucketHash: 0,
       transferStatus: TransferStatuses.NotTransferrable,
+      itemValueVisibility: [],
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
