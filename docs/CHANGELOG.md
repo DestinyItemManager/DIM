@@ -1,5 +1,7 @@
 ## Next
 
+## 6.64.1 <span class="changelog-date">(2021-05-11)</span>
+
 * Fix an issue where owning Synthesis currency was causing a crash.
 
 ## 6.64.0 <span class="changelog-date">(2021-05-09)</span>
