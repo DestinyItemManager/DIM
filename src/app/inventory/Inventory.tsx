@@ -41,7 +41,7 @@ const components = [
   DestinyComponentType.CharacterEquipment,
   DestinyComponentType.ItemInstances,
   // Without ItemSockets and ItemReusablePlugs there will be a delay before the thumbs ups.
-  // One solution could ebe to cache the wishlist info between loads.
+  // One solution could be to cache the wishlist info between loads.
   DestinyComponentType.ItemSockets,
   DestinyComponentType.ItemReusablePlugs,
 ];
