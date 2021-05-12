@@ -3,7 +3,12 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSpecialtySocketMetadatas, modSlotTags, modTypeTags } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { DEFAULT_GLOW, DEFAULT_ORNAMENTS, emptySocketHashes } from '../d2-known-values';
+import {
+  DEFAULT_GLOW,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_SHADER,
+  emptySocketHashes
+} from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
 const socketFilters: FilterDefinition[] = [
@@ -43,6 +48,19 @@ const socketFilters: FilterDefinition[] = [
 
       return matchesCollectionsRoll;
     },
+  },
+  {
+    keywords: ['shaded', 'hasshader'],
+    description: tl('Filter.HasShader'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) =>
+      item.sockets?.allSockets.some((socket) =>
+        Boolean(
+          socket.plugged &&
+          socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
+          socket.plugged.plugDef.hash !== DEFAULT_SHADER
+        )
+      ),
   },
   {
     keywords: ['ornamented', 'hasornament'],
