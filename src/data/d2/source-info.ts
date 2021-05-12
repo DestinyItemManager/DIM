@@ -485,7 +485,7 @@ const D2Sources: {
     sourceHashes: [
       269962496, // Source: Eververse package.
       860688654, // Source: Eververse
-      2882367429, // Source: Eververse - Complete the "Vault of Glass" raid to unlock this in Eververse.
+      2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
       4036739795, // Source: Bright Engrams.
     ],
     searchString: [],
@@ -843,7 +843,7 @@ const D2Sources: {
       2723305286, // Source: Raid Ring promotional event.
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
-      2882367429, // Source: Eververse - Complete the "Vault of Glass" raid to unlock this in Eververse.
+      2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
       3098906085, // Source: Complete a Guided Game raid as a guide.
       3147603678, // Acquired from the raid "Crown of Sorrow."
