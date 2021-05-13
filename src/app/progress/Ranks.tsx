@@ -18,24 +18,22 @@ export default function Ranks({
     : {};
 
   // there are 2 similar DestinyProgression entries for each crucible point system
-  // progressionInfo contains detailed rank names, resetInfo has valor/infamy resets
+  // progressionInfo contains detailed rank names and resetInfo, streakInfo is contains
+  // information about current strak status.
   const activityRanks = [
     {
       // Valor
-      progressionInfo: firstCharacterProgression[2626549951],
-      resetInfo: firstCharacterProgression[3882308435],
+      progressionInfo: firstCharacterProgression[2083746873],
       streakInfo: firstCharacterProgression[2203850209],
     },
     {
       // Glory
-      progressionInfo: firstCharacterProgression[2000925172],
-      resetInfo: firstCharacterProgression[2679551909],
+      progressionInfo: firstCharacterProgression[1647151960],
       streakInfo: firstCharacterProgression[2572719399],
     },
     {
       // Infamy
-      progressionInfo: firstCharacterProgression[2772425241],
-      resetInfo: firstCharacterProgression[2772425241],
+      progressionInfo: firstCharacterProgression[3008065600],
       streakInfo: firstCharacterProgression[2939151659],
     },
   ];
@@ -49,7 +47,6 @@ export default function Ranks({
               key={activityRank.progressionInfo.progressionHash}
               defs={defs}
               progress={activityRank.progressionInfo}
-              resets={activityRank.resetInfo}
               streak={activityRank.streakInfo}
             />
           )
