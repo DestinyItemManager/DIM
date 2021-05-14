@@ -10,7 +10,6 @@ import './faction.scss';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
-  resets: DestinyProgression;
   streak: DestinyProgression;
   defs: D2ManifestDefinitions;
 }
@@ -19,7 +18,7 @@ interface CrucibleRankProps {
  * displays a single Crucible or Gambit rank for the account
  */
 export function CrucibleRank(props: CrucibleRankProps) {
-  const { defs, progress, resets, streak } = props;
+  const { defs, progress, streak } = props;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
@@ -57,9 +56,9 @@ export function CrucibleRank(props: CrucibleRankProps) {
             pct: Math.round((progress.currentProgress / rankTotal) * 100),
           })}
         </div>
-        {Boolean(resets.currentResetCount) && (
+        {Boolean(progress.currentResetCount) && (
           <div className="faction-level">
-            {t('Progress.Resets', { count: resets.currentResetCount })}
+            {t('Progress.Resets', { count: progress.currentResetCount })}
           </div>
         )}
       </div>
