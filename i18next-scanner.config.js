@@ -51,18 +51,6 @@ module.exports = {
         fallback: false,
         separator: false,
       },
-      catalysts: {
-        list: [
-          'Quest',
-          'Mission',
-          'LeviathansBreath',
-          'RuinousEffigy',
-          'TheFourthHorseman',
-          'HeirApparent',
-        ],
-        fallback: false,
-        separator: false,
-      },
       progress: {
         list: ['Bounties', 'Items', 'Quests'],
         fallback: false,
