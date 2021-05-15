@@ -182,27 +182,26 @@ export default function RichDestinyText({
   ownerId?: string;
 }): React.ReactElement {
   const dynamicStrings = useSelector(dynamicStringsSelector);
-  // don't bother processing without d2 defs available
+
+  // perform dynamic string replacement
+  text = (text ?? '').replaceAll(dynamicTextFinder, (segment) => {
+    const hash = segment.match(/\d+/)![0];
+    const dynamicValue =
+      dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
+    return dynamicValue?.toString() ?? segment;
+  });
+
+  // don't bother with further processing without d2 defs available
   if (!defs?.isDestiny2()) {
     return <>{text}</>;
   }
   // if they are, do a 1-time table enrichment
   generateConversionTable(defs);
-  return (
-    <>
-      {
-        // split into segments, filter out empty, try replacing each piece with an icon if one matches
-        (text ?? '')
-          .replaceAll(dynamicTextFinder, (segment) => {
-            const hash = segment.match(/\d+/)![0];
-            const dynamicValue =
-              dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
-            return dynamicValue?.toString() ?? segment;
-          })
-          .split(iconPlaceholder)
-          .filter(Boolean)
-          .map((t, index) => replaceWithIcon(t, index))
-      }
-    </>
-  );
+
+  // split into segments, filter out empty, try replacing each piece with an icon if one matches
+  const richTextSegments = text
+    .split(iconPlaceholder)
+    .filter(Boolean)
+    .map((t, index) => replaceWithIcon(t, index));
+  return <>{richTextSegments}</>;
 }
