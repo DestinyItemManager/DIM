@@ -34,7 +34,7 @@ export default function ItemDescription({ item, defs }: Props) {
         <>
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
-              <RichDestinyText text={item.description} defs={defs} />
+              <RichDestinyText text={item.description} defs={defs} ownerId={item.owner} />
               {loreLink && (
                 <ExternalLink
                   className={styles.loreLink}
