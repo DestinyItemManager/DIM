@@ -23,7 +23,6 @@
     "FarmingStart": "Farming starten",
     "FarmingStop": "Farmen beenden",
     "Loading": "Aktuelle Aktivität",
-    "Loadouts": "Ausrüstungen",
     "NoQuests": "Du verfolgst keine Quests",
     "NoSearches": "Erstelle gespeicherte Suchanfragen und filtere sie hier.",
     "Offline": "Offline",
@@ -76,16 +75,6 @@
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
     "VendorNotFound": "Händler Daten nicht verfügbar."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Gefunden während der Hüterspiele 2021.",
-      "LeviathansBreath": "Gefunden, indem du mächtige Gegner mit dieser Waffe besiegst.",
-      "Mission": "Schließe die \"{{title}}\" Mission ab.",
-      "Quest": "Schließe die \"{{title}}\" Quest ab.",
-      "RuinousEffigy": "Gefunden, indem du Feinde mit Transmutationssphären besiegst.",
-      "TheFourthHorseman": "Schließe Seraph Bunker, Seraph Türme und Legendäre Verlorene Sektoren ab."
-    }
   },
   "Compare": {
     "Archetype": "Urtyp",
@@ -703,11 +692,9 @@
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",
-    "Redacted": "[VERTRAULICH]",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
     "SecretTriumph": "Geheimer Triumph",
-    "Source": "Quelle: {{sourceInfo}}",
     "StatTrackers": "Statistiken Tracker",
     "TrackedTriumphs": "Verfolgte Triumphe"
   },
