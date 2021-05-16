@@ -1,3 +1,4 @@
+import { dynamicStringsSelector } from 'app/inventory/selectors';
 import rT from 'data/d2/objective-richTexts';
 import cabalGold from 'destiny-icons/beyond_light/cabal-gold.svg';
 import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
@@ -45,15 +46,13 @@ import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import _ from 'lodash';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './RichDestinyText.m.scss';
 
-// matches a bracketed thing in the string, or certain private unicode characters
-const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
-
+// this table is too perfect to ruin so
 // prettier-ignore
-// this table is too perfect to ruin
 const baseConversionTable: {
   objectiveHash?: typeof rT[string];
   unicode: string;
@@ -117,6 +116,9 @@ const baseConversionTable: {
   { unicode: '', icon: cabalGold,     objectiveHash: rT['[Currency]']                   }
 ]
 
+// matches a bracketed thing in the string, or certain private unicode characters
+const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
+
 /**
  * given defs, uses known examples from the manifest
  * and returns a localized string-to-icon conversion table
@@ -147,7 +149,7 @@ const generateConversionTable = _.once((defs: D2ManifestDefinitions) => {
   });
 });
 
-const replaceWithIcon = (textSegment: string, index: number) => {
+function replaceWithIcon(textSegment: string, index: number) {
   const replacement = baseConversionTable.find(
     (r) => r.substring === textSegment || r.unicode === textSegment
   );
@@ -156,7 +158,10 @@ const replaceWithIcon = (textSegment: string, index: number) => {
       <img src={replacement.icon} className={styles.inlineSvg} title={textSegment} key={index} />
     )) || <span key={textSegment}>{textSegment}</span>
   );
-};
+}
+
+// matches a bracketed thing in the string, or certain private unicode characters
+const dynamicTextFinder = /\{var:\d+\}/g;
 
 /**
  * converts an objective description or other string to html nodes
@@ -164,29 +169,39 @@ const replaceWithIcon = (textSegment: string, index: number) => {
  * • bungie's localized placeholder strings
  * • special unicode characters representing weapon/etc icons in the game's font
  * and puts known SVG icons in their place
+ *
+ * include the characterId of the item's owner if possible
  */
 export default function RichDestinyText({
   text,
   defs,
+  ownerId = '', // normalize for cleaner indexing later
 }: {
   text?: string;
   defs?: D1ManifestDefinitions | D2ManifestDefinitions;
+  ownerId?: string;
 }): React.ReactElement {
-  // don't bother processing without d2 defs available
+  const dynamicStrings = useSelector(dynamicStringsSelector);
+
+  // perform dynamic string replacement
+  text = (text ?? '').replaceAll(dynamicTextFinder, (segment) => {
+    const hash = segment.match(/\d+/)![0];
+    const dynamicValue =
+      dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
+    return dynamicValue?.toString() ?? segment;
+  });
+
+  // don't bother with further processing without d2 defs available
   if (!defs?.isDestiny2()) {
     return <>{text}</>;
   }
   // if they are, do a 1-time table enrichment
   generateConversionTable(defs);
-  return (
-    <>
-      {
-        // split into segments, filter out empty, try replacing each piece with an icon if one matches
-        (text ?? '')
-          .split(iconPlaceholder)
-          .filter(Boolean)
-          .map((t, index) => replaceWithIcon(t, index))
-      }
-    </>
-  );
+
+  // split into segments, filter out empty, try replacing each piece with an icon if one matches
+  const richTextSegments = text
+    .split(iconPlaceholder)
+    .filter(Boolean)
+    .map((t, index) => replaceWithIcon(t, index));
+  return <>{richTextSegments}</>;
 }
