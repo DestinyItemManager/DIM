@@ -1,5 +1,7 @@
 ## Next
 
+## 6.65.1 <span class="changelog-date">(2021-05-17)</span>
+
 ## 6.65.0 <span class="changelog-date">(2021-05-16)</span>
 
 * Reimplemented the is:shaded / is:hasshader searches.
