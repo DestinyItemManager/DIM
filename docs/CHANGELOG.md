@@ -1,5 +1,7 @@
 ## Next
 
+## 6.65.0 <span class="changelog-date">(2021-05-16)</span>
+
 * Reimplemented the is:shaded / is:hasshader searches.
 * Crucible and Gambit ranks show on the Progress page again.
 * Fixed the display text for some bounties and rewards from a new text system in Season of the Splicer.
