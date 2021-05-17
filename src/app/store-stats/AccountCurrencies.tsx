@@ -20,33 +20,34 @@ const synthCurrencies = [
 /** The account currencies (glimmer, shards, etc.) */
 export default React.memo(function AccountCurrency() {
   const currencies = useSelector(currenciesSelector);
-  const { other, synth } = _.groupBy(currencies, (c) =>
-    synthCurrencies.includes(c.itemHash) ? 'synth' : 'other'
-  );
+  const [synth, other] = _.partition(currencies, (c) => synthCurrencies.includes(c.itemHash));
   return (
     <>
-      {[other, synth].map((currencyGroup) => (
-        <>
-          {currencyGroup.map((currency) => (
-            <React.Fragment key={currency.itemHash}>
-              <BungieImage
-                className={styles.currency}
-                src={currency.displayProperties.icon}
-                title={currency.displayProperties.name}
-              />
-              <div className={styles.currency} title={currency.displayProperties.name}>
-                {currency.quantity.toLocaleString()}
-              </div>
-            </React.Fragment>
-          ))}
-          {_.times((4 - currencyGroup.length) % 4, (i) => (
-            <React.Fragment key={i}>
-              <div />
-              <div />
-            </React.Fragment>
-          ))}
-        </>
-      ))}
+      {[other, synth].map(
+        (currencyGroup) =>
+          currencyGroup.length > 0 && (
+            <>
+              {currencyGroup.map((currency) => (
+                <React.Fragment key={currency.itemHash}>
+                  <BungieImage
+                    className={styles.currency}
+                    src={currency.displayProperties.icon}
+                    title={currency.displayProperties.name}
+                  />
+                  <div className={styles.currency} title={currency.displayProperties.name}>
+                    {currency.quantity.toLocaleString()}
+                  </div>
+                </React.Fragment>
+              ))}
+              {_.times(4 - (currencyGroup.length % 4), (i) => (
+                <React.Fragment key={i}>
+                  <div />
+                  <div />
+                </React.Fragment>
+              ))}
+            </>
+          )
+      )}
     </>
   );
 });
