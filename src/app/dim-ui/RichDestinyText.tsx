@@ -184,7 +184,7 @@ export default function RichDestinyText({
   const dynamicStrings = useSelector(dynamicStringsSelector);
 
   // perform dynamic string replacement
-  text = (text ?? '').replaceAll(dynamicTextFinder, (segment) => {
+  text = (text ?? '').replace(dynamicTextFinder, (segment) => {
     const hash = segment.match(/\d+/)![0];
     const dynamicValue =
       dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
