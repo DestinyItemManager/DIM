@@ -160,7 +160,6 @@ function replaceWithIcon(textSegment: string, index: number) {
   );
 }
 
-// matches a bracketed thing in the string, or certain private unicode characters
 const dynamicTextFinder = /\{var:\d+\}/g;
 
 /**
