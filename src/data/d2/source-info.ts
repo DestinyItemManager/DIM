@@ -565,6 +565,7 @@ const D2Sources: {
     sourceHashes: [
       1788267693, // Source: Earn rank-up packages from Banshee-44.
       2986841134, // Source: Salvager's Salvo Armament Quest
+      3512613235, // Source: A Sacred Fusion Quest
     ],
     searchString: [],
   },
@@ -901,6 +902,17 @@ const D2Sources: {
       1593696611, // Source: Season Pass Reward
       1838401392, // Source: Earned as a Season Pass reward.
       2379344669, // Source: Season Pass.
+    ],
+    searchString: [],
+  },
+  servitor: {
+    itemHashes: [],
+    sourceHashes: [
+      277706045, // Source: Season of the Splicer Nightfall Grandmaster
+      1600754038, // Source: Season of the Splicer Activities
+      2040801502, // Source: Season of the Splicer Triumph
+      2694738712, // Source: Season of the Splicer Quest
+      2967385539, // Source: Season of the Splicer Seasonal Challenges
     ],
     searchString: [],
   },
