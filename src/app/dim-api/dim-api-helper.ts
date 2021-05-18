@@ -1,9 +1,7 @@
-import { needsDeveloper } from 'app/accounts/actions';
 import {
   FatalTokenError,
   getActiveToken as getBungieToken,
 } from 'app/bungie-api/authenticated-fetch';
-import store from 'app/store/store';
 import { dedupePromise } from 'app/utils/util';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
@@ -165,8 +163,7 @@ const refreshToken = dedupePromise(async () => {
     return authToken;
   } catch (e) {
     if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
-      store.dispatch(needsDeveloper()); // todo: pass in dispatch
-      throw new Error('DIM API Key Incorrect');
+      throw new FatalTokenError('DIM API Key Incorrect');
     }
     throw e;
   }

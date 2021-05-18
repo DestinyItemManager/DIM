@@ -1,10 +1,18 @@
-import { loggedOut } from 'app/accounts/actions';
 import { t } from 'app/i18next-t';
-import store from 'app/store/store';
 import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
 import { getToken, hasTokenExpired, removeAccessToken, removeToken, Tokens } from './oauth-tokens';
+
+/**
+ * A fatal token error means we have to log in again.
+ */
+export class FatalTokenError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    this.name = 'FatalTokenError';
+  }
+}
 
 /**
  * A wrapper around "fetch" that implements Bungie's OAuth scheme. This either
@@ -32,7 +40,6 @@ export async function fetchWithBungieOAuth(
         e
       );
       removeToken();
-      goToLoginPage();
     }
     throw e;
   }
@@ -43,8 +50,9 @@ export async function fetchWithBungieOAuth(
     if (triedRefresh) {
       // Give up
       removeToken();
-      goToLoginPage();
-      throw new Error("Access token expired, and we've already tried to refresh. Failing.");
+      throw new FatalTokenError(
+        "Access token expired, and we've already tried to refresh. Failing."
+      );
     }
     // OK, Bungie has told us our access token is expired or
     // invalid. Refresh it and try again.
@@ -80,21 +88,10 @@ async function responseIndicatesBadToken(response: Response) {
   );
 }
 
-/**
- * A fatal token error means we have to log in again.
- */
-export class FatalTokenError extends Error {
-  constructor(msg: string) {
-    super(msg);
-    this.name = 'FatalTokenError';
-  }
-}
-
 export async function getActiveToken(): Promise<Tokens> {
   const token = getToken();
   if (!token) {
     removeToken();
-    goToLoginPage();
     throw new FatalTokenError('No auth token exists, redirect to login');
   }
 
@@ -107,7 +104,6 @@ export async function getActiveToken(): Promise<Tokens> {
   const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
   if (!refreshTokenIsValid) {
     removeToken();
-    goToLoginPage();
     throw new FatalTokenError('Refresh token invalid, clearing auth tokens & going to login');
   }
 
@@ -178,9 +174,4 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     }
   }
   throw new Error('Unknown error getting response token: ' + JSON.stringify(response));
-}
-
-export function goToLoginPage() {
-  // TODO: pass in dispatch
-  store.dispatch(loggedOut());
 }

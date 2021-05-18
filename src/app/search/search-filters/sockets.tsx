@@ -7,7 +7,7 @@ import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
-  emptySocketHashes
+  emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
@@ -57,8 +57,8 @@ const socketFilters: FilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-          socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
-          socket.plugged.plugDef.hash !== DEFAULT_SHADER
+            socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
+            socket.plugged.plugDef.hash !== DEFAULT_SHADER
         )
       ),
   },
@@ -125,13 +125,15 @@ const socketFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: modSlotTags.concat(['any', 'none']),
     destinyVersion: 2,
-    filter: ({ filterValue }) => (item: DimItem) => {
-      const modSocketTags = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
-      return (
-        (filterValue === 'none' && !modSocketTags) ||
-        (modSocketTags && (filterValue === 'any' || modSocketTags.includes(filterValue)))
-      );
-    },
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        const modSocketTags = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
+        return (
+          (filterValue === 'none' && !modSocketTags) ||
+          (modSocketTags && (filterValue === 'any' || modSocketTags.includes(filterValue)))
+        );
+      },
   },
   {
     keywords: 'holdsmod',
@@ -139,15 +141,17 @@ const socketFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: modTypeTags.concat(['any', 'none']),
     destinyVersion: 2,
-    filter: ({ filterValue }) => (item: DimItem) => {
-      const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
-        (m) => m.compatibleModTags
-      );
-      return (
-        (filterValue === 'none' && !compatibleModTags) ||
-        (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
-      );
-    },
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
+          (m) => m.compatibleModTags
+        );
+        return (
+          (filterValue === 'none' && !compatibleModTags) ||
+          (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
+        );
+      },
   },
 ];
 

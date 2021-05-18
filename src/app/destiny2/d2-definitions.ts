@@ -139,7 +139,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
 }
 
-const allTables = [...eagerTables, ...lazyTables];
+export const allTables = [...eagerTables, ...lazyTables];
 
 /**
  * Manifest database definitions. This returns a promise for an
@@ -157,44 +157,51 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
-    enhanceDBWithFakeEntries(db);
-    const defs = {
-      isDestiny1: () => false,
-      isDestiny2: () => true,
-    };
-    lazyTables.forEach((tableShort) => {
-      const table = `Destiny${tableShort}Definition`;
-      defs[tableShort] = {
-        get(id: number, requestor?: { hash: number } | string | number) {
-          const dbTable = db[table];
-          if (!dbTable) {
-            throw new Error(`Table ${table} does not exist in the manifest`);
-          }
-          const dbEntry = dbTable[id];
-          if (!dbEntry && tableShort !== 'Record') {
-            const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
-            reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
-              requestingEntryInfo,
-              failedHash: id,
-              failedComponent: table,
-            });
-          }
-          return dbEntry;
-        },
-        getAll() {
-          return db[table];
-        },
-      };
-    });
-    // Resources that need to be fully loaded (because they're iterated over)
-    eagerTables.forEach((tableShort) => {
-      const table = `Destiny${tableShort}Definition`;
-      defs[tableShort] = db[table];
-    });
 
-    dispatch(setD2Manifest(defs as D2ManifestDefinitions));
-    return defs as D2ManifestDefinitions;
+    const defs = buildDefinitionsFromManifest(db);
+
+    dispatch(setD2Manifest(defs));
+    return defs;
   };
+}
+
+export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
+  enhanceDBWithFakeEntries(db);
+  const defs = {
+    isDestiny1: () => false,
+    isDestiny2: () => true,
+  };
+  lazyTables.forEach((tableShort) => {
+    const table = `Destiny${tableShort}Definition`;
+    defs[tableShort] = {
+      get(id: number, requestor?: { hash: number } | string | number) {
+        const dbTable = db[table];
+        if (!dbTable) {
+          throw new Error(`Table ${table} does not exist in the manifest`);
+        }
+        const dbEntry = dbTable[id];
+        if (!dbEntry && tableShort !== 'Record') {
+          const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
+          reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
+            requestingEntryInfo,
+            failedHash: id,
+            failedComponent: table,
+          });
+        }
+        return dbEntry;
+      },
+      getAll() {
+        return db[table];
+      },
+    };
+  });
+  // Resources that need to be fully loaded (because they're iterated over)
+  eagerTables.forEach((tableShort) => {
+    const table = `Destiny${tableShort}Definition`;
+    defs[tableShort] = db[table];
+  });
+
+  return defs as D2ManifestDefinitions;
 }
 
 /** This adds fake entries to the DB for places where we've had to make stuff up. */

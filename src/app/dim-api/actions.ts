@@ -1,4 +1,5 @@
 import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
+import { needsDeveloper } from 'app/accounts/actions';
 import { compareAccounts } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
@@ -231,6 +232,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
           // Retry
           dispatch(loadDimApiData(forceLoad));
+        } else if ($DIM_FLAVOR === 'dev') {
+          dispatch(needsDeveloper());
         }
         return;
       } finally {

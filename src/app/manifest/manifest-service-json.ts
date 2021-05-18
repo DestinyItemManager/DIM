@@ -197,46 +197,61 @@ function loadManifestRemote(
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
     try {
-      const manifest = {};
-      // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
-      // try canonical component URL which should likely be already cached,
-      // then fall back to appending "?dim" then "?dim-[random numbers]",
-      // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
-      const cacheBusterStrings = [
-        '',
-        '?dim',
-        `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
-      ];
-      const futures = tableAllowList
-        .map((t) => `Destiny${t}Definition`)
-        .map(async (table) => {
-          let response: Response | null = null;
-          let error = null;
-
-          for (const query of cacheBusterStrings) {
-            try {
-              response = await fetch(`https://www.bungie.net${components[table]}${query}`);
-              if (response.ok) {
-                break;
-              }
-              error ??= response;
-            } catch (e) {
-              error ??= e;
-            }
-          }
-          const body = await (response?.ok ? response.json() : Promise.reject(error));
-          manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
-        });
-
-      await Promise.all(futures);
+      const manifest = await downloadManifestComponents(components, tableAllowList);
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version, tableAllowList);
-      return manifest as AllDestinyManifestComponents;
+      return manifest;
     } finally {
       dispatch(loadingEnd(t('Manifest.Download')));
     }
   };
+}
+
+export async function downloadManifestComponents(
+  components: {
+    [key: string]: string;
+  },
+  tableAllowList: string[]
+) {
+  // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+  // try canonical component URL which should likely be already cached,
+  // then fall back to appending "?dim" then "?dim-[random numbers]",
+  // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
+  const cacheBusterStrings = [
+    '',
+    '?dim',
+    `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+  ];
+
+  const manifest = {};
+
+  // Load the manifest tables we want table-by-table, in parallel. This is
+  // faster and downloads less data than the single huge file.
+  const futures = tableAllowList
+    .map((t) => `Destiny${t}Definition`)
+    .map(async (table) => {
+      let response: Response | null = null;
+      let error = null;
+
+      for (const query of cacheBusterStrings) {
+        try {
+          response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+          if (response.ok) {
+            break;
+          }
+          error ??= response;
+        } catch (e) {
+          error ??= e;
+        }
+      }
+      const body = await (response?.ok ? response.json() : Promise.reject(error));
+      manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
+    });
+
+  await Promise.all(futures);
+
+  return manifest as AllDestinyManifestComponents;
 }
 
 // This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
