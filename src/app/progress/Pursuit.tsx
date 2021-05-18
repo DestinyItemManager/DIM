@@ -95,7 +95,7 @@ function Pursuit({ item, hideDescription, isNew, searchHidden, defs }: Props) {
                 {item.name}
               </span>
               <div className="milestone-description">
-                <RichDestinyText text={item.description} defs={defs} />
+                <RichDestinyText text={item.description} defs={defs} ownerId={item.owner} />
               </div>
             </div>
           )}

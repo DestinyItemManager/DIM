@@ -1,5 +1,20 @@
 ## Next
 
+## 6.65.1 <span class="changelog-date">(2021-05-17)</span>
+
+## 6.65.0 <span class="changelog-date">(2021-05-16)</span>
+
+* Reimplemented the is:shaded / is:hasshader searches.
+* Crucible and Gambit ranks show on the Progress page again.
+* Fixed the display text for some bounties and rewards from a new text system in Season of the Splicer.
+* Fixed currencies wrapping weirdly when you're not in-game.
+
+## 6.64.1 <span class="changelog-date">(2021-05-11)</span>
+
+* Fix an issue where owning Synthesis currency was causing a crash.
+
+## 6.64.0 <span class="changelog-date">(2021-05-09)</span>
+
 ## 6.63.0 <span class="changelog-date">(2021-05-02)</span>
 
 ## 6.62.0 <span class="changelog-date">(2021-04-25)</span>

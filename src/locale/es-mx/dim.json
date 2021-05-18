@@ -23,7 +23,6 @@
     "FarmingStart": "Comenzar Farmeo",
     "FarmingStop": "Detener Farmeo",
     "Loading": "Actividad Actual",
-    "Loadouts": "Equipamientos",
     "NoQuests": "No estás siguiendo ninguna aventura",
     "NoSearches": "Crear búsquedas guardadas y filtrarlas aquí.",
     "Offline": "Desconectado",
@@ -76,16 +75,6 @@
     "Twitter": "Obtén actualizaciones de estado en:",
     "UnknownError": "Mensaje de Bungie.net: {{message}}",
     "VendorNotFound": "La información de los vendedores no está disponible."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Encontrado durante los Juegos de Guardianes 2021.",
-      "LeviathansBreath": "Encontrado al derrotar enemigos poderosos con esta arma.",
-      "Mission": "Completa la misión \"{{title}}\".",
-      "Quest": "Completa la aventura \"{{title}}\".",
-      "RuinousEffigy": "Encontrado al derrotar enemigos con Esferas de Transmutación.",
-      "TheFourthHorseman": "Completa Búnkeres Serafines, Torres Serafinas y Sectores Perdidos de Leyenda."
-    }
   },
   "Compare": {
     "Archetype": "Arquetipo",
@@ -703,11 +692,9 @@
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
     "RecordValue": "{{value}}pts",
-    "Redacted": "[CENSURADO]",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
     "SecretTriumph": "Triunfo Secreto",
-    "Source": "Fuente: {{sourceInfo}}",
     "StatTrackers": "Rastreadores de estadísticas",
     "TrackedTriumphs": "Triunfos seguidos"
   },

@@ -23,7 +23,6 @@
     "FarmingStart": "Режим Фарма",
     "FarmingStop": "Stop Farming",
     "Loading": "Текущая Активность",
-    "Loadouts": "Наборы",
     "NoQuests": "Задания не отслеживаются",
     "NoSearches": "Сохраняйте запросы поиска и фильтруйте их.",
     "Offline": "Не в сети",
@@ -76,16 +75,6 @@
     "Twitter": "Получить обновления статуса сервиса:",
     "UnknownError": "Сообщение от Bungie.net: {{message}}",
     "VendorNotFound": "Данные торговцев недоступны."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Found during Guardian Games 2021.",
-      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
-      "Mission": "Завершите миссию \"{{title}}\".",
-      "Quest": "Завершите задание \"{{title}}\".",
-      "RuinousEffigy": "Побеждайте врагов шарами трансмутации.",
-      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
-    }
   },
   "Compare": {
     "Archetype": "Изначальные свойства",
@@ -703,11 +692,9 @@
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
     "RecordValue": "{{value}}",
-    "Redacted": "[УДАЛЕНО]",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
     "SecretTriumph": "Скрытый Триумф",
-    "Source": "Источник: {{sourceInfo}}",
     "StatTrackers": "Трекеры",
     "TrackedTriumphs": "Отслеживаемые Триумфы"
   },

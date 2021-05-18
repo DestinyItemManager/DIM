@@ -22,8 +22,8 @@ export function StatTotalToggle({
   readOnly?: boolean;
 }) {
   const defs = useSelector(d2ManifestSelector);
-  const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
-    (state) => settingsSelector(state).customTotalStatsByClass
+  const customTotalStatsByClass: StatHashListsKeyedByDestinyClass = useSelector(
+    (state: RootState) => settingsSelector(state).customTotalStatsByClass
   );
   const dispatch = useDispatch();
 

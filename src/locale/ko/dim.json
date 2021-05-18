@@ -23,7 +23,6 @@
     "FarmingStart": "파밍 시작",
     "FarmingStop": "파밍 종료",
     "Loading": "현재 활동",
-    "Loadouts": "로드아웃",
     "NoQuests": "추적 중인 퀘스트 없음",
     "NoSearches": "여기서 저장된 검색 기록을 만들고 필터링하세요.",
     "Offline": "오프라인",
@@ -76,16 +75,6 @@
     "Twitter": "상태 업데이트 받기:",
     "UnknownError": "Bungie.net 메시지: {{message}}",
     "VendorNotFound": "상인의 정보가 없습니다."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "2021년 수호자 대회에서 발견됨.",
-      "LeviathansBreath": "이 무기로 강력한 전투원을 처치하여 찾을 수 있습니다.",
-      "Mission": "\"{{title}}\" 미션을 완료하세요.",
-      "Quest": "\"{{title}}\" 퀘스트를 완료하세요.",
-      "RuinousEffigy": "변환 구체로 전투원을 처치하여 찾을 수 있습니다.",
-      "TheFourthHorseman": "세라프 벙커, 세라프 탑, 전설 잊혀진 구역을 완료하세요."
-    }
   },
   "Compare": {
     "Archetype": "아키타입",
@@ -703,11 +692,9 @@
     "QuestExpires": "만료일까지 ",
     "Quests": "퀘스트",
     "RecordValue": "{{value}}점",
-    "Redacted": "[비공개]",
     "Resets": "초기화 1회",
     "Resets_plural": "초기화 {{count}}회",
     "SecretTriumph": "비밀 업적",
-    "Source": "출처: {{sourceInfo}}",
     "StatTrackers": "통계 추적기",
     "TrackedTriumphs": "추적 중인 업적"
   },

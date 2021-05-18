@@ -23,7 +23,6 @@
     "FarmingStart": "Attiva Farming",
     "FarmingStop": "Disattiva Farming",
     "Loading": "Attività attuale",
-    "Loadouts": "Loadout",
     "NoQuests": "Non stai seguendo nessuna impresa",
     "NoSearches": "Crea ricerche salvate e filtrale qui.",
     "Offline": "Non in linea",
@@ -76,16 +75,6 @@
     "Twitter": "Ottieni informazioni sullo stato del servizio su:",
     "UnknownError": "Messaggio Bungie.net: {{message}}",
     "VendorNotFound": "I dati dei mercanti non sono disponibili."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Trovato durante i Giochi dei Guardiani 2021.",
-      "LeviathansBreath": "Trovato sconfiggendo potenti nemici con quest'arma.",
-      "Mission": "Completa la missione \"{{title}}\".",
-      "Quest": "Completa l'impresa \"{{title}}\".",
-      "RuinousEffigy": "Trovato sconfiggendo nemici con le Sfere di Trasmutazione.",
-      "TheFourthHorseman": "Completa Bunker del Serafino, Torri del Serafino e Settori Perduti Leggenda."
-    }
   },
   "Compare": {
     "Archetype": "Archetipo",
@@ -703,11 +692,9 @@
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
     "RecordValue": "{{value}}punti",
-    "Redacted": "[CENSURATO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Trionfo Segreto",
-    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Contatori Statistiche",
     "TrackedTriumphs": "Trionfi Seguiti"
   },

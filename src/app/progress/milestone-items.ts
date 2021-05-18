@@ -123,13 +123,21 @@ function availableQuestToItem(
   };
 
   if (questRewards?.length) {
-    dimItem.pursuit.rewards = questRewards.map((r) => ({ itemHash: r.hash, quantity: 1 }));
+    dimItem.pursuit.rewards = questRewards.map((r) => ({
+      itemHash: r.hash,
+      quantity: 1,
+      hasConditionalVisibility: false,
+    }));
   } else if (questDef.questItemHash) {
     const questItem = defs.InventoryItem.get(questDef.questItemHash);
     if (questItem?.value?.itemValue.length) {
       dimItem.pursuit.rewards = questItem.value.itemValue
         .filter((v) => v.itemHash !== 0)
-        .map((v) => ({ itemHash: v.itemHash, quantity: v.quantity || 1 }));
+        .map((v) => ({
+          itemHash: v.itemHash,
+          quantity: v.quantity || 1,
+          hasConditionalVisibility: false,
+        }));
     }
   } else if (milestone.rewards) {
     dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);

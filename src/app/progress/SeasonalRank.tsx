@@ -5,6 +5,7 @@ import {
   DestinyCharacterProgressionComponent,
   DestinyClass,
   DestinyProfileResponse,
+  DestinyProgressionRewardItemQuantity,
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
@@ -201,11 +202,11 @@ export function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?:
   return seasonHashes.includes(currentSeasonHash);
 }
 
-function fakeReward(hash: number, level: number) {
+function fakeReward(hash: number, level: number): DestinyProgressionRewardItemQuantity {
   return {
     acquisitionBehavior: 1,
     claimUnlockDisplayStrings: [''],
-    itemClaimedUnlockHash: 0,
+    hasConditionalVisibility: false,
     itemHash: hash,
     quantity: 1,
     rewardedAtProgressionLevel: level,

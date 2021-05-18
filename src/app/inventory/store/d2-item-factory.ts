@@ -125,6 +125,7 @@ export function makeFakeItem(
       location: ItemLocation.Vendor,
       bucketHash: 0,
       transferStatus: TransferStatuses.NotTransferrable,
+      itemValueVisibility: [],
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
@@ -439,12 +440,7 @@ export function makeItem(
   };
 
   // *able
-  createdItem.taggable = Boolean(
-    createdItem.lockable ||
-      createdItem.classified ||
-      // Shaders
-      createdItem.bucket.hash === BucketHashes.Shaders_Equippable
-  );
+  createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(
     createdItem.equipment &&
       createdItem.lockable &&

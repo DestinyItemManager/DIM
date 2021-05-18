@@ -81,5 +81,6 @@ export function sumModCosts(
   return Object.entries(costs).map(([itemHashStr, quantity]) => ({
     itemHash: parseInt(itemHashStr, 10),
     quantity,
+    hasConditionalVisibility: false,
   }));
 }
