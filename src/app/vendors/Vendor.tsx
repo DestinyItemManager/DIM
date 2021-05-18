@@ -94,11 +94,11 @@ export default function Vendor({
 function extractXurLocationString(defs: D2ManifestDefinitions, xurLocation: XurLocation) {
   const placeDef = defs.Place.get(xurLocation.placeHash);
   if (!placeDef) {
-    return null;
+    return xurLocation.locationName;
   }
   const destinationDef = defs.Destination.get(xurLocation.destinationHash);
   if (!destinationDef) {
-    return null;
+    return xurLocation.locationName;
   }
   const bubbleDef = destinationDef.bubbles[xurLocation.bubbleIndex];
 
