@@ -2629,6 +2629,7 @@ const missingSources: { [key: string]: number[] } = {
     4078925541, // Substitutional Alloy Mask
     4078925542, // Substitutional Alloy Mask
   ],
+  servitor: [],
   shatteredthrone: [],
   shaxx: [
     85800627, // Ankaa Seeker IV
