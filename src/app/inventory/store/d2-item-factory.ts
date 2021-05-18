@@ -11,6 +11,7 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
   DestinyItemResponse,
+  DestinyItemSubType,
   DestinyItemType,
   DestinyObjectiveProgress,
   DictionaryComponentResponse,
@@ -440,7 +441,12 @@ export function makeItem(
   };
 
   // *able
-  createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
+  createdItem.taggable = Boolean(
+    createdItem.lockable ||
+      createdItem.classified ||
+      itemDef.itemSubType === DestinyItemSubType.Shader ||
+      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod)
+  );
   createdItem.comparable = Boolean(
     createdItem.equipment &&
       createdItem.lockable &&
