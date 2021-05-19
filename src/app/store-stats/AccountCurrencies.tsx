@@ -24,7 +24,7 @@ export default React.memo(function AccountCurrency() {
   return (
     <>
       {[other, synth].map(
-        (currencyGroup) =>
+        (currencyGroup, ci) =>
           currencyGroup.length > 0 && (
             <>
               {currencyGroup.map((currency) => (
@@ -39,8 +39,8 @@ export default React.memo(function AccountCurrency() {
                   </div>
                 </React.Fragment>
               ))}
-              {_.times(4 - (currencyGroup.length % 4), (i) => (
-                <React.Fragment key={i}>
+              {_.times((4 - (currencyGroup.length % 4)) % 4, (i) => (
+                <React.Fragment key={`${ci}-${i}`}>
                   <div />
                   <div />
                 </React.Fragment>
