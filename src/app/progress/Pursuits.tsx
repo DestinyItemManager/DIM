@@ -29,10 +29,8 @@ const pursuitsOrder = ['Bounties', 'Quests', 'Items'];
  * List out all the Pursuits for the character, grouped out in a useful way.
  */
 export default function Pursuits({ store }: { store: DimStore }) {
-  const defs = useD2Definitions();
-  if (!defs) {
-    return null;
-  }
+  // checked upstream in Progress
+  const defs = useD2Definitions()!;
 
   // Get all items in this character's inventory that represent quests - some are actual items that take
   // up inventory space, others are in the "Progress" bucket and need to be separated from the quest items

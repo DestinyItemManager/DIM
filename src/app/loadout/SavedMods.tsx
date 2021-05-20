@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { sortModGroups } from 'app/loadout-builder/mod-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -21,19 +20,13 @@ interface Props {
  * Component for managing mods associated to a loadout.
  */
 function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
-  const defs = useD2Definitions();
   // Turn savedMods into an array of mod groups where each group is
   const groupedMods = useMemo(() => {
-    if (!defs) {
-      return [];
-    }
-
     const indexedMods = _.groupBy(savedMods, (mod) => mod.plug.plugCategoryHash);
-
     return Object.values(indexedMods).sort(sortModGroups);
-  }, [savedMods, defs]);
+  }, [savedMods]);
 
-  if (!defs || !Object.keys(savedMods).length) {
+  if (!savedMods.length) {
     return null;
   }
 

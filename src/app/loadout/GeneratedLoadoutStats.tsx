@@ -58,9 +58,9 @@ export function GeneratedLoadoutStats({
   items: DimItem[];
   loadout: Loadout;
 }) {
+  // just D2, for now
   const defs = useD2Definitions();
   if (!defs) {
-    // just D2, for now
     return null;
   }
 
