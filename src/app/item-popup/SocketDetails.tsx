@@ -113,12 +113,10 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
 export const SocketDetailsMod = React.memo(
   ({
     itemDef,
-    defs,
     className,
     onClick,
   }: {
     itemDef: PluggableInventoryItemDefinition;
-    defs: D2ManifestDefinitions;
     className?: string;
     onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
@@ -133,7 +131,7 @@ export const SocketDetailsMod = React.memo(
         onFocus={onClickFn}
         tabIndex={0}
       >
-        <DefItemIcon itemDef={itemDef} defs={defs} />
+        <DefItemIcon itemDef={itemDef} />
       </div>
     );
   }
@@ -255,7 +253,6 @@ function SocketDetails({
     (({ onClose }: { onClose(): void }) => (
       <SocketDetailsSelectedPlug
         plug={selectedPlug}
-        defs={defs}
         item={item}
         socket={socket}
         currentPlug={socket.plugged}
@@ -283,7 +280,6 @@ function SocketDetails({
                 !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash),
             })}
             itemDef={mod}
-            defs={defs}
             onClick={setSelectedPlug}
           />
         ))}

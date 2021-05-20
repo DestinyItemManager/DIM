@@ -561,7 +561,6 @@ function LoadoutDrawer({
         deleteLoadout={onDeleteLoadout}
       />
       <GeneratedLoadoutStats
-        defs={defs}
         stores={stores}
         buckets={buckets}
         items={items}
@@ -598,7 +597,6 @@ function LoadoutDrawer({
                 loadout={loadout}
                 savedMods={savedMods}
                 items={items}
-                defs={defs}
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}

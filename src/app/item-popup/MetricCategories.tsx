@@ -1,31 +1,24 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React from 'react';
 import styles from './MetricCategories.m.scss';
 
 export default function MetricCategories({
   availableMetricCategoryNodeHashes,
-  defs,
 }: {
   availableMetricCategoryNodeHashes: number[];
-  defs: D2ManifestDefinitions;
 }) {
   return (
     <ul className={styles.list}>
       {availableMetricCategoryNodeHashes.map((categoryHash) => (
-        <MetricCategory key={categoryHash} categoryHash={categoryHash} defs={defs} />
+        <MetricCategory key={categoryHash} categoryHash={categoryHash} />
       ))}
     </ul>
   );
 }
 
-function MetricCategory({
-  categoryHash,
-  defs,
-}: {
-  categoryHash: number;
-  defs: D2ManifestDefinitions;
-}) {
+function MetricCategory({ categoryHash }: { categoryHash: number }) {
+  const defs = useD2Definitions()!;
   const presentationNode = defs.PresentationNode.get(categoryHash);
   return (
     <li>

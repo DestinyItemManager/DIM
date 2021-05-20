@@ -2,14 +2,13 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { powerActionIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import type { InventoryBuckets } from '../inventory/inventory-buckets';
 import type { DimItem } from '../inventory/item-types';
 import type { DimStore } from '../inventory/store-types';
@@ -47,21 +46,20 @@ function getItemsInListByCategory({
 }
 
 export function GeneratedLoadoutStats({
-  defs,
   stores,
   allItems,
   buckets,
   items,
   loadout,
 }: {
-  defs: D1ManifestDefinitions | D2ManifestDefinitions;
   stores: DimStore[];
   allItems: DimItem[];
   buckets: InventoryBuckets;
   items: DimItem[];
   loadout: Loadout;
 }) {
-  if (defs.isDestiny1()) {
+  const defs = useD2Definitions();
+  if (!defs) {
     // just D2, for now
     return null;
   }

@@ -1,11 +1,8 @@
-import { destinyVersionSelector } from 'app/accounts/selectors';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
@@ -17,7 +14,7 @@ import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
@@ -32,32 +29,15 @@ import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
 import MetricCategories from './MetricCategories';
 
-interface ProvidedProps {
+// TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
+export default function ItemDetails({
+  item,
+  extraInfo = {},
+}: {
   item: DimItem;
   extraInfo?: ItemPopupExtraInfo;
-}
-
-interface StoreProps {
-  defs: D2ManifestDefinitions | D1ManifestDefinitions;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    defs:
-      destinyVersionSelector(state) === 2 ? d2ManifestSelector(state)! : state.manifest.d1Manifest!,
-  };
-}
-
-function isD2Manifest(
-  defs: D2ManifestDefinitions | D1ManifestDefinitions
-): defs is D2ManifestDefinitions {
-  return defs.isDestiny2();
-}
-
-// TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
-function ItemDetails({ item, extraInfo = {}, defs }: Props) {
+}) {
+  const defs = useDefinitions()!;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon
     : handCannonIcon;
@@ -76,36 +56,30 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
         item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="100%" />}
 
-      <ItemDescription item={item} defs={defs} />
+      <ItemDescription item={item} />
 
-      {!item.stats && Boolean(item.collectibleHash) && isD2Manifest(defs) && (
+      {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2() && (
         <div className="item-details">
           {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
 
-      {isD2Manifest(defs) && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
+      {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
-          <EmblemPreview item={item} defs={defs} />
+          <EmblemPreview item={item} />
         </div>
       )}
 
-      {isD2Manifest(defs) && item.availableMetricCategoryNodeHashes && (
+      {defs.isDestiny2() && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
-            defs={defs}
           />
         </div>
       )}
 
-      {killTrackerInfo && isD2Manifest(defs) && (
-        <KillTrackerInfo
-          tracker={killTrackerInfo}
-          defs={defs}
-          showTextLabel
-          className="masterwork-progress"
-        />
+      {killTrackerInfo && defs.isDestiny2() && (
+        <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
       )}
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
@@ -122,7 +96,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
 
-      {isD2Manifest(defs) && item.energy && defs && <EnergyMeter item={item} defs={defs} />}
+      {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
       {item.sockets && <ItemSockets item={item} />}
 
       {item.perks && (
@@ -142,7 +116,7 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
       {defs && item.objectives && (
         <div className="item-details">
           {item.objectives.map((objective) => (
-            <Objective defs={defs} objective={objective} key={objective.objectiveHash} />
+            <Objective objective={objective} key={objective.objectiveHash} />
           ))}
         </div>
       )}
@@ -157,19 +131,19 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
         </div>
       )}
 
-      {isD2Manifest(defs) && item.pursuit && item.pursuit.rewards.length !== 0 && (
+      {defs.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} defs={defs} store={ownerStore} />
+            <Reward key={reward.itemHash} reward={reward} store={ownerStore} />
           ))}
         </div>
       )}
 
-      {isD2Manifest(defs) && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+      {defs.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
-            <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} />
           ))}
         </div>
       )}
@@ -220,5 +194,3 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemDetails);

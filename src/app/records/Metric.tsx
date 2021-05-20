@@ -1,18 +1,18 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import clsx from 'clsx';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './Metric.m.scss';
 import MetricBanner from './MetricBanner';
 import { DimMetric } from './presentation-nodes';
 
 interface Props {
   metric: DimMetric;
-  defs: D2ManifestDefinitions;
 }
 
-export default function Metric({ metric, defs }: Props) {
+export default function Metric({ metric }: Props) {
+  const defs = useD2Definitions()!;
   const { metricDef, metricComponent } = metric;
   const metricHash = metricDef.hash;
 
@@ -28,7 +28,6 @@ export default function Metric({ metric, defs }: Props) {
       <MetricBanner
         className={styles.icon}
         metricHash={metricHash}
-        defs={defs}
         objectiveProgress={metricComponent.objectiveProgress}
       />
       <div className={clsx(styles.header, { [styles.masterworked]: masterwork })}>
@@ -44,7 +43,7 @@ export default function Metric({ metric, defs }: Props) {
       <div>
         {description && (
           <p className={styles.description}>
-            <RichDestinyText text={description} defs={defs} />
+            <RichDestinyText text={description} />
           </p>
         )}
       </div>

@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -11,17 +10,14 @@ import styles from './PresentationNodeSearchResults.m.scss';
 
 export default function PresentationNodeSearchResults({
   searchResults,
-  defs,
   ownedItemHashes,
   profileResponse,
 }: {
   searchResults: DimPresentationNodeSearchResult[];
-  defs: D2ManifestDefinitions;
   ownedItemHashes?: Set<number>;
   profileResponse: DestinyProfileResponse;
 }) {
   // TODO: make each node in path linkable
-
   const completedRecordsHidden = useSelector<RootState, boolean>(
     (state) => settingsSelector(state).completedRecordsHidden
   );
@@ -48,14 +44,12 @@ export default function PresentationNodeSearchResults({
                 return node.childPresentationNodes ? (
                   <PresentationNodeRoot
                     presentationNodeHash={node.nodeDef.hash}
-                    defs={defs}
                     ownedItemHashes={ownedItemHashes}
                     profileResponse={profileResponse}
                   />
                 ) : (
                   <PresentationNodeLeaf
                     node={node}
-                    defs={defs}
                     ownedItemHashes={ownedItemHashes}
                     completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
@@ -64,7 +58,6 @@ export default function PresentationNodeSearchResults({
               })()}
             <PresentationNodeLeaf
               node={sr}
-              defs={defs}
               ownedItemHashes={ownedItemHashes}
               completedRecordsHidden={completedRecordsHidden}
               redactedRecordsRevealed={redactedRecordsRevealed}

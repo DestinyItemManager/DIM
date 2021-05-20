@@ -1,5 +1,3 @@
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
@@ -14,10 +12,9 @@ import NotesArea from './NotesArea';
 
 interface Props {
   item: DimItem;
-  defs?: D2ManifestDefinitions | D1ManifestDefinitions;
 }
 
-export default function ItemDescription({ item, defs }: Props) {
+export default function ItemDescription({ item }: Props) {
   const wishlistItem = useSelector(inventoryWishListsSelector)[item.id];
 
   // suppressing some unnecessary information for weapons and armor,
@@ -34,7 +31,7 @@ export default function ItemDescription({ item, defs }: Props) {
         <>
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
-              <RichDestinyText text={item.description} defs={defs} ownerId={item.owner} />
+              <RichDestinyText text={item.description} ownerId={item.owner} />
               {loreLink && (
                 <ExternalLink
                   className={styles.loreLink}

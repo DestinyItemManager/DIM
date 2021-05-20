@@ -1,15 +1,11 @@
 /* eslint-disable react/jsx-key, react/prop-types */
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { destinyVersionSelector } from 'app/accounts/selectors';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -26,15 +22,12 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
-  defs: D2ManifestDefinitions | D1ManifestDefinitions;
   isPhonePortrait: boolean;
   searchQuery: string;
 }
 
 function mapStateToProps() {
   return (state: RootState): StoreProps => ({
-    defs:
-      destinyVersionSelector(state) === 2 ? d2ManifestSelector(state)! : state.manifest.d1Manifest!,
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: querySelector(state),
@@ -73,7 +66,7 @@ function drillToSelection(
   return [selectionTree];
 }
 
-function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispatch }: Props) {
+function Organizer({ account, stores, isPhonePortrait, searchQuery, dispatch }: Props) {
   useLoadStores(account, stores.length > 0);
 
   const history = useHistory();
@@ -130,12 +123,7 @@ function Organizer({ account, defs, stores, isPhonePortrait, searchQuery, dispat
   return (
     <div className={styles.organizer}>
       <ErrorBoundary name="Organizer">
-        <ItemTypeSelector
-          defs={defs}
-          selection={selection}
-          selectionTree={types}
-          onSelection={onSelection}
-        />
+        <ItemTypeSelector selection={selection} selectionTree={types} onSelection={onSelection} />
         <ItemTable categories={selection} />
       </ErrorBoundary>
     </div>

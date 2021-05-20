@@ -1,9 +1,9 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -28,13 +28,8 @@ const pursuitsOrder = ['Bounties', 'Quests', 'Items'];
 /**
  * List out all the Pursuits for the character, grouped out in a useful way.
  */
-export default function Pursuits({
-  store,
-  defs,
-}: {
-  store: DimStore;
-  defs?: D2ManifestDefinitions;
-}) {
+export default function Pursuits({ store }: { store: DimStore }) {
+  const defs = useD2Definitions();
   if (!defs) {
     return null;
   }
@@ -67,7 +62,7 @@ export default function Pursuits({
                 title={t(`Progress.${group}`, { contextList: 'progress' })}
                 sectionId={'pursuits-' + group}
               >
-                <PursuitsGroup pursuits={pursuits[group]} store={store} defs={defs} />
+                <PursuitsGroup pursuits={pursuits[group]} store={store} />
               </CollapsibleTitle>
             </section>
           )
@@ -78,25 +73,21 @@ export default function Pursuits({
 
 export function PursuitsGroup({
   store,
-  defs,
   pursuits,
   hideDescriptions,
   skipTypes,
 }: {
   store: DimStore;
-  defs: D2ManifestDefinitions;
   pursuits: DimItem[];
   hideDescriptions?: boolean;
   skipTypes?: DefType[];
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
-
   return (
     <>
       {$featureFlags.bountyGuide && (
         <BountyGuide
           store={store}
-          defs={defs}
           bounties={pursuits}
           selectedFilters={bountyFilters}
           onSelectedFiltersChanged={setBountyFilters}
@@ -108,7 +99,6 @@ export function PursuitsGroup({
           <Pursuit
             item={item}
             key={item.index}
-            defs={defs}
             searchHidden={!matchBountyFilters(item, bountyFilters)}
             hideDescription={hideDescriptions}
           />

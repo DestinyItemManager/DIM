@@ -1,11 +1,11 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import './ActivityModifier.scss';
 
-export function ActivityModifier(props: { modifierHash: number; defs: D2ManifestDefinitions }) {
-  const { modifierHash, defs } = props;
+export function ActivityModifier({ modifierHash }: { modifierHash: number }) {
+  const defs = useD2Definitions()!;
 
   const modifier = defs.ActivityModifier.get(modifierHash);
   if (!modifier) {

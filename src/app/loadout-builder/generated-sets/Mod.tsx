@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import clsx from 'clsx';
@@ -8,13 +7,12 @@ import styles from './Mod.m.scss';
 
 interface Props {
   plugDef: PluggableInventoryItemDefinition;
-  defs: D2ManifestDefinitions;
   gridColumn?: number;
   large?: boolean;
   onClick?(): void;
 }
 
-function Mod({ plugDef, defs, gridColumn, large, onClick }: Props) {
+function Mod({ plugDef, gridColumn, large, onClick }: Props) {
   return (
     <div
       role="button"
@@ -28,7 +26,7 @@ function Mod({ plugDef, defs, gridColumn, large, onClick }: Props) {
       tabIndex={0}
       onClick={onClick}
     >
-      <DefItemIcon itemDef={plugDef} defs={defs} />
+      <DefItemIcon itemDef={plugDef} />
     </div>
   );
 }
