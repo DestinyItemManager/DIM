@@ -179,7 +179,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
-        if (id < 1) {
+        if (id < 1 || id > Number.MAX_SAFE_INTEGER) {
           throw new Error(`Hash ${id} does not exist in the manifest`);
         }
         const dbEntry = dbTable[id];
