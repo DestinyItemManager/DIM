@@ -177,3 +177,11 @@
 .owned-icon {
   background: #44bd32;
 }
+.popup-tab-title {
+  position: relative;
+  .thumbs-up {
+    position: absolute;
+    top: -2px;
+    right: -18px;
+  }
+}

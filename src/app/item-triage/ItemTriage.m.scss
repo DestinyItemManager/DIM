@@ -43,6 +43,9 @@
 .factorCombo {
   grid-column: 1 / 7;
   padding: 4px;
+  & > * {
+    display: inline-block;
+  }
 }
 .comboCount {
   grid-column: 7 / 9;

@@ -3,7 +3,8 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './ExpandableTextBlock.m.scss';
 
 /**
- * wrapped around some inline content, this collapses that to a specified number of lines and lets the user click it to show all.
+ * wrapped around some inline content, this crops to a specified number of lines
+ * (with a fadeout) and allows the user to click it and show the rest
  *
  * @param linesWhenClosed an integer please. controls how many lines to collapse to
  * @param alreadyOpen allows a parent component to force it open

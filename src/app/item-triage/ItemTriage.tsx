@@ -3,22 +3,29 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
+import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import PressTip from 'app/dim-ui/PressTip';
 import SpecialtyModSlotIcon, {
   ArmorSlotSpecificModSocketIcon,
   getArmorSlotSpecificModSocketDisplayName,
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { setSearchQuery } from 'app/shell/actions';
+import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
+import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
+// eslint-disable-next-line css-modules/no-unused-class
+import popupStyles from '../item-popup/ItemDescription.m.scss';
 import styles from './ItemTriage.m.scss';
 import { getValueColors, KeepJunkDial } from './ValueDial';
 
@@ -142,9 +149,11 @@ type factorComboCategory = keyof typeof factorCombos;
 const factorComboCategories = Object.keys(factorCombos);
 
 export function ItemTriage({ item }: { item: DimItem }) {
+  const dispatch = useDispatch();
   const [notableStats, setNotableStats] = useState<ReturnType<typeof getNotableStats>>();
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
   const allItems = useSelector(allItemsSelector);
+  const wishlistItem = useSelector(inventoryWishListsSelector)[item.id];
 
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
@@ -171,19 +180,37 @@ export function ItemTriage({ item }: { item: DimItem }) {
 
   return (
     <div className={styles.itemTriagePane}>
+      {wishlistItem?.notes?.length && (
+        <ExpandableTextBlock linesWhenClosed={3} className={popupStyles.description}>
+          <span className={popupStyles.wishListLabel}>
+            {t('WishListRoll.WishListNotes', { notes: '' })}
+          </span>
+          <span className={popupStyles.wishListTextContent}>{wishlistItem.notes}</span>
+        </ExpandableTextBlock>
+      )}
       <div className={styles.triageTable}>
         <div className={`${styles.factorCombo} ${styles.header}`}>This item</div>
         <div className={`${styles.comboCount} ${styles.header}`}>Similar items</div>
-        <div className={`${styles.keepMeter} ${styles.header}`} />
+        {/* <div className={`${styles.keepMeter} ${styles.header}`} /> */}
         <div className={styles.headerDivider} />
         {factorCombosLabels.length > 0 &&
           factorCombosLabels.map((comboDisplay, i) => (
             <React.Fragment key={i}>
               {comboDisplay}
-              <div className={styles.comboCount}>{itemFactors?.[i]?.count}</div>
-              <div className={styles.keepMeter}>
-                {itemFactors && <KeepJunkDial value={itemFactors[i]?.quality} />}
+              <div className={styles.comboCount}>
+                {itemFactors?.[i]?.count}{' '}
+                <span
+                  onClick={() => {
+                    dispatch(setSearchQuery('asdf'));
+                  }}
+                  title="filter"
+                >
+                  <AppIcon icon={searchIcon} className="search-bar-icon" />
+                </span>
               </div>
+              {/* <div className={styles.keepMeter}>
+                {itemFactors && <KeepJunkDial value={itemFactors[i]?.quality} />}
+              </div> */}
             </React.Fragment>
           ))}
       </div>

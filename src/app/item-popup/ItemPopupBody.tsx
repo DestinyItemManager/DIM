@@ -1,7 +1,10 @@
 import { t } from 'app/i18next-t';
 import { ItemTriage } from 'app/item-triage/ItemTriage';
+import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
+import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -25,12 +28,17 @@ export default function ItemPopupBody({
   tab: ItemPopupTab;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
+  const wishlistRoll = useSelector(inventoryWishListsSelector)[item.id];
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 
-  const tabs = [
+  const tabs: {
+    tab: ItemPopupTab;
+    title: JSX.Element | string;
+    component: JSX.Element;
+  }[] = [
     {
       tab: ItemPopupTab.Overview,
       title: t('MovePopup.OverviewTab'),
@@ -52,7 +60,18 @@ export default function ItemPopupBody({
   ) {
     tabs.push({
       tab: ItemPopupTab.Triage,
-      title: t('MovePopup.TriageTab'),
+      title: (
+        <span className="popup-tab-title">
+          {t('MovePopup.TriageTab')}
+          {wishlistRoll && (
+            <AppIcon
+              className="thumbs-up"
+              icon={thumbsUpIcon}
+              title={t('WishListRoll.BestRatedTip')}
+            />
+          )}
+        </span>
+      ),
       component: <ItemTriage item={item} />,
     });
   }

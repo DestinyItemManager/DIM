@@ -17,6 +17,8 @@ import {
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
 
+// filters relying on curated known values (class names, rarities, elements)
+
 const tierMap = {
   white: 'Common',
   green: 'Uncommon',
@@ -41,8 +43,15 @@ const itemCategoryHashesByName: { [key: string]: number } = {
   ...D2ItemCategoryHashesByName,
 };
 
-// filters relying on curated known values
+export const damageFilter: FilterDefinition = {
+  keywords: damageTypeNames,
+  description: tl('Filter.DamageType'),
+  filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
+  fromItem: (item) => `is:${getItemDamageShortName(item)}`,
+};
+
 const knownValuesFilters: FilterDefinition[] = [
+  damageFilter,
   {
     keywords: [
       'common',
@@ -107,11 +116,6 @@ const knownValuesFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: damageTypeNames,
-    description: tl('Filter.DamageType'),
-    filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
-  },
-  {
     keywords: Object.values(D2Categories)
       .flat()
       .map((v) => v.toLowerCase()),
@@ -141,7 +145,6 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) => item.pursuit?.rewards.some((r) => pinnacleSources.includes(r.itemHash)),
   },
-
   {
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'
