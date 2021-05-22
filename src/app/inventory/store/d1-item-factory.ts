@@ -189,7 +189,7 @@ function makeItem(
   }
 
   // def.bucketTypeHash is where it goes normally
-  let normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+  let normalBucket = buckets ? buckets.byHash[itemDef.bucketTypeHash] : undefined;
   // item.bucket is where it IS right now
   let currentBucket = buckets.byHash[item.bucket] || normalBucket;
   if (!normalBucket) {
