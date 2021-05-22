@@ -23,7 +23,6 @@
     "FarmingStart": "Iniciar Farm",
     "FarmingStop": "Parar Farm",
     "Loading": "Atividade atual",
-    "Loadouts": "Sets",
     "NoQuests": "Você não está rastreando nenhuma jornada",
     "NoSearches": "Crie pesquisas salvas e as filtre aqui.",
     "Offline": "Offline",
@@ -76,16 +75,6 @@
     "Twitter": "Veja atualizações em:",
     "UnknownError": "Mensagem da Bungie.net: {{message}}",
     "VendorNotFound": "Dados do vendedor não disponíveis."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Encontrado durante os Jogos dos Guardiões 2021.",
-      "LeviathansBreath": "Encontrado ao derrotar inimigos poderosos com esta arma.",
-      "Mission": "Complete a missão \"{{title}}\".",
-      "Quest": "Complete a jornada \"{{title}}.",
-      "RuinousEffigy": "Encontrado ao derrotar inimigos com esferas de Transmutação.",
-      "TheFourthHorseman": "Complete Bunkers do Serafim, Torres do Serafim e Setores Perdidos Lendários."
-    }
   },
   "Compare": {
     "Archetype": "Arquétipo",
@@ -703,11 +692,9 @@
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
     "RecordValue": "{{value}}pts",
-    "Redacted": "[EDITADO]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Triunfo Secreto",
-    "Source": "Fonte: {{sourceInfo}}",
     "StatTrackers": "Estatísticas",
     "TrackedTriumphs": "Triunfos Rastreados"
   },

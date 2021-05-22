@@ -23,7 +23,6 @@
     "FarmingStart": "Farming starten",
     "FarmingStop": "Farmen beenden",
     "Loading": "Aktuelle Aktivität",
-    "Loadouts": "Ausrüstungen",
     "NoQuests": "Du verfolgst keine Quests",
     "NoSearches": "Erstelle gespeicherte Suchanfragen und filtere sie hier.",
     "Offline": "Offline",
@@ -76,16 +75,6 @@
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
     "VendorNotFound": "Händler Daten nicht verfügbar."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Gefunden während der Hüterspiele 2021.",
-      "LeviathansBreath": "Gefunden, indem du mächtige Gegner mit dieser Waffe besiegst.",
-      "Mission": "Schließe die \"{{title}}\" Mission ab.",
-      "Quest": "Schließe die \"{{title}}\" Quest ab.",
-      "RuinousEffigy": "Gefunden, indem du Feinde mit Transmutationssphären besiegst.",
-      "TheFourthHorseman": "Schließe Seraph Bunker, Seraph Türme und Legendäre Verlorene Sektoren ab."
-    }
   },
   "Compare": {
     "Archetype": "Urtyp",
@@ -358,7 +347,7 @@
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
     "ChooseAMod": "Wähle deine Mods",
-    "ChooseAnExotic": "Choose your exotic",
+    "ChooseAnExotic": "Wähle dein Exotic",
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Diese Ausrüstung enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
@@ -408,8 +397,8 @@
     },
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod oder Beschreibung",
-    "SearchAnExotic": "Search an exotic or description",
-    "SelectExotic": "Select exotic",
+    "SearchAnExotic": "Suche ein Exotic oder Beschreibung",
+    "SelectExotic": "Wähle Exotic",
     "SelectMods": "Mods auswählen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
@@ -703,11 +692,9 @@
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}Pkte",
-    "Redacted": "[VERTRAULICH]",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
     "SecretTriumph": "Geheimer Triumph",
-    "Source": "Quelle: {{sourceInfo}}",
     "StatTrackers": "Statistiken Tracker",
     "TrackedTriumphs": "Verfolgte Triumphe"
   },

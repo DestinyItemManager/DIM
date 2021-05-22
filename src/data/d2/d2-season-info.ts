@@ -12,7 +12,7 @@ export enum D2SeasonEnum {
   ARRIVAL,
   HUNT,
   CHOSEN,
-  __REDACTED_14__,
+  SPLICER,
   __REDACTED_15__,
 
   __LENGTH__, // This always needs to be last
@@ -203,8 +203,8 @@ export const D2SeasonInfo = {
   },
   14: {
     DLCName: '',
-    seasonName: 'Season of [REDACTED-14]',
-    seasonTag: '',
+    seasonName: 'Season of the Splicer',
+    seasonTag: 'splicer',
     season: 14,
     maxLevel: 50,
     powerFloor: 1100,
@@ -213,7 +213,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1320,
     releaseDate: '2021-05-11',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 15,
   },
   15: {
     DLCName: '',
@@ -225,7 +225,7 @@ export const D2SeasonInfo = {
     softCap: 1250,
     powerfulCap: 1320,
     pinnacleCap: 1330,
-    releaseDate: '2021-09-10',
+    releaseDate: '2021-08-24',
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },
@@ -248,14 +248,31 @@ export const D2SeasonInfo = {
 >;
 
 function getCurrentSeason(): number {
+  const CLOSE_TO_RESET_HOURS = 5;
   const today = new Date();
   for (let i = D2SeasonEnum.__LENGTH__ - 1; i > 0; i--) {
     const seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
-    if (today >= seasonDate) {
+    const closeToNewSeason =
+      isToday(seasonDate) && numHoursBetween(today, seasonDate) <= CLOSE_TO_RESET_HOURS; // same day and within hours of reset
+    if (today >= seasonDate || closeToNewSeason) {
       return D2SeasonInfo[i].season;
     }
   }
   return 0;
+}
+
+function numHoursBetween(d1: Date, d2: Date) {
+  const MILLISECONDS_PER_HOUR = 3600000;
+  return Math.abs(d1.getTime() - d2.getTime()) / MILLISECONDS_PER_HOUR;
+}
+
+function isToday(someDate: Date) {
+  const today = new Date();
+  return (
+    someDate.getDate() === today.getDate() &&
+    someDate.getMonth() === today.getMonth() &&
+    someDate.getFullYear() === today.getFullYear()
+  );
 }
 
 export const D2CalculatedSeason: number = getCurrentSeason();

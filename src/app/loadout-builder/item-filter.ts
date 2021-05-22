@@ -58,7 +58,10 @@ export function filterItems(
     if (filteredItems[bucket]) {
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
-          (bucket !== lockedExotic?.bucketHash || item.hash === lockedExotic.def.hash) &&
+          (!lockedExotic ||
+            (bucket === lockedExotic.bucketHash ?
+              item.hash === lockedExotic.def.hash :
+              item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||

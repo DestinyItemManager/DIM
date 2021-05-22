@@ -23,7 +23,6 @@
     "FarmingStart": "Commencer Farming",
     "FarmingStop": "Arrêter Farming",
     "Loading": "Activité en cours",
-    "Loadouts": "Arsenaux",
     "NoQuests": "Vous ne suivez aucune quête",
     "NoSearches": "Enregistrer des recherches et les filtrer ici.",
     "Offline": "Hors ligne",
@@ -76,16 +75,6 @@
     "Twitter": "Tenez-vous informé sur:",
     "UnknownError": "Message de Bungie.net: {{message}}",
     "VendorNotFound": "Les données du vendeur sont indisponibles."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Trouvé durant les Jeux des Gardiens 2021.",
-      "LeviathansBreath": "Trouvé en battant des ennemis puissants avec cette arme.",
-      "Mission": "Terminez la mission \"{{title}}\".",
-      "Quest": "Terminez la quête \"{{title}}\".",
-      "RuinousEffigy": "Trouvé en battant des ennemis avec des sphères de transmutation.",
-      "TheFourthHorseman": "Complétez les Bunkers de Séraphin, les tours de Séraphin et les secteurs oubliés légendaires."
-    }
   },
   "Compare": {
     "Archetype": "Archétype",
@@ -358,7 +347,7 @@
   "LB": {
     "AdvancedOptions": "Options avancées",
     "ChooseAMod": "Choisissez vos mods",
-    "ChooseAnExotic": "Choose your exotic",
+    "ChooseAnExotic": "Choisissez votre exotique",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Cet arsenal contient des objets de marchand",
     "Current": "Actuel",
@@ -408,8 +397,8 @@
     },
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un mod ou une description",
-    "SearchAnExotic": "Search an exotic or description",
-    "SelectExotic": "Select exotic",
+    "SearchAnExotic": "Rechercher un exotique ou une description",
+    "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -442,8 +431,8 @@
     "ItemsGroupedByStatsEnergyModSlot": "Les objets sont groupés par statistiques, le statut de leur pièce maîtresse, leur type énergétique, et leur emplacement de mod saisonnier.",
     "ItemsGroupedByStatsModSlot": "Les objets sont groupés par statistiques, le statut de leur pièce maîtresse, et leur emplacement de mod saisonnier.",
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaison d'armure possible, mais DIM n'a regardé que les {{combos, number}} meilleurs combos de statistiques pour s'assurer que votre navigateur n'aies pas d'erreur. Sélectionnez des attributs, utiliser la recherche, ou démantelez de vieilles armures pour réduire le nombre de combos. Épingler des mods généraux ou saisonniers augmente le nombre de combos.",
-    "LockEquipped": "Épingler objets équipés",
-    "LockItem": "Épingler objet",
+    "LockEquipped": "Inc. équipés",
+    "LockItem": "Inclure objet",
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFoundExoticsAndMods": "Vous avec un exotique et 5 mods saisonniers sélectionnés.",
     "NoBuildsFoundModsAreTooExpensive": "Les besoins énergétiques des mods sélectionnés sont trop élevés.",
@@ -703,11 +692,9 @@
     "QuestExpires": "Expire dans ",
     "Quests": "Quêtes",
     "RecordValue": "{{value}}pts",
-    "Redacted": "(CENSURÉ)",
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",
     "SecretTriumph": "Triomphe Secret",
-    "Source": "Source : {{sourceInfo}}",
     "StatTrackers": "Compteur de Statistiques",
     "TrackedTriumphs": "Triomphes Suivis"
   },

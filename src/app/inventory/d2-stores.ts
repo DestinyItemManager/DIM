@@ -1,10 +1,12 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { Transaction } from '@sentry/types';
+import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
-import { ThunkResult } from 'app/store/types';
+import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
@@ -172,65 +174,13 @@ function loadStoresData(
           dispatch(loadNewItems(account)),
           getStores(account, components),
         ]);
+        const stopTimer = timer('Process inventory');
+
         if (!defs || !profileInfo) {
           return;
         }
-        const buckets = bucketsSelector(getState())!;
-        const stopTimer = timer('Process inventory');
 
-        // TODO: components may be hidden (privacy)
-
-        if (
-          !profileInfo.profileInventory.data ||
-          !profileInfo.characterInventories.data ||
-          !profileInfo.characters.data
-        ) {
-          errorLog(
-            'd2-stores',
-            'Vault or character inventory was missing - bailing in order to avoid corruption'
-          );
-          throw new DimError('BungieService.MissingInventory');
-        }
-
-        const lastPlayedDate = findLastPlayedDate(profileInfo);
-
-        const mergedCollectibles = mergeCollectibles(
-          profileInfo.profileCollectibles,
-          profileInfo.characterCollectibles
-        );
-
-        const processSpan = transaction?.startChild({
-          op: 'processItems',
-        });
-        const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
-
-        const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-          processCharacter(
-            defs,
-            buckets,
-            characterId,
-            profileInfo,
-            mergedCollectibles,
-            lastPlayedDate
-          )
-        );
-        processSpan?.finish();
-
-        const stores = [...characters, vault];
-
-        dispatch(cleanInfos(stores));
-
-        const allItems = stores.flatMap((s) => s.items);
-
-        const hasClassified = allItems.some(
-          (i) =>
-            i.classified &&
-            (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-        );
-
-        for (const s of stores) {
-          updateBasePower(allItems, s, defs, hasClassified);
-        }
+        const stores = await buildStores(dispatch, getState, defs, profileInfo, transaction);
 
         const currencies = processCurrencies(profileInfo, defs);
 
@@ -254,6 +204,9 @@ function loadStoresData(
       } catch (e) {
         errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);
+
+        dispatch(handleAuthErrors(e));
+
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));
@@ -272,6 +225,65 @@ function loadStoresData(
     loadingTracker.addPromise(promise);
     return promise;
   };
+}
+
+export async function buildStores(
+  dispatch: DimThunkDispatch,
+  getState: () => RootState,
+  defs: D2ManifestDefinitions,
+  profileInfo: DestinyProfileResponse,
+  transaction?: Transaction
+): Promise<DimStore[]> {
+  const buckets = bucketsSelector(getState())!;
+
+  // TODO: components may be hidden (privacy)
+
+  if (
+    !profileInfo.profileInventory.data ||
+    !profileInfo.characterInventories.data ||
+    !profileInfo.characters.data
+  ) {
+    errorLog(
+      'd2-stores',
+      'Vault or character inventory was missing - bailing in order to avoid corruption'
+    );
+    throw new DimError('BungieService.MissingInventory');
+  }
+
+  const lastPlayedDate = findLastPlayedDate(profileInfo);
+
+  const mergedCollectibles = mergeCollectibles(
+    profileInfo.profileCollectibles,
+    profileInfo.characterCollectibles
+  );
+
+  const processSpan = transaction?.startChild({
+    op: 'processItems',
+  });
+  const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
+
+  const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
+    processCharacter(defs, buckets, characterId, profileInfo, mergedCollectibles, lastPlayedDate)
+  );
+  processSpan?.finish();
+
+  const stores = [...characters, vault];
+
+  dispatch(cleanInfos(stores));
+
+  const allItems = stores.flatMap((s) => s.items);
+
+  const hasClassified = allItems.some(
+    (i) =>
+      i.classified &&
+      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+  );
+
+  for (const s of stores) {
+    updateBasePower(allItems, s, defs, hasClassified);
+  }
+
+  return stores;
 }
 
 function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2ManifestDefinitions) {

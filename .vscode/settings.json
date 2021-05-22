@@ -4,6 +4,7 @@
   "files.trimTrailingWhitespace": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
+  "jest.autoEnable": false,
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {

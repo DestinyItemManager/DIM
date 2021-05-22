@@ -23,7 +23,6 @@
     "FarmingStart": "开始收集",
     "FarmingStop": "停止收集",
     "Loading": "当前活动",
-    "Loadouts": "配装",
     "NoQuests": "您没有跟踪任何任务",
     "NoSearches": "创建保存的搜索并在这里过滤它们。",
     "Offline": "离线",
@@ -76,16 +75,6 @@
     "Twitter": "查看服务器更新状态:",
     "UnknownError": "来自Bungie.net的消息：{{message}}",
     "VendorNotFound": "商贩数据不可用."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "可于 2021 守护者游戏期间获得。",
-      "LeviathansBreath": "通过使用此武器击败强大的敌人获得。",
-      "Mission": "完成“{{title}}”任务。",
-      "Quest": "完成“{{title}}”任务。",
-      "RuinousEffigy": "通过用蜕变球体击败敌人获得。",
-      "TheFourthHorseman": "完成炽天使地堡、炽天使高塔，以及传说遗失区域。"
-    }
   },
   "Compare": {
     "Archetype": "原型",
@@ -358,7 +347,7 @@
   "LB": {
     "AdvancedOptions": "高级选项",
     "ChooseAMod": "选择你的模组",
-    "ChooseAnExotic": "Choose your exotic",
+    "ChooseAnExotic": "选择你的异域装备",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品.",
     "Current": "当前",
@@ -408,8 +397,8 @@
     },
     "Scaled": "缩放",
     "SearchAMod": "搜索模组或描述",
-    "SearchAnExotic": "Search an exotic or description",
-    "SelectExotic": "Select exotic",
+    "SearchAnExotic": "搜索异域装备或描述",
+    "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -703,11 +692,9 @@
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
     "RecordValue": "{{value}}点",
-    "Redacted": "[隐藏]",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密胜利",
-    "Source": "来源：{{sourceInfo}}",
     "StatTrackers": "数据追踪器",
     "TrackedTriumphs": "跟踪的成就"
   },

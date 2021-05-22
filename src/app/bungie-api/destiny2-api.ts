@@ -97,6 +97,8 @@ export function getStores(
     // TODO: we should defer this unless you're on the collections screen
     DestinyComponentType.Records,
     DestinyComponentType.Metrics,
+    // TODO: consume this
+    DestinyComponentType.StringVariables,
   ];
 
   return getProfile(platform, ...(components || defaultComponents));

@@ -73,6 +73,31 @@ export const ownedItemsSelector = () =>
     return ownedItemHashes;
   });
 
+/** gets all the dynamic strings from a profile response */
+export const dynamicStringsSelector = (state: RootState) => {
+  const profileResp = profileResponseSelector(state);
+  if (profileResp) {
+    const { profileStringVariables, characterStringVariables } = profileResp;
+    const allProfile: {
+      // are these keys really strings? no. are they numbers? yes. but are all keys strings in js? yes
+      // and are they being extracted from strings and not worth converting to numbers just to convert back to strings? yes
+      [valueHash: string]: number;
+    } = profileStringVariables?.data?.integerValuesByHash ?? {};
+    const byCharacter: {
+      [charId: string]: {
+        [valueHash: string]: number;
+      };
+    } = {};
+    for (const charId in characterStringVariables.data) {
+      byCharacter[charId] = characterStringVariables.data?.[charId].integerValuesByHash ?? {};
+    }
+    return {
+      allProfile,
+      byCharacter,
+    };
+  }
+};
+
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>
   currentProfileSelector(state)?.tags || emptyObject();

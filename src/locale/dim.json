@@ -23,7 +23,6 @@
     "FarmingStart": "Start Farming",
     "FarmingStop": "Stop Farming",
     "Loading": "Current Activity",
-    "Loadouts": "Loadouts",
     "NoQuests": "You're not tracking any quests",
     "NoSearches": "Create saved searches and filter them here.",
     "Offline": "Offline",
@@ -76,16 +75,6 @@
     "Twitter": "Get status updates on:",
     "UnknownError": "Bungie.net message: {{message}}",
     "VendorNotFound": "Vendor data is unavailable."
-  },
-  "Catalyst": {
-    "Source": {
-      "HeirApparent": "Found during Guardian Games 2021.",
-      "LeviathansBreath": "Found by defeating powerful enemies with this weapon.",
-      "Mission": "Complete the \"{{title}}\" mission.",
-      "Quest": "Complete the \"{{title}}\" quest.",
-      "RuinousEffigy": "Found by defeating enemies with Transmutation spheres.",
-      "TheFourthHorseman": "Complete Seraph Bunkers, Seraph Towers, and Legendary Lost Sectors."
-    }
   },
   "Compare": {
     "Archetype": "Archetype",
@@ -703,11 +692,9 @@
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
     "RecordValue": "{{value}}pts",
-    "Redacted": "[REDACTED]",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Secret Triumph",
-    "Source": "Source: {{sourceInfo}}",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
   },

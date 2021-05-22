@@ -196,19 +196,28 @@ export function process(
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
-      if (helm.equippingLabel && gaunt.equippingLabel) {
+      if (
+        gaunt.equippingLabel &&
+        gaunt.equippingLabel === helm.equippingLabel
+      ) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
-        if (chest.equippingLabel && (helm.equippingLabel || gaunt.equippingLabel)) {
+        if (
+          chest.equippingLabel &&
+          (chest.equippingLabel === gaunt.equippingLabel ||
+            chest.equippingLabel === helm.equippingLabel)
+        ) {
           numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
           if (
             leg.equippingLabel &&
-            (chest.equippingLabel || helm.equippingLabel || gaunt.equippingLabel)
+            (leg.equippingLabel === chest.equippingLabel ||
+              leg.equippingLabel === gaunt.equippingLabel ||
+              leg.equippingLabel === helm.equippingLabel)
           ) {
             numDoubleExotic += classItems.length;
             continue;

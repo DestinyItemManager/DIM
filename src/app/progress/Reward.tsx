@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimStore } from 'app/inventory/store-types';
 import { DestinyInventoryItemDefinition, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
@@ -60,7 +61,7 @@ export function Reward({
       <BungieImage src={rewardDisplay.icon} alt="" />
       <span>
         {powerBonus !== undefined && `+${powerBonus} `}
-        {rewardDisplay.name}
+        <RichDestinyText defs={defs} text={rewardDisplay.name} ownerId={store?.id} />
         {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}
       </span>
     </div>

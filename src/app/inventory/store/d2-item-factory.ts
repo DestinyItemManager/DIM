@@ -125,6 +125,7 @@ export function makeFakeItem(
       location: ItemLocation.Vendor,
       bucketHash: 0,
       transferStatus: TransferStatuses.NotTransferrable,
+      itemValueVisibility: [],
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
@@ -367,7 +368,7 @@ export function makeItem(
       '/img/misc/missing_icon_d2.png',
     hiddenOverlay,
     iconOverlay,
-    secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon,
+    secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
     notransfer: Boolean(
       itemDef.nonTransferrable ||
         item.transferStatus === TransferStatuses.NotTransferrable ||
@@ -439,12 +440,7 @@ export function makeItem(
   };
 
   // *able
-  createdItem.taggable = Boolean(
-    createdItem.lockable ||
-      createdItem.classified ||
-      // Shaders
-      createdItem.bucket.hash === BucketHashes.Shaders_Equippable
-  );
+  createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
   createdItem.comparable = Boolean(
     createdItem.equipment &&
       createdItem.lockable &&
