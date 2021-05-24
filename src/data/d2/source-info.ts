@@ -862,6 +862,7 @@ const D2Sources: {
       'leviathan',
       'scourge',
       'sos',
+      'vog',
     ],
   },
   rasputin: {
@@ -1117,6 +1118,13 @@ const D2Sources: {
     ],
     sourceHashes: [
       4122810030, // Source: Complete seasonal activities during Season of the Undying.
+    ],
+    searchString: [],
+  },
+  vog: {
+    itemHashes: [],
+    sourceHashes: [
+      2065138144, // Source: Venus Raid
     ],
     searchString: [],
   },
