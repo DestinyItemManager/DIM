@@ -1,5 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
 import _ from 'lodash';
 import React from 'react';
@@ -7,13 +7,8 @@ import Metric from './Metric';
 import styles from './Metrics.m.scss';
 import { DimMetric } from './presentation-nodes';
 
-export default function Metrics({
-  metrics,
-  defs,
-}: {
-  metrics: DimMetric[];
-  defs: D2ManifestDefinitions;
-}) {
+export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
+  const defs = useD2Definitions()!;
   const groupedMetrics = _.groupBy(
     metrics,
     (metric) => metric.metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0]
@@ -33,7 +28,7 @@ export default function Metrics({
             {traits[traitHash].displayProperties.name}
           </div>
           {metrics.map((metric) => (
-            <Metric key={metric.metricDef.hash} metric={metric} defs={defs} />
+            <Metric key={metric.metricDef.hash} metric={metric} />
           ))}
         </div>
       ))}

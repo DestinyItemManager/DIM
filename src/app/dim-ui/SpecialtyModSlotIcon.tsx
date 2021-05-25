@@ -1,33 +1,19 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
-import { connect } from 'react-redux';
 import PressTip from './PressTip';
 import styles from './SpecialtyModSlotIcon.m.scss';
 
-interface ProvidedProps {
+interface ModSlotIconProps {
   item: DimItem;
   className?: string;
   lowRes?: boolean;
 }
-
-interface StoreProps {
-  defs: D2ManifestDefinitions;
-}
-
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
-    defs: d2ManifestSelector(state)!,
-  });
-}
-
-type Props = ProvidedProps & StoreProps;
-function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
+export default function SpecialtyModSlotIcon({ item, className, lowRes }: ModSlotIconProps) {
+  const defs = useD2Definitions()!;
   const modMetadatas = getSpecialtySocketMetadatas(item);
 
   if (!modMetadatas) {
@@ -56,8 +42,6 @@ function SpecialtyModSlotIcon({ item, className, lowRes, defs }: Props) {
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(SpecialtyModSlotIcon);
-
 const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
 
 /** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
@@ -74,7 +58,8 @@ export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undef
 export const getArmorSlotSpecificModSocketDisplayName: (item: DimItem) => string = (item) =>
   getArmorSlotSpecificModSocket(item)?.plugged?.plugDef.itemTypeDisplayName || '';
 
-function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, defs }: Props) {
+export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModSlotIconProps) {
+  const defs = useD2Definitions()!;
   const foundSocket = getArmorSlotSpecificModSocket(item);
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   const emptySocketHash = foundSocket && foundSocket.socketDefinition.singleInitialItemHash;
@@ -88,6 +73,3 @@ function disconnectedArmorSlotSpecificModSocketIcon({ item, className, lowRes, d
     </PressTip>
   ) : null;
 }
-export const ArmorSlotSpecificModSocketIcon = connect<StoreProps>(mapStateToProps)(
-  disconnectedArmorSlotSpecificModSocketIcon
-);

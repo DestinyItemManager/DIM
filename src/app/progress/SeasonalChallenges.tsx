@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DimPresentationNode,
   DimRecord,
@@ -38,16 +38,15 @@ export const sortPursuits = chainComparator(
 export default function SeasonalChallenges({
   seasonalChallengesPresentationNode,
   store,
-  defs,
   buckets,
   profileResponse,
 }: {
   seasonalChallengesPresentationNode: DestinyPresentationNodeDefinition;
   store: DimStore;
-  defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
 }) {
+  const defs = useD2Definitions()!;
   const nodeTree = toPresentationNodeTree(
     defs,
     buckets,
@@ -79,7 +78,7 @@ export default function SeasonalChallenges({
         title={seasonalChallengesPresentationNode.displayProperties.name}
         sectionId="seasonal-challenges"
       >
-        <PursuitsGroup pursuits={pursuits} store={store} defs={defs} />
+        <PursuitsGroup pursuits={pursuits} store={store} />
       </CollapsibleTitle>
     </section>
   );
@@ -97,13 +96,11 @@ function flattenRecords(nodeTree: DimPresentationNode): DimRecord[] {
 
 function PursuitsGroup({
   store,
-  defs,
   pursuits,
   hideDescriptions,
   skipTypes,
 }: {
   store: DimStore;
-  defs: D2ManifestDefinitions;
   pursuits: DimItem[];
   hideDescriptions?: boolean;
   skipTypes?: DefType[];
@@ -115,7 +112,6 @@ function PursuitsGroup({
       {$featureFlags.bountyGuide && (
         <BountyGuide
           store={store}
-          defs={defs}
           bounties={pursuits}
           selectedFilters={bountyFilters}
           onSelectedFiltersChanged={setBountyFilters}
@@ -128,7 +124,6 @@ function PursuitsGroup({
           <Pursuit
             item={item}
             key={item.index}
-            defs={defs}
             searchHidden={!matchBountyFilters(item, bountyFilters, seasonalChallengesInfo)}
             hideDescription={hideDescriptions}
           />

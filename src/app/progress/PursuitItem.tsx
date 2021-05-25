@@ -1,7 +1,7 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/filters';
 import { count } from 'app/utils/util';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
@@ -14,9 +14,10 @@ import { showPursuitAsExpired } from './Pursuit';
 import styles from './PursuitItem.m.scss';
 
 function PursuitItem(
-  { item, isNew, defs }: { item: DimItem; isNew: boolean; defs: D2ManifestDefinitions },
+  { item, isNew }: { item: DimItem; isNew: boolean },
   ref: React.Ref<HTMLDivElement>
 ) {
+  const defs = useD2Definitions()!;
   const expired = showPursuitAsExpired(item);
 
   // Either there's a counter progress bar, or multiple checkboxes

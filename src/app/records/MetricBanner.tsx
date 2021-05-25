@@ -1,4 +1,4 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -10,11 +10,11 @@ import styles from './MetricBanner.m.scss';
 interface Props {
   metricHash: number;
   className?: string;
-  defs: D2ManifestDefinitions;
   objectiveProgress: DestinyObjectiveProgress;
 }
 
-export default function MetricBanner({ metricHash, defs, objectiveProgress, className }: Props) {
+export default function MetricBanner({ metricHash, objectiveProgress, className }: Props) {
+  const defs = useD2Definitions()!;
   const metricDef = defs.Metric.get(metricHash);
   if (!metricDef) {
     return null;

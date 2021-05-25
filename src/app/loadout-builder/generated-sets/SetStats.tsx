@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { getPossiblyIncorrectStats } from 'app/utils/item-utils';
@@ -16,7 +16,6 @@ import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
-  defs: D2ManifestDefinitions;
   stats: Readonly<{ [statType in StatTypes]: number }>;
   items: DimItem[];
   maxPower: number;
@@ -28,7 +27,6 @@ interface Props {
 }
 
 function SetStats({
-  defs,
   stats,
   items,
   maxPower,
@@ -38,6 +36,7 @@ function SetStats({
   className,
   existingLoadoutName,
 }: Props) {
+  const defs = useD2Definitions()!;
   const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);

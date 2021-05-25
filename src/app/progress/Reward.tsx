@@ -1,10 +1,10 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import _ from 'lodash';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import styles from './Reward.m.scss';
 
@@ -43,14 +43,13 @@ const engrams = {
 
 export function Reward({
   reward,
-  defs,
   store,
 }: {
   reward: DestinyItemQuantity;
-  defs: D2ManifestDefinitions;
   // If provided, will help make engram bonuses more accurate
   store?: DimStore;
 }) {
+  const defs = useD2Definitions()!;
   const rewardItem = defs.InventoryItem.get(reward.itemHash);
   const rewardDisplay = rewardItem.displayProperties;
 
@@ -61,7 +60,7 @@ export function Reward({
       <BungieImage src={rewardDisplay.icon} alt="" />
       <span>
         {powerBonus !== undefined && `+${powerBonus} `}
-        <RichDestinyText defs={defs} text={rewardDisplay.name} ownerId={store?.id} />
+        <RichDestinyText text={rewardDisplay.name} ownerId={store?.id} />
         {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}
       </span>
     </div>

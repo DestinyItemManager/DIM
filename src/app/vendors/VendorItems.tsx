@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import FactionIcon from '../progress/FactionIcon';
@@ -25,14 +25,12 @@ const itemSort = chainComparator<VendorItem>(
  * Display the items for a single vendor, organized by category.
  */
 export default function VendorItems({
-  defs,
   vendor,
   ownedItemHashes,
   currencyLookups,
   filtering,
   characterId,
 }: {
-  defs: D2ManifestDefinitions;
   vendor: D2Vendor;
   ownedItemHashes?: Set<number>;
   currencyLookups?: {
@@ -41,6 +39,7 @@ export default function VendorItems({
   filtering?: boolean;
   characterId: string;
 }) {
+  const defs = useD2Definitions()!;
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
@@ -133,7 +132,6 @@ export default function VendorItems({
                         item.item && (
                           <VendorItemComponent
                             key={item.key}
-                            defs={defs}
                             item={item}
                             owned={Boolean(ownedItemHashes?.has(item.item.hash))}
                             characterId={characterId}

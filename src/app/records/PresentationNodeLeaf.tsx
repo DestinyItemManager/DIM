@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import React from 'react';
 import Collectible from './Collectible';
 import Metrics from './Metrics';
@@ -11,13 +10,11 @@ import Record from './Record';
 export default function PresentationNodeLeaf({
   node,
   ownedItemHashes,
-  defs,
   completedRecordsHidden,
   redactedRecordsRevealed,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
-  defs: D2ManifestDefinitions;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
@@ -47,7 +44,6 @@ export default function PresentationNodeLeaf({
               <Record
                 key={record.recordDef.hash}
                 record={record}
-                defs={defs}
                 completedRecordsHidden={completedRecordsHidden}
                 redactedRecordsRevealed={redactedRecordsRevealed}
               />
@@ -55,7 +51,7 @@ export default function PresentationNodeLeaf({
           })}
         </div>
       )}
-      {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} defs={defs} />}
+      {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} />}
     </>
   );
 }

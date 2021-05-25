@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -6,6 +5,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout/actions';
 import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -42,7 +42,6 @@ interface ProvidedProps {
   set: ArmorSet;
   loadouts: Loadout[];
   lockedMods: PluggableInventoryItemDefinition[];
-  defs: D2ManifestDefinitions;
   classType: DestinyClass;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
@@ -70,7 +69,6 @@ function CompareDrawer({
   set,
   lockedMods,
   allItems,
-  defs,
   classType,
   statOrder,
   enabledStats,
@@ -78,6 +76,7 @@ function CompareDrawer({
   onClose,
   dispatch,
 }: Props) {
+  const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
   const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
@@ -188,7 +187,6 @@ function CompareDrawer({
             </button>
           </div>
           <SetStats
-            defs={defs}
             items={setItems}
             stats={set.stats}
             maxPower={getPower(setItems)}
@@ -200,7 +198,7 @@ function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={assignedMods[item.id]} defs={defs} />
+                <Sockets item={item} lockedMods={assignedMods[item.id]} />
               </div>
             ))}
           </div>
@@ -226,7 +224,6 @@ function CompareDrawer({
           {loadoutItems.length ? (
             <>
               <SetStats
-                defs={defs}
                 items={loadoutItems}
                 stats={loadoutStats}
                 maxPower={loadoutMaxPower}
@@ -243,7 +240,7 @@ function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets item={item} lockedMods={loadoutAssignedMods[item.id]} defs={defs} />
+                    <Sockets item={item} lockedMods={loadoutAssignedMods[item.id]} />
                   </div>
                 ))}
               </div>
@@ -257,7 +254,6 @@ function CompareDrawer({
                   <Mod
                     key={getModRenderKey(unassigned, modCounts)}
                     plugDef={unassigned}
-                    defs={defs}
                     large={true}
                   />
                 ))}

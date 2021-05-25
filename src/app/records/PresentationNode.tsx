@@ -1,12 +1,13 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { setSetting } from '../settings/actions';
 import { percent } from '../shell/filters';
@@ -18,11 +19,11 @@ import PresentationNodeLeaf from './PresentationNodeLeaf';
 interface StoreProps {
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  defs: D2ManifestDefinitions;
 }
 
 interface ProvidedProps {
   node: DimPresentationNode;
-  defs: D2ManifestDefinitions;
   ownedItemHashes?: Set<number>;
   path: number[];
   parents: number[];
@@ -37,6 +38,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     completedRecordsHidden: settings.completedRecordsHidden,
     redactedRecordsRevealed: settings.redactedRecordsRevealed,
+    defs: d2ManifestSelector(state)!,
   };
 }
 const mapDispatchToProps = {
@@ -176,7 +178,6 @@ function PresentationNode({
           <ConnectedPresentationNode
             key={subNode.nodeDef.hash}
             node={subNode}
-            defs={defs}
             ownedItemHashes={ownedItemHashes}
             path={path}
             parents={thisAndParents}
@@ -187,7 +188,6 @@ function PresentationNode({
       {childrenExpanded && visible > 0 && (
         <PresentationNodeLeaf
           node={node}
-          defs={defs}
           ownedItemHashes={ownedItemHashes}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}

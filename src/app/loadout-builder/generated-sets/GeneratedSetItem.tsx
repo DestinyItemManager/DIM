@@ -1,6 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React, { Dispatch } from 'react';
@@ -18,18 +18,17 @@ import Sockets from './Sockets';
 export default function GeneratedSetItem({
   item,
   locked,
-  defs,
   itemOptions,
   lockedMods,
   lbDispatch,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
-  defs: D2ManifestDefinitions;
   itemOptions: DimItem[];
   lockedMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
+  const defs = useD2Definitions()!;
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
   const removeLockedItem = (item: LockedItemType) =>
     lbDispatch({ type: 'removeItemFromLockedMap', item });
@@ -93,7 +92,7 @@ export default function GeneratedSetItem({
         )}
       </div>
       <div className={styles.lockedSockets}>
-        <Sockets item={item} lockedMods={lockedMods} defs={defs} onSocketClick={onSocketClick} />
+        <Sockets item={item} lockedMods={lockedMods} onSocketClick={onSocketClick} />
       </div>
     </div>
   );

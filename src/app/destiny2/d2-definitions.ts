@@ -1,3 +1,4 @@
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
 import {
@@ -148,12 +149,12 @@ export const allTables = [...eagerTables, ...lazyTables];
  */
 export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
   return async (dispatch, getState) => {
-    let existingManifest = getState().manifest.d2Manifest;
+    let existingManifest = d2ManifestSelector(getState());
     if (existingManifest) {
       return existingManifest;
     }
     const db = await dispatch(getManifest(allTables));
-    existingManifest = getState().manifest.d2Manifest;
+    existingManifest = d2ManifestSelector(getState());
     if (existingManifest) {
       return existingManifest;
     }
