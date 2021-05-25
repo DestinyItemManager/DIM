@@ -16,7 +16,7 @@ import PlugTooltip from 'app/item-popup/PlugTooltip';
 import { setSearchQuery } from 'app/shell/actions';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { inventoryWishListsSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -90,12 +90,12 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: getSpecialtySocketMetadatas,
+    runIf: getInterestingSocketMetadatas,
     render: (item) => (
       <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
     ),
     value: (item) =>
-      getSpecialtySocketMetadatas(item)
+      getInterestingSocketMetadatas(item)
         ?.map((m) => m.slotTag)
         .join() ?? '',
   },

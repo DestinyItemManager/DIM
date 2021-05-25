@@ -88,8 +88,8 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: legacyCompatibleTags,
     socketTypeHashes: legacySocketTypeHashes,
     compatiblePlugCategoryHashes: legacyCompatiblePlugCategoryHashes,
-    emptyModSocketHash: 4153634494, // the arrivals icon. i don't know.
     emptyModSocketHashes: legacyEmptyModSocketHashes,
+    emptyModSocketHash: 4153634494, // the arrivals icon. i don't know.
   },
   {
     slotTag: 'lastwish',
@@ -114,6 +114,14 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidDescent],
     emptyModSocketHashes: [4055462131],
     emptyModSocketHash: 4055462131,
+  },
+  {
+    slotTag: 'vaultofglass',
+    compatibleModTags: ['vaultofglass'],
+    socketTypeHashes: [3372624220],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV520],
+    emptyModSocketHashes: [3738398030],
+    emptyModSocketHash: 3738398030,
   },
   {
     slotTag: 'combatstyle',
