@@ -1,5 +1,7 @@
 ## Next
 
+## 6.66.2 <span class="changelog-date">(2021-05-25)</span>
+
 * Fix for errors on viewing some items when DIM had just loaded.
 
 ## 6.66.1 <span class="changelog-date">(2021-05-24)</span>
