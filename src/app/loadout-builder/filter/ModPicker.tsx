@@ -6,7 +6,7 @@ import { allItemsSelector, profileResponseSelector } from 'app/inventory/selecto
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
-import { escapeRegExp, isLatinBased } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
@@ -194,7 +194,7 @@ function ModPicker({
   };
 
   const queryFilteredMods = useMemo(() => {
-    const regexp = new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(query)}`, 'i');
+    const regexp = startWordRegexp(query, language);
     return query.length
       ? mods.filter(
           (mod) =>

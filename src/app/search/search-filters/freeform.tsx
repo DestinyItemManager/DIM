@@ -9,7 +9,7 @@ import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-export const isLatinBased = memoizeOne((language: string) =>
+const isLatinBased = memoizeOne((language: string) =>
   ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
 );
 
@@ -19,7 +19,7 @@ export function escapeRegExp(s: string) {
 }
 
 /** Make a Regexp that searches starting at a word boundary */
-function startWordRegexp(s: string, language: string) {
+export function startWordRegexp(s: string, language: string) {
   // Only some languages effectively use the \b regex word boundary
   return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
 }

@@ -3,7 +3,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { escapeRegExp, isLatinBased } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
 import { TierType } from 'bungie-api-ts/destiny2';
@@ -83,7 +83,7 @@ function ExoticPicker({
   }, [availableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
-    const regexp = new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(query)}`, 'i');
+    const regexp = startWordRegexp(query, language);
 
     // We filter items by looking at name and description of items, perks and exotic mods.
     const filteredExotics = query.length
