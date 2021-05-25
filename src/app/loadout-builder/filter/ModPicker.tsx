@@ -194,7 +194,6 @@ function ModPicker({
   };
 
   const queryFilteredMods = useMemo(() => {
-    // Only some languages effectively use the \b regex word boundary
     const regexp = new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(query)}`, 'i');
     return query.length
       ? mods.filter(

@@ -83,9 +83,7 @@ function ExoticPicker({
   }, [availableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
-    // Only some languages effectively use the \b regex word boundary
     const regexp = new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(query)}`, 'i');
-
 
     // We filter items by looking at name and description of items, perks and exotic mods.
     const filteredExotics = query.length
