@@ -1,3 +1,5 @@
+import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { createAction } from 'typesafe-actions';
 import { DestinyAccount } from './destiny-account';
 
@@ -15,3 +17,20 @@ export const loggedOut = createAction('accounts/LOG_OUT', (reauth?: boolean) => 
 }))();
 
 export const needsDeveloper = createAction('accounts/DEV_INFO_NEEDED')();
+
+/**
+ * Inspect an error and potentially log out the user or send them to the developer page
+ */
+export function handleAuthErrors(e: Error): ThunkResult {
+  return async (dispatch) => {
+    // This means we don't have an API key or the API key is wrong
+    if ($DIM_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
+      dispatch(needsDeveloper());
+    } else if (
+      e.name === 'FatalTokenError' ||
+      (e instanceof DimError && e.code === 'BungieService.NotLoggedIn')
+    ) {
+      dispatch(loggedOut());
+    }
+  };
+}

@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "6.65.1",
+  "version": "6.66.2",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -99,7 +99,7 @@
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^8.0.0",
     "cross-env": "^7.0.0",
-    "cross-fetch": "^3.0.6",
+    "cross-fetch": "^3.1.4",
     "css-loader": "^5.0.0",
     "css-modules-typescript-loader": "^4.0.0",
     "eslint": "^7.0.0",

@@ -83,7 +83,7 @@
     "ButtonHelp": "Porównaj Przedmioty",
     "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
-      "Unmatched": "This item doesn't match the type of items being compared."
+      "Unmatched": "Ten przedmiot nie pasuje do typu porównywanych przedmiotów."
     }
   },
   "Cooldown": {
@@ -174,7 +174,7 @@
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
     "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
-    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
+    "IsSunset": "Pokazuje przedmioty, które zostały przedawnione i nie mogą być już nasycone do maksymalnej mocy.",
     "ItemHash": "Pokazuje przedmioty z podanym hashem elementu ekwipunku. Dla zaawansowanych użytkowników.",
     "ItemId": "Pokazuje przedmiot z podanym ID elementu ekwipunku. Dla zaawansowanych użytkowników.",
     "Leveling": {
@@ -204,7 +204,7 @@
     "PartialMatch": "Pokazuje elementy, w których ich nazwa, opis, dowolny atut lub dowolne modyfikacje są częściowo dopasowane do tekstu filtra. Wyszukaj całe frazy za pomocą cytatów. Filtr 'perk:' będzie tylko wyszukiwać atuty.",
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
     "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
-    "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
+    "PinnacleReward": "Pokazuje zadania, które dają szczytowe nagrody.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
     "PowerLevel": "Pokazuje przedmioty na podstawie ich poziomu mocy. $t(Filter.PowerKeywords)",
     "PowerLimit": "Pokazuje przedmioty w oparciu o maksymalny poziom mocy, do którego mogą być nasycone. $t(Filter.PowerKeywords)",
@@ -220,8 +220,8 @@
     "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
-    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "Stats": "Pokazuje przedmioty na podstawie określonej wartości statystyki. Wspiera dodawanie wielu statystyk poprzez połączenie wielu nazw symbolem +.",
+    "StatsBase": "Filtruje pancerz w oparciu o jego podstawowe statystyki, bez założonych modyfikacji lub mistrzostwa. Wspiera dodawanie statystyk przez połączenie wielu nazw symbolem +.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "Tags": {
@@ -257,16 +257,16 @@
     "FilterHelp": "Szukaj przedmiotu/atutu, {{example}}, i więcej",
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterHelpMenuItem": "Pomoc z filtrami...",
-    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
-    "FilterHelpProgress": "Search milestones and bounties",
+    "FilterHelpOptimizer": "Filtruj pancerz z uzbrojeń: {{example}}",
+    "FilterHelpProgress": "Szukaj kamieni milowych i zleceń",
     "FilterHelpRecords": "Szukaj triumfy i kolekcje",
     "FilterMatchCount": "1 przedmiot",
     "FilterMatchCount_plural": "{{count}} przedmiotów",
     "Filters": "Filtry",
     "InstallDIM": "Zainstaluj jako aplikację",
-    "InstallDIMBanner": "Install DIM as an app on your home screen",
+    "InstallDIMBanner": "Zainstaluj DIM jako aplikację na ekranie głównym",
     "Inventory": "Ekwipunek",
-    "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
+    "IosPwaPrompt": "W Safari, kliknij ikonę udostępniania (środkowy przycisk u dołu) i wybierz \"Dodaj do Ekranu Domowego\".",
     "KeyboardShortcuts": "Skróty Klawiszowe",
     "Menu": "Menu",
     "Refresh": "Odśwież Dane Destiny [R]",
@@ -347,7 +347,7 @@
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
     "ChooseAMod": "Wybierz swoje modyfikacje",
-    "ChooseAnExotic": "Choose your exotic",
+    "ChooseAnExotic": "Wybierz swój egzotyk",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
@@ -397,8 +397,8 @@
     },
     "Scaled": "Skalowany",
     "SearchAMod": "Szukaj modyfikacji lub opisu",
-    "SearchAnExotic": "Search an exotic or description",
-    "SelectExotic": "Select exotic",
+    "SearchAnExotic": "Szukaj egzotyku lub opisu",
+    "SelectExotic": "Wybierz egzotyk",
     "SelectMods": "Wybierz modyfikacje",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
@@ -413,7 +413,7 @@
     "Vendors": "Wczytywanie sprzedawców Destiny..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
+    "AddHalfTierMods": "Dodaj modyfikacje +5",
     "AssumeMasterwork": "Przyjmij Mistrzowskie Statystyki",
     "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
@@ -455,21 +455,21 @@
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
     "TierNumber": "T{{tier}}",
-    "UnableToAddAllMods": "Unable to add all mods.",
-    "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
+    "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
+    "UnableToAddAllModsBody": "Nie ma wystarczającej ilości miejsc na modyfikacje, aby założyć {{mods}}.",
     "UnlockItem": "Odepnij Przedmiot"
   },
   "Loadouts": {
     "Abandon": "Czy na pewno chcesz porzucić te uzbrojenie?",
     "AddEquippedItems": "Dodaj Założone",
-    "AddUnequippedItems": "Add Unequipped",
+    "AddUnequippedItems": "Dodaj niezałożone",
     "AlreadyExistsClass": "Uzbrojenie z tą nazwą już istnieje dla twojego {{className}}.",
     "AlreadyExistsGlobal": "Globalne uzbrojenie o tej nazwie już istnieje.",
     "Any": "Dowolna klasa",
     "AppliedError": "Nie można było przenieść żadnego przedmiotu z twojego uzbrojenia.",
     "AppliedWarn": "Twoje uzbrojenie zostało częściowo przeniesione, ale {{failed}} z {{total}} przedmiotów miało błędy.",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
-    "ArmorMods": "Armor Mods",
+    "ArmorMods": "Modyfikacje pancerza",
     "AssumeMaxWeapons": "Zakładając, że bronie mają maksymalny poziom mocy",
     "Before": "Przed '{{name}}'",
     "ChooseItem": "Dodaj {{name}}",
@@ -478,7 +478,7 @@
     "ConfirmDelete": "Czy na pewno chcesz usunąć '{{name}}'?",
     "CouldNotEquip": "Nie można założyć {{itemname}}",
     "Create": "Utwórz Uzbrojenie",
-    "Delete": "Delete",
+    "Delete": "Usuń",
     "Edit": "Edytuj Uzbrojenie",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
     "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów/potężnych/szczytowych nagród.",
@@ -559,7 +559,7 @@
     "Weekly": "Cotygodniowe wyzwanie"
   },
   "MoveAmount": {
-    "Amount": "Amount:"
+    "Amount": "Ilość:"
   },
   "MovePopup": {
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
@@ -660,7 +660,7 @@
     "NoMobile": "Obróć telefon na bok, aby użyć organizatora.",
     "Note": "Ustaw notatkę",
     "NotePrompt": "Notka:",
-    "OpenIn": "Show in Organizer",
+    "OpenIn": "Pokaż w organizatorze",
     "Organizer": "Organizator",
     "SelectAll": "Zaznacz wszystko",
     "SelectItem": "Wybierz lub odznacz {{name}}",
@@ -675,8 +675,8 @@
     "Unlock": "Odblokuj"
   },
   "PostmasterWarningBanner": {
-    "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
+    "PostmasterAlmostFull": "Kurier jest prawie pełny! ({{number}}/{{postmasterSize}})",
+    "PostmasterFull": "Kurier jest pełny! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
     "Bounties": "Zlecenia",
@@ -707,7 +707,7 @@
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
-    "DeleteAll": "Delete all unstarred searches",
+    "DeleteAll": "Usuń wszystkie nieoznaczone gwiazdką",
     "Description": "To są Twoje przeszłe i zapisane wyszukiwania. Możesz je stąd usunąć.",
     "Link": "Zobacz i edytuj historię wyszukiwania",
     "Query": "Szukaj",
@@ -748,13 +748,13 @@
     "SingleCharacter": "Pokaż tylko aktualną postać",
     "SingleCharacterExplanation": "DIM ukryje wszystkie oprócz ostatnio używanej postaci. Ekwipunki tych postaci będą traktowane jak by były w schowku.",
     "SizeItem": "Rozmiar elementu",
-    "SortByAmmoType": "Ammo Type",
+    "SortByAmmoType": "Rodzaj amunicji",
     "SortByAmount": "Rozmiar stosu",
     "SortByClassType": "Wymagana klasa",
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
     "SortByRating": "Jakość pancerza (D1)",
-    "SortByRecent": "Recently Acquired (D2)",
+    "SortByRecent": "Ostatnio nabyte (D2)",
     "SortBySeason": "Sezon (D2)",
     "SortBySunset": "Został przedawniony (D2)",
     "SortByTag": "Tag ({{taglist}})",
@@ -777,8 +777,8 @@
     "DodgeCooldown": "Odnowienie uniku",
     "Intellect": "Intelekt",
     "LightGrenadeCooldown": "Odnowienie Granatu Jasności",
-    "LightMeleeCooldown": "Light Melee Cooldown",
-    "LightSuperCooldown": "Light Super Cooldown",
+    "LightMeleeCooldown": "Odnowienie jasnego ataku wręcz",
+    "LightSuperCooldown": "Odnowienie jasnej super umiejętności",
     "MaxGearPower": "Maksymalna Moc dostępnego wyposażenia",
     "MaxGearPowerAll": "Maksymalna moc całego wyposażenia",
     "MaxTotalPower": "Maksymalna całkowita Moc",
@@ -792,7 +792,7 @@
     "Quality": "Jakość statystyk",
     "RiftCooldown": "Odnowienie wyrwy",
     "Strength": "Siła",
-    "Sunset": "Sunset",
+    "Sunset": "Przedawniony",
     "Tier": "Poziom {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",

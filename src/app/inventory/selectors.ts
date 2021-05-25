@@ -82,13 +82,13 @@ export const dynamicStringsSelector = (state: RootState) => {
       // are these keys really strings? no. are they numbers? yes. but are all keys strings in js? yes
       // and are they being extracted from strings and not worth converting to numbers just to convert back to strings? yes
       [valueHash: string]: number;
-    } = profileStringVariables.data?.integerValuesByHash ?? {};
+    } = profileStringVariables?.data?.integerValuesByHash ?? {};
     const byCharacter: {
       [charId: string]: {
         [valueHash: string]: number;
       };
     } = {};
-    for (const charId in characterStringVariables.data) {
+    for (const charId in characterStringVariables?.data) {
       byCharacter[charId] = characterStringVariables.data?.[charId].integerValuesByHash ?? {};
     }
     return {

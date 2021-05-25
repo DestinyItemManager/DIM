@@ -1,7 +1,5 @@
-import { needsDeveloper } from 'app/accounts/actions';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import store from 'app/store/store';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
@@ -9,7 +7,7 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { fetchWithBungieOAuth, goToLoginPage } from './authenticated-fetch';
+import { fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {
   BungieError,
@@ -130,7 +128,6 @@ export function handleErrors(error: Error) {
 
     // Token expired and other auth maladies
     if (error.status === 401 || error.status === 403) {
-      goToLoginPage();
       throw new DimError('BungieService.NotLoggedIn').withError(error);
     }
 
@@ -158,7 +155,6 @@ export function handleErrors(error: Error) {
 
       case PlatformErrorCodes.AuthorizationCodeInvalid:
       case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
-        goToLoginPage();
         throw new DimError(
           'BungieService.AppNotPermitted',
           'DIM does not have permission to perform this action.'
@@ -180,7 +176,6 @@ export function handleErrors(error: Error) {
       case PlatformErrorCodes.AccessTokenHasExpired:
       case PlatformErrorCodes.WebAuthRequired:
       case PlatformErrorCodes.WebAuthModuleAsyncFailed: // means the access token has expired
-        goToLoginPage();
         throw new DimError('BungieService.NotLoggedIn').withError(error);
 
       case PlatformErrorCodes.DestinyAccountNotFound:
@@ -197,7 +192,6 @@ export function handleErrors(error: Error) {
       case PlatformErrorCodes.ApiKeyMissingFromRequest:
       case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
         if ($DIM_FLAVOR === 'dev') {
-          store.dispatch(needsDeveloper());
           throw new DimError('BungieService.DevVersion').withError(error);
         } else {
           throw new DimError('BungieService.Difficulties').withError(error);
