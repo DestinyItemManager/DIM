@@ -92,7 +92,7 @@ function Compare(
     dispatch(endCompareSession());
   }, [dispatch]);
 
-  const show = Boolean(session);
+  const show = Boolean(session) && compareItems.length > 0;
   const destinyVersion = show ? compareItems[0].destinyVersion : 2;
   useEffect(() => {
     if (show) {

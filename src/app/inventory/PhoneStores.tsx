@@ -25,8 +25,8 @@ interface Props {
  * This is the phone (portrait) view only.
  */
 export default function PhoneStores({ stores, buckets, singleCharacter }: Props) {
-  const vault = getVault(stores)!;
-  const currentStore = getCurrentStore(stores)!;
+  const vault = getVault(stores);
+  const currentStore = getCurrentStore(stores);
 
   const [{ selectedStoreId, direction }, setSelectedStoreId] = useState({
     selectedStoreId: currentStore?.id,
@@ -35,7 +35,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
-  if (!stores.length || !buckets) {
+  if (!stores.length || !buckets || !vault || !currentStore) {
     return null;
   }
 

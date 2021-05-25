@@ -179,6 +179,9 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
+        if (id < 1 || !Number.isSafeInteger(id)) {
+          throw new Error(`Invalid Hash: ${id}`);
+        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
           const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
