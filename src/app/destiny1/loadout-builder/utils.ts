@@ -315,15 +315,17 @@ function getBuckets(items: D1Item[]): ItemBucket {
 
 function normalizeStats(item: D1ItemWithNormalStats) {
   item.normalStats = {};
-  for (const stat of item.stats!) {
-    item.normalStats[stat.statHash] = {
-      statHash: stat.statHash,
-      base: stat.base,
-      scaled: stat.scaled ? stat.scaled.min : 0,
-      bonus: stat.bonus,
-      split: stat.split || 0,
-      qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0,
-    };
+  if (item.stats) {
+    for (const stat of item.stats) {
+      item.normalStats[stat.statHash] = {
+        statHash: stat.statHash,
+        base: stat.base,
+        scaled: stat.scaled ? stat.scaled.min : 0,
+        bonus: stat.bonus,
+        split: stat.split || 0,
+        qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0,
+      };
+    }
   }
   return item;
 }
