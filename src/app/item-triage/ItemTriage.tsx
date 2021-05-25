@@ -5,9 +5,10 @@ import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/Cu
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import PressTip from 'app/dim-ui/PressTip';
-import SpecialtyModSlotIcon, {
+import {
   ArmorSlotSpecificModSocketIcon,
   getArmorSlotSpecificModSocketDisplayName,
+  SpecialtyModSlotIcon,
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
@@ -92,7 +93,7 @@ const itemFactors: Record<string, Factor> = {
     id: 'specialtySocket',
     runIf: getInterestingSocketMetadatas,
     render: (item) => (
-      <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes={true} />
+      <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes onlyInteresting />
     ),
     value: (item) =>
       getInterestingSocketMetadatas(item)
@@ -103,7 +104,7 @@ const itemFactors: Record<string, Factor> = {
     id: 'armorSlot',
     runIf: getArmorSlotSpecificModSocketDisplayName,
     render: (item) => (
-      <ArmorSlotSpecificModSocketIcon className={styles.inlineIcon} item={item} lowRes={true} />
+      <ArmorSlotSpecificModSocketIcon className={styles.inlineIcon} item={item} lowRes />
     ),
     value: getArmorSlotSpecificModSocketDisplayName,
   },
@@ -199,14 +200,15 @@ export function ItemTriage({ item }: { item: DimItem }) {
               {comboDisplay}
               <div className={styles.comboCount}>
                 {itemFactors?.[i]?.count}{' '}
-                <span
+                <a
                   onClick={() => {
                     dispatch(setSearchQuery('asdf'));
                   }}
                   title="filter"
+                  className={styles.searchBarIcon}
                 >
-                  <AppIcon icon={searchIcon} className="search-bar-icon" />
-                </span>
+                  <AppIcon icon={searchIcon} />
+                </a>
               </div>
               {/* <div className={styles.keepMeter}>
                 {itemFactors && <KeepJunkDial value={itemFactors[i]?.quality} />}

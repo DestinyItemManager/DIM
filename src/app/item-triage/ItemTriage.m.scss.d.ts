@@ -12,6 +12,7 @@ interface CssExports {
   'inlineIcon': string;
   'itemTriagePane': string;
   'keepMeter': string;
+  'searchBarIcon': string;
   'smaller': string;
   'statIconWrapper': string;
   'statValue': string;
