@@ -9,7 +9,7 @@ import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = memoizeOne((language: string) =>
+export const isLatinBased = memoizeOne((language: string) =>
   ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
 );
 
