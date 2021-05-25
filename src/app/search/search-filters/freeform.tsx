@@ -14,7 +14,7 @@ const isLatinBased = memoizeOne((language: string) =>
 );
 
 /** escape special characters for a regex */
-export function escapeRegExp(s: string) {
+function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
