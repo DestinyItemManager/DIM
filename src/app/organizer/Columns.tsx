@@ -1,7 +1,6 @@
 import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -83,7 +82,6 @@ export function getColumns(
     [statHash: number]: StatInfo;
   },
   classType: DestinyClass,
-  defs: D2ManifestDefinitions,
   itemInfos: ItemInfos,
   wishList: {
     [key: string]: InventoryWishListRoll;
@@ -369,13 +367,10 @@ export function getColumns(
         cell: (_val, item) => (
           <div>
             {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
-              <PressTip
-                key={p.plugDef.hash}
-                tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-              >
+              <PressTip key={p.plugDef.hash} tooltip={<PlugTooltip item={item} plug={p} />}>
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
-                    <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />
                   </div>{' '}
                   {p.plugDef.displayProperties.name}
                 </div>
@@ -404,7 +399,7 @@ export function getColumns(
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_val, item) =>
-        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell defs={defs} item={item} />,
+        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell item={item} />,
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -414,7 +409,7 @@ export function getColumns(
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
-        cell: (_val, item) => <PerksCell defs={defs} item={item} traitsOnly={true} />,
+        cell: (_val, item) => <PerksCell item={item} traitsOnly={true} />,
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -470,11 +465,7 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
-              <KillTrackerInfo
-                tracker={killTrackerInfo}
-                defs={defs}
-                className={styles.killTrackerDisplay}
-              />
+              <KillTrackerInfo tracker={killTrackerInfo} className={styles.killTrackerDisplay} />
             )
           );
         },
@@ -525,15 +516,7 @@ export function getColumns(
   return columns;
 }
 
-function PerksCell({
-  defs,
-  item,
-  traitsOnly,
-}: {
-  defs: D2ManifestDefinitions;
-  item: DimItem;
-  traitsOnly?: boolean;
-}) {
+function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }) {
   if (!item.sockets) {
     return null;
   }
@@ -574,10 +557,7 @@ function PerksCell({
           })}
         >
           {socket.plugOptions.map((p) => (
-            <PressTip
-              key={p.plugDef.hash}
-              tooltip={<PlugTooltip item={item} plug={p} defs={defs} />}
-            >
+            <PressTip key={p.plugDef.hash} tooltip={<PlugTooltip item={item} plug={p} />}>
               <div
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:
@@ -586,7 +566,7 @@ function PerksCell({
                 data-perk-name={p.plugDef.displayProperties.name}
               >
                 <div className={styles.miniPerkContainer}>
-                  <DefItemIcon itemDef={p.plugDef} defs={defs} borderless={true} />
+                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
                 </div>{' '}
                 {p.plugDef.displayProperties.name}
               </div>

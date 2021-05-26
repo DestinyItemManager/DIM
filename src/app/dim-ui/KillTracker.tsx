@@ -1,4 +1,4 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { KillTracker } from 'app/utils/item-utils';
 import React from 'react';
 import BungieImage from './BungieImage';
@@ -14,14 +14,13 @@ import BungieImage from './BungieImage';
 export function KillTrackerInfo({
   tracker,
   showTextLabel,
-  defs,
   className,
 }: {
   tracker: KillTracker;
   showTextLabel?: boolean;
-  defs: D2ManifestDefinitions;
   className?: string;
 }) {
+  const defs = useD2Definitions()!;
   const killTrackerObjective =
     (tracker.trackerDef.objectives &&
       defs.Objective.get(tracker.trackerDef.objectives.objectiveHashes[0])) ||

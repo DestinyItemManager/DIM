@@ -1,3 +1,4 @@
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
 import {
@@ -40,6 +41,7 @@ import {
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
 } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
 import { HashLookupFailure, ManifestDefinitions } from './definitions';
@@ -148,12 +150,12 @@ export const allTables = [...eagerTables, ...lazyTables];
  */
 export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
   return async (dispatch, getState) => {
-    let existingManifest = getState().manifest.d2Manifest;
+    let existingManifest = d2ManifestSelector(getState());
     if (existingManifest) {
       return existingManifest;
     }
     const db = await dispatch(getManifest(allTables));
-    existingManifest = getState().manifest.d2Manifest;
+    existingManifest = d2ManifestSelector(getState());
     if (existingManifest) {
       return existingManifest;
     }
@@ -179,11 +181,12 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
-        if (id < 1 || !Number.isSafeInteger(id)) {
-          throw new Error(`Invalid Hash: ${id}`);
-        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
+          // Allow for valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries without needing a look-up table
+          if (id < 1 || !Number.isSafeInteger(id)) {
+            throw new Error(`Invalid Hash: ${id}`);
+          }
           const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
           reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
             requestingEntryInfo,
@@ -211,7 +214,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
 function enhanceDBWithFakeEntries(db: AllDestinyManifestComponents) {
   // We made up an item category for special grenade launchers. For now they can just be a copy
   // of the regular "Grenade Launcher" category but we could patch in localized descriptions if we wanted.
-  db.DestinyItemCategoryDefinition[-153950757] = {
-    ...db.DestinyItemCategoryDefinition[153950757],
+  db.DestinyItemCategoryDefinition[-ItemCategoryHashes.GrenadeLaunchers] = {
+    ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.GrenadeLaunchers],
   };
 }

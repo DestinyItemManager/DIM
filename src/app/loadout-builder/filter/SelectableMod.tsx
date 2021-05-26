@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStatHashes } from 'app/search/search-filter-values';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -12,19 +12,18 @@ import styles from './SelectableMod.m.scss';
 
 function SelectableMod({
   mod,
-  defs,
   selected,
   selectable,
   onModSelected,
   onModRemoved,
 }: {
   mod: PluggableInventoryItemDefinition;
-  defs: D2ManifestDefinitions;
   selected: boolean;
   selectable: boolean;
   onModSelected(mod: PluggableInventoryItemDefinition): void;
   onModRemoved(mod: PluggableInventoryItemDefinition): void;
 }) {
+  const defs = useD2Definitions()!;
   const handleClick = () => {
     selectable && onModSelected(mod);
   };
@@ -40,7 +39,7 @@ function SelectableMod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod className={styles.iconContainer} itemDef={mod} defs={defs} />
+        <SocketDetailsMod className={styles.iconContainer} itemDef={mod} />
         <div className={styles.perkInfo}>
           <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
           {_.uniqBy(
@@ -50,7 +49,6 @@ function SelectableMod({
             <div key={perk.perkHash}>
               <RichDestinyText
                 text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
-                defs={defs}
               />
               {perk.requirementDisplayString && (
                 <div className={styles.requirement}>{perk.requirementDisplayString}</div>
@@ -61,7 +59,7 @@ function SelectableMod({
             .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>
-                <StatValue value={stat.value} defs={defs} statHash={stat.statTypeHash} />
+                <StatValue value={stat.value} statHash={stat.statTypeHash} />
               </div>
             ))}
         </div>

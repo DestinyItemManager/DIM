@@ -6,7 +6,7 @@ import { allItemsSelector, profileResponseSelector } from 'app/inventory/selecto
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
-import { escapeRegExp } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
@@ -194,10 +194,7 @@ function ModPicker({
   };
 
   const queryFilteredMods = useMemo(() => {
-    // Only some languages effectively use the \b regex word boundary
-    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
-      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
-      : new RegExp(escapeRegExp(query), 'i');
+    const regexp = startWordRegexp(query, language);
     return query.length
       ? mods.filter(
           (mod) =>
@@ -229,7 +226,6 @@ function ModPicker({
   const footer = lockedModsInternal.length
     ? ({ onClose }: { onClose(): void }) => (
         <ModPickerFooter
-          defs={defs}
           lockedModsInternal={lockedModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
@@ -271,7 +267,6 @@ function ModPicker({
         <ModPickerSection
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
-          defs={defs}
           lockedModsInternal={lockedModsInternal}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}

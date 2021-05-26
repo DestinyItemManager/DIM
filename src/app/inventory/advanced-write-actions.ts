@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import {
   AwaAuthorizationResult,
@@ -48,7 +49,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     dispatch(
       awaItemChanged({
         changes: response.Response,
-        defs: getState().manifest.d2Manifest!,
+        defs: d2ManifestSelector(getState())!,
         buckets: bucketsSelector(getState())!,
       })
     );

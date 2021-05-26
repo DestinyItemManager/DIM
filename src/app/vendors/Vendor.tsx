@@ -1,4 +1,5 @@
 import { XurLocation } from '@d2api/d2api-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
@@ -25,14 +26,12 @@ export function VendorIcon({ src }: { src: string }) {
  */
 export default function Vendor({
   vendor,
-  defs,
   ownedItemHashes,
   currencyLookups,
   filtering,
   characterId,
 }: {
   vendor: D2Vendor;
-  defs: D2ManifestDefinitions;
   ownedItemHashes?: Set<number>;
   currencyLookups: {
     [itemHash: number]: number;
@@ -40,6 +39,7 @@ export default function Vendor({
   filtering: boolean;
   characterId: string;
 }) {
+  const defs = useD2Definitions()!;
   const xurLocation = useSelector((state: RootState) =>
     vendor.def.hash === VENDORS.XUR ? state.vendors.xurLocation : undefined
   );
@@ -79,7 +79,6 @@ export default function Vendor({
         sectionId={`d2vendor-${vendor.def.hash}`}
       >
         <VendorItems
-          defs={defs}
           vendor={vendor}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}

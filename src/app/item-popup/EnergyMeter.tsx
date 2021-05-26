@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -15,7 +16,6 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './EnergyMeter.m.scss';
 
 export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
@@ -30,13 +30,8 @@ const swappableEnergyTypes = [
   DestinyEnergyType.Void,
 ];
 
-export default function EnergyMeter({
-  defs,
-  item,
-}: {
-  defs: D2ManifestDefinitions;
-  item: DimItem;
-}) {
+export default function EnergyMeter({ item }: { item: DimItem }) {
+  const defs = useD2Definitions()!;
   const energyCapacity = item.energy?.energyCapacity || 0;
   const energyType = item.energy?.energyType || DestinyEnergyType.Any;
   const [hoverEnergyCapacity, setHoverEnergyCapacity] = useState(0);
@@ -181,7 +176,6 @@ export default function EnergyMeter({
               transition={{ duration: 0.3 }}
             >
               <EnergyUpgradePreview
-                defs={defs}
                 item={item}
                 previewCapacity={previewCapacity || energyCapacity}
                 previewEnergyType={previewEnergyType}
@@ -203,16 +197,15 @@ export default function EnergyMeter({
 }
 
 function EnergyUpgradePreview({
-  defs,
   item,
   previewCapacity,
   previewEnergyType,
 }: {
-  defs: D2ManifestDefinitions;
   item: DimItem;
   previewCapacity: number;
   previewEnergyType: DestinyEnergyType;
 }) {
+  const defs = useD2Definitions()!;
   if (!item.energy || !swappableEnergyTypes.includes(item.energy.energyType)) {
     return null;
   }
@@ -242,7 +235,7 @@ function EnergyUpgradePreview({
         <ElementIcon element={previewElement} /> {previewCapacity}
       </span>
       {_.sortBy(costs, (c) => c.quantity).map((cost) => (
-        <Cost key={cost.itemHash} cost={cost} defs={defs} className={styles.cost} />
+        <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
       ))}
     </>
   );

@@ -1,5 +1,4 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -66,7 +65,6 @@ interface Props {
   combosWithoutCaps: number;
   lockedMap: LockedMap;
   statOrder: StatTypes[];
-  defs: D2ManifestDefinitions;
   enabledStats: Set<StatTypes>;
   lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
@@ -82,7 +80,6 @@ export default function GeneratedSets({
   lockedMap,
   selectedStore,
   sets,
-  defs,
   statOrder,
   combos,
   combosWithoutCaps,
@@ -196,7 +193,6 @@ export default function GeneratedSets({
           selectedStore={selectedStore}
           lockedMap={lockedMap}
           lbDispatch={lbDispatch}
-          defs={defs}
           statOrder={statOrder}
           enabledStats={enabledStats}
           lockedMods={lockedMods}
@@ -224,7 +220,6 @@ export default function GeneratedSets({
                   selectedStore={selectedStore}
                   lockedMap={lockedMap}
                   lbDispatch={lbDispatch}
-                  defs={defs}
                   statOrder={statOrder}
                   enabledStats={enabledStats}
                   lockedMods={lockedMods}

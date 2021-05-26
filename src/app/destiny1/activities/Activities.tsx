@@ -248,11 +248,7 @@ function Activities({ account, defs, stores }: Props) {
                             />
                           ))}
                         {character.objectives.map((objective) => (
-                          <Objective
-                            defs={defs}
-                            objective={objective}
-                            key={objective.objectiveHash}
-                          />
+                          <Objective objective={objective} key={objective.objectiveHash} />
                         ))}
                         {character.objectives.length > 0 && <div className="objectives-spacer" />}
                       </div>

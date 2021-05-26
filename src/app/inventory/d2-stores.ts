@@ -6,6 +6,7 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
@@ -64,11 +65,7 @@ export function updateCharacters(): ThunkResult {
       return;
     }
 
-    const defs =
-      account.destinyVersion === 2
-        ? getState().manifest.d2Manifest
-        : getState().manifest.d1Manifest;
-
+    const defs = manifestSelector(getState());
     if (!defs) {
       return;
     }
@@ -83,7 +80,7 @@ export function updateCharacters(): ThunkResult {
             powerLevel: character.light,
             background: bungieNetPath(character.emblemBackgroundPath),
             icon: bungieNetPath(character.emblemPath),
-            stats: getCharacterStatsData(getState().manifest.d2Manifest!, character.stats),
+            stats: getCharacterStatsData(d2ManifestSelector(getState())!, character.stats),
             color: character.emblemColor,
           }))
         : [];
