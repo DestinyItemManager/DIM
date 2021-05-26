@@ -813,11 +813,11 @@ AddEncoding br .br
 # https://tools.ietf.org/html/rfc7232#section-2.3
 
 # `FileETag None` doesn't work in all cases.
-<IfModule mod_headers.c>
-    Header unset ETag
-</IfModule>
+#<IfModule mod_headers.c>
+#    Header unset ETag
+#</IfModule>
 
-FileETag None
+#FileETag None
 
 # ----------------------------------------------------------------------
 # | Expires headers                                                    |
@@ -970,10 +970,9 @@ FileETag None
 # Do not cache the service worker!
 
 <FilesMatch "service-worker\.js(\.(gz|br))?">
-    FileETag None
     <IfModule mod_headers.c>
-        Header unset ETag
-        Header set Cache-Control "max-age=0, s-maxage=86400, no-cache, no-store, must-revalidate"
+        # no-cache = revalidate with the server before using
+        Header set Cache-Control "max-age=0, s-maxage=86400, no-cache"
         Header set Pragma "no-cache"
         Header unset Expires
     </IfModule>
@@ -982,9 +981,7 @@ FileETag None
 # Do not cache html
 
 <FilesMatch "\.html(\.(gz|br))?">
-    FileETag None
     <IfModule mod_headers.c>
-        Header unset ETag
         Header set Cache-Control "max-age=0, s-maxage=<%= $DIM_FLAVOR === 'beta' ? 0 : 300 %>"
         Header unset Expires
     </IfModule>
@@ -993,9 +990,7 @@ FileETag None
 # Cache version.json for only 15 minutes
 
 <FilesMatch "version\.json(\.(gz|br))?">
-    FileETag None
     <IfModule mod_headers.c>
-        Header unset ETag
         Header set Cache-Control "max-age=900, s-maxage=86400"
         Header unset Expires
     </IfModule>
@@ -1004,9 +999,7 @@ FileETag None
 # Cache namifest
 
 <FilesMatch "manifest-webapp">
-    FileETag None
     <IfModule mod_headers.c>
-        Header unset ETag
         Header set Cache-Control "max-age=900, s-maxage=86400"
         Header set Vary "User-Agent"
         Header unset Expires
