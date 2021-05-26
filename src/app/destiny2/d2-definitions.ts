@@ -88,8 +88,6 @@ const eagerTables = [
   'ActivityMode',
 ];
 
-const validNegativeHashes = [-ItemCategoryHashes.GrenadeLaunchers];
-
 /** These aren't really lazy */
 export interface DefinitionTable<T> {
   /**
@@ -182,11 +180,12 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         if (!dbTable) {
           throw new Error(`Table ${table} does not exist in the manifest`);
         }
-        if ((id < 1 && !validNegativeHashes.includes(id)) || !Number.isSafeInteger(id)) {
-          throw new Error(`Invalid Hash: ${id}`);
-        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
+          // Allow for valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries without needing a look-up table
+          if (id < 1 || !Number.isSafeInteger(id)) {
+            throw new Error(`Invalid Hash: ${id}`);
+          }
           const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
           reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
             requestingEntryInfo,
