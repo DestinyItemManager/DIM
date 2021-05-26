@@ -83,10 +83,6 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
     setTimeout(reposition, 10);
   });
 
-  if (!itemOwner) {
-    return null;
-  }
-
   const canConsolidate =
     !item.notransfer &&
     item.location.hasTransferDestination &&
