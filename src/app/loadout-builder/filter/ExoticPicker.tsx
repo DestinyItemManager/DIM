@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { escapeRegExp } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
 import { TierType } from 'bungie-api-ts/destiny2';
@@ -77,10 +77,7 @@ function ExoticPicker({ availableExotics, isPhonePortrait, language, lbDispatch,
   }, [availableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
-    // Only some languages effectively use the \b regex word boundary
-    const regexp = ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
-      ? new RegExp(`\\b${escapeRegExp(query)}`, 'i')
-      : new RegExp(escapeRegExp(query), 'i');
+    const regexp = startWordRegexp(query, language);
 
     // We filter items by looking at name and description of items, perks and exotic mods.
     const filteredExotics = query.length
