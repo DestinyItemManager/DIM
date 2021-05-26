@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -21,13 +20,11 @@ const MAX_SLOT_SPECIFIC_MODS = 2;
 const MAX_SLOT_INDEPENDENT_MODS = 5;
 
 export default function PickerSectionMods({
-  defs,
   mods,
   lockedModsInternal,
   onModSelected,
   onModRemoved,
 }: {
-  defs: D2ManifestDefinitions;
   /** A array of mods where plug.plugCategoryHash's are equal. */
   mods: readonly PluggableInventoryItemDefinition[];
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
@@ -98,7 +95,6 @@ export default function PickerSectionMods({
         {mods.map((item) => (
           <SelectableMod
             key={item.hash}
-            defs={defs}
             selected={Boolean(
               associatedLockedMods.some((lockedItem) => lockedItem.hash === item.hash)
             )}

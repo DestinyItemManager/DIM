@@ -101,7 +101,6 @@ function ItemSocketsGeneral({
           {exoticArmorPerkSocket?.plugged && (
             <ArchetypeSocket
               archetypeSocket={exoticArmorPerkSocket}
-              defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}
             >
@@ -130,7 +129,6 @@ function ItemSocketsGeneral({
                 socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket
                     key={socketInfo.socketIndex}
-                    defs={defs}
                     item={item}
                     isPhonePortrait={isPhonePortrait}
                     socket={socketInfo}

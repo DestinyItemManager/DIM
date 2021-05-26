@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
+import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
@@ -76,15 +77,14 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
  */
 export function DefItemIcon({
   itemDef,
-  defs,
   className,
   borderless,
 }: {
   itemDef: DestinyInventoryItemDefinition;
-  defs?: D2ManifestDefinitions;
   className?: string;
   borderless?: boolean;
 }) {
+  const defs = useD2Definitions();
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||

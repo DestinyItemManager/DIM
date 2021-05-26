@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
@@ -17,11 +16,9 @@ import styles from './VendorItem.m.scss';
 
 export default function VendorItemComponent({
   item,
-  defs,
   owned,
   characterId,
 }: {
-  defs: D2ManifestDefinitions;
   item: VendorItem;
   owned: boolean;
   characterId?: string;
@@ -66,7 +63,7 @@ export default function VendorItemComponent({
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
           {item.costs.map((cost) => (
-            <Cost key={cost.itemHash} defs={defs} cost={cost} className={styles.cost} />
+            <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
           ))}
         </div>
       )}

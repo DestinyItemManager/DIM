@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
@@ -10,6 +9,7 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
@@ -34,7 +34,6 @@ const costStatHashes = [
 export default function SocketDetailsSelectedPlug({
   plug,
   socket,
-  defs,
   item,
   currentPlug,
   equippable,
@@ -42,14 +41,13 @@ export default function SocketDetailsSelectedPlug({
 }: {
   plug: PluggableInventoryItemDefinition;
   socket: DimSocket;
-  defs: D2ManifestDefinitions;
   item: DimItem;
   currentPlug: DimPlug | null;
   equippable: boolean;
   closeMenu(): void;
 }) {
   const dispatch = useThunkDispatch();
-
+  const defs = useD2Definitions()!;
   const selectedPlugPerk =
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
@@ -134,7 +132,7 @@ export default function SocketDetailsSelectedPlug({
   return (
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
-        <SocketDetailsMod itemDef={plug} defs={defs} />
+        <SocketDetailsMod itemDef={plug} />
         {!$featureFlags.awa && costs}
       </div>
       <div className={styles.modDescription}>
@@ -154,7 +152,7 @@ export default function SocketDetailsSelectedPlug({
       <div className={styles.modStats}>
         {stats.map((stat) => (
           <div className="plug-stats" key={stat.dimStat.statHash}>
-            <StatValue value={stat.modValue} defs={defs} statHash={stat.dimStat.statHash} />
+            <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
           </div>
         ))}
       </div>

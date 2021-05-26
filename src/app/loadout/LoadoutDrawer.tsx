@@ -1,7 +1,6 @@
-import { destinyVersionSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout-builder/filter/ModPicker';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { manifestSelector } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -363,8 +362,7 @@ function mapStateToProps() {
     stores: storesSelector(state),
     allItems: allItemsSelector(state),
     buckets: bucketsSelector(state)!,
-    defs:
-      destinyVersionSelector(state) === 2 ? d2ManifestSelector(state)! : state.manifest.d1Manifest!,
+    defs: manifestSelector(state)!,
     loadouts: loadoutsSelector(state),
   });
 }
@@ -561,7 +559,6 @@ function LoadoutDrawer({
         deleteLoadout={onDeleteLoadout}
       />
       <GeneratedLoadoutStats
-        defs={defs}
         stores={stores}
         buckets={buckets}
         items={items}
@@ -598,7 +595,6 @@ function LoadoutDrawer({
                 loadout={loadout}
                 savedMods={savedMods}
                 items={items}
-                defs={defs}
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}

@@ -226,7 +226,6 @@ function ModPicker({
   const footer = lockedModsInternal.length
     ? ({ onClose }: { onClose(): void }) => (
         <ModPickerFooter
-          defs={defs}
           lockedModsInternal={lockedModsInternal}
           isPhonePortrait={isPhonePortrait}
           onSubmit={(e) => onSubmit(e, onClose)}
@@ -268,7 +267,6 @@ function ModPicker({
         <ModPickerSection
           key={mods[0].plug.plugCategoryHash}
           mods={mods}
-          defs={defs}
           lockedModsInternal={lockedModsInternal}
           onModSelected={onModSelected}
           onModRemoved={onModRemoved}

@@ -26,7 +26,7 @@ export default React.memo(function AccountCurrency() {
       {[other, synth].map(
         (currencyGroup, ci) =>
           currencyGroup.length > 0 && (
-            <>
+            <React.Fragment key={currencyGroup.map((c) => c.itemHash).join()}>
               {currencyGroup.map((currency) => (
                 <React.Fragment key={currency.itemHash}>
                   <BungieImage
@@ -45,7 +45,7 @@ export default React.memo(function AccountCurrency() {
                   <div />
                 </React.Fragment>
               ))}
-            </>
+            </React.Fragment>
           )
       )}
     </>

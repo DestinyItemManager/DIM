@@ -67,7 +67,6 @@ function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
           !isKillTrackerSocket(socketInfo) && (
             <PerkSocket
               key={socketInfo.socketIndex}
-              defs={defs}
               item={item}
               socket={socketInfo}
               wishlistRoll={wishlistRoll}
@@ -83,14 +82,12 @@ function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
 export default connect<StoreProps>(mapStateToProps)(ItemPerksList);
 
 function PerkSocket({
-  defs,
   item,
   socket,
   wishlistRoll,
   selectedPerk,
   onPerkSelected,
 }: {
-  defs: D2ManifestDefinitions;
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
@@ -105,7 +102,6 @@ function PerkSocket({
           plug={plug}
           item={item}
           socketInfo={socket}
-          defs={defs}
           wishlistRoll={wishlistRoll}
           selectedSocket={selectedPerk?.socket === socket}
           selectedPerk={selectedPerk?.perk === plug}
@@ -117,7 +113,6 @@ function PerkSocket({
 }
 
 function PerkPlug({
-  defs,
   item,
   plug,
   socketInfo,
@@ -126,7 +121,6 @@ function PerkPlug({
   selectedPerk,
   onPerkSelected,
 }: {
-  defs: D2ManifestDefinitions;
   item: DimItem;
   plug: DimPlug;
   socketInfo: DimSocket;
@@ -155,7 +149,7 @@ function PerkPlug({
       onClick={perkSelected}
     >
       <div className={styles.perkIcon}>
-        <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
+        <DefItemIcon itemDef={plug.plugDef} borderless={true} />
         {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
           <AppIcon
             className="thumbs-up"
@@ -166,7 +160,7 @@ function PerkPlug({
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>
-          <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} defs={defs} />
+          <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
         </div>
       ) : (
         selected && (

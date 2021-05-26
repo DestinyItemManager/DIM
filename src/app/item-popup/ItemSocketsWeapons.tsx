@@ -111,7 +111,6 @@ function ItemSocketsWeapons({
   const renderSocket = (socketInfo: DimSocket) => (
     <Socket
       key={socketInfo.socketIndex}
-      defs={defs}
       item={item}
       isPhonePortrait={isPhonePortrait}
       socket={socketInfo}
@@ -128,7 +127,6 @@ function ItemSocketsWeapons({
           {archetypeSocket?.plugged && (
             <ArchetypeSocket
               archetypeSocket={archetypeSocket}
-              defs={defs}
               item={item}
               isPhonePortrait={isPhonePortrait}
             >
@@ -170,7 +168,6 @@ function ItemSocketsWeapons({
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
                       key={socketInfo.socketIndex}
-                      defs={defs}
                       item={item}
                       isPhonePortrait={isPhonePortrait}
                       socket={socketInfo}

@@ -1,8 +1,8 @@
+import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { percent } from '../shell/filters';
@@ -18,7 +18,6 @@ const plugSetOrder = chainComparator<VendorItem>(
 );
 
 interface Props {
-  defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   plugSetCollection: {
     hash: number;
@@ -33,13 +32,13 @@ interface Props {
  * A single plug set.
  */
 export default function PlugSet({
-  defs,
   buckets,
   plugSetCollection,
   items,
   path,
   onNodePathSelected,
 }: Props) {
+  const defs = useD2Definitions()!;
   const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);
 
@@ -89,7 +88,7 @@ export default function PlugSet({
       {childrenExpanded && (
         <div className="collectibles plugset">
           {vendorItems.map((item) => (
-            <VendorItemComponent key={item.key} defs={defs} item={item} owned={false} />
+            <VendorItemComponent key={item.key} item={item} owned={false} />
           ))}
         </div>
       )}

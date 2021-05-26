@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { compareBy } from 'app/utils/comparators';
@@ -16,7 +16,6 @@ import styles from './ExoticPicker.m.scss';
 import ExoticTile from './ExoticTile';
 
 interface Props {
-  defs: D2ManifestDefinitions;
   /** A list of item hashes for unlocked exotics. */
   availableExotics?: DimItem[];
   isPhonePortrait: boolean;
@@ -26,14 +25,8 @@ interface Props {
 }
 
 /** A drawer to select an exotic for your build. */
-function ExoticPicker({
-  defs,
-  availableExotics,
-  isPhonePortrait,
-  language,
-  lbDispatch,
-  onClose,
-}: Props) {
+function ExoticPicker({ availableExotics, isPhonePortrait, language, lbDispatch, onClose }: Props) {
+  const defs = useD2Definitions()!;
   const [query, setQuery] = useState('');
 
   const lockableExotics = useMemo(() => {
@@ -53,21 +46,22 @@ function ExoticPicker({
               socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
           )?.plugged?.plugDef;
 
-          const exoticModSetHash =
-            item.sockets?.allSockets.find(
-              (socket) =>
-                socket.plugged?.plugDef.plug.plugCategoryHash ===
-                PlugCategoryHashes.EnhancementsExoticAeonCult
-            )?.socketDefinition.reusablePlugSetHash;
+          const exoticModSetHash = item.sockets?.allSockets.find(
+            (socket) =>
+              socket.plugged?.plugDef.plug.plugCategoryHash ===
+              PlugCategoryHashes.EnhancementsExoticAeonCult
+          )?.socketDefinition.reusablePlugSetHash;
 
-          const exoticMods = exoticModSetHash ? _.compact(
-            defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
-              const modDef = defs.InventoryItem.get(item.plugItemHash);
-              if (isPluggableItem(modDef)) {
-                return modDef;
-              }
-            })
-          ) : [];
+          const exoticMods = exoticModSetHash
+            ? _.compact(
+                defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
+                  const modDef = defs.InventoryItem.get(item.plugItemHash);
+                  if (isPluggableItem(modDef)) {
+                    return modDef;
+                  }
+                })
+              )
+            : [];
 
           rtn.push({
             def,
@@ -155,7 +149,6 @@ function ExoticPicker({
                 {exotics.map((exotic) => (
                   <ExoticTile
                     key={exotic.def.hash}
-                    defs={defs}
                     exotic={exotic}
                     lbDispatch={lbDispatch}
                     onClose={onClose}

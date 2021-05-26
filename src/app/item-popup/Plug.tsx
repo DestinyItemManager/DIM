@@ -2,13 +2,13 @@ import { t } from 'app/i18next-t';
 import { mobileDragType } from 'app/inventory/DraggableInventoryItem';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -16,7 +16,6 @@ import './ItemSockets.scss';
 import PlugTooltip from './PlugTooltip';
 
 export default function Plug({
-  defs,
   plug,
   item,
   socketInfo,
@@ -26,7 +25,6 @@ export default function Plug({
   onClick,
   adjustedPlug,
 }: {
-  defs: D2ManifestDefinitions;
   plug: DimPlug;
   item: DimItem;
   socketInfo: DimSocket;
@@ -36,6 +34,7 @@ export default function Plug({
   onClick?(plug: DimPlug): void;
   adjustedPlug?: DimPlug;
 }) {
+  const defs = useD2Definitions()!;
   // Support dragging over plugs items on mobile
   const [{ hovering }, drop] = useDrop({
     accept: mobileDragType,
@@ -55,13 +54,11 @@ export default function Plug({
 
   const contents = (
     <div ref={drop}>
-      <DefItemIcon itemDef={plug.plugDef} defs={defs} borderless={true} />
+      <DefItemIcon itemDef={plug.plugDef} borderless={true} />
     </div>
   );
 
-  const tooltip = () => (
-    <PlugTooltip item={item} plug={plug} defs={defs} wishlistRoll={wishlistRoll} />
-  );
+  const tooltip = () => <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
 
   return (
     <div

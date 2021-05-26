@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
 import React from 'react';
@@ -6,7 +5,6 @@ import { AddButton } from './Buttons';
 import styles from './SavedModCategory.m.scss';
 
 interface Props {
-  defs: D2ManifestDefinitions;
   /** A list of mods that all have the same plugCategoryHash. */
   mods: PluggableInventoryItemDefinition[];
   /** Removes a mod from the loadout via the mods item hash. */
@@ -20,7 +18,7 @@ interface Props {
  *
  * It allows the mods to be added to and removed from the loadout.
  */
-function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
+function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
   const firstMod = mods.length && mods[0];
 
   if (!firstMod) {
@@ -47,7 +45,6 @@ function SavedModCategory({ defs, mods, onRemove, onOpenModPicker }: Props) {
         {mods.map((mod) => (
           <LockedModIcon
             key={`${mod.hash}-${modCounts[mod.hash]--}`}
-            defs={defs}
             mod={mod}
             onModClicked={() => onRemove(mod.hash)}
           />

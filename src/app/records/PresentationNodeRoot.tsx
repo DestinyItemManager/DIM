@@ -1,7 +1,7 @@
+import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import { itemsForPlugSet } from './plugset-helpers';
@@ -15,7 +15,6 @@ interface Props {
   ownedItemHashes?: Set<number>;
   profileResponse: DestinyProfileResponse;
   buckets?: InventoryBuckets;
-  defs: D2ManifestDefinitions;
   searchQuery?: string;
   isTriumphs?: boolean;
   overrideName?: string;
@@ -32,7 +31,6 @@ interface Props {
 export default function PresentationNodeRoot({
   presentationNodeHash,
   openedPresentationHash,
-  defs,
   buckets,
   profileResponse,
   ownedItemHashes,
@@ -43,6 +41,7 @@ export default function PresentationNodeRoot({
   overrideName,
   completedRecordsHidden,
 }: Props) {
+  const defs = useD2Definitions()!;
   const [nodePath, setNodePath] = useState<number[]>([]);
 
   let fullNodePath = nodePath;
@@ -74,7 +73,6 @@ export default function PresentationNodeRoot({
     return (
       <PresentationNodeSearchResults
         searchResults={searchResults}
-        defs={defs}
         ownedItemHashes={ownedItemHashes}
         profileResponse={profileResponse}
       />
@@ -92,7 +90,6 @@ export default function PresentationNodeRoot({
     <div className="presentation-node-root">
       <PresentationNode
         node={nodeTree}
-        defs={defs}
         ownedItemHashes={ownedItemHashes}
         path={fullNodePath}
         onNodePathSelected={setNodePath}
@@ -107,7 +104,6 @@ export default function PresentationNodeRoot({
         plugSetCollections.map((plugSetCollection) => (
           <div key={plugSetCollection.hash} className="presentation-node">
             <PlugSet
-              defs={defs}
               buckets={buckets}
               plugSetCollection={plugSetCollection}
               items={itemsForPlugSet(profileResponse, Number(plugSetCollection.hash))}

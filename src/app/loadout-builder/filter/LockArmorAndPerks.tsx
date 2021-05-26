@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -7,7 +6,6 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -47,7 +45,6 @@ interface StoreProps {
   buckets: InventoryBuckets;
   stores: DimStore[];
   language: string;
-  defs: D2ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -58,7 +55,6 @@ function mapStateToProps() {
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     language: settingsSelector(state).language,
-    defs: d2ManifestSelector(state)!,
   });
 }
 
@@ -67,7 +63,6 @@ function mapStateToProps() {
  */
 function LockArmorAndPerks({
   selectedStore,
-  defs,
   lockedMap,
   lockedMods,
   buckets,
@@ -201,7 +196,6 @@ function LockArmorAndPerks({
               <LockedModIcon
                 key={getModRenderKey(mod, modCounts)}
                 mod={mod}
-                defs={defs}
                 onModClicked={() => onModClicked(mod)}
               />
             ))}
@@ -275,7 +269,6 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
-            defs={defs}
             availableExotics={availableExotics}
             isPhonePortrait={isPhonePortrait}
             language={language}

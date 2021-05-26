@@ -1,6 +1,7 @@
 import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyCharacterProgressionComponent,
   DestinyClass,
@@ -13,26 +14,24 @@ import clsx from 'clsx';
 import brightEngrams from 'data/d2/bright-engrams.json';
 import _ from 'lodash';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
 
 export default function SeasonalRank({
   store,
-  defs,
   characterProgressions,
   season,
   seasonPass,
   profileInfo,
 }: {
   store: DimStore;
-  defs: D2ManifestDefinitions;
   characterProgressions: DestinyCharacterProgressionComponent;
   season?: DestinySeasonDefinition;
   seasonPass?: DestinySeasonPassDefinition;
   profileInfo: DestinyProfileResponse;
 }) {
+  const defs = useD2Definitions()!;
   if (!season) {
     return null;
   }

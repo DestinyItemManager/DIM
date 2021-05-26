@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ export default memo(function CompareSuggestions({
   categoryItems: DimItem[];
   onQueryChanged(query: string): void;
 }) {
-  const defs = useSelector(d2ManifestSelector);
+  const defs = useD2Definitions();
   const filterFactory = useSelector(filterFactorySelector);
 
   // Find all possible buttons

@@ -1,3 +1,4 @@
+import { useD2Definitions } from 'app/manifest/selectors';
 import {
   ARMSMASTER_ACTIVITY_MODIFIER,
   ENCOUNTERS_COMPLETED_OBJECTIVE,
@@ -7,7 +8,6 @@ import {
   DestinyMilestoneChallengeActivity,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
 import CompletionCheckbox from './CompletionCheckbox';
@@ -44,16 +44,15 @@ export function RaidDisplay(props: Props) {
  * which offers loot 1x per week, whose completion is tracked by the game & API
  */
 export function RaidActivity({
-  defs,
   activity,
   displayName,
   hideName,
 }: {
-  defs: D2ManifestDefinitions;
   activity: DestinyMilestoneChallengeActivity;
   displayName: string;
   hideName?: boolean;
 }) {
+  const defs = useD2Definitions()!;
   // a manifest-localized string describing raid segments with loot. "Encounters completed"
   const encountersString = defs.Objective.get(ENCOUNTERS_COMPLETED_OBJECTIVE).progressDescription;
 
@@ -70,10 +69,10 @@ export function RaidActivity({
         {activity.modifierHashes?.map(
           (modifierHash) =>
             modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} defs={defs} />
+              <ActivityModifier key={modifierHash} modifierHash={modifierHash} />
             )
         )}
-        <LoadoutRequirementModifier defs={defs} activity={activity} />
+        <LoadoutRequirementModifier activity={activity} />
       </div>
       <div className="quest-objectives">
         <div className="objective-row objective-boolean">

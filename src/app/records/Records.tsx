@@ -193,7 +193,6 @@ function Records({
               <TrackedTriumphs
                 trackedTriumphs={trackedTriumphs}
                 trackedRecordHash={trackedRecordHash}
-                defs={defs}
                 profileResponse={profileResponse}
                 searchQuery={searchQuery}
               />
@@ -211,7 +210,6 @@ function Records({
                 <ErrorBoundary name={nodeDef.displayProperties.name}>
                   <PresentationNodeRoot
                     presentationNodeHash={nodeDef.hash}
-                    defs={defs}
                     profileResponse={profileResponse}
                     buckets={buckets}
                     ownedItemHashes={ownedItemHashes}
