@@ -2,6 +2,7 @@ import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
@@ -23,7 +24,6 @@ import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ishtarIcon from '../../images/ishtar-collective.svg';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
@@ -32,7 +32,6 @@ import styles from './Record.m.scss';
 
 interface Props {
   record: DimRecord;
-  defs: D2ManifestDefinitions;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   hideRecordIcon?: boolean;
@@ -50,11 +49,11 @@ const overrideIcons = Object.keys(catalystIcons).map(Number);
 
 export default function Record({
   record,
-  defs,
   completedRecordsHidden,
   redactedRecordsRevealed,
   hideRecordIcon,
 }: Props) {
+  const defs = useD2Definitions()!;
   const { recordDef, trackedInGame, recordComponent } = record;
   const state = recordComponent.state;
   const recordHash = recordDef.hash;
@@ -191,7 +190,7 @@ export default function Record({
         {showObjectives && (
           <div className={styles.objectives}>
             {objectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+              <Objective key={objective.objectiveHash} objective={objective} />
             ))}
           </div>
         )}
@@ -206,7 +205,7 @@ export default function Record({
         {rewards &&
           !acquired &&
           !obscured &&
-          rewards.map((reward) => <Reward key={reward.itemHash} reward={reward} defs={defs} />)}
+          rewards.map((reward) => <Reward key={reward.itemHash} reward={reward} />)}
         {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
         {(!acquired || trackedInDim) && (
           <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>

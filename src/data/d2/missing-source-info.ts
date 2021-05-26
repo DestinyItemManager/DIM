@@ -2964,6 +2964,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   umbral: [],
   vexoffensive: [],
+  vog: [],
   wartable: [],
   wrathborn: [],
   zavala: [

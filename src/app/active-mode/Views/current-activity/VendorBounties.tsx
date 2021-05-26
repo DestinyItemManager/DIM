@@ -3,12 +3,12 @@ import {
   purchasableBountiesSelector,
 } from 'app/active-mode/Views/activity-util';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ownedItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { PursuitsGroup } from 'app/progress/Pursuits';
 import { RootState } from 'app/store/types';
 import { VendorItem } from 'app/vendors/vendor-item';
@@ -17,7 +17,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 interface ProvidedProps {
-  defs: D2ManifestDefinitions;
   store: DimStore;
   activityInfo: DestinyCharacterActivitiesComponent;
 }
@@ -40,7 +39,8 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
 }
 
 /** Find relevant vendor bounties based on your current activity */
-function VendorBounties({ defs, bounties, store, activityInfo, ownedItemHashes }: Props) {
+function VendorBounties({ bounties, store, activityInfo, ownedItemHashes }: Props) {
+  const defs = useD2Definitions()!;
   const suggestedBounties = getBountiesForActivity(defs, bounties, activityInfo);
 
   const ownedBountyHashes: number[] = [];
@@ -67,7 +67,6 @@ function VendorBounties({ defs, bounties, store, activityInfo, ownedItemHashes }
     <>
       <div className={styles.bountyGuide}>
         <PursuitsGroup
-          defs={defs}
           store={store}
           pursuits={ownedIncompletePursuits}
           skipTypes={['ActivityMode', 'Destination']}

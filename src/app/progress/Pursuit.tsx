@@ -1,10 +1,10 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
@@ -17,7 +17,6 @@ import PursuitItem from './PursuitItem';
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
-  defs: D2ManifestDefinitions;
   hideDescription?: boolean;
   searchHidden?: boolean;
 }
@@ -49,7 +48,8 @@ type Props = ProvidedProps & StoreProps;
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
-function Pursuit({ item, hideDescription, isNew, searchHidden, defs }: Props) {
+function Pursuit({ item, hideDescription, isNew, searchHidden }: Props) {
+  const defs = useD2Definitions()!;
   const expired = showPursuitAsExpired(item);
 
   const objectives = item.objectives || [];
@@ -73,7 +73,7 @@ function Pursuit({ item, hideDescription, isNew, searchHidden, defs }: Props) {
           onClick={onClick}
         >
           <div className="milestone-icon">
-            <PursuitItem item={item} isNew={isNew} ref={ref} defs={defs} />
+            <PursuitItem item={item} isNew={isNew} ref={ref} />
             {!item.complete && !expired && showObjectiveProgress && firstObjective && (
               <span>
                 {item.objectives && showObjectiveDetail ? (
@@ -95,7 +95,7 @@ function Pursuit({ item, hideDescription, isNew, searchHidden, defs }: Props) {
                 {item.name}
               </span>
               <div className="milestone-description">
-                <RichDestinyText text={item.description} defs={defs} ownerId={item.owner} />
+                <RichDestinyText text={item.description} ownerId={item.owner} />
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyMilestone } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './milestone.scss';
 import { RaidActivity, RaidDisplay } from './RaidDisplay';
 
@@ -8,7 +8,8 @@ import { RaidActivity, RaidDisplay } from './RaidDisplay';
  * Raids offer powerful rewards. Unlike Milestones, some raids have multiple tiers,
  * so this function enumerates the Activities within the Milstones
  */
-export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestDefinitions }) {
+export function Raid({ raid }: { raid: DestinyMilestone }) {
+  const defs = useD2Definitions()!;
   // convert character's DestinyMilestone to manifest's DestinyMilestoneDefinition
   const raidDef = defs.Milestone.get(raid.milestoneHash);
 
@@ -23,12 +24,7 @@ export function Raid({ raid, defs }: { raid: DestinyMilestone; defs: D2ManifestD
         <span className="milestone-name">{raidDef.displayProperties.name}</span>
       )}
       {activities.map((activity) => (
-        <RaidActivity
-          activity={activity}
-          displayName={displayName}
-          defs={defs}
-          key={activity.activityHash}
-        />
+        <RaidActivity activity={activity} displayName={displayName} key={activity.activityHash} />
       ))}
     </RaidDisplay>
   );

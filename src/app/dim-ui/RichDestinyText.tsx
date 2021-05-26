@@ -1,4 +1,5 @@
 import { dynamicStringsSelector } from 'app/inventory/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import rT from 'data/d2/objective-richTexts';
 import cabalGold from 'destiny-icons/beyond_light/cabal-gold.svg';
 import dmgStasis from 'destiny-icons/beyond_light/stasis.svg';
@@ -47,7 +48,6 @@ import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import styles from './RichDestinyText.m.scss';
 
@@ -173,13 +173,12 @@ const dynamicTextFinder = /\{var:\d+\}/g;
  */
 export default function RichDestinyText({
   text,
-  defs,
   ownerId = '', // normalize for cleaner indexing later
 }: {
   text?: string;
-  defs?: D1ManifestDefinitions | D2ManifestDefinitions;
   ownerId?: string;
 }): React.ReactElement {
+  const defs = useD2Definitions();
   const dynamicStrings = useSelector(dynamicStringsSelector);
 
   // perform dynamic string replacement
@@ -191,7 +190,7 @@ export default function RichDestinyText({
   });
 
   // don't bother with further processing without d2 defs available
-  if (!defs?.isDestiny2()) {
+  if (!defs) {
     return <>{text}</>;
   }
   // if they are, do a 1-time table enrichment

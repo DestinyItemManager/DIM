@@ -1,6 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -19,11 +19,11 @@ const undesireablePlugs = [
 interface Props {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
-  defs: D2ManifestDefinitions;
   onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
 }
 
-function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
+function Sockets({ item, lockedMods, onSocketClick }: Props) {
+  const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
   }
@@ -69,7 +69,6 @@ function Sockets({ item, lockedMods, defs, onSocketClick }: Props) {
           key={index}
           gridColumn={(index % 2) + 1}
           plugDef={plugDef}
-          defs={defs}
           onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
         />
       ))}

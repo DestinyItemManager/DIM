@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
@@ -9,7 +8,6 @@ import Plug from './Plug';
  * A socket may have multiple plugs - this can represent either a perk column or a mod socket.
  */
 export default function Socket({
-  defs,
   item,
   socket,
   wishlistRoll,
@@ -17,7 +15,6 @@ export default function Socket({
   onClick,
   adjustedPlug,
 }: {
-  defs: D2ManifestDefinitions;
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
@@ -41,7 +38,6 @@ export default function Socket({
           plug={plug}
           item={item}
           socketInfo={socket}
-          defs={defs}
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           isPhonePortrait={isPhonePortrait}

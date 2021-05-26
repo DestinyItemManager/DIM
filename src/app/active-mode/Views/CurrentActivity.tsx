@@ -3,36 +3,22 @@ import { useActivityInfo } from 'app/active-mode/Views/activity-util';
 import ActivityInformation from 'app/active-mode/Views/current-activity/ActivityInformation';
 import VendorBounties from 'app/active-mode/Views/current-activity/VendorBounties';
 import styles from 'app/active-mode/Views/CurrentActivity.m.scss';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React from 'react';
-import { connect } from 'react-redux';
 
-interface ProvidedProps {
+export default function CurrentActivity({
+  account,
+  store,
+}: {
   account: DestinyAccount;
   store: DimStore;
-}
-
-interface StoreProps {
-  defs?: D2ManifestDefinitions;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    defs: d2ManifestSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function CurrentActivity({ account, store, defs }: Props) {
+}) {
   const activityInfo = useActivityInfo({ account, store });
-
+  const defs = useD2Definitions();
   if (!defs) {
     return null;
   }
@@ -71,12 +57,10 @@ function CurrentActivity({ account, store, defs }: Props) {
       {activityInfo && (
         <>
           {activityName?.length > 0 && <div className={styles.title}>{activityName}</div>}
-          <ActivityInformation defs={defs} store={store} activityInfo={activityInfo} />
-          <VendorBounties store={store} activityInfo={activityInfo} defs={defs} />
+          <ActivityInformation store={store} activityInfo={activityInfo} />
+          <VendorBounties store={store} activityInfo={activityInfo} />
         </>
       )}
     </CollapsibleTitle>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(CurrentActivity);

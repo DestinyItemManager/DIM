@@ -1,5 +1,3 @@
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -69,7 +67,6 @@ export default function LoadoutDrawerContents(
     loadout,
     savedMods,
     buckets,
-    defs,
     items,
     stores,
     itemSortOrder,
@@ -82,7 +79,6 @@ export default function LoadoutDrawerContents(
     loadout: Loadout;
     savedMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
-    defs: D1ManifestDefinitions | D2ManifestDefinitions;
     stores: DimStore[];
     items: DimItem[];
     itemSortOrder: string[];
@@ -156,7 +152,6 @@ export default function LoadoutDrawerContents(
       </div>
       {$featureFlags.loadoutMods && (
         <SavedMods
-          defs={defs}
           savedMods={savedMods}
           onOpenModPicker={onOpenModPicker}
           removeModByHash={removeModByHash}

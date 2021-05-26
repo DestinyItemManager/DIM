@@ -38,11 +38,11 @@ export default function DesktopStores({
   singleCharacter,
   activeMode,
 }: Props) {
-  const vault = getVault(stores)!;
-  const currentStore = getCurrentStore(stores)!;
+  const vault = getVault(stores);
+  const currentStore = getCurrentStore(stores);
   const dispatch = useDispatch();
 
-  if (!stores.length || !buckets) {
+  if (!stores.length || !buckets || !vault || !currentStore) {
     return null;
   }
 

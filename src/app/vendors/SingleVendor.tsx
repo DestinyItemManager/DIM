@@ -181,7 +181,6 @@ function SingleVendor({
           )}
         </div>
         <VendorItems
-          defs={defs}
           vendor={d2Vendor}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={vendorResponse?.currencyLookups.data?.itemQuantities ?? {}}

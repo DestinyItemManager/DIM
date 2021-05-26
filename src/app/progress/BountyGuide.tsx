@@ -1,10 +1,10 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
@@ -51,7 +51,6 @@ export type BountyFilter = {
 export default function BountyGuide({
   store,
   bounties,
-  defs,
   selectedFilters,
   onSelectedFiltersChanged,
   skipTypes,
@@ -59,12 +58,12 @@ export default function BountyGuide({
 }: {
   store: DimStore;
   bounties: DimItem[];
-  defs: D2ManifestDefinitions;
   selectedFilters: BountyFilter[];
   onSelectedFiltersChanged(filters: BountyFilter[]): void;
   skipTypes?: DefType[]; // Filter to show only specific bounty types
   pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
+  const defs = useD2Definitions()!;
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
 
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {

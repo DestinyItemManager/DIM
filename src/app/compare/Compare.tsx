@@ -92,7 +92,7 @@ function Compare(
     dispatch(endCompareSession());
   }, [dispatch]);
 
-  const show = Boolean(session);
+  const show = Boolean(session) && compareItems.length > 0;
   const destinyVersion = show ? compareItems[0].destinyVersion : 2;
   useEffect(() => {
     if (show) {
@@ -117,11 +117,10 @@ function Compare(
   // TODO: make a function that takes items and perk overrides and produces new items!
 
   // Memoize computing the list of stats
-  const allStats = useMemo(() => getAllStats(compareItems, compareBaseStats, adjustedStats), [
-    compareItems,
-    compareBaseStats,
-    adjustedStats,
-  ]);
+  const allStats = useMemo(
+    () => getAllStats(compareItems, compareBaseStats, adjustedStats),
+    [compareItems, compareBaseStats, adjustedStats]
+  );
 
   const comparingArmor = compareItems[0]?.bucket.inArmor;
   const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);

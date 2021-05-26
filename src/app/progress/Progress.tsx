@@ -181,24 +181,19 @@ function Progress({
               <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
                 <div className="progress-row">
                   <ErrorBoundary name="CrucibleRanks">
-                    <Ranks profileInfo={profileInfo} defs={defs} />
+                    <Ranks profileInfo={profileInfo} />
                   </ErrorBoundary>
                 </div>
               </CollapsibleTitle>
             </section>
 
-            <SolsticeOfHeroes defs={defs} armor={solsticeArmor} title={solsticeTitle} />
+            <SolsticeOfHeroes armor={solsticeArmor} title={solsticeTitle} />
 
             <section id="milestones">
               <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
                 <div className="progress-row">
                   <ErrorBoundary name="Milestones">
-                    <Milestones
-                      defs={defs}
-                      buckets={buckets}
-                      profileInfo={profileInfo}
-                      store={selectedStore}
-                    />
+                    <Milestones buckets={buckets} profileInfo={profileInfo} store={selectedStore} />
                   </ErrorBoundary>
                 </div>
               </CollapsibleTitle>
@@ -209,7 +204,6 @@ function Progress({
                 <SeasonalChallenges
                   seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
                   store={selectedStore}
-                  defs={defs}
                   buckets={buckets}
                   profileResponse={profileInfo}
                 />
@@ -217,7 +211,7 @@ function Progress({
             )}
 
             <ErrorBoundary name="Pursuits">
-              <Pursuits store={selectedStore} defs={defs} />
+              <Pursuits store={selectedStore} />
             </ErrorBoundary>
 
             {raidNode && (
@@ -225,7 +219,7 @@ function Progress({
                 <CollapsibleTitle title={raidTitle} sectionId="raids">
                   <div className="progress-row">
                     <ErrorBoundary name="Raids">
-                      <Raids store={selectedStore} defs={defs} profileInfo={profileInfo} />
+                      <Raids store={selectedStore} profileInfo={profileInfo} />
                     </ErrorBoundary>
                   </div>
                 </CollapsibleTitle>
@@ -239,7 +233,6 @@ function Progress({
                     <TrackedTriumphs
                       trackedTriumphs={trackedTriumphs}
                       trackedRecordHash={trackedRecordHash}
-                      defs={defs}
                       profileResponse={profileInfo}
                       searchQuery={searchQuery}
                     />

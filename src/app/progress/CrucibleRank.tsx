@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import './CrucibleRank.scss';
@@ -11,15 +11,13 @@ import './faction.scss';
 interface CrucibleRankProps {
   progress: DestinyProgression;
   streak: DestinyProgression;
-  defs: D2ManifestDefinitions;
 }
 
 /**
  * displays a single Crucible or Gambit rank for the account
  */
-export function CrucibleRank(props: CrucibleRankProps) {
-  const { defs, progress, streak } = props;
-
+export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
+  const defs = useD2Definitions()!;
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
@@ -37,7 +35,7 @@ export function CrucibleRank(props: CrucibleRankProps) {
       title={progressionDef.displayProperties.description}
     >
       <div>
-        <CrucibleRankIcon progress={progress} defs={defs} />
+        <CrucibleRankIcon progress={progress} />
       </div>
       <div className="faction-info">
         <div className="faction-level">{progressionDef.displayProperties.name}</div>
@@ -66,8 +64,8 @@ export function CrucibleRank(props: CrucibleRankProps) {
   );
 }
 
-function CrucibleRankIcon(props: { progress: DestinyProgression; defs: D2ManifestDefinitions }) {
-  const { progress, defs } = props;
+function CrucibleRankIcon({ progress }: { progress: DestinyProgression }) {
+  const defs = useD2Definitions()!;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
 

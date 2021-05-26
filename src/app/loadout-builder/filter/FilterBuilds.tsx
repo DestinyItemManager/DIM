@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
@@ -15,14 +14,12 @@ import TierSelect from './TierSelect';
 export default function FilterBuilds({
   statRanges,
   stats,
-  defs,
   order,
   assumeMasterwork,
   onStatFiltersChanged,
 }: {
   statRanges?: { [statType in StatTypes]: MinMax };
   stats: { [statType in StatTypes]: MinMaxIgnored };
-  defs: D2ManifestDefinitions;
   order: StatTypes[];
   assumeMasterwork: boolean;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
@@ -48,7 +45,6 @@ export default function FilterBuilds({
           rowClassName={styles.row}
           stats={stats}
           statRanges={workingStatRanges}
-          defs={defs}
           order={order}
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}

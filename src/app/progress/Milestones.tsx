@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -17,14 +18,14 @@ import WellRestedPerkIcon from './WellRestedPerkIcon';
 export default function Milestones({
   profileInfo,
   store,
-  defs,
+
   buckets,
 }: {
   store: DimStore;
   profileInfo: DestinyProfileResponse;
-  defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
 }) {
+  const defs = useD2Definitions()!;
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = profileInfo?.characterProgressions?.data?.[store.id];
   const season = profileInfo.profile?.data?.currentSeasonHash
@@ -44,7 +45,6 @@ export default function Milestones({
       {characterProgressions && (
         <SeasonalRank
           store={store}
-          defs={defs}
           characterProgressions={characterProgressions}
           season={season}
           seasonPass={seasonPass}
@@ -53,14 +53,13 @@ export default function Milestones({
       )}
       {characterProgressions && (
         <WellRestedPerkIcon
-          defs={defs}
           progressions={characterProgressions}
           season={season}
           seasonPass={seasonPass}
         />
       )}
       {milestoneItems.sort(sortPursuits).map((item) => (
-        <Pursuit key={item.hash} item={item} defs={defs} />
+        <Pursuit key={item.hash} item={item} />
       ))}
     </div>
   );

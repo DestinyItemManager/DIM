@@ -13,11 +13,9 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { emptySet } from 'app/utils/empty';
 import {
   DestinyEnergyType,
-  DestinyInventoryItemDefinition,
   DestinyItemPlug,
   DestinyItemPlugBase,
   SocketPlugSources,
-  TierType,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
@@ -30,7 +28,6 @@ import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 interface ProvidedProps {
   item: DimItem;
   socket: DimSocket;
-  initialSelectedPlug?: DestinyInventoryItemDefinition;
   onClose(): void;
 }
 
@@ -113,12 +110,10 @@ export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
 export const SocketDetailsMod = React.memo(
   ({
     itemDef,
-    defs,
     className,
     onClick,
   }: {
     itemDef: PluggableInventoryItemDefinition;
-    defs: D2ManifestDefinitions;
     className?: string;
     onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
@@ -133,23 +128,14 @@ export const SocketDetailsMod = React.memo(
         onFocus={onClickFn}
         tabIndex={0}
       >
-        <DefItemIcon itemDef={itemDef} defs={defs} />
+        <DefItemIcon itemDef={itemDef} />
       </div>
     );
   }
 );
 
-function SocketDetails({
-  defs,
-  item,
-  socket,
-  initialSelectedPlug,
-  unlockedPlugs,
-  inventoryPlugs,
-  onClose,
-}: Props) {
-  const initialPlug =
-    (isPluggableItem(initialSelectedPlug) && initialSelectedPlug) || socket.plugged?.plugDef;
+function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
+  const initialPlug = socket.plugged?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
     initialPlug || null
   );
@@ -164,10 +150,12 @@ function SocketDetails({
     otherUnlockedPlugs.add(modHash);
   }
 
+  const initialPlugHash = socket.socketDefinition.singleInitialItemHash;
+  modHashes.add(initialPlugHash);
+
   if (
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
-    socket.reusablePlugItems &&
-    socket.reusablePlugItems.length
+    socket.reusablePlugItems?.length
   ) {
     for (const plugItem of socket.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
@@ -193,21 +181,23 @@ function SocketDetails({
   const energyTypeHash = item.energy?.energyTypeHash;
   const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
 
+  // Is this plug available to use?
+  const unlocked = (i: PluggableInventoryItemDefinition) =>
+    i.hash === initialPlugHash || unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash);
+
   let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
     .filter(
       (i) =>
-        i.inventory!.tierType !== TierType.Common &&
-        (!i.plug ||
-          !i.plug.energyCost ||
-          (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
-          i.plug.energyCost.energyType === DestinyEnergyType.Any)
+        !i.plug ||
+        !i.plug.energyCost ||
+        (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
+        i.plug.energyCost.energyType === DestinyEnergyType.Any
     )
     .filter(isPluggableItem)
     .sort(
       chainComparator(
-        reverseComparator(
-          compareBy((i) => unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash))
-        ),
+        compareBy((i) => i.hash !== initialPlugHash),
+        reverseComparator(compareBy(unlocked)),
         compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
@@ -255,13 +245,10 @@ function SocketDetails({
     (({ onClose }: { onClose(): void }) => (
       <SocketDetailsSelectedPlug
         plug={selectedPlug}
-        defs={defs}
         item={item}
         socket={socket}
         currentPlug={socket.plugged}
-        equippable={
-          unlockedPlugs.has(selectedPlug.hash) || otherUnlockedPlugs.has(selectedPlug.hash)
-        }
+        equippable={unlocked(selectedPlug)}
         closeMenu={onClose}
       />
     ));
@@ -279,11 +266,9 @@ function SocketDetails({
             key={mod.hash}
             className={clsx(styles.clickableMod, {
               [styles.selected]: selectedPlug === mod,
-              [styles.notUnlocked]:
-                !unlockedPlugs.has(mod.hash) && !otherUnlockedPlugs.has(mod.hash),
+              [styles.notUnlocked]: !unlocked(mod),
             })}
             itemDef={mod}
-            defs={defs}
             onClick={setSelectedPlug}
           />
         ))}
