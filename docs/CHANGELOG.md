@@ -1,6 +1,20 @@
 ## Next
 
+## 6.66.2 <span class="changelog-date">(2021-05-25)</span>
+
+* Fix for errors on viewing some items when DIM had just loaded.
+
+## 6.66.1 <span class="changelog-date">(2021-05-24)</span>
+
+* Fix for 404 errors when signing in with Bungie.
+
+## 6.66.0 <span class="changelog-date">(2021-05-23)</span>
+
+* Fix strange wrapping and blank space on the list of Currencies in the header.
+
 ## 6.65.1 <span class="changelog-date">(2021-05-17)</span>
+
+* Fix for a crash on older browsers.
 
 ## 6.65.0 <span class="changelog-date">(2021-05-16)</span>
 

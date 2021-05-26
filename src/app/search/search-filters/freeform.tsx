@@ -14,12 +14,12 @@ const isLatinBased = memoizeOne((language: string) =>
 );
 
 /** escape special characters for a regex */
-export function escapeRegExp(s: string) {
+function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /** Make a Regexp that searches starting at a word boundary */
-function startWordRegexp(s: string, language: string) {
+export function startWordRegexp(s: string, language: string) {
   // Only some languages effectively use the \b regex word boundary
   return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
 }
