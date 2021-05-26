@@ -2,13 +2,13 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { statAllowList } from 'app/inventory/store/stats';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -17,16 +17,14 @@ import './ItemSockets.scss';
 export default function PlugTooltip({
   item,
   plug,
-  defs,
   wishlistRoll,
 }: {
   item: DimItem;
   plug: DimPlug;
-  defs?: D2ManifestDefinitions;
   wishlistRoll?: InventoryWishListRoll;
 }) {
   // TODO: show insertion costs
-
+  const defs = useD2Definitions();
   const sourceString =
     defs &&
     plug.plugDef.collectibleHash &&
@@ -37,18 +35,17 @@ export default function PlugTooltip({
     t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
 
   const visibleStats = plug.stats
-    ? _.sortBy(Object.keys(plug.stats), (h) =>
-        statAllowList.indexOf(parseInt(h, 10))
-      ).filter((statHash) =>
-        isPlugStatActive(
-          item,
-          plug.plugDef.hash,
-          Number(statHash),
-          Boolean(
-            plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-              ?.isConditionallyActive
+    ? _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10))).filter(
+        (statHash) =>
+          isPlugStatActive(
+            item,
+            plug.plugDef.hash,
+            Number(statHash),
+            Boolean(
+              plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+                ?.isConditionallyActive
+            )
           )
-        )
       )
     : [];
 
@@ -61,7 +58,7 @@ export default function PlugTooltip({
 
       {plug.plugDef.displayProperties.description ? (
         <div>
-          <RichDestinyText text={plug.plugDef.displayProperties.description} defs={defs} />
+          <RichDestinyText text={plug.plugDef.displayProperties.description} />
         </div>
       ) : (
         plug.perks.map((perk) => (
@@ -70,7 +67,7 @@ export default function PlugTooltip({
               <div>{perk.displayProperties.name}</div>
             )}
             <div>
-              <RichDestinyText text={perk.displayProperties.description} defs={defs} />
+              <RichDestinyText text={perk.displayProperties.description} />
             </div>
           </div>
         ))
@@ -83,7 +80,6 @@ export default function PlugTooltip({
               key={statHash}
               statHash={parseInt(statHash, 10)}
               value={plug.stats![statHash]}
-              defs={defs}
             />
           ))}
         </div>
@@ -91,7 +87,7 @@ export default function PlugTooltip({
       {defs && plug.plugObjectives.length > 0 && (
         <div className="plug-objectives">
           {plug.plugObjectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} defs={defs} />
+            <Objective key={objective.objectiveHash} objective={objective} />
           ))}
         </div>
       )}
@@ -106,15 +102,8 @@ export default function PlugTooltip({
   );
 }
 
-export function StatValue({
-  value,
-  statHash,
-  defs,
-}: {
-  value: number;
-  statHash: number;
-  defs: D2ManifestDefinitions;
-}) {
+export function StatValue({ value, statHash }: { value: number; statHash: number }) {
+  const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
   if (!statDef || !statDef.displayProperties.name) {
     return null;

@@ -1,12 +1,11 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React, { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LockedExoticWithPlugs } from '../types';
 import styles from './ExoticTile.m.scss';
 
 interface Props {
-  defs: D2ManifestDefinitions;
   exotic: LockedExoticWithPlugs;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
@@ -19,7 +18,8 @@ interface Props {
  * Mods on the other hand only get a name and icon as multiple descriptions takes up too
  * much room on screen.
  */
-function ExoticTile({ defs, exotic, lbDispatch, onClose }: Props) {
+function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
+  const defs = useD2Definitions()!;
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
 
@@ -44,12 +44,12 @@ function ExoticTile({ defs, exotic, lbDispatch, onClose }: Props) {
       <div className={styles.itemName}>{def.displayProperties.name}</div>
       <div className={styles.details}>
         <div className={styles.itemImage}>
-          <DefItemIcon itemDef={def} defs={defs} />
+          <DefItemIcon itemDef={def} />
         </div>
         {exoticPerk && (
           <div key={exoticPerk.hash} className={styles.perkOrModInfo}>
             <div className={styles.perkOrModNameAndImage}>
-              <DefItemIcon className={styles.perkOrModImage} itemDef={exoticPerk} defs={defs} />
+              <DefItemIcon className={styles.perkOrModImage} itemDef={exoticPerk} />
               <div className={styles.perkOrModName}>{exoticPerk.displayProperties.name}</div>
             </div>
             <div className={styles.perkDescription}>{perkShortDescription}</div>
@@ -59,7 +59,7 @@ function ExoticTile({ defs, exotic, lbDispatch, onClose }: Props) {
           {exoticMods?.map((mod) => (
             <div key={mod.hash} className={styles.perkOrModInfo}>
               <div className={styles.perkOrModNameAndImage}>
-                <DefItemIcon className={styles.perkOrModImage} itemDef={mod} defs={defs} />
+                <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
                 <div className={styles.perkOrModName}>{mod.displayProperties.name}</div>
               </div>
             </div>

@@ -235,11 +235,7 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: 
                                 <h3>{record.name}</h3>
                                 <p>{record.description}</p>
                                 {record.objectives.map((objective) => (
-                                  <Objective
-                                    key={objective.objectiveHash}
-                                    defs={defs}
-                                    objective={objective}
-                                  />
+                                  <Objective key={objective.objectiveHash} objective={objective} />
                                 ))}
                               </div>
                             </div>

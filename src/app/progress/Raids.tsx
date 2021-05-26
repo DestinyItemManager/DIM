@@ -1,5 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimStore } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { RAID_ACTIVITY_TYPE_HASH, RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -12,13 +12,12 @@ import { Raid } from './Raid';
  */
 export default function Raids({
   store,
-  defs,
   profileInfo,
 }: {
   store: DimStore;
-  defs: D2ManifestDefinitions;
   profileInfo: DestinyProfileResponse;
 }) {
+  const defs = useD2Definitions()!;
   const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
     ? Object.values(profileMilestoneData)
@@ -42,7 +41,7 @@ export default function Raids({
   return (
     <div className="progress-for-character" key={store.id}>
       {raids.map((raid) => (
-        <Raid raid={raid} defs={defs} key={raid.milestoneHash} />
+        <Raid raid={raid} key={raid.milestoneHash} />
       ))}
     </div>
   );

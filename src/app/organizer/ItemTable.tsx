@@ -2,7 +2,6 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 /* eslint-disable react/jsx-key, react/prop-types */
 import { StatInfo } from 'app/compare/Compare';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
@@ -18,7 +17,6 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -71,7 +69,6 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   items: DimItem[];
-  defs: D2ManifestDefinitions;
   itemInfos: ItemInfos;
   wishList: {
     [key: string]: InventoryWishListRoll;
@@ -109,7 +106,6 @@ function mapStateToProps() {
     const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
     return {
       items,
-      defs: d2ManifestSelector(state)!,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
       wishList: inventoryWishListsSelector(state),
@@ -132,7 +128,6 @@ function ItemTable({
   categories,
   itemInfos,
   wishList,
-  defs,
   stores,
   enabledColumns,
   customTotalStatsByClass,
@@ -196,7 +191,6 @@ function ItemTable({
         itemType,
         statHashes,
         classIfAny,
-        defs,
         itemInfos,
         wishList,
         customStatTotal,
@@ -209,7 +203,6 @@ function ItemTable({
       statHashes,
       itemType,
       itemInfos,
-      defs,
       customStatTotal,
       classIfAny,
       loadouts,
@@ -230,15 +223,14 @@ function ItemTable({
   );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(() => buildRows(items, filteredColumns), [
-    filteredColumns,
-    items,
-  ]);
-  const rows = useMemo(() => sortRows(unsortedRows, columnSorts, filteredColumns), [
-    unsortedRows,
-    filteredColumns,
-    columnSorts,
-  ]);
+  const unsortedRows: Row[] = useMemo(
+    () => buildRows(items, filteredColumns),
+    [filteredColumns, items]
+  );
+  const rows = useMemo(
+    () => sortRows(unsortedRows, columnSorts, filteredColumns),
+    [unsortedRows, filteredColumns, columnSorts]
+  );
 
   const shiftHeld = useShiftHeld();
 
@@ -600,9 +592,7 @@ function sortRows(
  * This builds stat infos for all the stats that are relevant to a particular category of items.
  * It will return the same result for the same category, since all items in a category share stats.
  */
-function buildStatInfo(
-  items: DimItem[]
-): {
+function buildStatInfo(items: DimItem[]): {
   [statHash: number]: StatInfo;
 } {
   const statHashes: {

@@ -1,6 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { ARMSMASTER_ACTIVITY_MODIFIER } from 'app/search/d2-known-values';
 import { DestinyItemSubType, DestinyMilestoneChallengeActivity } from 'bungie-api-ts/destiny2';
 import React from 'react';
@@ -65,11 +65,10 @@ const equipmentSlotHashToItemCategoryHash = {
  */
 export default function LoadoutRequirementModifier({
   activity,
-  defs,
 }: {
   activity: DestinyMilestoneChallengeActivity;
-  defs: D2ManifestDefinitions;
 }) {
+  const defs = useD2Definitions()!;
   if (activity.loadoutRequirementIndex === undefined || activity.loadoutRequirementIndex === null) {
     return null;
   }

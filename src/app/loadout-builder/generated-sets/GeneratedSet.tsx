@@ -1,5 +1,4 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
@@ -21,7 +20,6 @@ interface Props {
   lockedMap: LockedMap;
   style: React.CSSProperties;
   statOrder: StatTypes[];
-  defs: D2ManifestDefinitions;
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
   lockedMods: PluggableInventoryItemDefinition[];
@@ -41,7 +39,6 @@ function GeneratedSet({
   lockedMap,
   style,
   statOrder,
-  defs,
   enabledStats,
   forwardedRef,
   lockedMods,
@@ -83,7 +80,6 @@ function GeneratedSet({
       <div className={styles.build}>
         <div className={styles.header}>
           <SetStats
-            defs={defs}
             stats={set.stats}
             items={items}
             maxPower={getPower(items)}
@@ -98,7 +94,6 @@ function GeneratedSet({
             <GeneratedSetItem
               key={items[0].index}
               item={items[0]}
-              defs={defs}
               itemOptions={items}
               locked={lockedMap[items[0].bucket.hash]}
               lbDispatch={lbDispatch}

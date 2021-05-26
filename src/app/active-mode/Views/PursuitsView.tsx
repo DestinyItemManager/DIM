@@ -84,14 +84,13 @@ function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) 
     >
       <div className={styles.activePursuits}>
         {pursuits.sort(sortPursuits).map((item) => (
-          <Pursuit item={item} key={item.index} defs={defs!} hideDescription={true} />
+          <Pursuit item={item} key={item.index} hideDescription={true} />
         ))}
         <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
           {hasValidRecords && (
             <TrackedTriumphs
               trackedTriumphs={trackedTriumphs}
               trackedRecordHash={trackedRecordHash}
-              defs={defs!}
               profileResponse={profileResponse!}
               hideRecordIcon={true}
             />

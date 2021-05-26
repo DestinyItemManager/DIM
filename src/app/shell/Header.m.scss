@@ -16,8 +16,6 @@ $header-height: 44px;
   top: 0;
   left: 0;
   right: 0;
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
   @include phone-portrait {
     background: #000;
@@ -28,7 +26,8 @@ $header-height: 44px;
 .header {
   width: 100%;
   box-sizing: border-box;
-  padding: 0 0 0 2px;
+  padding-left: env(safe-area-inset-left, 2px);
+  padding-right: env(safe-area-inset-right);
   height: $header-height;
   display: flex;
   flex-direction: row;

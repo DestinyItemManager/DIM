@@ -30,6 +30,7 @@ const ignoreDimErrors: (string | PlatformErrorCodes)[] = [
   'BungieService.Maintenance',
   'BungieService.NotConnected',
   'BungieService.NotConnectedOrBlocked',
+  'ItemService.ExoticError',
   PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation,
 ];
 

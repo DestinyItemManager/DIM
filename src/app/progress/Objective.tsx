@@ -1,6 +1,7 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { useDefinitions } from 'app/manifest/selectors';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
@@ -9,21 +10,18 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import '../item-popup/ItemObjectives.scss';
 import { percent } from '../shell/filters';
 import ObjectiveDescription from './ObjectiveDescription';
 
 export default function Objective({
-  defs,
   objective,
   suppressObjectiveDescription,
 }: {
-  defs: D2ManifestDefinitions | D1ManifestDefinitions;
   objective: DestinyObjectiveProgress;
   suppressObjectiveDescription?: boolean;
 }) {
+  const defs = useDefinitions()!;
   const objectiveDef = defs.Objective.get(objective.objectiveHash) as DestinyObjectiveDefinition;
 
   const progress = objective.progress || 0;
@@ -56,7 +54,6 @@ export default function Objective({
           <ObjectiveDescription
             progressDescription={progressDescription}
             objectiveDef={objectiveDef}
-            defs={defs}
           />
           <div className="objective-text">{progress.toLocaleString()}</div>
         </div>
@@ -83,7 +80,7 @@ export default function Objective({
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">
-          <RichDestinyText text={progressDescription} defs={defs} />
+          <RichDestinyText text={progressDescription} />
         </div>
         {!isBoolean && (
           <div className="objective-text">

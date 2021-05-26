@@ -1,6 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -20,7 +20,6 @@ const MinMaxSelect = React.memo(MinMaxSelectInner);
 export default function TierSelect({
   stats,
   statRanges,
-  defs,
   rowClassName,
   order,
   onStatOrderChanged,
@@ -28,12 +27,12 @@ export default function TierSelect({
 }: {
   stats: { [statType in StatTypes]: MinMaxIgnored };
   statRanges: { [statType in StatTypes]: MinMax };
-  defs: D2ManifestDefinitions;
   rowClassName: string;
   order: StatTypes[];
   onStatOrderChanged(order: StatTypes[]): void;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
+  const defs = useD2Definitions()!;
   const handleTierChange = (
     which: StatTypes,
     changed: { min?: number; max?: number; ignored: boolean }

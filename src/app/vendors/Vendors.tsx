@@ -249,7 +249,6 @@ function Vendors({
             vendorGroups.map((group) => (
               <VendorGroup
                 key={group.def.hash}
-                defs={defs}
                 group={group}
                 ownedItemHashes={fullOwnedItemHashes}
                 currencyLookups={currencyLookups}
@@ -270,11 +269,9 @@ function VendorGroup({
   group,
   ownedItemHashes,
   currencyLookups,
-  defs,
   filtering,
   characterId,
 }: {
-  defs: D2ManifestDefinitions;
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
@@ -287,7 +284,6 @@ function VendorGroup({
       {group.vendors.map((vendor) => (
         <ErrorBoundary key={vendor.def.hash} name="Vendor">
           <Vendor
-            defs={defs}
             vendor={vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}

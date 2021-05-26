@@ -1,6 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -328,16 +327,15 @@ export function getSelectionTree(destinyVersion: DestinyVersion) {
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
  */
 export default function ItemTypeSelector({
-  defs,
   selectionTree,
   selection,
   onSelection,
 }: {
-  defs: D2ManifestDefinitions | D1ManifestDefinitions;
   selectionTree: ItemCategoryTreeNode;
   selection: ItemCategoryTreeNode[];
   onSelection(selection: ItemCategoryTreeNode[]): void;
 }) {
+  const defs = useDefinitions()!;
   const filteredItems = useSelector(filteredItemsSelector);
   selection = selection.length ? selection : [selectionTree];
 

@@ -1,5 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
@@ -10,13 +10,12 @@ import styles from './Cost.m.scss';
  */
 export default function Cost({
   cost,
-  defs,
   className,
 }: {
-  defs: D2ManifestDefinitions;
   cost: DestinyItemQuantity;
   className?: string;
 }) {
+  const defs = useD2Definitions()!;
   const currencyItem = defs.InventoryItem.get(cost.itemHash);
   return (
     <div

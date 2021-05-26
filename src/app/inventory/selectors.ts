@@ -88,7 +88,7 @@ export const dynamicStringsSelector = (state: RootState) => {
         [valueHash: string]: number;
       };
     } = {};
-    for (const charId in characterStringVariables.data) {
+    for (const charId in characterStringVariables?.data) {
       byCharacter[charId] = characterStringVariables.data?.[charId].integerValuesByHash ?? {};
     }
     return {

@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { CrucibleRank } from './CrucibleRank';
@@ -6,13 +5,7 @@ import { CrucibleRank } from './CrucibleRank';
 /**
  * displays all Crucible and Gambit ranks for the account
  */
-export default function Ranks({
-  profileInfo,
-  defs,
-}: {
-  profileInfo: DestinyProfileResponse;
-  defs: D2ManifestDefinitions;
-}) {
+export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
   const firstCharacterProgression = profileInfo.characterProgressions?.data
     ? Object.values(profileInfo.characterProgressions.data)[0].progressions
     : {};
@@ -45,7 +38,6 @@ export default function Ranks({
           activityRank.progressionInfo && (
             <CrucibleRank
               key={activityRank.progressionInfo.progressionHash}
-              defs={defs}
               progress={activityRank.progressionInfo}
               streak={activityRank.streakInfo}
             />
