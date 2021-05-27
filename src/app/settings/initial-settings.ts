@@ -9,6 +9,7 @@ export interface Settings extends DimApiSettings {
   /** Item popup sidecar collapsed just shows icon and no character locations */
   sidecarCollapsed: boolean;
   activeMode: boolean;
+  loUpgradeSpendTier: number;
 
   /** In "Single Character Mode" DIM pretends you only have one (active) character and all the other characters' items are in the vault. */
   singleCharacter: boolean;
@@ -21,5 +22,6 @@ export const initialSettingsState: Settings = {
   compareBaseStats: false,
   sidecarCollapsed: false,
   activeMode: false,
+  loUpgradeSpendTier: 0,
   singleCharacter: false,
 };

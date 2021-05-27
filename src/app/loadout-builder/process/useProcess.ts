@@ -20,7 +20,9 @@ import {
   MinMaxIgnored,
   statHashes,
   StatTypes,
+  UpgradeSpendTiers,
 } from '../types';
+import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -48,7 +50,7 @@ export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
-  assumeMasterwork: boolean,
+  upgradeSpendTier: UpgradeSpendTiers,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
@@ -91,10 +93,9 @@ export function useProcess(
 
     const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
-    const raidCombatAndLegacyMods = Object.entries(
-      lockedModMap
-    ).flatMap(([plugCategoryHash, mods]) =>
-      mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+    const raidCombatAndLegacyMods = Object.entries(lockedModMap).flatMap(
+      ([plugCategoryHash, mods]) =>
+        mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
     const processItems: ProcessItemsByBucket = {};
@@ -106,7 +107,7 @@ export function useProcess(
       const groupedItems = groupItems(
         items,
         statOrder,
-        assumeMasterwork,
+        upgradeSpendTier,
         generalMods,
         raidCombatAndLegacyMods
       );
@@ -116,7 +117,11 @@ export function useProcess(
 
         if (item) {
           processItems[key].push(
-            mapDimItemToProcessItem(item, lockedModMap[bucketsToCategories[item.bucket.hash]])
+            mapDimItemToProcessItem(
+              item,
+              upgradeSpendTier,
+              lockedModMap[bucketsToCategories[item.bucket.hash]]
+            )
           );
           itemsById.set(item.id, group);
         }
@@ -134,7 +139,6 @@ export function useProcess(
         processItems,
         getTotalModStatChanges(lockedMods, selectedStore?.classType),
         lockedProcessMods,
-        assumeMasterwork,
         statOrder,
         statFilters
       )
@@ -167,7 +171,7 @@ export function useProcess(
     filteredItems,
     lockedItems,
     lockedMods,
-    assumeMasterwork,
+    upgradeSpendTier,
     statOrder,
     statFilters,
     selectedStore,
@@ -200,7 +204,7 @@ function createWorker() {
 function groupItems(
   items: readonly DimItem[],
   statOrder: StatTypes[],
-  assumeMasterwork: boolean,
+  upgradeSpendTier: UpgradeSpendTiers,
   generalMods: PluggableInventoryItemDefinition[],
   raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
 ) {
@@ -214,7 +218,7 @@ function groupItems(
       }
     }
 
-    let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+    let groupId = `${statValues}${upgradeSpendTierToMaxEnergy(upgradeSpendTier, item) === 10}`;
 
     if (raidCombatAndLegacyMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)

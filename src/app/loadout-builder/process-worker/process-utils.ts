@@ -1,5 +1,4 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { MAX_ARMOR_ENERGY_CAPACITY } from '../../search/d2-known-values';
 import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
@@ -175,7 +174,7 @@ export function canTakeSlotIndependantMods(
 
       const otherEnergyIsValid =
         item.energy &&
-        item.energy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+        item.energy.val + otherEnergy.val <= item.energy.capacity &&
         (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any);
 
       // The other mods wont fit in the item set so move on to the next set of mods
@@ -199,7 +198,7 @@ export function canTakeSlotIndependantMods(
 
         const generalEnergyIsValid =
           item.energy &&
-          item.energy.val + generalEnergy.val + otherEnergy.val <= MAX_ARMOR_ENERGY_CAPACITY &&
+          item.energy.val + generalEnergy.val + otherEnergy.val <= item.energy.capacity &&
           (item.energy.type === generalEnergy.type || generalEnergy.type === DestinyEnergyType.Any);
 
         // The general mods wont fit in the item set so move on to the next set of mods
@@ -226,7 +225,7 @@ export function canTakeSlotIndependantMods(
           const raidEnergyIsValid =
             item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
-              MAX_ARMOR_ENERGY_CAPACITY &&
+              item.energy.capacity &&
             (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any);
 
           // Due to raid mods overlapping with legacy mods for last wish we need to ensure

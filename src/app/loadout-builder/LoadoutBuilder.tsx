@@ -45,6 +45,7 @@ import {
   statKeys,
   StatTypes,
   statValues,
+  UpgradeSpendTiers,
 } from './types';
 
 interface ProvidedProps {
@@ -54,7 +55,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   statOrder: StatTypes[];
-  assumeMasterwork: boolean;
+  upgradeSpendTier: UpgradeSpendTiers;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -143,10 +144,10 @@ function mapStateToProps() {
   );
 
   return (state: RootState): StoreProps => {
-    const { loAssumeMasterwork } = settingsSelector(state);
+    const { loUpgradeSpendTier } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
-      assumeMasterwork: loAssumeMasterwork,
+      upgradeSpendTier: loUpgradeSpendTier,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
@@ -163,7 +164,7 @@ function mapStateToProps() {
 function LoadoutBuilder({
   stores,
   statOrder,
-  assumeMasterwork,
+  upgradeSpendTier,
   isPhonePortrait,
   items,
   loadouts,
@@ -218,7 +219,7 @@ function LoadoutBuilder({
     filteredItems,
     lockedMap,
     lockedMods,
-    assumeMasterwork,
+    upgradeSpendTier,
     statOrder,
     statFilters
   );
@@ -248,9 +249,9 @@ function LoadoutBuilder({
       ),
       mods: lockedMods.map((mod) => mod.hash),
       query: searchQuery,
-      assumeMasterworked: assumeMasterwork,
+      upgradeSpendTier,
     }),
-    [assumeMasterwork, lockedMods, searchQuery, statFilters, statOrder]
+    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
   );
 
   const combos = result?.combos || 0;
@@ -272,11 +273,11 @@ function LoadoutBuilder({
       <FilterBuilds
         statRanges={result?.statRanges}
         stats={statFilters}
+        upgradeSpendTier={upgradeSpendTier}
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
         order={statOrder}
-        assumeMasterwork={assumeMasterwork}
       />
 
       <LockArmorAndPerks
@@ -337,6 +338,7 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
+            upgradeSpendTier={upgradeSpendTier}
           />
         )}
         {modPicker.open &&
@@ -364,7 +366,7 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               statOrder={statOrder}
               enabledStats={enabledStats}
-              assumeMasterwork={assumeMasterwork}
+              upgradeSpendTier={upgradeSpendTier}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

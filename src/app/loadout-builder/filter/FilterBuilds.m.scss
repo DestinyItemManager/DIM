@@ -44,16 +44,16 @@
   }
 }
 
-.assumeMasterwork {
-  margin-bottom: 4px;
+.upgradeMaterials {
+  padding: 4px;
+  margin: 4px 0;
+  background-color: black;
+}
 
-  input {
-    margin-left: 0;
-    vertical-align: middle;
-  }
+.materialSelect {
+  width: 100%;
 
-  label {
-    cursor: pointer;
-    vertical-align: middle;
+  option {
+    text-overflow: ellipsis;
   }
 }

@@ -7,7 +7,7 @@ import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTiers } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -27,6 +27,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
+  upgradeSpendTier: UpgradeSpendTiers;
 }
 
 /**
@@ -46,6 +47,7 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
+  upgradeSpendTier,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -62,7 +64,8 @@ function GeneratedSet({
 
   const [assignedMods] = assignModsToArmorSet(
     set.armor.map((items) => items[0]),
-    lockedMods
+    lockedMods,
+    upgradeSpendTier
   );
 
   const canCompareLoadouts =

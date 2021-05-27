@@ -9,7 +9,7 @@ import {
 } from './process-worker/process-utils';
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { bucketsToCategories, LockableBucketHashes } from './types';
+import { bucketsToCategories, LockableBucketHashes, UpgradeSpendTiers } from './types';
 
 /**
  * Checks that:
@@ -86,7 +86,8 @@ function assignSlotIndependantMods(
 
 export function assignModsToArmorSet(
   setToMatch: readonly DimItem[],
-  lockedMods: PluggableInventoryItemDefinition[]
+  lockedMods: PluggableInventoryItemDefinition[],
+  upgradeSpendTier: UpgradeSpendTiers
 ): [Record<string, PluggableInventoryItemDefinition[]>, PluggableInventoryItemDefinition[]] {
   const assignments: Record<string, number[]> = {};
 
@@ -103,7 +104,9 @@ export function assignModsToArmorSet(
     if (item) {
       const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[hash]];
       assignModsForSlot(item, assignments, lockedModsByPlugCategoryHash);
-      processItems.push(mapDimItemToProcessItem(item, lockedModsByPlugCategoryHash));
+      processItems.push(
+        mapDimItemToProcessItem(item, upgradeSpendTier, lockedModsByPlugCategoryHash)
+      );
     }
   }
 

@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType } from './types';
+import { LockedItemType, UpgradeSpendTiers } from './types';
 
 /**
  * Add a locked item to the locked item list for a bucket.
@@ -73,4 +73,27 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   }
 
   return Math.floor(power / numPoweredItems);
+}
+
+/** Gets the max energy allowed from the passed in UpgradeSpendTier */
+export function upgradeSpendTierToMaxEnergy(tier: UpgradeSpendTiers, item: DimItem) {
+  const available = item.energy?.energyCapacity;
+  const isExotic = Boolean(item.equippingLabel);
+  if (available === undefined) {
+    return 0;
+  }
+
+  switch (tier) {
+    case UpgradeSpendTiers.LegendaryShards:
+      return Math.max(7, available);
+    case UpgradeSpendTiers.EnhancementPrisms:
+      return Math.max(isExotic ? 8 : 9, available);
+    case UpgradeSpendTiers.AscendantShardsNotExotic:
+      return Math.max(isExotic ? 8 : 10, available);
+    case UpgradeSpendTiers.AscendantShards:
+      return 10;
+    case UpgradeSpendTiers.Nothing:
+    default:
+      return available;
+  }
 }

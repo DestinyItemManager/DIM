@@ -1,10 +1,9 @@
-import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
 import _ from 'lodash';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { MinMax, MinMaxIgnored, statHashes, StatTypes, UpgradeSpendTiers } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
 
@@ -15,13 +14,13 @@ export default function FilterBuilds({
   statRanges,
   stats,
   order,
-  assumeMasterwork,
+  upgradeSpendTier,
   onStatFiltersChanged,
 }: {
   statRanges?: { [statType in StatTypes]: MinMax };
   stats: { [statType in StatTypes]: MinMaxIgnored };
   order: StatTypes[];
-  assumeMasterwork: boolean;
+  upgradeSpendTier: UpgradeSpendTiers;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
   const dispatch = useDispatch();
@@ -49,17 +48,30 @@ export default function FilterBuilds({
           onStatFiltersChanged={onStatFiltersChanged}
           onStatOrderChanged={onStatOrderChanged}
         />
-        <div
-          className={styles.assumeMasterwork}
-          title={t('LoadoutBuilder.AssumeMasterworkDetailed')}
-        >
-          <CheckButton
-            name="lo-assume-masterwork"
-            checked={assumeMasterwork}
-            onChange={(checked) => dispatch(setSetting('loAssumeMasterwork', checked))}
+        <div className={styles.upgradeMaterials}>
+          <select
+            className={styles.materialSelect}
+            value={upgradeSpendTier}
+            onChange={(event) =>
+              dispatch(setSetting('loUpgradeSpendTier', parseInt(event.target.value, 10)))
+            }
           >
-            {t('LoadoutBuilder.AssumeMasterwork')}
-          </CheckButton>
+            <option value={UpgradeSpendTiers.Nothing}>
+              {t('LoadoutBuilder.SpendNoMaterials')}
+            </option>
+            <option value={UpgradeSpendTiers.LegendaryShards}>
+              {t('LoadoutBuilder.LegendaryShards')}
+            </option>
+            <option value={UpgradeSpendTiers.EnhancementPrisms}>
+              {t('LoadoutBuilder.EnhancementPrisms')}
+            </option>
+            <option value={UpgradeSpendTiers.AscendantShardsNotExotic}>
+              {t('LoadoutBuilder.AscendantShardsNotExotics')}
+            </option>
+            <option value={UpgradeSpendTiers.AscendantShards}>
+              {t('LoadoutBuilder.AscendantShards')}
+            </option>
+          </select>
         </div>
       </div>
     </div>
