@@ -12,12 +12,15 @@ $content-cells: 5;
   --item-table-toolbar-height: 0;
 }
 
+.container {
+  width: calc(100vw - 16px);
+  overflow-x: scroll;
+}
+
 .table {
   min-width: 1270px;
   display: grid;
   margin: 8px 0 16px 0 !important;
-  width: calc(100vw - 16px);
-  overflow-x: scroll;
 
   > div {
     padding: 4px 8px;
@@ -28,7 +31,7 @@ $content-cells: 5;
 
 .toolbar {
   grid-column: 1 / -1;
-  position: sticky;
+  position: absolute;
   z-index: $toolbar;
   box-sizing: border-box;
 
