@@ -13,10 +13,10 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, itemInfosSelector, storesSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
-import { applyLoadout } from 'app/loadout/loadout-apply';
-import { Loadout } from 'app/loadout/loadout-types';
-import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
-import { loadoutsSelector } from 'app/loadout/selectors';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSetting } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -223,15 +223,14 @@ function ItemTable({
   );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(() => buildRows(items, filteredColumns), [
-    filteredColumns,
-    items,
-  ]);
-  const rows = useMemo(() => sortRows(unsortedRows, columnSorts, filteredColumns), [
-    unsortedRows,
-    filteredColumns,
-    columnSorts,
-  ]);
+  const unsortedRows: Row[] = useMemo(
+    () => buildRows(items, filteredColumns),
+    [filteredColumns, items]
+  );
+  const rows = useMemo(
+    () => sortRows(unsortedRows, columnSorts, filteredColumns),
+    [unsortedRows, filteredColumns, columnSorts]
+  );
 
   const shiftHeld = useShiftHeld();
 
@@ -593,9 +592,7 @@ function sortRows(
  * This builds stat infos for all the stats that are relevant to a particular category of items.
  * It will return the same result for the same category, since all items in a category share stats.
  */
-function buildStatInfo(
-  items: DimItem[]
-): {
+function buildStatInfo(items: DimItem[]): {
   [statHash: number]: StatInfo;
 } {
   const statHashes: {

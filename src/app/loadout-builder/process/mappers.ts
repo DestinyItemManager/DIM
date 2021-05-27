@@ -1,3 +1,4 @@
+import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
@@ -13,13 +14,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import {
-  ArmorSet,
-  knownModPlugCategoryHashes,
-  raidPlugCategoryHashes,
-  statHashToType,
-  StatTypes,
-} from '../types';
+import { ArmorSet, statHashToType, StatTypes } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {

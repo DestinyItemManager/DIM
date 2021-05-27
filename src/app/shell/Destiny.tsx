@@ -8,7 +8,7 @@ import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
-import LoadoutDrawer from 'app/loadout/LoadoutDrawer';
+import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';

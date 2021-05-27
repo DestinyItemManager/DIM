@@ -1,7 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout/loadout-types';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';

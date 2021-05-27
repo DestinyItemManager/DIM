@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType, statValues } from './types';
+import { LockedItemType } from './types';
 
 /**
  * Add a locked item to the locked item list for a bucket.
@@ -44,16 +44,6 @@ export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) 
     case 'exclude':
       return second.type === 'exclude' && first.item.id === second.item.id;
   }
-}
-
-/** Whether this item is eligible for being in loadout builder. Now only armour 2.0 and only items that have all the stats. */
-export function isLoadoutBuilderItem(item: DimItem) {
-  // Armor and Ghosts
-  return (
-    item.bucket.inArmor &&
-    item.energy &&
-    statValues.every((statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash))
-  );
 }
 
 /** Gets the stat tier from a stat value. */

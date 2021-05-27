@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import ModPicker from 'app/loadout-builder/filter/ModPicker';
+import ModPicker from 'app/loadout/mod-picker/ModPicker';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -409,11 +409,10 @@ function LoadoutDrawer({
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
-  const [items, warnitems] = useMemo(() => getItemsFromLoadoutItems(loadoutItems, defs, allItems), [
-    defs,
-    loadoutItems,
-    allItems,
-  ]);
+  const [items, warnitems] = useMemo(
+    () => getItemsFromLoadoutItems(loadoutItems, defs, allItems),
+    [defs, loadoutItems, allItems]
+  );
 
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent) =>

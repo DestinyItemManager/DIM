@@ -17,8 +17,8 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
+import { isArmor2WithStats } from '../item-utils';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from '../mod-utils';
-import { isLoadoutBuilderItem } from '../utils';
 import ModPickerFooter from './ModPickerFooter';
 import ModPickerSection from './ModPickerSection';
 
@@ -77,7 +77,7 @@ function mapStateToProps() {
           !item ||
           !item.sockets ||
           // Makes sure its an armour 2.0 item
-          !isLoadoutBuilderItem(item) ||
+          !isArmor2WithStats(item) ||
           // If classType is passed in only use items from said class otherwise use
           // items from all characters. Usefull if in loadouts and only mods and guns.
           !(classType === DestinyClass.Unknown || item.classType === classType)

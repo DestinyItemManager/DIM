@@ -1,5 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import LockedModIcon from 'app/loadout-builder/filter/LockedModIcon';
+import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import React from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedModCategory.m.scss';

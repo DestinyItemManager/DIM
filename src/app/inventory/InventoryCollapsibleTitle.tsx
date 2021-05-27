@@ -1,6 +1,10 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
+import {
+  postmasterAlmostFull,
+  postmasterSpaceUsed,
+  POSTMASTER_SIZE,
+} from 'app/loadout-drawer/postmaster';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';

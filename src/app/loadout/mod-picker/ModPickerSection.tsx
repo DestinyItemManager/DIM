@@ -10,7 +10,7 @@ import {
   knownModPlugCategoryHashes,
   raidPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
-} from '../types';
+} from '../known-values';
 import styles from './ModPickerSection.m.scss';
 import SelectableMod from './SelectableMod';
 

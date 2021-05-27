@@ -7,7 +7,7 @@ import { armorStatHashes } from 'app/search/search-filter-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import ClosableContainer from '../ClosableContainer';
+import ClosableContainer from '../loadout-ui/ClosableContainer';
 import styles from './SelectableMod.m.scss';
 
 function SelectableMod({

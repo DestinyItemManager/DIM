@@ -1,16 +1,9 @@
+import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import {
-  knownModPlugCategoryHashes,
-  LockableBuckets,
-  MinMax,
-  MinMaxIgnored,
-  raidPlugCategoryHashes,
-  statHashes,
-  StatTypes,
-} from '../types';
+import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
 import { SetTracker } from './set-tracker';

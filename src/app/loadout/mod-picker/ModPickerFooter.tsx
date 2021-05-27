@@ -2,8 +2,8 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
+import LockedModIcon from '../loadout-ui/LockedModIcon';
 import { getModRenderKey } from '../mod-utils';
-import LockedModIcon from './LockedModIcon';
 import styles from './ModPickerFooter.m.scss';
 
 interface Props {
