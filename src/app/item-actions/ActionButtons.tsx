@@ -4,14 +4,14 @@ import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { addItemToLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -87,22 +87,16 @@ export function TagActionButton({
   );
 }
 
-export function ConsolidateActionButton({ item, label }: ActionButtonProps) {
+export function ConsolidateActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
   const stores = useSelector(sortedStoresSelector);
   const owner = getStore(stores, item.owner);
   const dispatch = useDispatch();
 
-  if (!owner) {
-    return null;
-  }
-
-  const canConsolidate =
-    !item.notransfer &&
-    item.location.hasTransferDestination &&
-    item.maxStackSize > 1 &&
-    stores.some((s) => s !== owner && amountOfItem(s, item) > 0);
-
-  if (!canConsolidate) {
+  if (!actionModel.canConsolidate) {
     return null;
   }
 
@@ -121,11 +115,14 @@ export function ConsolidateActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-export function DistributeActionButton({ item, label }: ActionButtonProps) {
+export function DistributeActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
   const dispatch = useDispatch();
-  const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
 
-  if (!canDistribute) {
+  if (!actionModel.canDistribute) {
     return null;
   }
 
@@ -142,8 +139,12 @@ export function DistributeActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-export function InfuseActionButton({ item, label }: ActionButtonProps) {
-  if (!item.infusionFuel || item.owner === 'unknown') {
+export function InfuseActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
+  if (!actionModel.infusable) {
     return null;
   }
 
@@ -160,10 +161,15 @@ export function InfuseActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-export function LoadoutActionButton({ item, label }: ActionButtonProps) {
-  if (!itemCanBeInLoadout(item) || item.owner === 'unknown') {
+export function LoadoutActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
+  if (!actionModel.loadoutable) {
     return null;
   }
+
   const addToLoadout = (e: React.MouseEvent) => {
     hideItemPopup();
     addItemToLoadout(item, e);

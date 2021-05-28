@@ -6,15 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
-import {
-  CompareActionButton,
-  ConsolidateActionButton,
-  DistributeActionButton,
-  InfuseActionButton,
-  LoadoutActionButton,
-  LockActionButton,
-  TagActionButton,
-} from 'app/item-actions/ActionButtons';
+import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { setSetting } from 'app/settings/actions';
@@ -25,12 +17,19 @@ import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
+import { ItemActionsModel } from './item-popup-actions';
 
 const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
 
 const sharedButtonProps = { role: 'button', tabIndex: -1 };
 
-export default function DesktopItemActions({ item }: { item: DimItem }) {
+export default function DesktopItemActions({
+  item,
+  actionsModel,
+}: {
+  item: DimItem;
+  actionsModel: ItemActionsModel;
+}) {
   const stores = useSelector(sortedStoresSelector);
   const dispatch = useDispatch();
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
@@ -42,18 +41,22 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
 
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
+    // TODO: if movable
     const currentChar = getCurrentStore(stores)!;
     dispatch(moveItemTo(item, currentChar, false, item.maxStackSize));
     hideItemPopup();
   });
   useHotkey('v', t('Hotkey.Vault'), () => {
+    // TODO: if vaultable
     const vault = getVault(stores)!;
     dispatch(moveItemTo(item, vault, false, item.maxStackSize));
     hideItemPopup();
   });
   useHotkey('c', t('Compare.ButtonHelp'), () => {
-    hideItemPopup();
-    dispatch(addCompareItem(item));
+    if (item.comparable) {
+      hideItemPopup();
+      dispatch(addCompareItem(item));
+    }
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -117,15 +120,21 @@ export default function DesktopItemActions({ item }: { item: DimItem }) {
         </div>
       )}
 
-      <TagActionButton item={item} label={!sidecarCollapsed} />
-      <LockActionButton item={item} label={!sidecarCollapsed} />
-      <CompareActionButton item={item} label={!sidecarCollapsed} />
-      <ConsolidateActionButton item={item} label={!sidecarCollapsed} />
-      <DistributeActionButton item={item} label={!sidecarCollapsed} />
-      <LoadoutActionButton item={item} label={!sidecarCollapsed} />
-      <InfuseActionButton item={item} label={!sidecarCollapsed} />
+      <ItemAccessoryButtons
+        item={item}
+        mobile={false}
+        showLabel={!sidecarCollapsed}
+        actionsModel={actionsModel}
+      />
 
-      {!sidecarCollapsed && <ItemMoveLocations key={item.index} item={item} splitVault={true} />}
+      {!sidecarCollapsed && (
+        <ItemMoveLocations
+          key={item.index}
+          item={item}
+          splitVault={true}
+          actionsModel={actionsModel}
+        />
+      )}
     </div>
   );
 }

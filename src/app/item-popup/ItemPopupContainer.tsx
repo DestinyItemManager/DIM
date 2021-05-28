@@ -4,21 +4,13 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import {
-  CompareActionButton,
-  ConsolidateActionButton,
-  DistributeActionButton,
-  InfuseActionButton,
-  LoadoutActionButton,
-  LockActionButton,
-  TagActionButton,
-} from 'app/item-actions/ActionButtons';
+import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
@@ -27,6 +19,7 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { setSetting } from '../settings/actions';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
+import { buildItemActionsModel } from './item-popup-actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import styles from './ItemPopupContainer.m.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
@@ -98,12 +91,16 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
 
   useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
 
-  if (!currentItem?.item) {
+  // Try to find an updated version of the item!
+  const item = currentItem?.item && maybeFindItem(currentItem.item, stores);
+  const itemActionsModel = useMemo(
+    () => item && buildItemActionsModel(item, stores),
+    [item, stores]
+  );
+
+  if (!currentItem || !item || !itemActionsModel) {
     return null;
   }
-
-  // Try to find an updated version of the item!
-  const item = maybeFindItem(currentItem.item, stores);
 
   const body = (
     <ItemPopupBody
@@ -126,20 +123,23 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
         styles.movePopupDialog
       )}
       footer={
-        <div className={styles.mobileMoveLocations}>
-          <ItemMoveLocations key={item.index} item={item} />
-        </div>
+        itemActionsModel.hasMoveControls && (
+          <div className={styles.mobileMoveLocations}>
+            <ItemMoveLocations key={item.index} item={item} actionsModel={itemActionsModel} />
+          </div>
+        )
       }
     >
-      <div className={styles.mobileItemActions}>
-        <TagActionButton item={item} label={true} hideKeys={true} />
-        <LockActionButton item={item} />
-        <CompareActionButton item={item} />
-        <ConsolidateActionButton item={item} />
-        <DistributeActionButton item={item} />
-        <LoadoutActionButton item={item} />
-        <InfuseActionButton item={item} />
-      </div>
+      {itemActionsModel.hasAccessoryControls && (
+        <div className={styles.mobileItemActions}>
+          <ItemAccessoryButtons
+            item={item}
+            mobile={true}
+            showLabel={false}
+            actionsModel={itemActionsModel}
+          />
+        </div>
+      )}
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
@@ -161,9 +161,11 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
             <ItemPopupHeader item={item} key={`header${item.index}`} />
             {body}
           </div>
-          <div className={clsx(styles.desktopActions)}>
-            <DesktopItemActions item={item} />
-          </div>
+          {itemActionsModel.hasControls && (
+            <div className={clsx(styles.desktopActions)}>
+              <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+            </div>
+          )}
         </div>
       </ClickOutside>
       <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
