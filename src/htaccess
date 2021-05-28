@@ -971,9 +971,7 @@ AddEncoding br .br
 
 <FilesMatch "service-worker\.js(\.(gz|br))?">
     <IfModule mod_headers.c>
-        # no-cache = revalidate with the server before using
-        Header set Cache-Control "max-age=0, s-maxage=86400, no-cache"
-        Header set Pragma "no-cache"
+        Header set Cache-Control "max-age=0, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -982,7 +980,7 @@ AddEncoding br .br
 
 <FilesMatch "\.html(\.(gz|br))?">
     <IfModule mod_headers.c>
-        Header set Cache-Control "max-age=0, s-maxage=<%= $DIM_FLAVOR === 'beta' ? 0 : 300 %>"
+        Header set Cache-Control "max-age=0, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -996,7 +994,7 @@ AddEncoding br .br
     </IfModule>
 </FilesMatch>
 
-# Cache namifest
+# Cache manifest
 
 <FilesMatch "manifest-webapp">
     <IfModule mod_headers.c>
