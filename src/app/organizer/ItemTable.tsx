@@ -26,7 +26,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
-import { inventoryWishListsSelector } from 'app/wishlists/selectors';
+import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -70,9 +70,8 @@ interface StoreProps {
   stores: DimStore[];
   items: DimItem[];
   itemInfos: ItemInfos;
-  wishList: {
-    [key: string]: InventoryWishListRoll;
-  };
+  wishList: (item: DimItem) => InventoryWishListRoll | undefined;
+  hasWishList: boolean;
   isPhonePortrait: boolean;
   enabledColumns: string[];
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
@@ -108,7 +107,8 @@ function mapStateToProps() {
       items,
       stores: storesSelector(state),
       itemInfos: itemInfosSelector(state),
-      wishList: inventoryWishListsSelector(state),
+      wishList: wishListFunctionSelector(state),
+      hasWishList: hasWishListSelector(state),
       isPhonePortrait: state.shell.isPhonePortrait,
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
@@ -128,6 +128,7 @@ function ItemTable({
   categories,
   itemInfos,
   wishList,
+  hasWishList,
   stores,
   enabledColumns,
   customTotalStatsByClass,
@@ -193,6 +194,7 @@ function ItemTable({
         classIfAny,
         itemInfos,
         wishList,
+        hasWishList,
         customStatTotal,
         loadouts,
         newItems,
@@ -200,6 +202,7 @@ function ItemTable({
       ),
     [
       wishList,
+      hasWishList,
       statHashes,
       itemType,
       itemInfos,
