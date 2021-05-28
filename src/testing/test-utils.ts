@@ -8,7 +8,7 @@ import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
-import profile from './data/profile-2021-05-08.json';
+import profile from './data/profile-2021-05-28.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -65,7 +65,7 @@ export const getTestStores = _.once(async () => {
   const stores = buildStores(
     _.noop,
     () =>
-      (({
+      ({
         accounts: {
           currentAccount: 0,
           accounts: [testAccount],
@@ -73,7 +73,7 @@ export const getTestStores = _.once(async () => {
         manifest: {
           d2Manifest: manifest,
         },
-      } as unknown) as RootState),
+      } as unknown as RootState),
     manifest,
     (profile as any).Response as DestinyProfileResponse
   );
