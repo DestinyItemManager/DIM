@@ -83,16 +83,13 @@ export function getColumns(
   },
   classType: DestinyClass,
   itemInfos: ItemInfos,
-  wishList: {
-    [key: string]: InventoryWishListRoll;
-  },
+  wishList: (item: DimItem) => InventoryWishListRoll | undefined,
+  hasWishList: boolean,
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
   destinyVersion: DestinyVersion
 ): ColumnDefinition[] {
-  const hasWishList = !_.isEmpty(wishList);
-
   const statsGroup: ColumnGroup = {
     id: 'stats',
     header: t('Organizer.Columns.Stats'),
@@ -279,12 +276,11 @@ export function getColumns(
       filter: (value) => (value ? 'is:new' : 'not:new'),
     },
     destinyVersion === 2 &&
-      isWeapon &&
-      hasWishList && {
+      isWeapon && {
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
-          const roll = wishList?.[item.id];
+          const roll = wishList(item);
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>
@@ -502,7 +498,7 @@ export function getColumns(
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList?.[item.id]?.notes,
+        value: (item) => wishList(item)?.notes,
         gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`,
       },

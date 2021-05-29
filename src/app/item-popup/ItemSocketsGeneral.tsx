@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { inventoryWishListsSelector } from '../wishlists/selectors';
+import { wishListSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import './ItemSockets.scss';
@@ -34,7 +34,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
-    wishlistRoll: inventoryWishListsSelector(state)[item.id],
+    wishlistRoll: wishListSelector(item)(state),
     defs: d2ManifestSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
   };

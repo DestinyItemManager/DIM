@@ -135,6 +135,7 @@ export class VendorItem {
       buckets,
       itemComponents,
       itemHash,
+      // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       saleItem ? saleItem.vendorItemIndex.toString() : itemHash.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
       mergedCollectibles

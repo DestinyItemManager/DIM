@@ -1,5 +1,4 @@
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import { DimWishList, WishListRoll } from './types';
 
@@ -28,43 +27,6 @@ export interface InventoryWishListRoll {
   notes: string | undefined;
   /** Is this an undesirable roll? */
   isUndesirable?: boolean;
-}
-
-let previousWishListRolls: { [itemHash: number]: WishListRoll[] } | undefined;
-let seenItemIds = new Set<string>();
-let inventoryRolls: { [key: string]: InventoryWishListRoll } = {};
-
-/** Get InventoryWishListRolls for every item in the stores. */
-export function getInventoryWishListRolls(
-  allItems: DimItem[],
-  rollsByHash: { [itemHash: number]: WishListRoll[] }
-): { [key: string]: InventoryWishListRoll } {
-  if (
-    !$featureFlags.wishLists ||
-    _.isEmpty(rollsByHash) ||
-    !allItems.length ||
-    allItems[0].destinyVersion === 1
-  ) {
-    return {};
-  }
-
-  if (previousWishListRolls !== rollsByHash) {
-    previousWishListRolls = rollsByHash;
-    seenItemIds = new Set<string>();
-    inventoryRolls = {};
-  }
-
-  for (const item of allItems) {
-    if (item.sockets && !seenItemIds.has(item.id)) {
-      const wishListRoll = getInventoryWishListRoll(item, rollsByHash);
-      if (wishListRoll) {
-        inventoryRolls[item.id] = wishListRoll;
-      }
-      seenItemIds.add(item.id);
-    }
-  }
-
-  return inventoryRolls;
 }
 
 /**
@@ -169,11 +131,17 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
 }
 
 /** Get the InventoryWishListRoll for this item. */
-function getInventoryWishListRoll(
+export function getInventoryWishListRoll(
   item: DimItem,
   wishListRolls: { [itemHash: number]: WishListRoll[] }
 ): InventoryWishListRoll | undefined {
-  if (!wishListRolls || !item || !item.sockets) {
+  if (
+    !$featureFlags.wishLists ||
+    !wishListRolls ||
+    !item ||
+    item.destinyVersion === 1 ||
+    !item.sockets
+  ) {
     return undefined;
   }
 

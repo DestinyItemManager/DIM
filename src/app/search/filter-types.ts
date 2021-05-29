@@ -24,7 +24,7 @@ export interface FilterContext {
   allItems: DimItem[];
   currentStore: DimStore;
   loadouts: Loadout[];
-  inventoryWishListRolls: { [key: string]: InventoryWishListRoll };
+  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
   newItems: Set<string>;
   itemInfos: ItemInfos;
   itemHashTags: {

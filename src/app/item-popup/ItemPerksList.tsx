@@ -6,12 +6,12 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
+import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { default as React, useState } from 'react';
 import { connect } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
-import { inventoryWishListsSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
@@ -29,7 +29,7 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
-    wishlistRoll: inventoryWishListsSelector(state)[item.id],
+    wishlistRoll: wishListSelector(item)(state),
     defs: d2ManifestSelector(state),
   };
 }
