@@ -34,18 +34,20 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item, searchFilterIsEmpty } = props;
-
   const settings = settingsSelector(state);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
   const tag = getTag(item, itemInfos, itemHashTags);
+
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
     tag,
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     wishlistRoll: wishListSelector(item)(state),
     searchHidden:
+      // dim this item if there's no search filter and it's archived
       (searchFilterIsEmpty && tag === 'archive') ||
+      // or if there is filtering and it doesn't meet the condition
       (props.allowFilter && !searchFilterSelector(state)(item)),
   };
 }
