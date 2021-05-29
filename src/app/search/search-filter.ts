@@ -2,8 +2,9 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { getTag, ItemInfos } from '../inventory/dim-item-info';
+import { ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
@@ -89,7 +90,7 @@ function makeSearchFilterFactory(
     query = query.trim().toLowerCase();
     if (!query.length) {
       // By default, show anything that doesn't have the archive tag
-      return (item: DimItem) => getTag(item, itemInfos, itemHashTags) !== 'archive';
+      return _.stubTrue;
     }
 
     const parsedQuery = parseQuery(query);

@@ -20,6 +20,7 @@ interface ProvidedProps {
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
+  searchFilterIsEmpty?: boolean;
 }
 
 // Props from Redux via mapStateToProps
@@ -32,18 +33,20 @@ interface StoreProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { item } = props;
+  const { item, searchFilterIsEmpty } = props;
 
   const settings = settingsSelector(state);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
-
+  const tag = getTag(item, itemInfos, itemHashTags);
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
-    tag: getTag(item, itemInfos, itemHashTags),
+    tag,
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     wishlistRoll: wishListSelector(item)(state),
-    searchHidden: props.allowFilter && !searchFilterSelector(state)(item),
+    searchHidden:
+      (searchFilterIsEmpty && tag === 'archive') ||
+      (props.allowFilter && !searchFilterSelector(state)(item)),
   };
 }
 
