@@ -1,5 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { searchFilterSelector } from '../search/search-filter';
@@ -20,7 +21,7 @@ interface ProvidedProps {
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
-  searchFilterIsEmpty?: boolean;
+  dimArchived?: boolean;
 }
 
 // Props from Redux via mapStateToProps
@@ -33,11 +34,13 @@ interface StoreProps {
 }
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { item, searchFilterIsEmpty } = props;
+  const { item, dimArchived } = props;
   const settings = settingsSelector(state);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
   const tag = getTag(item, itemInfos, itemHashTags);
+  const currentFilter = searchFilterSelector(state);
+  const defaultFilterActive = currentFilter === _.stubTrue;
 
   return {
     isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
@@ -46,9 +49,9 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     wishlistRoll: wishListSelector(item)(state),
     searchHidden:
       // dim this item if there's no search filter and it's archived
-      (searchFilterIsEmpty && tag === 'archive') ||
+      (dimArchived && defaultFilterActive && tag === 'archive') ||
       // or if there is filtering and it doesn't meet the condition
-      (props.allowFilter && !searchFilterSelector(state)(item)),
+      (props.allowFilter && !currentFilter(item)),
   };
 }
 

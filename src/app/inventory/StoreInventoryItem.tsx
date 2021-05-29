@@ -1,9 +1,6 @@
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
-import { searchFilterSelector } from 'app/search/search-filter';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import { DimItem } from './item-types';
@@ -20,7 +17,6 @@ interface Props {
  */
 export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const dispatch = useThunkDispatch();
-  const currentFilter = useSelector(searchFilterSelector);
   const doubleClicked = (e: React.MouseEvent) => {
     dispatch(moveItemToCurrentStore(item, e));
   };
@@ -40,8 +36,8 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
             onClick={onClick}
             onDoubleClick={doubleClicked}
             // for only StoreInventoryItems (the main inventory page)
-            // we inject a special marker for use in dimming archived items
-            searchFilterIsEmpty={currentFilter === _.stubTrue}
+            // we mark these to be dimmed if archived
+            dimArchived
           />
         )}
       </ItemPopupTrigger>
