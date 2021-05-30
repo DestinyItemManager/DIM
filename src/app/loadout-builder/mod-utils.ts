@@ -1,6 +1,5 @@
 import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
@@ -10,7 +9,7 @@ import {
 } from './process-worker/process-utils';
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { bucketsToCategories, LockableBucketHashes } from './types';
+import { bucketsToCategories, LockableBucketHashes, UpgradeSpendTier } from './types';
 
 /**
  * Checks that:

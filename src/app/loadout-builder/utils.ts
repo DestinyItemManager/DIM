@@ -1,8 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType } from './types';
+import { LockedItemType, UpgradeSpendTier } from './types';
 
 /**
  * Add a locked item to the locked item list for a bucket.

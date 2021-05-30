@@ -4,7 +4,6 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
@@ -21,6 +20,7 @@ import {
   MinMaxIgnored,
   statHashes,
   StatTypes,
+  UpgradeSpendTier,
 } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {

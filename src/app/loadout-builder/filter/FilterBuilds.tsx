@@ -1,10 +1,9 @@
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { MinMax, MinMaxIgnored, statHashes, StatTypes, UpgradeSpendTier } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
 

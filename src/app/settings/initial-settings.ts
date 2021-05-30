@@ -1,6 +1,7 @@
 import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage } from 'app/i18n';
 
+// Todo(ryan): Temporary until api types are available
 export enum UpgradeSpendTier {
   Nothing,
   LegendaryShards,
