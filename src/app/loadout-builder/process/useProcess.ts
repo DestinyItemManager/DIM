@@ -4,6 +4,7 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
@@ -20,7 +21,6 @@ import {
   MinMaxIgnored,
   statHashes,
   StatTypes,
-  UpgradeSpendTiers,
 } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
@@ -50,7 +50,7 @@ export function useProcess(
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTiers,
+  upgradeSpendTier: UpgradeSpendTier,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
@@ -204,7 +204,7 @@ function createWorker() {
 function groupItems(
   items: readonly DimItem[],
   statOrder: StatTypes[],
-  upgradeSpendTier: UpgradeSpendTiers,
+  upgradeSpendTier: UpgradeSpendTier,
   generalMods: PluggableInventoryItemDefinition[],
   raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
 ) {

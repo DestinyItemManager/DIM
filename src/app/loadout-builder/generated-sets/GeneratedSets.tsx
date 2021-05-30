@@ -9,13 +9,14 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { someModHasEnergyRequirement } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTiers } from '../types';
+import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -71,7 +72,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTiers;
+  upgradeSpendTier: UpgradeSpendTier;
 }
 
 /**

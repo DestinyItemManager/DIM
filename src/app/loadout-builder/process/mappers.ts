@@ -1,6 +1,7 @@
 import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import {
   DestinyClass,
   DestinyEnergyType,
@@ -14,7 +15,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, statHashToType, StatTypes, UpgradeSpendTiers } from '../types';
+import { ArmorSet, statHashToType, StatTypes } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
@@ -111,7 +112,7 @@ export function getTotalModStatChanges(
 
 export function mapDimItemToProcessItem(
   dimItem: DimItem,
-  upgradeSpendTier: UpgradeSpendTiers,
+  upgradeSpendTier: UpgradeSpendTier,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
   const { bucket, id, hash, type, name, equippingLabel, basePower, stats, energy } = dimItem;

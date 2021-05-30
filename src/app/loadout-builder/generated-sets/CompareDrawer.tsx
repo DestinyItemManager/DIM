@@ -7,6 +7,7 @@ import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -17,14 +18,7 @@ import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
-import {
-  ArmorSet,
-  LockableBucketHashes,
-  statHashes,
-  statKeys,
-  StatTypes,
-  UpgradeSpendTiers,
-} from '../types';
+import { ArmorSet, LockableBucketHashes, statHashes, statKeys, StatTypes } from '../types';
 import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
@@ -56,7 +50,7 @@ interface ProvidedProps {
   classType: DestinyClass;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
-  upgradeSpendTier: UpgradeSpendTiers;
+  upgradeSpendTier: UpgradeSpendTier;
   onClose(): void;
 }
 

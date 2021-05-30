@@ -2,12 +2,13 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTiers } from '../types';
+import { ArmorSet, LockedMap, StatTypes } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -27,7 +28,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTiers;
+  upgradeSpendTier: UpgradeSpendTier;
 }
 
 /**

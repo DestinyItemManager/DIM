@@ -11,6 +11,7 @@ import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -45,7 +46,6 @@ import {
   statKeys,
   StatTypes,
   statValues,
-  UpgradeSpendTiers,
 } from './types';
 
 interface ProvidedProps {
@@ -55,7 +55,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   statOrder: StatTypes[];
-  upgradeSpendTier: UpgradeSpendTiers;
+  upgradeSpendTier: UpgradeSpendTier;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;

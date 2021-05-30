@@ -1,9 +1,10 @@
 import { t } from 'app/i18next-t';
 import { setSetting } from 'app/settings/actions';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { MinMax, MinMaxIgnored, statHashes, StatTypes, UpgradeSpendTiers } from '../types';
+import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
 
@@ -20,7 +21,7 @@ export default function FilterBuilds({
   statRanges?: { [statType in StatTypes]: MinMax };
   stats: { [statType in StatTypes]: MinMaxIgnored };
   order: StatTypes[];
-  upgradeSpendTier: UpgradeSpendTiers;
+  upgradeSpendTier: UpgradeSpendTier;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
   const dispatch = useDispatch();
@@ -56,19 +57,17 @@ export default function FilterBuilds({
               dispatch(setSetting('loUpgradeSpendTier', parseInt(event.target.value, 10)))
             }
           >
-            <option value={UpgradeSpendTiers.Nothing}>
-              {t('LoadoutBuilder.SpendNoMaterials')}
-            </option>
-            <option value={UpgradeSpendTiers.LegendaryShards}>
+            <option value={UpgradeSpendTier.Nothing}>{t('LoadoutBuilder.SpendNoMaterials')}</option>
+            <option value={UpgradeSpendTier.LegendaryShards}>
               {t('LoadoutBuilder.LegendaryShards')}
             </option>
-            <option value={UpgradeSpendTiers.EnhancementPrisms}>
+            <option value={UpgradeSpendTier.EnhancementPrisms}>
               {t('LoadoutBuilder.EnhancementPrisms')}
             </option>
-            <option value={UpgradeSpendTiers.AscendantShardsNotExotic}>
+            <option value={UpgradeSpendTier.AscendantShardsNotExotic}>
               {t('LoadoutBuilder.AscendantShardsNotExotics')}
             </option>
-            <option value={UpgradeSpendTiers.AscendantShards}>
+            <option value={UpgradeSpendTier.AscendantShards}>
               {t('LoadoutBuilder.AscendantShards')}
             </option>
           </select>
