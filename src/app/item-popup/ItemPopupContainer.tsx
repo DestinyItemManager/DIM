@@ -2,7 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
@@ -37,7 +37,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
-    stores: storesSelector(state),
+    stores: sortedStoresSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     itemDetails: settings.itemDetails,
   };

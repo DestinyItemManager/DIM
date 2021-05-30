@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
-import { storesSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { buildItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemSockets from 'app/item-popup/ItemSockets';
@@ -51,7 +51,7 @@ export default function MobileInspect() {
 }
 
 function MobileInspectSheet({ item, inspectType }: { item: DimItem; inspectType: Inspect }) {
-  const stores = useSelector(storesSelector);
+  const stores = useSelector(sortedStoresSelector);
   const itemActionsModel = useMemo(
     () => item && buildItemActionsModel(item, stores),
     [item, stores]
