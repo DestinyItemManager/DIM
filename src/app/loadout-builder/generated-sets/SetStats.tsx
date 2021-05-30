@@ -36,7 +36,6 @@ function SetStats({
   const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
-  // class items is the only array larger than 1 and it cannot have incorrect stats
 
   const displayStats = { ...stats };
 
