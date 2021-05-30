@@ -450,7 +450,6 @@
     "SaveAs": "Save as",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
-    "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",

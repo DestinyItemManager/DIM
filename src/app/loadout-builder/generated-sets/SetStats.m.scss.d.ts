@@ -11,7 +11,6 @@ interface CssExports {
   'statSegmentContainer': string;
   'tierLightContainer': string;
   'tierLightSegment': string;
-  'warning': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
