@@ -2,12 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
-import {
-  armorBuckets,
-  armorStats,
-  CUSTOM_TOTAL_STAT_HASH,
-  TOTAL_STAT_HASH,
-} from 'app/search/d2-known-values';
+import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import {
@@ -15,7 +10,6 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,
-  DestinyItemStatsComponent,
   DestinyStatAggregationType,
   DestinyStatCategory,
   DestinyStatDefinition,
@@ -106,7 +100,6 @@ type StatLookup = { [statHash: number]: DimStat | undefined };
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   createdItem: DimItem,
-  liveStats: DestinyItemStatsComponent | undefined,
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ) {
@@ -126,24 +119,11 @@ export function buildStats(
   );
 
   // We only use the raw "investment" stats to calculate all item stats.
-  let investmentStats =
+  const investmentStats =
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
   // Include the contributions from perks and mods
   applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
-
-  // if we didn't get stats from sockets and item def, fall back to the item's stats reported by the API
-  if (!investmentStats.length && liveStats && createdItem.type !== 'ClassItem') {
-    // TODO: build a version of applyPlugsToStats that only calculates plug values
-    investmentStats = buildLiveStats(
-      liveStats,
-      itemDef,
-      createdItem,
-      defs,
-      statGroup,
-      statDisplaysByStatHash
-    );
-  }
 
   if (createdItem.bucket.inArmor) {
     // one last check for missing stats on armor
@@ -490,99 +470,6 @@ function attachPlugStats(
 
     plug.stats = inactivePlugStats;
   }
-}
-
-/**
- * Build the stats that come "live" from the API's data on real instances
- */
-function buildLiveStats(
-  stats: DestinyItemStatsComponent,
-  itemDef: DestinyInventoryItemDefinition,
-  createdItem: DimItem,
-  defs: D2ManifestDefinitions,
-  statGroup: DestinyStatGroupDefinition,
-  statDisplaysByStatHash: StatDisplayLookup
-) {
-  const ret: DimStat[] = [];
-
-  // Sum all the conditionally inactive and active plug stats from sockets so we can calculate
-  // the value and base. On armour, the live stat includes all mod stats whether they are active or not.
-  const inactivePlugStatValues: { [statHash: number]: number } = {};
-  const activePlugStatValues: { [statHash: number]: number } = {};
-
-  if (createdItem.sockets) {
-    for (const { plugged } of createdItem.sockets.allSockets) {
-      if (plugged?.enabled && plugged.plugDef.investmentStats) {
-        for (const { isConditionallyActive, statTypeHash } of plugged.plugDef.investmentStats) {
-          const plugStat = plugged.stats?.[statTypeHash] ?? 0;
-          if (
-            !isPlugStatActive(
-              createdItem,
-              plugged.plugDef.hash,
-              statTypeHash,
-              isConditionallyActive
-            )
-          ) {
-            inactivePlugStatValues[statTypeHash] =
-              (inactivePlugStatValues[statTypeHash] ?? 0) + plugStat;
-          } else {
-            activePlugStatValues[statTypeHash] =
-              (activePlugStatValues[statTypeHash] ?? 0) + plugStat;
-          }
-        }
-      }
-    }
-  }
-
-  for (const itemStatKey in stats.stats) {
-    const itemStat = stats.stats[itemStatKey];
-
-    const statHash = itemStat.statHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
-      continue;
-    }
-
-    const statDef = defs.Stat.get(statHash);
-    if (!statDef) {
-      continue;
-    }
-
-    let maximumValue = statGroup.maximumValue;
-    let bar = !statsNoBar.includes(statHash);
-    let smallerIsBetter = false;
-
-    const statDisplay = statDisplaysByStatHash[statHash];
-
-    if (statDisplay) {
-      const firstInterp = statDisplay.displayInterpolation[0];
-      const lastInterp =
-        statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
-      smallerIsBetter = firstInterp.weight > lastInterp.weight;
-      maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
-      bar = !statDisplay.displayAsNumeric;
-    }
-
-    const value = itemStat.value - (inactivePlugStatValues[statHash] ?? 0);
-
-    ret.push({
-      investmentValue: itemStat.value,
-      statHash,
-      displayProperties: statDef.displayProperties,
-      sort: statAllowList.indexOf(statHash),
-      value,
-      base:
-        createdItem.bucket.hash === armorBuckets.classitem
-          ? 0
-          : value - (activePlugStatValues[statHash] ?? 0),
-      maximumValue,
-      bar,
-      smallerIsBetter,
-      additive: statDef.aggregationType === DestinyStatAggregationType.Character,
-      isConditionallyActive: false,
-    });
-  }
-
-  return ret;
 }
 
 function totalStat(stats: DimStat[]): DimStat {
