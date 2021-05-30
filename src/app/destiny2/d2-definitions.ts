@@ -183,12 +183,12 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
-          // Allow for valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries without needing a look-up table
-          if (id < 1 || !Number.isSafeInteger(id)) {
-            throw new Error(`Invalid Hash: ${id}`);
-          }
+          // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
+          // but other than that they should be whole & reasonable sized numbers
+          const errorString =
+            id < 1 || !Number.isSafeInteger(id) ? 'invalidHash' : 'hashLookupFailure';
           const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
-          reportException(`hashLookupFailure`, new HashLookupFailure(table, id), {
+          reportException(errorString, new HashLookupFailure(table, id), {
             requestingEntryInfo,
             failedHash: id,
             failedComponent: table,
