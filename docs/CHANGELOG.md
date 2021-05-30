@@ -1,5 +1,12 @@
 ## Next
 
+* Items tagged "archive" are no longer automatically excluded from Loadout Optimizer and the Organizer.
+* Vendor items can now match wish lists. Check what Banshee has for sale each week!
+* You can put tags and notes on Shaders again. And for the first time, you can put them on Mods. Both are accessible from the Collections row in the Records tab.
+* iPhone X+ screens once again do not show grey corners in landscape mode.
+* Fixed a bug that broke part of the Progress page.
+* Fixed a bug that crashed DIM if you clicked the masterwork of some items.
+
 ## 6.66.2 <span class="changelog-date">(2021-05-25)</span>
 
 * Fix for errors on viewing some items when DIM had just loaded.
