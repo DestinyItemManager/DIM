@@ -70,7 +70,10 @@ const socketFilters: FilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament &&
+            (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
+              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+                /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/
+              )) &&
             socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
             !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
             !socket.plugged.plugDef.itemCategoryHashes?.includes(
