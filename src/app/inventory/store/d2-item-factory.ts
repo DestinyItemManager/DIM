@@ -475,8 +475,7 @@ export function makeItem(
   }
 
   try {
-    const liveStats = itemComponents?.stats?.data?.[createdItem.id];
-    createdItem.stats = buildStats(createdItem, liveStats, itemDef, defs);
+    createdItem.stats = buildStats(createdItem, itemDef, defs);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
