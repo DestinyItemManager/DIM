@@ -1,9 +1,8 @@
-import { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
+import { ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import { exportDimApiData } from 'app/dim-api/dim-api';
 import { importDataBackup } from 'app/dim-api/import';
-import { parseProfileKey } from 'app/dim-api/reducer';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import HelpLink from 'app/dim-ui/HelpLink';
 import Switch from 'app/dim-ui/Switch';
@@ -11,11 +10,11 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp, ThunkResult } from 'app/store/types';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { exportBackupData } from './export-data';
+import { exportBackupData, exportLocalData } from './export-data';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
 import './storage.scss';
@@ -123,62 +122,6 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
 }
 
 export default connect<StoreProps>(mapStateToProps)(DimApiSettings);
-
-/**
- * Export the local IDB data to a format the DIM API could import.
- */
-function exportLocalData(): ThunkResult<ExportResponse> {
-  return async (_dispatch, getState) => {
-    const dimApiState = getState().dimApi;
-    const exportResponse: ExportResponse = {
-      settings: dimApiState.settings,
-      loadouts: [],
-      tags: [],
-      triumphs: [],
-      itemHashTags: [],
-      searches: [],
-    };
-
-    for (const profileKey in dimApiState.profiles) {
-      if (Object.prototype.hasOwnProperty.call(dimApiState.profiles, profileKey)) {
-        const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
-
-        for (const loadout of Object.values(dimApiState.profiles[profileKey].loadouts)) {
-          exportResponse.loadouts.push({
-            loadout,
-            platformMembershipId,
-            destinyVersion,
-          });
-        }
-        for (const annotation of Object.values(dimApiState.profiles[profileKey].tags)) {
-          exportResponse.tags.push({
-            annotation,
-            platformMembershipId,
-            destinyVersion,
-          });
-        }
-
-        exportResponse.triumphs.push({
-          platformMembershipId,
-          triumphs: dimApiState.profiles[profileKey].triumphs,
-        });
-      }
-    }
-
-    exportResponse.itemHashTags = Object.values(dimApiState.itemHashTags);
-
-    for (const destinyVersion in dimApiState.searches) {
-      for (const search of dimApiState.searches[destinyVersion]) {
-        exportResponse.searches.push({
-          destinyVersion: parseInt(destinyVersion, 10) as DestinyVersion,
-          search,
-        });
-      }
-    }
-
-    return exportResponse;
-  };
-}
 
 // TODO: gotta change all these strings
 function showBackupDownloadedNotification() {
