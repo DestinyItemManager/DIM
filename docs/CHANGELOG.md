@@ -1,5 +1,7 @@
 ## Next
 
+## 6.67.0 <span class="changelog-date">(2021-05-30)</span>
+
 * Items tagged "archive" are no longer automatically excluded from Loadout Optimizer and the Organizer.
 * Vendor items can now match wish lists. Check what Banshee has for sale each week!
 * You can put tags and notes on Shaders again. And for the first time, you can put them on Mods. Both are accessible from the Collections row in the Records tab.
