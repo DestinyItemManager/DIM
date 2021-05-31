@@ -191,8 +191,9 @@ function LoadoutBuilder({
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
-    () => filterItems(characterItems, lockedMap, lockedMods, lockedExotic, filter),
-    [characterItems, lockedMap, lockedMods, lockedExotic, filter]
+    () =>
+      filterItems(characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter),
+    [characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
   );
 
   const availableExotics = useMemo(() => {

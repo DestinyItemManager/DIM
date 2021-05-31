@@ -10,17 +10,23 @@ import {
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 import { bucketsToCategories, LockableBucketHashes, UpgradeSpendTier } from './types';
+import { canSwapEnergyFromUpgradeSpendTier } from './utils';
 
 /**
  * Checks that:
  *   1. The armour piece is Armour 2.0
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
-export const doEnergiesMatch = (mod: PluggableInventoryItemDefinition, item: DimItem) =>
+export const doEnergiesMatch = (
+  mod: PluggableInventoryItemDefinition,
+  item: DimItem,
+  upgradeSpendTier: UpgradeSpendTier
+) =>
   item.energy &&
   (!mod.plug.energyCost ||
     mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
-    mod.plug.energyCost.energyType === item.energy?.energyType);
+    mod.plug.energyCost.energyType === item.energy.energyType ||
+    canSwapEnergyFromUpgradeSpendTier(upgradeSpendTier, item));
 
 /**
  * If the energies match, this will assign the mods to the item in assignments.
@@ -30,9 +36,10 @@ export const doEnergiesMatch = (mod: PluggableInventoryItemDefinition, item: Dim
 function assignModsForSlot(
   item: DimItem,
   assignments: Record<string, number[]>,
+  upgradeSpendTier: UpgradeSpendTier,
   mods?: PluggableInventoryItemDefinition[]
 ): void {
-  if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item))) {
+  if (mods?.length && mods.every((mod) => doEnergiesMatch(mod, item, upgradeSpendTier))) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.hash)];
   }
 }
@@ -103,7 +110,7 @@ export function assignModsToArmorSet(
 
     if (item) {
       const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[hash]];
-      assignModsForSlot(item, assignments, lockedModsByPlugCategoryHash);
+      assignModsForSlot(item, assignments, upgradeSpendTier, lockedModsByPlugCategoryHash);
       processItems.push(
         mapDimItemToProcessItem(item, upgradeSpendTier, lockedModsByPlugCategoryHash)
       );

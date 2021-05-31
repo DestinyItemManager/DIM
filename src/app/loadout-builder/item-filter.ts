@@ -9,6 +9,7 @@ import {
   LockableBuckets,
   LockedItemType,
   LockedMap,
+  UpgradeSpendTier,
 } from './types';
 
 /**
@@ -19,6 +20,7 @@ export function filterItems(
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExotic: LoadoutBuilderState['lockedExotic'],
+  upgradeSpendTier: UpgradeSpendTier,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -59,13 +61,15 @@ export function filterItems(
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
           (!lockedExotic ||
-            (bucket === lockedExotic.bucketHash ?
-              item.hash === lockedExotic.def.hash :
-              item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
+            (bucket === lockedExotic.bucketHash
+              ? item.hash === lockedExotic.def.hash
+              : item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||
-            lockedModsByPlugCategoryHash.every((mod) => doEnergiesMatch(mod, item)))
+            lockedModsByPlugCategoryHash.every((mod) =>
+              doEnergiesMatch(mod, item, upgradeSpendTier)
+            ))
       );
     }
   });

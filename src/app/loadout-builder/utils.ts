@@ -75,9 +75,7 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   return Math.floor(power / numPoweredItems);
 }
 
-/** Gets the max energy allowed from the passed in UpgradeSpendTier */
-export function upgradeSpendTierToMaxEnergy(tier: UpgradeSpendTier, item: DimItem) {
-  const available = item.energy?.energyCapacity;
+function getMaxEnergyFromUpgradeSpendTier(tier: UpgradeSpendTier, item: DimItem) {
   const isExotic = Boolean(item.equippingLabel);
   if (available === undefined) {
     return 0;
@@ -85,15 +83,25 @@ export function upgradeSpendTierToMaxEnergy(tier: UpgradeSpendTier, item: DimIte
 
   switch (tier) {
     case UpgradeSpendTier.LegendaryShards:
-      return Math.max(7, available);
+      return 7;
     case UpgradeSpendTier.EnhancementPrisms:
-      return Math.max(isExotic ? 8 : 9, available);
+      return isExotic ? 8 : 9;
     case UpgradeSpendTier.AscendantShardsNotExotic:
-      return Math.max(isExotic ? 8 : 10, available);
+      return isExotic ? 8 : 10;
     case UpgradeSpendTier.AscendantShards:
       return 10;
     case UpgradeSpendTier.Nothing:
     default:
-      return available;
+      return 0;
   }
+}
+
+/** Gets the max energy allowed from the passed in UpgradeSpendTier */
+export function upgradeSpendTierToMaxEnergy(tier: UpgradeSpendTier, item: DimItem) {
+  return Math.max(item.energy?.energyCapacity || 0, getMaxEnergyFromUpgradeSpendTier(tier, item));
+}
+
+/** Figures out whether you can swap energies in the allowed spend tier. */
+export function canSwapEnergyFromUpgradeSpendTier(tier: UpgradeSpendTier, item: DimItem) {
+  return getMaxEnergyFromUpgradeSpendTier(tier, item) <= item.energy?.energyCapacity || 0;
 }
