@@ -2,7 +2,8 @@ import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definit
 import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { RootState } from 'app/store/types';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { delay } from 'app/utils/util';
+import { DestinyManifest, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import _ from 'lodash';
@@ -20,7 +21,18 @@ export async function getTestManifestJson() {
   // download and parse manifest
   const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
 
-  const manifest = await d2GetManifest();
+  let manifest: DestinyManifest;
+  for (let i = 0; ; i++) {
+    try {
+      manifest = await d2GetManifest();
+      break;
+    } catch (e) {
+      if (i === 4) {
+        throw e;
+      }
+      await delay(1000);
+    }
+  }
 
   const enManifestUrl = manifest.jsonWorldContentPaths.en;
   const filename = path.resolve(cacheDir, path.basename(enManifestUrl));
