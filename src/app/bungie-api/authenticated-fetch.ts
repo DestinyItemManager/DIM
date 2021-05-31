@@ -131,6 +131,36 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     );
     throw response;
   }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {}
+
+  if (data) {
+    if (data.error === 'server_error') {
+      if (data.error_description === 'SystemDisabled') {
+        throw new Error(t('BungieService.Maintenance'));
+      } else if (data.error_description !== 'AuthorizationRecordExpired') {
+        throw new Error(
+          `Unknown error getting response token: ${data.error}, ${data.error_description}`
+        );
+      }
+    }
+
+    if (data.ErrorCode) {
+      switch (data.ErrorCode) {
+        case PlatformErrorCodes.RefreshTokenNotYetValid:
+        case PlatformErrorCodes.AccessTokenHasExpired:
+        case PlatformErrorCodes.AuthorizationCodeInvalid:
+        case PlatformErrorCodes.AuthorizationRecordExpired:
+          throw new FatalTokenError(
+            'Refresh token expired or not valid, platform error ' + data.ErrorCode
+          );
+      }
+    }
+  }
+
   switch (response.status) {
     case -1:
       throw new Error(
@@ -139,39 +169,9 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     case 400:
     case 401:
     case 403: {
-      let data;
-      try {
-        data = await response.json();
-      } catch (e) {}
-      if (data?.error === 'server_error') {
-        if (data.error_description === 'SystemDisabled') {
-          throw new Error(t('BungieService.Maintenance'));
-        } else if (data.error_description !== 'AuthorizationRecordExpired') {
-          throw new Error(
-            `Unknown error getting response token: ${data.error}, ${data.error_description}`
-          );
-        }
-      }
       throw new FatalTokenError('Refresh token expired or not valid, status ' + response.status);
     }
-    default: {
-      try {
-        const data = await response.json();
-        if (data?.ErrorCode) {
-          switch (data.ErrorCode) {
-            case PlatformErrorCodes.RefreshTokenNotYetValid:
-            case PlatformErrorCodes.AccessTokenHasExpired:
-            case PlatformErrorCodes.AuthorizationCodeInvalid:
-            case PlatformErrorCodes.AuthorizationRecordExpired:
-              throw new FatalTokenError(
-                'Refresh token expired or not valid, platform error ' + data.ErrorCode
-              );
-          }
-        }
-      } catch (e) {
-        throw new Error("Error response wasn't json: " + e.message);
-      }
-    }
   }
+
   throw new Error('Unknown error getting response token: ' + JSON.stringify(response));
 }
