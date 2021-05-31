@@ -11,12 +11,10 @@ import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
-  CUSTOM_TOTAL_STAT_HASH,
   energyNamesByEnum,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,
-  TOTAL_STAT_HASH,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -125,25 +123,6 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
       .filter(Boolean)
       .join(', ') ?? ''
   );
-}
-
-export function getPossiblyIncorrectStats(item: DimItem): string[] {
-  const incorrect: Set<string> = new Set();
-  const stats = item.stats;
-
-  if (stats) {
-    for (const stat of stats) {
-      if (
-        stat.statHash !== TOTAL_STAT_HASH &&
-        stat.statHash !== CUSTOM_TOTAL_STAT_HASH &&
-        stat.statMayBeWrong &&
-        stat.displayProperties.name
-      ) {
-        incorrect.add(stat.displayProperties.name);
-      }
-    }
-  }
-  return [...incorrect];
 }
 
 /**

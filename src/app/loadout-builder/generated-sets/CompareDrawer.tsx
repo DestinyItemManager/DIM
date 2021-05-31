@@ -188,7 +188,6 @@ function CompareDrawer({
             </button>
           </div>
           <SetStats
-            items={setItems}
             stats={set.stats}
             maxPower={getPower(setItems)}
             statOrder={statOrder}
@@ -225,7 +224,6 @@ function CompareDrawer({
           {loadoutItems.length ? (
             <>
               <SetStats
-                items={loadoutItems}
                 stats={loadoutStats}
                 maxPower={loadoutMaxPower}
                 statOrder={statOrder}

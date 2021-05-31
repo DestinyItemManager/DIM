@@ -81,7 +81,6 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
-            items={items}
             maxPower={getPower(items)}
             statOrder={statOrder}
             enabledStats={enabledStats}
