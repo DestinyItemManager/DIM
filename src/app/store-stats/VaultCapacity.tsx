@@ -95,7 +95,7 @@ export default React.memo(function VaultCapacity() {
     <>
       {_.sortBy(Object.keys(vaultCounts), (id) => vaultBucketOrder.indexOf(parseInt(id, 10))).map(
         (bucketId) => {
-          const { count, bucket } = vaultCounts[Number(bucketId)];
+          const { count, bucket } = vaultCounts[bucketId];
           const isConsumables = bucketId === String(BucketHashes.Consumables);
           const title = isConsumables ? undefined : bucket.name;
           return (
