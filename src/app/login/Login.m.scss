@@ -1,0 +1,92 @@
+@import '../variables.scss';
+
+.billboard {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  max-width: 800px;
+  border-top: 5px solid #888;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  padding: 1rem 3rem;
+  text-align: center;
+  z-index: 99999;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+  margin: auto;
+
+  h1 {
+    @include destiny-header;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.explanation {
+  font-size: 16px;
+  margin: 8px 0 16px 0;
+}
+
+.section {
+  border-top: 1px solid #444;
+  text-align: center;
+  padding-top: 2em;
+  margin-top: 2em;
+  a {
+    text-decoration: underline;
+    color: #ccc;
+    cursor: pointer;
+  }
+}
+
+.dimSync {
+  composes: section;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dimSyncCheckbox {
+  width: fit-content;
+  margin: 0 0 0.5em 0;
+}
+
+.fineprint {
+  color: #aaa;
+}
+
+.warning {
+  margin: 16px 0 0 0;
+  padding: 0.85em;
+  background: scale-color($red, $lightness: -90%);
+  border-top: 4px solid $red;
+
+  h2 {
+    margin: 0 0 8px 0 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+  a {
+    color: white;
+    font-size: 12px;
+  }
+  button {
+    display: block;
+    margin: 0.5em auto 0 auto;
+  }
+}
+
+.auth {
+  composes: dim-button from global;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 1em 3em;
+  background-color: $orange;
+  color: black;
+  text-shadow: none;
+  &:hover {
+    transform: scale(1.05);
+  }
+}

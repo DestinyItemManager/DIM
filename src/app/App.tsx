@@ -46,7 +46,6 @@ interface StoreProps {
   showNewItems: boolean;
   charColMobile: number;
   needsLogin: boolean;
-  reauth: boolean;
   needsDeveloper: boolean;
 }
 
@@ -58,7 +57,6 @@ function mapStateToProps(state: RootState): StoreProps {
     showNewItems: settings.showNewItems,
     charColMobile: settings.charColMobile,
     needsLogin: state.accounts.needsLogin,
-    reauth: state.accounts.reauth,
     needsDeveloper: state.accounts.needsDeveloper,
   };
 }
@@ -71,7 +69,6 @@ function App({
   itemQuality,
   showNewItems,
   needsLogin,
-  reauth,
   needsDeveloper,
 }: Props) {
   const [storageWorks, setStorageWorks] = useState(true);
@@ -129,9 +126,9 @@ function App({
               {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
               {needsLogin &&
                 ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Redirect to={'/developer'} />
+                  <Redirect to="/developer" />
                 ) : (
-                  <Redirect to={reauth ? '/login?reauth=true' : '/login'} />
+                  <Redirect to="/login" />
                 ))}
               <Route path="/search-history" component={SearchHistory} exact />
               <Route
