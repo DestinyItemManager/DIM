@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -110,6 +111,7 @@ export function getTotalModStatChanges(
 }
 
 export function mapDimItemToProcessItem(
+  defs: D2ManifestDefinitions,
   dimItem: DimItem,
   upgradeSpendTier: UpgradeSpendTier,
   modsForSlot?: PluggableInventoryItemDefinition[]
@@ -140,10 +142,10 @@ export function mapDimItemToProcessItem(
     baseStats: baseStatMap,
     energy: energy
       ? {
-          type: canSwapEnergyFromUpgradeSpendTier(upgradeSpendTier, dimItem)
+          type: canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem)
             ? DestinyEnergyType.Any
             : energy.energyType,
-          capacity: upgradeSpendTierToMaxEnergy(upgradeSpendTier, dimItem),
+          capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem),
           val: modsCost,
         }
       : undefined,

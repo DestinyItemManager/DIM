@@ -8,7 +8,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -177,6 +177,7 @@ function LoadoutBuilder({
     { lockedMap, lockedMods, lockedExotic, selectedStoreId, statFilters, modPicker, compareSet },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
+  const defs = useD2Definitions();
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -192,8 +193,16 @@ function LoadoutBuilder({
 
   const filteredItems = useMemo(
     () =>
-      filterItems(characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter),
-    [characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
+      filterItems(
+        defs,
+        characterItems,
+        lockedMap,
+        lockedMods,
+        lockedExotic,
+        upgradeSpendTier,
+        filter
+      ),
+    [defs, characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
   );
 
   const availableExotics = useMemo(() => {
@@ -216,6 +225,7 @@ function LoadoutBuilder({
   }, [selectedStore, items]);
 
   const { result, processing } = useProcess(
+    defs,
     selectedStore,
     filteredItems,
     lockedMap,

@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
 import _ from 'lodash';
@@ -16,6 +17,7 @@ import {
  * Filter the items map down given the locking and filtering configs.
  */
 export function filterItems(
+  defs: D2ManifestDefinitions | undefined,
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
@@ -25,7 +27,7 @@ export function filterItems(
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
-  if (!items) {
+  if (!items || !defs) {
     return filteredItems;
   }
 
@@ -68,7 +70,7 @@ export function filterItems(
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||
             lockedModsByPlugCategoryHash.every((mod) =>
-              doEnergiesMatch(mod, item, upgradeSpendTier)
+              doEnergiesMatch(defs, mod, item, upgradeSpendTier)
             ))
       );
     }

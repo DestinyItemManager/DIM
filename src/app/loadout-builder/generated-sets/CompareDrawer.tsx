@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -31,14 +32,14 @@ import Mod from './Mod';
 import SetStats from './SetStats';
 import Sockets from './Sockets';
 
-function getItemStats(item: DimItem, upgradeSpendTier: number) {
+function getItemStats(defs: D2ManifestDefinitions, item: DimItem, upgradeSpendTier: number) {
   const baseStats = _.mapValues(
     statHashes,
     (value) => item.stats?.find((s) => s.statHash === value)?.base || 0
   );
 
   if (
-    upgradeSpendTierToMaxEnergy(upgradeSpendTier, item) === 10 ||
+    upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10 ||
     item.energy?.energyCapacity === 10
   ) {
     for (const statType of statKeys) {
@@ -113,7 +114,7 @@ function CompareDrawer({
   const loadoutStats = _.mapValues(statHashes, () => 0);
 
   for (const item of loadoutItems) {
-    const itemStats = getItemStats(item, upgradeSpendTier);
+    const itemStats = getItemStats(defs, item, upgradeSpendTier);
     for (const statType of statKeys) {
       loadoutStats[statType] += itemStats[statType];
     }
@@ -126,12 +127,14 @@ function CompareDrawer({
   }
 
   const [assignedMods] = assignModsToArmorSet(
+    defs,
     set.armor.map((items) => items[0]),
     lockedMods,
     upgradeSpendTier
   );
 
   const [loadoutAssignedMods, loadoutUnassignedMods] = assignModsToArmorSet(
+    defs,
     loadoutItems,
     lockedMods,
     upgradeSpendTier

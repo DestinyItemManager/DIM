@@ -1,4 +1,8 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { energyUpgrade } from 'app/inventory/store/energy';
+import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 import { LockedItemType, UpgradeSpendTier } from './types';
@@ -75,30 +79,108 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   return Math.floor(power / numPoweredItems);
 }
 
-function getMaxEnergyFromUpgradeSpendTier(tier: UpgradeSpendTier, item: DimItem) {
+/**
+ * This function finds the max energy an item can be upgraded to within the allowed spend tier.
+ * If it is precisely at the limit for the spend tier, the items energy capacity will be returned.
+ * If the item is over the limit for the spend tier 0 will be returned.
+ */
+function getMaxEnergyFromUpgradeSpendTier(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return 0;
+  }
+
   const isExotic = Boolean(item.equippingLabel);
+  // Used for figuring out what upgrade is not allowed
+  // if undefined there is no boundary
+  let boundaryHash: number | 'none' = 'none';
 
   switch (tier) {
-    case UpgradeSpendTier.LegendaryShards:
-      return 7;
-    case UpgradeSpendTier.EnhancementPrisms:
-      return isExotic ? 8 : 9;
-    case UpgradeSpendTier.AscendantShardsNotExotic:
-      return isExotic ? 8 : 10;
-    case UpgradeSpendTier.AscendantShards:
-      return 10;
     case UpgradeSpendTier.Nothing:
-    default:
+      // special case, value is 0 so items energy wins out or swap is always disallowed
       return 0;
+    case UpgradeSpendTier.LegendaryShards:
+      boundaryHash = UpgradeMaterialHashes.enhancementPrism;
+      break;
+    case UpgradeSpendTier.EnhancementPrisms:
+      boundaryHash = UpgradeMaterialHashes.ascendantShard;
+      break;
+    case UpgradeSpendTier.AscendantShardsNotExotic: {
+      if (!isExotic) {
+        break;
+      }
+      boundaryHash = UpgradeMaterialHashes.ascendantShard;
+      break;
+    }
+    case UpgradeSpendTier.AscendantShards:
+      break;
   }
+
+  const availableEnergyUpgrades = energyUpgrade(
+    defs,
+    item,
+    item.energy.energyType,
+    item.energy.energyCapacity,
+    item.energy.energyType,
+    10
+  );
+
+  // Just get the max possible energy capacity for the item.
+  if (boundaryHash === 'none') {
+    return Math.max(
+      item.energy.energyCapacity,
+      ...availableEnergyUpgrades.map(
+        (upgradeHash) => defs.InventoryItem.get(upgradeHash).plug!.energyCapacity!.capacityValue
+      )
+    );
+  }
+
+  let previousUpgrade: DestinyInventoryItemDefinition | undefined;
+  for (const upgrade of availableEnergyUpgrades) {
+    const upgradeItem = defs.InventoryItem.get(upgrade);
+    const upgradeMaterials = defs.MaterialRequirementSet.get(
+      upgradeItem.plug!.insertionMaterialRequirementHash
+    );
+
+    for (const material of upgradeMaterials.materials) {
+      if (material.itemHash === boundaryHash) {
+        // in the case of no previous upgrade the item must already be on the limit
+        return previousUpgrade
+          ? previousUpgrade.plug!.energyCapacity!.capacityValue
+          : item.energy.energyCapacity;
+      }
+    }
+    previousUpgrade = upgradeItem;
+  }
+
+  // should never happen but lets be safe
+  return 0;
 }
 
 /** Gets the max energy allowed from the passed in UpgradeSpendTier */
-export function upgradeSpendTierToMaxEnergy(tier: UpgradeSpendTier, item: DimItem) {
-  return Math.max(item.energy?.energyCapacity || 0, getMaxEnergyFromUpgradeSpendTier(tier, item));
+export function upgradeSpendTierToMaxEnergy(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return 0;
+  }
+
+  return Math.max(item.energy.energyCapacity, getMaxEnergyFromUpgradeSpendTier(defs, tier, item));
 }
 
 /** Figures out whether you can swap energies in the allowed spend tier. */
-export function canSwapEnergyFromUpgradeSpendTier(tier: UpgradeSpendTier, item: DimItem) {
-  return (item.energy?.energyCapacity || 0) <= getMaxEnergyFromUpgradeSpendTier(tier, item);
+export function canSwapEnergyFromUpgradeSpendTier(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return false;
+  }
+  return item.energy.energyCapacity <= getMaxEnergyFromUpgradeSpendTier(defs, tier, item);
 }

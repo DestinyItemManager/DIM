@@ -281,3 +281,9 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
 } as const;
+
+export const UpgradeMaterialHashes = {
+  legendaryShard: 1022552290,
+  enhancementPrism: 4257549984,
+  ascendantShard: 4257549985,
+} as const;
