@@ -15,7 +15,7 @@ import {
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import { ArmorSet, statHashToType, StatTypes, UpgradeSpendTier } from '../types';
-import { upgradeSpendTierToMaxEnergy } from '../utils';
+import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -140,7 +140,9 @@ export function mapDimItemToProcessItem(
     baseStats: baseStatMap,
     energy: energy
       ? {
-          type: energy.energyType,
+          type: canSwapEnergyFromUpgradeSpendTier(upgradeSpendTier, dimItem)
+            ? DestinyEnergyType.Any
+            : energy.energyType,
           capacity: upgradeSpendTierToMaxEnergy(upgradeSpendTier, dimItem),
           val: modsCost,
         }

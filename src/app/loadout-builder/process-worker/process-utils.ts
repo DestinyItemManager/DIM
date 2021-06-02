@@ -106,6 +106,11 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
       case DestinyEnergyType.Void:
         voidCount += 1;
         break;
+      case DestinyEnergyType.Any:
+        arcCount += 1;
+        solarCount += 1;
+        voidCount += 1;
+        break;
       default:
         break;
     }
@@ -175,7 +180,9 @@ export function canTakeSlotIndependantMods(
       const otherEnergyIsValid =
         item.energy &&
         item.energy.val + otherEnergy.val <= item.energy.capacity &&
-        (item.energy.type === otherEnergy.type || otherEnergy.type === DestinyEnergyType.Any);
+        (item.energy.type === otherEnergy.type ||
+          otherEnergy.type === DestinyEnergyType.Any ||
+          item.energy.type === DestinyEnergyType.Any);
 
       // The other mods wont fit in the item set so move on to the next set of mods
       if (!(otherEnergyIsValid && item.compatibleModSeasons?.includes(tag))) {
@@ -199,7 +206,9 @@ export function canTakeSlotIndependantMods(
         const generalEnergyIsValid =
           item.energy &&
           item.energy.val + generalEnergy.val + otherEnergy.val <= item.energy.capacity &&
-          (item.energy.type === generalEnergy.type || generalEnergy.type === DestinyEnergyType.Any);
+          (item.energy.type === generalEnergy.type ||
+            generalEnergy.type === DestinyEnergyType.Any ||
+            item.energy.type === DestinyEnergyType.Any);
 
         // The general mods wont fit in the item set so move on to the next set of mods
         if (!generalEnergyIsValid) {
@@ -226,7 +235,9 @@ export function canTakeSlotIndependantMods(
             item.energy &&
             item.energy.val + generalEnergy.val + otherEnergy.val + raidEnergy.val <=
               item.energy.capacity &&
-            (item.energy.type === raidEnergy.type || raidEnergy.type === DestinyEnergyType.Any);
+            (item.energy.type === raidEnergy.type ||
+              raidEnergy.type === DestinyEnergyType.Any ||
+              item.energy.type === DestinyEnergyType.Any);
 
           // Due to raid mods overlapping with legacy mods for last wish we need to ensure
           // that if an item has a legacy mod socket then another mod is not already intended
