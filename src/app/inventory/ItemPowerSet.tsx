@@ -29,12 +29,3 @@ export function ItemPowerSet(items: DimItem[], powerFloor: number) {
     </div>
   );
 }
-
-// the plaintext version
-// maxLightSet
-//   .map((i) => {
-//     const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
-//     const diffSymbol = powerDiff > 0 ? '+' : '';
-//     return `${i.primStat?.value} -- ${i.bucket.name} (${diffSymbol}${powerDiff})`;
-//   })
-//   .join('\n');

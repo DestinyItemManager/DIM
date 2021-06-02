@@ -1,0 +1,23 @@
+.materialCounts {
+  display: grid;
+  margin: auto;
+  width: fit-content;
+  grid-template-columns: max-content max-content max-content;
+  grid-gap: 2px 6px;
+  align-items: center;
+
+  img {
+    height: 20px;
+    width: 20px;
+  }
+  .amount {
+    text-align: right;
+    font-weight: bold;
+  }
+  .spanGrid {
+    grid-column-end: span 3;
+    hr {
+      margin: 3px;
+    }
+  }
+}

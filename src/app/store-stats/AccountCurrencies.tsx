@@ -5,7 +5,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './AccountCurrencies.m.scss';
 
-// hard coding this for now since i dont have defs to sort with
+// TO-DO: top level currency display should really be a handpicked list, not
+// a naive echo of whatever the API decides is a currency
 const synthCurrencies = [
   1583786617, // InventoryItem "Synthweave Template"
   3107195131, // InventoryItem "Sleek Synthcord"
@@ -39,6 +40,7 @@ export default React.memo(function AccountCurrency() {
                   </div>
                 </React.Fragment>
               ))}
+              {/* add 0-3 blank slots to keep each currencyGroup rounded to a multiple of 4 (for css grid) */}
               {_.times((4 - (currencyGroup.length % 4)) % 4, (i) => (
                 <React.Fragment key={`${ci}-${i}`}>
                   <div />

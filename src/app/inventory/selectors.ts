@@ -4,6 +4,7 @@ import { currentProfileSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -50,6 +51,14 @@ export const vaultSelector = (state: RootState) => getVault(storesSelector(state
 
 /** Account wide currencies */
 export const currenciesSelector = (state: RootState) => state.inventory.currencies;
+
+/** materials/currencies that aren't top level stuff */
+export const materialsSelector = (state: RootState) =>
+  allItemsSelector(state).filter(
+    (i) =>
+      i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
+      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens)
+  );
 
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
