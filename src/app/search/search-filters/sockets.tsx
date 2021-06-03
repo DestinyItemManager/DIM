@@ -1,6 +1,11 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { getSpecialtySocketMetadatas, modSlotTags, modTypeTags } from 'app/utils/item-utils';
+import {
+  getInterestingSocketMetadatas,
+  getSpecialtySocketMetadatas,
+  modSlotTags,
+  modTypeTags,
+} from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import {
@@ -11,7 +16,30 @@ import {
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
+export const modslotFilter: FilterDefinition = {
+  keywords: 'modslot',
+  description: tl('Filter.ModSlot'),
+  format: 'query',
+  suggestions: modSlotTags.concat(['any', 'none']),
+  destinyVersion: 2,
+  filter:
+    ({ filterValue }) =>
+    (item: DimItem) => {
+      const modSocketTags = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
+      return (
+        (filterValue === 'none' && !modSocketTags) ||
+        (modSocketTags && (filterValue === 'any' || modSocketTags.includes(filterValue)))
+      );
+    },
+  fromItem: (item) => {
+    const modSocketTags =
+      getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
+    return modSocketTags.join(' ');
+  },
+};
+
 const socketFilters: FilterDefinition[] = [
+  modslotFilter,
   {
     keywords: 'randomroll',
     description: tl('Filter.RandomRoll'),
@@ -122,22 +150,7 @@ const socketFilters: FilterDefinition[] = [
         )
       ),
   },
-  {
-    keywords: 'modslot',
-    description: tl('Filter.ModSlot'),
-    format: 'query',
-    suggestions: modSlotTags.concat(['any', 'none']),
-    destinyVersion: 2,
-    filter:
-      ({ filterValue }) =>
-      (item: DimItem) => {
-        const modSocketTags = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
-        return (
-          (filterValue === 'none' && !modSocketTags) ||
-          (modSocketTags && (filterValue === 'any' || modSocketTags.includes(filterValue)))
-        );
-      },
-  },
+
   {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),

@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { ItemTriage } from 'app/item-triage/ItemTriage';
 import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
-import { inventoryWishListsSelector } from 'app/wishlists/selectors';
+import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ export default function ItemPopupBody({
   tab: ItemPopupTab;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
-  const wishlistRoll = useSelector(inventoryWishListsSelector)[item.id];
+  const wishlistRoll = useSelector(wishListSelector(item));
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
