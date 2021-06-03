@@ -22,7 +22,7 @@ import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import { Loadout } from 'app/loadout/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/filters';
@@ -83,16 +83,13 @@ export function getColumns(
   },
   classType: DestinyClass,
   itemInfos: ItemInfos,
-  wishList: {
-    [key: string]: InventoryWishListRoll;
-  },
+  wishList: (item: DimItem) => InventoryWishListRoll | undefined,
+  hasWishList: boolean,
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
   destinyVersion: DestinyVersion
 ): ColumnDefinition[] {
-  const hasWishList = !_.isEmpty(wishList);
-
   const statsGroup: ColumnGroup = {
     id: 'stats',
     header: t('Organizer.Columns.Stats'),
@@ -170,36 +167,31 @@ export function getColumns(
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
       ? _.sortBy(
-          _.map(
-            statHashes,
-            (statInfo, statHashStr): ColumnWithStat => {
-              const statHash = parseInt(statHashStr, 10);
-              return {
-                statHash,
-                id: `quality_${statHash}`,
-                columnGroup: statQualityGroup,
-                header: t('Organizer.Columns.StatQualityStat', {
-                  stat: statInfo.displayProperties.name,
-                }),
-                value: (item: D1Item) => {
-                  const stat = item.stats?.find((s) => s.statHash === statHash);
-                  let pct = 0;
-                  if (stat?.scaled?.min) {
-                    pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
-                  }
-                  return pct;
-                },
-                cell: (value: number, item: D1Item) => {
-                  const stat = item.stats?.find((s) => s.statHash === statHash);
-                  return (
-                    <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>
-                      {value}%
-                    </span>
-                  );
-                },
-              };
-            }
-          ),
+          _.map(statHashes, (statInfo, statHashStr): ColumnWithStat => {
+            const statHash = parseInt(statHashStr, 10);
+            return {
+              statHash,
+              id: `quality_${statHash}`,
+              columnGroup: statQualityGroup,
+              header: t('Organizer.Columns.StatQualityStat', {
+                stat: statInfo.displayProperties.name,
+              }),
+              value: (item: D1Item) => {
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                let pct = 0;
+                if (stat?.scaled?.min) {
+                  pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
+                }
+                return pct;
+              },
+              cell: (value: number, item: D1Item) => {
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                return (
+                  <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
+                );
+              },
+            };
+          }),
           (s) => statAllowList.indexOf(s.statHash)
         )
       : [];
@@ -284,12 +276,11 @@ export function getColumns(
       filter: (value) => (value ? 'is:new' : 'not:new'),
     },
     destinyVersion === 2 &&
-      isWeapon &&
-      hasWishList && {
+      isWeapon && {
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
-          const roll = wishList?.[item.id];
+          const roll = wishList(item);
           return roll ? (roll.isUndesirable ? false : true) : undefined;
         },
         cell: (value) =>
@@ -507,7 +498,7 @@ export function getColumns(
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList?.[item.id]?.notes,
+        value: (item) => wishList(item)?.notes,
         gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`,
       },

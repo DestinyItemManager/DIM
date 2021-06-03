@@ -3,8 +3,9 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
-import { updateLoadout } from 'app/loadout/actions';
-import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
+import { updateLoadout } from 'app/loadout-drawer/actions';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -13,8 +14,8 @@ import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
-import { getItemsFromLoadoutItems } from '../../loadout/loadout-utils';
-import { assignModsToArmorSet, getModRenderKey } from '../mod-utils';
+import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
+import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, LockableBucketHashes, statHashes, statKeys, StatTypes } from '../types';
 import { getPower } from '../utils';
@@ -187,7 +188,6 @@ function CompareDrawer({
             </button>
           </div>
           <SetStats
-            items={setItems}
             stats={set.stats}
             maxPower={getPower(setItems)}
             statOrder={statOrder}
@@ -207,7 +207,6 @@ function CompareDrawer({
           <div className={clsx(styles.fillRow, styles.setHeader)}>
             <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
             <select
-              className={styles.loadoutSelect}
               value={selectedLoadout.id}
               onChange={(event) => {
                 const selected = useableLoadouts.find((l) => l.id === event.target.value);
@@ -224,7 +223,6 @@ function CompareDrawer({
           {loadoutItems.length ? (
             <>
               <SetStats
-                items={loadoutItems}
                 stats={loadoutStats}
                 maxPower={loadoutMaxPower}
                 statOrder={statOrder}

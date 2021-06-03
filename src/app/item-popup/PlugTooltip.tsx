@@ -35,18 +35,17 @@ export default function PlugTooltip({
     t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
 
   const visibleStats = plug.stats
-    ? _.sortBy(Object.keys(plug.stats), (h) =>
-        statAllowList.indexOf(parseInt(h, 10))
-      ).filter((statHash) =>
-        isPlugStatActive(
-          item,
-          plug.plugDef.hash,
-          Number(statHash),
-          Boolean(
-            plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-              ?.isConditionallyActive
+    ? _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10))).filter(
+        (statHash) =>
+          isPlugStatActive(
+            item,
+            plug.plugDef.hash,
+            Number(statHash),
+            Boolean(
+              plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+                ?.isConditionallyActive
+            )
           )
-        )
       )
     : [];
 

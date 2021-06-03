@@ -1,6 +1,6 @@
 import { compareSessionSelector } from 'app/compare/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { loadoutDialogOpen } from 'app/loadout-drawer/LoadoutDrawer';
 import { showMobileInspect } from 'app/mobile-inspect/mobile-inspect';
 import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import store from 'app/store/store';

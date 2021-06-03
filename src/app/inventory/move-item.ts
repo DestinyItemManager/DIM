@@ -3,7 +3,7 @@ import { compareOpenSelector } from 'app/compare/selectors';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { loadoutDialogOpen } from 'app/loadout/LoadoutDrawer';
+import { loadoutDialogOpen } from 'app/loadout-drawer/LoadoutDrawer';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';

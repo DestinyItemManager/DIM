@@ -414,7 +414,7 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Ajouter les mods +5",
-    "AssumeMasterwork": "Supposer statistiques de Pièce Maîtresse",
+    "AssumeMasterwork": "Pièce maîtresse activée",
     "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets sont une pièce maîtresse.",
     "ChooseAlternate": "Choisissez un autre objet avec les mêmes statistiques:",
     "ChooseAlternateTitle": "Choisissez un autre objet",

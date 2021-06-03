@@ -18,8 +18,6 @@ export interface AccountsState {
 
   /** Do we need the user to log in? */
   readonly needsLogin: boolean;
-  /** Should we force the auth choice when logging in? */
-  readonly reauth: boolean;
   /** Do we need the user to input developer info (dev only)? */
   readonly needsDeveloper: boolean;
 }
@@ -32,7 +30,6 @@ const initialState: AccountsState = {
   loaded: false,
   loadedFromIDB: false,
   needsLogin: !hasValidAuthTokens(),
-  reauth: false,
   needsDeveloper:
     !DIM_API_KEY ||
     !BUNGIE_API_KEY ||
@@ -79,7 +76,6 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
     case getType(actions.loggedOut):
       return {
         ...initialState,
-        reauth: action.payload.reauth,
         needsLogin: true,
       };
 

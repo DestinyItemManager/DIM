@@ -2,8 +2,9 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { getTag, ItemInfos } from '../inventory/dim-item-info';
+import { ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
@@ -13,10 +14,10 @@ import {
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { Loadout } from '../loadout/loadout-types';
-import { loadoutsSelector } from '../loadout/selectors';
+import { Loadout } from '../loadout-drawer/loadout-types';
+import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';
-import { inventoryWishListsSelector } from '../wishlists/selectors';
+import { wishListFunctionSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { FilterContext, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
@@ -37,7 +38,7 @@ export const filterFactorySelector = createSelector(
   allItemsSelector,
   currentStoreSelector,
   loadoutsSelector,
-  inventoryWishListsSelector,
+  wishListFunctionSelector,
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
@@ -65,7 +66,7 @@ function makeSearchFilterFactory(
   allItems: DimItem[],
   currentStore: DimStore,
   loadouts: Loadout[],
-  inventoryWishListRolls: { [key: string]: InventoryWishListRoll },
+  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   newItems: Set<string>,
   itemInfos: ItemInfos,
   itemHashTags: {
@@ -78,7 +79,7 @@ function makeSearchFilterFactory(
     allItems,
     currentStore,
     loadouts,
-    inventoryWishListRolls,
+    wishListFunction,
     newItems,
     itemInfos,
     itemHashTags,
@@ -89,7 +90,7 @@ function makeSearchFilterFactory(
     query = query.trim().toLowerCase();
     if (!query.length) {
       // By default, show anything that doesn't have the archive tag
-      return (item: DimItem) => getTag(item, itemInfos, itemHashTags) !== 'archive';
+      return _.stubTrue;
     }
 
     const parsedQuery = parseQuery(query);

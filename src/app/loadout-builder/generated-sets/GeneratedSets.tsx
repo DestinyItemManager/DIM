@@ -2,9 +2,9 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout/loadout-types';
-import { newLoadout } from 'app/loadout/loadout-utils';
-import { editLoadout } from 'app/loadout/LoadoutDrawer';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,

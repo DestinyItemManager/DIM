@@ -1,4 +1,4 @@
-import { postmasterAlmostFull } from 'app/loadout/postmaster';
+import { postmasterAlmostFull } from 'app/loadout-drawer/postmaster';
 import clsx from 'clsx';
 import React from 'react';
 import { InventoryBucket } from './inventory-buckets';

@@ -1,0 +1,22 @@
+.header {
+  font-weight: 600;
+  font-size: 20px;
+  border-bottom: 1px solid white;
+  margin: 8px 0;
+  padding-bottom: 4px;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin: 0 4px 16px 4px;
+}
+
+.bucket {
+  h3 {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 4px 0;
+  }
+}

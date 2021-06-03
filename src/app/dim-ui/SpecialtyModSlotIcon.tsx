@@ -49,7 +49,8 @@ export function SpecialtyModSlotIcon({
   );
 }
 
-const armorSlotSpecificPlugCategoryIdentifier = /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
+const armorSlotSpecificPlugCategoryIdentifier =
+  /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
 
 /** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
 export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>

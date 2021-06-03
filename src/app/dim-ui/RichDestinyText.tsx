@@ -155,7 +155,12 @@ function replaceWithIcon(textSegment: string, index: number) {
   );
   return (
     (replacement && (
-      <img src={replacement.icon} className={styles.inlineSvg} title={textSegment} key={index} />
+      <img
+        src={replacement.icon}
+        className={styles.inlineSvg}
+        title={replacement.substring}
+        key={index}
+      />
     )) || <span key={textSegment}>{textSegment}</span>
   );
 }

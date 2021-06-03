@@ -151,7 +151,9 @@ function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onCl
   }
 
   const initialPlugHash = socket.socketDefinition.singleInitialItemHash;
-  modHashes.add(initialPlugHash);
+  if (initialPlugHash) {
+    modHashes.add(initialPlugHash);
+  }
 
   if (
     socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&

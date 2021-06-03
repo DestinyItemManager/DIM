@@ -92,7 +92,7 @@ export function getDestinyAccountsForBungieAccount(
           title: t('Accounts.NoCharacters'),
         });
         removeToken();
-        dispatch(loggedOut(true));
+        dispatch(loggedOut());
       }
       return platforms;
     } catch (e) {

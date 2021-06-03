@@ -1,0 +1,11 @@
+.add {
+  composes: pull-item-button from global;
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+  justify-content: center;
+  margin: 0;
+  text-decoration: none;
+  width: calc(var(--item-size) / 2);
+}

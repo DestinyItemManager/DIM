@@ -85,7 +85,6 @@ export function getStores(
     // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
     DestinyComponentType.ItemInstances,
     DestinyComponentType.ItemObjectives,
-    DestinyComponentType.ItemStats,
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemCommonData,
@@ -195,7 +194,6 @@ export async function getVendor(
       DestinyComponentType.VendorSales,
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemStats,
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,
@@ -223,7 +221,6 @@ export async function getVendors(
       DestinyComponentType.VendorSales,
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemStats,
       DestinyComponentType.ItemSockets,
       DestinyComponentType.ItemTalentGrids,
       DestinyComponentType.ItemCommonData,

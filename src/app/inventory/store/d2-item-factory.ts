@@ -11,6 +11,7 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
   DestinyItemResponse,
+  DestinyItemSubType,
   DestinyItemType,
   DestinyObjectiveProgress,
   DictionaryComponentResponse,
@@ -440,7 +441,12 @@ export function makeItem(
   };
 
   // *able
-  createdItem.taggable = Boolean(createdItem.lockable || createdItem.classified);
+  createdItem.taggable = Boolean(
+    createdItem.lockable ||
+      createdItem.classified ||
+      itemDef.itemSubType === DestinyItemSubType.Shader ||
+      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod)
+  );
   createdItem.comparable = Boolean(
     createdItem.equipment &&
       createdItem.lockable &&
@@ -469,8 +475,7 @@ export function makeItem(
   }
 
   try {
-    const liveStats = itemComponents?.stats?.data?.[createdItem.id];
-    createdItem.stats = buildStats(createdItem, liveStats, itemDef, defs);
+    createdItem.stats = buildStats(createdItem, itemDef, defs);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });

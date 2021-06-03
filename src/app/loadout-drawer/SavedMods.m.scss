@@ -1,0 +1,25 @@
+.container {
+  margin: 8px 0;
+}
+
+.title {
+  font-size: 13px;
+  margin-right: 4px 0;
+  text-transform: uppercase;
+}
+
+.disclaimer {
+  font-style: italic;
+  padding-top: 8px;
+}
+
+.warningIcon {
+  color: yellow;
+  margin-right: 4px;
+}
+
+.categories {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

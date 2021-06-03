@@ -5,9 +5,9 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { Loadout } from 'app/loadout/loadout-types';
-import { loadoutFromEquipped } from 'app/loadout/loadout-utils';
-import { loadoutsSelector } from 'app/loadout/selectors';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -25,9 +25,10 @@ import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
+import { isArmor2WithStats } from '../loadout/item-utils';
+import ModPicker from '../loadout/mod-picker/ModPicker';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
-import ModPicker from './filter/ModPicker';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
@@ -45,7 +46,6 @@ import {
   StatTypes,
   statValues,
 } from './types';
-import { isLoadoutBuilderItem } from './utils';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -69,36 +69,31 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const itemsSelector = createSelector(
-    allItemsSelector,
-    (
-      allItems
-    ): Readonly<{
-      [classType: number]: ItemsByBucket;
-    }> => {
-      const items: {
-        [classType: number]: { [bucketHash: number]: DimItem[] };
-      } = {};
-      for (const item of allItems) {
-        if (!item || !isLoadoutBuilderItem(item)) {
-          continue;
-        }
-        const { classType, bucket } = item;
+  const itemsSelector = createSelector(allItemsSelector, (allItems): Readonly<{
+    [classType: number]: ItemsByBucket;
+  }> => {
+    const items: {
+      [classType: number]: { [bucketHash: number]: DimItem[] };
+    } = {};
+    for (const item of allItems) {
+      if (!item || !isArmor2WithStats(item)) {
+        continue;
+      }
+      const { classType, bucket } = item;
 
-        if (!items[classType]) {
-          items[classType] = {};
-        }
-
-        if (!items[classType][bucket.hash]) {
-          items[classType][bucket.hash] = [];
-        }
-
-        items[classType][bucket.hash].push(item);
+      if (!items[classType]) {
+        items[classType] = {};
       }
 
-      return items;
+      if (!items[classType][bucket.hash]) {
+        items[classType][bucket.hash] = [];
+      }
+
+      items[classType][bucket.hash].push(item);
     }
-  );
+
+    return items;
+  });
 
   const statOrderSelector = createSelector(
     (state: RootState) => settingsSelector(state).loStatSortOrder,
@@ -262,11 +257,10 @@ function LoadoutBuilder({
   const combosWithoutCaps = result?.combosWithoutCaps || 0;
   const sets = result?.sets;
 
-  const filteredSets = useMemo(() => sortGeneratedSets(statOrder, enabledStats, sets), [
-    statOrder,
-    enabledStats,
-    sets,
-  ]);
+  const filteredSets = useMemo(
+    () => sortGeneratedSets(statOrder, enabledStats, sets),
+    [statOrder, enabledStats, sets]
+  );
 
   // I dont think this can actually happen?
   if (!selectedStore) {

@@ -3,7 +3,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { inventoryWishListsSelector } from 'app/wishlists/selectors';
+import { wishListSelector } from 'app/wishlists/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ishtarLogo from '../../images/ishtar-collective.svg';
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function ItemDescription({ item }: Props) {
-  const wishlistItem = useSelector(inventoryWishListsSelector)[item.id];
+  const wishlistItem = useSelector(wishListSelector(item));
 
   // suppressing some unnecessary information for weapons and armor,
   // to make room for all that other delicious info

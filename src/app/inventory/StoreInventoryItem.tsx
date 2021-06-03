@@ -17,7 +17,6 @@ interface Props {
  */
 export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   const dispatch = useThunkDispatch();
-
   const doubleClicked = (e: React.MouseEvent) => {
     dispatch(moveItemToCurrentStore(item, e));
   };
@@ -36,6 +35,9 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
             innerRef={ref}
             onClick={onClick}
             onDoubleClick={doubleClicked}
+            // for only StoreInventoryItems (the main inventory page)
+            // we mark these to be dimmed if archived
+            dimArchived
           />
         )}
       </ItemPopupTrigger>

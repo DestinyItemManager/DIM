@@ -6,15 +6,15 @@ import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { amountOfItem, getStore, getVault } from 'app/inventory/stores-helpers';
+import { getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
-import { canBePulledFromPostmaster } from 'app/loadout/postmaster';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React, { useMemo, useRef, useState } from 'react';
+import _ from 'lodash';
+import React, { useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './ItemMoveLocations.m.scss';
@@ -27,104 +27,94 @@ export default function ItemMoveLocations({
   item,
   mobileInspect,
   splitVault,
+  actionsModel,
 }: {
   item: DimItem;
+  actionsModel: ItemActionsModel;
   mobileInspect?: boolean;
+  /** Split the vault button out into its own section (for desktop) instead of making it part of the horizontal emblem store buttons. */
   splitVault?: boolean;
 }) {
   const stores = useSelector(sortedStoresSelector);
-  const vault = getVault(stores);
+  const vault = getVault(stores)!;
   // barring a user selection, default to moving the whole stack of this item
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch();
-
-  // If the item can't be transferred (or is unique) don't show the move amount slider
-  const maximum = useMemo(
-    () =>
-      !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-        ? 1
-        : amountOfItem(itemOwner, item),
-    [itemOwner, item]
-  );
 
   const submitMoveTo = (store: DimStore, equip = false, moveAmount = amount) => {
     dispatch(moveItemTo(item, store, equip, moveAmount));
     hideItemPopup();
   };
 
-  if (!itemOwner) {
+  if (!itemOwner || !actionsModel.hasMoveControls) {
     return null;
   }
 
-  const canEquip = stores.filter((store) => itemCanBeEquippedBy(item, store));
-  const canStore = stores.filter((store) => canShowStore(store, itemOwner, item));
-
   return (
     <>
-      {splitVault && vault && (
-        <VaultActionButton
-          item={item}
-          vault={vault}
-          owner={itemOwner}
-          onClick={() => submitMoveTo(vault)}
-        />
-      )}
-
-      {item.location.type === 'LostItems' ? (
-        canBePulledFromPostmaster(item, itemOwner, stores) && (
+      {actionsModel.inPostmaster ? (
+        actionsModel.pullFromPostmaster && (
           <PullButtons
             item={item}
             itemOwner={itemOwner}
             submitMoveTo={submitMoveTo}
             vault={vault}
+            actionsModel={actionsModel}
           />
         )
       ) : (
         <>
-          <MoveLocations
-            label={t('MovePopup.Equip')}
-            stores={stores}
-            applicableStores={canEquip}
-            equip={true}
-            mobileInspect={mobileInspect}
-            defaultPadding={splitVault}
-            isDisplayedCheck={(store) => itemCanBeEquippedBy(item, store)}
-            isDisabledCheck={(store) => item.owner === store.id && item.equipped}
-            submitMoveTo={submitMoveTo}
-          />
-          <div className={styles.moveWithVault}>
+          {splitVault && actionsModel.canVault && (
+            <VaultActionButton vault={vault} onClick={() => submitMoveTo(vault)} />
+          )}
+          {actionsModel.equip.length > 0 && (
             <MoveLocations
-              label={t('MovePopup.Store')}
-              shortcutKey=" [P]"
-              stores={stores}
-              applicableStores={canStore}
+              label={t('MovePopup.Equip')}
+              actionsModel={actionsModel}
+              type="equip"
               mobileInspect={mobileInspect}
               defaultPadding={splitVault}
-              isDisplayedCheck={(store) => canShowStore(store, itemOwner, item)}
-              isDisabledCheck={(store) => !storeButtonEnabled(store, itemOwner, item)}
               submitMoveTo={submitMoveTo}
             />
-            {!splitVault && vault && (
-              <DropVaultButton
-                item={item}
-                store={vault}
-                owner={itemOwner}
+          )}
+          {(actionsModel.store.length > 0 || actionsModel.canVault) && (
+            <div className={styles.moveWithVault}>
+              <MoveLocations
+                label={t('MovePopup.Store')}
+                shortcutKey=" [P]"
+                actionsModel={actionsModel}
+                type="store"
                 mobileInspect={mobileInspect}
-                handleMove={() => submitMoveTo(vault)}
+                defaultPadding={splitVault}
+                submitMoveTo={submitMoveTo}
               />
-            )}
-          </div>
+              {!splitVault && actionsModel.canVault && (
+                <DropVaultButton
+                  store={vault}
+                  mobileInspect={mobileInspect}
+                  handleMove={() => submitMoveTo(vault)}
+                />
+              )}
+            </div>
+          )}
         </>
       )}
 
-      {maximum > 1 && (
-        <ItemMoveAmount amount={amount} maximum={maximum} onAmountChanged={setAmount} />
+      {actionsModel.showAmounts && (
+        <ItemMoveAmount
+          amount={amount}
+          maximum={actionsModel.maximumMoveAmount}
+          onAmountChanged={setAmount}
+        />
       )}
     </>
   );
 }
 
+/**
+ * For the mobile "drag inspect" mode, this provides a drop target that will send items to a specific store. It's also a normal button.
+ */
 function DropLocation({
   children,
   store,
@@ -156,23 +146,18 @@ function DropLocation({
   );
 }
 
+/**
+ * For the mobile "drag inspect" mode, this provides a drop target that will send items to the vault. It's also a normal button.
+ */
 function DropVaultButton({
-  item,
   store,
-  owner,
   mobileInspect,
   handleMove,
 }: {
-  item: DimItem;
   store: DimStore;
-  owner: DimStore;
   mobileInspect?: boolean;
   handleMove: () => void;
 }) {
-  if (item.location.inPostmaster || !canTransferToVault(owner, item)) {
-    return null;
-  }
-
   return (
     <DropLocation store={store} onDrop={handleMove}>
       <div
@@ -188,22 +173,7 @@ function DropVaultButton({
   );
 }
 
-function VaultActionButton({
-  item,
-  vault,
-  owner,
-  onClick,
-}: {
-  item: DimItem;
-  vault: DimStore;
-  owner: DimStore;
-  onClick: () => void;
-}) {
-  if (item.location.inPostmaster || !canTransferToVault(owner, item)) {
-    // PM items have an alternate vault button
-    return null;
-  }
-
+function VaultActionButton({ vault, onClick }: { vault: DimStore; onClick: () => void }) {
   return (
     <ActionButton onClick={onClick} title={t('MovePopup.Vault') + ' [V]'}>
       <StoreIcon store={vault} /> <span className={styles.vaultLabel}>{t('MovePopup.Vault')}</span>
@@ -214,49 +184,40 @@ function VaultActionButton({
 function MoveLocations({
   label,
   shortcutKey,
-  stores,
-  applicableStores,
   mobileInspect,
   defaultPadding,
-  equip,
-  isDisabledCheck,
-  isDisplayedCheck,
+  type,
+  actionsModel,
   submitMoveTo,
 }: {
   label: string;
   shortcutKey?: string;
-  stores: DimStore[];
-  applicableStores: DimStore[];
   defaultPadding?: boolean;
   mobileInspect?: boolean;
-  equip?: boolean;
-  /** is run on each store to decide whether its button is clickable */
-  isDisabledCheck: (store: DimStore) => boolean;
-  /** is run on each store to decide whether its button appears */
-  isDisplayedCheck: (store: DimStore) => boolean;
+  type: 'equip' | 'store';
+  actionsModel: ItemActionsModel;
   submitMoveTo: MoveSubmit;
 }) {
-  if (!applicableStores.length) {
+  const buttonInfos = actionsModel[type];
+  const equip = type === 'equip';
+
+  if (!buttonInfos.length) {
     return null;
   }
 
-  function moveLocation(store: DimStore) {
-    if (!isDisplayedCheck(store)) {
-      return null;
-    }
-
-    const handleMove = () => submitMoveTo(store, equip);
+  function moveLocation({ store, enabled }: StoreButtonInfo) {
+    const handleMove = enabled ? () => submitMoveTo(store, equip) : _.noop;
 
     const button = (
       <div
         className={clsx({
           [styles.equip]: equip,
           [styles.move]: !equip,
-          [styles.disabled]: isDisabledCheck(store),
+          [styles.disabled]: !enabled,
           [styles.mobileInspectButton]: mobileInspect,
         })}
         title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
-        onClick={handleMove}
+        onClick={enabled ? handleMove : undefined}
         {...sharedButtonProps}
       >
         <StoreIcon store={store} useBackground={true} />
@@ -283,20 +244,25 @@ function MoveLocations({
       })}
     >
       {label}
-      <div className={styles.moveLocationIcons}>{stores.map(moveLocation)}</div>
+      <div className={styles.moveLocationIcons}>{buttonInfos.map(moveLocation)}</div>
     </div>
   );
 }
 
+/**
+ * Buttons for pulling an item from the Postmaster.
+ */
 function PullButtons({
   item,
   itemOwner,
   submitMoveTo,
+  actionsModel,
   vault,
 }: {
   item: DimItem;
   itemOwner: DimStore;
   submitMoveTo: MoveSubmit;
+  actionsModel: ItemActionsModel;
   vault?: DimStore;
 }) {
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
@@ -323,7 +289,7 @@ function PullButtons({
           <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
         </div>
 
-        {canTransferToVault(itemOwner, item) && (
+        {actionsModel.canVault && (
           <div
             className={styles.move}
             onClick={() => submitMoveTo(vault!, false, item.amount)}
@@ -335,75 +301,4 @@ function PullButtons({
       </div>
     </div>
   );
-}
-
-function canTransferToVault(itemOwnerStore: DimStore, item: DimItem): boolean {
-  if (
-    // item isn't in a store????
-    !itemOwnerStore ||
-    // Can't vault a vaulted item.
-    itemOwnerStore.isVault ||
-    // Can't move this item away from the current itemStore
-    item.notransfer ||
-    // moot point because it can't be claimed from the postmaster
-    (item.location.inPostmaster && !item.canPullFromPostmaster)
-  ) {
-    return false;
-  }
-  return true;
-}
-
-function storeButtonEnabled(
-  buttonStore: DimStore,
-  itemOwnerStore: DimStore,
-  item: DimItem
-): boolean {
-  const store = itemOwnerStore;
-
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-    return item.canPullFromPostmaster;
-  } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
-    if (item.equipped && store.id === buttonStore.id) {
-      return true;
-    }
-  } else if (store.id !== buttonStore.id || item.equipped) {
-    // Only show one store for account wide items
-    return !item.bucket?.accountWide || buttonStore.current;
-  }
-
-  return false;
-}
-
-function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: DimItem): boolean {
-  const store = itemOwnerStore;
-
-  // Can't store into a vault
-  if (buttonStore.isVault || !store) {
-    return false;
-  }
-
-  // Don't show "Store" for finishers, seasonal artifacts, or clan banners
-  if (
-    item.location.capacity === 1 ||
-    item.location.hash === BucketHashes.SeasonalArtifact ||
-    item.location.hash === BucketHashes.Finishers
-  ) {
-    return false;
-  }
-
-  // Can pull items from the postmaster.
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
-    return item.canPullFromPostmaster;
-  } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
-    if (item.equipped && store.id === buttonStore.id) {
-      return true;
-    }
-  } else {
-    // Only show one store for account wide items
-    return !item.bucket?.accountWide || buttonStore.current;
-  }
-
-  return false;
 }

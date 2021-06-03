@@ -2,7 +2,7 @@ import { startFarming, stopFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import MaxlightButton from 'app/loadout/MaxlightButton';
+import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
