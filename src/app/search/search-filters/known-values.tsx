@@ -99,6 +99,7 @@ const knownValuesFilters: FilterDefinition[] = [
   damageFilter,
   classFilter,
   itemCategoryFilter,
+  itemTypeFilter,
   {
     keywords: [
       'common',
