@@ -6,7 +6,7 @@ import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
-import SpecialtyModSlotIcon from 'app/dim-ui/SpecialtyModSlotIcon';
+import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem } from 'app/inventory/item-types';

@@ -63,7 +63,35 @@ const getUniqueItemNamesFromManifest = _.once(
   }
 );
 
+export const nameFilter: FilterDefinition = {
+  keywords: 'name',
+  description: tl('Filter.PartialMatch'),
+  format: 'freeform',
+  // could we do this with a for loop faster,
+  // with wayyyyy more lines of code?? absolutely
+  suggestionsGenerator: ({ d2Manifest, allItems }) => {
+    if (d2Manifest && allItems) {
+      const myItemNames = allItems
+        .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+        .map((i) => i.name);
+      // favor items we actually own
+      const allItemNames = getUniqueItemNamesFromManifest(
+        Object.values(d2Manifest.InventoryItem.getAll())
+      );
+      return _.uniq([...myItemNames, ...allItemNames]).map(
+        (s) => `name:${quoteFilterString(s.toLowerCase())}`
+      );
+    }
+  },
+  filter: ({ filterValue, language }) => {
+    filterValue = plainString(filterValue, language);
+    return (item) => plainString(item.name, language).includes(filterValue);
+  },
+  fromItem: (item) => `name:${quoteFilterString(item.name)}`,
+};
+
 const freeformFilters: FilterDefinition[] = [
+  nameFilter,
   {
     keywords: 'notes',
     description: tl('Filter.Notes'),
@@ -75,31 +103,6 @@ const freeformFilters: FilterDefinition[] = [
         const notes = getNotes(item, itemInfos, itemHashTags);
         return Boolean(notes && plainString(notes, language).includes(filterValue));
       };
-    },
-  },
-  // could we do this with a for loop faster,
-  // with wayyyyy more lines of code?? absolutely
-  {
-    keywords: 'name',
-    description: tl('Filter.PartialMatch'),
-    format: 'freeform',
-    suggestionsGenerator: ({ d2Manifest, allItems }) => {
-      if (d2Manifest && allItems) {
-        const myItemNames = allItems
-          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
-          .map((i) => i.name);
-        // favor items we actually own
-        const allItemNames = getUniqueItemNamesFromManifest(
-          Object.values(d2Manifest.InventoryItem.getAll())
-        );
-        return _.uniq([...myItemNames, ...allItemNames]).map(
-          (s) => `name:${quoteFilterString(s.toLowerCase())}`
-        );
-      }
-    },
-    filter: ({ filterValue, language }) => {
-      filterValue = plainString(filterValue, language);
-      return (item) => plainString(item.name, language).includes(filterValue);
     },
   },
   {

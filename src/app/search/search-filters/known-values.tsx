@@ -3,7 +3,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
-import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -16,6 +16,8 @@ import {
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
+
+// filters relying on curated known values (class names, rarities, elements)
 
 const tierMap = {
   white: 'Common',
@@ -41,8 +43,63 @@ const itemCategoryHashesByName: { [key: string]: number } = {
   ...D2ItemCategoryHashesByName,
 };
 
-// filters relying on curated known values
+export const damageFilter: FilterDefinition = {
+  keywords: damageTypeNames,
+  description: tl('Filter.DamageType'),
+  filter:
+    ({ filterValue }) =>
+    (item) =>
+      getItemDamageShortName(item) === filterValue,
+  fromItem: (item) => `is:${getItemDamageShortName(item)}`,
+};
+
+export const classFilter: FilterDefinition = {
+  keywords: ['titan', 'hunter', 'warlock'],
+  description: tl('Filter.Class'),
+  filter: ({ filterValue }) => {
+    const classType = classes.indexOf(filterValue);
+    return (item) => !item.classified && item.classType === classType;
+  },
+  fromItem: (item) =>
+    item.classType === DestinyClass.Unknown ? '' : `is:${classes[item.classType]}`,
+};
+
+export const itemTypeFilter: FilterDefinition = {
+  keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
+    .flat()
+    .map((v) => v.toLowerCase()),
+  description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
+  filter:
+    ({ filterValue }) =>
+    (item) =>
+      item.type.toLowerCase() === filterValue,
+  fromItem: (item) => `is:${item.type.toLowerCase()}`,
+};
+
+export const itemCategoryFilter: FilterDefinition = {
+  keywords: Object.keys(itemCategoryHashesByName),
+  description: tl('Filter.WeaponType'),
+  filter: ({ filterValue }) => {
+    const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
+    if (!categoryHash) {
+      throw new Error('Unknown weapon type ' + filterValue);
+    }
+    return (item) => item.itemCategoryHashes.includes(categoryHash);
+  },
+  fromItem: (item) => {
+    const mostSpecificTypeHash = item.itemCategoryHashes[item.itemCategoryHashes.length - 1];
+    const typeTag = Object.entries(itemCategoryHashesByName).find(
+      ([_tag, ich]) => ich === mostSpecificTypeHash
+    )?.[0];
+    return typeTag ? `is:${typeTag}` : '';
+  },
+};
+
 const knownValuesFilters: FilterDefinition[] = [
+  damageFilter,
+  classFilter,
+  itemCategoryFilter,
+  itemTypeFilter,
   {
     keywords: [
       'common',
@@ -75,14 +132,6 @@ const knownValuesFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: ['titan', 'hunter', 'warlock'],
-    description: tl('Filter.Class'),
-    filter: ({ filterValue }) => {
-      const classType = classes.indexOf(filterValue);
-      return (item) => !item.classified && item.classType === classType;
-    },
-  },
-  {
     keywords: 'cosmetic',
     description: tl('Filter.Cosmetic'),
     filter: () => (item) => cosmeticTypes.includes(item.type),
@@ -107,29 +156,6 @@ const knownValuesFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: damageTypeNames,
-    description: tl('Filter.DamageType'),
-    filter: ({ filterValue }) => (item) => getItemDamageShortName(item) === filterValue,
-  },
-  {
-    keywords: Object.values(D2Categories)
-      .flat()
-      .map((v) => v.toLowerCase()),
-    description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
-    filter: ({ filterValue }) => (item) => item.type?.toLowerCase() === filterValue,
-  },
-  {
-    keywords: Object.keys(itemCategoryHashesByName),
-    description: tl('Filter.WeaponType'),
-    filter: ({ filterValue }) => {
-      const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
-      if (!categoryHash) {
-        throw new Error('Unknown weapon type ' + filterValue);
-      }
-      return (item) => item.itemCategoryHashes.includes(categoryHash);
-    },
-  },
-  {
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,
@@ -141,7 +167,6 @@ const knownValuesFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) => item.pursuit?.rewards.some((r) => pinnacleSources.includes(r.itemHash)),
   },
-
   {
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'

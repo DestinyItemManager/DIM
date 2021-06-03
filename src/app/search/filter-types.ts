@@ -112,6 +112,11 @@ export type FilterDefinition = {
    * A custom function used to generate (additional) suggestions
    */
   suggestionsGenerator?: (args: SuggestionsContext) => string[] | undefined;
+
+  /**
+   * given an item, this generates a filter that should match that item
+   */
+  fromItem?: (item: DimItem) => string;
 };
 
 export const enum FilterDeprecation {

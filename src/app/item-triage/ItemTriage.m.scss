@@ -14,16 +14,34 @@
   margin: 5px 10px 5px;
 }
 
-.triageTable {
+.ownershipTable {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: auto max-content;
   /*  & > div:nth-child(-n + 3) {} */
   margin-bottom: 15px;
   & > div {
     align-self: center;
     &.header {
       text-transform: uppercase;
-      align-self: end;
+      /* min-height: 32px; */
+      .inlineIcon {
+        height: 18px;
+        width: 18px;
+        position: relative;
+        top: -2px;
+      }
+    }
+  }
+}
+.statTable {
+  display: grid;
+  grid-template-columns: auto max-content;
+  /*  & > div:nth-child(-n + 3) {} */
+  margin-bottom: 15px;
+  & > div {
+    align-self: center;
+    &.header {
+      text-transform: uppercase;
       /* min-height: 32px; */
       .inlineIcon {
         height: 18px;
@@ -36,28 +54,40 @@
 }
 .headerDivider {
   /* grid-area: 2 / 1 / 2 / 4; */
-  grid-column: 1 / 11;
+  // grid-column: 1 / 11;
+  grid-column-end: span 2;
   background: #888;
   height: 1px;
 }
 .factorCombo {
-  grid-column: 1 / 7;
+  // grid-column: 1 / 7;
   padding: 4px;
+  & > * {
+    display: inline-block;
+  }
 }
 .comboCount {
-  grid-column: 7 / 9;
-  text-align: center;
+  // grid-column: 7 / 9;
+  display: flex;
+  justify-content: center;
+  > span {
+    text-align: right;
+    margin-right: 0.5em;
+    min-width: 2em;
+  }
 }
-.keepMeter {
-  grid-column: 9 / 11;
-  text-align: center;
-  padding-top: 5px;
-}
+// .keepMeter {
+//   // grid-column: 9 / 11;
+//   text-align: center;
+//   padding-top: 5px;
+// }
 .bestStat {
-  grid-column: 1 / 7;
+  // grid-column: 1 / 7;
+  // text-align: center;
+  visibility: visible;
 }
 .thisStat {
-  grid-column: 7 / 9;
+  // grid-column: 7 / 9;
   text-align: center;
 }
 .dimmed {
@@ -75,13 +105,13 @@
   display: inline-block;
 }
 
-.classIcon {
-  height: 20px;
-  width: 20px !important;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 2.5px;
-}
+// .classIcon {
+//   height: 20px;
+//   width: 20px !important;
+//   display: inline-block;
+//   vertical-align: middle;
+//   margin: 2.5px;
+// }
 
 .weaponSvg {
   // these have varying aspect ratios and are fill:black by default
@@ -89,6 +119,14 @@
   filter: invert(1);
 }
 
+.headerImage {
+  vertical-align: bottom;
+  margin-bottom: -2px;
+}
+
 .inlineBlock {
   display: inline-block;
+}
+.searchBarIcon {
+  cursor: pointer;
 }

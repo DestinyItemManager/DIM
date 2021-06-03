@@ -15,6 +15,7 @@ import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
+import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
 import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
 import machinegun from 'destiny-icons/weapons/machinegun.svg';
@@ -41,6 +42,7 @@ export const weaponTypeSvgByCategoryHash = {
   14: sidearm,
   54: sword,
   153950757: gLauncher,
+  [-153950757]: gLauncher_special,
   2489664120: traceRifle,
   1504945536: lFusionRifle,
   3954685534: smg,
@@ -78,11 +80,21 @@ export function getWeaponSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    if (weaponTypeSvgByCategoryHash[ich]) {
-      const svg: string = weaponTypeSvgByCategoryHash[ich] ?? weaponSlotSvgByCategoryHash[ich];
-      if (svg) {
-        return svg;
-      }
+    const svg: string = weaponTypeSvgByCategoryHash[ich] ?? weaponSlotSvgByCategoryHash[ich];
+    if (svg) {
+      return svg;
+    }
+  }
+}
+
+/** an SVG of the weapon's type, or slot, if possible */
+export function getArmorSvgIcon(item: DimItem) {
+  // reverse through the ICHs because most specific is last,
+  // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
+  for (const ich of [...item.itemCategoryHashes].reverse()) {
+    const svg: string = armorSlotSvgByCategoryHash[ich];
+    if (svg) {
+      return svg;
     }
   }
 }
