@@ -1,5 +1,6 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { keyByStatHash } from 'app/inventory/store/stats';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -91,10 +92,9 @@ export function useProcess(
 
     const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
-    const raidCombatAndLegacyMods = Object.entries(
-      lockedModMap
-    ).flatMap(([plugCategoryHash, mods]) =>
-      mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+    const raidCombatAndLegacyMods = Object.entries(lockedModMap).flatMap(
+      ([plugCategoryHash, mods]) =>
+        mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
     const processItems: ProcessItemsByBucket = {};
@@ -206,11 +206,11 @@ function groupItems(
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
-    const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+    const statsByHash = item.stats && keyByStatHash(item.stats);
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statType of statOrder) {
-        statValues.push(statsByHash[statHashes[statType]].base);
+        statValues.push(statsByHash[statHashes[statType]]!.base);
       }
     }
 

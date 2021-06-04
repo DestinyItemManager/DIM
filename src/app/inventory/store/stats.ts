@@ -20,7 +20,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
-import { DimItem, DimSocket, DimStat } from '../item-types';
+import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -30,9 +30,8 @@ import { DimItem, DimSocket, DimStat } from '../item-types';
  * the process looks like this:
  *
  * buildStats(stats){
- *   stats = buildInvestmentStats(stats)                // based on information from an item's inherent stats
- *   applyPlugsToStats(stats)                           // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
- *   if (no stats yet) stats = buildLiveStats(stats)  // fall back to what the api tells us the stats are
+ *   stats = buildInvestmentStats(stats) // based on information from an item's inherent stats
+ *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
  *   if (is armor) {
  *     if (any armor stat is missing) fill in missing stats with 0s
  *     synthesize totalStat and add it
@@ -113,10 +112,7 @@ export function buildStats(
 
   // we re-use this dictionary a bunch of times in subsequent
   // functions to speed up display info lookups
-  const statDisplaysByStatHash: StatDisplayLookup = _.keyBy(
-    statGroup.scaledStats,
-    (s) => s.statHash
-  );
+  const statDisplaysByStatHash = keyByStatHash(statGroup.scaledStats);
 
   // We only use the raw "investment" stats to calculate all item stats.
   const investmentStats =
@@ -284,10 +280,7 @@ function applyPlugsToStats(
     return;
   }
 
-  const existingStatsByHash: { [statHash: number]: DimStat | undefined } = _.keyBy(
-    existingStats,
-    (s) => s.statHash
-  );
+  const existingStatsByHash = keyByStatHash(existingStats);
 
   // intrinsic plugs aren't "enhancements", they define the basic stats of armor
   // we do those first and include them in the stat's base value
@@ -382,7 +375,7 @@ function attachPlugStats(
   const activePlug = socket.plugged;
 
   // This holds the item's 'base' investment stat values without any plug additions.
-  const baseItemInvestmentStats: { [statHash: number]: number } = {};
+  const baseItemInvestmentStats: DimPlug['stats'] = {};
 
   // The active plug is already contributing to the item's stats in statsByHash. Thus we treat it separately
   // here for two reasons,
@@ -391,9 +384,7 @@ function attachPlugStats(
   // 2. By utilizing the fact that the item's stats already include this, we can do one less interpolation
   // per stat to figure out the active plug's stat contribution.
   if (activePlug) {
-    const activePlugStats: {
-      [statHash: number]: number;
-    } = {};
+    const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of activePlug.plugDef.investmentStats) {
       let plugStatValue = plugInvestmentStat.value;
@@ -428,9 +419,7 @@ function attachPlugStats(
       continue;
     }
 
-    const inactivePlugStats: {
-      [statHash: number]: number;
-    } = {};
+    const inactivePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of plug.plugDef.investmentStats) {
       let plugStatValue = plugInvestmentStat.value;
@@ -583,4 +572,12 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
 function bankersRound(x: number) {
   const r = Math.round(x);
   return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
+}
+
+export function keyByStatHash(stats: DimStat[]): StatLookup;
+export function keyByStatHash(stats: DestinyStatDisplayDefinition[]): StatDisplayLookup;
+export function keyByStatHash(stats: (DimStat | DestinyStatDisplayDefinition)[]): {
+  [statHash: number]: DimStat | DestinyStatDisplayDefinition | undefined;
+} {
+  return _.keyBy(stats, (s) => s.statHash);
 }
