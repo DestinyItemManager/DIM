@@ -18,7 +18,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -240,7 +240,7 @@ function ItemTable({
   const onChangeEnabledColumn = useCallback(
     ({ checked, id }: { checked: boolean; id: string }) => {
       dispatch(
-        setSetting(
+        setSettingAction(
           columnSetting(itemType),
           _.uniq(
             _.compact(

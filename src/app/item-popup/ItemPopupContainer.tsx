@@ -17,7 +17,7 @@ import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { setSetting } from '../settings/actions';
+import { setSettingAction } from '../settings/actions';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
 import { buildItemActionsModel } from './item-popup-actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
@@ -44,7 +44,7 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 const mapDispatchToProps = {
-  setSetting,
+  setSettingAction,
 };
 type DispatchProps = typeof mapDispatchToProps;
 

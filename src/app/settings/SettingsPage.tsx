@@ -25,9 +25,10 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, refreshIcon } from '../shell/icons';
-import { setCharacterOrder, setSetting } from './actions';
+import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
+import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortOrder } from './item-sort';
 import Select, { mapToOptions } from './Select';
@@ -128,13 +129,13 @@ function SettingsPage({
   dispatch,
 }: Props) {
   useLoadStores(currentAccount, storesLoaded);
-
+  const setSetting = useSetSetting();
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
     }
 
-    dispatch(setSetting(name, checked));
+    setSetting(name, checked);
   };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
@@ -142,9 +143,9 @@ function SettingsPage({
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      dispatch(setSetting(e.target.name as keyof Settings, e.target.checked));
+      setSetting(e.target.name as keyof Settings, e.target.checked);
     } else {
-      dispatch(setSetting(e.target.name as keyof Settings, e.target.value));
+      setSetting(e.target.name as keyof Settings, e.target.value);
     }
   };
 
@@ -153,13 +154,13 @@ function SettingsPage({
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
     i18next.changeLanguage(language, () => {
-      dispatch(setSetting('language', language));
+      setSetting('language', language);
     });
   };
 
   const resetItemSize = (e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(setSetting('itemSize', 50));
+    setSetting('itemSize', 50);
     return false;
   };
 
@@ -170,12 +171,10 @@ function SettingsPage({
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
-    dispatch(setSetting('itemSort', 'custom'));
-    dispatch(
-      setSetting(
-        'itemSortOrderCustom',
-        sortOrder.filter((o) => o.enabled).map((o) => o.id)
-      )
+    setSetting('itemSort', 'custom');
+    setSetting(
+      'itemSortOrderCustom',
+      sortOrder.filter((o) => o.enabled).map((o) => o.id)
     );
   };
 
@@ -282,11 +281,7 @@ function SettingsPage({
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem
-                item={(fakeWeapon as unknown) as DimItem}
-                isNew={true}
-                tag="favorite"
-              />
+              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
             </div>
 
             {supportsCssVar && !isPhonePortrait && (
@@ -443,8 +438,8 @@ function SettingsPage({
           <section id="ratings">
             <h2>{t('Settings.Ratings')}</h2>
             <div className="examples sub-bucket">
-              <InventoryItem item={(fakeWeapon as unknown) as DimItem} isNew={true} />
-              <InventoryItem item={(fakeArmor as unknown) as DimItem} isNew={true} />
+              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} />
+              <InventoryItem item={fakeArmor as unknown as DimItem} isNew={true} />
             </div>
 
             <Checkbox

@@ -4,12 +4,11 @@ import InventoryModeToggle from 'app/active-mode/InventoryModeToggle';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
-import { setSetting } from 'app/settings/actions';
+import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import clsx from 'clsx';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
@@ -40,7 +39,7 @@ export default function DesktopStores({
 }: Props) {
   const vault = getVault(stores);
   const currentStore = getCurrentStore(stores);
-  const dispatch = useDispatch();
+  const setSetting = useSetSetting();
 
   if (!stores.length || !buckets || !vault || !currentStore) {
     return null;
@@ -51,7 +50,7 @@ export default function DesktopStores({
     headerStores = [currentStore, vault];
   }
 
-  const toggleSingleCharacter = () => dispatch(setSetting('singleCharacter', !singleCharacter));
+  const toggleSingleCharacter = () => setSetting('singleCharacter', !singleCharacter);
   const activeModeEnabled = $featureFlags.altInventoryMode && activeMode;
 
   return (

@@ -1,7 +1,7 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
@@ -148,7 +148,7 @@ function Compare(
   };
 
   const onChangeSetting = (checked: boolean, name: keyof Settings) => {
-    dispatch(setSetting(name, checked));
+    dispatch(setSettingAction(name, checked));
   };
 
   const comparator = sortCompareItemsComparator(

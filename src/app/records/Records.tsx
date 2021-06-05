@@ -9,7 +9,7 @@ import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/s
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { setSetting } from 'app/settings/actions';
+import { useSetSetting } from 'app/settings/hooks';
 import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
@@ -86,10 +86,9 @@ function Records({
   completedRecordsHidden,
   redactedRecordsRevealed,
   destiny2CoreSettings,
-  dispatch,
 }: Props) {
   useLoadStores(account, Boolean(profileResponse));
-
+  const setSetting = useSetSetting();
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
@@ -152,9 +151,9 @@ function Records({
   ];
 
   const onToggleCompletedRecordsHidden = (checked: boolean) =>
-    dispatch(setSetting('completedRecordsHidden', checked));
+    setSetting('completedRecordsHidden', checked);
   const onToggleRedactedRecordsRevealed = (checked: boolean) =>
-    dispatch(setSetting('redactedRecordsRevealed', checked));
+    setSetting('redactedRecordsRevealed', checked);
 
   return (
     <PageWithMenu className="d2-vendors">
