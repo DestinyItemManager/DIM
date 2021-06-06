@@ -35,7 +35,6 @@ import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
-import { isSpoils } from './spoils-of-conquest';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
@@ -371,9 +370,7 @@ export function makeItem(
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
     notransfer: Boolean(
-      itemDef.nonTransferrable ||
-        item.transferStatus === TransferStatuses.NotTransferrable ||
-        isSpoils(itemDef, owner, defs)
+      itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
