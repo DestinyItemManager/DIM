@@ -1,7 +1,7 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
 import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
 import { ThunkResult } from 'app/store/types';
@@ -35,7 +35,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
     // a blank source was submitted, indicating an intention to clear the wishlist
     if (newWishlistSource === '' && newWishlistSource !== existingWishListSource) {
-      dispatch(setSetting('wishListSource', newWishlistSource));
+      dispatch(setSettingAction('wishListSource', newWishlistSource));
       return;
     }
 
@@ -92,7 +92,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
       // if this is a new wishlist, set the setting now that we know it's fetchable
       if (newWishlistSource) {
-        dispatch(setSetting('wishListSource', newWishlistSource));
+        dispatch(setSettingAction('wishListSource', newWishlistSource));
       }
     } catch (e) {
       showNotification({

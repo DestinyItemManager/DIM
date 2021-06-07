@@ -20,7 +20,7 @@ import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { filterFactorySelector } from '../search/search-filter';
-import { setSetting } from '../settings/actions';
+import { setSettingAction } from '../settings/actions';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { showInfuse$ } from './infuse';
@@ -194,7 +194,7 @@ function InfusionFinder({
   // Save direction to settings
   useEffect(() => {
     if (direction !== lastInfusionDirection) {
-      dispatch(setSetting('infusionDirection', direction));
+      dispatch(setSettingAction('infusionDirection', direction));
     }
   }, [direction, lastInfusionDirection, dispatch]);
 

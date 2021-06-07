@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
@@ -26,7 +26,7 @@ describe('setSetting', () => {
   it('changes settings', () => {
     const state = initialState;
 
-    const updatedState = dimApi(state, setSetting('showNewItems', true));
+    const updatedState = dimApi(state, setSettingAction('showNewItems', true));
 
     expect(updatedState.settings.showNewItems).toBe(true);
     expect(updatedState.updateQueue).toEqual([

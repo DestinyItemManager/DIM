@@ -6,7 +6,7 @@ import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { DimStore } from '../inventory/store-types';
-import { setSetting } from '../settings/actions';
+import { setSettingAction } from '../settings/actions';
 import { stopFarming } from './actions';
 import './farming.scss';
 import { farmingStoreSelector } from './selectors';
@@ -29,7 +29,7 @@ type Props = StoreProps & ThunkDispatchProp;
 function Farming({ store, makeRoomForItems, dispatch }: Props) {
   const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked;
-    dispatch(setSetting('farmingMakeRoomForItems', value));
+    dispatch(setSettingAction('farmingMakeRoomForItems', value));
   };
 
   const nodeRef = useRef<HTMLDivElement>(null);

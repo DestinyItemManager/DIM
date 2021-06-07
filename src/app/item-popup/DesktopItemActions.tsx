@@ -9,7 +9,7 @@ import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -36,7 +36,7 @@ export default function DesktopItemActions({
   const itemOwner = getStore(stores, item.owner);
 
   const toggleSidecar = () => {
-    dispatch(setSetting('sidecarCollapsed', !sidecarCollapsed));
+    dispatch(setSettingAction('sidecarCollapsed', !sidecarCollapsed));
   };
 
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);

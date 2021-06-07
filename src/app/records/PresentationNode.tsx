@@ -9,7 +9,7 @@ import { deepEqual } from 'fast-equals';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import { setSetting } from '../settings/actions';
+import { setSettingAction } from '../settings/actions';
 import { percent } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { DimPresentationNode } from './presentation-nodes';
@@ -42,7 +42,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 const mapDispatchToProps = {
-  setSetting,
+  setSettingAction,
 };
 
 type DispatchProps = typeof mapDispatchToProps;

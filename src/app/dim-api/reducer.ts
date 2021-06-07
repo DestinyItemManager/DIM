@@ -280,7 +280,7 @@ export const dimApi = (
 
     // *** Settings ***
 
-    case getType(settingsActions.setSetting):
+    case getType(settingsActions.setSettingAction):
       return changeSetting(state, action.payload.property, action.payload.value);
 
     case getType(settingsActions.toggleCollapsedSection):
@@ -988,7 +988,7 @@ function trackTriumph(
 
 // Real hack to fake out enough store to select out the search configs
 function stubSearchRootState(account: DestinyAccount) {
-  return ({
+  return {
     accounts: {
       accounts: [account],
       currentAccount: 0,
@@ -996,7 +996,7 @@ function stubSearchRootState(account: DestinyAccount) {
     inventory: { stores: [] },
     dimApi: { profiles: {} },
     manifest: {},
-  } as any) as RootState;
+  } as any as RootState;
 }
 
 function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {

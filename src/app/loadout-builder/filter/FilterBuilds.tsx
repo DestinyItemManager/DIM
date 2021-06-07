@@ -1,9 +1,8 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
-import { setSetting } from 'app/settings/actions';
+import { useSetSetting } from 'app/settings/hooks';
 import _ from 'lodash';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
@@ -24,14 +23,12 @@ export default function FilterBuilds({
   assumeMasterwork: boolean;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
-  const dispatch = useDispatch();
+  const setSetting = useSetSetting();
 
   const onStatOrderChanged = (sortOrder: StatTypes[]) => {
-    dispatch(
-      setSetting(
-        'loStatSortOrder',
-        sortOrder.map((type) => statHashes[type])
-      )
+    setSetting(
+      'loStatSortOrder',
+      sortOrder.map((type) => statHashes[type])
     );
   };
 
@@ -56,7 +53,7 @@ export default function FilterBuilds({
           <CheckButton
             name="lo-assume-masterwork"
             checked={assumeMasterwork}
-            onChange={(checked) => dispatch(setSetting('loAssumeMasterwork', checked))}
+            onChange={(checked) => setSetting('loAssumeMasterwork', checked)}
           >
             {t('LoadoutBuilder.AssumeMasterwork')}
           </CheckButton>

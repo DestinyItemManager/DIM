@@ -2,7 +2,8 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useSetSetting } from 'app/settings/hooks';
+import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -14,7 +15,6 @@ import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
-import { setSetting } from '../../settings/actions';
 import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import './record-books.scss';
@@ -38,7 +38,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoreProps;
 
 interface RecordBook {
   hash: string;
@@ -71,14 +71,14 @@ interface RecordBookPage {
   completedCount: number;
 }
 
-function RecordBooks({ account, defs, stores, hideCompletedRecords, dispatch }: Props) {
+function RecordBooks({ account, defs, stores, hideCompletedRecords }: Props) {
   useLoadStores(account, stores.length > 0);
-
+  const setSetting = useSetSetting();
   if (!defs || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
   const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSetting('hideCompletedRecords', e.currentTarget.checked));
+    setSetting('hideCompletedRecords', e.currentTarget.checked);
   };
 
   // TODO: Ideally there would be an Advisors service that would
