@@ -1,5 +1,7 @@
 ## Next
 
+## 6.68.0 <span class="changelog-date">(2021-06-06)</span>
+
 * Some support for Vault of Glass mods in filters. Expect Loadout Optimizer fixes next week.
 * Clearer hover text for some Destiny icons inline with text.
 * Hovering Consumables in the Vault header now shows a list of owned materials and currencies.
