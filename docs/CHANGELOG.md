@@ -1,5 +1,14 @@
 ## Next
 
+* Some support for Vault of Glass mods in filters. Expect Loadout Optimizer fixes next week.
+* Clearer hover text for some Destiny icons inline with text.
+* Hovering Consumables in the Vault header now shows a list of owned materials and currencies.
+* `is:hasornament` now recognizes Synthesized armor.
+* DIM is less likely to log you out if Bungie.net is experiencing difficulties.
+* Stat searches now support `highest`, `secondhighest`, `thirdhighest`, etc as stat names.
+  * Try out `basestat:highest:>=20 basestat:secondhighest:>=15`
+* Login screen is now more descriptive, and helps back up your settings if you're enabling DIM Sync for the first time.
+
 ## 6.67.0 <span class="changelog-date">(2021-05-30)</span>
 
 * Items tagged "archive" are no longer automatically excluded from Loadout Optimizer and the Organizer.
