@@ -278,9 +278,11 @@ function ItemTable({
   };
 
   /**
+   * Handles Click Events for Table Rows
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
+   * When ctrl-clicking toggles selected value
    */
-  const narrowQueryFunction = useCallback(
+  const onRowClick = useCallback(
     (
       row: Row,
       column: ColumnDefinition
@@ -303,9 +305,17 @@ function ItemTable({
                 dispatch(toggleSearchQueryComponent(filter));
               }
             }
+
+            if (e.ctrlKey) {
+              setSelectedItemIds(
+                selectedItemIds.findIndex((selectedItemId) => selectedItemId === row.item.id) === -1
+                  ? [...selectedItemIds, row.item.id]
+                  : selectedItemIds.filter((id) => id !== row.item.id)
+              );
+            }
           }
         : undefined,
-    [dispatch]
+    [dispatch, selectedItemIds]
   );
 
   const onMoveSelectedItems = (store: DimStore) => {
@@ -542,11 +552,7 @@ function ItemTable({
               onChange={(e) => selectItem(e, row.item)}
             />
           </div>
-          <MemoRow
-            row={row}
-            filteredColumns={filteredColumns}
-            narrowQueryFunction={narrowQueryFunction}
-          />
+          <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
         </React.Fragment>
       ))}
     </div>
@@ -630,11 +636,11 @@ function buildStatInfo(items: DimItem[]): {
 function TableRow({
   row,
   filteredColumns,
-  narrowQueryFunction,
+  onRowClick,
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
-  narrowQueryFunction(
+  onRowClick(
     row: Row,
     column: ColumnDefinition
   ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
@@ -645,7 +651,7 @@ function TableRow({
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
-          onClick={narrowQueryFunction(row, column)}
+          onClick={onRowClick(row, column)}
           className={clsx(styles[column.id], {
             [styles.hasFilter]: column.filter,
           })}
