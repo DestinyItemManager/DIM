@@ -53,7 +53,30 @@
 .materialSelect {
   width: 100%;
 
-  option {
-    text-overflow: ellipsis;
+  button {
+    width: 100%;
+  }
+}
+
+.materialSpendInfo {
+  width: 220px;
+  @include phone-portrait {
+    // width of phone minus 12 padding each side
+    width: calc(100vw - 24px);
+  }
+}
+
+.upgradeOption {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+
+  img {
+    height: 14px;
+    width: 14px;
+    margin-right: 4px;
   }
 }

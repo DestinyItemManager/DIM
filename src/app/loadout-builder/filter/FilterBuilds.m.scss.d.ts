@@ -3,8 +3,10 @@
 interface CssExports {
   'filters': string;
   'materialSelect': string;
+  'materialSpendInfo': string;
   'row': string;
   'upgradeMaterials': string;
+  'upgradeOption': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

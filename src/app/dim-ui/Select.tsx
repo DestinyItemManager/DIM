@@ -2,7 +2,7 @@ import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
-import React, { ReactNode, useRef } from 'react';
+import React, { CSSProperties, ReactNode, useRef, useState } from 'react';
 import styles from './Select.m.scss';
 import { usePopper } from './usePopper';
 
@@ -18,6 +18,17 @@ interface Props<T> {
   /** Hide the selected option from the dropdown */
   hideSelected?: boolean;
   disabled?: boolean;
+  /** Sets the max width for the button. */
+  maxButtonWidth?: number;
+  /**
+   * Sets the max width for the dropdown.
+   *
+   * If 'button' is used the two things can happen:
+   * 1. If maxButtonWidth is set it will use that as the max width.
+   * 2. If maxButtonWidth is undefined it will calculate the width
+   * of the button dynamically and use that to set the max width.
+   */
+  maxDropdownWidth?: number | 'button';
   value?: T;
   options: Option<T>[];
   /** Optional override for the button content */
@@ -36,6 +47,8 @@ interface Props<T> {
 export default function Select<T>({
   className,
   disabled,
+  maxButtonWidth,
+  maxDropdownWidth,
   options: items,
   onChange,
   value,
@@ -58,6 +71,9 @@ export default function Select<T>({
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLElement>(null);
+  const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
+    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
+  );
 
   usePopper({
     contents: menuRef,
@@ -70,10 +86,39 @@ export default function Select<T>({
     throw new Error('value must correspond to one of the provided options');
   }
 
+  let buttonStyle: CSSProperties | undefined;
+  let dropdownStyle: CSSProperties | undefined;
+
+  if (maxButtonWidth !== undefined) {
+    buttonStyle = {
+      maxWidth: maxButtonWidth,
+    };
+  }
+
+  if (maxDropdownWidth === 'button' && dropdownWidth === undefined && buttonRef.current) {
+    // Minus 2 because the button has a border.
+    const width =
+      maxButtonWidth !== undefined
+        ? maxButtonWidth
+        : buttonRef.current.getBoundingClientRect().width - 2;
+    setDropdownWidth(width);
+  }
+
+  if (dropdownWidth !== undefined) {
+    dropdownStyle = {
+      maxWidth: dropdownWidth,
+    };
+  }
+
   return (
     <div className={className}>
       {children ? (
-        <button type="button" {...getToggleButtonProps({ ref: buttonRef })} disabled={disabled}>
+        <button
+          type="button"
+          style={buttonStyle}
+          {...getToggleButtonProps({ ref: buttonRef })}
+          disabled={disabled}
+        >
           {children}
         </button>
       ) : (
@@ -91,29 +136,31 @@ export default function Select<T>({
         {...getMenuProps({ ref: menuRef })}
         className={clsx(styles.menu, { [styles.open]: isOpen })}
       >
-        {isOpen &&
-          items.map(
-            (item, index) =>
-              !(hideSelected && item.value === value) && (
-                <div
-                  className={clsx(styles.menuItem, {
-                    [styles.highlighted]: highlightedIndex === index,
-                    highlighted: highlightedIndex === index,
-                    [styles.disabled]: item.disabled,
-                  })}
-                  key={item.key}
-                  {...getItemProps({
-                    item,
-                    index,
-                    onClick: (e: any) => {
-                      e.nativeEvent.preventDownshiftDefault = item.disabled;
-                    },
-                  })}
-                >
-                  {item.content}
-                </div>
-              )
-          )}
+        <div style={dropdownStyle}>
+          {isOpen &&
+            items.map(
+              (item, index) =>
+                !(hideSelected && item.value === value) && (
+                  <div
+                    className={clsx(styles.menuItem, {
+                      [styles.highlighted]: highlightedIndex === index,
+                      highlighted: highlightedIndex === index,
+                      [styles.disabled]: item.disabled,
+                    })}
+                    key={item.key}
+                    {...getItemProps({
+                      item,
+                      index,
+                      onClick: (e: any) => {
+                        e.nativeEvent.preventDownshiftDefault = item.disabled;
+                      },
+                    })}
+                  >
+                    {item.content}
+                  </div>
+                )
+            )}
+        </div>
       </div>
     </div>
   );
