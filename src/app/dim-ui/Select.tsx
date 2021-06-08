@@ -96,7 +96,7 @@ export default function Select<T>({
   }
 
   if (maxDropdownWidth === 'button' && dropdownWidth === undefined && buttonRef.current) {
-    // Minus 2 because the button has a border.
+    // Minus 2 because the menu has a thicker outline than the button border (2px vs 1px)
     const width =
       maxButtonWidth !== undefined
         ? maxButtonWidth
