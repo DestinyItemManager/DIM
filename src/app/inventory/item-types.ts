@@ -91,6 +91,8 @@ export interface DimItem {
   ammoType: DestinyAmmunitionType;
   /** The level a character must be to equip this item. */
   equipRequiredLevel: number;
+  /** Custom score for an armor piece. */
+  score: number;
   /** The maximum number of items that stack together for this item type. */
   maxStackSize: number;
   /** Is this stack unique (one per account, sometimes two if you can move to vault)? */

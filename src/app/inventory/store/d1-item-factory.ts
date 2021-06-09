@@ -315,6 +315,7 @@ function makeItem(
     energy: null,
     powerCap: null,
     pursuit: null,
+    score: 0,
   };
 
   // *able

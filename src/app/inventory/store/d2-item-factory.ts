@@ -22,13 +22,13 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import extendedICH from 'data/d2/extended-ich.json';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { DimItem, DimPerk } from '../item-types';
+import { DimItem, DimPerk, DimStat } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
 import { createItemIndex } from './item-index';
@@ -435,6 +435,7 @@ export function makeItem(
     perks: null,
     masterworkInfo: null,
     infusionQuality: null,
+    score: 0,
   };
 
   // *able
@@ -476,6 +477,13 @@ export function makeItem(
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
+  }
+
+  try {
+    createdItem.score = getArmorScore(createdItem);
+  } catch (e) {
+    errorLog('d2-stores', `Error building armor score for ${createdItem.name}`, item, itemDef, e);
+    reportException('ArmorScore', e, { itemHash: item.itemHash });
   }
 
   try {
@@ -629,6 +637,87 @@ export function makeItem(
 
 function isLegendaryOrBetter(item: DimItem) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
+}
+
+function getHunterScore(itemStats: DimStat[] | null): number {
+  let score = 0;
+  itemStats?.forEach((stat) => {
+    switch (stat.statHash) {
+      case StatHashes.Recovery:
+        score += 3 * stat.base;
+        break;
+      case StatHashes.Mobility:
+        score += 2 * stat.base;
+        break;
+      case StatHashes.Intellect:
+        score += stat.base;
+        break;
+      default:
+        break;
+    }
+  });
+  return score;
+}
+
+function getWarlockScore(itemStats: DimStat[] | null): number {
+  let score = 0;
+  itemStats?.forEach((stat) => {
+    switch (stat.statHash) {
+      case StatHashes.Recovery:
+        score += 3 * stat.base;
+        break;
+      case StatHashes.Intellect:
+        score += 2 * stat.base;
+        break;
+      case StatHashes.Discipline:
+        score += stat.base;
+        break;
+      default:
+        break;
+    }
+  });
+  return score;
+}
+
+function getTitanScore(item: DimItem): number {
+  let score = 0;
+  item.stats?.forEach((stat) => {
+    switch (stat.statHash) {
+      case StatHashes.Recovery:
+        score += 3 * stat.base;
+        break;
+      case StatHashes.Intellect:
+        score += 2 * stat.base;
+        break;
+      case StatHashes.Resilience:
+        score += stat.base;
+        break;
+      default:
+        break;
+    }
+  });
+  return score;
+}
+
+function getArmorScore(item: DimItem): number {
+  let score;
+  switch (item.classType) {
+    case DestinyClass.Hunter:
+      score = getHunterScore(item.stats);
+      break;
+    case DestinyClass.Titan:
+      score = getTitanScore(item);
+      break;
+    case DestinyClass.Warlock:
+      score = getWarlockScore(item.stats);
+      break;
+    case DestinyClass.Unknown:
+      score = 0;
+      break;
+    default:
+      score = 0;
+  }
+  return score;
 }
 
 function buildPursuitInfo(

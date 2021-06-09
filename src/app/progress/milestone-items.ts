@@ -288,6 +288,7 @@ function makeFakePursuitItem(
     trackable: false,
     energy: null,
     powerCap: null,
+    score: 0,
   };
 }
 

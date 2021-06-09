@@ -107,6 +107,17 @@ const overloadedRangeFilters: FilterDefinition[] = [
     },
   },
   {
+    keywords: ['score', 'armorscore'],
+    description: tl('Filter.ArmorScore'),
+    format: 'rangeoverload',
+    suggestions: ['score'],
+    filter: ({ filterValue }) => {
+      filterValue = replacePowerLevelKeyword(filterValue);
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) => item.score > 0 && compareTo(item.score);
+    },
+  },
+  {
     keywords: 'powerlimit',
     description: tl('Filter.PowerLimit'),
     format: 'rangeoverload',

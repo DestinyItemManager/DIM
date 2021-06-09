@@ -1,0 +1,19 @@
+@import '../variables.scss';
+
+.score {
+  display: flex;
+  margin-left: auto;
+  justify-content: flex-end;
+  text-align: right;
+  align-items: center;
+  font-weight: bold;
+  font-size: calc((9 / 50) * var(--item-size)); // 9px at default 50px item size
+  padding: 1px 2px;
+  background-color: black;
+  color: white;
+}
+
+span {
+  max-width: 100%;
+  max-height: 100%;
+}

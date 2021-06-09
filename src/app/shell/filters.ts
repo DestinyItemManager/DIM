@@ -148,6 +148,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     return tag === 'archive';
   }),
   acquisitionRecency: reverseComparator(compareBy((item: DimItem) => BigInt(item.id))),
+  armorScore: reverseComparator(compareBy((item: DimItem) => item.score ?? 0)),
   default: () => 0,
 };
 

@@ -4,6 +4,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
+import ArmorScore from './ArmorScore';
 import BadgeInfo from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
@@ -97,13 +98,14 @@ export default function InventoryItem({
         )}
         <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
-        {(tag || item.locked || notes) && (
+        {(tag || item.locked || notes || item.score > 0) && (
           <div className={styles.icons}>
             {item.locked && (
               <AppIcon className={styles.icon} icon={item.lockable ? lockIcon : starIcon} />
             )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}
             {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
+            {item.score > 0 && <ArmorScore score={item.score} />}
           </div>
         )}
         {isNew && <NewItemIndicator />}
