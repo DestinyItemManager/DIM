@@ -64,7 +64,11 @@ export default function FilterBuilds({
       {
         key: UpgradeSpendTier.Nothing.toString(),
         value: UpgradeSpendTier.Nothing,
-        content: <div className={styles.upgradeOption}>{t('LoadoutBuilder.Nothing')}</div>,
+        content: (
+          <div className={styles.upgradeOption}>
+            <div className={styles.materialName}>{t('LoadoutBuilder.Nothing')}</div>
+          </div>
+        ),
       },
       {
         key: UpgradeSpendTier.LegendaryShards.toString(),
@@ -72,7 +76,9 @@ export default function FilterBuilds({
         content: (
           <div className={styles.upgradeOption}>
             {legendaryShardIcon && <BungieImage src={legendaryShardIcon} />}
-            <div>{legendaryShardDef?.displayProperties.name || 'Legendary Shard'}</div>
+            <div className={styles.materialName}>
+              {legendaryShardDef?.displayProperties.name || 'Legendary Shard'}
+            </div>
           </div>
         ),
       },
@@ -82,7 +88,9 @@ export default function FilterBuilds({
         content: (
           <div className={styles.upgradeOption}>
             {enhancementPrismIcon && <BungieImage src={enhancementPrismIcon} />}
-            <div>{enhancementPrismDef?.displayProperties.name || 'Enhancement Prism'}</div>
+            <div className={styles.materialName}>
+              {enhancementPrismDef?.displayProperties.name || 'Enhancement Prism'}
+            </div>
           </div>
         ),
       },
@@ -92,7 +100,7 @@ export default function FilterBuilds({
         content: (
           <div className={styles.upgradeOption}>
             {ascendantShardIcon && <BungieImage src={ascendantShardIcon} />}
-            <div>
+            <div className={styles.materialName}>
               {t('LoadoutBuilder.NotExotics', {
                 material: ascendantShardName,
               })}
@@ -106,7 +114,7 @@ export default function FilterBuilds({
         content: (
           <div className={styles.upgradeOption}>
             {ascendantShardIcon && <BungieImage src={ascendantShardIcon} />}
-            <div>{ascendantShardName}</div>
+            <div className={styles.materialName}>{ascendantShardName}</div>
           </div>
         ),
       },

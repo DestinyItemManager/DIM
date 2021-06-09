@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'filters': string;
+  'materialName': string;
   'materialSelect': string;
   'materialSpendInfo': string;
   'row': string;

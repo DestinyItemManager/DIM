@@ -67,16 +67,20 @@
 }
 
 .upgradeOption {
-  margin: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  font-size: 12px;
+  justify-content: flex-start;
+  width: 100%;
 
   img {
+    margin: 0;
+    position: absolute;
     height: 14px;
     width: 14px;
-    margin-right: 4px;
   }
+}
+
+.materialName {
+  margin-left: 20px;
 }
