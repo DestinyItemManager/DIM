@@ -49,7 +49,8 @@ export function RaidActivity({
   hideName,
 }: {
   activity: DestinyMilestoneChallengeActivity;
-  displayName: string;
+  /** an override label to use instead of the activity's name */
+  displayName?: string;
   hideName?: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -74,16 +75,18 @@ export function RaidActivity({
         )}
         <LoadoutRequirementModifier activity={activity} />
       </div>
-      <div className="quest-objectives">
-        <div className="objective-row objective-boolean">
-          {activity.phases?.map((phase) => (
-            <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
-          ))}
-          <div className="objective-progress">
-            <div className="objective-description">{encountersString}</div>
+      {activity.phases && activity.phases.length > 0 && (
+        <div className="quest-objectives">
+          <div className="objective-row objective-boolean">
+            {activity.phases?.map((phase) => (
+              <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
+            ))}
+            <div className="objective-progress">
+              <div className="objective-description">{encountersString}</div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

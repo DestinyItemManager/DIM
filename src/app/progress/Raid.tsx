@@ -13,10 +13,21 @@ export function Raid({ raid }: { raid: DestinyMilestone }) {
   // convert character's DestinyMilestone to manifest's DestinyMilestoneDefinition
   const raidDef = defs.Milestone.get(raid.milestoneHash);
 
-  const activities = raid.activities?.filter((activity) => activity.phases) || [];
+  // try to find the version of the raid with phase data
+  let activities = raid.activities?.filter((activity) => activity.phases) || [];
+  // we may have overfiltered. maybe this raid has no available phase data
+  if (activities.length === 0) {
+    activities = raid.activities || [];
+  }
 
-  // override the sometimes cryptic individual activity names, if there's only 1 tier of the raid
-  const displayName = activities.length === 1 ? raidDef.displayProperties.name : '';
+  // can be used to override the sometimes cryptic individual activity names
+  let displayNameOverride: string | undefined;
+  if (activities.length === 1 && activities[0].activityHash === 2122313384) {
+    // this used to be a more general check, but ultimately, it is just to override
+    // this goofy activity named "Last Wish: Level 55". the milestone is a
+    // clean "Last Wish Raid" so we provide an override
+    displayNameOverride = raidDef.displayProperties.name;
+  }
 
   return (
     <RaidDisplay displayProperties={raidDef.displayProperties}>
@@ -24,7 +35,11 @@ export function Raid({ raid }: { raid: DestinyMilestone }) {
         <span className="milestone-name">{raidDef.displayProperties.name}</span>
       )}
       {activities.map((activity) => (
-        <RaidActivity activity={activity} displayName={displayName} key={activity.activityHash} />
+        <RaidActivity
+          activity={activity}
+          displayName={displayNameOverride}
+          key={activity.activityHash}
+        />
       ))}
     </RaidDisplay>
   );
