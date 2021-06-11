@@ -14,6 +14,7 @@ interface ProvidedProps {
   defaultCollapsed?: boolean;
   title: React.ReactNode;
   extra?: React.ReactNode;
+  extraOnlyCollapsed?: boolean;
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
@@ -44,7 +45,16 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): Dispat
 
 type Props = StoreProps & ProvidedProps & DispatchProps;
 
-function CollapsibleTitle({ title, collapsed, children, toggle, extra, className, style }: Props) {
+function CollapsibleTitle({
+  title,
+  collapsed,
+  children,
+  toggle,
+  extra,
+  extraOnlyCollapsed,
+  className,
+  style,
+}: Props) {
   const initialMount = useRef(true);
 
   useEffect(() => {
@@ -58,7 +68,7 @@ function CollapsibleTitle({ title, collapsed, children, toggle, extra, className
           <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
           <span>{title}</span>
         </span>
-        {extra}
+        {extraOnlyCollapsed ? collapsed && extra : extra}
       </div>
       <AnimatePresence>
         {!collapsed && (

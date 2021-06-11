@@ -63,7 +63,7 @@ export default function ItemPopupBody({
       title: (
         <span className="popup-tab-title">
           {t('MovePopup.TriageTab')}
-          {wishlistRoll && (
+          {tab === ItemPopupTab.Overview && wishlistRoll && (
             <AppIcon
               className="thumbs-up"
               icon={thumbsUpIcon}

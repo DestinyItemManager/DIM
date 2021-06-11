@@ -1,14 +1,17 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import { ArmorSlotSpecificModSocketIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
+import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { setSearchQuery } from 'app/shell/actions';
-import { AppIcon, searchIcon } from 'app/shell/icons';
+import { AppIcon, editIcon, searchIcon, thumbsUpIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { wishListSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -35,6 +38,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   const [itemFactors, setItemFactors] = useState<ReturnType<typeof getSimilarItems>>();
   const allItems = useSelector(allItemsSelector);
   const wishlistItem = useSelector(wishListSelector(item));
+  const loadouts = useSelector(loadoutsSelector);
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
     (state) => settingsSelector(state).customTotalStatsByClass
   );
@@ -56,96 +60,148 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // we rely on factorCombosLabels and itemFactors having the same number of elements,
   // because they are check the same factors
   const factorCombosLabels = getItemFactorComboDisplays(item);
+  const inLoadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
 
   return (
     <div className={styles.itemTriagePane}>
-      {wishlistItem?.notes?.length && (
-        <ExpandableTextBlock linesWhenClosed={3} className={popupStyles.description}>
-          <span className={popupStyles.wishListLabel}>
-            {t('WishListRoll.WishListNotes', { notes: '' })}
-          </span>
-          <span className={popupStyles.wishListTextContent}>{wishlistItem.notes}</span>
-        </ExpandableTextBlock>
-      )}
-      <div className={styles.ownershipTable}>
-        <div className={styles.header}>This item</div>
-        <div className={styles.header}># Owned</div>
-        <div className={styles.headerDivider} />
-        {itemFactors &&
-          factorCombosLabels.length > 0 &&
-          factorCombosLabels.map((comboDisplay, i) => {
-            const { count, query } = itemFactors[i];
-            return (
-              <React.Fragment key={i}>
-                {comboDisplay}
-                <div className={styles.comboCount}>
-                  <span>{count}</span>
-                  <a
-                    onClick={() => {
-                      dispatch(setSearchQuery(query));
-                    }}
-                    title={query}
-                    className={styles.searchBarIcon}
-                  >
-                    <AppIcon icon={searchIcon} />
-                  </a>
-                </div>
-              </React.Fragment>
-            );
-          })}
-      </div>
-      {notableStats && (
-        <div className={styles.statTable}>
-          <div className={`${styles.bestStat} ${styles.header}`}>
-            Best item (
-            <ArmorSlotSpecificModSocketIcon
-              className={clsx(styles.inlineIcon, styles.headerImage)}
-              item={item}
-              lowRes={true}
-            />
-            )
-          </div>
-          <div className={`${styles.thisStat} ${styles.header}`}>This item</div>
+      <CollapsibleTitle
+        title={'Wishlists'}
+        sectionId={'triage-wishlist'}
+        defaultCollapsed={false}
+        extra={wishlistItem && <AppIcon className="thumbs-up" icon={thumbsUpIcon} />}
+      >
+        {wishlistItem?.notes?.length && (
+          <ExpandableTextBlock linesWhenClosed={3} className={popupStyles.description}>
+            <span className={popupStyles.wishListLabel}>
+              {t('WishListRoll.WishListNotes', { notes: '' })}
+            </span>
+            <span className={popupStyles.wishListTextContent}>{wishlistItem.notes}</span>
+          </ExpandableTextBlock>
+        )}
+      </CollapsibleTitle>
+
+      <CollapsibleTitle
+        title={'In Loadouts'}
+        sectionId={'triage-loadout'}
+        defaultCollapsed={true}
+        extra={inLoadouts.length}
+        extraOnlyCollapsed
+      >
+        {inLoadouts.length > 0 && (
+          <ul>
+            {inLoadouts.map((l) => (
+              <li className={styles.loadoutRow} key={l.id}>
+                {l.name}{' '}
+                <a
+                  className={styles.lowKeyButton}
+                  title={t('Loadouts.Edit')}
+                  onClick={() => editLoadout(l, { isNew: false })}
+                >
+                  <AppIcon icon={editIcon} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CollapsibleTitle>
+      <CollapsibleTitle
+        title={'Item Count'}
+        sectionId={'triage-itemcount'}
+        defaultCollapsed={false}
+        extra={itemFactors && Math.min(...itemFactors.map((f) => f.count))}
+        extraOnlyCollapsed
+      >
+        <div className={styles.ownershipTable}>
+          <div className={styles.header}>This item</div>
+          <div className={styles.header}># Owned</div>
           <div className={styles.headerDivider} />
-          {notableStats.notableStats?.map(({ best, quality, percent, stat }) => (
-            <React.Fragment key={stat.statHash}>
-              <div className={styles.bestStat}>
-                <span className={styles.statIconWrapper}>
-                  {(stat.displayProperties.icon && (
-                    <BungieImage
-                      key={stat.statHash}
-                      className={clsx(styles.inlineIcon, styles.smaller)}
-                      src={stat.displayProperties.icon}
-                    />
-                  )) ||
-                    ' '}
-                </span>
-                <span className={styles.statValue}>{best}</span>{' '}
-                <span className={styles.dimmed}>{stat.displayProperties.name}</span>
-              </div>
-              <div className={styles.thisStat}>
-                <span className={styles.statValue}>{stat.base}</span> (
-                <span style={{ color: getValueColors(quality)[1] }}>{percent}%</span>)
-              </div>
-            </React.Fragment>
-          ))}
-          {item.bucket.inArmor && (
-            <>
-              <div className={styles.bestStat}>
-                <span className={styles.statIconWrapper}> </span>
-                <span className={styles.statValue}>{notableStats.customTotalMax.best}</span>{' '}
-                <StatTotalToggle forClass={item.classType} className={styles.inlineBlock} />
-              </div>
-              <div className={styles.thisStat}>
-                <span className={styles.statValue}>{notableStats.customTotalMax.stat}</span> (
-                <span style={{ color: getValueColors(notableStats.customTotalMax.quality)[1] }}>
-                  {notableStats.customTotalMax.percent}%
-                </span>
+          {itemFactors &&
+            factorCombosLabels.length > 0 &&
+            factorCombosLabels.map((comboDisplay, i) => {
+              const { count, query } = itemFactors[i];
+              return (
+                <React.Fragment key={i}>
+                  {comboDisplay}
+                  <div className={styles.comboCount}>
+                    <span>{count}</span>
+                    <a
+                      onClick={() => {
+                        dispatch(setSearchQuery(query));
+                      }}
+                      title={query}
+                      className={styles.lowKeyButton}
+                    >
+                      <AppIcon icon={searchIcon} />
+                    </a>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+        </div>
+      </CollapsibleTitle>
+      {item.bucket.inArmor && (
+        <CollapsibleTitle
+          title={'High Stats'}
+          sectionId={'triage-highstat'}
+          defaultCollapsed={false}
+          extraOnlyCollapsed
+        >
+          {notableStats && (
+            <div className={styles.statTable}>
+              <div className={`${styles.bestStat} ${styles.header}`}>
+                Best item (
+                <ArmorSlotSpecificModSocketIcon
+                  className={clsx(styles.inlineIcon, styles.headerImage)}
+                  item={item}
+                  lowRes={true}
+                />
                 )
               </div>
-            </>
+              <div className={`${styles.thisStat} ${styles.header}`}>This item</div>
+              <div className={styles.headerDivider} />
+              {notableStats.notableStats?.map(({ best, quality, percent, stat }) => (
+                <React.Fragment key={stat.statHash}>
+                  <div className={styles.bestStat}>
+                    <span className={styles.statIconWrapper}>
+                      {(stat.displayProperties.icon && (
+                        <BungieImage
+                          key={stat.statHash}
+                          className={clsx(styles.inlineIcon, styles.smaller)}
+                          src={stat.displayProperties.icon}
+                        />
+                      )) ||
+                        ' '}
+                    </span>
+                    <span className={styles.statValue}>{best}</span>{' '}
+                    <span className={styles.dimmed}>{stat.displayProperties.name}</span>
+                  </div>
+                  <div className={styles.thisStat}>
+                    <span className={styles.statValue}>{stat.base}</span> (
+                    <span style={{ color: getValueColors(quality)[1] }}>{percent}%</span>)
+                  </div>
+                </React.Fragment>
+              ))}
+              {item.bucket.inArmor && (
+                <>
+                  <div className={styles.bestStat}>
+                    <span className={styles.statIconWrapper}> </span>
+                    <span className={styles.statValue}>
+                      {notableStats.customTotalMax.best}
+                    </span>{' '}
+                    <StatTotalToggle forClass={item.classType} className={styles.inlineBlock} />
+                  </div>
+                  <div className={styles.thisStat}>
+                    <span className={styles.statValue}>{notableStats.customTotalMax.stat}</span> (
+                    <span style={{ color: getValueColors(notableStats.customTotalMax.quality)[1] }}>
+                      {notableStats.customTotalMax.percent}%
+                    </span>
+                    )
+                  </div>
+                </>
+              )}
+            </div>
           )}
-        </div>
+        </CollapsibleTitle>
       )}
     </div>
   );
