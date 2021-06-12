@@ -179,6 +179,16 @@ function ItemTable({
     [terminal, items]
   );
 
+  const recencyIndicies: Map<string, number> = useMemo(
+    () =>
+      new Map<string, number>(
+        items
+          .sort(compareBy((item: DimItem) => BigInt(item.id)))
+          .map((item: DimItem, index) => [item.id, index + 1] as [string, number])
+      ),
+    [items]
+  );
+
   const firstCategory = categories[1];
   const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
   const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
@@ -198,7 +208,8 @@ function ItemTable({
         customStatTotal,
         loadouts,
         newItems,
-        destinyVersion
+        destinyVersion,
+        recencyIndicies
       ),
     [
       wishList,
@@ -211,6 +222,7 @@ function ItemTable({
       loadouts,
       newItems,
       destinyVersion,
+      recencyIndicies,
     ]
   );
 

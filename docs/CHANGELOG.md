@@ -1,4 +1,5 @@
 ## Next
+* Added "Recency" Column & Sorting to Loadout Organizer, this allows viewing gear sorted by acquisition date.
 
 ## 6.68.0 <span class="changelog-date">(2021-06-06)</span>
 

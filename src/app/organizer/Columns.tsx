@@ -88,7 +88,8 @@ export function getColumns(
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
-  destinyVersion: DestinyVersion
+  destinyVersion: DestinyVersion,
+  recencyIndicies: Map<string, number>
 ): ColumnDefinition[] {
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -274,6 +275,11 @@ export function getColumns(
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
       filter: (value) => (value ? 'is:new' : 'not:new'),
+    },
+    {
+      id: 'recency',
+      header: t('Organizer.Columns.Recency'),
+      value: (item) => recencyIndicies.get(item.id),
     },
     destinyVersion === 2 &&
       isWeapon && {
