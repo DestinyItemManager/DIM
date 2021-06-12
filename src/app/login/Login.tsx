@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { exportBackupData, exportLocalData } from 'app/storage/export-data';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useState } from 'react';
-import { Link, Prompt } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
@@ -36,14 +36,6 @@ export default function Login() {
     return `https://www.bungie.net/en/OAuth/Authorize?${queryParams}`;
   };
 
-  // Don't let people leave the page without a backup if they're enablign DIM Sync after having it disabled
-  const [hasBackedUp, setHasBackedUp] = useState(false);
-  const onLoginClick = (e: React.MouseEvent) => {
-    if (!hasBackedUp && !confirm(t('Views.Login.BackupPrompt'))) {
-      e.preventDefault();
-    }
-  };
-
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync
   const [apiPermissionPreviouslyDisabled] = useState(
     localStorage.getItem('dim-api-enabled') === 'false'
@@ -53,6 +45,19 @@ export default function Login() {
     localStorage.setItem('dim-api-enabled', JSON.stringify(enabled));
     return enabled;
   });
+
+  // Don't let people leave the page without a backup if they're enabling DIM Sync after having it disabled
+  const [hasBackedUp, setHasBackedUp] = useState(false);
+  const onLoginClick = (e: React.MouseEvent) => {
+    if (
+      apiPermissionPreviouslyDisabled &&
+      apiPermissionGranted &&
+      !hasBackedUp &&
+      !confirm(t('Views.Login.BackupPrompt'))
+    ) {
+      e.preventDefault();
+    }
+  };
 
   if (isOldiOS && isStandalone) {
     return (
@@ -118,7 +123,6 @@ export default function Login() {
             <button type="button" className="dim-button" onClick={onExportData}>
               {t('Storage.Export')}
             </button>
-            <Prompt when={!hasBackedUp} message={t('Views.Login.BackupPrompt')} />
           </div>
         )}
         {!apiPermissionPreviouslyDisabled && !apiPermissionGranted && (
