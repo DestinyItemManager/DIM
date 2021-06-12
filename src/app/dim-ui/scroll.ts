@@ -50,8 +50,11 @@ export const itemPop = (item: DimItem) => {
     throw new Error(`No element with id ${item.index}`);
   }
   const elementRect = element.getBoundingClientRect();
+  const html = document.querySelector('html')!;
+  const headerHeight = parseInt(html.style.getPropertyValue('--header-height'), 10);
+  const storeHeaderHeight = parseInt(html.style.getPropertyValue('--store-header-height'), 10);
   const absoluteElementTop = elementRect.top + window.pageYOffset;
-  scrollToPosition({ left: 0, top: absoluteElementTop - 150 });
+  scrollToPosition({ left: 0, top: absoluteElementTop - (headerHeight + storeHeaderHeight + 24) });
   element.classList.add('item-pop');
 
   const removePop = () => {
