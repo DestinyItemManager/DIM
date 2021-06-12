@@ -89,7 +89,8 @@ function SingleVendor({
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
 
-  const returnWithVendorRequest = defs?.Vendor.get(vendorHash)?.returnWithVendorRequest;
+  const vendorDef = defs?.Vendor.get(vendorHash);
+  const returnWithVendorRequest = vendorDef?.returnWithVendorRequest;
   useEventBusListener(
     refresh$,
     useCallback(() => {
@@ -100,10 +101,10 @@ function SingleVendor({
   );
 
   useEffect(() => {
-    if (characterId && defs?.Vendor.get(vendorHash)?.returnWithVendorRequest) {
+    if (characterId && vendorDef?.returnWithVendorRequest) {
       dispatch(loadAllVendors(account, characterId));
     }
-  }, [account, characterId, defs, dispatch, vendorHash]);
+  }, [account, characterId, vendorDef, dispatch, vendorHash]);
 
   useLoadStores(account, stores.length > 0);
 
@@ -111,7 +112,6 @@ function SingleVendor({
     return <ShowPageLoading message={t('Manifest.Load')} />;
   }
 
-  const vendorDef = defs.Vendor.get(vendorHash);
   if (!vendorDef) {
     return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;
   }
@@ -165,14 +165,31 @@ function SingleVendor({
     return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;
   }
 
+  let displayName = d2Vendor.def.displayProperties.name;
+  let displayDesc = d2Vendor.def.displayProperties.description;
+
+  // if this vendor is the seasonal artifact
+  if (vendorDef.displayCategories.find((c) => c.identifier === 'category_reset')) {
+    // search for the associated item. this is way harder than it should be, but we have what we are given
+    const seasonHash = profileResponse?.profile.data?.currentSeasonHash;
+    const artifactDisplay = Object.values(defs.InventoryItem.getAll()).find(
+      //     it belongs to the current season,                         and looks like an artifact
+      (i) => i.seasonHash === seasonHash && i.inventory!.stackUniqueLabel.includes('.artifacts.')
+    )?.displayProperties;
+    if (artifactDisplay) {
+      displayName = artifactDisplay.name;
+      displayDesc = artifactDisplay.description;
+    }
+  }
+
   return (
     <div className={clsx(styles.page, 'dim-page')}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
-            {d2Vendor.def.displayProperties.name} <VendorLocation>{placeString}</VendorLocation>
+            {displayName} <VendorLocation>{placeString}</VendorLocation>
           </h1>
-          <div>{d2Vendor.def.displayProperties.description}</div>
+          <div>{displayDesc}</div>
           {d2Vendor.component && (
             <div>
               Inventory updates in{' '}
