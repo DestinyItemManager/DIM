@@ -1,5 +1,7 @@
 ## Next
 
+* Added ctrl-click to toggle item selection in Organizer
+
 ## 6.68.0 <span class="changelog-date">(2021-06-06)</span>
 
 * Some support for Vault of Glass mods in filters. Expect Loadout Optimizer fixes next week.
