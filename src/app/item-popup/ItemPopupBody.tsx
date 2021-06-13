@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { ItemTriage } from 'app/item-triage/ItemTriage';
+import { doShowTriage, ItemTriage } from 'app/item-triage/ItemTriage';
 import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
@@ -45,19 +45,7 @@ export default function ItemPopupBody({
       component: <ItemDetails item={item} extraInfo={extraInfo} />,
     },
   ];
-  if (
-    $featureFlags.triage &&
-    item.destinyVersion === 2 &&
-    (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' &&
-        item.bucket.type !== 'SeasonalArtifacts' &&
-        item.bucket.type !== 'Class'))
-    //   ||
-    // (item.bucket.sort === 'General' &&
-    //   (item.bucket.type === 'Ghost' ||        // enable these once there's
-    //     item.bucket.type === 'Vehicle' ||     // factor rules for them
-    //     item.bucket.type === 'Ships'))
-  ) {
+  if ($featureFlags.triage && doShowTriage(item)) {
     tabs.push({
       tab: ItemPopupTab.Triage,
       title: (
