@@ -11,8 +11,9 @@ interface CssExports {
   'inlineBlock': string;
   'inlineIcon': string;
   'itemTriagePane': string;
+  'loadoutRow': string;
+  'lowKeyButton': string;
   'ownershipTable': string;
-  'searchBarIcon': string;
   'smaller': string;
   'statIconWrapper': string;
   'statTable': string;

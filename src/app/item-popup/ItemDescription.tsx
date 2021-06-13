@@ -51,7 +51,7 @@ export default function ItemDescription({ item }: Props) {
           )}
         </>
       )}
-      {wishlistItem?.notes?.length && (
+      {!$featureFlags.triage && wishlistItem?.notes?.length && (
         <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>
             {t('WishListRoll.WishListNotes', { notes: '' })}
