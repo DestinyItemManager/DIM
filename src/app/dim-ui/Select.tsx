@@ -2,7 +2,7 @@ import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
-import React, { CSSProperties, ReactNode, useRef, useState } from 'react';
+import React, { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './Select.m.scss';
 import { usePopper } from './usePopper';
 
@@ -86,6 +86,17 @@ export default function Select<T>({
     throw new Error('value must correspond to one of the provided options');
   }
 
+  useEffect(() => {
+    if (maxDropdownWidth === 'button' && dropdownWidth === undefined && buttonRef.current) {
+      // Minus 2 because the menu has a thicker outline than the button border (2px vs 1px)
+      const width =
+        maxButtonWidth !== undefined
+          ? maxButtonWidth
+          : buttonRef.current.getBoundingClientRect().width - 2;
+      setDropdownWidth(width);
+    }
+  }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
+
   let buttonStyle: CSSProperties | undefined;
   let dropdownStyle: CSSProperties | undefined;
 
@@ -93,15 +104,6 @@ export default function Select<T>({
     buttonStyle = {
       maxWidth: maxButtonWidth,
     };
-  }
-
-  if (maxDropdownWidth === 'button' && dropdownWidth === undefined && buttonRef.current) {
-    // Minus 2 because the menu has a thicker outline than the button border (2px vs 1px)
-    const width =
-      maxButtonWidth !== undefined
-        ? maxButtonWidth
-        : buttonRef.current.getBoundingClientRect().width - 2;
-    setDropdownWidth(width);
   }
 
   if (dropdownWidth !== undefined) {

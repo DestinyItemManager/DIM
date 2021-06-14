@@ -83,4 +83,6 @@
 
 .materialName {
   margin-left: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

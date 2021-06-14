@@ -42,16 +42,16 @@ export default function FilterBuilds({
   const workingStatRanges =
     statRanges || _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
 
-  const legendaryShardDef = defs?.InventoryItem.get(UpgradeMaterialHashes.legendaryShard);
-  const enhancementPrismDef = defs?.InventoryItem.get(UpgradeMaterialHashes.enhancementPrism);
-  const ascendantShardDef = defs?.InventoryItem.get(UpgradeMaterialHashes.ascendantShard);
-  const legendaryShardIcon = legendaryShardDef?.displayProperties.icon;
-  const enhancementPrismIcon = enhancementPrismDef?.displayProperties.icon;
-  const ascendantShardIcon = ascendantShardDef?.displayProperties.icon;
-  const ascendantShardName = ascendantShardDef?.displayProperties.name || 'Ascendant Shard';
+  const upgradeOptions: Option<UpgradeSpendTier>[] = useMemo(() => {
+    const legendaryShardDef = defs?.InventoryItem.get(UpgradeMaterialHashes.legendaryShard);
+    const enhancementPrismDef = defs?.InventoryItem.get(UpgradeMaterialHashes.enhancementPrism);
+    const ascendantShardDef = defs?.InventoryItem.get(UpgradeMaterialHashes.ascendantShard);
+    const legendaryShardIcon = legendaryShardDef?.displayProperties.icon;
+    const enhancementPrismIcon = enhancementPrismDef?.displayProperties.icon;
+    const ascendantShardIcon = ascendantShardDef?.displayProperties.icon;
+    const ascendantShardName = ascendantShardDef?.displayProperties.name || 'Ascendant Shard';
 
-  const upgradeOptions: Option<UpgradeSpendTier>[] = useMemo(
-    () => [
+    return [
       {
         key: 'explanation',
         disabled: true,
@@ -118,16 +118,8 @@ export default function FilterBuilds({
           </div>
         ),
       },
-    ],
-    [
-      ascendantShardIcon,
-      ascendantShardName,
-      enhancementPrismDef?.displayProperties.name,
-      enhancementPrismIcon,
-      legendaryShardDef?.displayProperties.name,
-      legendaryShardIcon,
-    ]
-  );
+    ];
+  }, [defs]);
 
   return (
     <div>
