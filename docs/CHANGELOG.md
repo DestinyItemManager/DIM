@@ -1,6 +1,11 @@
 ## Next
 
-* Added ctrl-click to toggle item selection in Organizer
+* Added ctrl-click to toggle item selection in Organizer.
+* Fix over-eager prompt to backup data when signing in.
+* Viewing artifact details no longer always shows The Gate Lord's Eye.
+* Scrolling to an item tile is now more accurate.
+* Vault of Glass milestone is now more clearly named.
+* Loadout Optimizer support for Vault of Glass mods.
 
 ## 6.68.0 <span class="changelog-date">(2021-06-06)</span>
 
