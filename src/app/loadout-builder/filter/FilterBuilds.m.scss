@@ -67,10 +67,11 @@
 }
 
 .upgradeOption {
+  align-items: center;
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: flex-start;
+  overflow: hidden;
   width: 100%;
 
   img {
@@ -83,6 +84,7 @@
 
 .materialName {
   margin-left: 20px;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
