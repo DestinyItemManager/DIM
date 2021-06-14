@@ -2,7 +2,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade } from 'app/inventory/store/energy';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { warnLog } from 'app/utils/log';
+import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 import { LockedItemType, UpgradeSpendTier } from './types';
@@ -87,7 +88,8 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
 function getMaxEnergyFromUpgradeSpendTier(
   defs: D2ManifestDefinitions,
   tier: UpgradeSpendTier,
-  item: DimItem
+  item: DimItem,
+  energyType: DestinyEnergyType
 ) {
   if (!item.energy) {
     return 0;
@@ -124,7 +126,7 @@ function getMaxEnergyFromUpgradeSpendTier(
     item,
     item.energy.energyType,
     item.energy.energyCapacity,
-    item.energy.energyType,
+    energyType,
     10
   );
 
@@ -170,7 +172,10 @@ export function upgradeSpendTierToMaxEnergy(
     return 0;
   }
 
-  return Math.max(item.energy.energyCapacity, getMaxEnergyFromUpgradeSpendTier(defs, tier, item));
+  return Math.max(
+    item.energy.energyCapacity,
+    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, item.energy.energyType)
+  );
 }
 
 /** Figures out whether you can swap energies in the allowed spend tier. */
@@ -182,5 +187,33 @@ export function canSwapEnergyFromUpgradeSpendTier(
   if (!item.energy) {
     return false;
   }
-  return item.energy.energyCapacity <= getMaxEnergyFromUpgradeSpendTier(defs, tier, item);
+
+  let differentEnergy: DestinyEnergyType;
+
+  // Find any armour energy that is not the current energy
+  switch (item.energy.energyType) {
+    case DestinyEnergyType.Arc:
+      differentEnergy = DestinyEnergyType.Thermal;
+      break;
+    case DestinyEnergyType.Thermal:
+      differentEnergy = DestinyEnergyType.Void;
+      break;
+    case DestinyEnergyType.Void:
+      differentEnergy = DestinyEnergyType.Arc;
+      break;
+    default: {
+      warnLog(
+        'loadout-builder',
+        `Armor expected to have an energy type of ${DestinyEnergyType.Arc},
+        ${DestinyEnergyType.Thermal} or ${DestinyEnergyType.Void} but had
+        ${item.energy.energyType}`
+      );
+      differentEnergy = item.energy.energyType;
+    }
+  }
+
+  return (
+    item.energy.energyCapacity <=
+    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, differentEnergy)
+  );
 }
