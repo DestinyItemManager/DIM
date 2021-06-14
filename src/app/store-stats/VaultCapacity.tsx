@@ -1,8 +1,10 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
@@ -11,6 +13,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import { MaterialCounts } from './MaterialCounts';
 import styles from './VaultCapacity.m.scss';
 
 const bucketIcons = {
@@ -35,7 +38,7 @@ const vaultBucketOrder = [
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
 interface VaultCounts {
-  [bucketHash: number]: { count: number; bucket: InventoryBucket };
+  [bucketHash: string]: { count: number; bucket: InventoryBucket };
 }
 
 /**
@@ -86,29 +89,34 @@ const vaultCountsSelector = createSelector(
 /** Current amounts and maximum capacities of the vault */
 export default React.memo(function VaultCapacity() {
   const vaultCounts = useSelector(vaultCountsSelector);
+  const mats = <MaterialCounts />;
 
   return (
     <>
       {_.sortBy(Object.keys(vaultCounts), (id) => vaultBucketOrder.indexOf(parseInt(id, 10))).map(
         (bucketId) => {
           const { count, bucket } = vaultCounts[bucketId];
+          const isConsumables = bucketId === String(BucketHashes.Consumables);
+          const title = isConsumables ? undefined : bucket.name;
           return (
             <React.Fragment key={bucketId}>
-              <div className={styles.bucketTag} title={bucket.name}>
+              <div className={styles.bucketTag} title={title}>
                 {bucketIcons[bucketId] ? (
                   <img src={bucketIcons[bucketId]} alt="" />
                 ) : (
                   bucket.name.substring(0, 1)
                 )}
               </div>
-              <div
-                title={bucket.name}
-                className={clsx({
-                  [styles.full]: count === bucket.capacity,
-                })}
-              >
-                {count}/{bucket.capacity}
-              </div>
+              <PressTip tooltip={isConsumables ? mats : undefined}>
+                <div
+                  title={title}
+                  className={clsx({
+                    [styles.full]: count === bucket.capacity,
+                  })}
+                >
+                  {count}/{bucket.capacity}
+                </div>
+              </PressTip>
             </React.Fragment>
           );
         }

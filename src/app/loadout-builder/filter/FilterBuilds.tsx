@@ -3,10 +3,9 @@ import Select, { Option } from 'app/dim-ui/Select';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
-import { setSetting } from 'app/settings/actions';
+import { useSetSetting } from 'app/settings/hooks';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { MinMax, MinMaxIgnored, statHashes, StatTypes, UpgradeSpendTier } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
@@ -27,15 +26,13 @@ export default function FilterBuilds({
   upgradeSpendTier: UpgradeSpendTier;
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
-  const dispatch = useDispatch();
   const defs = useD2Definitions();
+  const setSetting = useSetSetting();
 
   const onStatOrderChanged = (sortOrder: StatTypes[]) => {
-    dispatch(
-      setSetting(
-        'loStatSortOrder',
-        sortOrder.map((type) => statHashes[type])
-      )
+    setSetting(
+      'loStatSortOrder',
+      sortOrder.map((type) => statHashes[type])
     );
   };
 
@@ -138,7 +135,7 @@ export default function FilterBuilds({
             maxDropdownWidth={'button'}
             options={upgradeOptions}
             value={upgradeSpendTier}
-            onChange={(value) => value && dispatch(setSetting('loUpgradeSpendTier', value))}
+            onChange={(value) => value && setSetting('loUpgradeSpendTier', value)}
           />
         </div>
       </div>

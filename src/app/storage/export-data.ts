@@ -1,4 +1,63 @@
+import { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
+import { parseProfileKey } from 'app/dim-api/reducer';
+import { ThunkResult } from 'app/store/types';
 import { download } from 'app/utils/util';
+
+/**
+ * Export the local IDB data to a format the DIM API could import.
+ */
+export function exportLocalData(): ThunkResult<ExportResponse> {
+  return async (_dispatch, getState) => {
+    const dimApiState = getState().dimApi;
+    const exportResponse: ExportResponse = {
+      settings: dimApiState.settings,
+      loadouts: [],
+      tags: [],
+      triumphs: [],
+      itemHashTags: [],
+      searches: [],
+    };
+
+    for (const profileKey in dimApiState.profiles) {
+      if (Object.prototype.hasOwnProperty.call(dimApiState.profiles, profileKey)) {
+        const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
+
+        for (const loadout of Object.values(dimApiState.profiles[profileKey].loadouts)) {
+          exportResponse.loadouts.push({
+            loadout,
+            platformMembershipId,
+            destinyVersion,
+          });
+        }
+        for (const annotation of Object.values(dimApiState.profiles[profileKey].tags)) {
+          exportResponse.tags.push({
+            annotation,
+            platformMembershipId,
+            destinyVersion,
+          });
+        }
+
+        exportResponse.triumphs.push({
+          platformMembershipId,
+          triumphs: dimApiState.profiles[profileKey].triumphs,
+        });
+      }
+    }
+
+    exportResponse.itemHashTags = Object.values(dimApiState.itemHashTags);
+
+    for (const destinyVersion in dimApiState.searches) {
+      for (const search of dimApiState.searches[destinyVersion]) {
+        exportResponse.searches.push({
+          destinyVersion: parseInt(destinyVersion, 10) as DestinyVersion,
+          search,
+        });
+      }
+    }
+
+    return exportResponse;
+  };
+}
 
 /**
  * Export the data backup as a file

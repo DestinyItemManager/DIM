@@ -6,7 +6,6 @@ interface CssExports {
   'header': string;
   'item': string;
   'loadoutName': string;
-  'loadoutSelect': string;
   'noLoadouts': string;
   'set': string;
   'setHeader': string;

@@ -13,7 +13,12 @@ interface ProvidedProps {
   sectionId: string;
   defaultCollapsed?: boolean;
   title: React.ReactNode;
+  /** right-aligned content that's in the title bar, but isn't the title */
   extra?: React.ReactNode;
+  /** if true, the `extra` content shows up only when this section is collapsed */
+  extraOnlyCollapsed?: boolean;
+  /** if true, this section is forced closed and ignores clicks */
+  disabled?: boolean;
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
@@ -30,21 +35,30 @@ interface DispatchProps {
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
   return {
-    collapsed: collapsed === undefined ? Boolean(props.defaultCollapsed) : collapsed,
+    collapsed: Boolean(props.disabled) || (collapsed ?? Boolean(props.defaultCollapsed)),
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): DispatchProps {
   return {
     toggle: () => {
-      dispatch(toggleCollapsedSection(ownProps.sectionId));
+      ownProps.disabled || dispatch(toggleCollapsedSection(ownProps.sectionId));
     },
   };
 }
 
 type Props = StoreProps & ProvidedProps & DispatchProps;
 
-function CollapsibleTitle({ title, collapsed, children, toggle, extra, className, style }: Props) {
+function CollapsibleTitle({
+  title,
+  collapsed,
+  children,
+  toggle,
+  extra,
+  extraOnlyCollapsed,
+  className,
+  style,
+}: Props) {
   const initialMount = useRef(true);
 
   useEffect(() => {
@@ -58,7 +72,7 @@ function CollapsibleTitle({ title, collapsed, children, toggle, extra, className
           <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
           <span>{title}</span>
         </span>
-        {extra}
+        {extraOnlyCollapsed ? collapsed && extra : extra}
       </div>
       <AnimatePresence>
         {!collapsed && (

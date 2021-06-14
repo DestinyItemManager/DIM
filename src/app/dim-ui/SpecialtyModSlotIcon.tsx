@@ -1,7 +1,7 @@
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import PressTip from './PressTip';
@@ -12,9 +12,16 @@ interface ModSlotIconProps {
   className?: string;
   lowRes?: boolean;
 }
-export default function SpecialtyModSlotIcon({ item, className, lowRes }: ModSlotIconProps) {
+export function SpecialtyModSlotIcon({
+  item,
+  className,
+  lowRes,
+  onlyInteresting,
+}: ModSlotIconProps & { onlyInteresting?: boolean }) {
   const defs = useD2Definitions()!;
-  const modMetadatas = getSpecialtySocketMetadatas(item);
+  const modMetadatas = (
+    onlyInteresting ? getInterestingSocketMetadatas : getSpecialtySocketMetadatas
+  )(item);
 
   if (!modMetadatas) {
     return null;

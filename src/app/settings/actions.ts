@@ -5,7 +5,7 @@ import { Settings } from './initial-settings';
 export const loaded = createAction('settings/LOADED')<Partial<Settings>>();
 
 /** This one seems a bit like cheating, but it lets us set a specific property. */
-export const setSetting = createAction(
+export const setSettingAction = createAction(
   'settings/SET',
   <V extends keyof Settings>(property: V, value: Settings[V]) => ({
     property,

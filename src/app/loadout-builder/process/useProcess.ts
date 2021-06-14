@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { keyByStatHash } from 'app/inventory/store/stats';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -216,11 +217,11 @@ function groupItems(
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
-    const statsByHash = item.stats && _.keyBy(item.stats, (s) => s.statHash);
+    const statsByHash = item.stats && keyByStatHash(item.stats);
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statType of statOrder) {
-        statValues.push(statsByHash[statHashes[statType]].base);
+        statValues.push(statsByHash[statHashes[statType]]!.base);
       }
     }
 

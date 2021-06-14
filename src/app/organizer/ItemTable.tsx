@@ -18,7 +18,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { setSetting } from 'app/settings/actions';
+import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -240,7 +240,7 @@ function ItemTable({
   const onChangeEnabledColumn = useCallback(
     ({ checked, id }: { checked: boolean; id: string }) => {
       dispatch(
-        setSetting(
+        setSettingAction(
           columnSetting(itemType),
           _.uniq(
             _.compact(
@@ -278,9 +278,11 @@ function ItemTable({
   };
 
   /**
+   * Handles Click Events for Table Rows
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
+   * When ctrl-clicking toggles selected value
    */
-  const narrowQueryFunction = useCallback(
+  const onRowClick = useCallback(
     (
       row: Row,
       column: ColumnDefinition
@@ -303,9 +305,17 @@ function ItemTable({
                 dispatch(toggleSearchQueryComponent(filter));
               }
             }
+
+            if (e.ctrlKey) {
+              setSelectedItemIds(
+                selectedItemIds.findIndex((selectedItemId) => selectedItemId === row.item.id) === -1
+                  ? [...selectedItemIds, row.item.id]
+                  : selectedItemIds.filter((id) => id !== row.item.id)
+              );
+            }
           }
         : undefined,
-    [dispatch]
+    [dispatch, selectedItemIds]
   );
 
   const onMoveSelectedItems = (store: DimStore) => {
@@ -542,11 +552,7 @@ function ItemTable({
               onChange={(e) => selectItem(e, row.item)}
             />
           </div>
-          <MemoRow
-            row={row}
-            filteredColumns={filteredColumns}
-            narrowQueryFunction={narrowQueryFunction}
-          />
+          <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
         </React.Fragment>
       ))}
     </div>
@@ -630,11 +636,11 @@ function buildStatInfo(items: DimItem[]): {
 function TableRow({
   row,
   filteredColumns,
-  narrowQueryFunction,
+  onRowClick,
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
-  narrowQueryFunction(
+  onRowClick(
     row: Row,
     column: ColumnDefinition
   ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
@@ -645,7 +651,7 @@ function TableRow({
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
-          onClick={narrowQueryFunction(row, column)}
+          onClick={onRowClick(row, column)}
           className={clsx(styles[column.id], {
             [styles.hasFilter]: column.filter,
           })}

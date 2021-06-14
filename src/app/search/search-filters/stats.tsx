@@ -83,6 +83,16 @@ const statFilters: FilterDefinition[] = [
 
 export default statFilters;
 
+// Support (for armor) these aliases for the stat in the nth rank
+const est = {
+  highest: 0,
+  secondhighest: 1,
+  thirdhighest: 2,
+  fourthhighest: 3,
+  fifthhighest: 4,
+  sixthhighest: 5,
+};
+
 /**
  * given a stat name, this returns a FilterDefinition for comparing that stat
  */
@@ -109,6 +119,17 @@ function statFilterFromString(
     const statMatches = (s: DimStat) =>
       armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue]);
     return (item) => Boolean(item.stats?.find(statMatches));
+  } else if (statNames in est) {
+    return (item) => {
+      if (!item.bucket.inArmor || !item.stats) {
+        return false;
+      }
+      const sortedStats = item.stats
+        .filter((s) => armorAnyStatHashes.includes(s.statHash))
+        .map((s) => s[byWhichValue])
+        .sort((a, b) => b - a);
+      return numberComparisonFunction(sortedStats[est[statNames]]);
+    };
   }
 
   const statCombiner = createStatCombiner(statNames, byWhichValue);

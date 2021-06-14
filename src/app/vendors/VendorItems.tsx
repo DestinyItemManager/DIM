@@ -21,6 +21,10 @@ const itemSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.name)
 );
 
+// ignore what i think is the loot pool preview on some tower vendors?
+// ignore the "reset artifact" button on artifact "vendor"
+const ignoreCategories = ['category_preview', 'category_reset'];
+
 /**
  * Display the items for a single vendor, organized by category.
  */
@@ -119,7 +123,7 @@ export default function VendorItems({
           itemsByCategory,
           (items, categoryIndex) =>
             vendor.def.displayCategories[categoryIndex] &&
-            vendor.def.displayCategories[categoryIndex].identifier !== 'category_preview' && (
+            !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
                 <h3 className={styles.categoryTitle}>
                   {vendor.def.displayCategories[categoryIndex]?.displayProperties.name || 'Unknown'}

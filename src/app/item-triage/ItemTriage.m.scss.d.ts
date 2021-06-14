@@ -2,21 +2,23 @@
 // Please do not change this file!
 interface CssExports {
   'bestStat': string;
-  'classIcon': string;
   'comboCount': string;
   'dimmed': string;
   'factorCombo': string;
   'header': string;
   'headerDivider': string;
+  'headerImage': string;
   'inlineBlock': string;
   'inlineIcon': string;
   'itemTriagePane': string;
-  'keepMeter': string;
+  'loadoutRow': string;
+  'lowKeyButton': string;
+  'ownershipTable': string;
   'smaller': string;
   'statIconWrapper': string;
+  'statTable': string;
   'statValue': string;
   'thisStat': string;
-  'triageTable': string;
   'weaponSvg': string;
 }
 export const cssExports: CssExports;

@@ -1,7 +1,10 @@
 import { t } from 'app/i18next-t';
-import { ItemTriage } from 'app/item-triage/ItemTriage';
+import { doShowTriage, ItemTriage } from 'app/item-triage/ItemTriage';
+import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
+import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { percent } from '../shell/filters';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -25,34 +28,38 @@ export default function ItemPopupBody({
   tab: ItemPopupTab;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
+  const wishlistRoll = useSelector(wishListSelector(item));
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 
-  const tabs = [
+  const tabs: {
+    tab: ItemPopupTab;
+    title: JSX.Element | string;
+    component: JSX.Element;
+  }[] = [
     {
       tab: ItemPopupTab.Overview,
       title: t('MovePopup.OverviewTab'),
       component: <ItemDetails item={item} extraInfo={extraInfo} />,
     },
   ];
-  if (
-    $featureFlags.triage &&
-    item.destinyVersion === 2 &&
-    (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' &&
-        item.bucket.type !== 'SeasonalArtifacts' &&
-        item.bucket.type !== 'Class'))
-    //   ||
-    // (item.bucket.sort === 'General' &&
-    //   (item.bucket.type === 'Ghost' ||        // enable these once there's
-    //     item.bucket.type === 'Vehicle' ||     // factor rules for them
-    //     item.bucket.type === 'Ships'))
-  ) {
+  if ($featureFlags.triage && doShowTriage(item)) {
     tabs.push({
       tab: ItemPopupTab.Triage,
-      title: t('MovePopup.TriageTab'),
+      title: (
+        <span className="popup-tab-title">
+          {t('MovePopup.TriageTab')}
+          {tab === ItemPopupTab.Overview && wishlistRoll && (
+            <AppIcon
+              className="thumbs-up"
+              icon={thumbsUpIcon}
+              title={t('WishListRoll.BestRatedTip')}
+            />
+          )}
+        </span>
+      ),
       component: <ItemTriage item={item} />,
     });
   }

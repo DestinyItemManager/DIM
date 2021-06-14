@@ -135,6 +135,6 @@ export function logOut(): ThunkResult {
     removeToken();
     deleteDimApiToken();
     del('accounts'); // remove saved accounts from IDB
-    dispatch(actions.loggedOut(true));
+    dispatch(actions.loggedOut());
   };
 }

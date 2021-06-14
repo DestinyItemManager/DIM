@@ -222,7 +222,6 @@ function CompareDrawer({
           <div className={clsx(styles.fillRow, styles.setHeader)}>
             <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
             <select
-              className={styles.loadoutSelect}
               value={selectedLoadout.id}
               onChange={(event) => {
                 const selected = useableLoadouts.find((l) => l.id === event.target.value);
