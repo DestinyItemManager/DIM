@@ -355,20 +355,24 @@ export function getColumns(
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
-        cell: (_val, item) => (
-          <div>
-            {_.compact([getWeaponArchetypeSocket(item)?.plugged]).map((p) => (
-              <PressTip key={p.plugDef.hash} tooltip={<PlugTooltip item={item} plug={p} />}>
+        cell: (_val, item) => {
+          const plugged = getWeaponArchetypeSocket(item)?.plugged;
+          return (
+            plugged && (
+              <PressTip
+                key={plugged.plugDef.hash}
+                tooltip={<PlugTooltip item={item} plug={plugged} />}
+              >
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
-                    <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                    <DefItemIcon itemDef={plugged.plugDef} borderless={true} />
                   </div>{' '}
-                  {p.plugDef.displayProperties.name}
+                  {plugged.plugDef.displayProperties.name}
                 </div>
               </PressTip>
-            ))}
-          </div>
-        ),
+            )
+          );
+        },
         filter: (value) => `perkname:"${value}"`,
       },
     (destinyVersion === 2 || isWeapon) && {
@@ -475,13 +479,8 @@ export function getColumns(
       cell: (_val, item) => {
         const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
         return (
-          inloadouts.length > 0 && (
-            <div>
-              {inloadouts.map((loadout) => (
-                <div key={loadout.id}>{loadout.name}</div>
-              ))}
-            </div>
-          )
+          inloadouts.length > 0 &&
+          inloadouts.map((loadout) => <div key={loadout.id}>{loadout.name}</div>)
         );
       },
       noSort: true,
