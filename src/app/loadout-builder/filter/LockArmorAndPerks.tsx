@@ -38,6 +38,7 @@ interface ProvidedProps {
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExotic?: LockedExotic;
   availableExotics?: DimItem[];
+  unusableExotics?: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -69,6 +70,7 @@ function LockArmorAndPerks({
   buckets,
   stores,
   availableExotics,
+  unusableExotics,
   lockedExotic,
   isPhonePortrait,
   language,
@@ -270,6 +272,7 @@ function LockArmorAndPerks({
         ReactDom.createPortal(
           <ExoticPicker
             availableExotics={availableExotics}
+            unusableExotics={unusableExotics}
             isPhonePortrait={isPhonePortrait}
             language={language}
             lbDispatch={lbDispatch}

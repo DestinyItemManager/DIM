@@ -18,6 +18,7 @@ import ExoticTile from './ExoticTile';
 interface Props {
   /** A list of item hashes for unlocked exotics. */
   availableExotics?: DimItem[];
+  unusableExotics?: DImItem[];
   isPhonePortrait: boolean;
   language: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -25,7 +26,14 @@ interface Props {
 }
 
 /** A drawer to select an exotic for your build. */
-function ExoticPicker({ availableExotics, isPhonePortrait, language, lbDispatch, onClose }: Props) {
+function ExoticPicker({
+  availableExotics,
+  unusableExotics,
+  isPhonePortrait,
+  language,
+  lbDispatch,
+  onClose,
+}: Props) {
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState('');
 
