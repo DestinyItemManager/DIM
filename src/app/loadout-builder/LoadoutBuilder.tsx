@@ -321,7 +321,11 @@ function LoadoutBuilder({
               exit={{ opacity: 0, y: -50 }}
               transition={{ ease: 'easeInOut', duration: 0.5 }}
             >
-              <div>{t('LoadoutBuilder.ProcessingSets', { character: selectedStore.name })}</div>
+              <div>
+                {t('LoadoutBuilder.ProcessingSets', {
+                  character: selectedStore.name,
+                })}
+              </div>
               <AppIcon icon={refreshIcon} spinning={true} />
             </motion.div>
           )}
