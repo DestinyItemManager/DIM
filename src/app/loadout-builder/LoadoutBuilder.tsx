@@ -69,31 +69,36 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const itemsSelector = createSelector(allItemsSelector, (allItems): Readonly<{
-    [classType: number]: ItemsByBucket;
-  }> => {
-    const items: {
-      [classType: number]: { [bucketHash: number]: DimItem[] };
-    } = {};
-    for (const item of allItems) {
-      if (!item || !isArmor2WithStats(item)) {
-        continue;
-      }
-      const { classType, bucket } = item;
+  const itemsSelector = createSelector(
+    allItemsSelector,
+    (
+      allItems
+    ): Readonly<{
+      [classType: number]: ItemsByBucket;
+    }> => {
+      const items: {
+        [classType: number]: { [bucketHash: number]: DimItem[] };
+      } = {};
+      for (const item of allItems) {
+        if (!item || !isArmor2WithStats(item)) {
+          continue;
+        }
+        const { classType, bucket } = item;
 
-      if (!items[classType]) {
-        items[classType] = {};
+        if (!items[classType]) {
+          items[classType] = {};
+        }
+
+        if (!items[classType][bucket.hash]) {
+          items[classType][bucket.hash] = [];
+        }
+
+        items[classType][bucket.hash].push(item);
       }
 
-      if (!items[classType][bucket.hash]) {
-        items[classType][bucket.hash] = [];
-      }
-
-      items[classType][bucket.hash].push(item);
+      return items;
     }
-
-    return items;
-  });
+  );
 
   const statOrderSelector = createSelector(
     (state: RootState) => settingsSelector(state).loStatSortOrder,
@@ -197,12 +202,10 @@ function LoadoutBuilder({
   const availableExotics = useMemo(() => {
     const exotics: DimItem[] = [];
 
-    if (selectedStore) {
-      const itemsForClass = items[selectedStore.classType];
-
+    if (characterItems) {
       for (const bucketHash of LockableBucketHashes) {
         // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
-        for (const item of itemsForClass[bucketHash] || []) {
+        for (const item of characterItems[bucketHash] || []) {
           if (item.equippingLabel) {
             exotics.push(item);
           }
@@ -211,7 +214,7 @@ function LoadoutBuilder({
 
       return exotics;
     }
-  }, [selectedStore, items]);
+  }, [characterItems]);
 
   const { result, processing } = useProcess(
     selectedStore,
