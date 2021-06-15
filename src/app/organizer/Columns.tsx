@@ -275,6 +275,12 @@ export function getColumns(
       defaultSort: SortDirection.DESC,
       filter: (value) => (value ? 'is:new' : 'not:new'),
     },
+    {
+      id: 'recency',
+      header: t('Organizer.Columns.Recency'),
+      value: (item) => item.id,
+      cell: () => '',
+    },
     destinyVersion === 2 &&
       isWeapon && {
         id: 'wishList',

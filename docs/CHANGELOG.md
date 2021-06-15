@@ -1,4 +1,5 @@
 ## Next
+* Added "Recency" Column & Sorting to Loadout Organizer, this allows viewing gear sorted by acquisition date.
 
 * Added ctrl-click to toggle item selection in Organizer.
 * Fix over-eager prompt to backup data when signing in.
