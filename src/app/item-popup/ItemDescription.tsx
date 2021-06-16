@@ -11,11 +11,7 @@ import ishtarLogo from '../../images/ishtar-collective.svg';
 import styles from './ItemDescription.m.scss';
 import NotesArea from './NotesArea';
 
-interface Props {
-  item: DimItem;
-}
-
-export default function ItemDescription({ item }: Props) {
+export default function ItemDescription({ item }: { item: DimItem }) {
   const wishlistItem = useSelector(wishListSelector(item));
 
   // suppressing some unnecessary information for weapons and armor,
