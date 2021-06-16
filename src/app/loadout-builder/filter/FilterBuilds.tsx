@@ -135,7 +135,7 @@ export default function FilterBuilds({
             maxDropdownWidth={'button'}
             options={upgradeOptions}
             value={upgradeSpendTier}
-            onChange={(value) => value && setSetting('loUpgradeSpendTier', value)}
+            onChange={(value) => value !== undefined && setSetting('loUpgradeSpendTier', value)}
           />
         </div>
       </div>
