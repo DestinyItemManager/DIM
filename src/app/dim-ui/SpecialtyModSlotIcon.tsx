@@ -19,9 +19,9 @@ export function SpecialtyModSlotIcon({
   onlyInteresting,
 }: ModSlotIconProps & { onlyInteresting?: boolean }) {
   const defs = useD2Definitions()!;
-  const modMetadatas = (onlyInteresting
-    ? getInterestingSocketMetadatas
-    : getSpecialtySocketMetadatas)(item);
+  const modMetadatas = (
+    onlyInteresting ? getInterestingSocketMetadatas : getSpecialtySocketMetadatas
+  )(item);
 
   if (!modMetadatas) {
     return null;

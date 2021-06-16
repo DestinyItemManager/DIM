@@ -8,7 +8,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -45,6 +45,7 @@ import {
   statKeys,
   StatTypes,
   statValues,
+  UpgradeSpendTier,
 } from './types';
 
 interface ProvidedProps {
@@ -54,7 +55,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   statOrder: StatTypes[];
-  assumeMasterwork: boolean;
+  upgradeSpendTier: UpgradeSpendTier;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -148,10 +149,10 @@ function mapStateToProps() {
   );
 
   return (state: RootState): StoreProps => {
-    const { loAssumeMasterwork } = settingsSelector(state);
+    const { loUpgradeSpendTier } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
-      assumeMasterwork: loAssumeMasterwork,
+      upgradeSpendTier: loUpgradeSpendTier,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
@@ -168,7 +169,7 @@ function mapStateToProps() {
 function LoadoutBuilder({
   stores,
   statOrder,
-  assumeMasterwork,
+  upgradeSpendTier,
   isPhonePortrait,
   items,
   loadouts,
@@ -181,6 +182,7 @@ function LoadoutBuilder({
     { lockedMap, lockedMods, lockedExotic, selectedStoreId, statFilters, modPicker, compareSet },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
+  const defs = useD2Definitions();
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -195,8 +197,17 @@ function LoadoutBuilder({
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
-    () => filterItems(characterItems, lockedMap, lockedMods, lockedExotic, filter),
-    [characterItems, lockedMap, lockedMods, lockedExotic, filter]
+    () =>
+      filterItems(
+        defs,
+        characterItems,
+        lockedMap,
+        lockedMods,
+        lockedExotic,
+        upgradeSpendTier,
+        filter
+      ),
+    [defs, characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
   );
 
   const availableExotics = useMemo(() => {
@@ -217,11 +228,12 @@ function LoadoutBuilder({
   }, [characterItems]);
 
   const { result, processing } = useProcess(
+    defs,
     selectedStore,
     filteredItems,
     lockedMap,
     lockedMods,
-    assumeMasterwork,
+    upgradeSpendTier,
     statOrder,
     statFilters
   );
@@ -251,9 +263,9 @@ function LoadoutBuilder({
       ),
       mods: lockedMods.map((mod) => mod.hash),
       query: searchQuery,
-      assumeMasterworked: assumeMasterwork,
+      upgradeSpendTier,
     }),
-    [assumeMasterwork, lockedMods, searchQuery, statFilters, statOrder]
+    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
   );
 
   const combos = result?.combos || 0;
@@ -275,11 +287,11 @@ function LoadoutBuilder({
       <FilterBuilds
         statRanges={result?.statRanges}
         stats={statFilters}
+        upgradeSpendTier={upgradeSpendTier}
         onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
         order={statOrder}
-        assumeMasterwork={assumeMasterwork}
       />
 
       <LockArmorAndPerks
@@ -340,6 +352,7 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
+            upgradeSpendTier={upgradeSpendTier}
           />
         )}
         {modPicker.open &&
@@ -367,7 +380,7 @@ function LoadoutBuilder({
               classType={selectedStore.classType}
               statOrder={statOrder}
               enabledStats={enabledStats}
-              assumeMasterwork={assumeMasterwork}
+              upgradeSpendTier={upgradeSpendTier}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

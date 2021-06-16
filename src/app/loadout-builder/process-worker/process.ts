@@ -22,7 +22,7 @@ const RETURNED_ARMOR_SETS = 200;
 /**
  * Generate a comparator that sorts first by the total of the considered stats,
  * and then by the individual stats in the order we want. This includes the effects
- * of existing masterwork mods and assumeMasterwork
+ * of existing masterwork mods and the upgradeSpendTier
  */
 function compareByStatOrder(
   orderedConsideredStatHashes: number[],
@@ -57,7 +57,6 @@ export function process(
   modStatTotals: { [stat in StatTypes]: number },
   /** Mods to add onto the sets */
   lockedModMap: LockedProcessMods,
-  assumeMasterwork: boolean,
   // TODO: replace with stat hashes
   statOrder: StatTypes[],
   // TODO: maps, eradicate StatTypes
@@ -102,7 +101,7 @@ export function process(
     ...filteredItems[LockableBuckets.leg],
     ...filteredItems[LockableBuckets.classitem],
   ]) {
-    statsCache.set(item, getStatValuesWithMW(item, assumeMasterwork, orderedStatHashes));
+    statsCache.set(item, getStatValuesWithMW(item, orderedStatHashes));
   }
 
   // Sort gear by the chosen stats so we consider the likely-best gear first
@@ -196,10 +195,7 @@ export function process(
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
-      if (
-        gaunt.equippingLabel &&
-        gaunt.equippingLabel === helm.equippingLabel
-      ) {
+      if (gaunt.equippingLabel && gaunt.equippingLabel === helm.equippingLabel) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
@@ -354,14 +350,10 @@ export function process(
 /**
  * Gets the stat values of an item with masterwork.
  */
-function getStatValuesWithMW(
-  item: ProcessItem,
-  assumeMasterwork: boolean | null,
-  orderedStatValues: number[]
-) {
+function getStatValuesWithMW(item: ProcessItem, orderedStatValues: number[]) {
   const baseStats = { ...item.baseStats };
 
-  if (assumeMasterwork || item.energy?.capacity === 10) {
+  if (item.energy?.capacity === 10) {
     for (const statHash of orderedStatValues) {
       baseStats[statHash] += 2;
     }

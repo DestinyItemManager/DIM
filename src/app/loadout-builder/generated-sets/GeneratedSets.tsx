@@ -15,7 +15,7 @@ import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { someModHasEnergyRequirement } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTier } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -71,6 +71,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
+  upgradeSpendTier: UpgradeSpendTier;
 }
 
 /**
@@ -89,6 +90,7 @@ export default function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
+  upgradeSpendTier,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -199,6 +201,7 @@ export default function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
+          upgradeSpendTier={upgradeSpendTier}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -226,6 +229,7 @@ export default function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
+                  upgradeSpendTier={upgradeSpendTier}
                 />
               )}
               scrollTop={scrollTop}

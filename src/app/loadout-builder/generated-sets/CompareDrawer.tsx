@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -17,20 +18,30 @@ import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
-import { ArmorSet, LockableBucketHashes, statHashes, statKeys, StatTypes } from '../types';
-import { getPower } from '../utils';
+import {
+  ArmorSet,
+  LockableBucketHashes,
+  statHashes,
+  statKeys,
+  StatTypes,
+  UpgradeSpendTier,
+} from '../types';
+import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
 import SetStats from './SetStats';
 import Sockets from './Sockets';
 
-function getItemStats(item: DimItem, assumeMasterwork: boolean | null) {
+function getItemStats(defs: D2ManifestDefinitions, item: DimItem, upgradeSpendTier: number) {
   const baseStats = _.mapValues(
     statHashes,
     (value) => item.stats?.find((s) => s.statHash === value)?.base || 0
   );
 
-  if (assumeMasterwork || item.energy?.energyCapacity === 10) {
+  if (
+    upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10 ||
+    item.energy?.energyCapacity === 10
+  ) {
     for (const statType of statKeys) {
       baseStats[statType] += 2;
     }
@@ -46,7 +57,7 @@ interface ProvidedProps {
   classType: DestinyClass;
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
-  assumeMasterwork: boolean;
+  upgradeSpendTier: UpgradeSpendTier;
   onClose(): void;
 }
 
@@ -73,7 +84,7 @@ function CompareDrawer({
   classType,
   statOrder,
   enabledStats,
-  assumeMasterwork,
+  upgradeSpendTier,
   onClose,
   dispatch,
 }: Props) {
@@ -103,7 +114,7 @@ function CompareDrawer({
   const loadoutStats = _.mapValues(statHashes, () => 0);
 
   for (const item of loadoutItems) {
-    const itemStats = getItemStats(item, assumeMasterwork);
+    const itemStats = getItemStats(defs, item, upgradeSpendTier);
     for (const statType of statKeys) {
       loadoutStats[statType] += itemStats[statType];
     }
@@ -116,13 +127,17 @@ function CompareDrawer({
   }
 
   const [assignedMods] = assignModsToArmorSet(
+    defs,
     set.armor.map((items) => items[0]),
-    lockedMods
+    lockedMods,
+    upgradeSpendTier
   );
 
   const [loadoutAssignedMods, loadoutUnassignedMods] = assignModsToArmorSet(
+    defs,
     loadoutItems,
-    lockedMods
+    lockedMods,
+    upgradeSpendTier
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {

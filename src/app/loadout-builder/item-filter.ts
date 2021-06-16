@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
 import _ from 'lodash';
@@ -9,21 +10,24 @@ import {
   LockableBuckets,
   LockedItemType,
   LockedMap,
+  UpgradeSpendTier,
 } from './types';
 
 /**
  * Filter the items map down given the locking and filtering configs.
  */
 export function filterItems(
+  defs: D2ManifestDefinitions | undefined,
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExotic: LoadoutBuilderState['lockedExotic'],
+  upgradeSpendTier: UpgradeSpendTier,
   filter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
-  if (!items) {
+  if (!items || !defs) {
     return filteredItems;
   }
 
@@ -59,13 +63,15 @@ export function filterItems(
       filteredItems[bucket] = filteredItems[bucket].filter(
         (item) =>
           (!lockedExotic ||
-            (bucket === lockedExotic.bucketHash ?
-              item.hash === lockedExotic.def.hash :
-              item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
+            (bucket === lockedExotic.bucketHash
+              ? item.hash === lockedExotic.def.hash
+              : item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
           // handle locked items and mods cases
           (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
           (!lockedModsByPlugCategoryHash ||
-            lockedModsByPlugCategoryHash.every((mod) => doEnergiesMatch(mod, item)))
+            lockedModsByPlugCategoryHash.every((mod) =>
+              doEnergiesMatch(defs, mod, item, upgradeSpendTier)
+            ))
       );
     }
   });

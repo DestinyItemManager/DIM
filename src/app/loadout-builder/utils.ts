@@ -1,7 +1,12 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { energyUpgrade } from 'app/inventory/store/energy';
+import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
+import { warnLog } from 'app/utils/log';
+import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType } from './types';
+import { LockedItemType, UpgradeSpendTier } from './types';
 
 /**
  * Add a locked item to the locked item list for a bucket.
@@ -73,4 +78,142 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   }
 
   return Math.floor(power / numPoweredItems);
+}
+
+/**
+ * This function finds the max energy an item can be upgraded to within the allowed spend tier.
+ * If it is precisely at the limit for the spend tier, the items energy capacity will be returned.
+ * If the item is over the limit for the spend tier 0 will be returned.
+ */
+function getMaxEnergyFromUpgradeSpendTier(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem,
+  energyType: DestinyEnergyType
+) {
+  if (!item.energy) {
+    return 0;
+  }
+
+  const isExotic = Boolean(item.equippingLabel);
+  // Used for figuring out what upgrade is not allowed
+  // if undefined there is no boundary
+  let boundaryHash: number | 'none' = 'none';
+
+  switch (tier) {
+    case UpgradeSpendTier.Nothing:
+      // special case, value is 0 so items energy wins out or swap is always disallowed
+      return 0;
+    case UpgradeSpendTier.LegendaryShards:
+      boundaryHash = UpgradeMaterialHashes.enhancementPrism;
+      break;
+    case UpgradeSpendTier.EnhancementPrisms:
+      boundaryHash = UpgradeMaterialHashes.ascendantShard;
+      break;
+    case UpgradeSpendTier.AscendantShardsNotExotic: {
+      if (!isExotic) {
+        break;
+      }
+      boundaryHash = UpgradeMaterialHashes.ascendantShard;
+      break;
+    }
+    case UpgradeSpendTier.AscendantShards:
+      break;
+  }
+
+  const availableEnergyUpgrades = energyUpgrade(
+    defs,
+    item,
+    item.energy.energyType,
+    item.energy.energyCapacity,
+    energyType,
+    10
+  );
+
+  // Just get the max possible energy capacity for the item.
+  if (boundaryHash === 'none') {
+    return Math.max(
+      item.energy.energyCapacity,
+      ...availableEnergyUpgrades.map(
+        (upgradeHash) => defs.InventoryItem.get(upgradeHash).plug!.energyCapacity!.capacityValue
+      )
+    );
+  }
+
+  let previousUpgrade: DestinyInventoryItemDefinition | undefined;
+  for (const upgrade of availableEnergyUpgrades) {
+    const upgradeItem = defs.InventoryItem.get(upgrade);
+    const upgradeMaterials = defs.MaterialRequirementSet.get(
+      upgradeItem.plug!.insertionMaterialRequirementHash
+    );
+
+    for (const material of upgradeMaterials.materials) {
+      if (material.itemHash === boundaryHash) {
+        // in the case of no previous upgrade the item must already be on the limit
+        return previousUpgrade
+          ? previousUpgrade.plug!.energyCapacity!.capacityValue
+          : item.energy.energyCapacity;
+      }
+    }
+    previousUpgrade = upgradeItem;
+  }
+
+  // should never happen but lets be safe
+  return 0;
+}
+
+/** Gets the max energy allowed from the passed in UpgradeSpendTier */
+export function upgradeSpendTierToMaxEnergy(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return 0;
+  }
+
+  return Math.max(
+    item.energy.energyCapacity,
+    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, item.energy.energyType)
+  );
+}
+
+/** Figures out whether you can swap energies in the allowed spend tier. */
+export function canSwapEnergyFromUpgradeSpendTier(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return false;
+  }
+
+  let differentEnergy: DestinyEnergyType;
+
+  // Find any armour energy that is not the current energy
+  switch (item.energy.energyType) {
+    case DestinyEnergyType.Arc:
+      differentEnergy = DestinyEnergyType.Thermal;
+      break;
+    case DestinyEnergyType.Thermal:
+      differentEnergy = DestinyEnergyType.Void;
+      break;
+    case DestinyEnergyType.Void:
+      differentEnergy = DestinyEnergyType.Arc;
+      break;
+    default: {
+      warnLog(
+        'loadout-builder',
+        `Armor expected to have an energy type of ${DestinyEnergyType.Arc},
+        ${DestinyEnergyType.Thermal} or ${DestinyEnergyType.Void} but had
+        ${item.energy.energyType}`
+      );
+      differentEnergy = item.energy.energyType;
+    }
+  }
+
+  return (
+    item.energy.energyCapacity <=
+    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, differentEnergy)
+  );
 }

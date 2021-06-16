@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Preview {{type}} contents",
-    "ShouldNotBeInVault": "This item may be at risk if it is left in the Vault. Please transfer it to a character.",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Add +5 Mods",
-    "AssumeMasterwork": "Assume Masterworked Stats",
-    "AssumeMasterworkDetailed": "Generate sets assuming all items are masterworked.",
     "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "No builds found. Common causes of this include:",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
     "NoLoadoutsToCompare": "No loadouts to compare",
+    "NotExotics": "{{material}} (Not Exotics)",
+    "Nothing": "Nothing",
     "NumCombinations": "{{count, number}} combination",
     "NumCombinations_plural": "{{count, number}} combinations",
     "OptimizerExplanation": "Choose the stats you want, and their priority order, then choose which mods you want to use.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Unpin Item"
+    "UnlockItem": "Unpin Item",
+    "UpgradeTierExplanation": "Select what you will spend when upgrading armor and changing energy affinity."
   },
   "Loadouts": {
     "Abandon": "Are you sure you want to abandon this loadout?",

@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { keyByStatHash } from 'app/inventory/store/stats';
@@ -21,7 +22,9 @@ import {
   MinMaxIgnored,
   statHashes,
   StatTypes,
+  UpgradeSpendTier,
 } from '../types';
+import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -45,11 +48,12 @@ interface ProcessState {
  */
 // TODO: introduce params object
 export function useProcess(
+  defs: D2ManifestDefinitions | undefined,
   selectedStore: DimStore | undefined,
   filteredItems: ItemsByBucket,
   lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
-  assumeMasterwork: boolean,
+  upgradeSpendTier: UpgradeSpendTier,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
@@ -104,9 +108,10 @@ export function useProcess(
       processItems[key] = [];
 
       const groupedItems = groupItems(
+        defs,
         items,
         statOrder,
-        assumeMasterwork,
+        upgradeSpendTier,
         generalMods,
         raidCombatAndLegacyMods
       );
@@ -114,9 +119,14 @@ export function useProcess(
       for (const group of Object.values(groupedItems)) {
         const item = group.length ? group[0] : null;
 
-        if (item) {
+        if (item && defs) {
           processItems[key].push(
-            mapDimItemToProcessItem(item, lockedModMap[bucketsToCategories[item.bucket.hash]])
+            mapDimItemToProcessItem(
+              defs,
+              item,
+              upgradeSpendTier,
+              lockedModMap[bucketsToCategories[item.bucket.hash]]
+            )
           );
           itemsById.set(item.id, group);
         }
@@ -134,7 +144,6 @@ export function useProcess(
         processItems,
         getTotalModStatChanges(lockedMods, selectedStore?.classType),
         lockedProcessMods,
-        assumeMasterwork,
         statOrder,
         statFilters
       )
@@ -164,10 +173,11 @@ export function useProcess(
         cleanupRef.current = null;
       });
   }, [
+    defs,
     filteredItems,
     lockedItems,
     lockedMods,
-    assumeMasterwork,
+    upgradeSpendTier,
     statOrder,
     statFilters,
     selectedStore,
@@ -198,9 +208,10 @@ function createWorker() {
  * Note that assumedMasterwork effects this.
  */
 function groupItems(
+  defs: D2ManifestDefinitions | undefined,
   items: readonly DimItem[],
   statOrder: StatTypes[],
-  assumeMasterwork: boolean,
+  upgradeSpendTier: UpgradeSpendTier,
   generalMods: PluggableInventoryItemDefinition[],
   raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
 ) {
@@ -214,7 +225,9 @@ function groupItems(
       }
     }
 
-    let groupId = `${statValues}${assumeMasterwork || item.energy?.energyCapacity === 10}`;
+    let groupId = `${statValues}${
+      defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10
+    }`;
 
     if (raidCombatAndLegacyMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)

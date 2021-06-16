@@ -2,12 +2,13 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTier } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -27,6 +28,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
+  upgradeSpendTier: UpgradeSpendTier;
 }
 
 /**
@@ -46,7 +48,9 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
+  upgradeSpendTier,
 }: Props) {
+  const defs = useD2Definitions();
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
@@ -61,8 +65,10 @@ function GeneratedSet({
   }
 
   const [assignedMods] = assignModsToArmorSet(
+    defs,
     set.armor.map((items) => items[0]),
-    lockedMods
+    lockedMods,
+    upgradeSpendTier
   );
 
   const canCompareLoadouts =

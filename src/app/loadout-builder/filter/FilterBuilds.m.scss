@@ -44,16 +44,47 @@
   }
 }
 
-.assumeMasterwork {
-  margin-bottom: 4px;
+.upgradeMaterials {
+  padding: 4px;
+  margin: 4px 0;
+  background-color: black;
+}
 
-  input {
-    margin-left: 0;
-    vertical-align: middle;
-  }
+.materialSelect {
+  width: 100%;
 
-  label {
-    cursor: pointer;
-    vertical-align: middle;
+  button {
+    width: 100%;
   }
+}
+
+.materialSpendInfo {
+  width: 220px;
+  @include phone-portrait {
+    // width of phone minus 12 padding each side
+    width: calc(100vw - 24px);
+  }
+}
+
+.upgradeOption {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  overflow: hidden;
+  width: 100%;
+
+  img {
+    margin: 0;
+    position: absolute;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.materialName {
+  margin-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

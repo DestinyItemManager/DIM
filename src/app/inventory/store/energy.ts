@@ -16,6 +16,8 @@ import { DimItem } from '../item-types';
  * same capacity. It does this using mod items that are duplicated (different mods for regular items and exotics),
  * so you need to find the right mod from a set of possible identical copies. We can do this by looking at the socket's
  * reusablePlugSetHash.
+ *
+ * TODO(ryan): I don't think old energy type and capacity are needed, they can be calculated from the item.
  */
 export function energyUpgrade(
   defs: D2ManifestDefinitions,
