@@ -1,5 +1,8 @@
+import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
+import clsx from 'clsx';
 import React, { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LockedExoticWithPlugs } from '../types';
@@ -7,6 +10,9 @@ import styles from './ExoticTile.m.scss';
 
 interface Props {
   exotic: LockedExoticWithPlugs;
+}
+
+interface ClickableProps extends Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -18,7 +24,7 @@ interface Props {
  * Mods on the other hand only get a name and icon as multiple descriptions takes up too
  * much room on screen.
  */
-function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
+function ExoticTileContents({ exotic }: Props) {
   const defs = useD2Definitions()!;
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
@@ -34,13 +40,7 @@ function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
   }
 
   return (
-    <div
-      className={styles.exotic}
-      onClick={() => {
-        lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
-        onClose();
-      }}
-    >
+    <>
       <div className={styles.itemName}>{def.displayProperties.name}</div>
       <div className={styles.details}>
         <div className={styles.itemImage}>
@@ -66,8 +66,35 @@ function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
           ))}
         </div>
       </div>
+    </>
+  );
+}
+
+export function ExoticTile({ exotic, lbDispatch, onClose }: ClickableProps) {
+  return (
+    <div
+      className={styles.exotic}
+      onClick={() => {
+        if (!exotic.isArmor1) {
+          return;
+        } else {
+          lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
+          onClose();
+        }
+      }}
+    >
+      <ExoticTileContents exotic={exotic} />
     </div>
   );
 }
 
-export default ExoticTile;
+export function Armor1ExoticTile({ exotic }: Props) {
+  return (
+    <PressTip
+      className={clsx(styles.exotic, styles.disabled)}
+      tooltip={<div>{t('LB.IncompatibleWithOptimizer')}</div>}
+    >
+      <ExoticTileContents exotic={exotic} />
+    </PressTip>
+  );
+}

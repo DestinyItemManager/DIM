@@ -13,12 +13,12 @@ import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
-import ExoticTile from './ExoticTile';
+import { Armor1ExoticTile, ExoticTile } from './ExoticTile';
 
 interface Props {
   /** A list of item hashes for unlocked exotics. */
   availableExotics?: DimItem[];
-  unusableExotics?: DImItem[];
+  unusableExotics?: DimItem[];
   isPhonePortrait: boolean;
   language: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -42,6 +42,12 @@ function ExoticPicker({
 
     if (availableExotics?.length) {
       const uniqueExotics = _.uniqBy(availableExotics, (item) => item.hash);
+
+      for (const unusable of unusableExotics || []) {
+        if (!uniqueExotics.some((exotic) => unusable.hash === exotic.hash)) {
+          uniqueExotics.push(unusable);
+        }
+      }
 
       for (const item of uniqueExotics) {
         const def = defs.InventoryItem.get(item.hash);
@@ -76,13 +82,14 @@ function ExoticPicker({
             bucketHash: item.bucket.hash,
             exoticPerk,
             exoticMods,
+            isArmor1: !item.energy,
           });
         }
       }
     }
 
     return rtn;
-  }, [availableExotics, defs]);
+  }, [availableExotics, unusableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
     const regexp = startWordRegexp(query, language);
@@ -154,14 +161,18 @@ function ExoticPicker({
             <div key={exotics[0].def.itemTypeDisplayName}>
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
               <div className={styles.items}>
-                {exotics.map((exotic) => (
-                  <ExoticTile
-                    key={exotic.def.hash}
-                    exotic={exotic}
-                    lbDispatch={lbDispatch}
-                    onClose={onClose}
-                  />
-                ))}
+                {exotics.map((exotic) =>
+                  exotic.isArmor1 ? (
+                    <Armor1ExoticTile exotic={exotic} />
+                  ) : (
+                    <ExoticTile
+                      key={exotic.def.hash}
+                      exotic={exotic}
+                      lbDispatch={lbDispatch}
+                      onClose={onClose}
+                    />
+                  )
+                )}
               </div>
             </div>
           ))}

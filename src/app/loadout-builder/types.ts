@@ -52,6 +52,7 @@ export interface LockedExoticWithPlugs extends LockedExotic {
   exoticPerk?: PluggableInventoryItemDefinition;
   /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
   exoticMods?: PluggableInventoryItemDefinition[];
+  isArmor1: boolean;
 }
 
 export type LockedItemType = LockedItemCase | LockedExclude;

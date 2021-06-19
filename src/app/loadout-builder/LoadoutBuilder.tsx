@@ -109,10 +109,10 @@ function mapStateToProps() {
     (
       allItems
     ): Readonly<{
-      [classType: number]: ItemsByBucket;
+      [classType: number]: DimItem[];
     }> => {
       const items: {
-        [classType: number]: { [bucketHash: number]: DimItem[] };
+        [classType: number]: DimItem[];
       } = {};
       for (const item of allItems) {
         if (!item || item.energy || !item.equippingLabel) {

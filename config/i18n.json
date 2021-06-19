@@ -398,6 +398,7 @@
     },
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
+    "IncompatibleWithOptimizer": "This item is incompatible with the optimizer. Please purchase a new version from collections.",
     "LB": "Loadout Optimizer",
     "Legs": "Legs",
     "LightMode": {
