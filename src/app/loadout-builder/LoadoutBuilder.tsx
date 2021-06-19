@@ -39,7 +39,6 @@ import { useProcess } from './process/useProcess';
 import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
-  LockableBucketHashes,
   statHashes,
   statHashToType,
   statKeys,
@@ -242,23 +241,6 @@ function LoadoutBuilder({
     [defs, characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
   );
 
-  const availableExotics = useMemo(() => {
-    const exotics: DimItem[] = [];
-
-    if (characterItems) {
-      for (const bucketHash of LockableBucketHashes) {
-        // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
-        for (const item of characterItems[bucketHash] || []) {
-          if (item.equippingLabel) {
-            exotics.push(item);
-          }
-        }
-      }
-
-      return exotics;
-    }
-  }, [characterItems]);
-
   const { result, processing } = useProcess(
     defs,
     selectedStore,
@@ -330,7 +312,7 @@ function LoadoutBuilder({
         selectedStore={selectedStore}
         lockedMap={lockedMap}
         lockedMods={lockedMods}
-        availableExotics={availableExotics}
+        characterItems={characterItems}
         unusableExotics={selectedStore && unusableExotics[selectedStore.classType]}
         lockedExotic={lockedExotic}
         lbDispatch={lbDispatch}
