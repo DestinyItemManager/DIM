@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "接近全满了!({{number}}/{{postmasterSize}})",
     "PostmasterFull": "全满了!({{number}}/{{postmasterSize}})",
     "PreviewVendor": "预览 {{type}} 内容",
-    "ShouldNotBeInVault": "这个物品如果留在保险库中可能有丢失风险。请将其转移给一个角色。",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模组",
-    "AssumeMasterwork": "假定大师之作属性",
-    "AssumeMasterworkDetailed": "假定所有物品是大师之作, 生产套装",
     "ChooseAlternate": "选择另一个拥有相同状态的物品：",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "找不到配装。常见原因包括：",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
     "NoLoadoutsToCompare": "没有要对比的配装",
+    "NotExotics": "{{material}}（非异域）",
+    "Nothing": "无",
     "NumCombinations": "{{count, number}} 个组合",
     "NumCombinations_plural": "{{count, number}} 个组合",
     "OptimizerExplanation": "选择并排序你想要的属性，然后选择你想使用的模组。",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "无法添加所有模组。",
     "UnableToAddAllModsBody": "模组插槽不足，无法装下 {{mods}}。",
-    "UnlockItem": "取消固定物品"
+    "UnlockItem": "取消固定物品",
+    "UpgradeTierExplanation": "选择你升级护甲或切换属性时想花费的材料。"
   },
   "Loadouts": {
     "Abandon": "你确定要放弃此配装?",
@@ -641,6 +641,7 @@
       "Perks": "特性",
       "PerksMods": "特性、模组与着色器",
       "Quality": "质量 %",
+      "Recency": "新旧",
       "Season": "赛季",
       "Source": "来源",
       "StatQuality": "属性质量",

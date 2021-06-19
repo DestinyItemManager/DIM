@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "У почтмейстера заканчивается место для вашего барахла! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "У почтмейстера нет места! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Предпросмотр {{type}}",
-    "ShouldNotBeInVault": "Этот предмет может оказаться под угрозой на Складе. Пожалуйста, передайте его персонажу.",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Добавить +5 Модификаторы",
-    "AssumeMasterwork": "Бонусы Абсолюта",
-    "AssumeMasterworkDetailed": "Бонус Абсолюта учитывается в Характеристиках всех предметов при генерации предложений.",
     "ChooseAlternate": "Предметы с такими же характеристиками:",
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Билды не найдены. Возможные причины:",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
     "NoLoadoutsToCompare": "Нет Наборов для сравнения",
+    "NotExotics": "{{material}} (Not Exotics)",
+    "Nothing": "Nothing",
     "NumCombinations": "{{count, number}} вариант",
     "NumCombinations_plural": "{{count, number}} вариантов",
     "OptimizerExplanation": "Choose the stats you want, and their priority order, then choose which mods you want to use.",
@@ -456,7 +455,8 @@
     "TierNumber": "Т{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Убрать из Обязательных"
+    "UnlockItem": "Убрать из Обязательных",
+    "UpgradeTierExplanation": "Select what you will spend when upgrading armor and changing energy affinity."
   },
   "Loadouts": {
     "Abandon": "Не сохраняем Набор?",
@@ -641,6 +641,7 @@
       "Perks": "Бонусы",
       "PerksMods": "Бонусы, Модификаторы и Шейдеры",
       "Quality": "Качество %",
+      "Recency": "Recency",
       "Season": "Сезон",
       "Source": "Где взять",
       "StatQuality": "Качество Характеристик",

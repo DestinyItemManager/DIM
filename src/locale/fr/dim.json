@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Aperçu du contenu {{type}}",
-    "ShouldNotBeInVault": "Cet objet peut être en danger s'il est laissé dans le Coffre. Veuillez le transférer vers un personnage.",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Ajouter les mods +5",
-    "AssumeMasterwork": "Pièce maîtresse activée",
-    "AssumeMasterworkDetailed": "Générer des ensembles en supposant que tous les objets sont une pièce maîtresse.",
     "ChooseAlternate": "Choisissez un autre objet avec les mêmes statistiques:",
     "ChooseAlternateTitle": "Choisissez un autre objet",
     "CompareLoadout": "Comparer Arsenal",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Aucun build trouvé. Les causes courantes de ceci incluent:",
     "NoComparableItems": "Cet arsenal n'a aucun objet comparable.. Sauvegarder l'ensemble de l'optimiseur ajoutera ces objets à votre arsenal.",
     "NoLoadoutsToCompare": "Aucun arsenal à comparer",
+    "NotExotics": "{{material}} (Pas Exotique)",
+    "Nothing": "Rien",
     "NumCombinations": "{{count, number}} combinaison",
     "NumCombinations_plural": "{{count, number}} combinaisons",
     "OptimizerExplanation": "Choisissez les statistiques que vous voulez, et leur ordre de priorité, puis choisissez quels mods vous voulez utiliser.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
     "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
-    "UnlockItem": "Désépingler Objet"
+    "UnlockItem": "Désépingler Objet",
+    "UpgradeTierExplanation": "Sélectionnez ce que vous dépenserez lors de l'amélioration de l'armure et du changement de l'affinité énergétique."
   },
   "Loadouts": {
     "Abandon": "Êtes-vous sûr de vouloir abandonner cette présélection ?",
@@ -641,6 +641,7 @@
       "Perks": "Attributs",
       "PerksMods": "Attributs, mods et revêtements",
       "Quality": "Qualité %",
+      "Recency": "Recency",
       "Season": "Saison",
       "Source": "Origine",
       "StatQuality": "Qualité de la Stat",
