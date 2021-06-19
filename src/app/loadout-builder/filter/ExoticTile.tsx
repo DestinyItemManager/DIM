@@ -67,7 +67,7 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
   );
 }
 
-export default function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
+function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
   return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
@@ -87,3 +87,5 @@ export default function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
     </div>
   );
 }
+
+export default ExoticTile;
