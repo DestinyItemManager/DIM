@@ -95,7 +95,7 @@ function ExoticPicker({
           bucketHash: item.bucket.hash,
           exoticPerk,
           exoticMods,
-          isArmor1: item.name.startsWith('C'), //!item.energy,
+          isArmor1: !item.energy,
         });
       }
     }
