@@ -70,31 +70,23 @@ function ExoticTileContents({ exotic }: Props) {
   );
 }
 
-export function ExoticTile({ exotic, lbDispatch, onClose }: ClickableProps) {
-  return (
-    <div
-      className={styles.exotic}
-      onClick={() => {
-        if (!exotic.isArmor1) {
-          return;
-        } else {
-          lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
-          onClose();
-        }
-      }}
-    >
-      <ExoticTileContents exotic={exotic} />
-    </div>
-  );
-}
-
-export function Armor1ExoticTile({ exotic }: Props) {
-  return (
+export default function ExoticTile({ exotic, lbDispatch, onClose }: ClickableProps) {
+  return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
       tooltip={<div>{t('LB.IncompatibleWithOptimizer')}</div>}
     >
       <ExoticTileContents exotic={exotic} />
     </PressTip>
+  ) : (
+    <div
+      className={styles.exotic}
+      onClick={() => {
+        lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
+        onClose();
+      }}
+    >
+      <ExoticTileContents exotic={exotic} />
+    </div>
   );
 }

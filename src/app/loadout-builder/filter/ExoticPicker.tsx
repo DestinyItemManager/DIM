@@ -13,7 +13,7 @@ import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ItemsByBucket, LockableBucketHashes, LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
-import { Armor1ExoticTile, ExoticTile } from './ExoticTile';
+import ExoticTile from './ExoticTile';
 
 interface Props {
   characterItems?: ItemsByBucket;
@@ -173,18 +173,14 @@ function ExoticPicker({
             <div key={exotics[0].def.itemTypeDisplayName}>
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
               <div className={styles.items}>
-                {exotics.map((exotic) =>
-                  exotic.isArmor1 ? (
-                    <Armor1ExoticTile exotic={exotic} />
-                  ) : (
-                    <ExoticTile
-                      key={exotic.def.hash}
-                      exotic={exotic}
-                      lbDispatch={lbDispatch}
-                      onClose={onClose}
-                    />
-                  )
-                )}
+                {exotics.map((exotic) => (
+                  <ExoticTile
+                    key={exotic.def.hash}
+                    exotic={exotic}
+                    lbDispatch={lbDispatch}
+                    onClose={onClose}
+                  />
+                ))}
               </div>
             </div>
           ))}
