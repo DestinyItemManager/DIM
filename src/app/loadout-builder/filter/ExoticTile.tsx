@@ -10,9 +10,6 @@ import styles from './ExoticTile.m.scss';
 
 interface Props {
   exotic: LockedExoticWithPlugs;
-}
-
-interface ClickableProps extends Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -24,7 +21,7 @@ interface ClickableProps extends Props {
  * Mods on the other hand only get a name and icon as multiple descriptions takes up too
  * much room on screen.
  */
-function ExoticTileContents({ exotic }: Props) {
+function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
   const defs = useD2Definitions()!;
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
@@ -70,7 +67,7 @@ function ExoticTileContents({ exotic }: Props) {
   );
 }
 
-export default function ExoticTile({ exotic, lbDispatch, onClose }: ClickableProps) {
+export default function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
   return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
