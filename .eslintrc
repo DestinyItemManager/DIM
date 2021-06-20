@@ -38,6 +38,7 @@
     },
     "ecmaVersion": 2018,
     "sourceType": "module",
+    "allowAutomaticSingleRunInference": true,
     "project": "./tsconfig.json"
   },
   "settings": {
