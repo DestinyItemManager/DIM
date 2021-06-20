@@ -10028,6 +10028,11 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+safari-14-idb-fix@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/safari-14-idb-fix/-/safari-14-idb-fix-1.0.2.tgz#c489feca93bc71628019ff490487370255316b86"
+  integrity sha512-RvZsa8kntL5qOnLdJbHfF7oAw596M/mRjpHXpASGu1/Rpn4SnI2IemHz3oUeK0chngZIcwyBXLSYBLrpIeE42A==
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
