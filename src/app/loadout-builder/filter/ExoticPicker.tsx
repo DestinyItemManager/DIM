@@ -56,7 +56,8 @@ function ExoticPicker({
 
     // Add in armor 1 exotics that don't have an armor 2 version
     for (const unusable of unusableExotics || []) {
-      if (!uniqueExotics.some((exotic) => unusable.hash === exotic.hash)) {
+      // Armor 1 & 2 items have different hashes but the same name.
+      if (!uniqueExotics.some((exotic) => unusable.name === exotic.name)) {
         uniqueExotics.push(unusable);
       }
     }
