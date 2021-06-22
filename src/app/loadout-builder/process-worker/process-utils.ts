@@ -94,6 +94,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
   let arcCount = 0;
   let solarCount = 0;
   let voidCount = 0;
+  let anyCount = 0;
 
   for (const item of modsOrItems) {
     switch (item?.energy?.type) {
@@ -107,12 +108,14 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
         voidCount += 1;
         break;
       case DestinyEnergyType.Any:
+        anyCount += 1;
+        break;
       default:
         break;
     }
   }
 
-  return [arcCount, solarCount, voidCount];
+  return [arcCount, solarCount, voidCount, anyCount];
 }
 
 // Used for null values
@@ -136,7 +139,7 @@ export function canTakeSlotIndependantMods(
   // Sort the items like the mods are to try and get a greedy result
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
-  const [arcItems, solarItems, voidItems] = getEnergyCounts(sortedItems);
+  const [arcItems, solarItems, voidItems, anyItems] = getEnergyCounts(sortedItems);
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
     otherModPermutations[0]
   );
@@ -147,15 +150,15 @@ export function canTakeSlotIndependantMods(
 
   // A quick check to see if we have enough of each energy type for the mods
   if (
-    voidItems < voidGeneralMods ||
-    voidItems < voidSeasonalMods ||
-    voidItems < voidRaidMods ||
-    solarItems < solarGeneralMods ||
-    solarItems < solarSeasonalMods ||
-    solarItems < solarRaidMods ||
-    arcItems < arcGeneralMods ||
-    arcItems < arcSeasonalMods ||
-    arcItems < arcRaidMods
+    voidItems + anyItems < voidGeneralMods ||
+    voidItems + anyItems < voidSeasonalMods ||
+    voidItems + anyItems < voidRaidMods ||
+    solarItems + anyItems < solarGeneralMods ||
+    solarItems + anyItems < solarSeasonalMods ||
+    solarItems + anyItems < solarRaidMods ||
+    arcItems + anyItems < arcGeneralMods ||
+    arcItems + anyItems < arcSeasonalMods ||
+    arcItems + anyItems < arcRaidMods
   ) {
     return false;
   }
