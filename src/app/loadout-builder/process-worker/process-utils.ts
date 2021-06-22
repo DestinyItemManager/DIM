@@ -107,10 +107,6 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
         voidCount += 1;
         break;
       case DestinyEnergyType.Any:
-        arcCount += 1;
-        solarCount += 1;
-        voidCount += 1;
-        break;
       default:
         break;
     }
