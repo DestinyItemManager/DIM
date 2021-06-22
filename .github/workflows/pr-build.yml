@@ -20,6 +20,13 @@ jobs:
         with:
           fetch-depth: 3 # So packtracker can get the previous commit
 
+      - name: Changelog check
+        uses: Zomzog/changelog-checker@v1.2.0
+        with:
+          fileName: ./docs/CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Cache node_modules
         uses: actions/cache@v2
         env:
