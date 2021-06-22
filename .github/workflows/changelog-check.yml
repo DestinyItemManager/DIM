@@ -13,6 +13,6 @@ jobs:
           uses: Zomzog/changelog-checker@v1.2.0
           with:
             fileName: docs/CHANGELOG.md
-            checksNotification: Simple
+            checkNotification: Simple
           env:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
