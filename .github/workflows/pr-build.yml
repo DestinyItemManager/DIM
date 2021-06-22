@@ -7,6 +7,17 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  changelog:
+      runs-on: ubuntu-latest
+      steps:
+
+        - name: Changelog check
+          uses: Zomzog/changelog-checker@v1.2.0
+          with:
+            fileName: docs/CHANGELOG.md
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
     steps:
