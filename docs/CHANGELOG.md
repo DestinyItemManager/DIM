@@ -1,5 +1,7 @@
 ## Next
 
+## 6.69.1 <span class="changelog-date">(2021-06-21)</span>
+
 * Fix an issue crashing DIM on older versions of Safari.
 
 ## 6.69.0 <span class="changelog-date">(2021-06-20)</span>
