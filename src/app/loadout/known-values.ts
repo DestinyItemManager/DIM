@@ -3,7 +3,7 @@ import {
   armor2PlugCategoryHashesByName,
   D2ArmorStatHashByName,
 } from 'app/search/d2-known-values';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 
 export const armorStatHashes = [
   D2ArmorStatHashByName.intellect,
@@ -22,12 +22,10 @@ export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.classitem,
 ];
 
-// TODO generate this somehow so we dont need to maintain it
-export const raidPlugCategoryHashes = [
-  PlugCategoryHashes.EnhancementsSeasonOutlaw, // last wish
-  PlugCategoryHashes.EnhancementsRaidGarden, // garden of salvation
-  PlugCategoryHashes.EnhancementsRaidDescent, // deep stone crypt
-  PlugCategoryHashes.EnhancementsRaidV520, // vault of glass
-];
+export const raidPlugCategoryHashes: number[] =
+  Array.isArray(raidModPlugCategoryHashes) &&
+  raidModPlugCategoryHashes.every((pch) => typeof pch === 'number')
+    ? raidModPlugCategoryHashes
+    : [];
 
 export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
