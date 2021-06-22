@@ -1,8 +1,9 @@
 ## Next
 
+* Fix an issue crashing DIM on older versions of Safari.
+
 ## 6.69.0 <span class="changelog-date">(2021-06-20)</span>
 * Added "Recency" Column & Sorting to Loadout Organizer, this allows viewing gear sorted by acquisition date.
-
 * Added ctrl-click to toggle item selection in Organizer.
 * Fix over-eager prompt to backup data when signing in.
 * Viewing artifact details no longer always shows The Gate Lord's Eye.
