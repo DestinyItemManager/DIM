@@ -81,20 +81,10 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
 }
 
 /**
- * This function finds the max energy an item can be upgraded to within the allowed spend tier.
- * If it is precisely at the limit for the spend tier, the items energy capacity will be returned.
- * If the item is over the limit for the spend tier 0 will be returned.
+ * Gets a boundary material hash for the spend tier. This is essentially the hash
+ * of the next tier up, so we can figure out what the maximum possible upgrade is.
  */
-function getMaxEnergyFromUpgradeSpendTier(
-  defs: D2ManifestDefinitions,
-  tier: UpgradeSpendTier,
-  item: DimItem,
-  energyType: DestinyEnergyType
-) {
-  if (!item.energy) {
-    return 0;
-  }
-
+function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
   const isExotic = Boolean(item.equippingLabel);
   // Used for figuring out what upgrade is not allowed
   // if undefined there is no boundary
@@ -102,8 +92,7 @@ function getMaxEnergyFromUpgradeSpendTier(
 
   switch (tier) {
     case UpgradeSpendTier.Nothing:
-      // special case, value is 0 so items energy wins out or swap is always disallowed
-      return 0;
+      throw new Error('Please handle this as a special case, no upgrades are allowed.');
     case UpgradeSpendTier.LegendaryShards:
       boundaryHash = UpgradeMaterialHashes.enhancementPrism;
       break;
@@ -121,12 +110,33 @@ function getMaxEnergyFromUpgradeSpendTier(
       break;
   }
 
+  return boundaryHash;
+}
+
+/** Gets the max energy allowed from the passed in UpgradeSpendTier */
+export function upgradeSpendTierToMaxEnergy(
+  defs: D2ManifestDefinitions,
+  tier: UpgradeSpendTier,
+  item: DimItem
+) {
+  if (!item.energy) {
+    return 0;
+  }
+
+  if (tier === UpgradeSpendTier.Nothing) {
+    return item.energy.energyCapacity;
+  }
+
+  // Used for figuring out what upgrade is not allowed
+  // if undefined there is no boundary
+  const boundaryHash = getEnergySpendTierBoundaryHash(item, tier);
+
   const availableEnergyUpgrades = energyUpgrade(
     defs,
     item,
     item.energy.energyType,
-    item.energy.energyCapacity,
-    energyType,
+    item.energy.energyCapacity - 1, // allows us to get the at level tier.
+    item.energy.energyType,
     10
   );
 
@@ -147,35 +157,16 @@ function getMaxEnergyFromUpgradeSpendTier(
       upgradeItem.plug!.insertionMaterialRequirementHash
     );
 
-    for (const material of upgradeMaterials.materials) {
-      if (material.itemHash === boundaryHash) {
-        // in the case of no previous upgrade the item must already be on the limit
-        return previousUpgrade
-          ? previousUpgrade.plug!.energyCapacity!.capacityValue
-          : item.energy.energyCapacity;
-      }
+    if (upgradeMaterials.materials.some((material) => material.itemHash === boundaryHash)) {
+      break;
     }
     previousUpgrade = upgradeItem;
   }
 
   // should never happen but lets be safe
-  return 0;
-}
+  const maxUpgradeEnergy = previousUpgrade?.plug?.energyCapacity?.capacityValue || 0;
 
-/** Gets the max energy allowed from the passed in UpgradeSpendTier */
-export function upgradeSpendTierToMaxEnergy(
-  defs: D2ManifestDefinitions,
-  tier: UpgradeSpendTier,
-  item: DimItem
-) {
-  if (!item.energy) {
-    return 0;
-  }
-
-  return Math.max(
-    item.energy.energyCapacity,
-    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, item.energy.energyType)
-  );
+  return Math.max(item.energy.energyCapacity, maxUpgradeEnergy);
 }
 
 /** Figures out whether you can swap energies in the allowed spend tier. */
@@ -184,7 +175,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
   tier: UpgradeSpendTier,
   item: DimItem
 ) {
-  if (!item.energy) {
+  if (!item.energy || tier === UpgradeSpendTier.Nothing) {
     return false;
   }
 
@@ -212,8 +203,30 @@ export function canSwapEnergyFromUpgradeSpendTier(
     }
   }
 
-  return (
-    item.energy.energyCapacity <=
-    getMaxEnergyFromUpgradeSpendTier(defs, tier, item, differentEnergy)
+  const availableEnergyUpgrades = energyUpgrade(
+    defs,
+    item,
+    item.energy.energyType,
+    item.energy.energyCapacity, // allows us to get the at level tier.
+    differentEnergy,
+    item.energy.energyCapacity
   );
+
+  if (!availableEnergyUpgrades.length) {
+    return false;
+  }
+
+  const boundaryHash = getEnergySpendTierBoundaryHash(item, tier);
+
+  if (boundaryHash === 'none') {
+    return true;
+  }
+
+  // There should only be one upgrade possibility
+  const upgrade = defs.InventoryItem.get(availableEnergyUpgrades[0]);
+  const upgradeMaterials = defs.MaterialRequirementSet.get(
+    upgrade.plug!.insertionMaterialRequirementHash
+  );
+
+  return upgradeMaterials.materials.every((material) => material.itemHash !== boundaryHash);
 }
