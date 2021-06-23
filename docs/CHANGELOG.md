@@ -1,5 +1,6 @@
 ## Next
 
+* Armor 1 exotics are visible in the exotic picker, albeit unselectable.
 * Fixed an issue where unwanted energy swaps were happening in the Optimizer.
 * Fixed an issue where mod energy types could be mismatched in the Optimizer.
 
