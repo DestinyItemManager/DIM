@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "殆どいっぱい! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "満杯! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
-    "ShouldNotBeInVault": "このアイテムが保管庫に残っていると、危険にさらされる可能性があります。キャラクターに転送してください。",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Mod を +5 追加",
-    "AssumeMasterwork": "マスターワーク済みと仮定する",
-    "AssumeMasterworkDetailed": "すべてのアイテムがマスターワークされていると仮定してセットを生成します。",
     "ChooseAlternate": "同じ統計を持つ別のアイテムを選択してください:",
     "ChooseAlternateTitle": "別のアイテムを選択してください。",
     "CompareLoadout": "ロードアウトを比較",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "ビルドは見つかりませんでした。一般的な原因としては、以下のようなものがあります:",
     "NoComparableItems": "このロードアウトには、同等のアイテムはありません。最適化セットを保存すると、このロードアウトにアイテムが追加されます。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
+    "NotExotics": "{{material}} (Exotics ではありません)",
+    "Nothing": "なし",
     "NumCombinations": "{{count, number}} の組み合わせ",
     "NumCombinations_plural": "{{count, number}} の組み合わせ",
     "OptimizerExplanation": "必要なスタッツと優先順位を選択し、使用するMODを選択します。",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
     "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
-    "UnlockItem": "アイテムのピン留めを解除"
+    "UnlockItem": "アイテムのピン留めを解除",
+    "UpgradeTierExplanation": "アーマーをアップグレードしたり、エネルギーの属性を変更したりする際に消費するものを選択します。"
   },
   "Loadouts": {
     "Abandon": "このロードアウトを破棄しますか?",
@@ -641,6 +641,7 @@
       "Perks": "パーク",
       "PerksMods": "パーク、改造パーツとシェーダー",
       "Quality": "クオリティ %",
+      "Recency": "直近",
       "Season": "シーズン",
       "Source": "ソース",
       "StatQuality": "Statsクオリティ",

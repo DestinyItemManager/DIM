@@ -140,6 +140,7 @@ export function toPresentationNodeTree(
 
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
+// TODO: this uses the entire search field as one big string search. no "and". no fun.
 export function filterPresentationNodesToSearch(
   node: DimPresentationNode,
   searchQuery: string,

@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Voll! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
-    "ShouldNotBeInVault": "Dieser Gegenstand kann in Gefahr sein, wenn er im Tresor gelassen wird. Bitte transferiere ihn auf einen Charakter.",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 Mods hinzufügen",
-    "AssumeMasterwork": "Meisterwerk-Statistiken verwenden",
-    "AssumeMasterworkDetailed": "Generiere Sets unter der Voraussetzung, dass alle Gegenstände Meisterwerke sind.",
     "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Statistiken:",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Keine Builds gefunden. Gewöhnliche Ursachen hierfür sind:",
     "NoComparableItems": "Diese Ausrüstung hat keine vergleichbaren Gegenstände. Das Speichern des Optimierer-Sets wird die Gegenstände zu dieser Ausrüstung hinzufügen.",
     "NoLoadoutsToCompare": "Keine Ausrüstungen für Vergleich",
+    "NotExotics": "{{material}} (keine Exotik)",
+    "Nothing": "Nichts",
     "NumCombinations": "{{count, number}} Kombinationen",
     "NumCombinations_plural": "{{count, number}} Kombinationen",
     "OptimizerExplanation": "Wähle die gewünschten Statistiken und die Reihenfolge der Prioritäten und wähle dann aus, welche Mods du verwenden möchtest.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
     "UnableToAddAllModsBody": "Es waren nicht genügend Mod-Slots verfügbar für {{mods}}.",
-    "UnlockItem": "Abpinnen"
+    "UnlockItem": "Abpinnen",
+    "UpgradeTierExplanation": "Wähle aus, was du ausgeben wirst, wenn du Rüstung verbesserst und Energieaffinität änderst."
   },
   "Loadouts": {
     "Abandon": "Möchtest du diese Ausrüstung wirklich verwerfen?",
@@ -641,6 +641,7 @@
       "Perks": "Perks",
       "PerksMods": "Perks, Mods & Shader",
       "Quality": "Qualität %",
+      "Recency": "Neuheit",
       "Season": "Saison",
       "Source": "Quelle",
       "StatQuality": "Wert-Qualität",
@@ -815,7 +816,7 @@
     },
     "DimApiFinePrint": "DIM speichert deine Tags, Ausrüstungen und Einstellungen auf den DIM-Servern und synchronisiert sie zwischen verschiedenen Versionen von DIM.",
     "DimSyncEnabled": "DIM Sync aktiviert",
-    "EnableDimApi": "Enable DIM Sync (recommended)",
+    "EnableDimApi": "DIM Sync aktivieren (empfohlen)",
     "Export": "Datensicherung herunterladen",
     "Import": "Datensicherung importieren",
     "ImportConfirmDimApi": "Bist du sicher, dass du deine aktuellen Tags, Ausrüstungen und Einstellungen mit dieser Version überschreiben möchtest? Dies wird deine aktuelle Version komplett ersetzen.",
@@ -833,7 +834,7 @@
     "ImportTooManyFiles": "Bitte nur eine Datei zum Importieren wählen.",
     "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
     "IndexedDBStorage": "Lokaler Browser Speicher",
-    "LearnMore": "Learn more about DIM Sync",
+    "LearnMore": "Erfahre mehr über DIM Sync",
     "MenuTitle": "Sync & Backups",
     "ProfileErrorBody": "Wir haben ein Problem beim Laden deiner Daten von DIM Sync. Wir versuchen weiterhin sie automatisch zu laden.",
     "ProfileErrorTitle": "DIM Sync Fehler",
@@ -901,11 +902,11 @@
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",
-      "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
-      "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
+      "BackupPrompt": "Bist du sicher, dass du DIM Sync ohne Sicherung aktivieren möchtest?",
+      "EnableDimSyncWarning": "Du hattest DIM Sync zuvor deaktiviert und nur lokalen Datenspeicher verwendet. Das Aktivieren von DIM Sync ersetzt alle lokalen Daten durch die Daten von DIM Sync. Du solltest deine Daten sichern bevor du DIM Sync aktivierst. Du kannst sie in den Einstellungen wiederherstellen.",
       "Explanation": "Erlaube DIM deine Destiny Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
-      "LearnMore": "Learn more about accounts and login",
-      "NewAccount": "Log in with a different Bungie.net account",
+      "LearnMore": "Erfahre mehr über Konten und Login",
+      "NewAccount": "Mit einem anderen Bungie.net-Konto anmelden",
       "Permission": "Wir brauchen dein Einverständnis...",
       "UpgradeExplanation": "Home screen Apps in deiner iOS Version erlauben es nicht, sich bei DIM anzumelden. Bitte aktualisiere auf iOS 12.2 oder neuer und füge DIM deinem Home-Bildschirm neu hinzu.",
       "UpgradeiOS": "Bitte iOS Updaten"

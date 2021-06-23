@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Podgląd zawartości {{type}}",
-    "ShouldNotBeInVault": "Ten przedmiot może być zagrożony, jeśli pozostanie w Schowku. Proszę przenieś go na postać.",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Dodaj modyfikacje +5",
-    "AssumeMasterwork": "Przyjmij Mistrzowskie Statystyki",
-    "AssumeMasterworkDetailed": "Generuj zestawy zakładając, że wszystkie przedmioty są mistrzowskie.",
     "ChooseAlternate": "Wybierz inny przedmiot z tymi samymi statystykami:",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Nie znaleziono kompilacji. Powszechne przyczyny tego obejmują:",
     "NoComparableItems": "Te uzbrojenie nie ma porównywalnych przedmiotów. Zapisanie zestawu optymalizatora doda przedmioty do tego uzbrojenia.",
     "NoLoadoutsToCompare": "Brak uzbrojeń do porównania",
+    "NotExotics": "{{material}} (nie egzotyczne)",
+    "Nothing": "Nic",
     "NumCombinations": "{{count, number}} kombinacja",
     "NumCombinations_plural": "{{count, number}} kombinacji",
     "OptimizerExplanation": "Wybierz statystyki, które chcesz i ich kolejność priorytetu, a następnie wybierz które modyfikacje chcesz użyć.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
     "UnableToAddAllModsBody": "Nie ma wystarczającej ilości miejsc na modyfikacje, aby założyć {{mods}}.",
-    "UnlockItem": "Odepnij Przedmiot"
+    "UnlockItem": "Odepnij Przedmiot",
+    "UpgradeTierExplanation": "Wybierz, co wydasz podczas ulepszania pancerza i zmiany jego elementu."
   },
   "Loadouts": {
     "Abandon": "Czy na pewno chcesz porzucić te uzbrojenie?",
@@ -641,6 +641,7 @@
       "Perks": "Atuty",
       "PerksMods": "Atuty, Modyfikacje i Barwy",
       "Quality": "Jakość %",
+      "Recency": "Nowość",
       "Season": "Sezon",
       "Source": "Źródło",
       "StatQuality": "Jakość statystyki",
@@ -815,7 +816,7 @@
     },
     "DimApiFinePrint": "DIM zapisze tagi, uzbrojenie i ustawienia na serwerach DIM i zsynchronizuje je między różnymi wersjami DIM.",
     "DimSyncEnabled": "Synchronizacja DIM włączona",
-    "EnableDimApi": "Enable DIM Sync (recommended)",
+    "EnableDimApi": "Włącz synchronizację DIM (zalecane)",
     "Export": "Pobierz kopię zapasową danych",
     "Import": "Importuj kopię zapasową danych",
     "ImportConfirmDimApi": "Czy na pewno chcesz nadpisać swoje obecne tagi, uzbrojenie i ustawienia tą wersją? To całkowicie zastąpi to, co posiadasz.",
@@ -833,7 +834,7 @@
     "ImportTooManyFiles": "Wybierz tylko jeden plik do importu.",
     "ImportWrongFileType": "Plik nie jest plikiem JSON. To może nie być kopia zapasowa DIM.",
     "IndexedDBStorage": "Lokalna pamięć przeglądarki",
-    "LearnMore": "Learn more about DIM Sync",
+    "LearnMore": "Dowiedz się więcej o synchronizacji DIM",
     "MenuTitle": "Synchronizacja i kopie zapasowe",
     "ProfileErrorBody": "Wystąpił problem podczas ładowania Twoich danych z DIM Sync. Będziemy starali się je ładować automatycznie.",
     "ProfileErrorTitle": "Błąd synchronizacji DIM",
@@ -901,11 +902,11 @@
     },
     "Login": {
       "Auth": "Autoryzuj za pomocą Bungie.net",
-      "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
-      "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
+      "BackupPrompt": "Czy na pewno chcesz włączyć synchronizację DIM bez kopii zapasowej?",
+      "EnableDimSyncWarning": "Wcześniej wyłączono synchronizację DIM i używano tylko lokalnego przechowywania danych. Włączenie synchronizacji DIM zastąpi wszystkie lokalne dane danymi z synchronizacji DIM. Przed włączeniem synchronizacji DIM powinieneś utworzyć kopię zapasową swoich danych. Możesz przywrócić tę kopię zapasową w ustawieniach.",
       "Explanation": "Pozwól, aby DIM mógł wyświetlać i modyfikować postacie, schowek i postęp w Destiny.",
-      "LearnMore": "Learn more about accounts and login",
-      "NewAccount": "Log in with a different Bungie.net account",
+      "LearnMore": "Dowiedz się więcej o kontach i logowaniu",
+      "NewAccount": "Zaloguj się przy użyciu innego konta Bungie.net",
       "Permission": "Potrzebujemy Twojej zgody...",
       "UpgradeExplanation": "Aplikacje na ekranie głównym w Twojej wersji iOS nie pozwalają na logowanie się do DIM. Zaktualizuj system do wersji iOS 12.2 lub nowszej i ponownie dodaj DIM do ekranu głównego.",
       "UpgradeiOS": "Proszę zaktualizuj iOS"

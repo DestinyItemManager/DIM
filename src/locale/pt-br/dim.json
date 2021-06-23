@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Visualizar conteúdo de {{type}}",
-    "ShouldNotBeInVault": "Este item pode estar em risco se ficar no Cofre. Por favor, transfira-o para um personagem imediatamente.",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Adicionar Mods +5",
-    "AssumeMasterwork": "Assumir atributos obra-prima",
-    "AssumeMasterworkDetailed": "Gerar sets assumindo que todos os itens são obra-primas.",
     "ChooseAlternate": "Escolher outro item com os mesmos atributos:",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Nenhuma construção compatível. As causas mais comuns podem incluir:",
     "NoComparableItems": "Esse set não tem itens comparáveis. Salvando o Conjunto do Otimizador irá adicionar os itens para esse set.",
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
+    "NotExotics": "{{material}} (Exceto Exóticos)",
+    "Nothing": "Nada",
     "NumCombinations": "{{count, number}} combinação",
     "NumCombinations_plural": "{{count, number}} combinações",
     "OptimizerExplanation": "Escolha os atributos desejados e suas prioridades, depois escolha quais mods você quer usar.",
@@ -456,7 +455,8 @@
     "TierNumber": "N{{tier}}",
     "UnableToAddAllMods": "Não foi possível adicionar todos os mods.",
     "UnableToAddAllModsBody": "Não havia espaços de mods suficientes para caber {{mods}}.",
-    "UnlockItem": "Desfixar item"
+    "UnlockItem": "Desfixar item",
+    "UpgradeTierExplanation": "Selecione o tipo de investimento pretendido para atualizar as peças de armadura e mudar a afinidade energética."
   },
   "Loadouts": {
     "Abandon": "Você tem certeza que gostaria de descartar esse set?",
@@ -641,6 +641,7 @@
       "Perks": "Perks",
       "PerksMods": "Perks, Mods e Tonalizadores",
       "Quality": "Qualidade %",
+      "Recency": "Recência",
       "Season": "Temporada",
       "Source": "Fonte",
       "StatQuality": "Qualidade dos Atributos",

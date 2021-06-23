@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "¡Casi lleno! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Lleno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
-    "ShouldNotBeInVault": "Este objeto podría estar en riesgo si se deja en el depósito. Por favor, transfiérelo a un personaje.",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Añadir +5 Mods",
-    "AssumeMasterwork": "Asumir Estadísticas de Obra Maestra",
-    "AssumeMasterworkDetailed": "Generar sets asumiendo que todos los objetos son obras maestras.",
     "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "No se encontraron equipaciones. Causes comunes de esto incluyen:",
     "NoComparableItems": "Esta equipación no tiene objetos comparables. Guardar el Set Optimizador añadirá los objetos a esta equipación.",
     "NoLoadoutsToCompare": "No hay equipaciones para comparar",
+    "NotExotics": "{{material}} (No exótico)",
+    "Nothing": "Nada",
     "NumCombinations": "{{count, number}} combinación",
     "NumCombinations_plural": "{{count, number}} combinaciones",
     "OptimizerExplanation": "Elige las estadísticas que quieras, y su orden de prioridad, luego elige cuáles mods quieres usar.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "No se pueden agregar todos los mods.",
     "UnableToAddAllModsBody": "No había suficientes espacios disponibles para que cupiera el mod de {{mods}}.",
-    "UnlockItem": "Desanclar objeto"
+    "UnlockItem": "Desanclar objeto",
+    "UpgradeTierExplanation": "Selecciona lo que gastarás cuando actualices armadura y cambies la afinidad de la energía."
   },
   "Loadouts": {
     "Abandon": "¿Estás seguro de que quieres abandonar esta equipación?",
@@ -641,6 +641,7 @@
       "Perks": "Perks",
       "PerksMods": "Perks, Mods & Shaders",
       "Quality": "% Calidad",
+      "Recency": "Recency",
       "Season": "Temporada",
       "Source": "Fuente",
       "StatQuality": "Calidad de las Estadísticas",

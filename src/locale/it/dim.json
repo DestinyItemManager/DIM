@@ -340,7 +340,6 @@
     "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
     "PreviewVendor": "Anteprima contenuto {{type}}",
-    "ShouldNotBeInVault": "Potrebbe essere rischioso tenere questo oggetto nel Deposito. Trasferiscilo ad un personaggio.",
     "StackFull": "Hai già uno stack pieno di {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -414,8 +413,6 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Aggiungi Modifiche +5",
-    "AssumeMasterwork": "Presupponi statistiche prodigiose",
-    "AssumeMasterworkDetailed": "Genera set supponendo che tutti gli oggetti siano prodigiosi.",
     "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
@@ -440,6 +437,8 @@
     "NoBuildsFoundWithReasons": "Nessuna build trovata. Le possibili cause sono:",
     "NoComparableItems": "Questo loadout non ha oggetti confrontabili. Salvare il Set Ottimizzatore aggiungerà gli oggetti a questo loadout.",
     "NoLoadoutsToCompare": "Nessun loadout da confrontare",
+    "NotExotics": "{{material}} (Non Esotiche)",
+    "Nothing": "Niente",
     "NumCombinations": "{{count, number}} combinazione",
     "NumCombinations_plural": "{{count, number}} combinazioni",
     "OptimizerExplanation": "Scegli le statistiche che vuoi, e il loro ordine di priorità, quindi scegli quali Modifiche vuoi usare.",
@@ -456,7 +455,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
     "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
-    "UnlockItem": "Sblocca oggetto"
+    "UnlockItem": "Sblocca oggetto",
+    "UpgradeTierExplanation": "Seleziona cosa utilizzerai per potenziare le armature e cambiare la loro affinità energetica."
   },
   "Loadouts": {
     "Abandon": "Vuoi davvero abbandonare questo loadout?",
@@ -641,6 +641,7 @@
       "Perks": "Perks",
       "PerksMods": "Perk, Modifiche & Shader",
       "Quality": "Qualità %",
+      "Recency": "In possesso da",
       "Season": "Stagione",
       "Source": "Fonte",
       "StatQuality": "Qualità Statistiche",

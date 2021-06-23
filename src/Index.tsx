@@ -8,6 +8,7 @@ import store from 'app/store/store';
 import { infoLog } from 'app/utils/log';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import idbReady from 'safari-14-idb-fix';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import './app/google';
 import { initi18n } from './app/i18n';
@@ -26,19 +27,28 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 setupRateLimiter();
-if ($featureFlags.wishLists) {
-  saveWishListToIndexedDB();
-}
-saveAccountsToIndexedDB();
-updateCSSVariables();
 
-store.dispatch(loadDimApiData());
-store.dispatch(loadCoreSettings());
-store.dispatch(pollForBungieAlerts());
+const i18nPromise = initi18n();
 
-saveItemInfosOnStateChange();
+(async () => {
+  // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes
+  await idbReady();
 
-initi18n().then(() => {
+  if ($featureFlags.wishLists) {
+    saveWishListToIndexedDB();
+  }
+  saveAccountsToIndexedDB();
+  updateCSSVariables();
+
+  store.dispatch(loadDimApiData());
+  store.dispatch(loadCoreSettings());
+  store.dispatch(pollForBungieAlerts());
+
+  saveItemInfosOnStateChange();
+
+  // Make sure localization is loaded
+  await i18nPromise;
+
   // Settings depends on i18n
   watchLanguageChanges();
 
@@ -48,4 +58,4 @@ initi18n().then(() => {
   );
 
   ReactDOM.render(<Root />, document.getElementById('app'));
-});
+})();
