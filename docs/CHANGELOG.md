@@ -1,5 +1,6 @@
 ## Next
 
+* Fixed an issue where unwanted energy swaps were happening in the Optimizer.
 ## 6.69.2 <span class="changelog-date">(2021-06-22)</span>
 
 * Fixed an issue with general mods returning no results in the Optimizer.
