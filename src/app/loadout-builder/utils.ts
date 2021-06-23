@@ -87,7 +87,6 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
 function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
   const isExotic = Boolean(item.equippingLabel);
   // Used for figuring out what upgrade is not allowed
-  // if undefined there is no boundary
   let boundaryHash: number | 'none' = 'none';
 
   switch (tier) {
@@ -127,8 +126,6 @@ export function upgradeSpendTierToMaxEnergy(
     return item.energy.energyCapacity;
   }
 
-  // Used for figuring out what upgrade is not allowed
-  // if undefined there is no boundary
   const boundaryHash = getEnergySpendTierBoundaryHash(item, tier);
 
   const availableEnergyUpgrades = energyUpgrade(
@@ -163,7 +160,6 @@ export function upgradeSpendTierToMaxEnergy(
     previousUpgrade = upgradeItem;
   }
 
-  // should never happen but lets be safe
   const maxUpgradeEnergy = previousUpgrade?.plug?.energyCapacity?.capacityValue || 0;
 
   return Math.max(item.energy.energyCapacity, maxUpgradeEnergy);
@@ -222,7 +218,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
     return true;
   }
 
-  // There should only be one upgrade possibility
+  // There should only be one upgrade possibility due to how energyUpgrade works
   const upgrade = defs.InventoryItem.get(availableEnergyUpgrades[0]);
   const upgradeMaterials = defs.MaterialRequirementSet.get(
     upgrade.plug!.insertionMaterialRequirementHash
