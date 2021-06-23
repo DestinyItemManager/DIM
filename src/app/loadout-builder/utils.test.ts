@@ -9,8 +9,6 @@ describe('Spend tier tests', () => {
   let defs: D2ManifestDefinitions;
   let item: DimItem;
   let exoticItem: DimItem;
-  const itemEnergies: number[] = [];
-  const exoticItemEnergies: number[] = [];
 
   const tiers = [
     UpgradeSpendTier.AscendantShards,
@@ -48,14 +46,6 @@ describe('Spend tier tests', () => {
       `Testing spend tier with exotic item energy capacity ${exoticItem.energy?.energyCapacity}
         and item energy capacity ${item.energy?.energyCapacity}`
     );
-
-    for (let i = item.energy?.energyCapacity || 10; i <= 10; i++) {
-      itemEnergies.push(i);
-    }
-
-    for (let i = exoticItem.energy?.energyCapacity || 10; i <= 10; i++) {
-      exoticItemEnergies.push(i);
-    }
   });
 
   const testTiersInDescendingOrder = (

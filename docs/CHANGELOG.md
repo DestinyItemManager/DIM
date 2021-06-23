@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed an issue where unwanted energy swaps were happening in the Optimizer.
+* Fixed an issue where mod energy types could be mismatched in the Optimizer.
 
 ## 6.69.2 <span class="changelog-date">(2021-06-22)</span>
 
