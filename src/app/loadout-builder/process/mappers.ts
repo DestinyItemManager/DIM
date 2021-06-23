@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
+import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
@@ -8,6 +8,7 @@ import {
   DestinyItemInvestmentStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
@@ -30,7 +31,7 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
   };
 
   if (
-    raidPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
+    raidModPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
     !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
   ) {
     processMod.tag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);

@@ -22,10 +22,7 @@ export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.classitem,
 ];
 
-export const raidPlugCategoryHashes: number[] =
-  Array.isArray(raidModPlugCategoryHashes) &&
-  raidModPlugCategoryHashes.every((pch) => typeof pch === 'number')
-    ? raidModPlugCategoryHashes
-    : [];
-
-export const knownModPlugCategoryHashes = [...armor2PlugCategoryHashes, ...raidPlugCategoryHashes];
+export const knownModPlugCategoryHashes = [
+  ...armor2PlugCategoryHashes,
+  ...raidModPlugCategoryHashes,
+];
