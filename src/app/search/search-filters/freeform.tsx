@@ -121,9 +121,10 @@ const freeformFilters: FilterDefinition[] = [
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(filterValue, language);
       return (item) => {
-        // TODO: this may do too many array allocations to be performant.
+        // TODO: this definitely does too many array allocations to be performant
         const strings = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
+          ...getStringsFromDisplayPropertiesMap(item.perks?.map((p) => p.displayProperties)),
           ...getStringsFromAllSockets(item),
         ];
         return strings.some((s) => startWord.test(plainString(s, language)));
@@ -179,6 +180,7 @@ const freeformFilters: FilterDefinition[] = [
         }
         const perkStrings = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
+          ...getStringsFromDisplayPropertiesMap(item.perks?.map((p) => p.displayProperties)),
           ...getStringsFromAllSockets(item),
         ];
         return perkStrings.some((s) => plainString(s, language).includes(filterValue));
@@ -210,7 +212,7 @@ function getStringsFromDisplayProperties<T extends { name: string; description: 
  * to get an array of just those strings
  */
 function getStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
-  displayProperties?: T | T[],
+  displayProperties?: T | T[] | null,
   includeDescription = true
 ) {
   if (!displayProperties) {
