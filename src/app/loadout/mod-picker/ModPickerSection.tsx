@@ -4,13 +4,10 @@ import {
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React from 'react';
-import {
-  knownModPlugCategoryHashes,
-  raidPlugCategoryHashes,
-  slotSpecificPlugCategoryHashes,
-} from '../known-values';
+import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from '../known-values';
 import styles from './ModPickerSection.m.scss';
 import SelectableMod from './SelectableMod';
 
@@ -47,9 +44,9 @@ export default function PickerSectionMods({
     associatedLockedMods = lockedModsInternal.filter(
       (mod) => mod.plug.plugCategoryHash === plugCategoryHash
     );
-  } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
+  } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
     associatedLockedMods = lockedModsInternal.filter((mod) =>
-      raidPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+      raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
     );
   } else {
     associatedLockedMods = lockedModsInternal.filter(
