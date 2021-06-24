@@ -1,4 +1,5 @@
-import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
+import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
@@ -171,7 +172,7 @@ export function process(
     const pch = Number(plugCategoryHash);
     if (pch === armor2PlugCategoryHashesByName.general) {
       generalMods = generalMods.concat(mods);
-    } else if (raidPlugCategoryHashes.includes(pch)) {
+    } else if (raidModPlugCategoryHashes.includes(pch)) {
       raidMods = raidMods.concat(mods);
     } else if (!knownModPlugCategoryHashes.includes(pch)) {
       otherMods = otherMods.concat(mods);

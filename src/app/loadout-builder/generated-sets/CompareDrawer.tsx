@@ -75,6 +75,17 @@ function mapStateToProps() {
   });
 }
 
+function chooseSimilarLoadout(
+  setItems: DimItem[],
+  useableLoadouts: Loadout[]
+): Loadout | undefined {
+  const exotic = setItems.find((i) => i.equippingLabel);
+  return (
+    (exotic && useableLoadouts.find((l) => l.items.some((i) => i.hash === exotic.hash))) ||
+    (useableLoadouts.length ? useableLoadouts[0] : undefined)
+  );
+}
+
 function CompareDrawer({
   characterClass,
   loadouts,
@@ -91,11 +102,11 @@ function CompareDrawer({
   const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
-  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
-    useableLoadouts.length ? useableLoadouts[0] : undefined
-  );
-
   const setItems = set.armor.map((items) => items[0]);
+
+  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
+    chooseSimilarLoadout(setItems, useableLoadouts)
+  );
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {

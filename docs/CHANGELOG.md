@@ -1,6 +1,10 @@
 ## Next
 
 * Armor 1 exotics are visible in the exotic picker, albeit unselectable.
+* Default to similar loadout as comparison base in Loadout Optimizer.
+
+## 6.70.0 <span class="changelog-date">(2021-06-23)</span>
+
 * Fixed an issue where unwanted energy swaps were happening in the Optimizer.
 * Fixed an issue where mod energy types could be mismatched in the Optimizer.
 

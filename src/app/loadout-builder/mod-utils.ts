@@ -1,7 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { knownModPlugCategoryHashes, raidPlugCategoryHashes } from 'app/loadout/known-values';
+import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -65,7 +66,7 @@ function assignSlotIndependantMods(
     const { plugCategoryHash } = mod.plug;
     if (plugCategoryHash === armor2PlugCategoryHashesByName.general) {
       generalMods.push(mod);
-    } else if (raidPlugCategoryHashes.includes(plugCategoryHash)) {
+    } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
       raidMods.push(mod);
     } else if (!knownModPlugCategoryHashes.includes(plugCategoryHash)) {
       otherMods.push(mod);
