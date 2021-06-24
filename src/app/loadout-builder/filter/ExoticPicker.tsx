@@ -11,13 +11,13 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { LockedExoticWithPlugs } from '../types';
+import { ItemsByBucket, LockableBucketHashes, LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile from './ExoticTile';
 
 interface Props {
-  /** A list of item hashes for unlocked exotics. */
-  availableExotics?: DimItem[];
+  characterItems?: ItemsByBucket;
+  unusableExotics?: DimItem[];
   isPhonePortrait: boolean;
   language: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -25,56 +25,84 @@ interface Props {
 }
 
 /** A drawer to select an exotic for your build. */
-function ExoticPicker({ availableExotics, isPhonePortrait, language, lbDispatch, onClose }: Props) {
+function ExoticPicker({
+  characterItems,
+  unusableExotics,
+  isPhonePortrait,
+  language,
+  lbDispatch,
+  onClose,
+}: Props) {
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState('');
 
   const lockableExotics = useMemo(() => {
     const rtn: LockedExoticWithPlugs[] = [];
+    const exotics: DimItem[] = [];
 
-    if (availableExotics?.length) {
-      const uniqueExotics = _.uniqBy(availableExotics, (item) => item.hash);
-
-      for (const item of uniqueExotics) {
-        const def = defs.InventoryItem.get(item.hash);
-
-        if (def?.displayProperties.hasIcon) {
-          const exoticPerk = item.sockets?.allSockets.find(
-            (socket) =>
-              socket.plugged &&
-              socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-              socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
-          )?.plugged?.plugDef;
-
-          const exoticModSetHash = item.sockets?.allSockets.find(
-            (socket) =>
-              socket.plugged?.plugDef.plug.plugCategoryHash ===
-              PlugCategoryHashes.EnhancementsExoticAeonCult
-          )?.socketDefinition.reusablePlugSetHash;
-
-          const exoticMods = exoticModSetHash
-            ? _.compact(
-                defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
-                  const modDef = defs.InventoryItem.get(item.plugItemHash);
-                  if (isPluggableItem(modDef)) {
-                    return modDef;
-                  }
-                })
-              )
-            : [];
-
-          rtn.push({
-            def,
-            bucketHash: item.bucket.hash,
-            exoticPerk,
-            exoticMods,
-          });
+    // Find all the armor 2 exotics.
+    if (characterItems) {
+      for (const bucketHash of LockableBucketHashes) {
+        // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
+        for (const item of characterItems[bucketHash] || []) {
+          if (item.equippingLabel) {
+            exotics.push(item);
+          }
         }
       }
     }
 
+    const uniqueExotics = _.uniqBy(exotics, (item) => item.hash);
+
+    // Add in armor 1 exotics that don't have an armor 2 version
+    for (const unusable of unusableExotics || []) {
+      // Armor 1 & 2 items have different hashes but the same name.
+      if (!uniqueExotics.some((exotic) => unusable.name === exotic.name)) {
+        uniqueExotics.push(unusable);
+      }
+    }
+
+    // Build up all the details we need to display the exotics properly
+    for (const item of uniqueExotics) {
+      const def = defs.InventoryItem.get(item.hash);
+
+      if (def?.displayProperties.hasIcon) {
+        const exoticPerk = item.sockets?.allSockets.find(
+          (socket) =>
+            socket.plugged &&
+            socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+            socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
+        )?.plugged?.plugDef;
+
+        const exoticModSetHash = item.sockets?.allSockets.find(
+          (socket) =>
+            socket.plugged?.plugDef.plug.plugCategoryHash ===
+            PlugCategoryHashes.EnhancementsExoticAeonCult
+        )?.socketDefinition.reusablePlugSetHash;
+
+        const exoticMods = exoticModSetHash
+          ? _.compact(
+              defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
+                const modDef = defs.InventoryItem.get(item.plugItemHash);
+                if (isPluggableItem(modDef)) {
+                  return modDef;
+                }
+              })
+            )
+          : [];
+
+        rtn.push({
+          def,
+          bucketHash: item.bucket.hash,
+          exoticPerk,
+          exoticMods,
+          isArmor1: !item.energy,
+        });
+      }
+    }
+
     return rtn;
-  }, [availableExotics, defs]);
+  }, [characterItems, unusableExotics, defs]);
 
   const filteredOrderedAndGroupedExotics = useMemo(() => {
     const regexp = startWordRegexp(query, language);

@@ -20,6 +20,7 @@ import { isArmor2WithStats } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
+  ItemsByBucket,
   LockableBuckets,
   LockedExclude,
   LockedExotic,
@@ -37,7 +38,8 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExotic?: LockedExotic;
-  availableExotics?: DimItem[];
+  characterItems?: ItemsByBucket;
+  unusableExotics?: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -68,7 +70,8 @@ function LockArmorAndPerks({
   lockedMods,
   buckets,
   stores,
-  availableExotics,
+  characterItems,
+  unusableExotics,
   lockedExotic,
   isPhonePortrait,
   language,
@@ -269,7 +272,8 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
-            availableExotics={availableExotics}
+            characterItems={characterItems}
+            unusableExotics={unusableExotics}
             isPhonePortrait={isPhonePortrait}
             language={language}
             lbDispatch={lbDispatch}

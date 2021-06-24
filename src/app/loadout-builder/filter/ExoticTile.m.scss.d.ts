@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'details': string;
+  'disabled': string;
   'exotic': string;
   'itemImage': string;
   'itemName': string;

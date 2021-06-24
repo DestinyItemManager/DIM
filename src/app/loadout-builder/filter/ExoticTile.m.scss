@@ -15,6 +15,11 @@
   }
 }
 
+.disabled {
+  cursor: default;
+  filter: contrast(0.5) brightness(0.5);
+}
+
 .details {
   display: flex;
   flex-direction: row;

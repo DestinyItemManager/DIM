@@ -39,7 +39,6 @@ import { useProcess } from './process/useProcess';
 import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
-  LockableBucketHashes,
   statHashes,
   statHashToType,
   statKeys,
@@ -59,6 +58,9 @@ interface StoreProps {
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
+  }>;
+  unusableExotics: Readonly<{
+    [classType: number]: DimItem[];
   }>;
   loadouts: Loadout[];
   filter: ItemFilter;
@@ -95,6 +97,33 @@ function mapStateToProps() {
         }
 
         items[classType][bucket.hash].push(item);
+      }
+
+      return items;
+    }
+  );
+
+  const unusableExoticsSelector = createSelector(
+    allItemsSelector,
+    (
+      allItems
+    ): Readonly<{
+      [classType: number]: DimItem[];
+    }> => {
+      const items: {
+        [classType: number]: DimItem[];
+      } = {};
+      for (const item of allItems) {
+        if (!item || item.energy || !item.equippingLabel) {
+          continue;
+        }
+        const { classType } = item;
+
+        if (!items[classType]) {
+          items[classType] = [];
+        }
+
+        items[classType].push(item);
       }
 
       return items;
@@ -155,6 +184,7 @@ function mapStateToProps() {
       upgradeSpendTier: loUpgradeSpendTier,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
+      unusableExotics: unusableExoticsSelector(state),
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
       searchQuery: querySelector(state),
@@ -172,6 +202,7 @@ function LoadoutBuilder({
   upgradeSpendTier,
   isPhonePortrait,
   items,
+  unusableExotics,
   loadouts,
   filter,
   preloadedLoadout,
@@ -209,23 +240,6 @@ function LoadoutBuilder({
       ),
     [defs, characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
   );
-
-  const availableExotics = useMemo(() => {
-    const exotics: DimItem[] = [];
-
-    if (characterItems) {
-      for (const bucketHash of LockableBucketHashes) {
-        // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
-        for (const item of characterItems[bucketHash] || []) {
-          if (item.equippingLabel) {
-            exotics.push(item);
-          }
-        }
-      }
-
-      return exotics;
-    }
-  }, [characterItems]);
 
   const { result, processing } = useProcess(
     defs,
@@ -298,7 +312,8 @@ function LoadoutBuilder({
         selectedStore={selectedStore}
         lockedMap={lockedMap}
         lockedMods={lockedMods}
-        availableExotics={availableExotics}
+        characterItems={characterItems}
+        unusableExotics={selectedStore && unusableExotics[selectedStore.classType]}
         lockedExotic={lockedExotic}
         lbDispatch={lbDispatch}
       />
