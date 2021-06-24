@@ -5,16 +5,11 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
-import {
-  armor2PlugCategoryHashes,
-  armor2PlugCategoryHashesByName,
-} from 'app/search/d2-known-values';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { someModHasEnergyRequirement } from '../mod-utils';
 import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTier } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
@@ -140,29 +135,6 @@ export default function GeneratedSets({
     measureSet = undefined;
   }
 
-  let groupingDescription;
-
-  const generalMods: PluggableInventoryItemDefinition[] = [];
-  const raidCombatAndLegacyMods: PluggableInventoryItemDefinition[] = [];
-
-  for (const mod of lockedMods) {
-    if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-      generalMods.push(mod);
-    } else if (!armor2PlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-      raidCombatAndLegacyMods.push(mod);
-    }
-  }
-
-  if (someModHasEnergyRequirement(raidCombatAndLegacyMods)) {
-    groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergyModSlot');
-  } else if (raidCombatAndLegacyMods.length) {
-    groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsModSlot');
-  } else if (someModHasEnergyRequirement(generalMods)) {
-    groupingDescription = t('LoadoutBuilder.ItemsGroupedByStatsEnergy');
-  } else {
-    groupingDescription = t('LoadoutBuilder.ItemsGroupedByStats');
-  }
-
   return (
     <div className={styles.sets}>
       <h2>
@@ -186,7 +158,6 @@ export default function GeneratedSets({
       {combos !== combosWithoutCaps && (
         <p>{t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}</p>
       )}
-      <p>{groupingDescription}</p>
       {measureSet ? (
         <GeneratedSet
           ref={setRowHeight}
