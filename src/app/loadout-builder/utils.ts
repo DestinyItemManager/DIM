@@ -115,10 +115,13 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       if (!isExotic) {
         break;
       }
-      boundaryHash = UpgradeMaterialHashes.legendaryShard;
+      // for exotics we allow energy upgrades/swaps using legendary shards.
+      boundaryHash = UpgradeMaterialHashes.enhancementPrism;
       break;
     }
     case UpgradeSpendTier.AscendantShardsNotMasterworked:
+      // already masterworked items will have full stats by default, by dropping the boundary
+      // we will stop energy swaps
       boundaryHash =
         item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
       break;
@@ -146,6 +149,8 @@ export function upgradeSpendTierToMaxEnergy(
 
   const boundaryHash = getEnergySpendTierBoundaryHash(item, tier);
 
+  // gets all possible energy upgrades for the item, including the current level
+  // we need this to populate previous item in the loops below
   const availableEnergyUpgrades = energyUpgrade(
     defs,
     item,
@@ -165,6 +170,8 @@ export function upgradeSpendTierToMaxEnergy(
     );
   }
 
+  // find the upgrade that uses the boundary material, the one before this will be the max
+  // upgrade we can use
   let previousUpgrade: DestinyInventoryItemDefinition | undefined;
   for (const upgrade of availableEnergyUpgrades) {
     const upgradeItem = defs.InventoryItem.get(upgrade);
@@ -172,6 +179,7 @@ export function upgradeSpendTierToMaxEnergy(
       upgradeItem.plug!.insertionMaterialRequirementHash
     );
 
+    // if we find the boundary material we have gone too far
     if (upgradeMaterials.materials.some((material) => material.itemHash === boundaryHash)) {
       break;
     }
@@ -221,6 +229,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
     }
   }
 
+  // gets a single upgrade for swapping energy at the current level
   const availableEnergyUpgrades = energyUpgrade(
     defs,
     item,
@@ -230,6 +239,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
     item.energy.energyCapacity
   );
 
+  // if an energy upgrade is not found it means we cannot swap
   if (!availableEnergyUpgrades.length) {
     return false;
   }
@@ -240,11 +250,13 @@ export function canSwapEnergyFromUpgradeSpendTier(
     return true;
   }
 
-  // There should only be one upgrade possibility due to how energyUpgrade works
   const upgrade = defs.InventoryItem.get(availableEnergyUpgrades[0]);
   const upgradeMaterials = defs.MaterialRequirementSet.get(
     upgrade.plug!.insertionMaterialRequirementHash
   );
 
+  // Make sure that the boundary material is not in the necessary upgrade material
+  // for example a masterworked item will need ascendant shards, enhancement prisms and
+  // legendary shards to swap to another masterwork.
   return upgradeMaterials.materials.every((material) => material.itemHash !== boundaryHash);
 }
