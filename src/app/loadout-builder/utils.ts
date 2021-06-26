@@ -115,7 +115,7 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       if (!isExotic) {
         break;
       }
-      boundaryHash = UpgradeMaterialHashes.ascendantShard;
+      boundaryHash = UpgradeMaterialHashes.legendaryShard;
       break;
     }
     case UpgradeSpendTier.AscendantShardsNotMasterworked:
@@ -150,7 +150,7 @@ export function upgradeSpendTierToMaxEnergy(
     defs,
     item,
     item.energy.energyType,
-    item.energy.energyCapacity - 1, // allows us to get the at level tier.
+    item.energy.energyCapacity - 1,
     item.energy.energyType,
     10
   );
@@ -225,7 +225,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
     defs,
     item,
     item.energy.energyType,
-    item.energy.energyCapacity, // allows us to get the at level tier.
+    item.energy.energyCapacity,
     differentEnergy,
     item.energy.energyCapacity
   );
