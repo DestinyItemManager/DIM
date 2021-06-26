@@ -1,3 +1,5 @@
+@import '../../variables';
+
 .exotic {
   > * {
     margin-right: 8px;
@@ -16,7 +18,7 @@
 }
 
 .selected {
-  border-color: orange;
+  border-color: $orange;
 }
 
 .disabled {

@@ -1,3 +1,5 @@
+@import '../../variables';
+
 .perk {
   > img,
   > * > img {
@@ -37,7 +39,7 @@
 }
 
 .lockedPerk {
-  border-color: orange;
+  border-color: $orange;
 }
 
 .plugStats {
