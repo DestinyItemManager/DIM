@@ -510,7 +510,6 @@
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item",
-    "UpgradeTierExplanation": "Select what you will spend when upgrading armor and changing energy affinity.",
     "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
   "Loadouts": {
