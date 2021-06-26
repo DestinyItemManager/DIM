@@ -11,11 +11,12 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ItemsByBucket, LockableBucketHashes, LockedExoticWithPlugs } from '../types';
+import { ItemsByBucket, LockableBucketHashes, LockedExotic, LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile from './ExoticTile';
 
 interface Props {
+  lockedExotic?: LockedExotic;
   characterItems?: ItemsByBucket;
   unusableExotics?: DimItem[];
   isPhonePortrait: boolean;
@@ -26,6 +27,7 @@ interface Props {
 
 /** A drawer to select an exotic for your build. */
 function ExoticPicker({
+  lockedExotic,
   characterItems,
   unusableExotics,
   isPhonePortrait,
@@ -177,6 +179,7 @@ function ExoticPicker({
                 {exotics.map((exotic) => (
                   <ExoticTile
                     key={exotic.def.hash}
+                    selected={lockedExotic?.def.hash === exotic.def.hash}
                     exotic={exotic}
                     lbDispatch={lbDispatch}
                     onClose={onClose}
