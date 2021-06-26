@@ -34,7 +34,7 @@ function getDisplayProperties(
   ).displayProperties;
   switch (upgradeSpendTier) {
     case UpgradeSpendTier.Nothing:
-      return { name: t('LoadoutBuilder.NoUpgrade') };
+      return { name: t('LoadoutBuilder.NoUpgrades') };
     case UpgradeSpendTier.LegendaryShards: {
       return defs.InventoryItem.get(UpgradeMaterialHashes.legendaryShard).displayProperties;
     }
@@ -106,7 +106,7 @@ function ArmorUpgradePicker({ onClose }: Props) {
         content: (
           <UpgradeOption
             name={getDisplayProperties(defs, UpgradeSpendTier.Nothing).name}
-            details={t('LoadoutBuilder.NoUpgradeDetails')}
+            details={t('LoadoutBuilder.NoUpgradesDetails')}
           />
         ),
       },
