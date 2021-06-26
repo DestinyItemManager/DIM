@@ -428,7 +428,7 @@
     "ExistingLoadout": "Existing Loadout",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
-    "LegendaryShardsAndEnhancementPrismDetails": "",
+    "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items with lower than {{energyLevel}} energy, the Optimizer will assume an energy level upgrade to {{energyLevel}}, and will change energy element as needed to assign mods.\n\nItems with at least {{energyLevel}} energy will use their existing energy amount and element.",
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible armor combinations, but DIM only looked at the {{combos, number}} highest stat combos to keep your browser from crashing. Select some perks, use a search, or dismantle old armor to reduce the number of combos. Pinning general or seasonal mods increases the number of combos.",
     "LockElement": "{{material}} (Lock Element)",
     "LockEquipped": "Pin equipped",
