@@ -120,7 +120,7 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       break;
     }
     case UpgradeSpendTier.AscendantShardsNotMasterworked:
-      // already masterworked items will have full stats by default, by dropping the boundary
+      // already masterworked items will have full energy by default, by dropping the boundary
       // we will stop energy swaps
       boundaryHash =
         item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
