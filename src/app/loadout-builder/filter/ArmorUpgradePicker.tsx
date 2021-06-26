@@ -120,7 +120,7 @@ function ArmorUpgradePicker({
             name={legendaryShardDisplay.name}
             icon={legendaryShardDisplay.icon}
             details={t('LoadoutBuilder.LegendaryShardsAndEnhancementPrismDetails', {
-              energyLevel: 7,
+              energyLevel: 7, // todo (ryanr) generate or obtain this programatically
             })}
           />
         ),
