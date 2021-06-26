@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "全ての設定を隠す",
     "HideConfigs": "設定を隠す",
+    "IncompatibleWithOptimizer": "このアイテムは Optimizer と互換性がありません。コレクションから新しいバージョンを再入手してください。",
     "LB": "ロードアウト最適化",
     "LightMode": {
       "HelpCurrent": "現在の防衛レベルでの負荷を計算します。",

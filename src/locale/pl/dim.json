@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Ukryj wszystkie konfiguracje",
     "HideConfigs": "Ukryj konfiguracje",
+    "IncompatibleWithOptimizer": "Ten przedmiot nie jest kompatybilny z Optymalizatorem. Proszę nabyć nową wersję z Kolekcji.",
     "LB": "Optymalizator Uzbrojenia",
     "LightMode": {
       "HelpCurrent": "Kalkuluje uzbrojenia na obecnych poziomach obrony.",

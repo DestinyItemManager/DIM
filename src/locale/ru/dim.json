@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Скрыть все настройки",
     "HideConfigs": "Скрыть настройки",
+    "IncompatibleWithOptimizer": "This item is incompatible with the Optimizer. Please reacquire a new version from Collections.",
     "LB": "Конструктор Наборов",
     "LightMode": {
       "HelpCurrent": "Рассчитать Наборы на текущих уровнях брони.",

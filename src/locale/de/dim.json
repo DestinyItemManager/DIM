@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
+    "IncompatibleWithOptimizer": "Dieser Gegenstand ist nicht mit dem Optimierer kompatibel. Bitte erwirb eine neue Version aus der Sammlung.",
     "LB": "Ausrüstungs-Optimierer",
     "LightMode": {
       "HelpCurrent": "Berechnet Ausrüstung mit dem aktuellen Verteidigungswert.",
@@ -583,7 +584,7 @@
     "OverviewTab": "Übersicht",
     "Owned": "Dieser Gegenstand ist in deinem Inventar.",
     "OwnedMod": "Diese Mod ist in deinem Modifikations-Inventar.",
-    "PullItem": "Ziehe von {{bucket}} nach {{store}}",
+    "PullItem": "Ziehe {{bucket}} auf {{store}}",
     "PullPostmaster": "Abrufen von Poststelle",
     "ReadLore": "Lese Überlieferungen und Hintergründe auf Ishtar Collective",
     "ReadLoreLink": "Lese Lore",

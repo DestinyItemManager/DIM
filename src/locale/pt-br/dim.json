@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Ocultar todas as configurações",
     "HideConfigs": "Ocultar configurações",
+    "IncompatibleWithOptimizer": "Esse item é incompatível com o Otimizador. Por favor, pegue uma nova versão das Coleções.",
     "LB": "Otimizador de Set",
     "LightMode": {
       "HelpCurrent": "Calcular set com os níveis de defesa atuais.",

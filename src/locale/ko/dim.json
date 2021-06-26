@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "모든 설정 숨기기",
     "HideConfigs": "설정 숨기기",
+    "IncompatibleWithOptimizer": "이 아이템은 로드아웃 최적화와 호환되지 않습니다. 수집품에서 새로운 버전을 다시 획득하세요.",
     "LB": "로드아웃 최적화",
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
