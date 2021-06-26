@@ -10,6 +10,7 @@ import styles from './ExoticTile.m.scss';
 
 interface Props {
   exotic: LockedExoticWithPlugs;
+  selected: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -67,7 +68,7 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
   );
 }
 
-function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
+function ExoticTile({ exotic, selected, lbDispatch, onClose }: Props) {
   return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
@@ -77,7 +78,7 @@ function ExoticTile({ exotic, lbDispatch, onClose }: Props) {
     </PressTip>
   ) : (
     <div
-      className={styles.exotic}
+      className={clsx(styles.exotic, { [styles.selected]: selected })}
       onClick={() => {
         lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
         onClose();

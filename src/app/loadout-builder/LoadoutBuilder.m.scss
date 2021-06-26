@@ -4,7 +4,7 @@
 .page {
   :global .perk-image {
     &.locked-perk {
-      border-color: orange;
+      border-color: $orange;
     }
   }
 }

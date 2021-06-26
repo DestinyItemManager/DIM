@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
+    "IncompatibleWithOptimizer": "Questo oggetto non è compatibile con l'Ottimizzatore. Riacquisisci una nuova versione dalle Collezioni.",
     "LB": "Ottimizzatore Loadout",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
