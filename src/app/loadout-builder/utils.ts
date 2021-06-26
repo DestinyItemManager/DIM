@@ -6,7 +6,20 @@ import { warnLog } from 'app/utils/log';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType, UpgradeSpendTier } from './types';
+import { LockedItemType } from './types';
+
+// Todo(ryan): Temporary until api types are available
+// this is a copy of the initial settings one as we can't have a link
+// between the web worker for process and initial settings.
+export enum UpgradeSpendTier {
+  Nothing,
+  LegendaryShards,
+  EnhancementPrisms,
+  AscendantShardsNotExotic,
+  AscendantShards,
+  AscendantShardsNotMasterworked,
+  AscendantShardsLockEnergyType,
+}
 
 /**
  * Add a locked item to the locked item list for a bucket.
@@ -105,6 +118,11 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       boundaryHash = UpgradeMaterialHashes.ascendantShard;
       break;
     }
+    case UpgradeSpendTier.AscendantShardsNotMasterworked:
+      boundaryHash =
+        item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
+      break;
+    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.AscendantShards:
       break;
   }
@@ -171,7 +189,11 @@ export function canSwapEnergyFromUpgradeSpendTier(
   tier: UpgradeSpendTier,
   item: DimItem
 ) {
-  if (!item.energy || tier === UpgradeSpendTier.Nothing) {
+  if (
+    !item.energy ||
+    tier === UpgradeSpendTier.Nothing ||
+    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
+  ) {
     return false;
   }
 

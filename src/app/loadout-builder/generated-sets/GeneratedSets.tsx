@@ -5,12 +5,13 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, LockedMap, StatTypes, UpgradeSpendTier } from '../types';
+import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 

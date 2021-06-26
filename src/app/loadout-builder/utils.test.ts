@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
-import { UpgradeSpendTier } from './types';
 import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from './utils';
 
 describe('Spend tier tests', () => {
