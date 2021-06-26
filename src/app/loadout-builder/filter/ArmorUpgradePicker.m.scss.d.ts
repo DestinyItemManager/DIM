@@ -2,10 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'container': string;
+  'itemContainer': string;
   'itemDetails': string;
   'itemImage': string;
   'itemName': string;
   'items': string;
+  'selected': string;
   'selectedUpgradeOption': string;
   'upgradeOption': string;
 }

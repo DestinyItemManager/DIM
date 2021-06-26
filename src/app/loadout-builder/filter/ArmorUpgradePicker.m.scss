@@ -1,14 +1,22 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin: 16px 0;
 }
 
 .items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 10px;
   margin: 0 4px 16px 4px;
+}
+
+.itemContainer {
+  border: 1px solid #666;
+}
+
+.selected {
+  border: 1px solid orange;
 }
 
 .upgradeOption {
@@ -16,7 +24,6 @@
     margin-right: 8px;
   }
 
-  border: 1px solid #666;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -30,6 +37,10 @@
 
 .itemDetails {
   display: flex;
+
+  div {
+    white-space: pre-line;
+  }
 }
 
 .itemImage {
@@ -52,6 +63,7 @@
   display: flex;
   flex-direction: row;
   padding: 4px;
+  margin-bottom: 4px;
 
   div {
     text-overflow: ellipsis;

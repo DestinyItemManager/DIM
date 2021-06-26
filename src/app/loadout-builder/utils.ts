@@ -115,8 +115,8 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       if (!isExotic) {
         break;
       }
-      // for exotics we allow energy upgrades/swaps using legendary shards.
-      boundaryHash = UpgradeMaterialHashes.enhancementPrism;
+      // for exotics we allow energy upgrades/swaps using enhancement prisms.
+      boundaryHash = UpgradeMaterialHashes.ascendantShard;
       break;
     }
     case UpgradeSpendTier.AscendantShardsNotMasterworked:

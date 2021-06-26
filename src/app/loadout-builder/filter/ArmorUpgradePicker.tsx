@@ -6,12 +6,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
 import { useSetSetting } from 'app/settings/hooks';
 import { UpgradeSpendTier } from 'app/settings/initial-settings';
+import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
 import styles from './ArmorUpgradePicker.m.scss';
-
-interface Props {
-  onClose(): void;
-}
 
 function UpgradeOption({ name, icon, details }: { name: string; icon?: string; details: string }) {
   return (
@@ -55,7 +52,7 @@ function getDisplayProperties(
     }
     case UpgradeSpendTier.AscendantShardsLockEnergyType: {
       return {
-        name: t('LoadoutBuilder.LockEnergyType', { material: ascendantShardDisplay.name }),
+        name: t('LoadoutBuilder.LockElement', { material: ascendantShardDisplay.name }),
         icon: ascendantShardDisplay.icon,
       };
     }
@@ -82,7 +79,13 @@ export function SelectedArmorUpgrade({
 }
 
 /** A drawer to select an exotic for your build. */
-function ArmorUpgradePicker({ onClose }: Props) {
+function ArmorUpgradePicker({
+  currentUpgradeSpendTier,
+  onClose,
+}: {
+  currentUpgradeSpendTier: UpgradeSpendTier;
+  onClose(): void;
+}) {
   const defs = useD2Definitions()!;
   const setSetting = useSetSetting();
 
@@ -140,7 +143,7 @@ function ArmorUpgradePicker({ onClose }: Props) {
           <UpgradeOption
             name={notExoticDisplay.name}
             icon={notExoticDisplay.icon}
-            details={t('LoadoutBuilder.AscendantShardNotExoticDetails', { energyLevel: 7 })}
+            details={t('LoadoutBuilder.AscendantShardNotExoticDetails', { energyLevel: 9 })}
           />
         ),
       },
@@ -193,6 +196,9 @@ function ArmorUpgradePicker({ onClose }: Props) {
           <div className={styles.items}>
             {upgradeOptions.map((option) => (
               <div
+                className={clsx(styles.itemContainer, {
+                  [styles.selected]: currentUpgradeSpendTier === option.value,
+                })}
                 key={option.value}
                 onClick={() => {
                   setSetting('loUpgradeSpendTier', option.value);

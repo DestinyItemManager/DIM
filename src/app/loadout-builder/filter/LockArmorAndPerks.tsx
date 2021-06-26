@@ -302,7 +302,10 @@ function LockArmorAndPerks({
         )}
       {showArmorUpgradePicker &&
         ReactDom.createPortal(
-          <ArmorUpgradePicker onClose={() => setShowArmorUpgradePicker(false)} />,
+          <ArmorUpgradePicker
+            currentUpgradeSpendTier={upgradeSpendTier}
+            onClose={() => setShowArmorUpgradePicker(false)}
+          />,
           document.body
         )}
     </div>
