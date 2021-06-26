@@ -12,6 +12,7 @@ interface CssExports {
   'perkOrModInfo': string;
   'perkOrModName': string;
   'perkOrModNameAndImage': string;
+  'selected': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

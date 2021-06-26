@@ -272,6 +272,7 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
+            lockedExotic={lockedExotic}
             characterItems={characterItems}
             unusableExotics={unusableExotics}
             isPhonePortrait={isPhonePortrait}
