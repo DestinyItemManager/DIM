@@ -7,6 +7,7 @@ import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/Cu
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import PressTip from 'app/dim-ui/PressTip';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import {
   ArmorSlotSpecificModSocketIcon,
   SpecialtyModSlotIcon,
@@ -116,7 +117,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
         <ul>
           {inLoadouts.map((l) => (
             <li className={styles.loadoutRow} key={l.id}>
-              {l.name}{' '}
+              <RichDestinyText text={l.name} />{' '}
               <a
                 className={styles.lowKeyButton}
                 title={t('Loadouts.Edit')}

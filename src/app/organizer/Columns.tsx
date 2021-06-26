@@ -6,6 +6,7 @@ import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import PressTip from 'app/dim-ui/PressTip';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
@@ -486,7 +487,11 @@ export function getColumns(
         const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
         return (
           inloadouts.length > 0 &&
-          inloadouts.map((loadout) => <div key={loadout.id}>{loadout.name}</div>)
+          inloadouts.map((loadout) => (
+            <div key={loadout.id}>
+              <RichDestinyText text={loadout.name} />
+            </div>
+          ))
         );
       },
       noSort: true,

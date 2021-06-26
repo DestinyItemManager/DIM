@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -210,7 +211,9 @@ function CompareDrawer({
             <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
             <button className="dim-button" type="button" onClick={onSaveLoadout}>
               {t('LoadoutBuilder.SaveAs')}{' '}
-              <span className={styles.loadoutName}>{selectedLoadout.name}</span>
+              <span className={styles.loadoutName}>
+                <RichDestinyText text={selectedLoadout.name} />
+              </span>
             </button>
           </div>
           <SetStats

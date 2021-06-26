@@ -1,4 +1,5 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -351,7 +352,7 @@ function LoadoutPopup({
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
               <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
-              {loadout.name}
+              <RichDestinyText text={loadout.name} />
             </span>
             <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>
               <AppIcon icon={editIcon} />

@@ -1,5 +1,6 @@
 import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { setItemHashNote, setItemNote } from 'app/inventory/actions';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
@@ -57,7 +58,7 @@ export default function NotesArea({
         <span className={savedNotes ? styles.notesLabel : styles.addNotesLabel}>
           {savedNotes ? t('MovePopup.Notes') : t('MovePopup.AddNote')}
         </span>{' '}
-        {savedNotes}
+        <RichDestinyText text={savedNotes} />
       </div>
     </div>
   );
