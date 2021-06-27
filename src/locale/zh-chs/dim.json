@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "隐藏所有配置",
     "HideConfigs": "隐藏配置",
+    "IncompatibleWithOptimizer": "This item is incompatible with the Optimizer. Please reacquire a new version from Collections.",
     "LB": "配装优化器",
     "LightMode": {
       "HelpCurrent": "计算当前防御等级.",

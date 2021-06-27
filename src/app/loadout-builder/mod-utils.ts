@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
@@ -11,7 +12,7 @@ import {
 } from './process-worker/process-utils';
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { bucketsToCategories, LockableBucketHashes, UpgradeSpendTier } from './types';
+import { bucketsToCategories, LockableBucketHashes } from './types';
 import { canSwapEnergyFromUpgradeSpendTier } from './utils';
 
 /**

@@ -9,6 +9,8 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import ClosableContainer from 'app/loadout/loadout-ui/ClosableContainer';
 import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -29,6 +31,7 @@ import {
   LockedMap,
 } from '../types';
 import { addLockedItem, removeLockedItem } from '../utils';
+import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
@@ -37,6 +40,7 @@ interface ProvidedProps {
   selectedStore: DimStore;
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
+  upgradeSpendTier: UpgradeSpendTier;
   lockedExotic?: LockedExotic;
   characterItems?: ItemsByBucket;
   unusableExotics?: DimItem[];
@@ -68,6 +72,7 @@ function LockArmorAndPerks({
   selectedStore,
   lockedMap,
   lockedMods,
+  upgradeSpendTier,
   buckets,
   stores,
   characterItems,
@@ -78,6 +83,8 @@ function LockArmorAndPerks({
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
+  const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
+  const defs = useD2Definitions()!;
   /**
    * Lock currently equipped items on a character
    * Recomputes matched sets
@@ -193,6 +200,18 @@ function LockArmorAndPerks({
   return (
     <div>
       <div className={styles.area}>
+        <SelectedArmorUpgrade defs={defs} upgradeSpendTier={upgradeSpendTier} />
+        <div className={styles.buttons}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => setShowArmorUpgradePicker(true)}
+          >
+            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.SelectArmorUpgrade')}
+          </button>
+        </div>
+      </div>
+      <div className={styles.area}>
         {Boolean(lockedMods.length) && (
           <div className={styles.itemGrid}>
             {lockedMods.map((mod) => (
@@ -272,12 +291,21 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
+            lockedExotic={lockedExotic}
             characterItems={characterItems}
             unusableExotics={unusableExotics}
             isPhonePortrait={isPhonePortrait}
             language={language}
             lbDispatch={lbDispatch}
             onClose={() => setShowExoticPicker(false)}
+          />,
+          document.body
+        )}
+      {showArmorUpgradePicker &&
+        ReactDom.createPortal(
+          <ArmorUpgradePicker
+            currentUpgradeSpendTier={upgradeSpendTier}
+            onClose={() => setShowArmorUpgradePicker(false)}
           />,
           document.body
         )}

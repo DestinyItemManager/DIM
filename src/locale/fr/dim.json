@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
+    "IncompatibleWithOptimizer": "Cet objet est incompatible avec l'optimiseur. Obtenez en une nouvelle version depuis les Collections.",
     "LB": "Optimiseur",
     "LightMode": {
       "HelpCurrent": "Calcule les arsenaux aux niveaux de défense actuels.",
@@ -641,7 +642,7 @@
       "Perks": "Attributs",
       "PerksMods": "Attributs, mods et revêtements",
       "Quality": "Qualité %",
-      "Recency": "Recency",
+      "Recency": "Récence",
       "Season": "Saison",
       "Source": "Origine",
       "StatQuality": "Qualité de la Stat",

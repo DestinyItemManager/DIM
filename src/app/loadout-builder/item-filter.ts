@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import { LoadoutBuilderState } from './loadout-builder-reducer';
 import { doEnergiesMatch } from './mod-utils';
@@ -10,7 +11,6 @@ import {
   LockableBuckets,
   LockedItemType,
   LockedMap,
-  UpgradeSpendTier,
 } from './types';
 
 /**

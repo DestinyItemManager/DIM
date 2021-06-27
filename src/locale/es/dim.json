@@ -374,6 +374,7 @@
     },
     "HideAllConfigs": "Ocultar todas las configuraciones",
     "HideConfigs": "Ocultar configuraciones",
+    "IncompatibleWithOptimizer": "Este objeto es incompatible con el Optimizador. Por favor, readquiera una versión nueva desde Colecciones.",
     "LB": "Optimizador de Equipaciones",
     "LightMode": {
       "HelpCurrent": "Calcula las equipaciones con los niveles de defensa actuales.",
@@ -641,7 +642,7 @@
       "Perks": "Ventajas",
       "PerksMods": "Ventajas, Modificadores y Shaders",
       "Quality": "% Calidad",
-      "Recency": "Recency",
+      "Recency": "Novedad",
       "Season": "Temporada",
       "Source": "Fuente",
       "StatQuality": "Calidad de las Estadísticas",
