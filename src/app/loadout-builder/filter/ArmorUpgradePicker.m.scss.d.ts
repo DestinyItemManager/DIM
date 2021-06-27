@@ -7,6 +7,8 @@ interface CssExports {
   'itemImage': string;
   'itemName': string;
   'items': string;
+  'lockEnergyType': string;
+  'modifiers': string;
   'selected': string;
   'selectedUpgradeOption': string;
   'upgradeOption': string;

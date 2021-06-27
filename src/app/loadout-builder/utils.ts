@@ -18,7 +18,6 @@ export enum UpgradeSpendTier {
   AscendantShardsNotExotic,
   AscendantShards,
   AscendantShardsNotMasterworked,
-  AscendantShardsLockEnergyType,
 }
 
 /**
@@ -125,7 +124,6 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       boundaryHash =
         item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
       break;
-    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.AscendantShards:
       break;
   }
@@ -197,11 +195,7 @@ export function canSwapEnergyFromUpgradeSpendTier(
   tier: UpgradeSpendTier,
   item: DimItem
 ) {
-  if (
-    !item.energy ||
-    tier === UpgradeSpendTier.Nothing ||
-    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
-  ) {
+  if (!item.energy || tier === UpgradeSpendTier.Nothing) {
     return false;
   }
 

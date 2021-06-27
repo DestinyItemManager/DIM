@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import CheckButton from 'app/dim-ui/CheckButton';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -50,12 +51,6 @@ function getDisplayProperties(
         icon: ascendantShardDisplay.icon,
       };
     }
-    case UpgradeSpendTier.AscendantShardsLockEnergyType: {
-      return {
-        name: t('LoadoutBuilder.LockElement', { material: ascendantShardDisplay.name }),
-        icon: ascendantShardDisplay.icon,
-      };
-    }
     case UpgradeSpendTier.AscendantShards: {
       return ascendantShardDisplay;
     }
@@ -65,15 +60,18 @@ function getDisplayProperties(
 export function SelectedArmorUpgrade({
   defs,
   upgradeSpendTier,
+  lockItemEnergyType,
 }: {
   defs: D2ManifestDefinitions;
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
 }) {
   const { name, icon } = getDisplayProperties(defs, upgradeSpendTier);
+  const displayName = lockItemEnergyType ? `${name} + ${t('LoadoutBuilder.LockElement')}` : name;
   return (
     <div className={styles.selectedUpgradeOption}>
       {icon && <BungieImage src={icon} />}
-      <div>{name}</div>
+      <div>{displayName}</div>
     </div>
   );
 }
@@ -81,9 +79,11 @@ export function SelectedArmorUpgrade({
 /** A drawer to select an exotic for your build. */
 function ArmorUpgradePicker({
   currentUpgradeSpendTier,
+  lockItemEnergyType,
   onClose,
 }: {
   currentUpgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
   onClose(): void;
 }) {
   const defs = useD2Definitions()!;
@@ -96,10 +96,6 @@ function ArmorUpgradePicker({
     const notMasterworkedDisplay = getDisplayProperties(
       defs,
       UpgradeSpendTier.AscendantShardsNotMasterworked
-    );
-    const lockedEnergyTypeDisplay = getDisplayProperties(
-      defs,
-      UpgradeSpendTier.AscendantShardsLockEnergyType
     );
     const ascendantShardDisplay = getDisplayProperties(defs, UpgradeSpendTier.AscendantShards);
 
@@ -158,16 +154,6 @@ function ArmorUpgradePicker({
         ),
       },
       {
-        value: UpgradeSpendTier.AscendantShardsLockEnergyType,
-        content: (
-          <UpgradeOption
-            name={lockedEnergyTypeDisplay.name}
-            icon={lockedEnergyTypeDisplay.icon}
-            details={t('LoadoutBuilder.AscendantShardLockEnergyDetails')}
-          />
-        ),
-      },
-      {
         value: UpgradeSpendTier.AscendantShards,
         content: (
           <UpgradeOption
@@ -193,6 +179,16 @@ function ArmorUpgradePicker({
     >
       {({ onClose }) => (
         <div className={styles.container}>
+          <div className={styles.modifiers}>
+            <CheckButton
+              name="lo-lock-item-energy-type"
+              className={styles.lockEnergyType}
+              checked={lockItemEnergyType}
+              onChange={(checked) => setSetting('loLockItemEnergyType', checked)}
+            >
+              {t('LoadoutBuilder.LockElement')}
+            </CheckButton>
+          </div>
           <div className={styles.items}>
             {upgradeOptions.map((option) => (
               <div

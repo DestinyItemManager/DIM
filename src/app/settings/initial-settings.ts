@@ -9,7 +9,6 @@ export enum UpgradeSpendTier {
   AscendantShardsNotExotic,
   AscendantShards,
   AscendantShardsNotMasterworked,
-  AscendantShardsLockEnergyType,
 }
 
 export interface Settings extends DimApiSettings {
@@ -21,6 +20,7 @@ export interface Settings extends DimApiSettings {
   sidecarCollapsed: boolean;
   activeMode: boolean;
   loUpgradeSpendTier: UpgradeSpendTier;
+  loLockItemEnergyType: boolean;
 
   /** In "Single Character Mode" DIM pretends you only have one (active) character and all the other characters' items are in the vault. */
   singleCharacter: boolean;
@@ -34,5 +34,6 @@ export const initialSettingsState: Settings = {
   sidecarCollapsed: false,
   activeMode: false,
   loUpgradeSpendTier: UpgradeSpendTier.Nothing,
+  loLockItemEnergyType: false,
   singleCharacter: false,
 };

@@ -6,6 +6,19 @@
   margin: 16px 0;
 }
 
+.modifiers {
+  display: flex;
+  margin: 0 4px 16px 4px;
+}
+
+.lockEnergyType {
+  width: 200px;
+
+  @include phone-portrait {
+    width: 100%;
+  }
+}
+
 .items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));

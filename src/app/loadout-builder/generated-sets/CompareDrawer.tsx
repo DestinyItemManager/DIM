@@ -56,6 +56,7 @@ interface ProvidedProps {
   statOrder: StatTypes[];
   enabledStats: Set<StatTypes>;
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
   onClose(): void;
 }
 
@@ -94,6 +95,7 @@ function CompareDrawer({
   statOrder,
   enabledStats,
   upgradeSpendTier,
+  lockItemEnergyType,
   onClose,
   dispatch,
 }: Props) {
@@ -139,14 +141,16 @@ function CompareDrawer({
     defs,
     set.armor.map((items) => items[0]),
     lockedMods,
-    upgradeSpendTier
+    upgradeSpendTier,
+    lockItemEnergyType
   );
 
   const [loadoutAssignedMods, loadoutUnassignedMods] = assignModsToArmorSet(
     defs,
     loadoutItems,
     lockedMods,
-    upgradeSpendTier
+    upgradeSpendTier,
+    lockItemEnergyType
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {

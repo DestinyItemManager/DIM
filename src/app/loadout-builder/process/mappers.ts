@@ -116,6 +116,7 @@ export function mapDimItemToProcessItem(
   defs: D2ManifestDefinitions,
   dimItem: DimItem,
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
   const { bucket, id, hash, type, name, equippingLabel, basePower, stats, energy } = dimItem;
@@ -138,7 +139,11 @@ export function mapDimItemToProcessItem(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyType;
 
-  if (!energyType && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem)) {
+  if (
+    !energyType &&
+    !lockItemEnergyType &&
+    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem)
+  ) {
     energyType = DestinyEnergyType.Any;
   }
 

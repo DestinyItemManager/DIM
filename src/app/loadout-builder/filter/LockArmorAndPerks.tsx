@@ -41,6 +41,7 @@ interface ProvidedProps {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
   lockedExotic?: LockedExotic;
   characterItems?: ItemsByBucket;
   unusableExotics?: DimItem[];
@@ -73,6 +74,7 @@ function LockArmorAndPerks({
   lockedMap,
   lockedMods,
   upgradeSpendTier,
+  lockItemEnergyType,
   buckets,
   stores,
   characterItems,
@@ -200,7 +202,11 @@ function LockArmorAndPerks({
   return (
     <div>
       <div className={styles.area}>
-        <SelectedArmorUpgrade defs={defs} upgradeSpendTier={upgradeSpendTier} />
+        <SelectedArmorUpgrade
+          defs={defs}
+          upgradeSpendTier={upgradeSpendTier}
+          lockItemEnergyType={lockItemEnergyType}
+        />
         <div className={styles.buttons}>
           <button
             type="button"
@@ -305,6 +311,7 @@ function LockArmorAndPerks({
         ReactDom.createPortal(
           <ArmorUpgradePicker
             currentUpgradeSpendTier={upgradeSpendTier}
+            lockItemEnergyType={lockItemEnergyType}
             onClose={() => setShowArmorUpgradePicker(false)}
           />,
           document.body

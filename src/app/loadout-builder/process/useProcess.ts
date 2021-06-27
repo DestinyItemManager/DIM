@@ -54,6 +54,7 @@ export function useProcess(
   lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   statOrder: StatTypes[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
@@ -125,6 +126,7 @@ export function useProcess(
               defs,
               item,
               upgradeSpendTier,
+              lockItemEnergyType,
               lockedModMap[bucketsToCategories[item.bucket.hash]]
             )
           );
@@ -181,6 +183,7 @@ export function useProcess(
     statOrder,
     statFilters,
     selectedStore,
+    lockItemEnergyType,
   ]);
 
   return { result, processing };
