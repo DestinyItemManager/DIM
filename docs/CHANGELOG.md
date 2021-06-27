@@ -2,6 +2,7 @@
 
 * Armor 1 exotics are visible in the exotic picker, albeit unselectable.
 * Default to similar loadout as comparison base in Loadout Optimizer.
+* Support Destiny font symbols (and shortcuts such as `[Fusion Rifle]`) in notes and loadout names.
 
 ## 6.70.0 <span class="changelog-date">(2021-06-23)</span>
 

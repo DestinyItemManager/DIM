@@ -340,7 +340,7 @@ function LoadoutPopup({
               onClick={(e) => onApplyLoadout(previousLoadout, e, true)}
             >
               <AppIcon icon={undoIcon} />
-              {previousLoadout.name}
+              <RichDestinyText text={previousLoadout.name} />
             </span>
             <span onClick={(e) => onApplyLoadout(previousLoadout, e)}>
               <span>{t('Loadouts.RestoreAllItems')}</span>
