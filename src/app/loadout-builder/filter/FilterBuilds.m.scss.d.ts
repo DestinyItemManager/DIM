@@ -2,12 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'filters': string;
-  'materialName': string;
-  'materialSelect': string;
-  'materialSpendInfo': string;
   'row': string;
-  'upgradeMaterials': string;
-  'upgradeOption': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

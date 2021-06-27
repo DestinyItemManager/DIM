@@ -8,6 +8,8 @@ export enum UpgradeSpendTier {
   EnhancementPrisms,
   AscendantShardsNotExotic,
   AscendantShards,
+  AscendantShardsNotMasterworked,
+  AscendantShardsLockEnergyType,
 }
 
 export interface Settings extends DimApiSettings {
