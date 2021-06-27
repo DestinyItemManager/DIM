@@ -1,4 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import _ from 'lodash';
@@ -19,7 +20,6 @@ import {
 } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { UpgradeSpendTier } from './types';
 
 function modifyMod({
   mod,
@@ -133,19 +133,19 @@ describe('process-utils', () => {
     raidMods = [raidMod, raidMod, raidMod, raidMod, raidMod];
   });
 
-  it('generates the correct number of permutations for full unique mods', () => {
-    const mods = generalMods.map((mod, i) => ({ ...mod, energy: { ...mod.energy!, val: i } }));
-    expect(generateModPermutations(mods)).toHaveLength(120);
-  });
-
-  it('generates the correct number of permutations for all duplicate mods', () => {
-    expect(generateModPermutations(combatMods)).toHaveLength(1);
-  });
-
-  it('generates the correct number of permutations for 3 unique mods', () => {
-    const mods = raidMods.map((mod, i) => ({ ...mod, energy: { ...mod.energy!, val: i % 3 } }));
-    // answer is 5!/(2!2!) = 30 as we have two repeated mods
-    expect(generateModPermutations(mods)).toHaveLength(30);
+  // Answers are derived as permutations of multisets
+  // e.g. for energy levels [1, 2, 1, 2, 1] we have 3 1's and 2 2's. The formula for the
+  // correct number of permutations is 5!/(3!2!) = 120/(6 * 2) = 10
+  // for [1, 2, 3, 1, 2] we have 5!/(2!2!1!) = 120/(2 * 2) = 30
+  test.each([
+    [1, 1],
+    [2, 10],
+    [3, 30],
+    [4, 60],
+    [5, 120],
+  ])('generates the correct number of permutations for %i unique mods', (n, result) => {
+    const mods = generalMods.map((mod, i) => modifyMod({ mod, energyVal: i % n }));
+    expect(generateModPermutations(mods)).toHaveLength(result);
   });
 
   it('can fit all mods when there are no mods', () => {
@@ -153,29 +153,99 @@ describe('process-utils', () => {
   });
 
   it('can fit five general mods', () => {
+    const modifiedItems = items.map((item) =>
+      modifyItem({ item, energyVal: generalMod.energy!.val })
+    );
     const generalModPerms = generateModPermutations(generalMods);
-    expect(canTakeSlotIndependantMods(generalModPerms, [[]], [[]], items)).toBe(true);
+    expect(canTakeSlotIndependantMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
   });
 
-  it('can fit five combat mods', () => {
-    const itemsWithCombatSockets = items.map((item) => ({ ...item, tag: combatMod.tag }));
+  test.each([0, 1, 2, 3, 4])(
+    'it can fit a general mod into a single item at index %i',
+    (itemIndex) => {
+      const modifiedItems = items.map((item, i) =>
+        modifyItem({
+          item,
+          energyType: generalMod.energy!.type,
+          energyVal: itemIndex === i ? generalMod.energy!.val : generalMod.energy!.val + 1,
+        })
+      );
+      const combatModPerms = generateModPermutations([combatMod]);
+      expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
+    }
+  );
+
+  test.each([
+    ['can', 'combat'],
+    ["can't", 'not-a-tag'],
+  ])('it %s fit five combat mods', (canFit, tag) => {
+    const modifiedItems = items.map((item) =>
+      modifyItem({
+        item,
+        energyType: combatMod.energy!.type,
+        energyVal: combatMod.energy!.val,
+        compatibleModSeasons: [tag],
+      })
+    );
     const combatModPerms = generateModPermutations(combatMods);
     // sanity check
-    expect(itemsWithCombatSockets[0].tag).toBe('combat');
-    expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], itemsWithCombatSockets)).toBe(
-      true
+    expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(
+      canFit === 'can'
     );
   });
 
-  it('can fit five raid mods', () => {
-    const itemsWithRaidSockets = items.map((item) => ({ ...item, tag: raidMod.tag }));
-    const combatModPerms = generateModPermutations(combatMods);
+  test.each([0, 1, 2, 3, 4])(
+    'it can fit a combat mod into a single item at index %i',
+    (itemIndex) => {
+      const modifiedItems = items.map((item, i) =>
+        modifyItem({
+          item,
+          energyType: combatMod.energy!.type,
+          energyVal: combatMod.energy!.val,
+          compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
+        })
+      );
+      const combatModPerms = generateModPermutations([combatMod]);
+      expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
+    }
+  );
+
+  test.each([
+    ['can', 'deepstonecrypt'],
+    ["can't", 'not-a-tag'],
+  ])('it %s fit five raid mods', (canFit, tag) => {
+    const modifiedItems = items.map((item) =>
+      modifyItem({
+        item,
+        energyType: raidMod.energy!.type,
+        energyVal: raidMod.energy!.val,
+        compatibleModSeasons: [tag],
+      })
+    );
+    const raidModPerms = generateModPermutations(raidMods);
     // sanity check
-    expect(itemsWithRaidSockets[0].tag).toBe('deepstonecrypt');
-    expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], itemsWithRaidSockets)).toBe(true);
+    expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(
+      canFit === 'can'
+    );
   });
 
-  it('can fit general, raid and combat mods if there is enough energy', () => {
+  test.each([0, 1, 2, 3, 4])(
+    'it can fit a raid mod into a single item at index %i',
+    (itemIndex) => {
+      const modifiedItems = items.map((item, i) =>
+        modifyItem({
+          item,
+          energyType: combatMod.energy!.type,
+          energyVal: combatMod.energy!.val,
+          compatibleModSeasons: i === itemIndex ? [raidMod.tag!] : [],
+        })
+      );
+      const raidModPerms = generateModPermutations([raidMod]);
+      expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(true);
+    }
+  );
+
+  it('can fit general, raid, and combat mods if there is enough energy', () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
@@ -209,139 +279,77 @@ describe('process-utils', () => {
     ).toBe(false);
   });
 
-  it("can't fit general, raid and combat mods if there is not enough energy", () => {
-    const modifiedItems: ProcessItem[] = [...items];
-    modifiedItems[4] = modifyItem({
-      item: modifiedItems[4],
-      energyType: DestinyEnergyType.Void,
-      energyVal: 8,
-      compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
-    });
+  test.each(['general', 'combat', 'raid'])(
+    "can't fit mods if %s mods have too much energy",
+    (modType) => {
+      const modifiedItems: ProcessItem[] = [...items];
+      modifiedItems[4] = modifyItem({
+        item: modifiedItems[4],
+        energyType: DestinyEnergyType.Void,
+        energyVal: 9,
+        compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
+      });
 
-    const modifiedGeneralMod = modifyMod({
-      mod: generalMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedCombatMod = modifyMod({
-      mod: combatMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedRaidMod = modifyMod({
-      mod: raidMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
+      const modifiedGeneralMod = modifyMod({
+        mod: generalMod,
+        energyType: DestinyEnergyType.Void,
+        energyVal: modType === 'general' ? 4 : 3,
+      });
+      const modifiedCombatMod = modifyMod({
+        mod: combatMod,
+        energyType: DestinyEnergyType.Void,
+        energyVal: modType === 'combat' ? 4 : 3,
+      });
+      const modifiedRaidMod = modifyMod({
+        mod: raidMod,
+        energyType: DestinyEnergyType.Void,
+        energyVal: modType === 'raid' ? 4 : 3,
+      });
 
-    const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-    const combatModPerms = generateModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateModPermutations([modifiedRaidMod]);
+      const generalModPerms = generateModPermutations([modifiedGeneralMod]);
+      const combatModPerms = generateModPermutations([modifiedCombatMod]);
+      const raidModPerms = generateModPermutations([modifiedRaidMod]);
 
-    expect(
-      canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
-    ).toBe(false);
-  });
+      expect(
+        canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+      ).toBe(false);
+    }
+  );
 
-  it("can't fit general, raid and combat mods if a general mod has the wrong energy", () => {
-    const modifiedItems: ProcessItem[] = [...items];
-    modifiedItems[4] = modifyItem({
-      item: modifiedItems[4],
-      energyType: DestinyEnergyType.Void,
-      energyVal: 9,
-      compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
-    });
+  test.each(['general', 'combat', 'raid'])(
+    "can't fit mods if a %s mod has the wrong element",
+    (modType) => {
+      const modifiedItems: ProcessItem[] = [...items];
+      modifiedItems[4] = modifyItem({
+        item: modifiedItems[4],
+        energyType: DestinyEnergyType.Void,
+        energyVal: 9,
+        compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
+      });
 
-    const modifiedGeneralMod = modifyMod({
-      mod: generalMod,
-      energyType: DestinyEnergyType.Arc,
-      energyVal: 3,
-    });
-    const modifiedCombatMod = modifyMod({
-      mod: combatMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedRaidMod = modifyMod({
-      mod: raidMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
+      const modifiedGeneralMod = modifyMod({
+        mod: generalMod,
+        energyType: modType === 'general' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
+        energyVal: 3,
+      });
+      const modifiedCombatMod = modifyMod({
+        mod: combatMod,
+        energyType: modType === 'combat' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
+        energyVal: 3,
+      });
+      const modifiedRaidMod = modifyMod({
+        mod: raidMod,
+        energyType: modType === 'raid' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
+        energyVal: 3,
+      });
 
-    const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-    const combatModPerms = generateModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateModPermutations([modifiedRaidMod]);
+      const generalModPerms = generateModPermutations([modifiedGeneralMod]);
+      const combatModPerms = generateModPermutations([modifiedCombatMod]);
+      const raidModPerms = generateModPermutations([modifiedRaidMod]);
 
-    expect(
-      canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
-    ).toBe(false);
-  });
-
-  it("can't fit general, raid and combat mods if a raid mod has the wrong energy", () => {
-    const modifiedItems: ProcessItem[] = [...items];
-    modifiedItems[4] = modifyItem({
-      item: modifiedItems[4],
-      energyType: DestinyEnergyType.Void,
-      energyVal: 9,
-      compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
-    });
-
-    const modifiedGeneralMod = modifyMod({
-      mod: generalMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedCombatMod = modifyMod({
-      mod: combatMod,
-      energyType: DestinyEnergyType.Arc,
-      energyVal: 3,
-    });
-    const modifiedRaidMod = modifyMod({
-      mod: raidMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-
-    const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-    const combatModPerms = generateModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateModPermutations([modifiedRaidMod]);
-
-    expect(
-      canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
-    ).toBe(false);
-  });
-
-  it("can't fit general, raid and combat mods if a raid mod has the wrong energy", () => {
-    const modifiedItems: ProcessItem[] = [...items];
-    modifiedItems[4] = modifyItem({
-      item: modifiedItems[4],
-      energyType: DestinyEnergyType.Void,
-      energyVal: 9,
-      compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
-    });
-
-    const modifiedGeneralMod = modifyMod({
-      mod: generalMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedCombatMod = modifyMod({
-      mod: combatMod,
-      energyType: DestinyEnergyType.Void,
-      energyVal: 3,
-    });
-    const modifiedRaidMod = modifyMod({
-      mod: raidMod,
-      energyType: DestinyEnergyType.Arc,
-      energyVal: 3,
-    });
-
-    const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-    const combatModPerms = generateModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateModPermutations([modifiedRaidMod]);
-
-    expect(
-      canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
-    ).toBe(false);
-  });
+      expect(
+        canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+      ).toBe(false);
+    }
+  );
 });
