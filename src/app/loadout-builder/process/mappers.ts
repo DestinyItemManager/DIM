@@ -84,7 +84,7 @@ function isModStatActive(
  */
 export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
-  characterClass?: DestinyClass
+  characterClass: DestinyClass | undefined
 ) {
   const totals: { [stat in StatTypes]: number } = {
     Mobility: 0,
