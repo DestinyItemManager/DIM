@@ -1,24 +1,17 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
-import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from './utils';
+import {
+  canSwapEnergyFromUpgradeSpendTier,
+  UpgradeSpendTier,
+  upgradeSpendTierToMaxEnergy,
+} from './utils';
 
 describe('Spend tier tests', () => {
   let defs: D2ManifestDefinitions;
   let item: DimItem;
   let exoticItem: DimItem;
-
-  const tiers = [
-    UpgradeSpendTier.AscendantShards,
-    UpgradeSpendTier.AscendantShardsLockEnergyType,
-    UpgradeSpendTier.AscendantShardsNotMasterworked,
-    UpgradeSpendTier.AscendantShardsNotExotic,
-    UpgradeSpendTier.EnhancementPrisms,
-    UpgradeSpendTier.LegendaryShards,
-    UpgradeSpendTier.Nothing,
-  ];
 
   beforeAll(async () => {
     const [fetchedDefs, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
@@ -50,105 +43,180 @@ describe('Spend tier tests', () => {
     );
   });
 
-  const testTiersInDescendingOrder = (
-    expected: number[] | boolean[],
-    testFn: (tier: UpgradeSpendTier) => boolean | number
-  ) => {
-    for (const [index, tier] of tiers.entries()) {
-      expect(testFn(tier)).toBe(expected[index]);
+  test.each([
+    ['AscendantShards', true],
+    ['AscendantShardsLockEnergyType', false],
+    ['AscendantShardsNotMasterworked', false],
+    ['AscendantShardsNotExotic', true],
+    ['EnhancementPrisms', false],
+    ['LegendaryShards', false],
+    ['Nothing', false],
+  ])(
+    'Upgrade spend tier %s can swap energy on a masterworked item = %p',
+    (tier: string, result: boolean) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 10 } };
+      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
+        result
+      );
     }
-  };
+  );
 
-  test('a masterworked item can only be swapped with ascendant shards', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 10 } };
+  test.each([
+    ['AscendantShards', true],
+    ['AscendantShardsLockEnergyType', false],
+    ['AscendantShardsNotMasterworked', false],
+    ['AscendantShardsNotExotic', false],
+    ['EnhancementPrisms', false],
+    ['LegendaryShards', false],
+    ['Nothing', false],
+  ])(
+    'Upgrade spend tier %s can swap energy on a masterworked exotic item = %p',
+    (tier: string, result: boolean) => {
+      const updatedItem: DimItem = {
+        ...exoticItem,
+        energy: { ...exoticItem.energy!, energyCapacity: 10 },
+      };
+      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
+        result
+      );
+    }
+  );
 
-    testTiersInDescendingOrder(
-      [true, false, false, true, false, false, false],
-      (tier: UpgradeSpendTier) => canSwapEnergyFromUpgradeSpendTier(defs, tier, updatedItem)
-    );
-  });
+  test.each([
+    ['AscendantShards', true],
+    ['AscendantShardsLockEnergyType', false],
+    ['AscendantShardsNotMasterworked', true],
+    ['AscendantShardsNotExotic', true],
+    ['EnhancementPrisms', true],
+    ['LegendaryShards', false],
+    ['Nothing', false],
+  ])(
+    'Upgrade spend tier %s can swap energy on an item with 9 energy = %p',
+    (tier: string, result: boolean) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 9 } };
+      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
+        result
+      );
+    }
+  );
 
-  test('a masterworked exotic item can only be swapped with ascendant shards', () => {
-    const updatedItem: DimItem = {
-      ...exoticItem,
-      energy: { ...exoticItem.energy!, energyCapacity: 10 },
-    };
+  test.each([
+    ['AscendantShards', true],
+    ['AscendantShardsLockEnergyType', false],
+    ['AscendantShardsNotMasterworked', true],
+    ['AscendantShardsNotExotic', true],
+    ['EnhancementPrisms', true],
+    ['LegendaryShards', true],
+    ['Nothing', false],
+  ])(
+    'Upgrade spend tier %s can swap energy on an item with 7 energy = %p',
+    (tier: string, result: boolean) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 7 } };
+      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
+        result
+      );
+    }
+  );
 
-    testTiersInDescendingOrder(
-      [true, false, false, false, false, false, false],
-      (tier: UpgradeSpendTier) => canSwapEnergyFromUpgradeSpendTier(defs, tier, updatedItem)
-    );
-  });
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 10],
+    ['EnhancementPrisms', 10],
+    ['LegendaryShards', 10],
+    ['Nothing', 10],
+  ])(
+    'Upgrade spend tier %s upgrades a materworked item to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 10 } };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 
-  test('an item with 9 energy can only be swapped with enhancement prisms or higher', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 9 } };
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 10],
+    ['EnhancementPrisms', 10],
+    ['LegendaryShards', 10],
+    ['Nothing', 10],
+  ])(
+    'Upgrade spend tier %s upgrades a materworked exotic item to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = {
+        ...exoticItem,
+        energy: { ...exoticItem.energy!, energyCapacity: 10 },
+      };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 
-    testTiersInDescendingOrder(
-      [true, false, true, true, true, false, false],
-      (tier: UpgradeSpendTier) => canSwapEnergyFromUpgradeSpendTier(defs, tier, updatedItem)
-    );
-  });
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 10],
+    ['EnhancementPrisms', 9],
+    ['LegendaryShards', 9],
+    ['Nothing', 9],
+  ])(
+    'Upgrade spend tier %s upgrades an item with 9 energy to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 9 } };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 
-  test('an item with 7 energy can only be swapped with legendary shards or higher', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 7 } };
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 9],
+    ['EnhancementPrisms', 9],
+    ['LegendaryShards', 9],
+    ['Nothing', 9],
+  ])(
+    'Upgrade spend tier %s upgrades an exotic item with 9 energy to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = {
+        ...exoticItem,
+        energy: { ...exoticItem.energy!, energyCapacity: 9 },
+      };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 
-    testTiersInDescendingOrder(
-      [true, false, true, true, true, true, false],
-      (tier: UpgradeSpendTier) => canSwapEnergyFromUpgradeSpendTier(defs, tier, updatedItem)
-    );
-  });
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 10],
+    ['EnhancementPrisms', 9],
+    ['LegendaryShards', 7],
+    ['Nothing', 7],
+  ])(
+    'Upgrade spend tier %s upgrades an item with 7 energy to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 7 } };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 
-  test('a masterworked item always has max energy of 10', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 10 } };
-
-    testTiersInDescendingOrder([10, 10, 10, 10, 10, 10, 10], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
-
-  test('a masterworked exotic item always has max energy of 10', () => {
-    const updatedItem: DimItem = {
-      ...exoticItem,
-      energy: { ...exoticItem.energy!, energyCapacity: 10 },
-    };
-
-    testTiersInDescendingOrder([10, 10, 10, 10, 10, 10, 10], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
-
-  test('an item with 9 energy level can only be upgraded by ascendant shards', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 9 } };
-
-    testTiersInDescendingOrder([10, 10, 10, 10, 9, 9, 9], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
-
-  test('an exotic item with 9 energy level can only be upgraded by ascendant shards', () => {
-    const updatedItem: DimItem = {
-      ...exoticItem,
-      energy: { ...exoticItem.energy!, energyCapacity: 9 },
-    };
-
-    testTiersInDescendingOrder([10, 10, 10, 9, 9, 9, 9], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
-
-  test('an item with 7 energy level can only be upgraded by enhancement prisms or higher', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 7 } };
-
-    testTiersInDescendingOrder([10, 10, 10, 10, 9, 7, 7], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
-
-  test('an item with 1 energy level can only be upgraded by legendary shards or higher', () => {
-    const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 1 } };
-
-    testTiersInDescendingOrder([10, 10, 10, 10, 9, 7, 1], (tier: UpgradeSpendTier) =>
-      upgradeSpendTierToMaxEnergy(defs, tier, updatedItem)
-    );
-  });
+  test.each([
+    ['AscendantShards', 10],
+    ['AscendantShardsLockEnergyType', 10],
+    ['AscendantShardsNotMasterworked', 10],
+    ['AscendantShardsNotExotic', 10],
+    ['EnhancementPrisms', 9],
+    ['LegendaryShards', 7],
+    ['Nothing', 1],
+  ])(
+    'Upgrade spend tier %s upgrades an item with 1 energy to %i energy;',
+    (tier: string, result: number) => {
+      const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 1 } };
+      expect(upgradeSpendTierToMaxEnergy(defs, UpgradeSpendTier[tier], updatedItem)).toBe(result);
+    }
+  );
 });
