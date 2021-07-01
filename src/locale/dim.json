@@ -484,6 +484,7 @@
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "CouldNotEquip": "Could not equip {{itemname}}",
     "Create": "Create Loadout",
+    "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
     "Edit": "Edit Loadout",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
