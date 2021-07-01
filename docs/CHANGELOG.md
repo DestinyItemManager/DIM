@@ -1,12 +1,13 @@
 ## Next
 
+* Fixed issue with locked mod stats not being applied to a compared loadouts in the Optimizer.
+
 ## 6.71.0 <span class="changelog-date">(2021-06-27)</span>
 
 * Armor 1 exotics are visible in the exotic picker, albeit unselectable.
 * Default to similar loadout as comparison base in Loadout Optimizer.
 * Armor upgrades in the Optimizer have full descriptions of their functionality. Added Ascendant Shard 'Not Masterworked' and 'Lock Energy Type' options.
 * In the Exotic Selector, the currently selected exotic is now highlighted.
-* Fixed issue with locked mod stats not being applied to a compared loadouts in the Optimizer.
 
 ## 6.70.0 <span class="changelog-date">(2021-06-23)</span>
 
