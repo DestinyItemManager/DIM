@@ -45,7 +45,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', true],
-    ['AscendantShardsLockEnergyType', false],
     ['AscendantShardsNotMasterworked', false],
     ['AscendantShardsNotExotic', true],
     ['EnhancementPrisms', false],
