@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed issue with locked mod stats not being applied to a compared loadouts in the Optimizer.
+
 ## 6.71.0 <span class="changelog-date">(2021-06-27)</span>
 
 * Armor 1 exotics are visible in the exotic picker, albeit unselectable.

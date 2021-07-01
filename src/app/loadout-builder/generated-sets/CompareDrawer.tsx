@@ -129,7 +129,7 @@ function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedMods);
+  const lockedModStats = getTotalModStatChanges(lockedMods, characterClass);
 
   for (const statType of statKeys) {
     loadoutStats[statType] += lockedModStats[statType];
