@@ -90,6 +90,9 @@ function ArmorUpgradePicker({
   const setSetting = useSetSetting();
 
   const upgradeOptions: { value: UpgradeSpendTier; content: ReactNode }[] = useMemo(() => {
+    const elementLockDescription = lockItemEnergyType
+      ? t('LoadoutBuilder.ElementLockedDescription')
+      : t('LoadoutBuilder.ElementNotLockedDescription');
     const legendaryShardDisplay = getDisplayProperties(defs, UpgradeSpendTier.LegendaryShards);
     const enhancementPrismDisplay = getDisplayProperties(defs, UpgradeSpendTier.EnhancementPrisms);
     const notExoticDisplay = getDisplayProperties(defs, UpgradeSpendTier.AscendantShardsNotExotic);
@@ -117,6 +120,7 @@ function ArmorUpgradePicker({
             icon={legendaryShardDisplay.icon}
             details={t('LoadoutBuilder.LegendaryShardsAndEnhancementPrismDetails', {
               energyLevel: 7, // todo (ryanr) generate or obtain this programatically
+              elementLockDescription,
             })}
           />
         ),
@@ -129,6 +133,7 @@ function ArmorUpgradePicker({
             icon={enhancementPrismDisplay.icon}
             details={t('LoadoutBuilder.LegendaryShardsAndEnhancementPrismDetails', {
               energyLevel: 9,
+              elementLockDescription,
             })}
           />
         ),
@@ -139,7 +144,10 @@ function ArmorUpgradePicker({
           <UpgradeOption
             name={notExoticDisplay.name}
             icon={notExoticDisplay.icon}
-            details={t('LoadoutBuilder.AscendantShardNotExoticDetails', { energyLevel: 9 })}
+            details={t('LoadoutBuilder.AscendantShardNotExoticDetails', {
+              energyLevel: 9,
+              elementLockDescription,
+            })}
           />
         ),
       },
@@ -149,7 +157,9 @@ function ArmorUpgradePicker({
           <UpgradeOption
             name={notMasterworkedDisplay.name}
             icon={notMasterworkedDisplay.icon}
-            details={t('LoadoutBuilder.AscendantShardNotMasterworkedDetails')}
+            details={t('LoadoutBuilder.AscendantShardNotMasterworkedDetails', {
+              elementLockDescription,
+            })}
           />
         ),
       },
@@ -159,12 +169,12 @@ function ArmorUpgradePicker({
           <UpgradeOption
             name={ascendantShardDisplay.name}
             icon={ascendantShardDisplay.icon}
-            details={t('LoadoutBuilder.AscendantShardDetails')}
+            details={t('LoadoutBuilder.AscendantShardDetails', { elementLockDescription })}
           />
         ),
       },
     ];
-  }, [defs]);
+  }, [defs, lockItemEnergyType]);
 
   return (
     <Sheet
