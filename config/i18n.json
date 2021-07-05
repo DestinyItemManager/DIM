@@ -455,7 +455,7 @@
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
     "CreateLoadout": "Save Loadout",
     "ElementLockedDescription": ". All items will use their existing element.",
-    "ElementNotLockedDescription": ", and will change element as needed to assign mods.",
+    "ElementNotLockedDescription": "Items will change element as needed to assign mods.",
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
     "ExistingLoadout": "Existing Loadout",
