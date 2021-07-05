@@ -1,5 +1,7 @@
 ## Next
 
+## 6.72.0 <span class="changelog-date">(2021-07-04)</span>
+
 * Fixed issue with locked mod stats not being applied to a compared loadouts in the Optimizer.
 
 ## 6.71.0 <span class="changelog-date">(2021-06-27)</span>
