@@ -1,5 +1,7 @@
 ## Next
 
+* Solstice of Heroes is back and so is the **Solstice of Heroes** section of the **Progress** tab. Check it out and view your progress toward upgrading armor.
+
 ## 6.72.0 <span class="changelog-date">(2021-07-04)</span>
 
 * Fixed issue with locked mod stats not being applied to a compared loadouts in the Optimizer.
