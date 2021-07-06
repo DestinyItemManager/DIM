@@ -50,7 +50,7 @@ export function solsticeOfHeroesArmor(allItems: DimItem[], selectedStore: DimSto
         item.objectives.length > 0 &&
         item.classType === selectedStore.classType &&
         getEvent(item) === D2EventEnum.SOLSTICE_OF_HEROES &&
-        getSeason(item) === 11
+        getSeason(item) === 14
     ),
     (i) => D2Categories.Armor.indexOf(i.type)
   );
