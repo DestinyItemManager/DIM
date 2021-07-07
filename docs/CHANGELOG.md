@@ -1,5 +1,7 @@
 ## Next
 
+* Solstice of Heroes pursuit list now shows the full description of the objectives, not just the checkboxes.
+
 ## 6.72.1 <span class="changelog-date">(2021-07-06)</span>
 
 * Solstice of Heroes is back and so is the **Solstice of Heroes** section of the **Progress** tab. Check it out and view your progress toward upgrading armor.
