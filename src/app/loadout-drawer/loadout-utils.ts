@@ -1,6 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isArmor2WithStats } from 'app/loadout/item-utils';
@@ -258,7 +259,7 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
   const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));
 
   const loadout = newLoadout(
-    'Currently Equipped',
+    t('Loadouts.CurrentlyEquipped'),
     items.map((i) => convertToLoadoutItem(i, true))
   );
   loadout.classType = store.classType;

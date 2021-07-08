@@ -4,6 +4,7 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getEvent, getSeason } from 'app/inventory/store/season';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import _ from 'lodash';
 import React from 'react';
@@ -15,6 +16,7 @@ import './SolsticeOfHeroes.scss';
  * List out all the Pursuits for the character, grouped out in a useful way.
  */
 export default function SolsticeOfHeroes({ armor, title }: { title: string; armor: DimItem[] }) {
+  const defs = useD2Definitions()!;
   if (!armor.length) {
     return null;
   }
@@ -25,14 +27,17 @@ export default function SolsticeOfHeroes({ armor, title }: { title: string; armo
         <div className="progress-row">
           <ErrorBoundary name="Solstice">
             <div className="progress-for-character">
-              {armor.map((item) => (
-                <div key={item.id} className="solsticeProgressBox">
-                  <Pursuit item={item} key={item.index} />
-                  {item.objectives?.map((objective) => (
-                    <Objective objective={objective} key={objective.objectiveHash} />
-                  ))}
-                </div>
-              ))}
+              {armor.map((item) => {
+                const description = defs.InventoryItem.get(item.hash).flavorText;
+                return (
+                  <div key={item.id} className="solsticeProgressBox">
+                    <Pursuit item={{ ...item, description }} key={item.index} />
+                    {item.objectives?.map((objective) => (
+                      <Objective objective={objective} key={objective.objectiveHash} />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </ErrorBoundary>
         </div>
@@ -50,7 +55,7 @@ export function solsticeOfHeroesArmor(allItems: DimItem[], selectedStore: DimSto
         item.objectives.length > 0 &&
         item.classType === selectedStore.classType &&
         getEvent(item) === D2EventEnum.SOLSTICE_OF_HEROES &&
-        getSeason(item) === 11
+        getSeason(item) === 14
     ),
     (i) => D2Categories.Armor.indexOf(i.type)
   );
