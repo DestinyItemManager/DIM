@@ -344,7 +344,6 @@ function processCharacter(
     uninstancedItemObjectives
   );
   store.items = processedItems;
-  store.hadErrors = items.length !== processedItems.length;
   return store;
 }
 
@@ -381,7 +380,7 @@ function processVault(
     mergedCollectibles
   );
   store.items = processedItems;
-  store.hadErrors = items.length !== processedItems.length;
+
   return store;
 }
 
