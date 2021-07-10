@@ -172,5 +172,7 @@ export function getNotes(
 }
 
 /** given an item, returns a selector which monitors that item's notes */
-export const itemNoteSelector = (item: DimItem) => (state: RootState): string | undefined =>
-  getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state));
+export const itemNoteSelector =
+  (item: DimItem) =>
+  (state: RootState): string | undefined =>
+    getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state));
