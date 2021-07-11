@@ -33,6 +33,10 @@
   }
 }
 
+.invalid {
+  color: #aaa !important;
+}
+
 .openButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   display: inline-block;
