@@ -1,3 +1,4 @@
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade } from 'app/inventory/store/energy';
@@ -7,19 +8,6 @@ import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 import { LockedItemType } from './types';
-
-// Todo(ryan): Temporary until api types are available
-// this is a copy of the initial settings one as we can't have a link
-// between the web worker for process and initial settings.
-export enum UpgradeSpendTier {
-  Nothing,
-  LegendaryShards,
-  EnhancementPrisms,
-  AscendantShardsNotExotic,
-  AscendantShards,
-  AscendantShardsNotMasterworked,
-  AscendantShardsLockEnergyType,
-}
 
 /**
  * Add a locked item to the locked item list for a bucket.

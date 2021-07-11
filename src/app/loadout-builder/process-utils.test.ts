@@ -1,5 +1,5 @@
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import _ from 'lodash';

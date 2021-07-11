@@ -4,6 +4,7 @@ const { compilerOptions } = require('./tsconfig');
 module.exports = {
   transform: { '\\.(t|j)s$': ['ts-jest'] },
   preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   verbose: true,
   testTimeout: 60000,
   moduleNameMapper: {
@@ -16,6 +17,8 @@ module.exports = {
   globals: {
     $BROWSERS: [],
     $DIM_FLAVOR: 'test',
+    $DIM_WEB_API_KEY: 'xxx',
+    $DIM_API_KEY: 'xxx',
     $featureFlags: {
       dimApi: true,
     },

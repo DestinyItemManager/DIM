@@ -1,8 +1,8 @@
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import {
   DestinyClass,
   DestinyEnergyType,
