@@ -12,5 +12,5 @@ export const D2Categories = {
     'SeasonalArtifacts',
     'ClanBanners',
   ],
-  Inventory: ['Consumables', 'Modifications', 'Shaders'],
+  Inventory: ['Consumables', 'Modifications'],
 };
