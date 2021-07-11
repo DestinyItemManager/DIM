@@ -6,6 +6,7 @@ import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { toggleSearchResults } from 'app/shell/actions';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
@@ -364,6 +365,9 @@ function SearchBar(
     ) {
       e.preventDefault();
       dispatch(searchDeleted(items[highlightedIndex].query));
+    } else if (e.key === 'Enter' && !isOpen && liveQuery) {
+      // Show search results on "Enter" with a closed menu
+      dispatch(toggleSearchResults());
     }
   };
 

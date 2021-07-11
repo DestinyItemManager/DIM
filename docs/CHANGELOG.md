@@ -2,6 +2,10 @@
 
 * Solstice of Heroes pursuit list now shows the full description of the objectives, not just the checkboxes.
 
+### Beta Only
+
+* The Search Results drawer is back in beta, ready for some more feedback. On mobile it shows up whenever you search, on desktop you can either click the icon or hit "Enter" in the search bar. Try clicking on items in the search results drawer - or even dragging them to characters!
+
 ## 6.72.1 <span class="changelog-date">(2021-07-06)</span>
 
 * Solstice of Heroes is back and so is the **Solstice of Heroes** section of the **Progress** tab. Check it out and view your progress toward upgrading armor.

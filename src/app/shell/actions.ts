@@ -23,6 +23,11 @@ export const toggleSearchQueryComponent = createAction(
   'shell/TOGGLE_SEARCH_QUERY_COMPONENT'
 )<string>();
 
+export const toggleSearchResults = createAction(
+  'shell/TOGGLE_SEARCH_RESULTS',
+  (open?: boolean) => open
+)();
+
 /**
  * Update the known list of Bungie.net alerts.
  */

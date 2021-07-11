@@ -17,6 +17,12 @@ export interface ShellState {
    */
   readonly searchQueryVersion: number;
 
+  /**
+   * Whether the detailed search results drawer is open. The logic for this is
+   * a bit tricky and needs to be shared between a few components.
+   */
+  readonly searchResultsOpen: boolean;
+
   /** Global, page-covering loading state. */
   readonly loadingMessages: string[];
 
@@ -29,6 +35,7 @@ const initialState: ShellState = {
   isPhonePortrait: isPhonePortraitFromMediaQuery(),
   searchQuery: '',
   searchQueryVersion: 0,
+  searchResultsOpen: false,
   loadingMessages: [],
   bungieAlerts: [],
 };
@@ -36,7 +43,7 @@ const initialState: ShellState = {
 export const shell: Reducer<ShellState, ShellAction> = (
   state: ShellState = initialState,
   action: ShellAction
-) => {
+): ShellState => {
   switch (action.type) {
     case getType(actions.setPhonePortrait):
       return {
@@ -50,6 +57,9 @@ export const shell: Reducer<ShellState, ShellAction> = (
         searchQueryVersion: action.payload.doNotUpdateVersion
           ? state.searchQueryVersion
           : state.searchQueryVersion + 1,
+        searchResultsOpen:
+          state.searchResultsOpen ||
+          Boolean(state.isPhonePortrait && !state.searchQuery && action.payload.query),
       };
 
     case getType(actions.toggleSearchQueryComponent): {
@@ -63,6 +73,13 @@ export const shell: Reducer<ShellState, ShellAction> = (
         ...state,
         searchQuery: newQuery.replace(/\s+/, ' ').trim(),
         searchQueryVersion: state.searchQueryVersion + 1,
+      };
+    }
+
+    case getType(actions.toggleSearchResults): {
+      return {
+        ...state,
+        searchResultsOpen: action.payload ?? !state.searchResultsOpen,
       };
     }
 
