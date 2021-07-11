@@ -4,6 +4,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { motion } from 'framer-motion';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -60,28 +61,43 @@ function MainSearchBarActions({
   return (
     <>
       {showSearchCount && (
-        <span className={styles.count}>
-          {t('Header.FilterMatchCount', { count: filteredItems.length })}
-        </span>
-      )}
-
-      {$featureFlags.searchResults && showSearchCount && showSearchResults && (
-        <button
-          type="button"
-          className={styles.resultButton}
-          title={t('Header.SearchResults')}
-          onClick={() => dispatch(toggleSearchResults())}
+        <motion.div
+          key="count"
+          layout
+          exit={{ scale: 0 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
         >
-          <AppIcon icon={faList} />
-        </button>
+          <span className={styles.count}>
+            {t('Header.FilterMatchCount', { count: filteredItems.length })}
+          </span>
+          {$featureFlags.searchResults && showSearchResults && (
+            <button
+              type="button"
+              className={styles.resultButton}
+              title={t('Header.SearchResults')}
+              onClick={() => dispatch(toggleSearchResults())}
+            >
+              <AppIcon icon={faList} />
+            </button>
+          )}
+        </motion.div>
       )}
 
       {showSearchActions && (
-        <ItemActionsDropdown
-          filteredItems={filteredItems}
-          searchActive={showSearchCount}
-          searchQuery={searchQuery}
-        />
+        <motion.div
+          layout
+          key="action"
+          exit={{ scale: 0 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+        >
+          <ItemActionsDropdown
+            filteredItems={filteredItems}
+            searchActive={showSearchCount}
+            searchQuery={searchQuery}
+          />
+        </motion.div>
       )}
 
       {$featureFlags.searchResults &&
