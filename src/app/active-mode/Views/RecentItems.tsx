@@ -56,12 +56,7 @@ export default function RecentItems() {
       <div className={styles.matchedItems}>
         {options.length ? (
           items.map((item) => (
-            <ConnectedInventoryItem
-              key={item.index}
-              id={'farm-' + item.index}
-              item={item}
-              onClick={() => itemPop(item)}
-            />
+            <ConnectedInventoryItem key={item.index} item={item} onClick={() => itemPop(item)} />
           ))
         ) : (
           <div className={styles.noSearches}>

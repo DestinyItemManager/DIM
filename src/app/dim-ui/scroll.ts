@@ -45,9 +45,9 @@ export function scrollToHref(e: React.MouseEvent) {
  */
 export const itemPop = (item: DimItem) => {
   // TODO: this is tough to do with an ID since we'll have multiple
-  const element = document.getElementById(item.index)?.parentNode as HTMLElement;
+  const element = document.getElementById(`i_${item.index}`)?.parentNode as HTMLElement;
   if (!element) {
-    throw new Error(`No element with id ${item.index}`);
+    throw new Error(`No element with id i_${item.index}`);
   }
   const elementRect = element.getBoundingClientRect();
   const html = document.querySelector('html')!;

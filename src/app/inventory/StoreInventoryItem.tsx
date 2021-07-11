@@ -31,7 +31,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
         {(ref, onClick) => (
           <ConnectedInventoryItem
             item={item}
-            allowFilter={true}
+            allowFilter={false}
             innerRef={ref}
             onClick={onClick}
             onDoubleClick={doubleClicked}

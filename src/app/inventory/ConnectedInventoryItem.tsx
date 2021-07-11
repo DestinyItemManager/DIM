@@ -14,7 +14,6 @@ import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
-  id?: string; // defaults to item.index - id is typically used for `itemPop`
   allowFilter?: boolean;
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
@@ -48,10 +47,10 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     wishlistRoll: wishListSelector(item)(state),
     searchHidden:
-      // dim this item if there's no search filter and it's archived
-      (dimArchived && defaultFilterActive && tag === 'archive') ||
-      // or if there is filtering and it doesn't meet the condition
-      (props.allowFilter && !currentFilter(item)),
+      props.allowFilter && // dim this item if there's no search filter and it's archived
+      ((dimArchived && defaultFilterActive && tag === 'archive') ||
+        // or if there is filtering and it doesn't meet the condition
+        !currentFilter(item)),
   };
 }
 
@@ -63,7 +62,6 @@ type Props = ProvidedProps & StoreProps;
  */
 function ConnectedInventoryItem({
   item,
-  id,
   isNew,
   tag,
   notes,
@@ -78,7 +76,6 @@ function ConnectedInventoryItem({
   return (
     <InventoryItem
       item={item}
-      id={id}
       isNew={isNew}
       tag={tag}
       notes={notes}

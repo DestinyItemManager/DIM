@@ -58,6 +58,10 @@ function MainSearchBarActions({
     queryValid && searchQuery && !onProgress && !onRecords && !onVendors
   );
 
+  const hideItemStyles = filteredItems
+    .map((i) => `#i_${i.index} {opacity: 1;transform: scale(1);}`)
+    .join(' ');
+
   return (
     <>
       {showSearchCount && (
@@ -99,6 +103,12 @@ function MainSearchBarActions({
           />
         </motion.div>
       )}
+
+      {filteredItems.length > 0 &&
+        ReactDOM.createPortal(
+          <style>{`.item {opacity: 0.2;transform: scale(0.75);} ${hideItemStyles}`}</style>,
+          document.head
+        )}
 
       {$featureFlags.searchResults &&
         showSearchResults &&
