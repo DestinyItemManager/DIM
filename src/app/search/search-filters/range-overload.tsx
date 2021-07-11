@@ -97,6 +97,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: ['light', 'power'],
+    /* t('Filter.PowerKeywords') */
     description: tl('Filter.PowerLevel'),
     format: 'rangeoverload',
     suggestions: powerLevelKeywords,
@@ -108,6 +109,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'powerlimit',
+    /* t('Filter.PowerKeywords') */
     description: tl('Filter.PowerLimit'),
     format: 'rangeoverload',
     suggestions: powerCapKeywords,
