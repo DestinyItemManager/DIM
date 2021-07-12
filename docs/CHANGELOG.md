@@ -1,5 +1,7 @@
 ## Next
 
+* Not be broken
+
 ## 6.73.0 <span class="changelog-date">(2021-07-11)</span>
 
 * Solstice of Heroes pursuit list now shows the full description of the objectives, not just the checkboxes.
