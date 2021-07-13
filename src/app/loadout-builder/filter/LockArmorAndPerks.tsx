@@ -1,3 +1,4 @@
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -10,7 +11,6 @@ import ClosableContainer from 'app/loadout/loadout-ui/ClosableContainer';
 import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';

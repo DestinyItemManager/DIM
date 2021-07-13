@@ -1,7 +1,7 @@
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
 export const API_KEY =
-  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta'
+  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta' || $DIM_FLAVOR === 'test'
     ? $DIM_WEB_API_KEY
     : localStorage.getItem('apiKey')!;
 

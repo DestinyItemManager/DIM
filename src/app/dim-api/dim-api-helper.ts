@@ -7,7 +7,7 @@ import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =
-  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta'
+  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta' || $DIM_FLAVOR === 'test'
     ? $DIM_API_KEY
     : localStorage.getItem('dimApiKey')!;
 
