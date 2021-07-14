@@ -21,7 +21,7 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
 
   const header = (
     <div>
-      <h1 className="destiny">{t('Header.FilterMatchCount', { count: items.length })}</h1>
+      <h1 className={styles.header}>{t('Header.FilterMatchCount', { count: items.length })}</h1>
     </div>
   );
 
@@ -35,7 +35,7 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
       allowClickThrough={true}
     >
       <ClickOutsideRoot>
-        <div className="sub-bucket">
+        <div className={clsx('sub-bucket', styles.contents)}>
           {sortItems(items, itemSortOrder).map((item) => (
             <DraggableInventoryItem key={item.index} item={item}>
               <ItemPopupTrigger item={item} key={item.index}>

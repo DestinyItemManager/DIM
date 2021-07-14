@@ -1,5 +1,18 @@
-import type { QueryAST } from './query-parser';
+import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig } from './search-config';
+
+export function parseAndValidateQuery(query: string, searchConfig: SearchConfig) {
+  let valid = true;
+  try {
+    const ast = parseQuery(query);
+    if (!validateQuery(ast, searchConfig)) {
+      valid = false;
+    }
+  } catch (e) {
+    valid = false;
+  }
+  return valid;
+}
 
 /**
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter.

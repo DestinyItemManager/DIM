@@ -4,3 +4,11 @@
   z-index: 10 !important;
   max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
 }
+
+.header {
+  margin: 0;
+}
+
+.contents {
+  min-height: calc(#{$badge-height} + var(--item-size) + 4px) !important;
+}

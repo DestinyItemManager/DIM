@@ -3,7 +3,7 @@ import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
-import { emptyObject } from 'app/utils/empty';
+import { emptyObject, emptySet } from 'app/utils/empty';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
@@ -24,6 +24,17 @@ export const bucketsSelector = createSelector(
     destinyVersion === 2
       ? d2Manifest && getBucketsD2(d2Manifest)
       : d1Manifest && getBucketsD1(d1Manifest)
+);
+
+/** Bucket hashes for buckets that we actually show on the inventory page. */
+export const displayableBucketHashesSelector = createSelector(bucketsSelector, (buckets) =>
+  buckets
+    ? new Set(
+        Object.keys(buckets.byCategory).flatMap((category) =>
+          buckets.byCategory[category].map((b) => b.hash)
+        )
+      )
+    : emptySet<number>()
 );
 
 /** All stores, sorted according to user preference. */
