@@ -9,18 +9,6 @@ import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 import { LockedItemType } from './types';
 
-// Todo(ryan): Temporary until api types are available
-// this is a copy of the initial settings one as we can't have a link
-// between the web worker for process and initial settings.
-export enum UpgradeSpendTier {
-  Nothing,
-  LegendaryShards,
-  EnhancementPrisms,
-  AscendantShardsNotExotic,
-  AscendantShards,
-  AscendantShardsNotMasterworked,
-}
-
 /**
  * Add a locked item to the locked item list for a bucket.
  */
@@ -103,6 +91,7 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
   let boundaryHash: number | 'none' = 'none';
 
   switch (tier) {
+    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.Nothing:
       throw new Error('Please handle this as a special case, no upgrades are allowed.');
     case UpgradeSpendTier.LegendaryShards:
@@ -142,7 +131,10 @@ export function upgradeSpendTierToMaxEnergy(
     return 0;
   }
 
-  if (tier === UpgradeSpendTier.Nothing) {
+  if (
+    tier === UpgradeSpendTier.Nothing ||
+    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
+  ) {
     return item.energy.energyCapacity;
   }
 
@@ -196,7 +188,11 @@ export function canSwapEnergyFromUpgradeSpendTier(
   tier: UpgradeSpendTier,
   item: DimItem
 ) {
-  if (!item.energy || tier === UpgradeSpendTier.Nothing) {
+  if (
+    !item.energy ||
+    tier === UpgradeSpendTier.Nothing ||
+    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
+  ) {
     return false;
   }
 

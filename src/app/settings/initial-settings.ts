@@ -5,19 +5,8 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage } from 'app/i18n';
 
-// Todo(ryan): Temporary until api types are available
-export enum UpgradeSpendTier {
-  Nothing,
-  LegendaryShards,
-  EnhancementPrisms,
-  AscendantShardsNotExotic,
-  AscendantShards,
-  AscendantShardsNotMasterworked,
-}
-
 export interface Settings extends DimApiSettings {
   activeMode: boolean;
-  loUpgradeSpendTier: UpgradeSpendTier;
   loLockItemEnergyType: boolean;
 }
 

@@ -31,6 +31,7 @@ function getDisplayProperties(
     UpgradeMaterialHashes.ascendantShard
   ).displayProperties;
   switch (upgradeSpendTier) {
+    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.Nothing:
       return { name: t('LoadoutBuilder.NoUpgrades') };
     case UpgradeSpendTier.LegendaryShards: {
