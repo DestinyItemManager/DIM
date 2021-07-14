@@ -1,3 +1,4 @@
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CheckButton from 'app/dim-ui/CheckButton';
@@ -6,7 +7,6 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
 import { useSetSetting } from 'app/settings/hooks';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
 import styles from './ArmorUpgradePicker.m.scss';
