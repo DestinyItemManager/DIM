@@ -96,19 +96,44 @@ describe('process-utils', () => {
     for (const store of stores) {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
-          helmet = mapDimItemToProcessItem(defs, storeItem, UpgradeSpendTier.EnhancementPrisms);
+          helmet = mapDimItemToProcessItem(
+            defs,
+            storeItem,
+            UpgradeSpendTier.EnhancementPrisms,
+            false
+          );
         }
         if (!arms && isArmor2Arms(storeItem)) {
-          arms = mapDimItemToProcessItem(defs, storeItem, UpgradeSpendTier.EnhancementPrisms);
+          arms = mapDimItemToProcessItem(
+            defs,
+            storeItem,
+            UpgradeSpendTier.EnhancementPrisms,
+            false
+          );
         }
         if (!chest && isArmor2Chest(storeItem)) {
-          chest = mapDimItemToProcessItem(defs, storeItem, UpgradeSpendTier.EnhancementPrisms);
+          chest = mapDimItemToProcessItem(
+            defs,
+            storeItem,
+            UpgradeSpendTier.EnhancementPrisms,
+            false
+          );
         }
         if (!legs && isArmor2Legs(storeItem)) {
-          legs = mapDimItemToProcessItem(defs, storeItem, UpgradeSpendTier.EnhancementPrisms);
+          legs = mapDimItemToProcessItem(
+            defs,
+            storeItem,
+            UpgradeSpendTier.EnhancementPrisms,
+            false
+          );
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
-          classItem = mapDimItemToProcessItem(defs, storeItem, UpgradeSpendTier.EnhancementPrisms);
+          classItem = mapDimItemToProcessItem(
+            defs,
+            storeItem,
+            UpgradeSpendTier.EnhancementPrisms,
+            false
+          );
         }
 
         if (helmet && arms && chest && legs && classItem) {

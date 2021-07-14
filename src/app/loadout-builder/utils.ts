@@ -91,6 +91,7 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
   let boundaryHash: number | 'none' = 'none';
 
   switch (tier) {
+    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.Nothing:
       throw new Error('Please handle this as a special case, no upgrades are allowed.');
     case UpgradeSpendTier.LegendaryShards:
@@ -113,7 +114,6 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       boundaryHash =
         item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
       break;
-    case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.AscendantShards:
       break;
   }
@@ -131,7 +131,10 @@ export function upgradeSpendTierToMaxEnergy(
     return 0;
   }
 
-  if (tier === UpgradeSpendTier.Nothing) {
+  if (
+    tier === UpgradeSpendTier.Nothing ||
+    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
+  ) {
     return item.energy.energyCapacity;
   }
 

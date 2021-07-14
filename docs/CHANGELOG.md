@@ -1,5 +1,6 @@
 ## Next
 
+* Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
 
 ## 6.73.0 <span class="changelog-date">(2021-07-11)</span>

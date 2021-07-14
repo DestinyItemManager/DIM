@@ -67,6 +67,7 @@ interface Props {
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
 }
 
 /**
@@ -86,6 +87,7 @@ export default function GeneratedSets({
   params,
   halfTierMods,
   upgradeSpendTier,
+  lockItemEnergyType,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -173,6 +175,7 @@ export default function GeneratedSets({
           params={params}
           halfTierMods={halfTierMods}
           upgradeSpendTier={upgradeSpendTier}
+          lockItemEnergyType={lockItemEnergyType}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -201,6 +204,7 @@ export default function GeneratedSets({
                   params={params}
                   halfTierMods={halfTierMods}
                   upgradeSpendTier={upgradeSpendTier}
+                  lockItemEnergyType={lockItemEnergyType}
                 />
               )}
               scrollTop={scrollTop}

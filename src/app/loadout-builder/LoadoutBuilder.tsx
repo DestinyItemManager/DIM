@@ -58,6 +58,7 @@ interface ProvidedProps {
 interface StoreProps {
   statOrder: StatTypes[];
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
   isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
@@ -181,10 +182,11 @@ function mapStateToProps() {
   );
 
   return (state: RootState): StoreProps => {
-    const { loUpgradeSpendTier } = settingsSelector(state);
+    const { loUpgradeSpendTier, loLockItemEnergyType } = settingsSelector(state);
     return {
       statOrder: statOrderSelector(state),
       upgradeSpendTier: loUpgradeSpendTier,
+      lockItemEnergyType: loLockItemEnergyType,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       unusableExotics: unusableExoticsSelector(state),
@@ -203,6 +205,7 @@ function LoadoutBuilder({
   stores,
   statOrder,
   upgradeSpendTier,
+  lockItemEnergyType,
   isPhonePortrait,
   items,
   unusableExotics,
@@ -251,6 +254,7 @@ function LoadoutBuilder({
     lockedMap,
     lockedMods,
     upgradeSpendTier,
+    lockItemEnergyType,
     statOrder,
     statFilters
   );
@@ -315,6 +319,7 @@ function LoadoutBuilder({
         lockedMap={lockedMap}
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
+        lockItemEnergyType={lockItemEnergyType}
         characterItems={characterItems}
         unusableExotics={selectedStore && unusableExotics[selectedStore.classType]}
         lockedExotic={lockedExotic}
@@ -371,6 +376,7 @@ function LoadoutBuilder({
             params={params}
             halfTierMods={halfTierMods}
             upgradeSpendTier={upgradeSpendTier}
+            lockItemEnergyType={lockItemEnergyType}
           />
         )}
         {modPicker.open &&
@@ -399,6 +405,7 @@ function LoadoutBuilder({
               statOrder={statOrder}
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
+              lockItemEnergyType={lockItemEnergyType}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

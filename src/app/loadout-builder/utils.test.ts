@@ -42,7 +42,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', true],
-    ['AscendantShardsLockEnergyType', false],
     ['AscendantShardsNotMasterworked', false],
     ['AscendantShardsNotExotic', true],
     ['EnhancementPrisms', false],
@@ -60,7 +59,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', true],
-    ['AscendantShardsLockEnergyType', false],
     ['AscendantShardsNotMasterworked', false],
     ['AscendantShardsNotExotic', false],
     ['EnhancementPrisms', false],
@@ -81,7 +79,7 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', true],
-    ['AscendantShardsLockEnergyType', false],
+
     ['AscendantShardsNotMasterworked', true],
     ['AscendantShardsNotExotic', true],
     ['EnhancementPrisms', true],
@@ -99,7 +97,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', true],
-    ['AscendantShardsLockEnergyType', false],
     ['AscendantShardsNotMasterworked', true],
     ['AscendantShardsNotExotic', true],
     ['EnhancementPrisms', true],
@@ -117,7 +114,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 10],
     ['EnhancementPrisms', 10],
@@ -133,7 +129,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 10],
     ['EnhancementPrisms', 10],
@@ -152,7 +147,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 10],
     ['EnhancementPrisms', 9],
@@ -168,7 +162,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 9],
     ['EnhancementPrisms', 9],
@@ -187,7 +180,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 10],
     ['EnhancementPrisms', 9],
@@ -203,7 +195,6 @@ describe('Spend tier tests', () => {
 
   test.each([
     ['AscendantShards', 10],
-    ['AscendantShardsLockEnergyType', 10],
     ['AscendantShardsNotMasterworked', 10],
     ['AscendantShardsNotExotic', 10],
     ['EnhancementPrisms', 9],

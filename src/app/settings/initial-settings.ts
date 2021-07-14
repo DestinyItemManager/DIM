@@ -7,6 +7,7 @@ import { defaultLanguage } from 'app/i18n';
 
 export interface Settings extends DimApiSettings {
   activeMode: boolean;
+  loLockItemEnergyType: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -17,5 +18,6 @@ export const initialSettingsState: Settings = {
   sidecarCollapsed: false,
   activeMode: false,
   loUpgradeSpendTier: UpgradeSpendTier.Nothing,
+  loLockItemEnergyType: false,
   singleCharacter: false,
 };

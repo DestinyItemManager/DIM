@@ -100,7 +100,8 @@ export function assignModsToArmorSet(
   defs: D2ManifestDefinitions | undefined,
   setToMatch: readonly DimItem[],
   lockedMods: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ): [Record<string, PluggableInventoryItemDefinition[]>, PluggableInventoryItemDefinition[]] {
   const assignments: Record<string, number[]> = {};
 
@@ -118,7 +119,13 @@ export function assignModsToArmorSet(
       const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[hash]];
       assignModsForSlot(defs, item, assignments, upgradeSpendTier, lockedModsByPlugCategoryHash);
       processItems.push(
-        mapDimItemToProcessItem(defs, item, upgradeSpendTier, lockedModsByPlugCategoryHash)
+        mapDimItemToProcessItem(
+          defs,
+          item,
+          upgradeSpendTier,
+          lockItemEnergyType,
+          lockedModsByPlugCategoryHash
+        )
       );
     }
   }
