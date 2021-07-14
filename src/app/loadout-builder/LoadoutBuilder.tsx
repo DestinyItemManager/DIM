@@ -183,15 +183,9 @@ function mapStateToProps() {
 
   return (state: RootState): StoreProps => {
     const { loUpgradeSpendTier, loLockItemEnergyType } = settingsSelector(state);
-
-    // Technically not correct as the vales will include both the spend tier and it's
-    // name but for our purposes this will work as the spend tier is a number at runtime.
-    const lockItemEnergyTypeIsValid = Object.values(UpgradeSpendTier).some(
-      (tier) => tier === loUpgradeSpendTier
-    );
     return {
       statOrder: statOrderSelector(state),
-      upgradeSpendTier: lockItemEnergyTypeIsValid ? loUpgradeSpendTier : UpgradeSpendTier.Nothing,
+      upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
       isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
