@@ -1,9 +1,8 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';

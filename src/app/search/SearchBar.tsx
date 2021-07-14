@@ -254,9 +254,12 @@ function SearchBar(
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query || '',
-    onInputValueChange: ({ inputValue }) => {
+    onInputValueChange: ({ inputValue, type }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
+      if (type !== useCombobox.stateChangeTypes.InputChange) {
+        debouncedUpdateQuery.flush();
+      }
     },
   });
 
@@ -293,10 +296,9 @@ function SearchBar(
   };
 
   const clearFilter = useCallback(() => {
-    debouncedUpdateQuery('');
     reset();
     onClear?.();
-  }, [onClear, reset, debouncedUpdateQuery]);
+  }, [onClear, reset]);
 
   // Reset live query when search version changes
   useEffect(() => {

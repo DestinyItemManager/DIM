@@ -75,6 +75,7 @@ module.exports = (env) => {
       publicPath: '/',
       filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
       chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
+      assetModuleFilename: ASSET_NAME_PATTERN,
     },
 
     // Dev server
@@ -157,16 +158,16 @@ module.exports = (env) => {
         {
           // Optimize SVGs - mostly for destiny-icons.
           test: /\.svg$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 5 * 1024, // only inline if less than 5kb
-                name: ASSET_NAME_PATTERN,
-                // Use smaller data URIs
-                generator: (content) => svgToMiniDataURI(content.toString()),
-              },
+          type: 'asset',
+          generator: {
+            dataUrl: (content) => svgToMiniDataURI(content.toString()),
+          },
+          parser: {
+            dataUrlCondition: {
+              maxSize: 5 * 1024, // only inline if less than 5kb
             },
+          },
+          use: [
             {
               loader: 'svgo-loader',
             },
@@ -174,10 +175,11 @@ module.exports = (env) => {
         },
         {
           test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-          loader: 'url-loader',
-          options: {
-            limit: 5 * 1024, // only inline if less than 5kb
-            name: ASSET_NAME_PATTERN,
+          type: 'asset',
+          parser: {
+            dataUrlCondition: {
+              maxSize: 5 * 1024, // only inline if less than 5kb
+            },
           },
         },
         // *.m.scss will have CSS Modules support
@@ -254,15 +256,12 @@ module.exports = (env) => {
           loader: 'source-map-loader',
         },
         {
-          type: 'javascript/auto',
           test: /\.json/,
           include: /src(\/|\\)locale/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: { name: '[name]-[contenthash:6].[ext]' },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: '[name]-[contenthash:6].[ext]',
+          },
         },
         {
           type: 'javascript/auto',

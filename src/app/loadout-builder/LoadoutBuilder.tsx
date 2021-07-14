@@ -1,4 +1,8 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  StatConstraint,
+  UpgradeSpendTier,
+} from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -11,7 +15,6 @@ import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { UpgradeSpendTier } from 'app/settings/initial-settings';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';

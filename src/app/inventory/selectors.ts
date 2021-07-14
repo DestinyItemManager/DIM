@@ -49,8 +49,18 @@ export const currentStoreSelector = (state: RootState) => getCurrentStore(stores
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 
+const visibleCurrencies = [
+  3159615086, // Glimmer
+  1022552290, // Legendary Shards
+  2817410917, // Bright Dust
+  3147280338, // Silver
+];
+
 /** Account wide currencies */
-export const currenciesSelector = (state: RootState) => state.inventory.currencies;
+export const currenciesSelector = createSelector(
+  (state: RootState) => state.inventory.currencies,
+  (currencies) => currencies.filter((c) => visibleCurrencies.includes(c.itemHash))
+);
 
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = (state: RootState) =>
