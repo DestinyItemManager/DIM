@@ -5,6 +5,7 @@
 ## 6.73.0 <span class="changelog-date">(2021-07-11)</span>
 
 * Solstice of Heroes pursuit list now shows the full description of the objectives, not just the checkboxes.
+* Recent searches are now capped at 300 searches, down from 500.
 * Armor synthesis materials are no longer shown in the currencies block under the vault.
 
 ## 6.72.1 <span class="changelog-date">(2021-07-06)</span>

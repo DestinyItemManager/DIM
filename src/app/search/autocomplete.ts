@@ -104,7 +104,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
 // TODO: this should probably be different when there's a query vs not. With a query
 // it should sort on how closely you match, while without a query it's just offering
 // you your "favorite" searches.
-const recentSearchComparator = reverseComparator(
+export const recentSearchComparator = reverseComparator(
   chainComparator<Search>(
     // Saved searches before recents
     compareBy((s) => s.saved),
