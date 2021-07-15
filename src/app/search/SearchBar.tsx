@@ -247,7 +247,7 @@ function SearchBar(
     highlightedIndex,
     getItemProps,
     setInputValue,
-    reset,
+    reset: clearFilter,
     openMenu,
   } = useCombobox<SearchItem>({
     items,
@@ -260,6 +260,9 @@ function SearchBar(
       debouncedUpdateQuery(inputValue || '');
       if (type !== useCombobox.stateChangeTypes.InputChange) {
         debouncedUpdateQuery.flush();
+      }
+      if (type === useCombobox.stateChangeTypes.FunctionReset) {
+        onClear?.();
       }
     },
   });
@@ -295,11 +298,6 @@ function SearchBar(
       openMenu();
     }
   };
-
-  const clearFilter = useCallback(() => {
-    reset();
-    onClear?.();
-  }, [onClear, reset]);
 
   // Reset live query when search version changes
   useEffect(() => {
