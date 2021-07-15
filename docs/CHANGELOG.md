@@ -2,16 +2,17 @@
 
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
+* Invalid search queries are greyed out, and the save search star is hidden.
+
+### Beta Only
+
+* The Search Results drawer is back in beta, ready for some more feedback. On mobile it shows up whenever you search, on desktop you can either click the icon or hit "Enter" in the search bar. Try clicking on items in the search results drawer - or even dragging them to characters!
 
 ## 6.73.0 <span class="changelog-date">(2021-07-11)</span>
 
 * Solstice of Heroes pursuit list now shows the full description of the objectives, not just the checkboxes.
 * Recent searches are now capped at 300 searches, down from 500.
 * Armor synthesis materials are no longer shown in the currencies block under the vault.
-
-### Beta Only
-
-* The Search Results drawer is back in beta, ready for some more feedback. On mobile it shows up whenever you search, on desktop you can either click the icon or hit "Enter" in the search bar. Try clicking on items in the search results drawer - or even dragging them to characters!
 
 ## 6.72.1 <span class="changelog-date">(2021-07-06)</span>
 
@@ -44,7 +45,7 @@
 ## 6.69.0 <span class="changelog-date">(2021-06-20)</span>
 * Added "Recency" Column & Sorting to Loadout Organizer, this allows viewing gear sorted by acquisition date.
 * Added ctrl-click to toggle item selection in Organizer.
-* Fix over-eager prompt to backup data when signing in.
+ * Fix over-eager prompt to backup data when signing in.
 * Viewing artifact details no longer always shows The Gate Lord's Eye.
 * Scrolling to an item tile is now more accurate.
 * Vault of Glass milestone is now more clearly named.

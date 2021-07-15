@@ -42,6 +42,7 @@ import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete'
 import HighlightedText from './HighlightedText';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
+import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 import styles from './SearchBar.m.scss';
 
@@ -75,6 +76,7 @@ interface ProvidedProps {
 interface StoreProps {
   recentSearches: Search[];
   isPhonePortrait: boolean;
+  validateQuery: (query: string) => boolean;
   autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
 }
 
@@ -103,6 +105,7 @@ function mapStateToProps() {
       recentSearches: recentSearchesSelector(state),
       isPhonePortrait: isPhonePortraitSelector(state),
       autocompleter: autoCompleterSelector(state),
+      validateQuery: validateQuerySelector(state),
       searchQuery: manipulatedSearchQuery,
     };
   };
@@ -189,6 +192,7 @@ function SearchBar(
     onQueryChanged,
     onClear,
     dispatch,
+    validateQuery,
     autocompleter,
     recentSearches,
     isPhonePortrait,
@@ -207,9 +211,11 @@ function SearchBar(
     [onQueryChanged]
   );
 
+  const valid = validateQuery(liveQuery);
+
   const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (liveQuery && liveQuery !== lastBlurQuery.current) {
+    if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));
@@ -385,7 +391,7 @@ function SearchBar(
           onFocus,
           onKeyDown,
           ref: inputElement,
-          className: 'filter-input',
+          className: clsx('filter-input', { [styles.invalid]: !valid }),
           autoComplete: 'off',
           autoCorrect: 'off',
           autoCapitalize: 'off',
@@ -399,7 +405,7 @@ function SearchBar(
 
       {children}
 
-      {liveQuery.length > 0 && (
+      {liveQuery.length > 0 && valid && (
         <button
           type="button"
           className={clsx('filter-bar-button', styles.saveSearchButton)}
