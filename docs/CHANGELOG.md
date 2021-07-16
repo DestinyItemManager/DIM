@@ -3,6 +3,7 @@
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
 * Invalid search queries are greyed out, and the save search star is hidden.
+* Favour higher energy and equipped items for grouped items in the Optimizer. This will mainly be noticed by the shown class item.
 
 ### Beta Only
 
