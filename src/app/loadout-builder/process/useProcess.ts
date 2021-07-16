@@ -7,6 +7,7 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
@@ -248,5 +249,16 @@ function groupItems(
     return groupId;
   };
 
-  return _.groupBy(items, groupingFn);
+  const groups = _.groupBy(items, groupingFn);
+
+  for (const group of Object.values(groups)) {
+    group.sort(
+      chainComparator(
+        compareBy((item) => -(item.energy?.energyCapacity || 0)),
+        compareBy((item) => (item.equipped ? 0 : 1))
+      )
+    );
+  }
+
+  return groups;
 }
