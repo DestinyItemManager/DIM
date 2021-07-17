@@ -1,9 +1,13 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
+import { AppIcon, faAngleRight, faRandom, lockIcon } from 'app/shell/icons';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { Dispatch } from 'react';
+import _ from 'lodash';
+import React, { Dispatch, ReactNode } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
@@ -65,10 +69,41 @@ export default function GeneratedSetItem({
     }
   };
 
+  let energyChangeDisplay: ReactNode | undefined;
+
+  if (lockedMods.length) {
+    const modCost = _.sumBy(lockedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+    const itemEnergyCapacity = item.energy?.energyCapacity || 0;
+    const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
+    const modEnergyHash = lockedMods.find(
+      (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
+    )?.plug.energyCost?.energyTypeHash;
+    const modEnergy = (modEnergyHash && defs.EnergyType.get(modEnergyHash)) || null;
+    const resultingEnergyCapacity =
+      modEnergy && armorEnergy.hash === modEnergy.hash
+        ? Math.max(itemEnergyCapacity, modCost)
+        : modCost;
+
+    energyChangeDisplay = modEnergy && (
+      <div className={styles.energySwapContainer}>
+        <div className={clsx({ [styles.masterworked]: itemEnergyCapacity === 10 })}>
+          {itemEnergyCapacity}
+        </div>
+        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
+        <AppIcon icon={faAngleRight} />
+        <div className={clsx({ [styles.masterworked]: resultingEnergyCapacity === 10 })}>
+          {resultingEnergyCapacity}
+        </div>
+        <BungieImage className={styles.energyIcon} src={modEnergy.displayProperties.icon} />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.item}>
       <div className={styles.swapButtonContainer}>
         <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
+        {energyChangeDisplay}
         {itemOptions.length > 1 ? (
           <button
             type="button"

@@ -58,10 +58,28 @@
   flex-direction: column;
 }
 
+.energySwapContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.energyIcon {
+  height: 10px;
+  width: 10px;
+}
+
+.masterworked {
+  color: $masterwork-border-color;
+}
+
 .swapButton {
   composes: dim-button from global;
   justify-self: center;
-  margin-top: 6px;
+  margin-top: 4px;
   @include phone-portrait {
     padding: 8px 20px;
   }
