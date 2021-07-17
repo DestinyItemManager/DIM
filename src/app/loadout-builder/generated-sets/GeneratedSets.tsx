@@ -14,8 +14,9 @@ import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
-function hasExoticPerk(items: DimItem[]) {
-  return items.some((item) => item.isExotic);
+/** Taller item groups have either the swap icon under the item of an exotic perk. */
+function hasExoticPerkOrSwapIcon(items: DimItem[]) {
+  return items.length > 1 || items.some((item) => item.isExotic);
 }
 
 /**
@@ -37,12 +38,8 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
     let countWithExoticPerkOrSwapIcon = 0;
     // So we look on those rows for items with the swap icon or an exotic perk.
     for (const indexes of [[0, 1], [2, 3], [4]]) {
-      // need to slightly favour swap icons as they can be pused out by the
-      // energy swap/upgrade display
-      if (indexes.some((index) => set.armor[index].length > 1)) {
-        countWithExoticPerkOrSwapIcon += 1.1;
-      } else if (indexes.some((index) => hasExoticPerk(set.armor[index]))) {
-        countWithExoticPerkOrSwapIcon += 1;
+      if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+        countWithExoticPerkOrSwapIcon++;
       }
     }
 

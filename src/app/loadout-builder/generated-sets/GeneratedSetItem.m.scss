@@ -7,6 +7,7 @@
   width: min-content;
   align-items: start;
   justify-content: start;
+  margin-top: 4px;
 
   > *:first-child {
     grid-area: item;
@@ -61,15 +62,25 @@
 .energySwapContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   font-size: 10px;
-  margin-top: 4px;
+}
+
+.arrow {
+  margin: 0 4px;
+}
+
+.energyValue {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .energyIcon {
   height: 10px;
   width: 10px;
+  margin-left: 1px;
 }
 
 .masterworked {
