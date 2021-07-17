@@ -1,6 +1,7 @@
 ## Next
 
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
+* Optimiser is now better at matching a set to an existing loadout.
 * Not be broken
 * Invalid search queries are greyed out, and the save search star is hidden.
 

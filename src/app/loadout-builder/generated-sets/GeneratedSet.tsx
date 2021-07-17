@@ -1,9 +1,10 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
+import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -78,11 +79,23 @@ function GeneratedSet({
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
 
-  const existingLoadout = loadouts.find((loadout) =>
-    set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
-  );
+  // const existingLoadout = loadouts.find((loadout) =>
+  //   set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
+  // );
 
-  const items = set.armor.map((items) => items[0]);
+  let existingLoadout: Loadout | undefined;
+  let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
+
+  for (const loadout of loadouts) {
+    const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
+    const allSetItems = set.armor.flat();
+    const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
+    if (intersection.length === set.armor.length) {
+      existingLoadout = loadout;
+      displayedItems = intersection;
+      break;
+    }
+  }
 
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
@@ -90,7 +103,7 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
-            maxPower={getPower(items)}
+            maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
             existingLoadoutName={existingLoadout?.name}
@@ -98,14 +111,14 @@ function GeneratedSet({
           />
         </div>
         <div className={styles.items}>
-          {set.armor.map((items) => (
+          {displayedItems.map((item, i) => (
             <GeneratedSetItem
-              key={items[0].index}
-              item={items[0]}
-              itemOptions={items}
-              locked={lockedMap[items[0].bucket.hash]}
+              key={item.index}
+              item={item}
+              itemOptions={set.armor[i]}
+              locked={lockedMap[item.bucket.hash]}
               lbDispatch={lbDispatch}
-              lockedMods={assignedMods[items[0].id]}
+              lockedMods={assignedMods[item.id]}
             />
           ))}
         </div>
