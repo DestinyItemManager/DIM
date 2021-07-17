@@ -40,6 +40,11 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
     for (const indexes of [[0, 1], [2, 3], [4]]) {
       if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
         countWithExoticPerkOrSwapIcon++;
+        // need to slightly favour swap icons as they can be pused out by the
+        // energy swap/upgrade display
+        if (indexes.some((index) => set.armor[index].length > 1)) {
+          countWithExoticPerkOrSwapIcon += 0.1;
+        }
       }
     }
 
