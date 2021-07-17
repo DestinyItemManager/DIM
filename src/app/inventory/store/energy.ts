@@ -27,9 +27,14 @@ export function energyUpgrade(
   newEnergyType: DestinyEnergyType,
   newEnergyCapacity: number
 ) {
-  const tierSocket = getFirstSocketByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorTier)!;
+  const tierSocket =
+    item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
 
-  const plugSet = defs.PlugSet.get(tierSocket.socketDefinition.reusablePlugSetHash!);
+  if (!tierSocket?.socketDefinition.reusablePlugSetHash) {
+    return [];
+  }
+
+  const plugSet = defs.PlugSet.get(tierSocket.socketDefinition.reusablePlugSetHash);
 
   const energyMods: DestinyInventoryItemDefinition[] = [];
   for (const { plugItemHash } of plugSet.reusablePlugItems) {

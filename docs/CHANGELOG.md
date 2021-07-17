@@ -2,6 +2,7 @@
 
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
+* Fix issue with Optimiser crashing when socket data is not available.
 * Invalid search queries are greyed out, and the save search star is hidden.
 
 ### Beta Only
