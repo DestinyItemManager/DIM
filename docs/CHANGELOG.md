@@ -5,6 +5,7 @@
 * Fix issue with Optimiser crashing when socket data is not available.
 * Invalid search queries are greyed out, and the save search star is hidden.
 * Favour higher energy and equipped items for grouped items in the Optimizer. This will mainly be noticed by the shown class item.
+* Display the energy swap or upgrade details for items in the Optimiser.
 
 ### Beta Only
 
