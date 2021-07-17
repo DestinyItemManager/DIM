@@ -469,7 +469,7 @@
     "LockPerk": "Select perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
-    "NoBuildsFoundWithReasons": "No builds found. This is likely caused by the inability to assign all selected mods.",
+    "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "NotExotics": "{{material}} (Not Exotics)",
