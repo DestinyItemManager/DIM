@@ -79,10 +79,6 @@ function GeneratedSet({
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
 
-  // const existingLoadout = loadouts.find((loadout) =>
-  //   set.armor.every((items) => loadout.items.map((item) => item.id).includes(items[0].id))
-  // );
-
   let existingLoadout: Loadout | undefined;
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
 
