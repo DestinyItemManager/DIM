@@ -5,6 +5,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
@@ -14,9 +15,19 @@ import { ArmorSet, LockedMap, StatTypes } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
-/** Taller item groups have either the swap icon under the item of an exotic perk. */
-function hasExoticPerkOrSwapIcon(items: DimItem[]) {
-  return items.length > 1 || items.some((item) => item.isExotic);
+/** Taller item groups have either the swap icon under the item, an exotic perk, or a raid mod socket. */
+function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
+  return (
+    items.length > 1 ||
+    items.some(
+      (item) =>
+        item.isExotic ||
+        item.sockets?.allSockets.some(
+          ({ plugged }) =>
+            plugged && raidModPlugCategoryHashes.includes(plugged.plugDef.plug.plugCategoryHash)
+        )
+    )
+  );
 }
 
 /**
@@ -38,7 +49,7 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
     let countWithExoticPerkOrSwapIcon = 0;
     // So we look on those rows for items with the swap icon or an exotic perk.
     for (const indexes of [[0, 1], [2, 3], [4]]) {
-      if (indexes.some((index) => hasExoticPerkOrSwapIcon(set.armor[index]))) {
+      if (indexes.some((index) => hasExoticPerkRaidModOrSwapIcon(set.armor[index]))) {
         countWithExoticPerkOrSwapIcon++;
       }
     }
