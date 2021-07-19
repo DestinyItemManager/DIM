@@ -1,11 +1,14 @@
 ## Next
 
+## 6.74.0 <span class="changelog-date">(2021-07-18)</span>
+
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
 * Fix issue with Optimiser crashing when socket data is not available.
 * Invalid search queries are greyed out, and the save search star is hidden.
 * Favour higher energy and equipped items for grouped items in the Optimizer. This will mainly be noticed by the shown class item.
 * Display the energy swap or upgrade details for items in the Optimiser.
+* Adding unequipped items to a loadout no longer also adds items from the Postmaster.
 
 ### Beta Only
 

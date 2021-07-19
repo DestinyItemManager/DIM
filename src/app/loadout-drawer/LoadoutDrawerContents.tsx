@@ -239,6 +239,7 @@ async function fillLoadoutFromUnequipped(
 
   const items = dimStore.items.filter(
     (item) =>
+      !item.location.inPostmaster &&
       item.bucket.type !== 'Class' &&
       itemCanBeInLoadout(item) &&
       fromEquippedTypes.includes(item.type) &&
