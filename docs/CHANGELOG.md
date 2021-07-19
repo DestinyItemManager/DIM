@@ -1,9 +1,10 @@
 ## Next
 
+* Optimiser is now better at matching a set to an existing loadout.
+
 ## 6.74.0 <span class="changelog-date">(2021-07-18)</span>
 
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
-* Optimiser is now better at matching a set to an existing loadout.
 * Not be broken
 * Fix issue with Optimiser crashing when socket data is not available.
 * Invalid search queries are greyed out, and the save search star is hidden.
