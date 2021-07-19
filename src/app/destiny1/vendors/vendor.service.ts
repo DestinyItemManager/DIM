@@ -488,7 +488,8 @@ export function countCurrencies(
         case 2534352370:
         case 3159615086:
         case 2749350776:
-          totalCoins[currencyHash] = currencies.find((c) => c.itemHash === currencyHash)!.quantity;
+          totalCoins[currencyHash] =
+            currencies.find((c) => c.itemHash === currencyHash)?.quantity || 0;
           break;
         default:
           totalCoins[currencyHash] = _.sumBy(stores, (store) =>

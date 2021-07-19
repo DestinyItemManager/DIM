@@ -11,6 +11,7 @@ import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
+import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
@@ -402,39 +403,54 @@ function SearchBar(
           name: 'filter',
         })}
       />
+      <AnimateSharedLayout>
+        <AnimatePresence>
+          {children}
 
-      {children}
+          {liveQuery.length > 0 && valid && (
+            <motion.button
+              layout
+              exit={{ scale: 0 }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              key="save"
+              type="button"
+              className={clsx('filter-bar-button', styles.saveSearchButton)}
+              onClick={toggleSaved}
+              title={t('Header.SaveSearch')}
+            >
+              <AppIcon icon={saved ? starIcon : starOutlineIcon} />
+            </motion.button>
+          )}
 
-      {liveQuery.length > 0 && valid && (
-        <button
-          type="button"
-          className={clsx('filter-bar-button', styles.saveSearchButton)}
-          onClick={toggleSaved}
-          title={t('Header.SaveSearch')}
-        >
-          <AppIcon icon={saved ? starIcon : starOutlineIcon} />
-        </button>
-      )}
+          {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
+            <motion.button
+              layout
+              exit={{ scale: 0 }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              key="clear"
+              type="button"
+              className="filter-bar-button"
+              onClick={clearFilter}
+              title={t('Header.Clear')}
+            >
+              <AppIcon icon={disabledIcon} />
+            </motion.button>
+          )}
 
-      {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
-        <button
-          type="button"
-          className="filter-bar-button"
-          onClick={clearFilter}
-          title={t('Header.Clear')}
-        >
-          <AppIcon icon={disabledIcon} />
-        </button>
-      )}
-
-      <button
-        type="button"
-        className={clsx('filter-bar-button', styles.openButton)}
-        {...getToggleButtonProps()}
-        aria-label="toggle menu"
-      >
-        <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
-      </button>
+          <motion.button
+            layout
+            key="menu"
+            type="button"
+            className={clsx('filter-bar-button', styles.openButton)}
+            {...getToggleButtonProps()}
+            aria-label="toggle menu"
+          >
+            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
+          </motion.button>
+        </AnimatePresence>
+      </AnimateSharedLayout>
 
       {filterHelpOpen &&
         ReactDOM.createPortal(
