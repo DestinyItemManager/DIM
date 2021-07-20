@@ -25,7 +25,7 @@ function EnergySwap({
   item: DimItem;
   lockedMods: PluggableInventoryItemDefinition[];
 }) {
-  if (!lockedMods.length) {
+  if (!lockedMods?.length) {
     return null;
   }
 
