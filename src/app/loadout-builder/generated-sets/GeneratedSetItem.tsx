@@ -23,7 +23,7 @@ function EnergySwap({
 }: {
   defs: D2ManifestDefinitions;
   item: DimItem;
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedMods?: PluggableInventoryItemDefinition[];
 }) {
   if (!lockedMods?.length) {
     return null;
@@ -76,7 +76,7 @@ export default function GeneratedSetItem({
   item: DimItem;
   locked?: readonly LockedItemType[];
   itemOptions: DimItem[];
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedMods?: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const defs = useD2Definitions()!;
