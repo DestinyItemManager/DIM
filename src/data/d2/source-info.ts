@@ -370,6 +370,7 @@ const D2Sources: {
       571102497, // Source: Complete this weapon's associated Gambit quest.
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
+      1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
@@ -524,6 +525,7 @@ const D2Sources: {
       571102497, // Source: Complete this weapon's associated Gambit quest.
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
+      1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
