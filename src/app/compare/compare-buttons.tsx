@@ -66,9 +66,9 @@ export function findSimilarArmors(
       exampleItem.element &&
       exampleItemModSlotMetadatas && {
         buttonLabel: [exampleItemElementIcon, specialtyModSlotNames?.join(' + ')],
-        query: `is:armor2.0 is:${getItemDamageShortName(
-          exampleItem
-        )} ${exampleItemModSlotMetadatas.map((m) => `modslot:${m.slotTag || 'none'}`).join(' ')}`,
+        query: `is:armor2.0 is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
+          .map((m) => `modslot:${m.slotTag || 'none'}`)
+          .join(' ')}`,
       },
 
     // basically stuff with the same name & categories

@@ -39,19 +39,21 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: 'onwrongclass',
     description: tl('Filter.Class'),
-    filter: ({ stores }) => (item) => {
-      const ownerStore = getStore(stores, item.owner);
+    filter:
+      ({ stores }) =>
+      (item) => {
+        const ownerStore = getStore(stores, item.owner);
 
-      return (
-        !item.classified &&
-        item.owner !== 'vault' &&
-        !item.bucket.accountWide &&
-        item.classType !== DestinyClass.Unknown &&
-        ownerStore &&
-        !itemCanBeEquippedBy(item, ownerStore) &&
-        !item.location?.inPostmaster
-      );
-    },
+        return (
+          !item.classified &&
+          item.owner !== 'vault' &&
+          !item.bucket.accountWide &&
+          item.classType !== DestinyClass.Unknown &&
+          ownerStore &&
+          !itemCanBeEquippedBy(item, ownerStore) &&
+          !item.location?.inPostmaster
+        );
+      },
   },
   {
     keywords: 'invault',
@@ -61,7 +63,10 @@ const locationFilters: FilterDefinition[] = [
   {
     keywords: 'incurrentchar',
     description: tl('Filter.Location'),
-    filter: ({ currentStore }) => (item) => (currentStore ? item.owner === currentStore.id : false),
+    filter:
+      ({ currentStore }) =>
+      (item) =>
+        currentStore ? item.owner === currentStore.id : false,
   },
 ];
 

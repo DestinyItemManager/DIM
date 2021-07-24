@@ -70,8 +70,10 @@ const d1Filters: FilterDefinition[] = [
     keywords: ['tracked', 'untracked'],
     description: tl('Filter.Tracked'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) =>
-      item.trackable && (filterValue === 'tracked' ? item.tracked : !item.tracked),
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) =>
+        item.trackable && (filterValue === 'tracked' ? item.tracked : !item.tracked),
   },
   {
     keywords: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
@@ -89,43 +91,49 @@ const d1Filters: FilterDefinition[] = [
     keywords: ['intellect', 'discipline', 'strength'],
     description: tl('Filter.NamedStat'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) =>
-      item.stats?.some((s) =>
-        Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0)
-      ),
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) =>
+        item.stats?.some((s) =>
+          Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0)
+        ),
   },
   {
     keywords: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     description: tl('Filter.Glimmer'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) => {
-      switch (filterValue) {
-        case 'glimmerboost':
-          return boosts.includes(item.hash);
-        case 'glimmersupply':
-          return supplies.includes(item.hash);
-        case 'glimmeritem':
-          return boosts.includes(item.hash) || supplies.includes(item.hash);
-      }
-      return false;
-    },
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) => {
+        switch (filterValue) {
+          case 'glimmerboost':
+            return boosts.includes(item.hash);
+          case 'glimmersupply':
+            return supplies.includes(item.hash);
+          case 'glimmeritem':
+            return boosts.includes(item.hash) || supplies.includes(item.hash);
+        }
+        return false;
+      },
   },
   {
     keywords: ['ornamentable', 'ornamentmissing', 'ornamentunlocked'],
     description: tl('Filter.Ornament'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) => {
-      const complete = item.talentGrid?.nodes.some((n) => n.ornament);
-      const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) => {
+        const complete = item.talentGrid?.nodes.some((n) => n.ornament);
+        const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
 
-      if (filterValue === 'ornamentunlocked') {
-        return complete;
-      } else if (filterValue === 'ornamentmissing') {
-        return missing;
-      } else {
-        return complete || missing;
-      }
-    },
+        if (filterValue === 'ornamentunlocked') {
+          return complete;
+        } else if (filterValue === 'ornamentmissing') {
+          return missing;
+        } else {
+          return complete || missing;
+        }
+      },
   },
   {
     keywords: ['quality', 'percentage'],
@@ -161,16 +169,18 @@ const d1Filters: FilterDefinition[] = [
     ],
     description: tl('Filter.Vendor'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) => {
-      const restricted = vendorHashes.restricted[filterValue];
-      const required = vendorHashes.required[filterValue];
-      const match = (vendorHash: number) => item.sourceHashes.includes(vendorHash);
-      if (restricted) {
-        return (!required || required.some(match)) && !restricted.some(match);
-      } else {
-        return required?.some(match);
-      }
-    },
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) => {
+        const restricted = vendorHashes.restricted[filterValue];
+        const required = vendorHashes.required[filterValue];
+        const match = (vendorHash: number) => item.sourceHashes.includes(vendorHash);
+        if (restricted) {
+          return (!required || required.some(match)) && !restricted.some(match);
+        } else {
+          return required?.some(match);
+        }
+      },
   },
   {
     keywords: [
@@ -194,24 +204,26 @@ const d1Filters: FilterDefinition[] = [
     ],
     description: tl('Filter.Release'),
     destinyVersion: 1,
-    filter: ({ filterValue }) => (item: D1Item) => {
-      if (filterValue === 'vanilla') {
-        return getItemYear(item) === 1;
-      } else if (D1ActivityHashes.restricted[filterValue]) {
-        return (
-          D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
+    filter:
+      ({ filterValue }) =>
+      (item: D1Item) => {
+        if (filterValue === 'vanilla') {
+          return getItemYear(item) === 1;
+        } else if (D1ActivityHashes.restricted[filterValue]) {
+          return (
+            D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
+              item.sourceHashes.includes(sourceHash)
+            ) &&
+            !D1ActivityHashes.restricted[filterValue].some((sourceHash: number) =>
+              item.sourceHashes.includes(sourceHash)
+            )
+          );
+        } else {
+          return D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
             item.sourceHashes.includes(sourceHash)
-          ) &&
-          !D1ActivityHashes.restricted[filterValue].some((sourceHash: number) =>
-            item.sourceHashes.includes(sourceHash)
-          )
-        );
-      } else {
-        return D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
-          item.sourceHashes.includes(sourceHash)
-        );
-      }
-    },
+          );
+        }
+      },
   },
 ];
 

@@ -67,7 +67,10 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'new',
     description: tl('Filter.NewItems'),
-    filter: ({ newItems }) => (item) => newItems.has(item.id),
+    filter:
+      ({ newItems }) =>
+      (item) =>
+        newItems.has(item.id),
   },
   {
     keywords: 'sunset',

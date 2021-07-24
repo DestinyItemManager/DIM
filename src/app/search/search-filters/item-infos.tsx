@@ -7,22 +7,28 @@ const itemInfosFilters: FilterDefinition[] = [
   {
     keywords: 'tagged',
     description: tl('Filter.Tags.Tagged'),
-    filter: ({ itemInfos, itemHashTags }) => (item) =>
-      getTag(item, itemInfos, itemHashTags) !== undefined,
+    filter:
+      ({ itemInfos, itemHashTags }) =>
+      (item) =>
+        getTag(item, itemInfos, itemHashTags) !== undefined,
   },
   {
     keywords: 'tag',
     description: tl('Filter.Tags.Tag'),
     format: 'query',
     suggestions: itemTagSelectorList.map((tag) => tag.type ?? 'none'),
-    filter: ({ filterValue, itemInfos, itemHashTags }) => (item) =>
-      (getTag(item, itemInfos, itemHashTags) || 'none') === filterValue,
+    filter:
+      ({ filterValue, itemInfos, itemHashTags }) =>
+      (item) =>
+        (getTag(item, itemInfos, itemHashTags) || 'none') === filterValue,
   },
   {
     keywords: 'hasnotes',
     description: tl('Filter.HasNotes'),
-    filter: ({ itemInfos, itemHashTags }) => (item) =>
-      Boolean(getNotes(item, itemInfos, itemHashTags)),
+    filter:
+      ({ itemInfos, itemHashTags }) =>
+      (item) =>
+        Boolean(getNotes(item, itemInfos, itemHashTags)),
   },
 ];
 

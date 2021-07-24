@@ -796,14 +796,7 @@ function isInputElement(element: HTMLElement): element is HTMLInputElement {
 }
 
 const unwantedPerkHashes = [
-  1270552711,
-  217480046,
-  191086989,
-  913963685,
-  1034209669,
-  1263323987,
-  193091484,
-  2133116599,
+  1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599,
 ];
 
 function filterPerks(perks: D1GridNode[], item: D1Item) {
