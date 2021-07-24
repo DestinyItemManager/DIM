@@ -99,9 +99,10 @@ export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
  */
 export function handleErrors(error: Error) {
   if (error instanceof DOMException && error.name === 'AbortError') {
-    throw (navigator.onLine
-      ? new DimError('BungieService.SlowResponse')
-      : new DimError('BungieService.NotConnected')
+    throw (
+      navigator.onLine
+        ? new DimError('BungieService.SlowResponse')
+        : new DimError('BungieService.NotConnected')
     ).withError(error);
   }
 
@@ -111,18 +112,20 @@ export function handleErrors(error: Error) {
   }
 
   if (error instanceof TypeError) {
-    throw (navigator.onLine
-      ? new DimError('BungieService.NotConnectedOrBlocked')
-      : new DimError('BungieService.NotConnected')
+    throw (
+      navigator.onLine
+        ? new DimError('BungieService.NotConnectedOrBlocked')
+        : new DimError('BungieService.NotConnected')
     ).withError(error);
   }
 
   if (error instanceof HttpStatusError) {
     // "I don't think they exist" --Westley, The Princess Bride (1987)
     if (error.status === -1) {
-      throw (navigator.onLine
-        ? new DimError('BungieService.NotConnectedOrBlocked')
-        : new DimError('BungieService.NotConnected')
+      throw (
+        navigator.onLine
+          ? new DimError('BungieService.NotConnectedOrBlocked')
+          : new DimError('BungieService.NotConnected')
       ).withError(error);
     }
 

@@ -38,7 +38,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
         resetItemIndexGenerator();
 
         const [defs, , rawStores] = await Promise.all([
-          (dispatch(getDefinitions()) as any) as Promise<D1ManifestDefinitions>,
+          dispatch(getDefinitions()) as any as Promise<D1ManifestDefinitions>,
           dispatch(loadNewItems(account)),
           getStores(account),
         ]);
