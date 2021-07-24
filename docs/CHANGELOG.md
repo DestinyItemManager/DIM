@@ -2,6 +2,7 @@
 
 * Display the energy swap or upgrade details for items in the Optimiser.
 * Optimiser is now better at matching a set to an existing loadout.
+* Compare will properly close (and not just become invisible) if all the items you're comparing are deleted.
 
 ## 6.74.0 <span class="changelog-date">(2021-07-18)</span>
 
