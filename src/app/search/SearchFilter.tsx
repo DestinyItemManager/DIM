@@ -1,5 +1,9 @@
 import { t } from 'app/i18next-t';
-import { querySelector, searchQueryVersionSelector } from 'app/shell/selectors';
+import {
+  isPhonePortraitSelector,
+  querySelector,
+  searchQueryVersionSelector,
+} from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
@@ -23,14 +27,14 @@ type DispatchProps = {
   setSearchQuery(query: string): void;
 };
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
-  setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
+  setSearchQuery: (query) => dispatch(setSearchQuery(query, false)),
 });
 
 type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
   };

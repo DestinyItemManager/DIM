@@ -8,6 +8,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -38,7 +39,7 @@ function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     stores: sortedStoresSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     itemDetails: settings.itemDetails,
   };
 }

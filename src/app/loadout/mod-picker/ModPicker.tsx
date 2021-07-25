@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
@@ -9,6 +9,7 @@ import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -126,8 +127,8 @@ function mapStateToProps() {
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
-    isPhonePortrait: state.shell.isPhonePortrait,
-    language: settingsSelector(state).language,
+    isPhonePortrait: isPhonePortraitSelector(state),
+    language: languageSelector(state),
     mods: unlockedModsSelector(state, props),
   });
 }

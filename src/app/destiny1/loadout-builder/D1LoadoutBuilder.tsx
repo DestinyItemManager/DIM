@@ -3,6 +3,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
@@ -62,7 +63,7 @@ function mapStateToProps(state: RootState): StoreProps {
     buckets: bucketsSelector(state),
     stores: storesSelector(state) as D1Store[],
     defs: state.manifest.d1Manifest,
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 

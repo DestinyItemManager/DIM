@@ -34,6 +34,7 @@ import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import Refresh from './refresh';
+import { isPhonePortraitSelector } from './selectors';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 
@@ -62,7 +63,7 @@ type Props = StoreProps & ThunkDispatchProp;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     account: currentAccountSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 

@@ -1,5 +1,6 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -33,7 +34,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: wishListSelector(item)(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 

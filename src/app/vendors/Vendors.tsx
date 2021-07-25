@@ -10,6 +10,7 @@ import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -70,7 +71,7 @@ function mapStateToProps() {
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     searchQuery: state.shell.searchQuery,
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),

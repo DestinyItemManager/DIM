@@ -12,6 +12,7 @@ import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/select
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
@@ -49,7 +50,7 @@ function mapStateToProps(state: RootState): StoreProps {
     settings: settingsSelector(state),
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     currentAccount: currentAccountSelector(state),
   };
 }

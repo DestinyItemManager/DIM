@@ -16,7 +16,7 @@ import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { querySelector } from 'app/shell/selectors';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -187,7 +187,7 @@ function mapStateToProps() {
       statOrder: statOrderSelector(state),
       upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
-      isPhonePortrait: state.shell.isPhonePortrait,
+      isPhonePortrait: isPhonePortraitSelector(state),
       items: itemsSelector(state),
       unusableExotics: unusableExoticsSelector(state),
       loadouts: loadoutsSelector(state),

@@ -5,6 +5,7 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
@@ -53,7 +54,7 @@ function mapStateToProps(state: RootState): StoreProps {
     currentStore: currentStoreSelector(state)!,
     filters: filterFactorySelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 

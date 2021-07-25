@@ -1,5 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { settingsSelector } from 'app/dim-api/selectors';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -24,7 +25,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores,
     buckets: bucketsSelector(state)!,
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     singleCharacter: stores.length > 2 && singleCharacter,
     activeMode,
   };

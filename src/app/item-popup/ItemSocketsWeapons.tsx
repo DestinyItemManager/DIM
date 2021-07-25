@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import {
   getSocketByIndex,
@@ -42,14 +43,13 @@ interface StoreProps {
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: wishListSelector(item)(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function ItemSocketsWeapons({
-  defs,
   item,
   minimal,
   wishlistRoll,

@@ -15,7 +15,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
-import { querySelector } from 'app/shell/selectors';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -55,7 +55,7 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     stores: sortedStoresSelector(state),
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),

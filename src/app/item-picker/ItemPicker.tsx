@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -39,7 +40,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
     itemSortOrder: itemSortOrderSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
   });
 }
 

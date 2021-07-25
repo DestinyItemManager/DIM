@@ -1,5 +1,5 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -12,6 +12,7 @@ import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
@@ -59,10 +60,10 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait,
+    isPhonePortrait: isPhonePortraitSelector(state),
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
-    language: settingsSelector(state).language,
+    language: languageSelector(state),
   };
 }
 
