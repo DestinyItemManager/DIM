@@ -28,6 +28,7 @@ import { refresh$ } from '../shell/refresh';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
 import type { VendorsState } from './reducer';
+import { vendorsByCharacterSelector } from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
@@ -52,7 +53,7 @@ function mapStateToProps() {
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendors: state.vendors.vendorsByCharacter,
+    vendors: vendorsByCharacterSelector(state),
   });
 }
 

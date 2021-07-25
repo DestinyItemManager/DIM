@@ -10,7 +10,7 @@ import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -47,6 +47,7 @@ import {
   toVendorGroups,
 } from './d2-vendors';
 import { VendorsState } from './reducer';
+import { vendorsByCharacterSelector } from './selectors';
 import Vendor from './Vendor';
 import VendorsMenu from './VendorsMenu';
 
@@ -72,10 +73,10 @@ function mapStateToProps() {
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
     isPhonePortrait: isPhonePortraitSelector(state),
-    searchQuery: state.shell.searchQuery,
+    searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendors: state.vendors.vendorsByCharacter,
+    vendors: vendorsByCharacterSelector(state),
   });
 }
 

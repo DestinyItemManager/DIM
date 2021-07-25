@@ -11,7 +11,7 @@ import Account from './Account';
 import { DestinyAccount } from './destiny-account';
 import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
-import { currentAccountSelector } from './selectors';
+import { accountsSelector, currentAccountSelector } from './selectors';
 
 interface ProvidedProps {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
@@ -25,7 +25,7 @@ interface StoreProps {
 function mapStateToProps(state: RootState): StoreProps {
   return {
     currentAccount: currentAccountSelector(state),
-    accounts: state.accounts.accounts,
+    accounts: accountsSelector(state),
   };
 }
 

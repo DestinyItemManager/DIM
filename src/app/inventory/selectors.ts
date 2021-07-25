@@ -61,6 +61,9 @@ export const currentStoreSelector = (state: RootState) => getCurrentStore(stores
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 
+/** The inventoryItemIds of all items that are "new". */
+export const newItemsSelector = (state: RootState) => state.inventory.newItems;
+
 const visibleCurrencies = [
   3159615086, // Glimmer
   1022552290, // Legendary Shards

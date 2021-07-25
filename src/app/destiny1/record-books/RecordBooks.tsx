@@ -2,6 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { d1ManifestSelector } from 'app/manifest/selectors';
 import { useSetSetting } from 'app/settings/hooks';
 import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
@@ -34,7 +35,7 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     hideCompletedRecords: settings.hideCompletedRecords,
     stores: storesSelector(state) as D1Store[],
-    defs: state.manifest.d1Manifest,
+    defs: d1ManifestSelector(state),
   };
 }
 

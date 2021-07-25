@@ -1,6 +1,7 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
@@ -56,7 +57,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
-  defs?: D1ManifestDefinitions;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -64,12 +64,13 @@ type Props = ProvidedProps & StoreProps;
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: sortedStoresSelector(state),
-    defs: state.manifest.d1Manifest,
   };
 }
 
-function Activities({ account, defs, stores }: Props) {
+function Activities({ account, stores }: Props) {
   useLoadStores(account, stores.length > 0);
+
+  const defs = useD1Definitions();
 
   if (!defs || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

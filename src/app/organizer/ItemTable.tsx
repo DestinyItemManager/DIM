@@ -10,7 +10,12 @@ import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, itemInfosSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  itemInfosSelector,
+  newItemsSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
@@ -114,7 +119,7 @@ function mapStateToProps() {
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),
-      newItems: state.inventory.newItems,
+      newItems: newItemsSelector(state),
       destinyVersion: destinyVersionSelector(state),
     };
   };

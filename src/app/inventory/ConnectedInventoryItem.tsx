@@ -9,7 +9,7 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { itemHashTagsSelector, itemInfosSelector, newItemsSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -43,7 +43,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   return {
-    isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
+    isNew: settings.showNewItems ? newItemsSelector(state).has(item.id) : false,
     tag,
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     wishlistRoll: wishListSelector(item)(state),
