@@ -6,6 +6,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { ModAssignments } from './process-worker/mod-assignments';
 import {
   canTakeSlotIndependantMods,
   generateModPermutations,
@@ -40,12 +41,12 @@ export const doEnergiesMatch = (
 function assignModsForSlot(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  assignments: Record<string, number[]>,
+  assignments: ModAssignments,
   upgradeSpendTier: UpgradeSpendTier,
   mods?: PluggableInventoryItemDefinition[]
 ): void {
   if (mods?.length && mods.every((mod) => doEnergiesMatch(defs, mod, item, upgradeSpendTier))) {
-    assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.hash)];
+    assignments.assignSlotDependantMods(item, mods);
   }
 }
 
@@ -57,7 +58,7 @@ function assignModsForSlot(
 function assignSlotIndependantMods(
   setToMatch: ProcessItem[],
   lockedMods: PluggableInventoryItemDefinition[],
-  assignments: Record<string, number[]>
+  assignments: ModAssignments
 ): void {
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const otherMods: PluggableInventoryItemDefinition[] = [];
@@ -87,6 +88,9 @@ function assignSlotIndependantMods(
   const otherModPermutations = generateModPermutations(otherProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
+  // eslint-disable-next-line no-console
+  console.log(`Combat mod perms: ${otherModPermutations.length}`);
+
   canTakeSlotIndependantMods(
     generalModPermutations,
     otherModPermutations,
@@ -103,7 +107,7 @@ export function assignModsToArmorSet(
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
 ): [Record<string, PluggableInventoryItemDefinition[]>, PluggableInventoryItemDefinition[]] {
-  const assignments: Record<string, number[]> = {};
+  const assignments = new ModAssignments();
 
   for (const item of setToMatch) {
     assignments[item.id] = [];
@@ -136,7 +140,7 @@ export function assignModsToArmorSet(
 
   // In this we map modHashes to their mod using modsByHash. Note that we pop the mod from the
   // array in modByHash, this will leave us with any unassigned mods left in modsByHash
-  const assignedMods = _.mapValues(assignments, (modHashes) =>
+  const assignedMods = _.mapValues(assignments.results, (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())
       // This shouldn't happen but lets throw in a filter for saftey and type happyness

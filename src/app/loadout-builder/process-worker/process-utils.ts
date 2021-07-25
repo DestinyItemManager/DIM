@@ -1,4 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { ModAssignments } from './mod-assignments';
 import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
@@ -122,19 +123,20 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
 /**
- * This figures out if all general, other and raid mods can be assigned to an armour set.
+ * This figures out if all general, other and raid mods can be assigned to an armour set. It has two modes of
+ * operation. If assignments is not passed in it returns a boolean value indicating whether a set was found to
+ * store all the mods. If assignments is passed in, it find the permutation of mods with the least energy swaps
+ * and stores the results in ModAssignments.
  *
  * The params generalModPermutations, otherModPermutations, raidModPermutations are assumed to be the results
  * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or raid mods.
- *
- * assignments is mutated by this function to store any mods assignments that were made.
  */
 export function canTakeSlotIndependantMods(
   generalModPermutations: (ProcessMod | null)[][],
   otherModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
   items: ProcessItem[],
-  assignments?: Record<string, number[]>
+  assignments?: ModAssignments
 ) {
   // Sort the items like the mods are to try and get a greedy result
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
@@ -258,26 +260,18 @@ export function canTakeSlotIndependantMods(
         // At this point all three assignments have been satisfied, so we can create the assignments
         // if necessary and break out of the function
         if (assignments) {
-          for (let i = 0; i < sortedItems.length; i++) {
-            const generalMod = generalP[i];
-            const otherMod = otherP[i];
-            const raidMod = raidP[i];
-            if (generalMod) {
-              assignments[sortedItems[i].id].push(generalMod.hash);
-            }
-            if (otherMod) {
-              assignments[sortedItems[i].id].push(otherMod.hash);
-            }
-            if (raidMod) {
-              assignments[sortedItems[i].id].push(raidMod.hash);
-            }
-          }
+          assignments.assignSlotIndependantModsIfLessEnergyTypeSwaps(
+            sortedItems,
+            generalP,
+            otherP,
+            raidP
+          );
+        } else {
+          return true;
         }
-
-        return true;
       }
     }
   }
 
-  return false;
+  return assignments ? assignments.assignmentFound : false;
 }

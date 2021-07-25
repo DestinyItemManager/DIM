@@ -159,6 +159,7 @@ export function mapDimItemToProcessItem(
     energy: energy
       ? {
           type: energyType ?? energy.energyType,
+          originalEnergyType: energy.energyType,
           capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem),
           val: modsCost,
         }

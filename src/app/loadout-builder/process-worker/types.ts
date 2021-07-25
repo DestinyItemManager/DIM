@@ -10,6 +10,7 @@ export interface ProcessItem {
   equippingLabel?: string;
   energy?: {
     type: DestinyEnergyType;
+    originalEnergyType: DestinyEnergyType;
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
     capacity: number;
     /**
