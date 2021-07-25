@@ -26,12 +26,12 @@ interface StoreProps {
   searchQuery: string;
 }
 
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
+function mapStateToProps(state: RootState): StoreProps {
+  return {
     stores: storesSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: querySelector(state),
-  });
+  };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;

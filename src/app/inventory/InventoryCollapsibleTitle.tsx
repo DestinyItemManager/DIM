@@ -1,23 +1,22 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { collapsedSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import {
   postmasterAlmostFull,
   postmasterSpaceUsed,
   POSTMASTER_SIZE,
 } from 'app/loadout-drawer/postmaster';
-import { RootState } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './InventoryCollapsibleTitle.scss';
 import { DimStore } from './store-types';
 
-interface ProvidedProps {
+interface Props {
   sectionId: string;
   title: React.ReactNode;
   children?: React.ReactNode;
@@ -25,39 +24,20 @@ interface ProvidedProps {
   stores: DimStore[];
 }
 
-interface StoreProps {
-  collapsed: boolean;
-}
-
-interface DispatchProps {
-  toggle(): void;
-}
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return {
-    collapsed: settingsSelector(state).collapsedSections[props.sectionId],
-  };
-}
-
-function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): DispatchProps {
-  return {
-    toggle: () => {
-      dispatch(toggleCollapsedSection(ownProps.sectionId));
-    },
-  };
-}
-
-type Props = StoreProps & ProvidedProps & DispatchProps;
-
-function InventoryCollapsibleTitle({
+export default function InventoryCollapsibleTitle({
   sectionId,
   title,
-  collapsed,
   children,
-  toggle,
   className,
   stores,
 }: Props) {
+  const dispatch = useThunkDispatch();
+  const collapsed = Boolean(useSelector(collapsedSelector(sectionId)));
+  const toggle = useCallback(
+    () => dispatch(toggleCollapsedSection(sectionId)),
+    [dispatch, sectionId]
+  );
+
   const checkPostmaster = sectionId === 'Postmaster';
 
   const initialMount = useRef(true);
@@ -140,8 +120,3 @@ function InventoryCollapsibleTitle({
     </>
   );
 }
-
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(InventoryCollapsibleTitle);

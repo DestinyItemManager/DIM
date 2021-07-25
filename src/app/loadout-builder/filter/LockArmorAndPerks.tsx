@@ -57,13 +57,13 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
+function mapStateToProps(state: RootState): StoreProps {
+  return {
     isPhonePortrait: state.shell.isPhonePortrait,
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
     language: settingsSelector(state).language,
-  });
+  };
 }
 
 /**

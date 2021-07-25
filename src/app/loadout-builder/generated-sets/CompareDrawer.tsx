@@ -67,11 +67,11 @@ interface StoreProps {
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
+function mapStateToProps(state: RootState): StoreProps {
+  return {
     allItems: allItemsSelector(state),
     characterClass: currentStoreSelector(state)?.classType,
-  });
+  };
 }
 
 function chooseSimilarLoadout(

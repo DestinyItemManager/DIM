@@ -13,6 +13,13 @@ export function makeProfileKey(platformMembershipId: string, destinyVersion: Des
 
 export const settingsSelector = (state: RootState) => state.dimApi.settings;
 
+export const languageSelector = (state: RootState) => settingsSelector(state).language;
+
+export const collapsedSelector =
+  (sectionId: string) =>
+  (state: RootState): boolean | undefined =>
+    settingsSelector(state).collapsedSections[sectionId];
+
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;
 
