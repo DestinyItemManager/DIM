@@ -19,6 +19,7 @@
   align-items: center;
   min-width: 10em;
   padding: 6px 9px;
+  white-space: nowrap;
   @include phone-portrait {
     padding: 10px 16px;
     font-size: 14px;
