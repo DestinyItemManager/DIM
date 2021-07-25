@@ -29,6 +29,7 @@ interface ProvidedProps {
   searchQuery: string;
   filteredItems: DimItem[];
   searchActive: boolean;
+  fixed?: boolean;
 }
 
 interface StoreProps {
@@ -54,6 +55,7 @@ function ItemActionsDropdown({
   isPhonePortrait,
   filteredItems,
   searchQuery,
+  fixed,
   dispatch,
 }: Props) {
   let isComparable = false;
@@ -179,6 +181,7 @@ function ItemActionsDropdown({
       kebab={true}
       className={styles.dropdownButton}
       offset={isPhonePortrait ? 10 : 3}
+      fixed={fixed}
     />
   );
 }

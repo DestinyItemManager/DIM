@@ -19,20 +19,21 @@ export const hasWishListSelector = createSelector(
 );
 
 /** Returns a memoized function to look up wishlist by item, which is reset when the wishlist changes. Prefer wishListSelector */
-export const wishListFunctionSelector = createSelector(wishListsByHashSelector, (wishlists): ((
-  item: DimItem
-) => InventoryWishListRoll | undefined) => {
-  // Cache of inventory item id to roll. For this to work, make sure vendor/collections rolls have unique ids.
-  const cache = new Map<string, InventoryWishListRoll | undefined>();
-  return (item: DimItem) => {
-    if (cache.has(item.id)) {
-      return cache.get(item.id);
-    }
-    const roll = getInventoryWishListRoll(item, wishlists);
-    cache.set(item.id, roll);
-    return roll;
-  };
-});
+export const wishListFunctionSelector = createSelector(
+  wishListsByHashSelector,
+  (wishlists): ((item: DimItem) => InventoryWishListRoll | undefined) => {
+    // Cache of inventory item id to roll. For this to work, make sure vendor/collections rolls have unique ids.
+    const cache = new Map<string, InventoryWishListRoll | undefined>();
+    return (item: DimItem) => {
+      if (cache.has(item.id)) {
+        return cache.get(item.id);
+      }
+      const roll = getInventoryWishListRoll(item, wishlists);
+      cache.set(item.id, roll);
+      return roll;
+    };
+  }
+);
 
 /**
  * A reverse-curried selector that is easier to use in useSelector. This will re-render the component only when

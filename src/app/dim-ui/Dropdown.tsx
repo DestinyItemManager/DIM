@@ -28,6 +28,7 @@ interface Props {
   disabled?: boolean;
   options: Option[];
   offset?: number;
+  fixed?: boolean;
 }
 
 function isDropdownOption(option: Option): option is DropdownOption {
@@ -49,6 +50,7 @@ export default function Dropdown({
   disabled,
   options: items,
   offset,
+  fixed,
 }: Props) {
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect({
     items,
@@ -63,6 +65,7 @@ export default function Dropdown({
     reference: buttonRef,
     placement: 'bottom-start',
     offset,
+    fixed,
   });
 
   return (

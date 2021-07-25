@@ -69,7 +69,7 @@ export function initi18n(): Promise<unknown> {
         },
         backend: {
           loadPath([lng]: string[]) {
-            const path = ({
+            const path = {
               en,
               it,
               de,
@@ -83,7 +83,7 @@ export function initi18n(): Promise<unknown> {
               ko,
               'zh-cht': zhCHT,
               'zh-chs': zhCHS,
-            }[lng] as unknown) as string;
+            }[lng] as unknown as string;
             if (!path) {
               throw new Error(`unsupported language ${lng}`);
             }

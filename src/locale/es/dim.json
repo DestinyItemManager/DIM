@@ -229,6 +229,7 @@
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
     },
+    "Timelost": "\\(perdido en el tiempo\\)",
     "Tracked": "Muestra misiones/contratos basado en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
     "Trashlist": "Muestra objetos que coincidan con la lista basura de tu lista de deseos.",

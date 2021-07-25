@@ -123,9 +123,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(raw: {
-  data: { buckets: any };
-}): {
+export function makeVault(raw: { data: { buckets: any } }): {
   store: D1Store;
   items: any[];
 } {

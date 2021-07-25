@@ -7,7 +7,10 @@ const advancedFilters: FilterDefinition[] = [
     keywords: 'id',
     description: tl('Filter.ItemId'),
     format: 'freeform',
-    filter: ({ filterValue }) => (item) => item.id === filterValue,
+    filter:
+      ({ filterValue }) =>
+      (item) =>
+        item.id === filterValue,
   },
   {
     keywords: 'hash',
