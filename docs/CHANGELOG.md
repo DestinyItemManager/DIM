@@ -2,6 +2,7 @@
 
 * Display the energy swap or upgrade details for items in the Optimiser.
 * Optimiser is now better at matching a set to an existing loadout.
+* Fixed the search actions (three dots) menu not appearing in Safari.
 
 ## 6.74.0 <span class="changelog-date">(2021-07-18)</span>
 
