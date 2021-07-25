@@ -1,5 +1,6 @@
 ## Next
 
+* When opening Compare for a Timelost weapon, we now also include non-Timelost versions of that weapon.
 * Display the energy swap or upgrade details for items in the Optimiser.
 * Optimiser is now better at matching a set to an existing loadout.
 * Fixed the search actions (three dots) menu not appearing in Safari.
