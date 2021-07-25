@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import {
@@ -16,7 +16,6 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { DimAdjustedItemPlug } from '../compare/types';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -37,14 +36,12 @@ interface ProvidedProps {
 
 interface StoreProps {
   wishlistRoll?: InventoryWishListRoll;
-  defs?: D2ManifestDefinitions;
   isPhonePortrait: boolean;
 }
 
 function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
   return {
     wishlistRoll: wishListSelector(item)(state),
-    defs: d2ManifestSelector(state),
     isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
@@ -60,6 +57,7 @@ function ItemSocketsWeapons({
   updateSocketComparePlug,
   adjustedItemPlugs,
 }: Props) {
+  const defs = useD2Definitions();
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {

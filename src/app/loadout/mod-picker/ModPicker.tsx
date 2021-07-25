@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
@@ -43,7 +43,6 @@ interface ProvidedProps {
 interface StoreProps {
   language: string;
   isPhonePortrait: boolean;
-  defs: D2ManifestDefinitions;
   /**
    * An array of mods built from looking at the current DestinyClass's
    * items and finding all the available mods that could be socketed.
@@ -129,7 +128,6 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     isPhonePortrait: state.shell.isPhonePortrait,
     language: settingsSelector(state).language,
-    defs: d2ManifestSelector(state)!,
     mods: unlockedModsSelector(state, props),
   });
 }
@@ -138,7 +136,6 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
-  defs,
   mods,
   language,
   isPhonePortrait,
@@ -147,6 +144,7 @@ function ModPicker({
   onAccept,
   onClose,
 }: Props) {
+  const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
   const [lockedModsInternal, setLockedModsInternal] = useState(() => [...lockedMods]);
   const filterInput = useRef<SearchFilterRef | null>(null);

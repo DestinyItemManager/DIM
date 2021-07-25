@@ -5,7 +5,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -19,7 +19,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
@@ -36,7 +35,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
   searchQuery?: string;
@@ -56,7 +54,6 @@ function mapStateToProps() {
     const settings = settingsSelector(state);
     return {
       buckets: bucketsSelector(state),
-      defs: d2ManifestSelector(state),
       ownedItemHashes: ownedItemsSelectorInstance(state),
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
@@ -77,7 +74,6 @@ function Records({
   account,
   buckets,
   ownedItemHashes,
-  defs,
   profileResponse,
   searchQuery,
   searchFilter,
@@ -93,6 +89,8 @@ function Records({
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;
+
+  const defs = useD2Definitions();
 
   if (!profileResponse || !defs || !buckets) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

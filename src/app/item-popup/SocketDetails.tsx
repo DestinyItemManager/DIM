@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
@@ -6,7 +5,7 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
@@ -32,7 +31,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  defs: D2ManifestDefinitions;
   inventoryPlugs: Set<number>;
   unlockedPlugs: Set<number>;
 }
@@ -89,7 +87,6 @@ function mapStateToProps() {
   );
 
   return (state: RootState, props: ProvidedProps): StoreProps => ({
-    defs: d2ManifestSelector(state)!,
     inventoryPlugs: inventoryPlugs(state, props),
     unlockedPlugs: unlockedPlugsSelector(state, props),
   });
@@ -134,7 +131,8 @@ export const SocketDetailsMod = React.memo(
   }
 );
 
-function SocketDetails({ defs, item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
+function SocketDetails({ item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
+  const defs = useD2Definitions()!;
   const initialPlug = socket.plugged?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
     initialPlug || null

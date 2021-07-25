@@ -1,5 +1,4 @@
 import styles from 'app/active-mode/Views/PursuitsView.m.scss';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
@@ -7,7 +6,7 @@ import { t } from 'app/i18next-t';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import Pursuit from 'app/progress/Pursuit';
 import { sortPursuits } from 'app/progress/Pursuits';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
@@ -25,13 +24,11 @@ interface ProvidedProps {
 
 interface StoreProps {
   trackedTriumphs: number[];
-  defs?: D2ManifestDefinitions;
   profileResponse?: DestinyProfileResponse;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    defs: d2ManifestSelector(state),
     trackedTriumphs: trackedTriumphsSelector(state),
     profileResponse: profileResponseSelector(state),
   };
@@ -39,7 +36,9 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = ProvidedProps & StoreProps;
 
-function PursuitsView({ store, trackedTriumphs, defs, profileResponse }: Props) {
+function PursuitsView({ store, trackedTriumphs, profileResponse }: Props) {
+  const defs = useD2Definitions();
+
   // Get all items in this character's inventory that represent quests - some are actual items that take
   // up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
   // that represent milestones.

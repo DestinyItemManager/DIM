@@ -13,7 +13,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -23,7 +23,6 @@ import { motion, PanInfo } from 'framer-motion';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -44,7 +43,6 @@ interface ProvidedProps {
 interface StoreProps {
   isPhonePortrait: boolean;
   buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
@@ -59,7 +57,6 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     isPhonePortrait: state.shell.isPhonePortrait,
     stores: sortedStoresSelector(state),
-    defs: d2ManifestSelector(state),
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
@@ -71,7 +68,6 @@ function mapStateToProps(state: RootState): StoreProps {
 
 function Progress({
   account,
-  defs,
   stores,
   isPhonePortrait,
   buckets,
@@ -81,6 +77,7 @@ function Progress({
   allItems,
   coreSettings,
 }: Props) {
+  const defs = useD2Definitions();
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useLoadStores(account, Boolean(profileInfo));

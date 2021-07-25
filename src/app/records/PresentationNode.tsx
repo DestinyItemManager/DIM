@@ -1,7 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -19,7 +18,6 @@ import PresentationNodeLeaf from './PresentationNodeLeaf';
 interface StoreProps {
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
-  defs: D2ManifestDefinitions;
 }
 
 interface ProvidedProps {
@@ -38,7 +36,6 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     completedRecordsHidden: settings.completedRecordsHidden,
     redactedRecordsRevealed: settings.redactedRecordsRevealed,
-    defs: d2ManifestSelector(state)!,
   };
 }
 const mapDispatchToProps = {
@@ -50,7 +47,6 @@ type Props = StoreProps & ProvidedProps & DispatchProps;
 
 function PresentationNode({
   node,
-  defs,
   ownedItemHashes,
   path,
   parents,
@@ -61,6 +57,7 @@ function PresentationNode({
   isRootNode,
   overrideName,
 }: Props) {
+  const defs = useD2Definitions()!;
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
   const presentationNodeHash = node.nodeDef.hash;
