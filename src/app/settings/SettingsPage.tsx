@@ -114,9 +114,6 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文', // Chinese (Simplified)
 });
 
-// Edge doesn't support these
-const supportsCssVar = window?.CSS?.supports('(--foo: red)');
-
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
@@ -284,7 +281,7 @@ function SettingsPage({
               <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
             </div>
 
-            {supportsCssVar && !isPhonePortrait && (
+            {!isPhonePortrait && (
               <div className="setting">
                 <div className="horizontal itemSize">
                   <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
@@ -410,27 +407,26 @@ function SettingsPage({
               </div>
             )}
 
-            {supportsCssVar &&
-              (isPhonePortrait ? (
-                <div className="setting">
-                  <Select
-                    label={t('Settings.InventoryColumnsMobile')}
-                    name="charColMobile"
-                    value={settings.charColMobile}
-                    options={charColOptions}
-                    onChange={onChange}
-                  />
-                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                </div>
-              ) : (
+            {isPhonePortrait ? (
+              <div className="setting">
                 <Select
-                  label={t('Settings.InventoryColumns')}
-                  name="charCol"
-                  value={settings.charCol}
+                  label={t('Settings.InventoryColumnsMobile')}
+                  name="charColMobile"
+                  value={settings.charColMobile}
                   options={charColOptions}
                   onChange={onChange}
                 />
-              ))}
+                <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+              </div>
+            ) : (
+              <Select
+                label={t('Settings.InventoryColumns')}
+                name="charCol"
+                value={settings.charCol}
+                options={charColOptions}
+                onChange={onChange}
+              />
+            )}
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}
