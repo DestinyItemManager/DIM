@@ -103,10 +103,8 @@ function App({
     <div
       key={`lang-${language}`}
       className={clsx('app', `lang-${language}`, `char-cols-${charColMobile}`, {
-        itemQuality: itemQuality,
+        itemQuality,
         'show-new-items': showNewItems,
-        'ms-edge': navigator.userAgent.includes('Edge'),
-        ios: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
       })}
     >
       <ScrollToTop />
