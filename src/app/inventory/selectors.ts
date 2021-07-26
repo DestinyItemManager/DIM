@@ -8,7 +8,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
-import { characterSortSelector } from '../settings/character-sort';
+import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
 import { getTag, ItemInfos } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
@@ -43,6 +43,13 @@ export const sortedStoresSelector = createSelector(
   storesSelector,
   characterSortSelector,
   (stores, sortStores) => sortStores(stores)
+);
+
+/** Sorted by "importance" which handles reversed sorting a bit better - for menus only */
+export const storesSortedByImportanceSelector = createSelector(
+  characterSortImportanceSelector,
+  storesSelector,
+  (sort, stores) => sort(stores)
 );
 
 /**

@@ -1,5 +1,4 @@
 import { settingsSelector } from 'app/dim-api/selectors';
-import { storesSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -46,7 +45,7 @@ export const characterSortSelector = createSelector(
  * dropdowns and such where "mostRecentReverse" still implies that the most recent character
  * is most important.
  */
-const characterSortImportanceSelector = createSelector(
+export const characterSortImportanceSelector = createSelector(
   characterOrderSelector,
   customCharacterSortSelector,
   (order, customCharacterSort) => {
@@ -67,10 +66,4 @@ const characterSortImportanceSelector = createSelector(
         return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
     }
   }
-);
-
-export const storesSortedByImportanceSelector = createSelector(
-  characterSortImportanceSelector,
-  storesSelector,
-  (sort, stores) => sort(stores)
 );
