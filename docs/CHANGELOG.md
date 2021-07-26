@@ -1,5 +1,7 @@
 ## Next
 
+## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
+
 * When opening Compare for a Timelost weapon, we now also include non-Timelost versions of that weapon.
 * Display the energy swap or upgrade details for items in the Optimiser.
 * Optimiser is now better at matching a set to an existing loadout.
