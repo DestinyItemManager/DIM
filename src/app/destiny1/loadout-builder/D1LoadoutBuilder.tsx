@@ -4,7 +4,6 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { d1ManifestSelector } from 'app/manifest/selectors';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
@@ -53,7 +52,6 @@ interface StoreProps {
   stores: D1Store[];
   buckets?: InventoryBuckets;
   defs?: D1ManifestDefinitions;
-  isPhonePortrait: boolean;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
@@ -64,7 +62,6 @@ function mapStateToProps(state: RootState): StoreProps {
     buckets: bucketsSelector(state),
     stores: storesSelector(state) as D1Store[],
     defs: d1ManifestSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -189,7 +186,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   }
 
   render() {
-    const { stores, buckets, defs, isPhonePortrait } = this.props;
+    const { stores, buckets, defs } = this.props;
     const {
       includeVendors,
       loadingVendors,
@@ -238,7 +235,6 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
             <CharacterSelect
               selectedStore={active}
               stores={stores}
-              isPhonePortrait={isPhonePortrait}
               onCharacterChanged={this.onSelectedChange}
             />
           </div>

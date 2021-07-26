@@ -5,7 +5,6 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
@@ -44,7 +43,6 @@ interface StoreProps {
   allItems: DimItem[];
   currentStore?: DimStore;
   lastInfusionDirection: InfuseDirection;
-  isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
 }
 
@@ -54,7 +52,6 @@ function mapStateToProps(state: RootState): StoreProps {
     currentStore: currentStoreSelector(state)!,
     filters: filterFactorySelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
-    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -152,7 +149,6 @@ function InfusionFinder({
   allItems,
   currentStore,
   filters,
-  isPhonePortrait,
   lastInfusionDirection,
   dispatch,
 }: Props) {
@@ -241,10 +237,6 @@ function InfusionFinder({
     </div>
   );
 
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
   const header = ({ onClose }: { onClose(): void }) => (
     <div className="infuseHeader">
       <h1>
@@ -287,11 +279,7 @@ function InfusionFinder({
           </div>
         </div>
         <div className="infuseSearch">
-          <SearchBar
-            onQueryChanged={onQueryChanged}
-            placeholder={t('Infusion.Filter')}
-            autoFocus={autoFocus}
-          />
+          <SearchBar onQueryChanged={onQueryChanged} placeholder={t('Infusion.Filter')} />
         </div>
       </div>
     </div>

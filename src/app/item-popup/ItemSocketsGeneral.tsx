@@ -1,24 +1,21 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import './ItemSockets.scss';
 import styles from './ItemSocketsGeneral.m.scss';
 import Socket from './Socket';
 import SocketDetails from './SocketDetails';
 
-interface ProvidedProps {
+interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
@@ -26,29 +23,14 @@ interface ProvidedProps {
   adjustedItemPlugs?: DimAdjustedItemPlug;
 }
 
-interface StoreProps {
-  wishlistRoll?: InventoryWishListRoll;
-  isPhonePortrait: boolean;
-}
-
-function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  return {
-    wishlistRoll: wishListSelector(item)(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function ItemSocketsGeneral({
+export default function ItemSocketsGeneral({
   item,
   minimal,
-  wishlistRoll,
-  isPhonePortrait,
   updateSocketComparePlug,
   adjustedItemPlugs,
 }: Props) {
   const defs = useD2Definitions();
+  const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
@@ -97,11 +79,7 @@ function ItemSocketsGeneral({
       {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerkSocket?.plugged && (
-            <ArchetypeSocket
-              archetypeSocket={exoticArmorPerkSocket}
-              item={item}
-              isPhonePortrait={isPhonePortrait}
-            >
+            <ArchetypeSocket archetypeSocket={exoticArmorPerkSocket} item={item}>
               {!minimal && (
                 <div className={styles.exoticDescription}>
                   {exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
@@ -128,7 +106,6 @@ function ItemSocketsGeneral({
                   <Socket
                     key={socketInfo.socketIndex}
                     item={item}
-                    isPhonePortrait={isPhonePortrait}
                     socket={socketInfo}
                     wishlistRoll={wishlistRoll}
                     onClick={handleSocketClick}
@@ -152,8 +129,6 @@ function ItemSocketsGeneral({
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemSocketsGeneral);
 
 /** converts a socket category to a valid css class name */
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {

@@ -27,7 +27,6 @@ import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
@@ -78,7 +77,6 @@ interface StoreProps {
   itemInfos: ItemInfos;
   wishList: (item: DimItem) => InventoryWishListRoll | undefined;
   hasWishList: boolean;
-  isPhonePortrait: boolean;
   enabledColumns: string[];
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
   loadouts: Loadout[];
@@ -115,7 +113,6 @@ function mapStateToProps() {
       itemInfos: itemInfosSelector(state),
       wishList: wishListFunctionSelector(state),
       hasWishList: hasWishListSelector(state),
-      isPhonePortrait: isPhonePortraitSelector(state),
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
       loadouts: loadoutsSelector(state),

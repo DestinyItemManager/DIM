@@ -9,7 +9,7 @@ import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -43,7 +43,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   language: string;
-  isPhonePortrait: boolean;
   /**
    * An array of mods built from looking at the current DestinyClass's
    * items and finding all the available mods that could be socketed.
@@ -127,7 +126,6 @@ function mapStateToProps() {
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
-    isPhonePortrait: isPhonePortraitSelector(state),
     language: languageSelector(state),
     mods: unlockedModsSelector(state, props),
   });
@@ -136,19 +134,12 @@ function mapStateToProps() {
 /**
  * A sheet to pick mods that are required in the final loadout sets.
  */
-function ModPicker({
-  mods,
-  language,
-  isPhonePortrait,
-  lockedMods,
-  initialQuery,
-  onAccept,
-  onClose,
-}: Props) {
+function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose }: Props) {
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
   const [lockedModsInternal, setLockedModsInternal] = useState(() => [...lockedMods]);
   const filterInput = useRef<SearchFilterRef | null>(null);
+  const isPhonePortrait = useIsPhonePortrait();
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {

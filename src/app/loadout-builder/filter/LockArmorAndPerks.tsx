@@ -1,5 +1,4 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -12,7 +11,6 @@ import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
@@ -50,20 +48,16 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   stores: DimStore[];
-  language: string;
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: isPhonePortraitSelector(state),
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
-    language: languageSelector(state),
   };
 }
 
@@ -81,8 +75,6 @@ function LockArmorAndPerks({
   characterItems,
   unusableExotics,
   lockedExotic,
-  isPhonePortrait,
-  language,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -301,8 +293,6 @@ function LockArmorAndPerks({
             lockedExotic={lockedExotic}
             characterItems={characterItems}
             unusableExotics={unusableExotics}
-            isPhonePortrait={isPhonePortrait}
-            language={language}
             lbDispatch={lbDispatch}
             onClose={() => setShowExoticPicker(false)}
           />,

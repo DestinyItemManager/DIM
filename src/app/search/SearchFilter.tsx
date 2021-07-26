@@ -1,9 +1,5 @@
 import { t } from 'app/i18next-t';
-import {
-  isPhonePortraitSelector,
-  querySelector,
-  searchQueryVersionSelector,
-} from 'app/shell/selectors';
+import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
@@ -18,7 +14,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   searchQueryVersion: number;
   searchQuery: string;
 }
@@ -34,7 +29,6 @@ type Props = ProvidedProps & StoreProps & DispatchProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: isPhonePortraitSelector(state),
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
   };
@@ -44,9 +38,10 @@ function mapStateToProps(state: RootState): StoreProps {
  * The main search filter that's in the header.
  */
 export function SearchFilter(
-  { isPhonePortrait, setSearchQuery, searchQuery, searchQueryVersion, onClear }: Props,
+  { setSearchQuery, searchQuery, searchQueryVersion, onClear }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
+  const isPhonePortrait = useIsPhonePortrait();
   const onClearFilter = useCallback(() => {
     onClear?.();
   }, [onClear]);

@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { settingsSelector } from 'app/dim-api/selectors';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -13,7 +13,6 @@ import './Stores.scss';
 
 interface StoreProps {
   stores: DimStore[];
-  isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   singleCharacter: boolean;
   activeMode: boolean;
@@ -25,7 +24,6 @@ function mapStateToProps(state: RootState): StoreProps {
   return {
     stores,
     buckets: bucketsSelector(state)!,
-    isPhonePortrait: isPhonePortraitSelector(state),
     singleCharacter: stores.length > 2 && singleCharacter,
     activeMode,
   };
@@ -38,7 +36,8 @@ type Props = {
 /**
  * Display inventory and character headers for all characters and the vault.
  */
-function Stores({ account, stores, buckets, isPhonePortrait, singleCharacter, activeMode }: Props) {
+function Stores({ account, stores, buckets, singleCharacter, activeMode }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   if (!stores.length || !buckets) {
     return null;
   }

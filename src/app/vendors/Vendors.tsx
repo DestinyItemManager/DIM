@@ -10,7 +10,7 @@ import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -58,7 +58,6 @@ interface StoreProps {
   stores: DimStore[];
   buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
-  isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
   vendors: VendorsState['vendorsByCharacter'];
@@ -72,7 +71,6 @@ function mapStateToProps() {
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
     searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
@@ -89,7 +87,6 @@ function Vendors({
   stores,
   buckets,
   ownedItemHashes,
-  isPhonePortrait,
   searchQuery,
   filterItems,
   profileResponse,
@@ -98,6 +95,7 @@ function Vendors({
   account,
 }: Props) {
   const defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
   const [characterId, setCharacterId] = useState<string>();
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 
@@ -227,7 +225,6 @@ function Vendors({
         {selectedStore && (
           <CharacterSelect
             stores={stores}
-            isPhonePortrait={isPhonePortrait}
             selectedStore={selectedStore}
             onCharacterChanged={onCharacterChanged}
           />

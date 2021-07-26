@@ -10,12 +10,10 @@ import Socket from './Socket';
 export default function ArchetypeSocket({
   archetypeSocket,
   item,
-  isPhonePortrait,
   children,
 }: {
   archetypeSocket?: DimSocket;
   item: DimItem;
-  isPhonePortrait: boolean;
   children?: React.ReactNode;
 }) {
   if (!archetypeSocket?.plugged) {
@@ -25,12 +23,7 @@ export default function ArchetypeSocket({
   return (
     <>
       <div className={styles.mod}>
-        <Socket
-          key={archetypeSocket.socketIndex}
-          item={item}
-          isPhonePortrait={isPhonePortrait}
-          socket={archetypeSocket}
-        />
+        <Socket key={archetypeSocket.socketIndex} item={item} socket={archetypeSocket} />
       </div>
       <div className={styles.info}>
         <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>

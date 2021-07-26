@@ -3,15 +3,14 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { characterSortImportanceSelector } from 'app/settings/character-sort';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { storesSortedByImportanceSelector } from 'app/settings/character-sort';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -25,39 +24,26 @@ import {
 import { loadingTracker } from '../shell/loading-tracker';
 import styles from './ItemActionsDropdown.m.scss';
 
-interface ProvidedProps {
+interface Props {
   searchQuery: string;
   filteredItems: DimItem[];
   searchActive: boolean;
   fixed?: boolean;
 }
 
-interface StoreProps {
-  stores: DimStore[];
-  isPhonePortrait: boolean;
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: characterSortImportanceSelector(state)(storesSelector(state)),
-    isPhonePortrait: isPhonePortraitSelector(state),
-  };
-}
-
 /**
  * Various actions that can be performed on an item
  */
-function ItemActionsDropdown({
-  stores,
+export default React.memo(function ItemActionsDropdown({
   searchActive,
-  isPhonePortrait,
   filteredItems,
   searchQuery,
   fixed,
-  dispatch,
 }: Props) {
+  const dispatch = useThunkDispatch();
+  const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(storesSortedByImportanceSelector);
+
   let isComparable = false;
   if (filteredItems.length) {
     const type = filteredItems[0].typeName;
@@ -184,6 +170,4 @@ function ItemActionsDropdown({
       fixed={fixed}
     />
   );
-}
-
-export default connect<StoreProps>(mapStateToProps)(ItemActionsDropdown);
+});

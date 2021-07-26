@@ -7,7 +7,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
@@ -60,8 +60,6 @@ interface ProvidedProps {
   placeholder: string;
   /** Is this the main search bar in the header? It behaves somewhat differently. */
   mainSearchBar?: boolean;
-  /** Whether to autofocus this on mount */
-  autoFocus?: boolean;
   /** A fake property that can be used to force the "live" query to be replaced with the one from props */
   searchQueryVersion?: number;
   /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
@@ -76,7 +74,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   recentSearches: Search[];
-  isPhonePortrait: boolean;
   validateQuery: (query: string) => boolean;
   autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
 }
@@ -104,7 +101,6 @@ function mapStateToProps() {
 
     return {
       recentSearches: recentSearchesSelector(state),
-      isPhonePortrait: isPhonePortraitSelector(state),
       autocompleter: autoCompleterSelector(state),
       validateQuery: validateQuerySelector(state),
       searchQuery: manipulatedSearchQuery,
@@ -189,17 +185,23 @@ function SearchBar(
     mainSearchBar,
     placeholder,
     children,
-    autoFocus,
     onQueryChanged,
     onClear,
     dispatch,
     validateQuery,
     autocompleter,
     recentSearches,
-    isPhonePortrait,
   }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
+  const isPhonePortrait = useIsPhonePortrait();
+
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const autoFocus =
+    !mainSearchBar &&
+    !isPhonePortrait &&
+    !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const inputElement = useRef<HTMLInputElement>(null);

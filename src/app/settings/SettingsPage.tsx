@@ -12,7 +12,7 @@ import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/select
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
@@ -40,7 +40,6 @@ import Spreadsheets from './Spreadsheets';
 interface StoreProps {
   currentAccount?: DestinyAccount;
   settings: Settings;
-  isPhonePortrait: boolean;
   storesLoaded: boolean;
   stores: DimStore[];
 }
@@ -50,7 +49,6 @@ function mapStateToProps(state: RootState): StoreProps {
     settings: settingsSelector(state),
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
     currentAccount: currentAccountSelector(state),
   };
 }
@@ -121,14 +119,8 @@ const supportsCssVar = window?.CSS?.supports('(--foo: red)');
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
-function SettingsPage({
-  settings,
-  isPhonePortrait,
-  storesLoaded,
-  stores,
-  currentAccount,
-  dispatch,
-}: Props) {
+function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount, storesLoaded);
   const setSetting = useSetSetting();
   const onCheckChange = (checked: boolean, name: keyof Settings) => {

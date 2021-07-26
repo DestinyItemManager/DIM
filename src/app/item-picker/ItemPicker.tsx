@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -25,7 +24,6 @@ type ProvidedProps = ItemPickerState & {
 interface StoreProps {
   allItems: DimItem[];
   itemSortOrder: string[];
-  isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
 }
 
@@ -40,7 +38,6 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
     itemSortOrder: itemSortOrderSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
   });
 }
 
@@ -57,17 +54,12 @@ function ItemPicker({
   filters,
   itemSortOrder,
   sortBy,
-  isPhonePortrait,
   ignoreSelectedPerks,
   onItemSelected,
   onCancel,
   onSheetClosed,
 }: Props) {
   const [query, setQuery] = useState('');
-
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
     onItemSelected({ item });
@@ -83,11 +75,7 @@ function ItemPicker({
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        <SearchBar
-          placeholder={t('ItemPicker.SearchPlaceholder')}
-          autoFocus={autoFocus}
-          onQueryChanged={setQuery}
-        />
+        <SearchBar placeholder={t('ItemPicker.SearchPlaceholder')} onQueryChanged={setQuery} />
       </div>
     </div>
   );

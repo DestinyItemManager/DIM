@@ -10,7 +10,7 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
-import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -38,7 +38,6 @@ interface StoreProps {
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
   searchQuery?: string;
-  isPhonePortrait: boolean;
   trackedTriumphs: number[];
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
@@ -58,7 +57,6 @@ function mapStateToProps() {
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
       searchFilter: searchFilterSelector(state),
-      isPhonePortrait: isPhonePortraitSelector(state),
       trackedTriumphs: trackedTriumphsSelector(state),
       completedRecordsHidden: settings.completedRecordsHidden,
       redactedRecordsRevealed: settings.redactedRecordsRevealed,
@@ -77,12 +75,12 @@ function Records({
   profileResponse,
   searchQuery,
   searchFilter,
-  isPhonePortrait,
   trackedTriumphs,
   completedRecordsHidden,
   redactedRecordsRevealed,
   destiny2CoreSettings,
 }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account, Boolean(profileResponse));
   const setSetting = useSetSetting();
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();

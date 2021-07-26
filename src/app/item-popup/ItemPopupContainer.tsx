@@ -8,7 +8,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -30,7 +30,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   itemDetails: boolean;
   stores: DimStore[];
 }
@@ -39,7 +38,6 @@ function mapStateToProps(state: RootState): StoreProps {
   const settings = settingsSelector(state);
   return {
     stores: sortedStoresSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
     itemDetails: settings.itemDetails,
   };
 }
@@ -65,14 +63,10 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props) {
+function ItemPopupContainer({ stores, boundarySelector }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const currentItem = useSubscription(showItemPopup$);
-  const onTabChanged = (newTab: ItemPopupTab) => {
-    if (newTab !== tab) {
-      setTab(newTab);
-    }
-  };
 
   const onClose = () => hideItemPopup();
 
@@ -109,7 +103,7 @@ function ItemPopupContainer({ isPhonePortrait, stores, boundarySelector }: Props
       key={`body${item.index}`}
       extraInfo={currentItem.extraInfo}
       tab={tab}
-      onTabChanged={onTabChanged}
+      onTabChanged={setTab}
     />
   );
 

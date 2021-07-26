@@ -7,7 +7,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
-import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
@@ -22,14 +22,12 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
-  isPhonePortrait: boolean;
   searchQuery: string;
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
     searchQuery: querySelector(state),
   };
 }
@@ -66,7 +64,8 @@ function drillToSelection(
   return [selectionTree];
 }
 
-function Organizer({ account, stores, isPhonePortrait, searchQuery, dispatch }: Props) {
+function Organizer({ account, stores, searchQuery, dispatch }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account, stores.length > 0);
 
   const history = useHistory();

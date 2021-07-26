@@ -11,6 +11,7 @@ function setCSSVariable(property: string, value: { toString(): string }) {
 /**
  * Update a set of CSS variables depending on the settings of the app and whether we're in portrait mode.
  */
+// TODO: swap these into hooks
 export default function updateCSSVariables() {
   observeStore(settingsSelector, (currentState, nextState, state) => {
     if (!currentState) {
