@@ -82,6 +82,6 @@ export function SearchFilter(
   );
 }
 
-export default connect<StoreProps>(mapStateToProps, {
+export default connect<StoreProps>(mapStateToProps, null, null, {
   forwardRef: true,
 })(React.forwardRef(SearchFilter));
