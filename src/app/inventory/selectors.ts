@@ -65,6 +65,8 @@ const visibleCurrencies = [
   1022552290, // Legendary Shards
   2817410917, // Bright Dust
   3147280338, // Silver
+  2534352370, // Legendary Marks (D1)
+  2749350776, // Silver (D1)
 ];
 
 /** Account wide currencies */

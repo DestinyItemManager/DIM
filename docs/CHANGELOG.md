@@ -1,5 +1,7 @@
 ## Next
 
+* Legendary Marks and Silver once again appear in the D1 inventory view.
+
 ## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
 
 * When opening Compare for a Timelost weapon, we now also include non-Timelost versions of that weapon.
