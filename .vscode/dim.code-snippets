@@ -15,23 +15,6 @@
   // 	],
   // 	"description": "Log output to console"
   // }
-  "React Component": {
-    "prefix": "comp",
-    "body": [
-      "import React from 'react';",
-      "",
-      "export default class ${1:ClassName} extends React.Component {",
-      "\trender() {",
-      "\t\treturn (",
-      "\t\t\t$0",
-      "\t\t);",
-      "\t}",
-      "}",
-      ""
-    ],
-    "description": "TypeScript React Component"
-  },
-
   "SFC Component": {
     "prefix": "sfc",
     "body": [
@@ -75,16 +58,5 @@
       "}"
     ],
     "description": "mapStateToProps"
-  },
-
-  "mapDispatchToProps": {
-    "prefix": "mapDispatchToProps",
-    "body": [
-      "const mapDispatchToProps = {",
-      "  $0",
-      "};",
-      "type DispatchProps = typeof mapDispatchToProps"
-    ],
-    "description": "mapDispatchToProps"
   }
 }

@@ -11,7 +11,6 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
-import { setSettingAction } from '../settings/actions';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import { ItemPickerState } from './item-picker';
@@ -41,12 +40,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
   });
 }
 
-const mapDispatchToProps = {
-  setSettingAction,
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps;
 
 function ItemPicker({
   allItems,
@@ -112,4 +106,4 @@ function ItemPicker({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemPicker);
+export default connect<StoreProps>(mapStateToProps)(ItemPicker);

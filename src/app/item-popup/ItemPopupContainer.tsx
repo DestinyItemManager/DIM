@@ -18,7 +18,6 @@ import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { setSettingAction } from '../settings/actions';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
 import { buildItemActionsModel } from './item-popup-actions';
 import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
@@ -42,12 +41,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-const mapDispatchToProps = {
-  setSettingAction,
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps;
 
 const tierClasses: { [key in DimItem['tier']]: string } = {
   Exotic: styles.exotic,
@@ -168,10 +162,7 @@ function ItemPopupContainer({ stores, boundarySelector }: Props) {
   );
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemPopupContainer);
+export default connect<StoreProps>(mapStateToProps)(ItemPopupContainer);
 
 /**
  * The passed in item may be old - look through stores to try and find a newer version!

@@ -8,7 +8,6 @@ import { deepEqual } from 'fast-equals';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import { setSettingAction } from '../settings/actions';
 import { percent } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { DimPresentationNode } from './presentation-nodes';
@@ -38,12 +37,8 @@ function mapStateToProps(state: RootState): StoreProps {
     redactedRecordsRevealed: settings.redactedRecordsRevealed,
   };
 }
-const mapDispatchToProps = {
-  setSettingAction,
-};
 
-type DispatchProps = typeof mapDispatchToProps;
-type Props = StoreProps & ProvidedProps & DispatchProps;
+type Props = StoreProps & ProvidedProps;
 
 function PresentationNode({
   node,
@@ -195,9 +190,6 @@ function PresentationNode({
 }
 
 // This will be set to the connected (via redux) version of the component
-const ConnectedPresentationNode = connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(PresentationNode);
+const ConnectedPresentationNode = connect<StoreProps>(mapStateToProps)(PresentationNode);
 
 export default ConnectedPresentationNode;
