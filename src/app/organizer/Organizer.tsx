@@ -4,35 +4,20 @@ import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import ItemTable from './ItemTable';
 import ItemTypeSelector, { getSelectionTree, ItemCategoryTreeNode } from './ItemTypeSelector';
 import styles from './Organizer.m.scss';
 
-interface ProvidedProps {
+interface Props {
   account: DestinyAccount;
 }
-
-interface StoreProps {
-  stores: DimStore[];
-  searchQuery: string;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: storesSelector(state),
-    searchQuery: querySelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 /**
  * Given a list of item category hashes and a tree of categories, translate the hashes
@@ -64,8 +49,11 @@ function drillToSelection(
   return [selectionTree];
 }
 
-function Organizer({ account, stores, searchQuery, dispatch }: Props) {
+export default function Organizer({ account }: Props) {
+  const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(storesSelector);
+  const searchQuery = useSelector(querySelector);
   useLoadStores(account, stores.length > 0);
 
   const history = useHistory();
@@ -128,5 +116,3 @@ function Organizer({ account, stores, searchQuery, dispatch }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Organizer);

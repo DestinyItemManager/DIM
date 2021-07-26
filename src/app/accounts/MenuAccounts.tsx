@@ -1,40 +1,30 @@
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
-import { DestinyAccount } from './destiny-account';
 import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
 import { accountsSelector, currentAccountSelector } from './selectors';
 
-interface ProvidedProps {
+interface Props {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
 }
 
-interface StoreProps {
-  currentAccount?: DestinyAccount;
-  accounts: readonly DestinyAccount[];
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    currentAccount: currentAccountSelector(state),
-    accounts: accountsSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Props) {
+export default function MenuAccounts({ closeDropdown }: Props) {
+  const dispatch = useThunkDispatch();
+  const currentAccount = useSelector(currentAccountSelector);
+  const accounts = useSelector(accountsSelector);
   if (!currentAccount) {
     return null;
   }
+
+  const onLogOut = () => dispatch(logOut());
 
   const sortedAccounts = _.sortBy(accounts, (a) => -(a.lastPlayed?.getTime() || 0));
 
@@ -53,7 +43,7 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Pro
           />
         </Link>
       ))}
-      <div className={clsx(styles.logout)} onClick={() => dispatch(logOut())}>
+      <div className={clsx(styles.logout)} onClick={onLogOut}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
@@ -61,5 +51,3 @@ function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Pro
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(MenuAccounts);

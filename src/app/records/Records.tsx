@@ -1,4 +1,4 @@
-import { settingsSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -38,7 +38,6 @@ interface StoreProps {
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
   searchQuery?: string;
-  trackedTriumphs: number[];
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   searchFilter?: ItemFilter;
@@ -57,7 +56,6 @@ function mapStateToProps() {
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
       searchFilter: searchFilterSelector(state),
-      trackedTriumphs: trackedTriumphsSelector(state),
       completedRecordsHidden: settings.completedRecordsHidden,
       redactedRecordsRevealed: settings.redactedRecordsRevealed,
       destiny2CoreSettings: destiny2CoreSettingsSelector(state),
@@ -75,7 +73,6 @@ function Records({
   profileResponse,
   searchQuery,
   searchFilter,
-  trackedTriumphs,
   completedRecordsHidden,
   redactedRecordsRevealed,
   destiny2CoreSettings,
@@ -102,8 +99,6 @@ function Records({
     profileResponse?.profileCollectibles?.data?.collectionCategoriesRootNodeHash;
   const recordsRootHash = profileResponse?.profileRecords?.data?.recordCategoriesRootNodeHash;
   const sealsRootHash = profileResponse?.profileRecords?.data?.recordSealsRootNodeHash;
-
-  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
   const seasonalChallengesHash = destiny2CoreSettings?.seasonalChallengesPresentationNodeHash || 0;
 
@@ -185,12 +180,7 @@ function Records({
         <section id="trackedTriumphs">
           <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
             <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-              <TrackedTriumphs
-                trackedTriumphs={trackedTriumphs}
-                trackedRecordHash={trackedRecordHash}
-                profileResponse={profileResponse}
-                searchQuery={searchQuery}
-              />
+              <TrackedTriumphs searchQuery={searchQuery} />
             </ErrorBoundary>
           </CollapsibleTitle>
         </section>

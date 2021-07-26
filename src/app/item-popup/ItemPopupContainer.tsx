@@ -1,4 +1,3 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -9,10 +8,9 @@ import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import DesktopItemActions from 'app/item-popup/DesktopItemActions';
 import ItemPopupHeader from 'app/item-popup/ItemPopupHeader';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
@@ -24,24 +22,9 @@ import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import styles from './ItemPopupContainer.m.scss';
 import ItemTagHotkeys from './ItemTagHotkeys';
 
-interface ProvidedProps {
+interface Props {
   boundarySelector?: string;
 }
-
-interface StoreProps {
-  itemDetails: boolean;
-  stores: DimStore[];
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  const settings = settingsSelector(state);
-  return {
-    stores: sortedStoresSelector(state),
-    itemDetails: settings.itemDetails,
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
 
 const tierClasses: { [key in DimItem['tier']]: string } = {
   Exotic: styles.exotic,
@@ -57,8 +40,10 @@ const tierClasses: { [key in DimItem['tier']]: string } = {
  * A container that can show a single item popup/tooltip. This is a
  * single element to help prevent multiple popups from showing at once.
  */
-function ItemPopupContainer({ stores, boundarySelector }: Props) {
+export default function ItemPopupContainer({ boundarySelector }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(sortedStoresSelector);
+
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const currentItem = useSubscription(showItemPopup$);
 
@@ -161,8 +146,6 @@ function ItemPopupContainer({ stores, boundarySelector }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemPopupContainer);
 
 /**
  * The passed in item may be old - look through stores to try and find a newer version!

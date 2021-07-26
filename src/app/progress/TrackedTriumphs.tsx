@@ -1,26 +1,26 @@
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
+import { profileResponseSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
 import Record from 'app/records/Record';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styles from './TrackedTriumphs.m.scss';
 
 export function TrackedTriumphs({
-  trackedTriumphs,
-  trackedRecordHash,
-  profileResponse,
   searchQuery,
   hideRecordIcon,
 }: {
-  trackedTriumphs: number[];
-  trackedRecordHash: number;
-  profileResponse: DestinyProfileResponse;
   searchQuery?: string;
   hideRecordIcon?: boolean;
 }) {
   const defs = useD2Definitions()!;
+  const profileResponse = useSelector(profileResponseSelector)!;
+  const trackedTriumphs = useSelector(trackedTriumphsSelector);
+  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
+
   const recordHashes = trackedRecordHash
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;

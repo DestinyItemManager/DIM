@@ -1,4 +1,3 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -45,7 +44,6 @@ interface StoreProps {
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
-  trackedTriumphs: number[];
   allItems: DimItem[];
   coreSettings?: Destiny2CoreSettings;
 }
@@ -58,7 +56,6 @@ function mapStateToProps(state: RootState): StoreProps {
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
-    trackedTriumphs: trackedTriumphsSelector(state),
     allItems: allItemsSelector(state),
     coreSettings: destiny2CoreSettingsSelector(state),
   };
@@ -70,7 +67,6 @@ function Progress({
   buckets,
   profileInfo,
   searchQuery,
-  trackedTriumphs,
   allItems,
   coreSettings,
 }: Props) {
@@ -145,7 +141,6 @@ function Progress({
     ...(raidNode ? [{ id: 'raids', title: raidTitle }] : []),
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
   ];
-  const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
     <ErrorBoundary name="Progress">
@@ -224,12 +219,7 @@ function Progress({
               <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
                 <div className="progress-row">
                   <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-                    <TrackedTriumphs
-                      trackedTriumphs={trackedTriumphs}
-                      trackedRecordHash={trackedRecordHash}
-                      profileResponse={profileInfo}
-                      searchQuery={searchQuery}
-                    />
+                    <TrackedTriumphs searchQuery={searchQuery} />
                   </ErrorBoundary>
                 </div>
               </CollapsibleTitle>
