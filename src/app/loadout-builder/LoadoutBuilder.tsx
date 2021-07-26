@@ -16,7 +16,7 @@ import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
-import { querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -59,7 +59,6 @@ interface StoreProps {
   statOrder: StatTypes[];
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
-  isPhonePortrait: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
@@ -187,7 +186,6 @@ function mapStateToProps() {
       statOrder: statOrderSelector(state),
       upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
-      isPhonePortrait: state.shell.isPhonePortrait,
       items: itemsSelector(state),
       unusableExotics: unusableExoticsSelector(state),
       loadouts: loadoutsSelector(state),
@@ -206,7 +204,7 @@ function LoadoutBuilder({
   statOrder,
   upgradeSpendTier,
   lockItemEnergyType,
-  isPhonePortrait,
+
   items,
   unusableExotics,
   loadouts,
@@ -220,6 +218,7 @@ function LoadoutBuilder({
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
   const defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -334,7 +333,6 @@ function LoadoutBuilder({
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
-          isPhonePortrait={isPhonePortrait}
           onCharacterChanged={(storeId: string) => lbDispatch({ type: 'changeCharacter', storeId })}
         />
         {isPhonePortrait ? (

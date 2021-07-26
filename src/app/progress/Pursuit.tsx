@@ -2,6 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { newItemsSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -37,7 +38,7 @@ function mapStateToProps(
   const settings = settingsSelector(state);
 
   return {
-    isNew: settings.showNewItems ? state.inventory.newItems.has(item.id) : false,
+    isNew: settings.showNewItems ? newItemsSelector(state).has(item.id) : false,
     searchHidden: searchHidden || !searchFilterSelector(state)(item),
   };
 }

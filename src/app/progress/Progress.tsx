@@ -1,4 +1,3 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -13,9 +12,9 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
-import { querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -23,7 +22,6 @@ import { motion, PanInfo } from 'framer-motion';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -42,13 +40,10 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   stores: DimStore[];
   profileInfo?: DestinyProfileResponse;
   searchQuery?: string;
-  trackedTriumphs: number[];
   allItems: DimItem[];
   coreSettings?: Destiny2CoreSettings;
 }
@@ -57,13 +52,10 @@ type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait,
     stores: sortedStoresSelector(state),
-    defs: d2ManifestSelector(state),
     buckets: bucketsSelector(state),
     profileInfo: profileResponseSelector(state),
     searchQuery: querySelector(state),
-    trackedTriumphs: trackedTriumphsSelector(state),
     allItems: allItemsSelector(state),
     coreSettings: destiny2CoreSettingsSelector(state),
   };
@@ -71,16 +63,15 @@ function mapStateToProps(state: RootState): StoreProps {
 
 function Progress({
   account,
-  defs,
   stores,
-  isPhonePortrait,
   buckets,
   profileInfo,
   searchQuery,
-  trackedTriumphs,
   allItems,
   coreSettings,
 }: Props) {
+  const defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useLoadStores(account, Boolean(profileInfo));
@@ -150,7 +141,6 @@ function Progress({
     ...(raidNode ? [{ id: 'raids', title: raidTitle }] : []),
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
   ];
-  const trackedRecordHash = profileInfo?.profileRecords?.data?.trackedRecordHash || 0;
 
   return (
     <ErrorBoundary name="Progress">
@@ -159,7 +149,6 @@ function Progress({
           {selectedStore && (
             <CharacterSelect
               stores={stores}
-              isPhonePortrait={isPhonePortrait}
               selectedStore={selectedStore}
               onCharacterChanged={setSelectedStoreId}
             />
@@ -230,12 +219,7 @@ function Progress({
               <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
                 <div className="progress-row">
                   <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-                    <TrackedTriumphs
-                      trackedTriumphs={trackedTriumphs}
-                      trackedRecordHash={trackedRecordHash}
-                      profileResponse={profileInfo}
-                      searchQuery={searchQuery}
-                    />
+                    <TrackedTriumphs searchQuery={searchQuery} />
                   </ErrorBoundary>
                 </div>
               </CollapsibleTitle>

@@ -54,9 +54,9 @@ export const shell: Reducer<ShellState, ShellAction> = (
       return {
         ...state,
         searchQuery: action.payload.query,
-        searchQueryVersion: action.payload.doNotUpdateVersion
-          ? state.searchQueryVersion
-          : state.searchQueryVersion + 1,
+        searchQueryVersion: action.payload.updateVersion
+          ? state.searchQueryVersion + 1
+          : state.searchQueryVersion,
         searchResultsOpen:
           state.searchResultsOpen ||
           Boolean(state.isPhonePortrait && !state.searchQuery && action.payload.query),

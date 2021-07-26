@@ -1,16 +1,16 @@
-import { settingsSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
-import { isPhonePortraitSelector, querySelector } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -19,7 +19,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
@@ -36,12 +35,9 @@ interface ProvidedProps {
 
 interface StoreProps {
   buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
   searchQuery?: string;
-  isPhonePortrait: boolean;
-  trackedTriumphs: number[];
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   searchFilter?: ItemFilter;
@@ -56,13 +52,10 @@ function mapStateToProps() {
     const settings = settingsSelector(state);
     return {
       buckets: bucketsSelector(state),
-      defs: d2ManifestSelector(state),
       ownedItemHashes: ownedItemsSelectorInstance(state),
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
       searchFilter: searchFilterSelector(state),
-      isPhonePortrait: isPhonePortraitSelector(state),
-      trackedTriumphs: trackedTriumphsSelector(state),
       completedRecordsHidden: settings.completedRecordsHidden,
       redactedRecordsRevealed: settings.redactedRecordsRevealed,
       destiny2CoreSettings: destiny2CoreSettingsSelector(state),
@@ -77,22 +70,22 @@ function Records({
   account,
   buckets,
   ownedItemHashes,
-  defs,
   profileResponse,
   searchQuery,
   searchFilter,
-  isPhonePortrait,
-  trackedTriumphs,
   completedRecordsHidden,
   redactedRecordsRevealed,
   destiny2CoreSettings,
 }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account, Boolean(profileResponse));
   const setSetting = useSetSetting();
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;
+
+  const defs = useD2Definitions();
 
   if (!profileResponse || !defs || !buckets) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -106,8 +99,6 @@ function Records({
     profileResponse?.profileCollectibles?.data?.collectionCategoriesRootNodeHash;
   const recordsRootHash = profileResponse?.profileRecords?.data?.recordCategoriesRootNodeHash;
   const sealsRootHash = profileResponse?.profileRecords?.data?.recordSealsRootNodeHash;
-
-  const trackedRecordHash = profileResponse?.profileRecords?.data?.trackedRecordHash || 0;
 
   const seasonalChallengesHash = destiny2CoreSettings?.seasonalChallengesPresentationNodeHash || 0;
 
@@ -189,12 +180,7 @@ function Records({
         <section id="trackedTriumphs">
           <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
             <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-              <TrackedTriumphs
-                trackedTriumphs={trackedTriumphs}
-                trackedRecordHash={trackedRecordHash}
-                profileResponse={profileResponse}
-                searchQuery={searchQuery}
-              />
+              <TrackedTriumphs searchQuery={searchQuery} />
             </ErrorBoundary>
           </CollapsibleTitle>
         </section>

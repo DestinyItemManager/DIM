@@ -1,23 +1,13 @@
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Loading } from './Loading';
 import styles from './PageLoading.m.scss';
 
-interface StoreProps {
-  message?: string;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    message: _.last(state.shell.loadingMessages),
-  };
-}
-
-type Props = StoreProps & ThunkDispatchProp;
+const messageSelector = (state: RootState) => _.last(state.shell.loadingMessages);
 
 const transitionClasses = {
   enter: styles.pageLoadingEnter,
@@ -29,7 +19,8 @@ const transitionClasses = {
 /**
  * This displays the page-level loading screen. React Suspense can make this obsolete once it's available.
  */
-function PageLoading({ message }: Props) {
+export default function PageLoading() {
+  const message = useSelector(messageSelector);
   const nodeRef = useRef<HTMLDivElement>(null);
   return (
     <TransitionGroup component={null}>
@@ -47,5 +38,3 @@ function PageLoading({ message }: Props) {
     </TransitionGroup>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(PageLoading);

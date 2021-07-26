@@ -43,7 +43,6 @@ interface StoreProps {
   allItems: DimItem[];
   currentStore?: DimStore;
   lastInfusionDirection: InfuseDirection;
-  isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
 }
 
@@ -53,7 +52,6 @@ function mapStateToProps(state: RootState): StoreProps {
     currentStore: currentStoreSelector(state)!,
     filters: filterFactorySelector(state),
     lastInfusionDirection: settingsSelector(state).infusionDirection,
-    isPhonePortrait: state.shell.isPhonePortrait,
   };
 }
 
@@ -151,7 +149,6 @@ function InfusionFinder({
   allItems,
   currentStore,
   filters,
-  isPhonePortrait,
   lastInfusionDirection,
   dispatch,
 }: Props) {
@@ -240,10 +237,6 @@ function InfusionFinder({
     </div>
   );
 
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
-
   const header = ({ onClose }: { onClose(): void }) => (
     <div className="infuseHeader">
       <h1>
@@ -286,11 +279,7 @@ function InfusionFinder({
           </div>
         </div>
         <div className="infuseSearch">
-          <SearchBar
-            onQueryChanged={onQueryChanged}
-            placeholder={t('Infusion.Filter')}
-            autoFocus={autoFocus}
-          />
+          <SearchBar onQueryChanged={onQueryChanged} placeholder={t('Infusion.Filter')} />
         </div>
       </div>
     </div>

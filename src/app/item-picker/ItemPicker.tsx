@@ -11,7 +11,6 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
-import { setSettingAction } from '../settings/actions';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import { ItemPickerState } from './item-picker';
@@ -24,7 +23,6 @@ type ProvidedProps = ItemPickerState & {
 interface StoreProps {
   allItems: DimItem[];
   itemSortOrder: string[];
-  isPhonePortrait: boolean;
   filters(query: string): ItemFilter;
 }
 
@@ -39,16 +37,10 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
     itemSortOrder: itemSortOrderSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
   });
 }
 
-const mapDispatchToProps = {
-  setSettingAction,
-};
-type DispatchProps = typeof mapDispatchToProps;
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps;
 
 function ItemPicker({
   allItems,
@@ -56,17 +48,12 @@ function ItemPicker({
   filters,
   itemSortOrder,
   sortBy,
-  isPhonePortrait,
   ignoreSelectedPerks,
   onItemSelected,
   onCancel,
   onSheetClosed,
 }: Props) {
   const [query, setQuery] = useState('');
-
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
 
   const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
     onItemSelected({ item });
@@ -82,11 +69,7 @@ function ItemPicker({
     <div>
       <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        <SearchBar
-          placeholder={t('ItemPicker.SearchPlaceholder')}
-          autoFocus={autoFocus}
-          onQueryChanged={setQuery}
-        />
+        <SearchBar placeholder={t('ItemPicker.SearchPlaceholder')} onQueryChanged={setQuery} />
       </div>
     </div>
   );
@@ -123,4 +106,4 @@ function ItemPicker({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(ItemPicker);
+export default connect<StoreProps>(mapStateToProps)(ItemPicker);

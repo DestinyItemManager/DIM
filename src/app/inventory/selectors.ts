@@ -8,8 +8,9 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
-import { characterSortSelector } from '../settings/character-sort';
-import { ItemInfos } from './dim-item-info';
+import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
+import { getTag, ItemInfos } from './dim-item-info';
+import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
 import { getCurrentStore, getVault } from './stores-helpers';
 
@@ -44,6 +45,13 @@ export const sortedStoresSelector = createSelector(
   (stores, sortStores) => sortStores(stores)
 );
 
+/** Sorted by "importance" which handles reversed sorting a bit better - for menus only */
+export const storesSortedByImportanceSelector = createSelector(
+  characterSortImportanceSelector,
+  storesSelector,
+  (sort, stores) => sort(stores)
+);
+
 /**
  * Get a flat list of all items.
  */
@@ -59,6 +67,9 @@ export const currentStoreSelector = (state: RootState) => getCurrentStore(stores
 
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
+
+/** The inventoryItemIds of all items that are "new". */
+export const newItemsSelector = (state: RootState) => state.inventory.newItems;
 
 const visibleCurrencies = [
   3159615086, // Glimmer
@@ -139,6 +150,10 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
  */
 export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
+
+/** Get a specific item's tag */
+export const tagSelector = (item: DimItem) => (state: RootState) =>
+  getTag(item, itemInfosSelector(state), itemHashTagsSelector(state));
 
 /**
  * all hashtags used in existing item notes, with (case-insensitive) dupes removed

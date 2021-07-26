@@ -2,13 +2,14 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetSetting } from 'app/settings/hooks';
 import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
@@ -19,26 +20,9 @@ import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import './record-books.scss';
 
-interface ProvidedProps {
+interface Props {
   account: DestinyAccount;
 }
-
-interface StoreProps {
-  hideCompletedRecords: boolean;
-  stores: D1Store[];
-  defs?: D1ManifestDefinitions;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  const settings = settingsSelector(state);
-  return {
-    hideCompletedRecords: settings.hideCompletedRecords,
-    stores: storesSelector(state) as D1Store[],
-    defs: state.manifest.d1Manifest,
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
 
 interface RecordBook {
   hash: string;
@@ -71,7 +55,13 @@ interface RecordBookPage {
   completedCount: number;
 }
 
-function RecordBooks({ account, defs, stores, hideCompletedRecords }: Props) {
+export default function RecordBooks({ account }: Props) {
+  const defs = useD1Definitions();
+  const stores = useSelector(storesSelector) as D1Store[];
+  const hideCompletedRecords = useSelector(
+    (state: RootState) => settingsSelector(state).hideCompletedRecords
+  );
+
   useLoadStores(account, stores.length > 0);
   const setSetting = useSetSetting();
   if (!defs || !stores.length) {
@@ -252,5 +242,3 @@ function RecordBooks({ account, defs, stores, hideCompletedRecords }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(RecordBooks);

@@ -1,8 +1,9 @@
 import { t } from 'app/i18next-t';
-import { querySelector, searchQueryVersionSelector } from 'app/shell/selectors';
+import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
-import { connect, MapDispatchToPropsFunction } from 'react-redux';
+import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
@@ -14,23 +15,14 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   searchQueryVersion: number;
   searchQuery: string;
 }
 
-type DispatchProps = {
-  setSearchQuery(query: string): void;
-};
-const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, StoreProps> = (dispatch) => ({
-  setSearchQuery: (query) => dispatch(setSearchQuery(query, true)),
-});
-
-type Props = ProvidedProps & StoreProps & DispatchProps;
+type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    isPhonePortrait: state.shell.isPhonePortrait,
     searchQuery: querySelector(state),
     searchQueryVersion: searchQueryVersionSelector(state),
   };
@@ -40,14 +32,18 @@ function mapStateToProps(state: RootState): StoreProps {
  * The main search filter that's in the header.
  */
 export function SearchFilter(
-  { isPhonePortrait, setSearchQuery, searchQuery, searchQueryVersion, onClear }: Props,
+  { searchQuery, searchQueryVersion, onClear }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
+  const isPhonePortrait = useIsPhonePortrait();
   const onClearFilter = useCallback(() => {
     onClear?.();
   }, [onClear]);
 
   const location = useLocation();
+
+  const dispatch = useThunkDispatch();
+  const onQueryChanged = (query: string) => dispatch(setSearchQuery(query, false));
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
@@ -74,7 +70,7 @@ export function SearchFilter(
   return (
     <SearchBar
       ref={ref}
-      onQueryChanged={setSearchQuery}
+      onQueryChanged={onQueryChanged}
       placeholder={placeholder}
       onClear={onClearFilter}
       searchQueryVersion={searchQueryVersion}
@@ -86,6 +82,6 @@ export function SearchFilter(
   );
 }
 
-export default connect<StoreProps, DispatchProps>(mapStateToProps, mapDispatchToProps, null, {
+export default connect<StoreProps>(mapStateToProps, null, null, {
   forwardRef: true,
 })(React.forwardRef(SearchFilter));

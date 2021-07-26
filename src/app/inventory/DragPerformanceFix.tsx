@@ -8,8 +8,6 @@ function hideOverlay() {
 }
 
 /** This is a workaround for sluggish dragging in Chrome (and possibly other browsers) */
-function DragPerformanceFix() {
+export default function DragPerformanceFix() {
   return <div className="drag-perf-fix" onClick={hideOverlay} />;
 }
-
-export default DragPerformanceFix;

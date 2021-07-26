@@ -11,14 +11,12 @@ export default function Socket({
   item,
   socket,
   wishlistRoll,
-  isPhonePortrait,
   onClick,
   adjustedPlug,
 }: {
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  isPhonePortrait: boolean;
   onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
   adjustedPlug?: DimPlug;
 }) {
@@ -40,7 +38,6 @@ export default function Socket({
           socketInfo={socket}
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
-          isPhonePortrait={isPhonePortrait}
           onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
           adjustedPlug={adjustedPlug}
         />

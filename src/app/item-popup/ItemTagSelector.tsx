@@ -2,36 +2,29 @@ import KeyHelp from 'app/dim-ui/KeyHelp';
 import Select, { Option } from 'app/dim-ui/Select';
 import { t, tl } from 'app/i18next-t';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { tagSelector } from 'app/inventory/selectors';
 import { AppIcon, clearIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
-import { getTag, itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
+import { useSelector } from 'react-redux';
+import { itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemTagSelector.m.scss';
 
-interface ProvidedProps {
+interface Props {
   item: DimItem;
   className?: string;
   hideKeys?: boolean;
   hideButtonLabel?: boolean;
 }
 
-interface StoreProps {
-  tag?: TagValue;
-}
+export default function ItemTagSelector({ item, className, hideKeys, hideButtonLabel }: Props) {
+  const dispatch = useThunkDispatch();
+  const tag = useSelector(tagSelector(item));
 
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return { tag: getTag(props.item, itemInfosSelector(state), itemHashTagsSelector(state)) };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, dispatch }: Props) {
   const onChange = (tag?: TagValue) => {
     dispatch(
       itemIsInstanced(item)
@@ -76,8 +69,6 @@ function ItemTagSelector({ item, className, tag, hideKeys, hideButtonLabel, disp
     />
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemTagSelector);
 
 function TagOption({ tagOption, hideKeys }: { tagOption: TagInfo; hideKeys?: boolean }) {
   return (

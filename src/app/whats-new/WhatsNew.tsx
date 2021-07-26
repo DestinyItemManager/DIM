@@ -1,28 +1,16 @@
-import { settingsSelector } from 'app/dim-api/selectors';
-import { RootState } from 'app/store/types';
+import { languageSelector } from 'app/dim-api/selectors';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Timeline } from 'react-twitter-widgets';
 import BungieAlerts from './BungieAlerts';
 import ChangeLog from './ChangeLog';
 import './WhatsNew.scss';
 
-interface StoreProps {
-  language: string;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    language: settingsSelector(state).language,
-  };
-}
-
-type Props = StoreProps;
-
 /**
  * What's new in the world of DIM?
  */
-function WhatsNew({ language }: Props) {
+export default function WhatsNew() {
+  const language = useSelector(languageSelector);
   return (
     <div className="dim-page dim-static-page">
       <BungieAlerts />
@@ -48,4 +36,3 @@ function WhatsNew({ language }: Props) {
     </div>
   );
 }
-export default connect<StoreProps>(mapStateToProps)(WhatsNew);

@@ -3,23 +3,11 @@ import { saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { AppIcon, closeIcon, starIcon, starOutlineIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styles from './SearchHistory.m.scss';
-
-interface StoreProps {
-  recentSearches: Search[];
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    recentSearches: recentSearchesSelector(state),
-  };
-}
-
-type Props = StoreProps & ThunkDispatchProp;
 
 const searchComparator = reverseComparator(
   chainComparator<Search>(
@@ -29,7 +17,10 @@ const searchComparator = reverseComparator(
   )
 );
 
-function SearchHistory({ recentSearches, dispatch }: Props) {
+export default function SearchHistory() {
+  const dispatch = useThunkDispatch();
+  const recentSearches = useSelector(recentSearchesSelector);
+
   const deleteSearch = (e: React.MouseEvent, item: Search) => {
     e.stopPropagation();
     dispatch(searchDeleted(item.query));
@@ -99,5 +90,3 @@ function SearchHistory({ recentSearches, dispatch }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(SearchHistory);

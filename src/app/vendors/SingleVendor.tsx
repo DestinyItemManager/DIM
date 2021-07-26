@@ -2,7 +2,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -12,7 +12,6 @@ import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { mergeCollectibles } from '../inventory/d2-stores';
@@ -29,6 +28,7 @@ import { refresh$ } from '../shell/refresh';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
 import type { VendorsState } from './reducer';
+import { vendorsByCharacterSelector } from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
@@ -40,7 +40,6 @@ interface ProvidedProps {
 
 interface StoreProps {
   stores: DimStore[];
-  defs?: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
   ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
@@ -53,9 +52,8 @@ function mapStateToProps() {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    defs: d2ManifestSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendors: state.vendors.vendorsByCharacter,
+    vendors: vendorsByCharacterSelector(state),
   });
 }
 
@@ -69,12 +67,12 @@ function SingleVendor({
   stores,
   buckets,
   ownedItemHashes,
-  defs,
   profileResponse,
   vendorHash,
   dispatch,
   vendors,
 }: Props) {
+  const defs = useD2Definitions();
   const { search } = useLocation();
 
   // TODO: get for all characters, or let people select a character? This is a hack

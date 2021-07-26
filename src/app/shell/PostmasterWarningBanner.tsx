@@ -11,7 +11,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './PostmasterWarningBanner.m.scss';
-import { isPhonePortraitSelector } from './selectors';
+import { useIsPhonePortrait } from './selectors';
 
 /** Shows a warning anywhere in the app if your active character's postmaster is low. */
 export default React.memo(function PostmasterWarningBanner() {
@@ -22,7 +22,7 @@ export default React.memo(function PostmasterWarningBanner() {
 
   const store = useSelector(currentStoreSelector);
 
-  const isPhonePortrait = useSelector(isPhonePortraitSelector);
+  const isPhonePortrait = useIsPhonePortrait();
   const { pathname } = useLocation();
   const onInventory = pathname.endsWith('inventory');
 
