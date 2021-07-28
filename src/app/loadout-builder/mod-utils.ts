@@ -6,7 +6,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { ModAssignments } from './process-worker/mod-assignments';
+import { ModAssignments } from './mod-assignments';
 import {
   canTakeSlotIndependantMods,
   generateModPermutations,
@@ -140,7 +140,7 @@ export function assignModsToArmorSet(
 
   // In this we map modHashes to their mod using modsByHash. Note that we pop the mod from the
   // array in modByHash, this will leave us with any unassigned mods left in modsByHash
-  const assignedMods = _.mapValues(assignments.results, (modHashes) =>
+  const assignedMods = _.mapValues(assignments.getResults(), (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())
       // This shouldn't happen but lets throw in a filter for saftey and type happyness

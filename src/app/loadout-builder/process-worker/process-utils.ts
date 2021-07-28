@@ -1,5 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ModAssignments } from './mod-assignments';
+import { ModAssignments } from '../mod-assignments';
 import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
@@ -273,5 +273,5 @@ export function canTakeSlotIndependantMods(
     }
   }
 
-  return assignments ? assignments.assignmentFound : false;
+  return assignments ? assignments.isSuccessfullyAssigned : false;
 }

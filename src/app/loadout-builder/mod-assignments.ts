@@ -1,7 +1,9 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
-import { ProcessItem, ProcessMod } from './types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { ProcessItem, ProcessMod } from './process-worker/types';
+
+const DEFAULT_ENERGY_INVESTMENT = 1000;
 
 interface ItemAssignments {
   mods: ProcessMod[];
@@ -11,7 +13,7 @@ interface ItemAssignments {
 export class ModAssignments {
   private slotDependantAssignments: Map<string, number[]>;
   private slotIndependantAssignments: Map<ProcessItem, ItemAssignments>;
-  private extraEnergyInvestment = 1000;
+  private extraEnergyInvestment = DEFAULT_ENERGY_INVESTMENT;
   combinationsChecked = 0;
 
   constructor() {
@@ -19,12 +21,12 @@ export class ModAssignments {
     this.slotIndependantAssignments = new Map();
   }
 
-  get assignmentFound() {
-    return this.extraEnergyInvestment < 1000;
+  get isSuccessfullyAssigned() {
+    return this.extraEnergyInvestment < DEFAULT_ENERGY_INVESTMENT;
   }
 
   // gets a minimal set of data for the UI
-  get results() {
+  getResults() {
     const rtn: Record<string, number[]> = {};
 
     // eslint-disable-next-line no-console
@@ -54,6 +56,14 @@ export class ModAssignments {
       item.id,
       mods.map((mod) => mod.hash)
     );
+  }
+
+  private calculateEnergyChange(item: ProcessItem, assignments: ItemAssignments) {
+    const modCost =
+      (item.energy?.val || 0) + _.sumBy(assignments.mods, (mod) => mod.energy?.val || 0);
+    const energyUsedAndWasted = modCost + (item.energy?.capacity || 0);
+    const energyInvested = Math.max(0, modCost - (item.energy?.capacity || 0));
+    return assignments.energySwapped ? energyUsedAndWasted : energyInvested;
   }
 
   assignSlotIndependantModsIfLessEnergyTypeSwaps(
@@ -93,14 +103,8 @@ export class ModAssignments {
     }
 
     const newExtraEnergyInvestment = _.sumBy(
-      [...newAssignments.entries()],
-      ([item, assignment]) => {
-        const modCost =
-          (item.energy?.val || 0) + _.sumBy(assignment.mods, (mod) => mod.energy?.val || 0);
-        const energyUsedAndWasted = modCost + (item.energy?.capacity || 0);
-        const energyInvested = Math.max(0, modCost - (item.energy?.capacity || 0));
-        return assignment.energySwapped ? energyUsedAndWasted : energyInvested;
-      }
+      Array.from(newAssignments.entries()),
+      ([item, itemAssignments]) => this.calculateEnergyChange(item, itemAssignments)
     );
 
     if (newExtraEnergyInvestment > this.extraEnergyInvestment) {

@@ -12,7 +12,7 @@ import {
   isArmor2Legs,
 } from '../../testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
-import { ModAssignments } from './process-worker/mod-assignments';
+import { ModAssignments } from './mod-assignments';
 import { generateModPermutations } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
@@ -182,7 +182,7 @@ describe('mod-assignments', () => {
       assignments.assignSlotIndependantModsIfLessEnergyTypeSwaps(testItems, [], mods, []);
     }
 
-    const energyTypeResults = Object.values(assignments.results).map(
+    const energyTypeResults = Object.values(assignments.getResults()).map(
       (modHashes) => testCombatMods.find((mod) => mod.hash === modHashes[0])?.energy?.type
     );
 
