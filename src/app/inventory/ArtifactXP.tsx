@@ -18,18 +18,14 @@ export function ArtifactXP(characterProgress: DestinyCharacterProgressionCompone
     width: percent(progressToNextLevel / nextLevelAt),
   };
   return (
-    <>
-      <div style={{ display: 'flex' }}>
-        <div className="objective-progress">
-          {<div className="objective-progress-bar" style={progressBarStyle} />}
-          <div className="objective-description">
-            <img src={xpIcon} className={styles.xpIcon} /> {level + 1}
-          </div>
-          <div className="objective-text">
-            {formatter.format(progressToNextLevel)} / {formatter.format(nextLevelAt)}
-          </div>
-        </div>
+    <div className="objective-progress">
+      {<div className="objective-progress-bar" style={progressBarStyle} />}
+      <div className="objective-description">
+        <img src={xpIcon} className={styles.xpIcon} /> {level + 1}
       </div>
-    </>
+      <div className="objective-text">
+        {formatter.format(progressToNextLevel)} / {formatter.format(nextLevelAt)}
+      </div>
+    </div>
   );
 }
