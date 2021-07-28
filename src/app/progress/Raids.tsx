@@ -5,6 +5,7 @@ import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2
 import _ from 'lodash';
 import React from 'react';
 import { Raid } from './Raid';
+import { getCharacterProgressions } from './selectors';
 
 /**
  * Displays all of the raids available to a user as milestones
@@ -18,9 +19,9 @@ export default function Raids({
   profileInfo: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
-  const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
-  const allMilestones: DestinyMilestone[] = profileMilestoneData
-    ? Object.values(profileMilestoneData)
+  const characterMilestoneData = getCharacterProgressions(profileInfo, store.id)?.milestones;
+  const allMilestones: DestinyMilestone[] = characterMilestoneData
+    ? Object.values(characterMilestoneData)
     : [];
 
   // filter to milestones with child activities that are raids

@@ -1,9 +1,9 @@
 import styles from 'app/active-mode/Views/current-activity/ActivityInformation.m.scss';
-import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import { RaidActivity } from 'app/progress/RaidDisplay';
+import { characterProgressionsSelector } from 'app/progress/selectors';
 import { DestinyCharacterActivitiesComponent, DestinyMilestone } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ interface Props {
 
 /** Find unclaimed vendor bounties based on your current activity */
 export default function ActivityInformation({ store, activityInfo }: Props) {
-  const profileInfo = useSelector(profileResponseSelector);
+  const characterProgressionData = useSelector(characterProgressionsSelector(store.id));
   const defs = useD2Definitions()!;
 
   const activity =
@@ -27,10 +27,10 @@ export default function ActivityInformation({ store, activityInfo }: Props) {
     return null;
   }
 
-  const profileMilestoneData = profileInfo?.characterProgressions?.data?.[store.id]?.milestones;
+  const characterMilestoneData = characterProgressionData?.milestones;
 
-  const allMilestones: DestinyMilestone[] = profileMilestoneData
-    ? Object.values(profileMilestoneData)
+  const allMilestones: DestinyMilestone[] = characterMilestoneData
+    ? Object.values(characterMilestoneData)
     : [];
 
   const milestones = allMilestones.find((milestone) => {

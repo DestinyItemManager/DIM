@@ -9,6 +9,7 @@ import { milestoneToItems } from './milestone-items';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
+import { getCharacterProgressions } from './selectors';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
 
 /**
@@ -27,7 +28,7 @@ export default function Milestones({
 }) {
   const defs = useD2Definitions()!;
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
-  const characterProgressions = profileInfo?.characterProgressions?.data?.[store.id];
+  const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
@@ -98,8 +99,7 @@ function milestonesForCharacter(
   profileInfo: DestinyProfileResponse,
   character: DimStore
 ): DestinyMilestone[] {
-  const characterMilestoneData =
-    profileInfo.characterProgressions?.data?.[character.id]?.milestones;
+  const characterMilestoneData = getCharacterProgressions(profileInfo, character.id)?.milestones;
   const allMilestones: DestinyMilestone[] = characterMilestoneData
     ? Object.values(characterMilestoneData)
     : [];

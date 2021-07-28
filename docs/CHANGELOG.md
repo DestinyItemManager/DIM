@@ -1,6 +1,7 @@
 ## Next
 
 * Legendary Marks and Silver once again appear in the D1 inventory view.
+* Tap/hover the Artifact power level in the header, to check XP progress towards the next level.
 
 ## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
 
