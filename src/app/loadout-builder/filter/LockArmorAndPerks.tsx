@@ -1,5 +1,4 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -49,21 +48,17 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  isPhonePortrait: boolean;
   buckets: InventoryBuckets;
   stores: DimStore[];
-  language: string;
 }
 
 type Props = ProvidedProps & StoreProps;
 
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
-    isPhonePortrait: state.shell.isPhonePortrait,
+function mapStateToProps(state: RootState): StoreProps {
+  return {
     buckets: bucketsSelector(state)!,
     stores: storesSelector(state),
-    language: settingsSelector(state).language,
-  });
+  };
 }
 
 /**
@@ -80,8 +75,6 @@ function LockArmorAndPerks({
   characterItems,
   unusableExotics,
   lockedExotic,
-  isPhonePortrait,
-  language,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -300,8 +293,6 @@ function LockArmorAndPerks({
             lockedExotic={lockedExotic}
             characterItems={characterItems}
             unusableExotics={unusableExotics}
-            isPhonePortrait={isPhonePortrait}
-            language={language}
             lbDispatch={lbDispatch}
             onClose={() => setShowExoticPicker(false)}
           />,

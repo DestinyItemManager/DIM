@@ -8,6 +8,8 @@ import { defaultLanguage } from 'app/i18n';
 export interface Settings extends DimApiSettings {
   activeMode: boolean;
   loLockItemEnergyType: boolean;
+  /** Badge the app icon with the number of postmaster items on the current character */
+  badgePostmaster: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -20,4 +22,5 @@ export const initialSettingsState: Settings = {
   loUpgradeSpendTier: UpgradeSpendTier.Nothing,
   loLockItemEnergyType: false,
   singleCharacter: false,
+  badgePostmaster: true,
 };

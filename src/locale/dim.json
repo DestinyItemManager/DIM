@@ -229,6 +229,7 @@
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
     },
+    "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
     "Trashlist": "Shows items that match your wish list's trash list.",
@@ -722,6 +723,8 @@
     "UsageCount": "# Used"
   },
   "Settings": {
+    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
+    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "CharacterOrder": "Sort characters by",
     "CharacterOrderFixed": "Character age (buggy on PC)",
     "CharacterOrderRecent": "Most recent character",

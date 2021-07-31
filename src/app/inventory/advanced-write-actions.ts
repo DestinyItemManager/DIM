@@ -46,6 +46,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     });
 
     // Update items that changed
+    // TODO: reload item instead
     dispatch(
       awaItemChanged({
         changes: response.Response,

@@ -229,6 +229,7 @@
       "Tag": "显示具有特定标签的物品。",
       "Tagged": "显示具有任何标签的物品。"
     },
+    "Timelost": "（失时）",
     "Tracked": "根据追踪状态显示任务/赏金.",
     "Transferable": "可在角色间移动的物品.",
     "Trashlist": "显示你愿望单中废弃列表物品",
@@ -436,7 +437,7 @@
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
     "NewEmptyLoadout": "创建配装",
-    "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
+    "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
     "NoLoadoutsToCompare": "没有要对比的配装",
     "NoUpgrades": "无升级",
@@ -722,6 +723,8 @@
     "UsageCount": "使用次数"
   },
   "Settings": {
+    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
+    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "CharacterOrder": "排序方式",
     "CharacterOrderFixed": "角色年龄(PC平台有错误)",
     "CharacterOrderRecent": "最近使用的角色",

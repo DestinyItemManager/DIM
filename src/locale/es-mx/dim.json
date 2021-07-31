@@ -229,6 +229,7 @@
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
     },
+    "Timelost": "\\(tiempo perdido\\)",
     "Tracked": "Muestra aventuras/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
     "Trashlist": "Muestra objetos que coincidan con la lista basura de la lista de deseos.",
@@ -722,6 +723,8 @@
     "UsageCount": "# Usado"
   },
   "Settings": {
+    "BadgePostmaster": "Muestra el número de objetos en Administración para el personaje actual en el icono de la app",
+    "BadgePostmasterExplanation": "Para que esto funcione necesitas instalar DIM como app y tu sistema operativo debe soportar mostrar insignias",
     "CharacterOrder": "Ordenar personajes por",
     "CharacterOrderFixed": "Edad del personaje (falla en PC)",
     "CharacterOrderRecent": "Personaje más reciente",

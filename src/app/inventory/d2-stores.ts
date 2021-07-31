@@ -4,14 +4,18 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { getCharacterProgressions } from 'app/progress/selectors';
 import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
+  DestinyCharacterProgressionComponent,
   DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
   DestinyComponentType,
@@ -35,6 +39,7 @@ import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
 import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
+import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
@@ -45,7 +50,7 @@ import { getCharacterStatsData as getD1CharacterStatsData } from './store/charac
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
-import { getArtifactBonus } from './stores-helpers';
+import { getArtifactBonus, getCurrentStore } from './stores-helpers';
 
 let isFirstLoad = true;
 
@@ -183,10 +188,20 @@ function loadStoresData(
 
         // Let our styling know how many characters there are
         // TODO: this should be an effect on the stores component, except it's also
-        // used on D1 activities page
+        // used on D1 activities page. It should probably at least be an observer on
+        // the store
         document
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
+        if (
+          stores.length > 0 &&
+          settingsSelector(getState()).badgePostmaster &&
+          'setAppBadge' in navigator
+        ) {
+          const activeStore = getCurrentStore(stores)!;
+          navigator.setAppBadge(totalPostmasterItems(activeStore));
+        }
+
         stopTimer();
 
         const stateSpan = transaction?.startChild({
@@ -270,6 +285,8 @@ export async function buildStores(
 
   const allItems = stores.flatMap((s) => s.items);
 
+  const characterProgress = getCharacterProgressions(profileInfo);
+
   const hasClassified = allItems.some(
     (i) =>
       i.classified &&
@@ -277,7 +294,7 @@ export async function buildStores(
   );
 
   for (const s of stores) {
-    updateBasePower(allItems, s, defs, hasClassified);
+    updateBasePower(allItems, s, defs, hasClassified, characterProgress);
   }
 
   return stores;
@@ -314,7 +331,7 @@ function processCharacter(
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
-    profileInfo.characterProgressions?.data?.[characterId]?.uninstancedItemObjectives || [];
+    getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
 
   const store = makeCharacter(defs, character, lastPlayedDate);
 
@@ -402,7 +419,8 @@ function updateBasePower(
   allItems: DimItem[],
   store: DimStore,
   defs: D2ManifestDefinitions,
-  hasClassified: boolean
+  hasClassified: boolean,
+  characterProgress: DestinyCharacterProgressionComponent | undefined
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
@@ -432,6 +450,7 @@ function updateBasePower(
       name: t('Stats.PowerModifier'),
       hasClassified: false,
       description: '',
+      richTooltip: ArtifactXP(characterProgress),
       value: artifactPower,
       icon: xpIcon,
     };

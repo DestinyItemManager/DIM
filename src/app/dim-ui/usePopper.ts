@@ -32,7 +32,8 @@ const popperOptions = (
   placement: Options['placement'] = 'auto',
   arrowClassName?: string,
   boundarySelector?: string,
-  offset = arrowClassName ? 5 : 0
+  offset = arrowClassName ? 5 : 0,
+  fixed = false
 ): Partial<Options> => {
   const headerHeight = parseInt(
     document.querySelector('html')!.style.getPropertyValue('--header-height')!,
@@ -47,6 +48,7 @@ const popperOptions = (
   };
   const hasArrow = Boolean(arrowClassName);
   return {
+    strategy: fixed ? 'fixed' : 'absolute',
     placement,
     modifiers: _.compact([
       {
@@ -88,6 +90,7 @@ export function usePopper({
   boundarySelector,
   placement,
   offset,
+  fixed,
 }: {
   /** A ref to the rendered contents of a popper-positioned item */
   contents: React.RefObject<HTMLElement>;
@@ -101,6 +104,8 @@ export function usePopper({
   placement?: Placement;
   /** Offset of how far from the element to shift the popper. */
   offset?: number;
+  /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
+  fixed?: boolean;
 }) {
   const popper = useRef<Instance | undefined>();
 
@@ -120,7 +125,7 @@ export function usePopper({
       if (popper.current) {
         popper.current.update();
       } else {
-        const options = popperOptions(placement, arrowClassName, boundarySelector, offset);
+        const options = popperOptions(placement, arrowClassName, boundarySelector, offset, fixed);
         popper.current = createPopper(reference.current, contents.current, options);
         popper.current.update();
         setTimeout(() => popper.current?.update(), 0); // helps fix arrow position

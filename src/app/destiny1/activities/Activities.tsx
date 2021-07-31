@@ -1,19 +1,19 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
-import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { sortedStoresSelector } from '../../inventory/selectors';
-import { D1Store, DimStore } from '../../inventory/store-types';
+import { D1Store } from '../../inventory/store-types';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import './activities.scss';
@@ -50,26 +50,15 @@ interface ActivityTier {
   }[];
 }
 
-interface ProvidedProps {
+interface Props {
   account: DestinyAccount;
 }
 
-interface StoreProps {
-  stores: DimStore[];
-  defs?: D1ManifestDefinitions;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: sortedStoresSelector(state),
-    defs: state.manifest.d1Manifest,
-  };
-}
-
-function Activities({ account, defs, stores }: Props) {
+export default function Activities({ account }: Props) {
+  const stores = useSelector(sortedStoresSelector);
   useLoadStores(account, stores.length > 0);
+
+  const defs = useD1Definitions();
 
   if (!defs || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -315,5 +304,3 @@ function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull
   });
   return skulls;
 }
-
-export default connect<StoreProps>(mapStateToProps)(Activities);

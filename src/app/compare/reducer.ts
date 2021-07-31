@@ -103,9 +103,10 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     }
     const removeQuery = `-id:${item.id}`;
 
-    const newQuery = (query.includes(removeQuery)
-      ? query.replace(removeQuery, '')
-      : `${query} ${itemQuery}`.replace(/\s+/, ' ')
+    const newQuery = (
+      query.includes(removeQuery)
+        ? query.replace(removeQuery, '')
+        : `${query} ${itemQuery}`.replace(/\s+/, ' ')
     ).trim();
 
     return {
@@ -142,9 +143,10 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
   }
 
   const addedQuery = `or id:${item.id}`;
-  const newQuery = (state.session.query.includes(addedQuery)
-    ? state.session.query.replace(addedQuery, '')
-    : `${state.session.query} -id:${item.id}`
+  const newQuery = (
+    state.session.query.includes(addedQuery)
+      ? state.session.query.replace(addedQuery, '')
+      : `${state.session.query} -id:${item.id}`
   )
     .replace(/\s+/, ' ')
     .trim();

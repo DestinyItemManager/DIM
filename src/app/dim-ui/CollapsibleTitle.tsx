@@ -1,10 +1,10 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { collapsedSelector } from 'app/dim-api/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './CollapsibleTitle.scss';
@@ -28,42 +28,37 @@ interface StoreProps {
   collapsed: boolean;
 }
 
-interface DispatchProps {
-  toggle(): void;
-}
-
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const collapsed = settingsSelector(state).collapsedSections[props.sectionId];
+  const collapsed = collapsedSelector(props.sectionId)(state);
   return {
     collapsed: Boolean(props.disabled) || (collapsed ?? Boolean(props.defaultCollapsed)),
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch, ownProps: ProvidedProps): DispatchProps {
-  return {
-    toggle: () => {
-      ownProps.disabled || dispatch(toggleCollapsedSection(ownProps.sectionId));
-    },
-  };
-}
-
-type Props = StoreProps & ProvidedProps & DispatchProps;
+type Props = StoreProps & ProvidedProps;
 
 function CollapsibleTitle({
   title,
   collapsed,
   children,
-  toggle,
   extra,
   extraOnlyCollapsed,
   className,
+  disabled,
+  sectionId,
   style,
 }: Props) {
+  const dispatch = useThunkDispatch();
   const initialMount = useRef(true);
 
   useEffect(() => {
     initialMount.current = false;
   }, [initialMount]);
+
+  const toggle = useCallback(
+    () => disabled || dispatch(toggleCollapsedSection(sectionId)),
+    [disabled, dispatch, sectionId]
+  );
 
   return (
     <>
@@ -96,7 +91,4 @@ function CollapsibleTitle({
   );
 }
 
-export default connect<StoreProps, DispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(CollapsibleTitle);
+export default connect<StoreProps>(mapStateToProps)(CollapsibleTitle);

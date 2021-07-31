@@ -1,7 +1,16 @@
 ## Next
 
+* Legendary Marks and Silver once again appear in the D1 inventory view.
+* Tap/hover the Artifact power level in the header, to check XP progress towards the next level.
+* When you install DIM on your desktop or home screen, it will now be badged with the number of postmaster items on the current character. You can disable this from Settings. This won't work on iOS.
+
+## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
+
+* When opening Compare for a Timelost weapon, we now also include non-Timelost versions of that weapon.
 * Display the energy swap or upgrade details for items in the Optimiser.
 * Optimiser is now better at matching a set to an existing loadout.
+* Compare will properly close (and not just become invisible) if all the items you're comparing are deleted.
+* Fixed the search actions (three dots) menu not appearing in Safari.
 
 ## 6.74.0 <span class="changelog-date">(2021-07-18)</span>
 

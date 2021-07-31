@@ -6,7 +6,7 @@ import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
@@ -15,12 +15,11 @@ import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
-import { DestinyAccount } from '../accounts/destiny-account';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { default as SearchFilter } from '../search/SearchFilter';
@@ -34,13 +33,9 @@ import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import Refresh from './refresh';
+import { useIsPhonePortrait } from './selectors';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
-
-interface StoreProps {
-  account?: DestinyAccount;
-  isPhonePortrait: boolean;
-}
 
 const logoStyles = {
   beta: styles.beta,
@@ -57,16 +52,11 @@ const transitionClasses = {
 
 // TODO: finally time to hack apart the header styles!
 
-type Props = StoreProps & ThunkDispatchProp;
+export default function Header() {
+  const dispatch = useThunkDispatch();
+  const isPhonePortrait = useIsPhonePortrait();
+  const account = useSelector(currentAccountSelector);
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    account: currentAccountSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
-  };
-}
-
-function Header({ account, isPhonePortrait, dispatch }: Props) {
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLAnchorElement>(null);
@@ -369,5 +359,3 @@ function Header({ account, isPhonePortrait, dispatch }: Props) {
     </header>
   );
 }
-
-export default connect(mapStateToProps)(Header);

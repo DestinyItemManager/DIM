@@ -6,6 +6,7 @@ import {
   DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
+import React from 'react';
 import { D1Item, DimItem } from './item-types';
 
 /**
@@ -101,7 +102,7 @@ export interface DimCharacterStat {
   /** maxGearPower (hash `-3`) may have this. if it's set, it's the *equippable* max power (instead of all items' combined max) */
   differentEquippableMaxGearPower?: number;
   /** additional rich content available to display in a stat's tooltip */
-  richTooltip?: JSX.Element;
+  richTooltip?: React.ReactChild;
 
   /** A localized description of this stat's effect. */
   effect?: string;

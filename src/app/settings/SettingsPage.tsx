@@ -12,6 +12,7 @@ import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/select
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
@@ -39,7 +40,6 @@ import Spreadsheets from './Spreadsheets';
 interface StoreProps {
   currentAccount?: DestinyAccount;
   settings: Settings;
-  isPhonePortrait: boolean;
   storesLoaded: boolean;
   stores: DimStore[];
 }
@@ -49,7 +49,6 @@ function mapStateToProps(state: RootState): StoreProps {
     settings: settingsSelector(state),
     storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
     currentAccount: currentAccountSelector(state),
   };
 }
@@ -114,20 +113,11 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文', // Chinese (Simplified)
 });
 
-// Edge doesn't support these
-const supportsCssVar = window?.CSS?.supports('(--foo: red)');
-
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
-function SettingsPage({
-  settings,
-  isPhonePortrait,
-  storesLoaded,
-  stores,
-  currentAccount,
-  dispatch,
-}: Props) {
+function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch }: Props) {
+  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount, storesLoaded);
   const setSetting = useSetSetting();
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
@@ -147,6 +137,13 @@ function SettingsPage({
     } else {
       setSetting(e.target.name as keyof Settings, e.target.value);
     }
+  };
+
+  const onBadgePostmasterChanged = (checked: boolean, name: keyof Settings) => {
+    if (!checked && 'setAppBadge' in navigator) {
+      navigator.clearAppBadge();
+    }
+    onCheckChange(checked, name);
   };
 
   const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -284,7 +281,7 @@ function SettingsPage({
               <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
             </div>
 
-            {supportsCssVar && !isPhonePortrait && (
+            {!isPhonePortrait && (
               <div className="setting">
                 <div className="horizontal itemSize">
                   <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
@@ -410,27 +407,35 @@ function SettingsPage({
               </div>
             )}
 
-            {supportsCssVar &&
-              (isPhonePortrait ? (
-                <div className="setting">
-                  <Select
-                    label={t('Settings.InventoryColumnsMobile')}
-                    name="charColMobile"
-                    value={settings.charColMobile}
-                    options={charColOptions}
-                    onChange={onChange}
-                  />
-                  <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-                </div>
-              ) : (
+            {isPhonePortrait ? (
+              <div className="setting">
                 <Select
-                  label={t('Settings.InventoryColumns')}
-                  name="charCol"
-                  value={settings.charCol}
+                  label={t('Settings.InventoryColumnsMobile')}
+                  name="charColMobile"
+                  value={settings.charColMobile}
                   options={charColOptions}
                   onChange={onChange}
                 />
-              ))}
+                <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
+              </div>
+            ) : (
+              <Select
+                label={t('Settings.InventoryColumns')}
+                name="charCol"
+                value={settings.charCol}
+                options={charColOptions}
+                onChange={onChange}
+              />
+            )}
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.BadgePostmaster')}
+                name="badgePostmaster"
+                value={settings.badgePostmaster}
+                onChange={onBadgePostmasterChanged}
+              />
+              <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
+            </div>
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}

@@ -5,6 +5,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useRef } from 'react';
@@ -21,7 +22,6 @@ export default function Plug({
   socketInfo,
   wishlistRoll,
   hasMenu,
-  isPhonePortrait,
   onClick,
   adjustedPlug,
 }: {
@@ -30,11 +30,11 @@ export default function Plug({
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
-  isPhonePortrait: boolean;
   onClick?(plug: DimPlug): void;
   adjustedPlug?: DimPlug;
 }) {
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
   // Support dragging over plugs items on mobile
   const [{ hovering }, drop] = useDrop({
     accept: mobileDragType,

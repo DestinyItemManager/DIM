@@ -1,3 +1,4 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -5,11 +6,13 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ItemsByBucket, LockableBucketHashes, LockedExotic, LockedExoticWithPlugs } from '../types';
 import styles from './ExoticPicker.m.scss';
@@ -19,8 +22,6 @@ interface Props {
   lockedExotic?: LockedExotic;
   characterItems?: ItemsByBucket;
   unusableExotics?: DimItem[];
-  isPhonePortrait: boolean;
-  language: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   onClose(): void;
 }
@@ -30,12 +31,12 @@ function ExoticPicker({
   lockedExotic,
   characterItems,
   unusableExotics,
-  isPhonePortrait,
-  language,
   lbDispatch,
   onClose,
 }: Props) {
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
+  const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
 
   const lockableExotics = useMemo(() => {

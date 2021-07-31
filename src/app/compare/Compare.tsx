@@ -92,10 +92,14 @@ function Compare(
     dispatch(endCompareSession());
   }, [dispatch]);
 
-  const show = Boolean(session) && compareItems.length > 0;
-  const destinyVersion = show ? compareItems[0].destinyVersion : 2;
+  const hasSession = Boolean(session);
+  const hasItems = compareItems.length > 0;
+  const show = hasSession && hasItems;
+
+  const firstCompareItem = compareItems.length > 0 ? compareItems[0] : undefined;
+  const destinyVersion = show ? firstCompareItem?.destinyVersion : 2;
   useEffect(() => {
-    if (show) {
+    if (show && destinyVersion !== undefined) {
       ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/compare`);
     }
   }, [show, destinyVersion]);
@@ -109,10 +113,17 @@ function Compare(
   // Clear the session on unmount
   useEffect(
     () => () => {
-      dispatch(endCompareSession());
+      cancel();
     },
-    [dispatch]
+    [cancel]
   );
+
+  // Reset if there ever are no items
+  useEffect(() => {
+    if (hasSession && !hasItems) {
+      cancel();
+    }
+  }, [cancel, hasItems, hasSession]);
 
   // TODO: make a function that takes items and perk overrides and produces new items!
 
@@ -122,7 +133,7 @@ function Compare(
     [compareItems, compareBaseStats, adjustedStats]
   );
 
-  const comparingArmor = compareItems[0]?.bucket.inArmor;
+  const comparingArmor = firstCompareItem?.bucket.inArmor;
   const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
 
   if (!show) {
@@ -189,10 +200,11 @@ function Compare(
 
   // If the session was started with a specific item, this is it
   // TODO: highlight this item
-  const initialItem =
-    session?.initialItemId && categoryItems.find((i) => i.id === session.initialItemId);
+  const initialItem = session?.initialItemId
+    ? categoryItems.find((i) => i.id === session.initialItemId)
+    : undefined;
   // The example item is the one we'll use for generating suggestion buttons
-  const exampleItem = initialItem || compareItems[0];
+  const exampleItem = initialItem || firstCompareItem;
 
   return (
     <Sheet

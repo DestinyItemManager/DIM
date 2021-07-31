@@ -5,6 +5,7 @@ import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { buildItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemSubHeader } from 'app/mobile-inspect/ItemSubHeader';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,11 +20,17 @@ export const enum Inspect {
 }
 
 export default function MobileInspect() {
+  const isPhonePortrait = useIsPhonePortrait();
   const nodeRef = useRef<HTMLDivElement>(null);
+
   // TODO: In some very rare cases the popup doesn't close. Allow tapping to reset/close.
   const reset = () => showMobileInspect$.next({});
 
   const { item, inspectType = Inspect.default } = useSubscription(showMobileInspect$);
+
+  if (!isPhonePortrait) {
+    return null;
+  }
 
   return (
     <>

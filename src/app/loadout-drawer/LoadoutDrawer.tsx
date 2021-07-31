@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout/mod-picker/ModPicker';
-import { manifestSelector } from 'app/manifest/selectors';
+import { useDefinitions } from 'app/manifest/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -14,8 +14,6 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import Sheet from '../dim-ui/Sheet';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import InventoryItem from '../inventory/InventoryItem';
@@ -80,7 +78,6 @@ interface StoreProps {
   stores: DimStore[];
   allItems: DimItem[];
   buckets: InventoryBuckets;
-  defs: D1ManifestDefinitions | D2ManifestDefinitions;
   loadouts: Loadout[];
 }
 
@@ -362,7 +359,6 @@ function mapStateToProps() {
     stores: storesSelector(state),
     allItems: allItemsSelector(state),
     buckets: bucketsSelector(state)!,
-    defs: manifestSelector(state)!,
     loadouts: loadoutsSelector(state),
   });
 }
@@ -377,10 +373,11 @@ function LoadoutDrawer({
   stores,
   allItems,
   itemSortOrder,
-  defs,
   loadouts,
   dispatch,
 }: Props) {
+  const defs = useDefinitions()!;
+
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,

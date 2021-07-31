@@ -96,6 +96,7 @@ function MainSearchBarActions({
             filteredItems={filteredItems}
             searchActive={showSearchCount}
             searchQuery={searchQuery}
+            fixed={true}
           />
         </motion.div>
       )}

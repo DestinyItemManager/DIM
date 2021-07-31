@@ -20,9 +20,8 @@ function getBrowserName(agent) {
 
 function getBrowserVersionFromUserAgent(agent) {
   var browserName = getBrowserName(agent).toLowerCase();
-  var version = (browserName === 'ios_saf'
-    ? agent.os.version
-    : agent.browser.version || agent.os.version || ''
+  var version = (
+    browserName === 'ios_saf' ? agent.os.version : agent.browser.version || agent.os.version || ''
   ).split('.');
   while (version.length > 0) {
     try {

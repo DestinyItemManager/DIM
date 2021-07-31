@@ -229,6 +229,7 @@
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
     },
+    "Timelost": "\\(zagubion(y|a) w czasie\\)",
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",
     "Trashlist": "Pokazuje przedmioty pasujące do listy śmieci z twojej listy życzeń.",
@@ -722,6 +723,8 @@
     "UsageCount": "# Używanych"
   },
   "Settings": {
+    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
+    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "CharacterOrder": "Sortuj postaci wg",
     "CharacterOrderFixed": "Wiek postaci (buguje się na PC)",
     "CharacterOrderRecent": "Ostatnio używana postać",

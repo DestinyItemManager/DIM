@@ -1,48 +1,34 @@
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { default as React, useState } from 'react';
-import { connect } from 'react-redux';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
+import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
 import PlugTooltip from './PlugTooltip';
 
-interface ProvidedProps {
+interface Props {
   item: DimItem;
   perks: DimSocketCategory;
 }
 
-interface StoreProps {
-  wishlistRoll?: InventoryWishListRoll;
-  defs?: D2ManifestDefinitions;
-}
-
-function mapStateToProps(state: RootState, { item }: ProvidedProps): StoreProps {
-  return {
-    wishlistRoll: wishListSelector(item)(state),
-    defs: d2ManifestSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
+export default function ItemPerksList({ item, perks }: Props) {
   // TODO: bring back clicking perks to see stats
   // TODO: click perk to see others
   // TODO: details?
   // TODO: tooltips
   // TODO: AWA buttons
   // TODO: grid for armor?
+  const defs = useD2Definitions();
+  const wishlistRoll = useSelector(wishListSelector(item));
 
   const [selectedPerk, setSelectedPerk] = useState<{ socket: DimSocket; perk: DimPlug }>();
   const onPerkSelected = (socket: DimSocket, perk: DimPlug) => {
@@ -78,8 +64,6 @@ function ItemPerksList({ defs, item, perks, wishlistRoll }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemPerksList);
 
 function PerkSocket({
   item,

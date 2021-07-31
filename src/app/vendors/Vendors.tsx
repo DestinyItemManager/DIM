@@ -5,11 +5,12 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS, VENDOR_GROUPS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -46,6 +47,7 @@ import {
   toVendorGroups,
 } from './d2-vendors';
 import { VendorsState } from './reducer';
+import { vendorsByCharacterSelector } from './selectors';
 import Vendor from './Vendor';
 import VendorsMenu from './VendorsMenu';
 
@@ -55,9 +57,7 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   buckets?: InventoryBuckets;
-  defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
-  isPhonePortrait: boolean;
   searchQuery: string;
   profileResponse?: DestinyProfileResponse;
   vendors: VendorsState['vendorsByCharacter'];
@@ -71,12 +71,10 @@ function mapStateToProps() {
     stores: sortedStoresSelector(state),
     ownedItemHashes: ownedItemSelectorInstance(state),
     buckets: bucketsSelector(state),
-    defs: d2ManifestSelector(state),
-    isPhonePortrait: state.shell.isPhonePortrait,
-    searchQuery: state.shell.searchQuery,
+    searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
-    vendors: state.vendors.vendorsByCharacter,
+    vendors: vendorsByCharacterSelector(state),
   });
 }
 
@@ -86,11 +84,9 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 function Vendors({
-  defs,
   stores,
   buckets,
   ownedItemHashes,
-  isPhonePortrait,
   searchQuery,
   filterItems,
   profileResponse,
@@ -98,6 +94,8 @@ function Vendors({
   dispatch,
   account,
 }: Props) {
+  const defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
   const [characterId, setCharacterId] = useState<string>();
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 
@@ -227,7 +225,6 @@ function Vendors({
         {selectedStore && (
           <CharacterSelect
             stores={stores}
-            isPhonePortrait={isPhonePortrait}
             selectedStore={selectedStore}
             onCharacterChanged={onCharacterChanged}
           />

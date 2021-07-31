@@ -229,6 +229,7 @@
       "Tag": "С указанным Тэгом.",
       "Tagged": "С любым Тэгом."
     },
+    "Timelost": "\\(вневременн(ой|ая)\\)",
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Перемещаемые.",
     "Trashlist": "\"Мусор\" по загруженному Wish List.",
@@ -722,6 +723,8 @@
     "UsageCount": "# Раз"
   },
   "Settings": {
+    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
+    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "возраст (для ПК может глючить)",
     "CharacterOrderRecent": "активность",

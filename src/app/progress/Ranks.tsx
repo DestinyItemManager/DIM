@@ -1,14 +1,13 @@
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { CrucibleRank } from './CrucibleRank';
+import { getCharacterProgressions } from './selectors';
 
 /**
  * displays all Crucible and Gambit ranks for the account
  */
 export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
-  const firstCharacterProgression = profileInfo.characterProgressions?.data
-    ? Object.values(profileInfo.characterProgressions.data)[0].progressions
-    : {};
+  const firstCharacterProgression = getCharacterProgressions(profileInfo) ?? {};
 
   // there are 2 similar DestinyProgression entries for each crucible point system
   // progressionInfo contains detailed rank names and resetInfo, streakInfo is contains

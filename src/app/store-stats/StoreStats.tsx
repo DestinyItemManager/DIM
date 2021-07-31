@@ -1,8 +1,7 @@
 import type { DimStore } from 'app/inventory/store-types';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { LoadoutStats, PowerFormula } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import D1CharacterStats from './D1CharacterStats';
@@ -17,7 +16,7 @@ export default function StoreStats({
   store: DimStore;
   style?: React.CSSProperties;
 }) {
-  const isPhonePortrait = useSelector(isPhonePortraitSelector);
+  const isPhonePortrait = useIsPhonePortrait();
   return (
     <div className={clsx({ ['store-cell']: Boolean(style), vault: store.isVault })} style={style}>
       {store.isVault ? (

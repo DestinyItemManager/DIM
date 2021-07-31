@@ -1,25 +1,12 @@
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
-import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
-import { SearchConfig, searchConfigSelector } from './search-config';
+import { searchConfigSelector } from './search-config';
 import { generateSuggestionsForFilter } from './suggestions-generation';
-
-interface StoreProps {
-  searchConfig: SearchConfig;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    searchConfig: searchConfigSelector(state),
-  };
-}
-
-type Props = StoreProps;
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
@@ -28,12 +15,12 @@ function keywordsString(keywords: string | string[]) {
   return keywords;
 }
 
-function FilterHelp({ searchConfig }: Props) {
+export default function FilterHelp() {
+  const searchConfig = useSelector(searchConfigSelector);
   const [search, setSearch] = useState('');
 
-  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);
-  };
 
   const searchLower = search.toLowerCase();
   const filters = search
@@ -93,8 +80,6 @@ function FilterHelp({ searchConfig }: Props) {
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(FilterHelp);
 
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();

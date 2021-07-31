@@ -1,4 +1,5 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
@@ -25,14 +26,13 @@ const spring: Spring = {
 export default function CharacterSelect({
   stores,
   selectedStore,
-  isPhonePortrait,
   onCharacterChanged,
 }: {
   stores: DimStore[];
   selectedStore: DimStore;
-  isPhonePortrait?: boolean;
   onCharacterChanged(storeId: string): void;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
   stores = stores.filter((s) => !s.isVault);
 
   if (!isPhonePortrait) {

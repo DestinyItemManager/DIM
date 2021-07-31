@@ -66,9 +66,9 @@ export function findSimilarArmors(
       exampleItem.element &&
       exampleItemModSlotMetadatas && {
         buttonLabel: [exampleItemElementIcon, specialtyModSlotNames?.join(' + ')],
-        query: `is:armor2.0 is:${getItemDamageShortName(
-          exampleItem
-        )} ${exampleItemModSlotMetadatas.map((m) => `modslot:${m.slotTag || 'none'}`).join(' ')}`,
+        query: `is:armor2.0 is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
+          .map((m) => `modslot:${m.slotTag || 'none'}`)
+          .join(' ')}`,
       },
 
     // basically stuff with the same name & categories
@@ -110,7 +110,11 @@ const getRpm = (i: DimItem) => {
 export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
-  const adeptStripped = exampleItem.name.replace(new RegExp(t('Filter.Adept'), 'gi'), '').trim();
+  const adeptStripped = exampleItem.name
+    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
+    .trim()
+    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
+    .trim();
 
   let comparisonSets: CompareButton[] = _.compact([
     // same weapon type
