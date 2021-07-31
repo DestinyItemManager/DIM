@@ -139,6 +139,13 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
     }
   };
 
+  const onBadgePostmasterChanged = (checked: boolean, name: keyof Settings) => {
+    if (!checked && 'setAppBadge' in navigator) {
+      navigator.clearAppBadge();
+    }
+    onCheckChange(checked, name);
+  };
+
   const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     languageChanged = true;
     const language = e.target.value;
@@ -420,6 +427,15 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
                 onChange={onChange}
               />
             )}
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.BadgePostmaster')}
+                name="badgePostmaster"
+                value={settings.badgePostmaster}
+                onChange={onBadgePostmasterChanged}
+              />
+              <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
+            </div>
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}
