@@ -2,6 +2,7 @@
 
 * Legendary Marks and Silver once again appear in the D1 inventory view.
 * Tap/hover the Artifact power level in the header, to check XP progress towards the next level.
+* When you install DIM on your desktop or home screen, it will now be badged with the number of postmaster items on the current character. You can disable this from Settings. This won't work on iOS.
 
 ## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
 

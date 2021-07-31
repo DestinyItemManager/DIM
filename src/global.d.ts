@@ -66,6 +66,9 @@ interface Window {
 interface Navigator {
   /** iOS-only: True if the app is running in installed mode */
   standalone?: boolean;
+
+  setAppBadge(num?: number);
+  clearAppBadge();
 }
 
 /**

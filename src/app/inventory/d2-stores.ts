@@ -4,8 +4,10 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
@@ -48,7 +50,7 @@ import { getCharacterStatsData as getD1CharacterStatsData } from './store/charac
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
-import { getArtifactBonus } from './stores-helpers';
+import { getArtifactBonus, getCurrentStore } from './stores-helpers';
 
 let isFirstLoad = true;
 
@@ -186,10 +188,20 @@ function loadStoresData(
 
         // Let our styling know how many characters there are
         // TODO: this should be an effect on the stores component, except it's also
-        // used on D1 activities page
+        // used on D1 activities page. It should probably at least be an observer on
+        // the store
         document
           .querySelector('html')!
           .style.setProperty('--num-characters', String(stores.length - 1));
+        if (
+          stores.length > 0 &&
+          settingsSelector(getState()).badgePostmaster &&
+          'setAppBadge' in navigator
+        ) {
+          const activeStore = getCurrentStore(stores)!;
+          navigator.setAppBadge(totalPostmasterItems(activeStore));
+        }
+
         stopTimer();
 
         const stateSpan = transaction?.startChild({
