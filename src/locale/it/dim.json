@@ -723,6 +723,8 @@
     "UsageCount": "# Utilizzi"
   },
   "Settings": {
+    "BadgePostmaster": "Mostra il numero degli oggetti dall'Amministratrice per il personaggio attuale sull'icona dell'app",
+    "BadgePostmasterExplanation": "Affinché questo funzioni devi installare DIM come app e il tuo sistema operativo deve supportare la visualizzazione dei badge",
     "CharacterOrder": "Ordina personaggi per",
     "CharacterOrderFixed": "Età del personaggio (malfunzionante su PC)",
     "CharacterOrderRecent": "Personaggio più recente",
