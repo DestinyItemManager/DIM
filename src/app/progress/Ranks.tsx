@@ -7,7 +7,7 @@ import { getCharacterProgressions } from './selectors';
  * displays all Crucible and Gambit ranks for the account
  */
 export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
-  const firstCharacterProgression = getCharacterProgressions(profileInfo) ?? {};
+  const firstCharacterProgression = getCharacterProgressions(profileInfo)?.progressions ?? {};
 
   // there are 2 similar DestinyProgression entries for each crucible point system
   // progressionInfo contains detailed rank names and resetInfo, streakInfo is contains
