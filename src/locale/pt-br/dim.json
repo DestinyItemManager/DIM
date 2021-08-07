@@ -723,8 +723,8 @@
     "UsageCount": "Nº de Usos"
   },
   "Settings": {
-    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
-    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
+    "BadgePostmaster": "Exibir a quantidade de itens disponíveis com o Chefe do Correio do personagem atual no ícone do aplicativo",
+    "BadgePostmasterExplanation": "Esta opção só funcionará se você instalar o DIM como um app e seu Sistema Operacional suportar este recurso de exibição",
     "CharacterOrder": "Ordenar personagens por",
     "CharacterOrderFixed": "Idade do personagem (buggy no PC)",
     "CharacterOrderRecent": "Personagem mais recente",
