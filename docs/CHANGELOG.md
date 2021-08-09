@@ -1,5 +1,7 @@
 ## Next
 
+## 6.77.0 <span class="changelog-date">(2021-08-08)</span>
+
 * Timelost weapons now include their additional Level 10 Masterwork stats.
 
 ## 6.76.0 <span class="changelog-date">(2021-08-01)</span>
