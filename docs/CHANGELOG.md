@@ -1,5 +1,7 @@
 ## Next
 
+* Armor in the Organizer no longer displays the now-standard Combat Mod Slot
+
 ## 6.77.0 <span class="changelog-date">(2021-08-08)</span>
 
 * Timelost weapons now include their additional Level 10 Masterwork stats.
