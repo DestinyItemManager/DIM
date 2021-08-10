@@ -37,11 +37,11 @@ import {
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import {
+  getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadatas,
   isD1Item,
   isSunset,
 } from 'app/utils/item-utils';
@@ -339,15 +339,24 @@ export function getColumns(
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
         value: (item) =>
-          getSpecialtySocketMetadatas(item)
+          getInterestingSocketMetadatas(item)
             ?.map((m) => m.slotTag)
             .join(','),
         cell: (value, item) =>
-          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
-        filter: (_val, item) => {
-          const modSlotMetadata = getSpecialtySocketMetadatas(item);
-          return `modslot:${modSlotMetadata?.[0].slotTag || 'none'}`;
-        },
+          value && (
+            <SpecialtyModSlotIcon
+              className={styles.modslotIcon}
+              item={item}
+              excludeStandardD2ModSockets
+            />
+          ),
+        filter: (value: string) =>
+          value !== undefined
+            ? value
+                .split(',')
+                .map((m) => `modslot:${m}`)
+                .join(' ')
+            : ``,
       },
     destinyVersion === 1 && {
       id: 'percentComplete',
