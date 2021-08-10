@@ -723,7 +723,7 @@
     "UsageCount": "# Usado"
   },
   "Settings": {
-    "BadgePostmaster": "Muestra el número de objetos en Administración para el personaje actual en el icono de la app",
+    "BadgePostmaster": "Muestra el número de objetos en la Administración para el personaje actual en el icono de la app",
     "BadgePostmasterExplanation": "Para que esto funcione necesitas instalar DIM como app y tu sistema operativo debe soportar mostrar insignias",
     "CharacterOrder": "Ordenar personajes por",
     "CharacterOrderFixed": "Edad del personaje (falla en PC)",
