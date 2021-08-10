@@ -353,8 +353,8 @@ export function getColumns(
         filter: (value: string) =>
           value !== undefined
             ? value
-                ?.split(',')
-                ?.map((m) => `modslot:${m}`)
+                .split(',')
+                .map((m) => `modslot:${m}`)
                 .join(' ')
             : ``,
       },
