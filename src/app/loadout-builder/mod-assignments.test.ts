@@ -17,70 +17,6 @@ import { generateModPermutations } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 
-function modifyMod({
-  mod,
-  hash,
-  energyType,
-  energyVal,
-  tag,
-}: {
-  mod: ProcessMod;
-  hash: number;
-  energyType?: DestinyEnergyType;
-  energyVal?: number;
-  tag?: string;
-}): ProcessMod {
-  const newMod = _.cloneDeep(mod);
-  if (hash !== undefined) {
-    mod.hash = hash;
-  }
-
-  if (energyType !== undefined) {
-    newMod.energy!.type = energyType;
-  }
-
-  if (energyVal !== undefined) {
-    newMod.energy!.val = energyVal;
-  }
-
-  newMod.tag = tag;
-
-  return newMod;
-}
-
-function modifyItem({
-  item,
-  energyType,
-  originalEnergyType,
-  energyVal,
-  energyCapacity,
-}: {
-  item: ProcessItem;
-  energyType?: DestinyEnergyType;
-  originalEnergyType?: DestinyEnergyType;
-  energyVal?: number;
-  energyCapacity?: number;
-}): ProcessItem {
-  const newItem = _.cloneDeep(item);
-  if (energyType !== undefined) {
-    newItem.energy!.type = energyType;
-  }
-
-  if (originalEnergyType !== undefined) {
-    newItem.energy!.originalEnergyType = originalEnergyType;
-  }
-
-  if (energyVal !== undefined) {
-    newItem.energy!.val = energyVal;
-  }
-
-  if (energyCapacity !== undefined) {
-    newItem.energy!.capacity = energyCapacity;
-  }
-
-  return newItem;
-}
-
 // The tsconfig in the process worker folder messes with tests so they live outside of it.
 describe('mod-assignments', () => {
   let combatMod: ProcessMod;
@@ -149,45 +85,55 @@ describe('mod-assignments', () => {
     combatMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(elementalLightModHash) as PluggableInventoryItemDefinition
     );
+  });
 
-    items = [helmet, arms, chest, legs, classItem];
-    combatMods = [combatMod, combatMod, combatMod, combatMod, combatMod];
+  beforeEach(() => {
+    items = [
+      _.cloneDeep(helmet),
+      _.cloneDeep(arms),
+      _.cloneDeep(chest),
+      _.cloneDeep(legs),
+      _.cloneDeep(classItem),
+    ];
+    combatMods = Array.from({ length: 5 }, (ignored) => _.cloneDeep(combatMod));
   });
 
   it('returns an assignment with a lower energy investment', () => {
     const assignments = new ModAssignments();
 
-    const testItems = items.map((item) =>
-      modifyItem({
-        item,
-        originalEnergyType: DestinyEnergyType.Arc,
-        energyCapacity: 1,
-        energyVal: 0,
-      })
-    );
+    for (const item of items) {
+      item.energy!.originalEnergyType = DestinyEnergyType.Arc;
+      item.energy!.capacity = 1;
+      item.energy!.val = 0;
+      item.energy!.type = item.energy?.originalEnergyType;
+    }
 
-    testItems[0].energy!.originalEnergyType = DestinyEnergyType.Thermal;
-    testItems[4].energy!.originalEnergyType = DestinyEnergyType.Void;
+    items[0].energy!.originalEnergyType = DestinyEnergyType.Thermal;
+    items[0].energy!.type = DestinyEnergyType.Thermal;
+    items[4].energy!.originalEnergyType = DestinyEnergyType.Void;
+    items[4].energy!.type = DestinyEnergyType.Void;
 
-    const testCombatMods = combatMods.map((mod, i) =>
-      modifyMod({ mod, hash: i, energyType: DestinyEnergyType.Arc, energyVal: 3 })
-    );
+    for (const [i, mod] of combatMods.entries()) {
+      mod.hash = i;
+      mod.energy!.type = DestinyEnergyType.Arc;
+      mod.energy!.val = 3;
+    }
 
-    testCombatMods[1].energy!.type = DestinyEnergyType.Void;
-    testCombatMods[3].energy!.type = DestinyEnergyType.Thermal;
+    combatMods[1].energy!.type = DestinyEnergyType.Void;
+    combatMods[3].energy!.type = DestinyEnergyType.Thermal;
 
-    const combatModPerms = generateModPermutations(testCombatMods);
+    const combatModPerms = generateModPermutations(combatMods);
 
     for (const mods of combatModPerms) {
-      assignments.assignSlotIndependantModsIfLessEnergyTypeSwaps(testItems, [], mods, []);
+      assignments.assignSlotIndependantModsIfLessEnergyTypeSwaps(items, [], mods, []);
     }
 
     const energyTypeResults = Object.values(assignments.getResults()).map(
-      (modHashes) => testCombatMods.find((mod) => mod.hash === modHashes[0])?.energy?.type
+      (modHashes) => combatMods.find((mod) => mod.hash === modHashes[0])?.energy?.type
     );
 
-    for (let i = 0; i < testItems.length; i++) {
-      expect(testItems[i].energy!.originalEnergyType).toBe(energyTypeResults[i]);
-    }
+    const expectedResults = items.map((item) => item.energy?.originalEnergyType);
+
+    expect(energyTypeResults).toEqual(expectedResults);
   });
 });

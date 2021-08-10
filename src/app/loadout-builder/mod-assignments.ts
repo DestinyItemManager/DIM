@@ -29,11 +29,6 @@ export class ModAssignments {
   getResults() {
     const rtn: Record<string, number[]> = {};
 
-    // eslint-disable-next-line no-console
-    console.log(`Energy invested: ${this.extraEnergyInvestment}`);
-    // eslint-disable-next-line no-console
-    console.log(`Combos checked: ${this.combinationsChecked}`);
-
     for (const [item, itemAssignments] of this.slotIndependantAssignments.entries()) {
       if (!rtn[item.id]) {
         rtn[item.id] = itemAssignments.mods.map((mod) => mod.hash);
