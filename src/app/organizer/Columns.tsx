@@ -350,7 +350,13 @@ export function getColumns(
               excludeStandardD2ModSockets
             />
           ),
-        filter: (value) => (value !== undefined ? `modslot:${value}` : ``),
+        filter: (value: string) =>
+          value !== undefined
+            ? value
+                ?.split(',')
+                ?.map((m) => `modslot:${m}`)
+                .join(' ')
+            : ``,
       },
     destinyVersion === 1 && {
       id: 'percentComplete',
