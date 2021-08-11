@@ -19,6 +19,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 
 ### Pre-requisites
 
+* Install [Git](https://git-scm.com/downloads)
 * Install [NodeJS](https://nodejs.org/).
 * Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * Windows-based developers will need to install `windows-build-tools` (`yarn global add windows-build-tools`) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
