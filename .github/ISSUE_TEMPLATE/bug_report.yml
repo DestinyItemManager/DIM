@@ -3,30 +3,30 @@ description: File a bug/issue
 title: "<title>"
 labels: [Bug]
 body:
-  - type: input
-    id: DIMversion
-    attributes:
-      label: DIM Version
-      description: Find the version in "About DIM" from the menu (the button with three bars on the upper left of the screen). Is the DIM icon orange, or blue?
-      placeholder: ex. Version 6.78.0.1000630 (beta), built on 8/15/2021, 8:04:14 PM
-    validations:
-      required: true
-  - type: input
-    id: BrowserVersion
-    attributes:
-      label: Browser Details
-      description: What browser and version are you experiencing this issue on?
-      placeholder: ex. Chrome 92.0.4515.131
-    validations:
-      required: true
-  - type: input
-    id: OSversion
-    attributes:
-      label: OS Details
-      description: What operating system are you experiencing this issue on?
-      placeholder: ex. Windows 10
-    validations:
-      required: true
+- type: input
+  id: DIMversion
+  attributes:
+    label: DIM Version
+    description: Find the version in "About DIM" from the menu (the button with three bars on the upper left of the screen). Is the DIM icon orange, or blue?
+    placeholder: ex. Version 6.78.0.1000630 (beta), built on 8/15/2021, 8:04:14 PM
+  validations:
+    required: true
+- type: input
+  id: BrowserVersion
+  attributes:
+    label: Browser Details
+    description: What browser and version are you experiencing this issue on?
+    placeholder: ex. Chrome 92.0.4515.131
+  validations:
+    required: true
+- type: input
+  id: OSversion
+  attributes:
+    label: OS Details
+    description: What operating system are you experiencing this issue on?
+    placeholder: ex. Windows 10
+  validations:
+    required: true
 - type: textarea
   attributes:
     label: Describe the bug
