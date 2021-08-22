@@ -128,7 +128,7 @@ describe('mod-assignments', () => {
       assignments.assignSlotIndependantModsIfLessEnergyTypeSwaps(items, [], mods, []);
     }
 
-    const energyTypeResults = Object.values(assignments.getResults()).map(
+    const energyTypeResults = Array.from(assignments.getResults().values()).map(
       (modHashes) => combatMods.find((mod) => mod.hash === modHashes[0])?.energy?.type
     );
 

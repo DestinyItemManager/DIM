@@ -159,8 +159,11 @@ export function mapDimItemToProcessItem(
     energy: energy
       ? {
           type: energyType ?? energy.energyType,
+          // used to find best mod assignments
           originalEnergyType: energy.energyType,
           capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem),
+          // used to find best mod assignments
+          originalCapacity: energy.energyCapacity,
           val: modsCost,
         }
       : undefined,

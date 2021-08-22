@@ -11,8 +11,13 @@ export interface ProcessItem {
   energy?: {
     type: DestinyEnergyType;
     originalEnergyType: DestinyEnergyType;
-    /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
+    /**
+     * The maximum energy capacity for the item, e.g. if masterworked this will be 10. This is influenced by
+     * the selected armor upgrade.
+     */
     capacity: number;
+    /** The original energy capacity of the item. */
+    originalCapacity: number;
     /**
      * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
      * function for ProcessItems and ProcessMods.

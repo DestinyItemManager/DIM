@@ -68,8 +68,8 @@ export class ModAssignments {
   private calculateEnergyChange(item: ProcessItem, assignments: ItemAssignments) {
     const modCost =
       (item.energy?.val || 0) + _.sumBy(assignments.mods, (mod) => mod.energy?.val || 0);
-    const energyUsedAndWasted = modCost + (item.energy?.capacity || 0);
-    const energyInvested = Math.max(0, modCost - (item.energy?.capacity || 0));
+    const energyUsedAndWasted = modCost + (item.energy?.originalCapacity || 0);
+    const energyInvested = Math.max(0, modCost - (item.energy?.originalCapacity || 0));
     return assignments.energySwapped ? energyUsedAndWasted : energyInvested;
   }
 
