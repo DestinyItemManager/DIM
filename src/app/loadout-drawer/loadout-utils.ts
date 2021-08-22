@@ -4,7 +4,7 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isArmor2WithStats } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
@@ -192,7 +192,7 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
 
 /** Extracts the equipped armour 2.0 mod hashes from the item */
 export function extractArmorModHashes(item: DimItem) {
-  if (!isArmor2WithStats(item) || !item.sockets) {
+  if (!isLoadoutBuilderItem(item) || !item.sockets) {
     return [];
   }
   return _.compact(

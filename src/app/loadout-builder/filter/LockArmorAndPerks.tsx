@@ -17,7 +17,7 @@ import _ from 'lodash';
 import React, { Dispatch, useState } from 'react';
 import ReactDom from 'react-dom';
 import { connect } from 'react-redux';
-import { isArmor2WithStats } from '../../loadout/item-utils';
+import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
@@ -87,7 +87,7 @@ function LockArmorAndPerks({
   const lockEquipped = () => {
     const newLockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     selectedStore.items.forEach((item) => {
-      if (item.equipped && isArmor2WithStats(item)) {
+      if (item.equipped && isLoadoutBuilderItem(item)) {
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
@@ -118,7 +118,7 @@ function LockArmorAndPerks({
         const { item } = await showItemPicker({
           filterItems: (item: DimItem) =>
             Boolean(
-              isArmor2WithStats(item) &&
+              isLoadoutBuilderItem(item) &&
                 itemCanBeEquippedBy(item, selectedStore, true) &&
                 (!filter || filter(item))
             ),
