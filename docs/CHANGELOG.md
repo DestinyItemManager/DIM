@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed misaligment in stat rows, and vertical scrolling, in Compare.
+* Highlighting stats in Compare is faster.
+
 ## 6.78.0 <span class="changelog-date">(2021-08-15)</span>
 
 * Armor in the Organizer no longer displays the now-standard Combat Mod Slot
