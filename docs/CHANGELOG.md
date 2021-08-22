@@ -1,5 +1,7 @@
 ## Next
 
+* Optimizer now shows more optimal mod assignments.
+
 ## 6.78.0 <span class="changelog-date">(2021-08-15)</span>
 
 * Armor in the Organizer no longer displays the now-standard Combat Mod Slot
