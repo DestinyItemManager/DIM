@@ -165,7 +165,7 @@ export function process(
   const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   let generalMods: ProcessMod[] = [];
-  let otherMods: ProcessMod[] = [];
+  let combatMods: ProcessMod[] = [];
   let raidMods: ProcessMod[] = [];
 
   for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
@@ -175,14 +175,14 @@ export function process(
     } else if (raidModPlugCategoryHashes.includes(pch)) {
       raidMods = raidMods.concat(mods);
     } else if (!knownModPlugCategoryHashes.includes(pch)) {
-      otherMods = otherMods.concat(mods);
+      combatMods = combatMods.concat(mods);
     }
   }
 
   const generalModsPermutations = generateModPermutations(generalMods);
-  const otherModPermutations = generateModPermutations(otherMods);
+  const combatModPermutations = generateModPermutations(combatMods);
   const raidModPermutations = generateModPermutations(raidMods);
-  const hasMods = otherMods.length || raidMods.length || generalMods.length;
+  const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
@@ -285,7 +285,7 @@ export function process(
               hasMods &&
               !canTakeSlotIndependantMods(
                 generalModsPermutations,
-                otherModPermutations,
+                combatModPermutations,
                 raidModPermutations,
                 armor
               )

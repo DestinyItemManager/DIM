@@ -124,14 +124,14 @@ const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 /**
  * This figures out if all general, other and raid mods can be assigned to an armour set.
  *
- * The params generalModPermutations, otherModPermutations, raidModPermutations are assumed to be the results
+ * The params generalModPermutations, combatModPermutations, raidModPermutations are assumed to be the results
  * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or raid mods.
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */
 export function canTakeSlotIndependantMods(
   generalModPermutations: (ProcessMod | null)[][],
-  otherModPermutations: (ProcessMod | null)[][],
+  combatModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
   items: ProcessItem[],
   assignments?: Record<string, number[]>
@@ -141,7 +141,7 @@ export function canTakeSlotIndependantMods(
 
   const [arcItems, solarItems, voidItems, anyItems] = getEnergyCounts(sortedItems);
   const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
-    otherModPermutations[0]
+    combatModPermutations[0]
   );
   const [arcGeneralMods, solarGeneralMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
@@ -163,18 +163,18 @@ export function canTakeSlotIndependantMods(
     return false;
   }
 
-  otherModLoop: for (const otherP of otherModPermutations) {
-    otherItemLoop: for (let i = 0; i < sortedItems.length; i++) {
-      const otherMod = otherP[i];
+  combatModLoop: for (const combatP of combatModPermutations) {
+    combatItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+      const combatMod = combatP[i];
 
       // If a mod is null there is nothing being socketed into the item so move on
-      if (!otherMod) {
-        continue otherItemLoop;
+      if (!combatMod) {
+        continue combatItemLoop;
       }
 
       const item = sortedItems[i];
-      const tag = otherMod.tag!;
-      const otherEnergy = otherMod.energy || defaultModEnergy;
+      const tag = combatMod.tag!;
+      const otherEnergy = combatMod.energy || defaultModEnergy;
 
       const otherEnergyIsValid =
         item.energy &&
@@ -185,7 +185,7 @@ export function canTakeSlotIndependantMods(
 
       // The other mods wont fit in the item set so move on to the next set of mods
       if (!(otherEnergyIsValid && item.compatibleModSeasons?.includes(tag))) {
-        continue otherModLoop;
+        continue combatModLoop;
       }
     }
 
@@ -200,7 +200,7 @@ export function canTakeSlotIndependantMods(
 
         const item = sortedItems[i];
         const generalEnergy = generalMod.energy || defaultModEnergy;
-        const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+        const otherEnergy = combatP[i]?.energy || defaultModEnergy;
 
         const generalEnergyIsValid =
           item.energy &&
@@ -227,7 +227,7 @@ export function canTakeSlotIndependantMods(
           const item = sortedItems[i];
           const raidTag = raidMod.tag!;
           const generalEnergy = generalP[i]?.energy || defaultModEnergy;
-          const otherEnergy = otherP[i]?.energy || defaultModEnergy;
+          const otherEnergy = combatP[i]?.energy || defaultModEnergy;
           const raidEnergy = raidMod.energy || defaultModEnergy;
 
           const raidEnergyIsValid =
@@ -238,19 +238,8 @@ export function canTakeSlotIndependantMods(
               raidEnergy.type === DestinyEnergyType.Any ||
               item.energy.type === DestinyEnergyType.Any);
 
-          // Due to raid mods overlapping with legacy mods for last wish we need to ensure
-          // that if an item has a legacy mod socket then another mod is not already intended
-          // for this socket.
-          const notLegacySocketOrLegacyMod = !item.hasLegacyModSocket || !otherP[i];
-
           // The raid mods wont fit in the item set so move on to the next set of mods
-          if (
-            !(
-              raidEnergyIsValid &&
-              notLegacySocketOrLegacyMod &&
-              item.compatibleModSeasons?.includes(raidTag)
-            )
-          ) {
+          if (!(raidEnergyIsValid && item.compatibleModSeasons?.includes(raidTag))) {
             continue raidModLoop;
           }
         }
@@ -260,13 +249,13 @@ export function canTakeSlotIndependantMods(
         if (assignments) {
           for (let i = 0; i < sortedItems.length; i++) {
             const generalMod = generalP[i];
-            const otherMod = otherP[i];
+            const combatMod = combatP[i];
             const raidMod = raidP[i];
             if (generalMod) {
               assignments[sortedItems[i].id].push(generalMod.hash);
             }
-            if (otherMod) {
-              assignments[sortedItems[i].id].push(otherMod.hash);
+            if (combatMod) {
+              assignments[sortedItems[i].id].push(combatMod.hash);
             }
             if (raidMod) {
               assignments[sortedItems[i].id].push(raidMod.hash);
