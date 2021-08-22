@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
@@ -14,7 +14,7 @@ interface ProvidedProps {
 type Props = ProvidedProps;
 
 // TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
-export default function ItemTalentGrid({ item, perksOnly }: Props) {
+export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
   const talentGrid = item.talentGrid;
 
   if (!talentGrid) {
@@ -105,7 +105,7 @@ export default function ItemTalentGrid({ item, perksOnly }: Props) {
       </g>
     </svg>
   );
-}
+});
 
 function talentGridNodesFilter(nodes: DimGridNode[], hiddenColumns: number) {
   return (nodes || []).filter((node) => !node.hidden && node.column >= hiddenColumns);

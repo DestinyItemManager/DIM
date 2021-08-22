@@ -70,10 +70,14 @@ type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: Allow minimizing the sheet (to make selection easier)
 // TODO: memoize
-function Compare(
-  this: void,
-  { categoryItems, compareBaseStats, compareItems, session, organizerLink, dispatch }: Props
-) {
+function Compare({
+  categoryItems,
+  compareBaseStats,
+  compareItems,
+  session,
+  organizerLink,
+  dispatch,
+}: Props) {
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
   /** The stat row to sort by */
@@ -136,26 +140,51 @@ function Compare(
   const comparingArmor = firstCompareItem?.bucket.inArmor;
   const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
 
+  const updateQuery = useCallback(
+    (newQuery: string) => {
+      dispatch(updateCompareQuery(newQuery));
+    },
+    [dispatch]
+  );
+
+  const doUpdateSocketComparePlug = useCallback(
+    ({ item, socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+      const updatedPlugs = updateSocketComparePlug({
+        item,
+        socket,
+        plug,
+        adjustedPlugs,
+        adjustedStats,
+      });
+      if (!updatedPlugs) {
+        return;
+      }
+      // TODO: put these together
+      setAdjustedPlugs(updatedPlugs.adjustedPlugs);
+      setAdjustedStats(updatedPlugs.adjustedStats);
+    },
+    [adjustedPlugs, adjustedStats]
+  );
+
+  const remove = useCallback(
+    (item: DimItem) => {
+      if (compareItems.length <= 1) {
+        cancel();
+      } else {
+        dispatch(removeCompareItem(item));
+      }
+    },
+    [cancel, compareItems.length, dispatch]
+  );
+
   if (!show) {
     return null;
   }
-
-  const updateQuery = (newQuery: string) => {
-    dispatch(updateCompareQuery(newQuery));
-  };
 
   const sort = (newSortedHash?: string | number) => {
     // TODO: put sorting together?
     setSortedHash(newSortedHash);
     setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
-  };
-
-  const remove = (item: DimItem) => {
-    if (compareItems.length <= 1) {
-      cancel();
-    } else {
-      dispatch(removeCompareItem(item));
-    }
   };
 
   const onChangeSetting = (checked: boolean, name: keyof Settings) => {
@@ -171,30 +200,6 @@ function Compare(
   const sortedComparisonItems = !sortedHash
     ? compareItems
     : Array.from(compareItems).sort(comparator);
-
-  const doUpdateSocketComparePlug = ({
-    item,
-    socket,
-    plug,
-  }: {
-    item: DimItem;
-    socket: DimSocket;
-    plug: DimPlug;
-  }) => {
-    const updatedPlugs = updateSocketComparePlug({
-      item,
-      socket,
-      plug,
-      adjustedPlugs,
-      adjustedStats,
-    });
-    if (!updatedPlugs) {
-      return;
-    }
-    // TODO: put these together
-    setAdjustedPlugs(updatedPlugs.adjustedPlugs);
-    setAdjustedStats(updatedPlugs.adjustedStats);
-  };
 
   // TODO: test/handle removing all items (no results)
 
