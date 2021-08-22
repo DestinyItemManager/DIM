@@ -95,7 +95,7 @@ describe('mod-assignments', () => {
       _.cloneDeep(legs),
       _.cloneDeep(classItem),
     ];
-    combatMods = Array.from({ length: 5 }, (ignored) => _.cloneDeep(combatMod));
+    combatMods = Array.from({ length: 5 }, () => _.cloneDeep(combatMod));
   });
 
   it('returns an assignment with a lower energy investment', () => {
@@ -105,7 +105,7 @@ describe('mod-assignments', () => {
       item.energy!.originalEnergyType = DestinyEnergyType.Arc;
       item.energy!.capacity = 1;
       item.energy!.val = 0;
-      item.energy!.type = item.energy?.originalEnergyType;
+      item.energy!.type = item.energy!.originalEnergyType;
     }
 
     items[0].energy!.originalEnergyType = DestinyEnergyType.Thermal;

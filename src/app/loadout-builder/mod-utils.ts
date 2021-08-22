@@ -140,7 +140,8 @@ export function assignModsToArmorSet(
 
   // In this we map modHashes to their mod using modsByHash. Note that we pop the mod from the
   // array in modByHash, this will leave us with any unassigned mods left in modsByHash
-  const assignedMods = _.mapValues(assignments.getResults(), (modHashes) =>
+  // TODO (ryan) move objects over to maps for type safety
+  const assignedMods = _.mapValues(Object.fromEntries(assignments.getResults()), (modHashes) =>
     modHashes
       .map((modHash) => modsByHash[modHash].pop())
       // This shouldn't happen but lets throw in a filter for saftey and type happyness
