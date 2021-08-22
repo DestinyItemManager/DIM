@@ -294,7 +294,12 @@ const itemFactors: Record<string, Factor> = {
     id: 'specialtySocket',
     runIf: getInterestingSocketMetadatas,
     render: (item) => (
-      <SpecialtyModSlotIcon className={styles.inlineIcon} item={item} lowRes onlyInteresting />
+      <SpecialtyModSlotIcon
+        className={styles.inlineIcon}
+        item={item}
+        lowRes
+        excludeStandardD2ModSockets
+      />
     ),
     filter: modslotFilter.fromItem!,
   },

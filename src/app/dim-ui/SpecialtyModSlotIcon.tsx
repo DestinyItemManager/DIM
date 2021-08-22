@@ -16,11 +16,11 @@ export function SpecialtyModSlotIcon({
   item,
   className,
   lowRes,
-  onlyInteresting,
-}: ModSlotIconProps & { onlyInteresting?: boolean }) {
+  excludeStandardD2ModSockets,
+}: ModSlotIconProps & { excludeStandardD2ModSockets?: boolean }) {
   const defs = useD2Definitions()!;
   const modMetadatas = (
-    onlyInteresting ? getInterestingSocketMetadatas : getSpecialtySocketMetadatas
+    excludeStandardD2ModSockets ? getInterestingSocketMetadatas : getSpecialtySocketMetadatas
   )(item);
 
   if (!modMetadatas) {
