@@ -82,6 +82,7 @@
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",
     "require-atomic-updates": "off",
+    "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
     "react/no-unescaped-entities": "off",
     "react/jsx-no-target-blank": "off",
     "react/display-name": "off",
