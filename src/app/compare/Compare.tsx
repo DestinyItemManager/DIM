@@ -1,6 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
-import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
+import { locateItem } from 'app/inventory/locate-item';
 import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
@@ -266,7 +266,7 @@ function Compare({
                 item={item}
                 key={item.id}
                 stats={allStats}
-                itemClick={itemPop}
+                itemClick={locateItem}
                 remove={remove}
                 setHighlight={setHighlight}
                 highlight={highlight}
