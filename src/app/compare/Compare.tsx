@@ -349,7 +349,6 @@ function updateSocketComparePlug({
     item.destinyVersion === 1 ||
     !item.sockets ||
     !item.stats ||
-    socketIndex > 2 ||
     !pluggedPlug ||
     (clickedPlug.plugDef.hash === pluggedPlug?.plugDef.hash && currentAdjustedPlug === undefined)
   ) {

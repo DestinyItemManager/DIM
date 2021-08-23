@@ -2,6 +2,7 @@
 
 * Fixed misaligment in stat rows, and vertical scrolling, in Compare.
 * Highlighting stats in Compare is faster.
+* You can click any perk in Compare, not just the first couple.
 
 ## 6.78.0 <span class="changelog-date">(2021-08-15)</span>
 
