@@ -1,5 +1,7 @@
 ## Next
 
+* Legacy mods are no longer selectable in the Loadout Optimizer.
+
 ## 6.79.0 <span class="changelog-date">(2021-08-22)</span>
 
 ## 6.78.0 <span class="changelog-date">(2021-08-15)</span>

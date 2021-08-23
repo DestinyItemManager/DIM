@@ -164,7 +164,6 @@ export function mapDimItemToProcessItem(
         }
       : undefined,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
-    hasLegacyModSocket: Boolean(modMetadatas?.some((m) => m.slotTag === 'legacy')),
   };
 }
 
