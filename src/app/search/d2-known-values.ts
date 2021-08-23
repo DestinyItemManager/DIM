@@ -275,8 +275,6 @@ export const breakerTypes = {
   stagger: BreakerTypeHashes.Stagger,
 };
 
-export const powerCapPlugSetHash = 573;
-
 export const modsWithConditionalStats = {
   powerfulFriends: 1484685887,
   radiantLight: 2979815167,
