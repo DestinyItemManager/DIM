@@ -38,17 +38,18 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
 
   const visibleNodes = talentGrid.nodes.filter((n) => !n.hidden);
   const numColumns = _.maxBy(visibleNodes, (n) => n.column)!.column + 1 - hiddenColumns;
-  const numRows = perksOnly ? 2 : _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
+  const numRows = _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
+
+  const height = (numRows * totalNodeSize - nodePadding) * scaleFactor;
+  const width = (numColumns * totalNodeSize - nodePadding) * scaleFactor;
 
   return (
     <svg
       preserveAspectRatio="xMaxYMin meet"
-      viewBox={`0 0 ${(numColumns * totalNodeSize - nodePadding) * scaleFactor} ${
-        (numRows * totalNodeSize - nodePadding) * scaleFactor + 1
-      }`}
+      viewBox={`0 0 ${width} ${height}`}
       className="talent-grid"
-      height={(numRows * totalNodeSize - nodePadding) * scaleFactor}
-      width={(numColumns * totalNodeSize - nodePadding) * scaleFactor}
+      height={height}
+      width={width}
     >
       <g transform={`scale(${scaleFactor})`}>
         {talentGridNodesFilter(talentGrid.nodes, hiddenColumns).map((node) => (
