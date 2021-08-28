@@ -1,0 +1,65 @@
+@import '../variables';
+
+.items {
+  flex: 1;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  contain: content;
+}
+
+.statLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 4px;
+  padding-left: 0;
+}
+
+.sorted {
+  color: $orange;
+}
+
+.spacer {
+  height: 48px;
+}
+
+.organizerLink {
+  compose: 'dim-button' from global;
+  margin-left: auto;
+  @include phone-portrait {
+    margin-left: 0;
+  }
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  :global(.dim-button) {
+    margin-bottom: 4px;
+    &:nth-last-child(n + 2) {
+      margin-right: 3px;
+    }
+  }
+}
+
+.bucket {
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  .fixedLeft {
+    border-left: none;
+  }
+  :global(.talent-grid) {
+    padding: 4px 2px 0 2px;
+    box-sizing: border-box;
+    width: 150px;
+    height: auto;
+  }
+}

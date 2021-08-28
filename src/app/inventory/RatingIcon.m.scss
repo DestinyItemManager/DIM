@@ -1,0 +1,13 @@
+.icon {
+  font-size: 0.8em !important;
+}
+
+.godroll {
+  composes: icon;
+  color: #0b486b;
+}
+
+.trashlist {
+  composes: icon;
+  color: #d14334;
+}

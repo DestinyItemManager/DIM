@@ -1,3 +1,5 @@
+@import '../variables';
+
 .close {
   width: 16px;
   height: 16px;
@@ -9,6 +11,6 @@
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.8);
   &:hover {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: $orange;
   }
 }

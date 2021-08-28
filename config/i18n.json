@@ -71,6 +71,7 @@
     "Armor2": "Armor 2.0",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
+    "InitialItem": "This is the item the Compare tool was launched from",
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },

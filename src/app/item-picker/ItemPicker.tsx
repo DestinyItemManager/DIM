@@ -67,7 +67,7 @@ function ItemPicker({
 
   const header = (
     <div>
-      <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
+      <h1>{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
         <SearchBar placeholder={t('ItemPicker.SearchPlaceholder')} onQueryChanged={setQuery} />
       </div>

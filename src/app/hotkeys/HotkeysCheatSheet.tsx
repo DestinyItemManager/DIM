@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import GlobalHotkeys from './GlobalHotkeys';
 import hotkeys from './hotkeys';
-import './HotkeysCheatSheet.scss';
+import styles from './HotkeysCheatSheet.m.scss';
 import { useHotkey } from './useHotkey';
 
 export default function HotkeysCheatSheet() {
@@ -23,7 +23,7 @@ export default function HotkeysCheatSheet() {
   const appKeyMap = hotkeys.getAllHotkeys();
 
   return (
-    <div className="cfp-hotkeys-container" onClick={hide}>
+    <div className={styles.container} onClick={hide}>
       <GlobalHotkeys
         hotkeys={[
           {
@@ -33,17 +33,17 @@ export default function HotkeysCheatSheet() {
           },
         ]}
       />
-      <div className="cfp-hotkeys">
-        <h4 className="cfp-hotkeys-title">{t('Hotkey.CheatSheetTitle')}</h4>
-        <div className="cfp-hotkeys-list">
+      <div className={styles.hotkeys}>
+        <h4 className={styles.title}>{t('Hotkey.CheatSheetTitle')}</h4>
+        <div className={styles.list}>
           {_.sortBy(Object.entries(appKeyMap), ([combo]) => combo).map(
             ([combo, description]) =>
               description.length > 0 && (
                 <React.Fragment key={combo}>
-                  <div className="cfp-hotkeys-keys">
-                    <KeyHelp combo={combo} className="cfp-hotkeys-key" />
+                  <div className={styles.keys}>
+                    <KeyHelp combo={combo} className={styles.key} />
                   </div>
-                  <div className="cfp-hotkeys-text">{description}</div>
+                  <div className={styles.text}>{description}</div>
                 </React.Fragment>
               )
           )}

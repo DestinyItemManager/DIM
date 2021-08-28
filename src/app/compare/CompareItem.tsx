@@ -1,4 +1,3 @@
-import CloseButton from 'app/dim-ui/CloseButton';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
@@ -12,6 +11,7 @@ import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import { AppIcon, searchIcon } from '../shell/icons';
 import { StatInfo } from './Compare';
+import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
 import { DimAdjustedItemPlug, DimAdjustedItemStat } from './types';
 
@@ -44,20 +44,21 @@ export default function CompareItem({
   const itemHeader = useMemo(
     () => (
       <>
-        <div className="compare-item-header">
+        <div className={styles.header}>
           <LockActionButton item={item} />
           <TagActionButton item={item} label={true} hideKeys={true} />
-          <CloseButton onClick={() => remove(item)} />
+          <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>
         <div
-          className={clsx('item-name', { 'compare-initial-item': isInitialItem })}
+          className={clsx(styles.itemName, { [styles.initialItem]: isInitialItem })}
+          title={isInitialItem ? t('Compare.InitialItem') : undefined}
           onClick={() => itemClick(item)}
         >
           {item.name} <AppIcon icon={searchIcon} />
         </div>
         <PressTip
           elementType="span"
-          className="itemAside"
+          className={styles.itemAside}
           tooltip={itemNotes}
           allowClickThrough={true}
         >

@@ -20,6 +20,7 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
+import styles from './Compare.m.scss';
 import './compare.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
@@ -215,7 +216,7 @@ function Compare({
     <Sheet
       onClose={cancel}
       header={
-        <div className="compare-options">
+        <div className={styles.options}>
           {comparingArmor && (
             <Checkbox
               label={t('Compare.CompareBaseStats')}
@@ -232,7 +233,7 @@ function Compare({
             />
           )}
           {organizerLink && (
-            <Link className="dim-button organizer-link" to={organizerLink}>
+            <Link className={styles.organizerLink} to={organizerLink}>
               <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
             </Link>
           )}
@@ -240,15 +241,15 @@ function Compare({
       }
     >
       <div id="loadout-drawer" className="compare">
-        <div className="compare-bucket" onMouseLeave={() => setHighlight(undefined)}>
-          <div className="compare-item fixed-left">
-            <div className="spacer" />
+        <div className={styles.bucket} onMouseLeave={() => setHighlight(undefined)}>
+          <div className={clsx('compare-item', styles.fixedLeft)}>
+            <div className={styles.spacer} />
             {allStats.map((stat) => (
               <div
                 key={stat.id}
-                className={clsx('compare-stat-label', {
+                className={clsx(styles.statLabel, {
                   highlight: stat.id === highlight,
-                  sorted: stat.id === sortedHash,
+                  [styles.sorted]: stat.id === sortedHash,
                 })}
                 onMouseOver={() => setHighlight(stat.id)}
                 onClick={() => sort(stat.id)}
@@ -260,7 +261,7 @@ function Compare({
               </div>
             ))}
           </div>
-          <div className="compare-items">
+          <div className={styles.items}>
             {sortedComparisonItems.map((item) => (
               <CompareItem
                 item={item}

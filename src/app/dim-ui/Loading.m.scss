@@ -1,7 +1,7 @@
 @import '../variables.scss';
 @import 'ceaser-easing';
 
-.dim-loading {
+.loading {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,7 +41,7 @@ $image: (
   (2, 2)
 );
 
-.logo-container {
+.container {
   width: 5 * $square-size;
   height: 5 * $square-size;
   position: relative;
@@ -49,7 +49,7 @@ $image: (
   margin: 60px 0;
 }
 
-.logo-square {
+.square {
   width: $square-size;
   height: $square-size;
   background: #fff;
@@ -59,7 +59,7 @@ $image: (
 
 @for $index from 1 through length($image) {
   $point: nth($image, $index);
-  .logo-square:nth-child(#{$index}) {
+  .square:nth-child(#{$index}) {
     top: nth($point, 1) * $square-size;
     left: nth($point, 2) * $square-size;
     animation: $logoDuration
@@ -103,7 +103,7 @@ $image: (
 
 $loadingTextDuration: 200ms;
 $loadingTextDistance: 16px;
-.loading-text-container {
+.textContainer {
   width: 300px;
   height: 3em;
   position: relative;
@@ -114,25 +114,25 @@ $loadingTextDistance: 16px;
   opacity: 0;
   animation: 500ms linear $initialDelay forwards fade-in;
 }
-.loading-text {
+.text {
   position: absolute;
   font-size: 16px;
   text-align: center;
 }
-.loading-text-enter {
+.textEnter {
   transform: translateY(-$loadingTextDistance);
   opacity: 0;
 }
-.loading-text-enter.loading-text-enter-active {
+.textEnter.textEnterActive {
   transform: translateY(0);
   opacity: 1;
   transition: all $loadingTextDuration ease-out;
 }
-.loading-text-exit {
+.textExit {
   transform: translateY(0);
   opacity: 1;
 }
-.loading-text-exit.loading-text-exit-active {
+.textExit.textExitActive {
   transform: translateY($loadingTextDistance);
   opacity: 0;
   transition: all $loadingTextDuration ease-out;
