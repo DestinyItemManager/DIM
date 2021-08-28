@@ -5,14 +5,6 @@
   font-size: 14px;
   user-select: auto;
 
-  .about-logo {
-    float: left;
-    margin-right: 10px;
-    margin-top: 8px;
-  }
-  .about-header {
-    margin-bottom: 16px;
-  }
   form {
     padding: 0;
   }
@@ -43,21 +35,5 @@
   }
   > p {
     margin: 5px 0;
-  }
-  dt {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.1em;
-    margin-top: 10px;
-    color: $orange;
-  }
-  dd {
-    margin: 4px 0px 8px 0px;
-  }
-  .social {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 8px;
-    margin: 8px 0;
   }
 }

@@ -1,0 +1,27 @@
+.warningBlock {
+  color: white;
+  background: $red;
+  padding: 0.5em 1em;
+  display: inline-block;
+}
+
+.gauge {
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: relative;
+  min-height: 17px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  div {
+    background-color: #6dcc66;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    &.full {
+      background-color: red;
+    }
+  }
+}

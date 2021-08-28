@@ -1,3 +1,4 @@
+import CloseButton from 'app/dim-ui/CloseButton';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
@@ -46,7 +47,7 @@ export default function CompareItem({
         <div className="compare-item-header">
           <LockActionButton item={item} />
           <TagActionButton item={item} label={true} hideKeys={true} />
-          <div className="close" onClick={() => remove(item)} />
+          <CloseButton onClick={() => remove(item)} />
         </div>
         <div
           className={clsx('item-name', { 'compare-initial-item': isInitialItem })}

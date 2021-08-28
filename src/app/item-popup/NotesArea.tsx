@@ -184,7 +184,7 @@ function NotesEditor({
         onMouseDown={stopEvents}
       />
       {liveNotes && liveNotes.length > maxLength && (
-        <span className="textarea-error">{t('Notes.Error')}</span>
+        <span className={styles.error}>{t('Notes.Error')}</span>
       )}
     </form>
   );

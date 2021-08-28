@@ -3,6 +3,7 @@
 interface CssExports {
   'addNotesLabel': string;
   'editIcon': string;
+  'error': string;
   'hashtagSuggestions': string;
   'minimal': string;
   'noNotesYet': string;

@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import CloseButton from 'app/dim-ui/CloseButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
@@ -334,12 +335,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
                   {excludeditems.map((excludeditem) => (
                     <div key={excludeditem.index} className="excluded-item">
                       <LoadoutBuilderItem item={excludeditem} />
-                      <div
-                        className="close"
-                        onClick={() => this.onExcludedRemove(excludeditem)}
-                        role="button"
-                        tabIndex={0}
-                      />
+                      <CloseButton onClick={() => this.onExcludedRemove(excludeditem)} />
                     </div>
                   ))}
                 </div>
