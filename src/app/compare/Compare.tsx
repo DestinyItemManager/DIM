@@ -65,7 +65,7 @@ export interface StatInfo {
 }
 
 /** a DimStat with, at minimum, a statHash */
-export type MinimalStat = Partial<DimStat> & Pick<DimStat, 'statHash'>;
+export type MinimalStat = { statHash: number; value: number; base?: number };
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: Allow minimizing the sheet (to make selection easier)
@@ -296,23 +296,20 @@ function sortCompareItemsComparator(
     return (_a: DimItem, _b: DimItem) => 0;
   }
 
-  return reverseComparator(
-    chainComparator(
-      compareBy((item: DimItem) => {
-        const shouldReverse = sortStat.lowerBetter ? sortBetterFirst : !sortBetterFirst;
+  const shouldReverse = sortStat.lowerBetter ? sortBetterFirst : !sortBetterFirst;
 
+  return reverseComparator(
+    chainComparator<DimItem>(
+      compareBy((item) => {
         const stat = sortStat.getStat(item);
         if (!stat) {
           return -1;
         }
-        const statValue = compareBaseStats ? stat.base : stat.value;
-        if (statValue === undefined) {
-          return -1;
-        }
+        const statValue = compareBaseStats ? stat.base ?? stat.value : stat.value;
         return shouldReverse ? -statValue : statValue;
       }),
-      compareBy((i: DimItem) => i.index),
-      compareBy((i: DimItem) => i.name)
+      compareBy((i) => i.index),
+      compareBy((i) => i.name)
     )
   );
 }
@@ -497,7 +494,6 @@ function getAllStats(
           (item.energy && {
             statHash: item.energy.energyType,
             value: item.energy.energyCapacity,
-            base: undefined,
           }) ||
           undefined
       )
@@ -577,7 +573,7 @@ function makeFakeStat(
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
   lowerBetter = false
-) {
+): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
   }
