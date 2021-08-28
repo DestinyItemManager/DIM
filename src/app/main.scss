@@ -137,12 +137,6 @@ span:focus {
   pointer-events: none;
 }
 
-.currency img {
-  vertical-align: text-bottom;
-  height: 16px;
-  width: 16px;
-}
-
 dt {
   font-style: italic;
   font-weight: bold;
@@ -179,16 +173,6 @@ body {
   font-size: 12px;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
-}
-
-#system {
-  outline: none;
-  background-color: #fafafa;
-  float: right;
-  cursor: pointer;
-  option {
-    cursor: pointer;
-  }
 }
 
 input,
