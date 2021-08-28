@@ -403,26 +403,22 @@ module.exports = (env) => {
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(true),
-        // Move the pull from button
-        '$featureFlags.movePullFromButton': JSON.stringify(env.dev),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(!env.release),
+        '$featureFlags.searchResults': JSON.stringify(true),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Incorporate mods directly into loadouts
-        '$featureFlags.loadoutMods': JSON.stringify(!env.release),
-        // Show bounty guide
-        '$featureFlags.bountyGuide': JSON.stringify(true),
+        '$featureFlags.loadoutMods': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
         // Install prompt banners for mobile
-        '$featureFlags.installBanner': JSON.stringify(!env.release),
+        '$featureFlags.installBanner': JSON.stringify(true),
         // Header banner when postmaster is full
-        '$featureFlags.postmasterBanner': JSON.stringify(!env.release),
+        '$featureFlags.postmasterBanner': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
