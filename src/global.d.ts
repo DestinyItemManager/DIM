@@ -56,6 +56,7 @@ declare function ga(...params: string[]);
 
 interface Window {
   OC?: unknown;
+  MSStream?: unknown;
 
   // Service worker stuff
   __precacheManifest: string[] | undefined;
