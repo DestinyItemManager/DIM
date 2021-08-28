@@ -26,7 +26,7 @@
 }
 
 .spacer {
-  height: 48px;
+  height: var(--compare-item-height, 48px);
 }
 
 .organizerLink {

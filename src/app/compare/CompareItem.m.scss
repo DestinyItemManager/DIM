@@ -29,9 +29,9 @@
 }
 
 .itemAside {
-  float: right;
+  position: absolute;
   padding: 0;
-  margin-right: 4px;
+  right: 4px;
   z-index: 10;
 }
 

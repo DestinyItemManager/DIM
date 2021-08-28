@@ -8,6 +8,9 @@
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 
   > div {
     padding-left: 4px;
