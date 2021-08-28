@@ -1,12 +1,14 @@
-import { scrollToPosition } from 'app/dim-ui/scroll';
+import { itemPop, scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import StoreStats from 'app/store-stats/StoreStats';
+import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
 import { motion, PanInfo } from 'framer-motion';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
+import { locateItem$ } from './locate-item';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
@@ -34,6 +36,29 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
   const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
+
+  // Handle scrolling the right store into view when locating an item
+  useEventBusListener(
+    locateItem$,
+    useCallback(
+      (item) => {
+        let owner = item.owner;
+        if (singleCharacter && owner !== currentStore?.id) {
+          owner = 'vault';
+        }
+        if (selectedStoreId !== item.owner) {
+          setSelectedStoreId({
+            selectedStoreId: item.owner,
+            direction: 1,
+          });
+          setTimeout(() => itemPop(item), 500);
+        } else {
+          itemPop(item);
+        }
+      },
+      [currentStore?.id, selectedStoreId, singleCharacter]
+    )
+  );
 
   if (!stores.length || !buckets || !vault || !currentStore) {
     return null;

@@ -1,8 +1,8 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
-import { itemPop } from 'app/dim-ui/scroll';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
+import { locateItem } from 'app/inventory/locate-item';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
@@ -65,7 +65,7 @@ export default function GearPower() {
               powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
             return (
               <div key={i.id} className={clsx(bucketClassNames[i.type], styles.gearItem)}>
-                <div onClick={() => itemPop(i)}>
+                <div onClick={() => locateItem(i)}>
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>
                 <div className={styles.gearItemInfo}>

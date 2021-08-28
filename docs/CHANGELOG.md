@@ -1,5 +1,11 @@
 ## Next
 
+* Fixed misaligment in stat rows, and vertical scrolling, in Compare.
+* Highlighting stats in Compare is faster.
+* You can click any perk in Compare, not just the first couple.
+* Clicking an item's name to find it in the inventory view will now change character on mobile to wherever the item is.
+* In Compare for D1, fixed an issue where you could only see the first 2 perk options.
+
 ## 6.79.1 <span class="changelog-date">(2021-08-25)</span>
 
 * Legacy mods are no longer selectable in the Loadout Optimizer.

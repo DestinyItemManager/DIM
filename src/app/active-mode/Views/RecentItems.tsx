@@ -1,9 +1,9 @@
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { locateItem } from 'app/inventory/locate-item';
 import { allItemsSelector } from 'app/inventory/selectors';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { filterFactorySelector } from 'app/search/search-filter';
@@ -60,7 +60,7 @@ export default function RecentItems() {
               key={item.index}
               id={'farm-' + item.index}
               item={item}
-              onClick={() => itemPop(item)}
+              onClick={() => locateItem(item)}
             />
           ))
         ) : (

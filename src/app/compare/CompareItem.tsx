@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -40,27 +40,36 @@ export default function CompareItem({
   isInitialItem: boolean;
 }) {
   const itemNotes = useSelector(itemNoteSelector(item));
+  const itemHeader = useMemo(
+    () => (
+      <>
+        <div className="compare-item-header">
+          <LockActionButton item={item} />
+          <TagActionButton item={item} label={true} hideKeys={true} />
+          <div className="close" onClick={() => remove(item)} />
+        </div>
+        <div
+          className={clsx('item-name', { 'compare-initial-item': isInitialItem })}
+          onClick={() => itemClick(item)}
+        >
+          {item.name} <AppIcon icon={searchIcon} />
+        </div>
+        <PressTip
+          elementType="span"
+          className="itemAside"
+          tooltip={itemNotes}
+          allowClickThrough={true}
+        >
+          <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
+        </PressTip>
+      </>
+    ),
+    [isInitialItem, item, itemClick, itemNotes, remove]
+  );
+
   return (
     <div className="compare-item">
-      <div className="compare-item-header">
-        <LockActionButton item={item} />
-        <TagActionButton item={item} label={true} hideKeys={true} />
-        <div className="close" onClick={() => remove(item)} />
-      </div>
-      <div
-        className={clsx('item-name', { 'compare-initial-item': isInitialItem })}
-        onClick={() => itemClick(item)}
-      >
-        {item.name} <AppIcon icon={searchIcon} />
-      </div>
-      <PressTip
-        elementType="span"
-        className="itemAside"
-        tooltip={itemNotes}
-        allowClickThrough={true}
-      >
-        <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
-      </PressTip>
+      {itemHeader}
       {stats.map((stat) => (
         <CompareStat
           key={stat.id}

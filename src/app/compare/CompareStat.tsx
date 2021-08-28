@@ -3,14 +3,14 @@ import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import React from 'react';
+import React, { memo } from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import { MinimalStat, StatInfo } from './Compare';
 import { DimAdjustedItemStat } from './types';
 
-export default function CompareStat({
+export default memo(function CompareStat({
   stat,
   compareBaseStats,
   item,
@@ -61,7 +61,7 @@ export default function CompareStat({
       </span>
     </div>
   );
-}
+});
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
