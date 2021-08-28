@@ -7,6 +7,10 @@
 * Clicking an item's name to find it in the inventory view will now change character on mobile to wherever the item is.
 * In Compare for D1, fixed an issue where you could only see the first 2 perk options.
 
+### Beta Only
+
+* Removed the Infusion Finder tool - the rules for infusion are simple enough now that this doesn't offer any real help.
+
 ## 6.79.1 <span class="changelog-date">(2021-08-25)</span>
 
 * Legacy mods are no longer selectable in the Loadout Optimizer.

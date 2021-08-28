@@ -63,7 +63,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const taggable = item.taggable;
   const lockable = item.lockable || item.trackable;
   const comparable = item.comparable;
-  const infusable = !(!item.infusionFuel || !itemOwner);
+  const infusable = $featureFlags.infusionFinder && !(!item.infusionFuel || !itemOwner);
   const loadoutable = !(!itemCanBeInLoadout(item) || !itemOwner);
 
   const inPostmaster = item.location.type === 'LostItems';

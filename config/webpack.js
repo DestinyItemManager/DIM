@@ -423,6 +423,8 @@ module.exports = (env) => {
         '$featureFlags.installBanner': JSON.stringify(!env.release),
         // Header banner when postmaster is full
         '$featureFlags.postmasterBanner': JSON.stringify(!env.release),
+        // Infusion finder tool
+        '$featureFlags.infusionFinder': JSON.stringify(env.release),
       }),
 
       new LodashModuleReplacementPlugin({
