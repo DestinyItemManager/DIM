@@ -163,7 +163,7 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
 
   const reloadDim = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.location.reload(false);
+    window.location.reload();
     return false;
   };
 
