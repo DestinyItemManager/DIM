@@ -81,7 +81,7 @@ function buildMasterworkInfo(
     }
     if (!createdItem.element && createdItem.bucket?.sort === 'Armor') {
       createdItem.element =
-        Object.values(defs.DamageType).find(
+        Object.values(defs.DamageType.getAll()).find(
           (damageType) => damageType.enumValue === resistanceMods[stat.statTypeHash]
         ) ?? null;
     }

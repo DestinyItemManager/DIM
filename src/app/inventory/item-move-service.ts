@@ -791,7 +791,7 @@ function canMoveToStore(
               cancelToken,
             })
           );
-          return dispatch(canMoveToStore(item, store, amount, options));
+          return await dispatch(canMoveToStore(item, store, amount, options));
         } catch (e) {
           if (numRetries < 3) {
             // Exclude this item and try again so we pick another

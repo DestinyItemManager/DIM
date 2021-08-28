@@ -21,7 +21,6 @@ export interface ProcessItem {
   basePower: number;
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
-  hasLegacyModSocket: boolean;
 }
 
 export type ProcessItemsByBucket = Readonly<{

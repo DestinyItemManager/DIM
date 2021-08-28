@@ -217,8 +217,8 @@ export const D2SeasonInfo = {
   },
   15: {
     DLCName: '',
-    seasonName: 'Season of [REDACTED-15]',
-    seasonTag: '',
+    seasonName: 'Season of the Lost',
+    seasonTag: 'lost',
     season: 15,
     maxLevel: 50,
     powerFloor: 1100,
@@ -227,7 +227,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1330,
     releaseDate: '2021-08-24',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 26,
   },
 } as Record<
   number,

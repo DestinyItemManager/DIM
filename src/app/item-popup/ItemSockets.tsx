@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import './ItemSockets.scss';
@@ -15,7 +15,7 @@ interface ProvidedProps {
 
 type Props = ProvidedProps;
 
-export default function ItemSockets(props: Props) {
+export default memo(function ItemSockets(props: Props) {
   const item = props.item;
 
   if (item.destinyVersion === 2 && item.bucket.inWeapons) {
@@ -23,4 +23,4 @@ export default function ItemSockets(props: Props) {
   }
 
   return <ItemSocketsGeneral {...props} />;
-}
+});

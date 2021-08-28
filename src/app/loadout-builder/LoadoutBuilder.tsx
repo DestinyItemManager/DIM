@@ -29,7 +29,7 @@ import { createSelector } from 'reselect';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { isArmor2WithStats } from '../loadout/item-utils';
+import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/mod-picker/ModPicker';
 import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
@@ -86,7 +86,7 @@ function mapStateToProps() {
         [classType: number]: { [bucketHash: number]: DimItem[] };
       } = {};
       for (const item of allItems) {
-        if (!item || !isArmor2WithStats(item)) {
+        if (!item || !isLoadoutBuilderItem(item)) {
           continue;
         }
         const { classType, bucket } = item;

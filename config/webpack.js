@@ -82,14 +82,18 @@ module.exports = (env) => {
     devServer: env.dev
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          stats: 'errors-only',
           https: {
             key: fs.readFileSync('key.pem'), // Private keys in PEM format.
             cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
           },
+          devMiddleware: {
+            stats: 'errors-only',
+          },
+          client: {
+            overlay: false,
+          },
           historyApiFallback: true,
-          hot: true,
-          hotOnly: true,
+          hot: 'only',
           liveReload: false,
         }
       : undefined,

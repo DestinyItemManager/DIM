@@ -12,5 +12,6 @@
   "arrival": 11,
   "hunt": 12,
   "chosen": 13,
-  "splicer": 14
+  "splicer": 14,
+  "lost": 15
 }

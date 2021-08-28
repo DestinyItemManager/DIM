@@ -60,6 +60,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   .sheet-contents {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;

@@ -1,6 +1,5 @@
 name: Bug
 description: File a bug/issue
-title: "<title>"
 labels: [Bug]
 body:
 - type: input
@@ -37,5 +36,6 @@ body:
   attributes:
     label: Logs
     description: If you can, open the devtools console (ctrl+shift+J on PC and cmd+option+J on Mac) and paste what you see in the window that pops up
+    render: shell
   validations:
     required: false

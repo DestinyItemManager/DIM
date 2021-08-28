@@ -64,6 +64,7 @@
   flex: 1;
   white-space: nowrap;
   overflow-x: scroll;
+  overflow-y: hidden;
   touch-action: pan-x;
   display: flex;
   flex-direction: row;
@@ -116,7 +117,7 @@
     font-size: 0.9em;
   }
   .spacer {
-    height: 46px;
+    height: 48px;
   }
 
   span > .app-icon,
