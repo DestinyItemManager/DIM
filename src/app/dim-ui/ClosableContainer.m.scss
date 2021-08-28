@@ -1,3 +1,5 @@
+@import '../variables';
+
 .container {
   position: relative;
 }
@@ -11,10 +13,10 @@
   position: absolute;
   top: 2px;
   right: 2px;
-  background-image: url('../../../images/close.png');
+  background-image: url('images/close.png');
   background-color: rgba(100, 100, 100, 0.8);
   &:hover {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: $orange;
   }
 }
 
