@@ -10,6 +10,7 @@
 * Search results can be shown in their own popup sheet now (this shows by default on mobile)
 * There is now a helpful banner prompt to install the app on mobile.
 * When the postmaster is near full, a banner will warn you even if you're not on the inventory screen.
+* Artifact XP progress is now displayed for the correct season.
 
 ## 6.79.1 <span class="changelog-date">(2021-08-25)</span>
 
