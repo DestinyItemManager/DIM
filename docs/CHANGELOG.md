@@ -6,6 +6,10 @@
 * You can click any perk in Compare, not just the first couple.
 * Clicking an item's name to find it in the inventory view will now change character on mobile to wherever the item is.
 * In Compare for D1, fixed an issue where you could only see the first 2 perk options.
+* Mods can be saved and viewed in Loadouts - this is automatic for loadouts created by Loadout Optimizer but you can edit the mods directly in the loadout editor.
+* Search results can be shown in their own popup sheet now (this shows by default on mobile)
+* There is now a helpful banner prompt to install the app on mobile.
+* When the postmaster is near full, a banner will warn you even if you're not on the inventory screen.
 
 ## 6.79.1 <span class="changelog-date">(2021-08-25)</span>
 
