@@ -7,7 +7,7 @@ const formatter = new Intl.NumberFormat();
 
 export function ArtifactXP(characterProgress: DestinyCharacterProgressionComponent | undefined) {
   const artifactProgress =
-    characterProgress?.progressions[1793560787] ??
+    characterProgress?.progressions[243419342] ?? // to-do: this is not a fixed hash
     ({} as { progressToNextLevel: undefined; nextLevelAt: undefined; level: undefined });
   const { progressToNextLevel, nextLevelAt, level } = artifactProgress;
 
