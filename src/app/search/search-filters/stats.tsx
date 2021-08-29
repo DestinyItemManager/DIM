@@ -179,7 +179,7 @@ function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: s
 
 function checkIfHasMaxStatValue(
   maxStatValues: {
-    [key: string]: { [key: string]: { value: number; base: number } };
+    [key: string]: { [key: string]: { value: number; base: number } } | undefined;
   },
   item: DimItem,
   statName: string,
@@ -192,10 +192,11 @@ function checkIfHasMaxStatValue(
   const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
   const byWhichValue = byBaseValue ? 'base' : 'value';
   const itemSlot = `${item.classType}${item.type}`;
+  const maxStatsForSlot = maxStatValues[itemSlot];
   const matchingStats = item.stats?.filter(
     (s) =>
       statHashes.includes(s.statHash) &&
-      s[byWhichValue] === maxStatValues[itemSlot][s.statHash][byWhichValue]
+      s[byWhichValue] === maxStatsForSlot?.[s.statHash][byWhichValue]
   );
   return matchingStats && Boolean(matchingStats.length);
 }
