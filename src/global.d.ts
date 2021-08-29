@@ -50,8 +50,6 @@ declare const $featureFlags: {
   installBanner: boolean;
   /** Header banner when postmaster is full */
   postmasterBanner: boolean;
-  /** Infusion finder tool */
-  infusionFinder: boolean;
 };
 
 declare function ga(...params: string[]);

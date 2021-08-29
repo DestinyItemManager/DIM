@@ -7,7 +7,6 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import InfusionFinder from 'app/infuse/InfusionFinder';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
@@ -265,7 +264,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <LoadoutDrawer />
       <Compare />
       <Farming />
-      <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
     </>
