@@ -214,12 +214,11 @@ function WishListSettings({
           {(title || description) && (
             <div className="fineprint">
               {title && (
-                <div className="overflow-dots">
+                <div>
                   <b>{title}</b>
-                  <br />
                 </div>
               )}
-              <div className="overflow-dots">{description}</div>
+              <div>{description}</div>
             </div>
           )}
         </div>

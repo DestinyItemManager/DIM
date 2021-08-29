@@ -1,23 +1,23 @@
 @import '../variables.scss';
 
+// These classes are used in item-picker, mod-picker, exotic-picker and search results
+
 .item-picker {
-  .item-picker-search {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .search-filter {
-      flex: 1;
-      margin-left: 0;
-      min-width: 0;
-    }
-  }
   .sheet-contents > div {
     padding: 8px;
   }
-  .split-buttons {
-    margin-left: 8px;
-  }
   .item {
     cursor: pointer;
+  }
+}
+
+.item-picker-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  :global(.search-filter) {
+    flex: 1;
+    margin-left: 0;
+    min-width: 0;
   }
 }

@@ -4,7 +4,7 @@
  * Copyright (c) 2016 Wes Cruver
  * License: MIT
  */
-.cfp-hotkeys-container {
+.container {
   display: table !important;
   position: fixed;
   width: 100%;
@@ -20,20 +20,20 @@
   }
 }
 
-.cfp-hotkeys-title {
+.title {
   font-weight: bold;
   text-align: center;
   font-size: 1.2em;
 }
 
-.cfp-hotkeys {
+.hotkeys {
   width: 100%;
   height: 100%;
   display: table-cell;
   vertical-align: middle;
 }
 
-.cfp-hotkeys-list {
+.list {
   display: grid;
   grid-template-columns: repeat(auto-fill, 75px minmax(200px, 1fr));
   margin: 0 auto;
@@ -41,30 +41,30 @@
   color: white;
 }
 
-.cfp-hotkeys-keys {
+.keys {
   padding: 5px;
   text-align: right;
 }
 
-.cfp-hotkeys-key {
+.key {
   font-size: 1em !important;
   padding: 4px 6px !important;
 }
 
-.cfp-hotkeys-text {
+.text {
   padding-left: 10px;
   font-size: 1em;
   align-self: center;
 }
 
 @media all and (max-width: 500px) {
-  .cfp-hotkeys {
+  .hotkeys {
     font-size: 0.8em;
   }
 }
 
 @media all and (min-width: 750px) {
-  .cfp-hotkeys {
+  .hotkeys {
     font-size: 1.2em;
   }
 }

@@ -168,6 +168,11 @@
       font-size: 12px;
     }
     .currency {
+      img {
+        vertical-align: text-bottom;
+        height: 16px;
+        width: 16px;
+      }
       position: absolute;
       top: 4px;
       right: 40px;
