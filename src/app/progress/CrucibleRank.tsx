@@ -10,7 +10,7 @@ import './faction.scss';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
-  streak: DestinyProgression;
+  streak?: DestinyProgression;
 }
 
 /**
@@ -24,7 +24,7 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
 
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
-  const streakCheckboxes = Array(5).fill(true).fill(false, streak.stepIndex);
+  const streakCheckboxes = streak && Array(5).fill(true).fill(false, streak.stepIndex);
 
   // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;
@@ -44,11 +44,13 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
           <BungieImage className="rank-icon" src={progressionDef.rankIcon} />
           {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
         </div>
-        <div className="win-streak objective-row">
-          {streakCheckboxes.map((c, i) => (
-            <CompletionCheckbox key={i} completed={c} />
-          ))}
-        </div>
+        {streakCheckboxes && (
+          <div className="win-streak objective-row">
+            {streakCheckboxes.map((c, i) => (
+              <CompletionCheckbox key={i} completed={c} />
+            ))}
+          </div>
+        )}
         <div className="faction-level">
           {t('Progress.PercentPrestige', {
             pct: Math.round((progress.currentProgress / rankTotal) * 100),
