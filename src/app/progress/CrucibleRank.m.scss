@@ -1,0 +1,74 @@
+@import '../variables.scss';
+
+.factionInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.activityRank {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  @include phone-portrait {
+    align-items: center;
+  }
+}
+
+.factionName {
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.crucibleRankIcon {
+  margin: 2px 10px -2px 2px;
+  position: relative;
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+}
+
+.crucibleRankProgress {
+  fill: none;
+}
+
+.crucibleRankTotalProgress {
+  stroke: $blue;
+  fill: none;
+}
+
+.factionLevel {
+  color: #a1a2a2;
+}
+
+.rankIcon {
+  height: 10px;
+  margin-right: 4px;
+}
+
+.winStreak {
+  margin-top: 5px;
+  & > :global(.objective-checkbox) {
+    height: 14px;
+    width: 14px;
+    &:global(.objective-complete) {
+      opacity: 1;
+      /* yellow for crucibles, green override for gambit*/
+      &::after {
+        background-color: #dde330;
+        height: 8px;
+        width: 8px;
+        :global(.faction-3008065600) & {
+          background-color: #409a80;
+        }
+      }
+    }
+  }
+}
+
+@include phone-portrait {
+  :global(.ranks-for-character) {
+    .faction {
+      flex-direction: column;
+    }
+  }
+}

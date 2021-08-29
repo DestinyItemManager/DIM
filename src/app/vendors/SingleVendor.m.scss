@@ -10,12 +10,9 @@
   }
 
   img,
-  :global(.faction-icon) {
+  svg {
     position: relative;
     height: var(--item-size);
     margin-right: 8px;
-  }
-  :global(.faction-icon) {
-    width: var(--item-size);
   }
 }
