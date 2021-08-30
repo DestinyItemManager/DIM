@@ -66,8 +66,8 @@ export function SearchFilter(
     [isPhonePortrait, onRecords, onProgress, onOptimizer]
   );
 
-  const extras = useMemo(() => <MainSearchBarActions />, []);
-  const menu = useMemo(() => <MainSearchBarMenu />, []);
+  const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);
+  const menu = useMemo(() => <MainSearchBarMenu key="actions-menu" />, []);
 
   return (
     <SearchBar
