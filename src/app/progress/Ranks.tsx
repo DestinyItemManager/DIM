@@ -14,24 +14,30 @@ import { getCharacterProgressions } from './selectors';
 // figure out which unmapped streak progression matches with which rank
 // progression:
 //
-// const defs = useD2Definitions();
-// const progressions = Object.values(defs!.Progression.getAll()).filter(
+// const defs = useD2Definitions()!;
+// const progressions = Object.values(defs.Progression.getAll()).filter(
 //   (d) =>
 //     d.scope === DestinyProgressionScope.MappedUnlockValue &&
 //     d.steps?.length === 5 &&
-//     !Object.values(streakProgressionMapping).includes(d.hash)
+//     !Object.values(rankProgressionToStreakProgression).includes(d.hash)
 // );
 // console.log(
-//   progressions
-//     .map((p) => ({ hash: p.hash, streak: firstCharacterProgression[p.hash].stepIndex }))
+//   progressions.map((p) => ({
+//     hash: p.hash,
+//     streak: firstCharacterProgression[p.hash].stepIndex,
+//   })),
+//   progressionHashes.map((p) => ({
+//     name: defs?.Progression.get(p).displayProperties.name,
+//     hash: p,
+//   }))
 // );
 
 const rankProgressionToStreakProgression = {
   2083746873: 2203850209, // Valor
   1647151960: 2572719399, // Glory
   3008065600: 2939151659, // Infamy
-  // TODO: Vanguard
-  // TODO: Trials
+  457612306: 600547406, // Vanguard
+  2755675426: 70699614, // Trials
 };
 
 /**
