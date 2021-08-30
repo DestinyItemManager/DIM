@@ -11,12 +11,14 @@ import styles from './MaterialCounts.m.scss';
 const retiredMats = [31293053, 49145143, 1305274547, 2014411539];
 const showMats = spiderMats.filter((m) => !retiredMats.includes(m));
 const goodMats = [2979281381, 4257549984, 3853748946, 4257549985];
-const seasonal = [1776857076];
+const seasonal = [1425776985, 1776857076];
 
 export function MaterialCounts() {
-  const materials = _.groupBy(useSelector(materialsSelector), (m) => m.hash);
-  const consumablesLabel =
-    useD2Definitions()?.InventoryBucket[BucketHashes.Consumables].displayProperties.name;
+  const allMats = useSelector(materialsSelector);
+  const defs = useD2Definitions()!;
+  const materials = _.groupBy(allMats, (m) => m.hash);
+  const consumablesLabel = defs.InventoryBucket[BucketHashes.Consumables].displayProperties.name;
+
   return (
     <>
       {consumablesLabel}
@@ -38,7 +40,7 @@ export function MaterialCounts() {
               const item = items[0];
               return (
                 <React.Fragment key={item.hash}>
-                  <span className={styles.amount}>{amount}</span>
+                  <span className={styles.amount}>{amount.toLocaleString()}</span>
                   <BungieImage src={item.icon} />
                   <span>{item.name}</span>
                 </React.Fragment>
