@@ -14,6 +14,7 @@
 * Rearranged the search buttons so the menu icon never moves.
 * Ranks for Vanguard and Trials are now shown in the Progress page.
 * Changed the icons in the Vendors menu.
+* Added Parallax Trajectory to the currencies hover menu.
 
 ## 6.79.1 <span class="changelog-date">(2021-08-25)</span>
 

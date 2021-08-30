@@ -13,6 +13,7 @@
   .amount {
     text-align: right;
     font-weight: bold;
+    font-variant-numeric: tabular-nums;
   }
   .spanGrid {
     grid-column-end: span 3;
