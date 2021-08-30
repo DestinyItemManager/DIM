@@ -11,6 +11,7 @@
 * There is now a helpful banner prompt to install the app on mobile.
 * When the postmaster is near full, a banner will warn you even if you're not on the inventory screen.
 * Artifact XP progress is now displayed for the correct season.
+* Rearranged the search buttons so the menu icon never moves.
 * Ranks for Vanguard and Trials are now shown in the Progress page.
 * Changed the icons in the Vendors menu.
 
