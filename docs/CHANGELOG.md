@@ -1,5 +1,7 @@
 ## Next
 
+## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
+
 * Fix sorting by power and energy in Compare when "Show Base Stats" is enabled.
 * Fixed misaligment in stat rows, and vertical scrolling, in Compare.
 * Highlighting stats in Compare is faster.
