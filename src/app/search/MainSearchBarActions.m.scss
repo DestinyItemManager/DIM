@@ -9,4 +9,10 @@
 
 .resultButton {
   composes: filter-bar-button from global;
+  display: flex;
+  align-items: center;
+
+  > span:first-child {
+    margin-right: 4px !important;
+  }
 }

@@ -35,10 +35,33 @@ $dropdown-menu: 10;
 }
 
 .checkButton {
-  border-radius: 0;
-  margin: 0;
   background-color: black;
+  border-radius: 0;
+  border: none;
+  box-sizing: border-box;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  margin: 0;
   padding: 8px 12px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    background-color: #151515;
+  }
+
+  &:active {
+    box-shadow: none;
+    background-color: $orange;
+  }
+
+  :global(.app-icon) {
+    margin: auto 0 auto 4px;
+  }
 
   label {
     margin-right: 4px;
@@ -56,9 +79,5 @@ $dropdown-menu: 10;
 
   &:last-child {
     border-radius: 0 0 2px 2px;
-  }
-
-  &:hover {
-    background-color: #151515;
   }
 }

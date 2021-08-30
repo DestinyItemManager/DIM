@@ -83,15 +83,13 @@ export function PursuitsGroup({
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
   return (
     <>
-      {$featureFlags.bountyGuide && (
-        <BountyGuide
-          store={store}
-          bounties={pursuits}
-          selectedFilters={bountyFilters}
-          onSelectedFiltersChanged={setBountyFilters}
-          skipTypes={skipTypes}
-        />
-      )}
+      <BountyGuide
+        store={store}
+        bounties={pursuits}
+        selectedFilters={bountyFilters}
+        onSelectedFiltersChanged={setBountyFilters}
+        skipTypes={skipTypes}
+      />
       <div className="progress-for-character">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit

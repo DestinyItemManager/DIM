@@ -1,3 +1,4 @@
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout/mod-picker/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -579,8 +580,9 @@ function LoadoutDrawer({
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
                     <div key={item.id} className="loadout-item">
-                      <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
-                      <div className="close" onClick={() => onRemoveItem(item)} />
+                      <ClosableContainer onClose={() => onRemoveItem(item)}>
+                        <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                      </ClosableContainer>
                     </div>
                   ))}
                 </div>

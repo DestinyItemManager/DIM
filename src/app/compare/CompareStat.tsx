@@ -8,6 +8,7 @@ import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
 import { MinimalStat, StatInfo } from './Compare';
+import styles from './CompareStat.m.scss';
 import { DimAdjustedItemStat } from './types';
 
 export default memo(function CompareStat({
@@ -41,7 +42,7 @@ export default memo(function CompareStat({
         )}
         {itemStat?.value !== undefined ? (
           itemStat.statHash === StatHashes.RecoilDirection ? (
-            <span className="stat-recoil">
+            <span className={styles.recoil}>
               <span>{adjustedItemStats?.[itemStat.statHash] ?? itemStat.value}</span>
               <RecoilStat value={adjustedItemStats?.[itemStat.statHash] ?? itemStat.value} />
             </span>
@@ -56,7 +57,7 @@ export default memo(function CompareStat({
         {Boolean(itemStat?.value) &&
           (itemStat as D1Stat).qualityPercentage &&
           Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
-            <span className="range">({(itemStat as D1Stat).qualityPercentage!.range})</span>
+            <span className={styles.range}>({(itemStat as D1Stat).qualityPercentage!.range})</span>
           )}
       </span>
     </div>

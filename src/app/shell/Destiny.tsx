@@ -17,6 +17,7 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
+import styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
@@ -201,7 +202,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   return (
     <>
-      <div id="content">
+      <div className={styles.content}>
         <Switch>
           <Route path={`${path}/inventory`} exact>
             <Inventory account={account} />

@@ -5,3 +5,6 @@ CHANGELOG.md merge=union
 
 *.png binary
 *.jpg binary
+
+# Generated files can always be collapsed in diffs
+*.m.scss.d.ts linguist-generated

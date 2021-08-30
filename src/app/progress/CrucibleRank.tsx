@@ -1,16 +1,16 @@
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
-import './CrucibleRank.scss';
-import './faction.scss';
+import styles from './CrucibleRank.m.scss';
 
 interface CrucibleRankProps {
   progress: DestinyProgression;
-  streak: DestinyProgression;
+  streak?: DestinyProgression;
 }
 
 /**
@@ -24,38 +24,40 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
 
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
-  const streakCheckboxes = Array(5).fill(true).fill(false, streak.stepIndex);
+  const streakCheckboxes = streak && Array(5).fill(true).fill(false, streak.stepIndex);
 
   // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;
 
   return (
     <div
-      className={`faction activity-rank ${factionClass}`}
+      className={clsx(factionClass, styles.activityRank)}
       title={progressionDef.displayProperties.description}
     >
       <div>
         <CrucibleRankIcon progress={progress} />
       </div>
-      <div className="faction-info">
-        <div className="faction-level">{progressionDef.displayProperties.name}</div>
-        <div className="faction-name">{step.stepName}</div>
-        <div className="faction-level">
-          <BungieImage className="rank-icon" src={progressionDef.rankIcon} />
+      <div className={styles.factionInfo}>
+        <div className={styles.factionLevel}>{progressionDef.displayProperties.name}</div>
+        <div className={styles.factionName}>{step.stepName}</div>
+        <div className={styles.factionLevel}>
+          <BungieImage className={styles.rankIcon} src={progressionDef.rankIcon} />
           {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
         </div>
-        <div className="win-streak objective-row">
-          {streakCheckboxes.map((c, i) => (
-            <CompletionCheckbox key={i} completed={c} />
-          ))}
-        </div>
-        <div className="faction-level">
+        {streakCheckboxes && (
+          <div className={clsx(styles.winStreak, 'objective-row')}>
+            {streakCheckboxes.map((c, i) => (
+              <CompletionCheckbox key={i} completed={c} />
+            ))}
+          </div>
+        )}
+        <div className={styles.factionLevel}>
           {t('Progress.PercentPrestige', {
             pct: Math.round((progress.currentProgress / rankTotal) * 100),
           })}
         </div>
         {Boolean(progress.currentResetCount) && (
-          <div className="faction-level">
+          <div className={styles.factionLevel}>
             {t('Progress.Resets', { count: progress.currentResetCount })}
           </div>
         )}
@@ -77,7 +79,7 @@ function CrucibleRankIcon({ progress }: { progress: DestinyProgression }) {
   const circumference2 = 2 * 25 * Math.PI;
 
   return (
-    <div className="crucible-rank-icon">
+    <div className={styles.crucibleRankIcon}>
       <svg viewBox="0 0 54 54">
         <circle r="27" cx="27" cy="27" fill="#555" />
         <circle r="21" cx="27" cy="27" fill="#222" />
@@ -87,7 +89,7 @@ function CrucibleRankIcon({ progress }: { progress: DestinyProgression }) {
             cx="-27"
             cy="27"
             transform="rotate(-90)"
-            className="crucible-rank-progress"
+            className={styles.crucibleRankProgress}
             strokeWidth="3"
             strokeDasharray={`${
               (circumference * progress.progressToNextLevel) / progress.nextLevelAt
@@ -101,7 +103,7 @@ function CrucibleRankIcon({ progress }: { progress: DestinyProgression }) {
             cx="-27"
             cy="27"
             transform="rotate(-90)"
-            className="crucible-rank-total-progress"
+            className={styles.crucibleRankTotalProgress}
             strokeWidth="3"
             strokeDasharray={`${
               (circumference2 * progress.currentProgress) / rankTotal

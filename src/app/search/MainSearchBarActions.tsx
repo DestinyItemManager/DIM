@@ -1,5 +1,4 @@
 import { t } from 'app/i18next-t';
-import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
@@ -52,7 +51,6 @@ function MainSearchBarActions({
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
-  const showSearchActions = onInventory;
   const showSearchResults = onInventory;
   const showSearchCount = Boolean(
     queryValid && searchQuery && !onProgress && !onRecords && !onVendors
@@ -68,36 +66,23 @@ function MainSearchBarActions({
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
         >
-          <span className={styles.count}>
-            {t('Header.FilterMatchCount', { count: filteredItems.length })}
-          </span>
-          {$featureFlags.searchResults && showSearchResults && (
+          {$featureFlags.searchResults && showSearchResults ? (
             <button
               type="button"
               className={styles.resultButton}
               title={t('Header.SearchResults')}
               onClick={() => dispatch(toggleSearchResults())}
             >
+              <span className={styles.count}>
+                {t('Header.FilterMatchCount', { count: filteredItems.length })}
+              </span>
               <AppIcon icon={faList} />
             </button>
+          ) : (
+            <span className={styles.count}>
+              {t('Header.FilterMatchCount', { count: filteredItems.length })}
+            </span>
           )}
-        </motion.div>
-      )}
-
-      {showSearchActions && (
-        <motion.div
-          layout
-          key="action"
-          exit={{ scale: 0 }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-        >
-          <ItemActionsDropdown
-            filteredItems={filteredItems}
-            searchActive={showSearchCount}
-            searchQuery={searchQuery}
-            fixed={true}
-          />
         </motion.div>
       )}
 

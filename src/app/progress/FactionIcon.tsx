@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
-import './faction.scss';
+import styles from './FactionIcon.m.scss';
 
 export default function FactionIcon(props: {
   factionProgress: DestinyProgression;
@@ -21,7 +21,7 @@ export default function FactionIcon(props: {
     <DiamondProgress
       icon={bungieNetPath(factionDef.displayProperties.icon)}
       level={level}
-      className="faction-icon"
+      className={styles.factionIcon}
       progress={factionProgress.progressToNextLevel / factionProgress.nextLevelAt}
     />
   );

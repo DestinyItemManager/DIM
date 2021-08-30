@@ -1,11 +1,10 @@
-import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
-import './CharacterOrderEditor.scss';
+import styles from './CharacterOrderEditor.m.scss';
 
 /**
  * An editor for character orders, with drag and drop.
@@ -38,7 +37,7 @@ export default function CharacterOrderEditor({
 
   if (!characters.length) {
     return (
-      <div className="character-order-editor">
+      <div className={styles.editor}>
         <AppIcon icon={refreshIcon} spinning={true} /> Loading characters...
       </div>
     );
@@ -48,24 +47,22 @@ export default function CharacterOrderEditor({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="characters" direction="horizontal">
         {(provided) => (
-          <div className="character-order-editor" ref={provided.innerRef}>
+          <div className={styles.editor} ref={provided.innerRef}>
             {characters
               .filter((c) => !c.isVault)
               .map((character, index) => (
                 <Draggable draggableId={character.id} index={index} key={character.id}>
-                  {(provided, snapshot) => (
+                  {(provided) => (
                     <div
-                      className={clsx('character-order-editor-item', {
-                        'is-dragging': snapshot.isDragging,
-                      })}
+                      className={styles.item}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <div className="sortable-character">
+                      <div className={styles.character}>
                         <img src={character.icon} />
-                        <div className="character-text">
-                          <span className="power-level">{character.powerLevel}</span>{' '}
+                        <div>
+                          <span className={styles.powerLevel}>{character.powerLevel}</span>{' '}
                           {character.className}
                         </div>
                       </div>
