@@ -61,8 +61,8 @@ export default function Vendor({
             <span className={styles.vendorIconWrapper}>
               <BungieImage
                 src={
-                  vendor.def.displayProperties.icon ||
-                  vendor.def.displayProperties.smallTransparentIcon
+                  vendor.def.displayProperties.smallTransparentIcon ||
+                  vendor.def.displayProperties.icon
                 }
                 className={styles.icon}
               />
