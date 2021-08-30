@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { percent } from '../shell/filters';
+import styles from './LocalStorageInfo.m.scss';
 import './storage.scss';
 
 export default function LocalStorageInfo({ showDetails }: { showDetails: boolean }) {
@@ -35,16 +36,16 @@ export default function LocalStorageInfo({ showDetails }: { showDetails: boolean
           <h3>{t('Storage.IndexedDBStorage')}</h3>
           <p>{t(`Storage.Details.IndexedDBStorage`)}</p>
           {browserMayClearData && (
-            <p className="warning-block">{t('Storage.BrowserMayClearData')}</p>
+            <p className={styles.warningBlock}>{t('Storage.BrowserMayClearData')}</p>
           )}
         </>
       )}
       {quota && (
         <div>
-          <div className="storage-guage">
+          <div className={styles.gauge}>
             <div
               className={clsx({
-                full: quota.usage / quota.quota > 0.9,
+                [styles.full]: quota.usage / quota.quota > 0.9,
               })}
               style={{ width: percent(Math.max(quota.usage / quota.quota, 0.01)) }}
             />

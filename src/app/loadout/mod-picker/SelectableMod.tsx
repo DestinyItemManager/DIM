@@ -1,3 +1,4 @@
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
@@ -7,7 +8,6 @@ import { armorStatHashes } from 'app/search/search-filter-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import ClosableContainer from '../loadout-ui/ClosableContainer';
 import styles from './SelectableMod.m.scss';
 
 function SelectableMod({

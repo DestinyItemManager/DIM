@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Timeline } from 'react-twitter-widgets';
 import BungieAlerts from './BungieAlerts';
 import ChangeLog from './ChangeLog';
-import './WhatsNew.scss';
+import styles from './WhatsNew.m.scss';
 
 /**
  * What's new in the world of DIM?
@@ -15,7 +15,7 @@ export default function WhatsNew() {
     <div className="dim-page dim-static-page">
       <BungieAlerts />
 
-      <div className="twitter">
+      <div className={styles.twitter}>
         <Timeline
           dataSource={{
             sourceType: 'profile',

@@ -1,4 +1,5 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import React from 'react';
 import { DimItem } from '../inventory/item-types';
@@ -19,11 +20,12 @@ export default function LoadoutDrawerItem({
 
   return (
     <div onClick={(e) => equip(item, e)} className="loadout-item">
-      <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
-      <div className="close" onClick={onClose} />
-      {item.type === 'Class' && (
-        <ClassIcon classType={item.classType} className="loadout-item-class-icon" />
-      )}
+      <ClosableContainer onClose={onClose}>
+        <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
+        {item.type === 'Class' && (
+          <ClassIcon classType={item.classType} className="loadout-item-class-icon" />
+        )}
+      </ClosableContainer>
     </div>
   );
 }

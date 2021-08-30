@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import styles from './ItemPop.m.scss';
 
 /**
  * Cross browser safe scrollTo implementation.
@@ -55,10 +56,10 @@ export const itemPop = (item: DimItem) => {
   const storeHeaderHeight = parseInt(html.style.getPropertyValue('--store-header-height'), 10);
   const absoluteElementTop = elementRect.top + window.pageYOffset;
   scrollToPosition({ left: 0, top: absoluteElementTop - (headerHeight + storeHeaderHeight + 24) });
-  element.classList.add('item-pop');
+  element.classList.add(styles.itemPop);
 
   const removePop = () => {
-    element.classList.remove('item-pop');
+    element.classList.remove(styles.itemPop);
     for (const event of ['webkitAnimationEnd', 'oanimationend', 'msAnimationEnd', 'animationend']) {
       element.removeEventListener(event, removePop);
     }

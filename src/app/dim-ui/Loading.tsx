@@ -1,39 +1,34 @@
+import _ from 'lodash';
 import React, { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './Loading.scss';
+import styles from './Loading.m.scss';
+
+const transitionClasses = {
+  enter: styles.textEnter,
+  enterActive: styles.textEnterActive,
+  exit: styles.textExit,
+  exitActive: styles.textExitActive,
+};
 
 export function Loading({ message }: { message?: string }) {
   const nodeRef = useRef<HTMLDivElement>(null);
   return (
-    <section className="dim-loading">
-      <div className="logo-container">
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
-        <div className="logo-square" />
+    <section className={styles.loading}>
+      <div className={styles.container}>
+        {_.times(16, (n) => (
+          <div key={n} className={styles.square} />
+        ))}
       </div>
 
       {message && (
-        <TransitionGroup className="loading-text-container">
+        <TransitionGroup className={styles.textContainer}>
           <CSSTransition
             key={message}
             nodeRef={nodeRef}
-            classNames="loading-text"
+            classNames={transitionClasses}
             timeout={{ enter: 200, exit: 200 }}
           >
-            <div ref={nodeRef} className="loading-text">
+            <div ref={nodeRef} className={styles.text}>
               {message}
             </div>
           </CSSTransition>
