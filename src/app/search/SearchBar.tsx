@@ -66,6 +66,8 @@ interface ProvidedProps {
   searchQuery?: string;
   /** Children are used as optional extra action buttons only when there is a query. */
   children?: React.ReactChild;
+  /** An optional menu of actions that can be executed on the search. Always shown. */
+  menu?: React.ReactChild;
   /** Fired whenever the query changes (already debounced) */
   onQueryChanged(query: string): void;
   /** Fired whenever the query has been cleared */
@@ -191,6 +193,7 @@ function SearchBar(
     validateQuery,
     autocompleter,
     recentSearches,
+    menu,
   }: Props,
   ref: React.Ref<SearchFilterRef>
 ) {
@@ -440,6 +443,8 @@ function SearchBar(
               <AppIcon icon={disabledIcon} />
             </motion.button>
           )}
+
+          {menu}
 
           <motion.button
             layout
