@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed wonky rank display in the phone portrait layout.
+* Removed the Infusion Finder tool - the rules for infusion are simple enough now that this doesn't offer any real help.
 
 ## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
 
