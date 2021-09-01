@@ -22,7 +22,6 @@ import {
   LockedMap,
   MinMax,
   MinMaxIgnored,
-  statHashes,
   StatTypes,
 } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
@@ -56,7 +55,7 @@ export function useProcess(
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
-  statOrder: StatTypes[],
+  statOrder: number[],
   statFilters: { [statType in StatTypes]: MinMaxIgnored }
 ) {
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -220,7 +219,7 @@ const groupComparator = chainComparator(
 function groupItems(
   defs: D2ManifestDefinitions | undefined,
   items: readonly DimItem[],
-  statOrder: StatTypes[],
+  statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,
   generalMods: PluggableInventoryItemDefinition[],
   raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
@@ -230,8 +229,8 @@ function groupItems(
     const statsByHash = item.stats && keyByStatHash(item.stats);
     // Ensure ordering of stats
     if (statsByHash) {
-      for (const statType of statOrder) {
-        statValues.push(statsByHash[statHashes[statType]]!.base);
+      for (const statHash of statOrder) {
+        statValues.push(statsByHash[statHash]!.base);
       }
     }
 

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { LockableBuckets, MinMax, MinMaxIgnored, statHashToType, StatTypes } from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
 import { SetTracker } from './set-tracker';
@@ -26,12 +26,16 @@ const RETURNED_ARMOR_SETS = 200;
  * of existing masterwork mods and the upgradeSpendTier
  */
 function compareByStatOrder(
+  // Ordered list of enabled stats
   orderedConsideredStatHashes: number[],
-  // A reverse index from stat hash to the index in the statsCache ordered stats array
-  statHashToOrder: { [statHash: number]: number },
+  // The user's chosen order of all stats, by hash
+  statOrder: number[],
   // A map from item to stat values in user-selected order, with masterworks included
   statsCache: Map<ProcessItem, number[]>
 ) {
+  const statHashToOrder: { [statHash: number]: number } = {};
+  statOrder.forEach((statHash, index) => (statHashToOrder[statHash] = index));
+
   return chainComparator<ProcessItem>(
     // First compare by sum of considered stats
     compareBy((i) =>
@@ -58,8 +62,8 @@ export function process(
   modStatTotals: { [stat in StatTypes]: number },
   /** Mods to add onto the sets */
   lockedModMap: LockedProcessMods,
-  // TODO: replace with stat hashes
-  statOrder: StatTypes[],
+  /** The user's chosen stat order, including disabled stats */
+  statOrder: number[],
   // TODO: maps, eradicate StatTypes
   statFilters: { [stat in StatTypes]: MinMaxIgnored }
 ): {
@@ -72,14 +76,10 @@ export function process(
 
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
-  const orderedStatHashes = statOrder.map((statType) => statHashes[statType]);
   // Stat types excluding ignored stats
-  const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
-  const orderedConsideredStatHashes = orderedConsideredStats.map(
-    (statType) => statHashes[statType]
+  const orderedConsideredStatHashes = statOrder.filter(
+    (statHash) => !statFilters[statHashToType[statHash]].ignored
   );
-  const statHashToOrder: { [statHash: number]: number } = {};
-  statOrder.forEach((statType, index) => (statHashToOrder[statHashes[statType]] = index));
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -102,15 +102,11 @@ export function process(
     ...filteredItems[LockableBuckets.leg],
     ...filteredItems[LockableBuckets.classitem],
   ]) {
-    statsCache.set(item, getStatValuesWithMW(item, orderedStatHashes));
+    statsCache.set(item, getStatValuesWithMW(item, statOrder));
   }
 
   // Sort gear by the chosen stats so we consider the likely-best gear first
-  const itemComparator = compareByStatOrder(
-    orderedConsideredStatHashes,
-    statHashToOrder,
-    statsCache
-  );
+  const itemComparator = compareByStatOrder(orderedConsideredStatHashes, statOrder, statsCache);
   // TODO: make these a list/map
   const helms = (filteredItems[LockableBuckets.helmet] || []).sort(itemComparator);
   const gaunts = (filteredItems[LockableBuckets.gauntlets] || []).sort(itemComparator);
@@ -237,7 +233,8 @@ export function process(
               const itemStats = statsCache.get(item)!;
               let index = 0;
               // itemStats are already in the user's chosen stat order
-              for (const statType of statOrder) {
+              for (const statHash of statOrder) {
+                const statType = statHashToType[statHash];
                 stats[statType] = stats[statType] + itemStats[index];
                 // Stats can't exceed 100 even with mods. At least, today they
                 // can't - we *could* pass the max value in from the stat def.
@@ -251,7 +248,8 @@ export function process(
 
             let totalTier = 0;
             let statRangeExceeded = false;
-            for (const statKey of orderedConsideredStats) {
+            for (const statHash of orderedConsideredStatHashes) {
+              const statKey = statHashToType[statHash];
               const tier = statTier(stats[statKey]);
 
               // Update our global min/max for this stat
@@ -302,7 +300,8 @@ export function process(
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             let tiers = '';
-            for (const statKey of orderedConsideredStats) {
+            for (const statHash of orderedConsideredStatHashes) {
+              const statKey = statHashToType[statHash];
               const tier = statTier(stats[statKey]);
               // Make each stat exactly one code unit so the string compares correctly
               tiers += tier.toString(11);

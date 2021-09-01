@@ -6,9 +6,8 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React from 'react';
-import { statHashes, StatTypes } from '../types';
+import { statHashToType, StatTypes } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
@@ -16,13 +15,16 @@ import { calculateTotalTier, sumEnabledStats } from './utils';
 interface Props {
   stats: Readonly<{ [statType in StatTypes]: number }>;
   maxPower: number;
-  statOrder: StatTypes[];
+  statOrder: number[];
   enabledStats: Set<StatTypes>;
   characterClass?: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
 }
 
+/**
+ * Displays the overall tier and per-stat tier of a set.
+ */
 function SetStats({
   stats,
   maxPower,
@@ -33,11 +35,12 @@ function SetStats({
   existingLoadoutName,
 }: Props) {
   const defs = useD2Definitions()!;
-  const statsDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
+  const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
+  for (const statHash of statOrder) {
+    statDefs[statHash] = defs.Stat.get(statHash);
+  }
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
-
-  const displayStats = { ...stats };
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -69,16 +72,16 @@ function SetStats({
         ) : null}
       </div>
       <div className={styles.statSegmentContainer}>
-        {statOrder.map((stat) => (
+        {statOrder.map((statHash) => (
           <PressTip
-            key={stat}
+            key={statHash}
             tooltip={
               <StatTooltip
                 stat={{
-                  hash: statsDefs[stat].hash,
-                  name: statsDefs[stat].displayProperties.name,
-                  value: displayStats[stat],
-                  description: statsDefs[stat].displayProperties.description,
+                  hash: statHash,
+                  name: statDefs[statHash].displayProperties.name,
+                  value: stats[statHashToType[statHash]],
+                  description: statDefs[statHash].displayProperties.description,
                 }}
                 characterClass={characterClass}
               />
@@ -86,9 +89,9 @@ function SetStats({
             allowClickThrough={true}
           >
             <Stat
-              isActive={enabledStats.has(stat)}
-              stat={statsDefs[stat]}
-              value={displayStats[stat]}
+              isActive={enabledStats.has(statHashToType[statHash])}
+              stat={statDefs[statHash]}
+              value={stats[statHashToType[statHash]]}
             />
           </PressTip>
         ))}

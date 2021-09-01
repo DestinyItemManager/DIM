@@ -53,7 +53,7 @@ interface ProvidedProps {
   loadouts: Loadout[];
   lockedMods: PluggableInventoryItemDefinition[];
   classType: DestinyClass;
-  statOrder: StatTypes[];
+  statOrder: number[];
   enabledStats: Set<StatTypes>;
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;

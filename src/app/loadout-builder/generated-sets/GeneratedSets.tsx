@@ -70,7 +70,7 @@ interface Props {
   combos: number;
   combosWithoutCaps: number;
   lockedMap: LockedMap;
-  statOrder: StatTypes[];
+  statOrder: number[];
   enabledStats: Set<StatTypes>;
   lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];

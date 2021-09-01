@@ -21,7 +21,7 @@ interface Props {
   selectedStore?: DimStore;
   lockedMap: LockedMap;
   style: React.CSSProperties;
-  statOrder: StatTypes[];
+  statOrder: number[];
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<StatTypes>;
   lockedMods: PluggableInventoryItemDefinition[];

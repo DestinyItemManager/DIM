@@ -44,7 +44,6 @@ import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
   statHashes,
-  statHashToType,
   statKeys,
   StatTypes,
   statValues,
@@ -56,7 +55,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  statOrder: StatTypes[];
+  statOrder: number[]; // stat hashes, including disabled stats
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   items: Readonly<{
@@ -133,11 +132,6 @@ function mapStateToProps() {
     }
   );
 
-  const statOrderSelector = createSelector(
-    (state: RootState) => settingsSelector(state).loStatSortOrder,
-    (loStatSortOrder: number[]) => loStatSortOrder.map((hash) => statHashToType[hash])
-  );
-
   /** A selector to pull out all half tier general mods so we can quick add them to sets. */
   const halfTierModsSelector = createSelector(
     (state: RootState) => settingsSelector(state).loStatSortOrder,
@@ -183,7 +177,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const { loUpgradeSpendTier, loLockItemEnergyType } = settingsSelector(state);
     return {
-      statOrder: statOrderSelector(state),
+      statOrder: settingsSelector(state).loStatSortOrder,
       upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
       items: itemsSelector(state),
@@ -264,7 +258,7 @@ function LoadoutBuilder({
     () => ({
       statConstraints: _.compact(
         _.sortBy(Object.entries(statFilters), ([statName]) =>
-          statOrder.indexOf(statName as StatTypes)
+          statOrder.indexOf(statHashes[statName as StatTypes])
         ).map(([statName, minMax]) => {
           if (minMax.ignored) {
             return undefined;

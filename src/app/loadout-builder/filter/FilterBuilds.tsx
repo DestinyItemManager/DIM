@@ -16,17 +16,12 @@ export default function FilterBuilds({
 }: {
   statRanges?: { [statType in StatTypes]: MinMax };
   stats: { [statType in StatTypes]: MinMaxIgnored };
-  order: StatTypes[];
+  order: number[]; // stat hashes in user order
   onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
 }) {
   const setSetting = useSetSetting();
 
-  const onStatOrderChanged = (sortOrder: StatTypes[]) => {
-    setSetting(
-      'loStatSortOrder',
-      sortOrder.map((type) => statHashes[type])
-    );
-  };
+  const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
 
   const workingStatRanges =
     statRanges || _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
