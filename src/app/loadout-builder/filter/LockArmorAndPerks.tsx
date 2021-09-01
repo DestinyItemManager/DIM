@@ -21,7 +21,6 @@ import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
-  ItemsByBucket,
   LockableBuckets,
   LockedExclude,
   LockedExotic,
@@ -42,8 +41,6 @@ interface ProvidedProps {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   lockedExotic?: LockedExotic;
-  characterItems?: ItemsByBucket;
-  unusableExotics?: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -72,8 +69,6 @@ function LockArmorAndPerks({
   lockItemEnergyType,
   buckets,
   stores,
-  characterItems,
-  unusableExotics,
   lockedExotic,
   lbDispatch,
 }: Props) {
@@ -291,9 +286,8 @@ function LockArmorAndPerks({
         ReactDom.createPortal(
           <ExoticPicker
             lockedExotic={lockedExotic}
-            characterItems={characterItems}
-            unusableExotics={unusableExotics}
-            lbDispatch={lbDispatch}
+            classType={selectedStore.classType}
+            onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExotic: exotic })}
             onClose={() => setShowExoticPicker(false)}
           />,
           document.body
