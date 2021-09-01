@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, statHashes } from '../types';
+import { ArmorSet } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
@@ -46,9 +46,9 @@ export default function GeneratedSetButtons({
 
   const statsWithPlus5: number[] = [];
 
-  for (const [stat, value] of Object.entries(set.stats)) {
+  for (const [statHash, value] of Object.entries(set.stats)) {
     if (value % 10 > 4) {
-      statsWithPlus5.push(statHashes[stat]);
+      statsWithPlus5.push(parseInt(statHash, 10));
     }
   }
 

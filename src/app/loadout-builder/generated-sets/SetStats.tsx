@@ -7,16 +7,16 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { statHashToType, StatTypes } from '../types';
+import { ArmorSet } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
-  stats: Readonly<{ [statType in StatTypes]: number }>;
+  stats: ArmorSet['stats'];
   maxPower: number;
   statOrder: number[];
-  enabledStats: Set<StatTypes>;
+  enabledStats: Set<number>;
   characterClass?: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
@@ -80,7 +80,7 @@ function SetStats({
                 stat={{
                   hash: statHash,
                   name: statDefs[statHash].displayProperties.name,
-                  value: stats[statHashToType[statHash]],
+                  value: stats[statHash],
                   description: statDefs[statHash].displayProperties.description,
                 }}
                 characterClass={characterClass}
@@ -89,9 +89,9 @@ function SetStats({
             allowClickThrough={true}
           >
             <Stat
-              isActive={enabledStats.has(statHashToType[statHash])}
+              isActive={enabledStats.has(statHash)}
               stat={statDefs[statHash]}
-              value={stats[statHashToType[statHash]]}
+              value={stats[statHash]}
             />
           </PressTip>
         ))}

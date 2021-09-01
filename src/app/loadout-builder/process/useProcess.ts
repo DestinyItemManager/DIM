@@ -17,12 +17,12 @@ import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
 import {
   ArmorSet,
+  ArmorStatHashes,
   bucketsToCategories,
   ItemsByBucket,
   LockedMap,
   MinMax,
   MinMaxIgnored,
-  StatTypes,
 } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
@@ -39,7 +39,7 @@ interface ProcessState {
     sets: ArmorSet[];
     combos: number;
     combosWithoutCaps: number;
-    statRanges?: { [stat in StatTypes]: MinMax };
+    statRanges?: { [statHash in ArmorStatHashes]: MinMax };
   } | null;
 }
 
@@ -56,7 +56,7 @@ export function useProcess(
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
   statOrder: number[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statFilters: { [statHash in ArmorStatHashes]: MinMaxIgnored }
 ) {
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,

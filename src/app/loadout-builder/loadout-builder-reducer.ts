@@ -5,15 +5,17 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import {
   ArmorSet,
+  ArmorStatHashes,
   LockedExotic,
   LockedItemType,
   LockedMap,
   MinMaxIgnored,
-  StatTypes,
 } from './types';
 import { addLockedItem, removeLockedItem } from './utils';
 
@@ -22,13 +24,23 @@ export interface LoadoutBuilderState {
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExotic?: LockedExotic;
   selectedStoreId?: string;
-  statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
+  statFilters: Readonly<{ [statHash in ArmorStatHashes]: MinMaxIgnored }>;
   modPicker: {
     open: boolean;
     initialQuery?: string;
   };
   compareSet?: ArmorSet;
 }
+
+export const defaultStatFilters = {
+  [StatHashes.Mobility]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Resilience]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Recovery]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Discipline]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Intellect]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Strength]: { min: 0, max: 10, ignored: false },
+};
+Object.freeze(defaultStatFilters);
 
 const lbStateInit = ({
   stores,
@@ -61,14 +73,7 @@ const lbStateInit = ({
   }
   return {
     lockedMap,
-    statFilters: {
-      Mobility: { min: 0, max: 10, ignored: false },
-      Resilience: { min: 0, max: 10, ignored: false },
-      Recovery: { min: 0, max: 10, ignored: false },
-      Discipline: { min: 0, max: 10, ignored: false },
-      Intellect: { min: 0, max: 10, ignored: false },
-      Strength: { min: 0, max: 10, ignored: false },
-    },
+    statFilters: _.cloneDeep(defaultStatFilters),
     lockedMods: [],
     selectedStoreId: selectedStoreId,
     modPicker: {
@@ -108,14 +113,7 @@ function lbStateReducer(
         selectedStoreId: action.storeId,
         lockedMap: {},
         lockedExotic: undefined,
-        statFilters: {
-          Mobility: { min: 0, max: 10, ignored: false },
-          Resilience: { min: 0, max: 10, ignored: false },
-          Recovery: { min: 0, max: 10, ignored: false },
-          Discipline: { min: 0, max: 10, ignored: false },
-          Intellect: { min: 0, max: 10, ignored: false },
-          Strength: { min: 0, max: 10, ignored: false },
-        },
+        statFilters: _.cloneDeep(defaultStatFilters),
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };

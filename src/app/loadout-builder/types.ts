@@ -1,22 +1,8 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import {
-  armor2PlugCategoryHashesByName,
-  armorBuckets,
-  D2ArmorStatHashByName,
-} from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-
-// todo: get this from d2-known-values
-export type StatTypes =
-  | 'Mobility'
-  | 'Resilience'
-  | 'Recovery'
-  | 'Discipline'
-  | 'Intellect'
-  | 'Strength';
 
 export interface MinMax {
   min: number;
@@ -67,7 +53,7 @@ export type LockedMap = Readonly<{
  */
 export interface ArmorSet {
   /** The overall stats for the loadout as a whole. */
-  readonly stats: Readonly<{ [statType in StatTypes]: number }>;
+  readonly stats: Readonly<{ [statHash in ArmorStatHashes]: number }>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
 }
@@ -97,21 +83,13 @@ export const bucketsToCategories = {
   [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
 };
 
-// to-do: deduplicate this and use D2ArmorStatHashByName instead
-export const statHashes: { [type in StatTypes]: number } = {
-  Mobility: D2ArmorStatHashByName.mobility,
-  Resilience: D2ArmorStatHashByName.resilience,
-  Recovery: D2ArmorStatHashByName.recovery,
-  Discipline: D2ArmorStatHashByName.discipline,
-  Intellect: D2ArmorStatHashByName.intellect,
-  Strength: D2ArmorStatHashByName.strength,
-};
-
-export const statValues = Object.values(statHashes);
-export const statKeys = Object.keys(statHashes) as StatTypes[];
-
-// Need to force the type as lodash converts the StatTypes type to string.
-export const statHashToType = _.invert(statHashes) as { [hash: number]: StatTypes };
+export type ArmorStatHashes =
+  | StatHashes.Mobility
+  | StatHashes.Resilience
+  | StatHashes.Recovery
+  | StatHashes.Discipline
+  | StatHashes.Intellect
+  | StatHashes.Strength;
 
 /**
  * The resuablePlugSetHash from armour 2.0's general socket.

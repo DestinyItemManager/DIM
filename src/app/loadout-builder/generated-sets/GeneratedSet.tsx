@@ -9,7 +9,7 @@ import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { assignModsToArmorSet } from '../mod-utils';
-import { ArmorSet, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -23,7 +23,7 @@ interface Props {
   style: React.CSSProperties;
   statOrder: number[];
   forwardedRef?: React.Ref<HTMLDivElement>;
-  enabledStats: Set<StatTypes>;
+  enabledStats: Set<number>;
   lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
