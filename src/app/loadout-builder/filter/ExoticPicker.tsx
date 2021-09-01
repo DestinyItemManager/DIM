@@ -16,9 +16,9 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LockedExotic, LockedExoticWithPlugs } from '../types';
+import { LockedExotic } from '../types';
 import styles from './ExoticPicker.m.scss';
-import ExoticTile from './ExoticTile';
+import ExoticTile, { LockedExoticWithPlugs } from './ExoticTile';
 
 interface Props {
   lockedExotic?: LockedExotic;

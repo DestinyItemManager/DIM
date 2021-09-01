@@ -1,11 +1,20 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import React from 'react';
-import { LockedExoticWithPlugs } from '../types';
+import { LockedExotic } from '../types';
 import styles from './ExoticTile.m.scss';
+
+export interface LockedExoticWithPlugs extends LockedExotic {
+  /** The intrinsic perk that is unique to this exotic. */
+  exoticPerk?: PluggableInventoryItemDefinition;
+  /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
+  exoticMods?: PluggableInventoryItemDefinition[];
+  isArmor1: boolean;
+}
 
 interface Props {
   exotic: LockedExoticWithPlugs;
