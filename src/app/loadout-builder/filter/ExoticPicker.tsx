@@ -48,7 +48,7 @@ function ExoticPicker({
       for (const bucketHash of LockableBucketHashes) {
         // itemsForClass[bucketHash] can be undefined if the user has no armour 2.0
         for (const item of characterItems[bucketHash] || []) {
-          if (item.equippingLabel) {
+          if (item.isExotic) {
             exotics.push(item);
           }
         }

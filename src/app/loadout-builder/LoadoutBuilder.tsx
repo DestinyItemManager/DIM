@@ -117,7 +117,7 @@ function mapStateToProps() {
         [classType: number]: DimItem[];
       } = {};
       for (const item of allItems) {
-        if (!item || item.energy || !item.equippingLabel) {
+        if (!item || item.energy || !item.isExotic || !item.bucket.inArmor) {
           continue;
         }
         const { classType } = item;
