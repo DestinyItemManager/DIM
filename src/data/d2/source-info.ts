@@ -1,6 +1,42 @@
 const D2Sources: {
   [key: string]: { itemHashes: number[]; sourceHashes: number[]; searchString: string[] };
 } = {
+  ada: {
+    itemHashes: [
+      417164956, // Jötunn
+      3211806999, // Izanagi's Burden
+      3588934839, // Le Monarque
+      3650581584, // New Age Black Armory
+      3650581585, // Refurbished Black Armory
+      3650581586, // Rasmussen Clan
+      3650581587, // House of Meyrin
+      3650581588, // Satou Tribe
+      3650581589, // Bergusian Night
+    ],
+    sourceHashes: [
+      266896577, // Source: Solve the Norse glyph puzzle.
+      439994003, // Source: Complete the "Master Smith" Triumph.
+      925197669, // Source: Complete a Bergusia Forge ignition.
+      948753311, // Source: Found by completing Volundr Forge ignitions.
+      1286332045, // Source: Found by completing Izanami Forge ignitions.
+      1457456824, // Source: Complete the "Reunited Siblings" Triumph.
+      1465990789, // Source: Solve the Japanese glyph puzzle.
+      1546689276, // Source: Acquired from Ada-1
+      1596507419, // Source: Complete a Gofannon Forge ignition.
+      2062058385, // Source: Crafted in a Black Armory forge.
+      2384327872, // Source: Solve the French glyph puzzle.
+      2541753910, // Source: Complete the "Master Blaster" Triumph.
+      2966694626, // Source: Found by solving the mysteries behind the Black Armory's founding families.
+      3047033583, // Source: Returned the Obsidian Accelerator.
+      3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
+      3390164851, // Source: Found by turning in Black Armory bounties.
+      3764925750, // Source: Complete an Izanami Forge ignition.
+      4101102010, // Source: Found by completing Bergusia Forge ignitions.
+      4247521481, // Source: Complete the "Beautiful but Deadly" Triumph.
+      4290227252, // Source: Complete a Volundr Forge ignition.
+    ],
+    searchString: [],
+  },
   adventure: {
     itemHashes: [],
     sourceHashes: [
@@ -24,6 +60,15 @@ const D2Sources: {
       3427537854, // Source: Adventure "Road Rage" on Io.
       3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone.
       4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone.
+    ],
+    searchString: [],
+  },
+  banshee: {
+    itemHashes: [],
+    sourceHashes: [
+      1788267693, // Source: Earn rank-up packages from Banshee-44.
+      2986841134, // Source: Salvager's Salvo Armament Quest
+      3512613235, // Source: A Sacred Fusion Quest
     ],
     searchString: [],
   },
@@ -54,6 +99,7 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
+      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -136,6 +182,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       4155903822, // Source: Obtained from Master Cryptarch Rahool.
+    ],
+    searchString: [],
+  },
+  compass: {
+    itemHashes: [],
+    sourceHashes: [
+      2939318890, // Source: Wayfinder's Compass
     ],
     searchString: [],
   },
@@ -918,6 +971,7 @@ const D2Sources: {
       139160732, // Source: Season of the Splicer
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       1600754038, // Source: Season of the Splicer Activities
+      1828592460, // Source: Splicer Servitor
       2040801502, // Source: Season of the Splicer Triumph
       2694738712, // Source: Season of the Splicer Quest
       2967385539, // Source: Season of the Splicer Seasonal Challenges
