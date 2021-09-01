@@ -971,7 +971,8 @@ AddEncoding br .br
 
 <FilesMatch "service-worker\.js(\.(gz|br))?">
     <IfModule mod_headers.c>
-        Header set Cache-Control "max-age=0, s-maxage=86400"
+        # no-cache = revalidate with the server before using
+        Header set Cache-Control "max-age=0, s-maxage=86400, must-revalidate"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -980,7 +981,7 @@ AddEncoding br .br
 
 <FilesMatch "\.html(\.(gz|br))?">
     <IfModule mod_headers.c>
-        Header set Cache-Control "max-age=0, s-maxage=86400"
+        Header set Cache-Control "max-age=0, s-maxage=86400, must-revalidate"
         Header unset Expires
     </IfModule>
 </FilesMatch>
@@ -989,7 +990,7 @@ AddEncoding br .br
 
 <FilesMatch "version\.json(\.(gz|br))?">
     <IfModule mod_headers.c>
-        Header set Cache-Control "max-age=900, s-maxage=86400"
+        Header set Cache-Control "max-age=900, s-maxage=86400, must-revalidate"
         Header unset Expires
     </IfModule>
 </FilesMatch>
