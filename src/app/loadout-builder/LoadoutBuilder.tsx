@@ -1,9 +1,5 @@
-import {
-  LoadoutParameters,
-  StatConstraint,
-  UpgradeSpendTier,
-} from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { savedLoadoutParametersSelector, settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
@@ -25,7 +21,6 @@ import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import _ from 'lodash';
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -42,6 +37,7 @@ import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { defaultStatFilters, useLbState } from './loadout-builder-reducer';
+import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
 import { ArmorStatHashes, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
@@ -91,7 +87,8 @@ function mapStateToProps() {
 
   /** A selector to pull out all half tier general mods so we can quick add them to sets. */
   const halfTierModsSelector = createSelector(
-    (state: RootState) => settingsSelector(state).loStatSortOrder,
+    (state: RootState) =>
+      savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash!),
     d2ManifestSelector,
     (statOrder, defs) => {
       const halfTierMods: PluggableInventoryItemDefinition[] = [];
@@ -216,32 +213,9 @@ function LoadoutBuilder({
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
   // TODO: replace some of these individual params with this object
-  const params: LoadoutParameters = useMemo(
-    () => ({
-      statConstraints: _.compact(
-        statOrder.map((statHash) => {
-          const minMax = statFilters[statHash];
-          if (minMax.ignored) {
-            return undefined;
-          }
-          const stat: StatConstraint = {
-            statHash,
-          };
-          if (minMax.min > 0) {
-            stat.minTier = minMax.min;
-          }
-          if (minMax.max < 10) {
-            stat.maxTier = minMax.max;
-          }
-          return stat;
-        })
-      ),
-      mods: lockedMods.map((mod) => mod.hash),
-      query: searchQuery,
-      upgradeSpendTier,
-      exoticArmorHash: lockedExoticHash,
-    }),
-    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder, lockedExoticHash]
+  const params = useMemo(
+    () => buildLoadoutParams(upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder),
+    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
   );
 
   const sets = result?.sets;
