@@ -68,6 +68,14 @@ const locationFilters: FilterDefinition[] = [
       (item) =>
         currentStore ? item.owner === currentStore.id : false,
   },
+  {
+    keywords: 'currentclass',
+    description: tl('Filter.CurrentClass'),
+    filter:
+      ({ currentStore }) =>
+      (item) =>
+        currentStore ? item.classType === currentStore.classType : false,
+  },
 ];
 
 export default locationFilters;
