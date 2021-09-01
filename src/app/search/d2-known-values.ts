@@ -279,6 +279,7 @@ export const modsWithConditionalStats = {
   powerfulFriends: 1484685887,
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
+  elementalCapacitor: 3511092054,
 } as const;
 
 export const UpgradeMaterialHashes = {
