@@ -90,22 +90,13 @@ function mapStateToProps() {
           continue;
         }
         const { classType, bucket } = item;
-
-        if (!items[classType]) {
-          items[classType] = {};
-        }
-
-        if (!items[classType][bucket.hash]) {
-          items[classType][bucket.hash] = [];
-        }
-
-        items[classType][bucket.hash].push(item);
+        ((items[classType] ??= {})[bucket.hash] ??= []).push(item);
       }
-
       return items;
     }
   );
 
+  // Find all "unusable" Armor 1.0 exotics grouped by class
   const unusableExoticsSelector = createSelector(
     allItemsSelector,
     (
@@ -122,13 +113,8 @@ function mapStateToProps() {
         }
         const { classType } = item;
 
-        if (!items[classType]) {
-          items[classType] = [];
-        }
-
-        items[classType].push(item);
+        (items[classType] ??= []).push(item);
       }
-
       return items;
     }
   );
