@@ -157,6 +157,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Curated": "Shows items that are a curated roll.",
+    "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
@@ -302,16 +303,6 @@
     "StartSearchClear": "Start a fresh search",
     "Tab": "TAB",
     "Vault": "Send item to vault"
-  },
-  "Infusion": {
-    "Filter": "Filter items",
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
-    "InfusionMaterials": "Infusion Materials",
-    "NoItems": "No infusable items available.",
-    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
   },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
@@ -580,7 +571,6 @@
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
-    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
