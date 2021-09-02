@@ -1,4 +1,5 @@
 const missingSources: { [key: string]: number[] } = {
+  ada: [],
   adventure: [
     11686457, // Unethical Experiments Cloak
     11686458, // Orobas Vectura Cloak
@@ -18,6 +19,15 @@ const missingSources: { [key: string]: number[] } = {
     2913284400, // Mindbreaker Boots
     3706457514, // Gearhead Grips
     3706457515, // Songbreaker Grips
+  ],
+  banshee: [
+    583723938, // Fusion Rifle Loader
+    583723939, // Linear Fusion Rifle Targeting
+    583723940, // Shotgun Dexterity
+    583723941, // Sword Scavenger
+    739655784, // Auto Rifle Loader
+    739655787, // Shotgun Ammo Finder
+    739655788, // Sidearm Dexterity
   ],
   battlegrounds: [],
   blackarmory: [],
@@ -460,6 +470,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   cayde6: [],
   cipher: [],
+  compass: [],
   contact: [],
   crownofsorrow: [
     17280095, // Shadow's Strides

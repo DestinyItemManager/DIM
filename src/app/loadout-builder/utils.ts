@@ -86,7 +86,6 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
  * of the next tier up, so we can figure out what the maximum possible upgrade is.
  */
 function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
-  const isExotic = Boolean(item.equippingLabel);
   // Used for figuring out what upgrade is not allowed
   let boundaryHash: number | 'none' = 'none';
 
@@ -101,7 +100,7 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       boundaryHash = UpgradeMaterialHashes.ascendantShard;
       break;
     case UpgradeSpendTier.AscendantShardsNotExotic: {
-      if (!isExotic) {
+      if (!item.isExotic) {
         break;
       }
       // for exotics we allow energy upgrades/swaps using enhancement prisms.

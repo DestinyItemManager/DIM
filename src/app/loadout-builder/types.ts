@@ -2,7 +2,7 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
   min: number;
@@ -31,14 +31,6 @@ export interface LockedExotic {
   def: DestinyInventoryItemDefinition;
   /** The bucket has the exotic belongs to (e.g. arms). */
   bucketHash: BucketHashes;
-}
-
-export interface LockedExoticWithPlugs extends LockedExotic {
-  /** The intrinsic perk that is unique to this exotic. */
-  exoticPerk?: PluggableInventoryItemDefinition;
-  /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
-  exoticMods?: PluggableInventoryItemDefinition[];
-  isArmor1: boolean;
 }
 
 export type LockedItemType = LockedItemCase | LockedExclude;

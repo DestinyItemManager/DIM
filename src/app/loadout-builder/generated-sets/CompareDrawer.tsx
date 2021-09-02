@@ -79,7 +79,7 @@ function chooseSimilarLoadout(
   setItems: DimItem[],
   useableLoadouts: Loadout[]
 ): Loadout | undefined {
-  const exotic = setItems.find((i) => i.equippingLabel);
+  const exotic = setItems.find((i) => i.isExotic);
   return (
     (exotic && useableLoadouts.find((l) => l.items.some((i) => i.hash === exotic.hash))) ||
     (useableLoadouts.length ? useableLoadouts[0] : undefined)

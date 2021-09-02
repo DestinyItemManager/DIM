@@ -55,9 +55,6 @@ interface StoreProps {
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
-  unusableExotics: Readonly<{
-    [classType: number]: DimItem[];
-  }>;
   loadouts: Loadout[];
   filter: ItemFilter;
   searchQuery: string;
@@ -83,45 +80,8 @@ function mapStateToProps() {
           continue;
         }
         const { classType, bucket } = item;
-
-        if (!items[classType]) {
-          items[classType] = {};
-        }
-
-        if (!items[classType][bucket.hash]) {
-          items[classType][bucket.hash] = [];
-        }
-
-        items[classType][bucket.hash].push(item);
+        ((items[classType] ??= {})[bucket.hash] ??= []).push(item);
       }
-
-      return items;
-    }
-  );
-
-  const unusableExoticsSelector = createSelector(
-    allItemsSelector,
-    (
-      allItems
-    ): Readonly<{
-      [classType: number]: DimItem[];
-    }> => {
-      const items: {
-        [classType: number]: DimItem[];
-      } = {};
-      for (const item of allItems) {
-        if (!item || item.energy || !item.equippingLabel) {
-          continue;
-        }
-        const { classType } = item;
-
-        if (!items[classType]) {
-          items[classType] = [];
-        }
-
-        items[classType].push(item);
-      }
-
       return items;
     }
   );
@@ -175,7 +135,6 @@ function mapStateToProps() {
       upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
       items: itemsSelector(state),
-      unusableExotics: unusableExoticsSelector(state),
       loadouts: loadoutsSelector(state),
       filter: searchFilterSelector(state),
       searchQuery: querySelector(state),
@@ -192,9 +151,7 @@ function LoadoutBuilder({
   statOrder,
   upgradeSpendTier,
   lockItemEnergyType,
-
   items,
-  unusableExotics,
   loadouts,
   filter,
   preloadedLoadout,
@@ -306,8 +263,6 @@ function LoadoutBuilder({
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
-        characterItems={characterItems}
-        unusableExotics={selectedStore && unusableExotics[selectedStore.classType]}
         lockedExotic={lockedExotic}
         lbDispatch={lbDispatch}
       />
