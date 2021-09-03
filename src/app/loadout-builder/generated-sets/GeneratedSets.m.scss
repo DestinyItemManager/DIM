@@ -1,7 +1,12 @@
 @import '../../variables.scss';
 
 .sets {
+  margin-top: 12px;
   max-width: max-content;
+
+  p {
+    font-size: 14px;
+  }
 
   @include phone-portrait {
     h2 {
@@ -13,12 +18,6 @@
   }
 }
 
-.newLoadout {
-  float: right;
-}
-
-.numSets {
-  font-size: 12px;
-  text-transform: none;
-  letter-spacing: normal;
+.toolbar {
+  @include horizontal-space-children(4px);
 }

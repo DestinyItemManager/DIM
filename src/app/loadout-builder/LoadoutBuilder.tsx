@@ -233,8 +233,6 @@ function LoadoutBuilder({
     [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
   );
 
-  const combos = result?.combos || 0;
-  const combosWithoutCaps = result?.combosWithoutCaps || 0;
   const sets = result?.sets;
 
   const filteredSets = useMemo(
@@ -279,7 +277,7 @@ function LoadoutBuilder({
 
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu className={styles.menu}>
+      <PageWithMenu.Menu>
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -312,8 +310,6 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
-            combos={combos}
-            combosWithoutCaps={combosWithoutCaps}
             lockedMap={lockedMap}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}

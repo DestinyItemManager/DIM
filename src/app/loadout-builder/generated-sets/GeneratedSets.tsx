@@ -67,8 +67,6 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  combos: number;
-  combosWithoutCaps: number;
   lockedMap: LockedMap;
   statOrder: number[];
   enabledStats: Set<number>;
@@ -89,8 +87,6 @@ export default function GeneratedSets({
   selectedStore,
   sets,
   statOrder,
-  combos,
-  combosWithoutCaps,
   enabledStats,
   lockedMods,
   loadouts,
@@ -150,27 +146,17 @@ export default function GeneratedSets({
 
   return (
     <div className={styles.sets}>
-      <h2>
-        {t('LoadoutBuilder.GeneratedBuilds')}{' '}
-        <span className={styles.numSets}>
-          ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
-        </span>
+      <div className={styles.toolbar}>
+        <UserGuideLink topic="Loadout_Optimizer" />
         <button
           type="button"
-          className={`dim-button ${styles.newLoadout}`}
+          className="dim-button"
           onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
         >
           {t('LoadoutBuilder.NewEmptyLoadout')}
         </button>
-      </h2>
-      <UserGuideLink topic="Loadout_Optimizer" />
-      <p>
-        {t('LoadoutBuilder.OptimizerExplanation')}{' '}
-        {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
-      </p>
-      {combos !== combosWithoutCaps && (
-        <p>{t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}</p>
-      )}
+      </div>
+      <p>{t('LoadoutBuilder.OptimizerExplanation')}</p>
       {measureSet ? (
         <GeneratedSet
           ref={setRowHeight}
