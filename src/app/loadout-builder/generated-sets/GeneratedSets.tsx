@@ -11,7 +11,7 @@ import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } fr
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, LockedMap, StatTypes } from '../types';
+import { ArmorSet, LockedMap } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -70,8 +70,8 @@ interface Props {
   combos: number;
   combosWithoutCaps: number;
   lockedMap: LockedMap;
-  statOrder: StatTypes[];
-  enabledStats: Set<StatTypes>;
+  statOrder: number[];
+  enabledStats: Set<number>;
   lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;

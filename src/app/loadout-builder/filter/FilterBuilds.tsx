@@ -1,7 +1,7 @@
 import { useSetSetting } from 'app/settings/hooks';
-import _ from 'lodash';
 import React from 'react';
-import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { defaultStatFilters } from '../loadout-builder-reducer';
+import { ArmorStatHashes, MinMax, MinMaxIgnored } from '../types';
 import styles from './FilterBuilds.m.scss';
 import TierSelect from './TierSelect';
 
@@ -14,22 +14,16 @@ export default function FilterBuilds({
   order,
   onStatFiltersChanged,
 }: {
-  statRanges?: { [statType in StatTypes]: MinMax };
-  stats: { [statType in StatTypes]: MinMaxIgnored };
-  order: StatTypes[];
-  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
+  statRanges?: { [statHash in ArmorStatHashes]: MinMax };
+  stats: { [statHash in ArmorStatHashes]: MinMaxIgnored };
+  order: number[]; // stat hashes in user order
+  onStatFiltersChanged(stats: { [statHash in ArmorStatHashes]: MinMaxIgnored }): void;
 }) {
   const setSetting = useSetSetting();
 
-  const onStatOrderChanged = (sortOrder: StatTypes[]) => {
-    setSetting(
-      'loStatSortOrder',
-      sortOrder.map((type) => statHashes[type])
-    );
-  };
+  const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
 
-  const workingStatRanges =
-    statRanges || _.mapValues(statHashes, () => ({ min: 0, max: 10, ignored: false }));
+  const workingStatRanges = statRanges || defaultStatFilters;
 
   return (
     <div>

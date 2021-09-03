@@ -1,6 +1,7 @@
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { D1LightStats } from './d1-known-values';
 import {
+  armorStats,
   CUSTOM_TOTAL_STAT_HASH,
   D2ArmorStatHashByName,
   D2LightStats,
@@ -43,7 +44,7 @@ export const dimArmorStatHashByName = {
 export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
 
 /** armor stat hashes to check for the "any" keyword */
-export const armorAnyStatHashes = Object.values(D2ArmorStatHashByName);
+export const armorAnyStatHashes = armorStats;
 
 /** stat hashes to calculate max values for */
 export const armorStatHashes = Object.values(dimArmorStatHashByName);

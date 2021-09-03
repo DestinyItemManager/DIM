@@ -4,7 +4,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStatHashes } from 'app/search/search-filter-values';
+import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -56,7 +56,7 @@ function SelectableMod({
             </div>
           ))}
           {mod.investmentStats
-            .filter((stat) => armorStatHashes.includes(stat.statTypeHash))
+            .filter((stat) => armorStats.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>
                 <StatValue value={stat.value} statHash={stat.statTypeHash} />

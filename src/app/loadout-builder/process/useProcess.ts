@@ -17,13 +17,12 @@ import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
 import {
   ArmorSet,
+  ArmorStatHashes,
   bucketsToCategories,
   ItemsByBucket,
   LockedMap,
   MinMax,
   MinMaxIgnored,
-  statHashes,
-  StatTypes,
 } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
@@ -40,7 +39,7 @@ interface ProcessState {
     sets: ArmorSet[];
     combos: number;
     combosWithoutCaps: number;
-    statRanges?: { [stat in StatTypes]: MinMax };
+    statRanges?: { [statHash in ArmorStatHashes]: MinMax };
   } | null;
 }
 
@@ -56,8 +55,8 @@ export function useProcess(
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
-  statOrder: StatTypes[],
-  statFilters: { [statType in StatTypes]: MinMaxIgnored }
+  statOrder: number[],
+  statFilters: { [statHash in ArmorStatHashes]: MinMaxIgnored }
 ) {
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
@@ -220,7 +219,7 @@ const groupComparator = chainComparator(
 function groupItems(
   defs: D2ManifestDefinitions | undefined,
   items: readonly DimItem[],
-  statOrder: StatTypes[],
+  statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,
   generalMods: PluggableInventoryItemDefinition[],
   raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
@@ -230,8 +229,8 @@ function groupItems(
     const statsByHash = item.stats && keyByStatHash(item.stats);
     // Ensure ordering of stats
     if (statsByHash) {
-      for (const statType of statOrder) {
-        statValues.push(statsByHash[statHashes[statType]]!.base);
+      for (const statHash of statOrder) {
+        statValues.push(statsByHash[statHash]!.base);
       }
     }
 

@@ -13,6 +13,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
+import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -40,15 +41,7 @@ import { filterItems } from './item-filter';
 import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import {
-  generalSocketReusablePlugSetHash,
-  ItemsByBucket,
-  statHashes,
-  statHashToType,
-  statKeys,
-  StatTypes,
-  statValues,
-} from './types';
+import { ArmorStatHashes, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -56,7 +49,7 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  statOrder: StatTypes[];
+  statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   items: Readonly<{
@@ -93,11 +86,6 @@ function mapStateToProps() {
     }
   );
 
-  const statOrderSelector = createSelector(
-    (state: RootState) => settingsSelector(state).loStatSortOrder,
-    (loStatSortOrder: number[]) => loStatSortOrder.map((hash) => statHashToType[hash])
-  );
-
   /** A selector to pull out all half tier general mods so we can quick add them to sets. */
   const halfTierModsSelector = createSelector(
     (state: RootState) => settingsSelector(state).loStatSortOrder,
@@ -120,7 +108,7 @@ function mapStateToProps() {
           isPluggableItem(plug) &&
           isArmor2Mod(plug) &&
           plug.investmentStats.some(
-            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+            (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
           )
         ) {
           halfTierMods.push(plug);
@@ -132,7 +120,7 @@ function mapStateToProps() {
       return halfTierMods.sort(
         compareBy((mod) => {
           const stat = mod.investmentStats.find(
-            (stat) => stat.value === 5 && statValues.includes(stat.statTypeHash)
+            (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
           );
           return statOrder.indexOf(stat!.statTypeHash);
         })
@@ -143,7 +131,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => {
     const { loUpgradeSpendTier, loLockItemEnergyType } = settingsSelector(state);
     return {
-      statOrder: statOrderSelector(state),
+      statOrder: settingsSelector(state).loStatSortOrder,
       upgradeSpendTier: loUpgradeSpendTier,
       lockItemEnergyType: loLockItemEnergyType,
       items: itemsSelector(state),
@@ -180,7 +168,7 @@ function LoadoutBuilder({
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
   const enabledStats = useMemo(
-    () => new Set(statKeys.filter((statType) => !statFilters[statType].ignored)),
+    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
     [statFilters]
   );
 
@@ -220,14 +208,13 @@ function LoadoutBuilder({
   const params: LoadoutParameters = useMemo(
     () => ({
       statConstraints: _.compact(
-        _.sortBy(Object.entries(statFilters), ([statName]) =>
-          statOrder.indexOf(statName as StatTypes)
-        ).map(([statName, minMax]) => {
+        statOrder.map((statHash) => {
+          const minMax = statFilters[statHash];
           if (minMax.ignored) {
             return undefined;
           }
           const stat: StatConstraint = {
-            statHash: statHashes[statName],
+            statHash,
           };
           if (minMax.min > 0) {
             stat.minTier = minMax.min;
