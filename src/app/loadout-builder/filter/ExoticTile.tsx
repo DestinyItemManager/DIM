@@ -3,12 +3,13 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { LockedExotic } from '../types';
 import styles from './ExoticTile.m.scss';
 
-export interface LockedExoticWithPlugs extends LockedExotic {
+export interface LockedExoticWithPlugs {
+  def: DestinyInventoryItemDefinition;
   /** The intrinsic perk that is unique to this exotic. */
   exoticPerk?: PluggableInventoryItemDefinition;
   /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
