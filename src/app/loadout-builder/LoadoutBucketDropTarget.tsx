@@ -12,8 +12,11 @@ import { DimItem } from '../inventory/item-types';
 interface ExternalProps {
   className?: string;
   children?: React.ReactNode;
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   bucketTypes: string[];
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   storeIds: string[];
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   onItemLocked(lockedItem: DimItem): void;
 }
 
