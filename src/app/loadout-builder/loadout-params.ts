@@ -15,7 +15,8 @@ export function buildLoadoutParams(
   lockedMods: PluggableInventoryItemDefinition[],
   searchQuery: string,
   statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
-  statOrder: number[]
+  statOrder: number[],
+  exoticArmorHash?: number
 ): LoadoutParameters {
   return {
     statConstraints: _.compact(
@@ -39,6 +40,7 @@ export function buildLoadoutParams(
     mods: lockedMods.map((mod) => mod.hash),
     query: searchQuery,
     upgradeSpendTier,
+    exoticArmorHash,
   };
 }
 

@@ -214,8 +214,16 @@ function LoadoutBuilder({
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
   // TODO: replace some of these individual params with this object
   const params = useMemo(
-    () => buildLoadoutParams(upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder),
-    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
+    () =>
+      buildLoadoutParams(
+        upgradeSpendTier,
+        lockedMods,
+        searchQuery,
+        statFilters,
+        statOrder,
+        lockedExoticHash
+      ),
+    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder, lockedExoticHash]
   );
 
   const sets = result?.sets;
