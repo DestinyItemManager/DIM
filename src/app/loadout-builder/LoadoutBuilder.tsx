@@ -16,6 +16,7 @@ import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
+import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -32,13 +33,13 @@ import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/mod-picker/ModPicker';
-import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
+import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
-import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
+import { defaultStatFilters, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
 import { ArmorStatHashes, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
@@ -241,6 +242,12 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
+  const setSetting = useSetSetting();
+
+  const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
+
+  const workingStatRanges = result?.statRanges || defaultStatFilters;
+
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -248,13 +255,14 @@ function LoadoutBuilder({
 
   const menuContent = (
     <div className={styles.menuContent}>
-      <FilterBuilds
-        statRanges={result?.statRanges}
+      <TierSelect
         stats={statFilters}
-        onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
+        statRanges={workingStatRanges}
+        order={statOrder}
+        onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
-        order={statOrder}
+        onStatOrderChanged={onStatOrderChanged}
       />
 
       <LockArmorAndPerks

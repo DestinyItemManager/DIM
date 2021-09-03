@@ -188,7 +188,7 @@ function LockArmorAndPerks({
     <LockedItem key={lockedItem.item.id} lockedItem={lockedItem} onRemove={removeLockedItemType} />
   );
   return (
-    <div>
+    <>
       <div className={styles.area}>
         <SelectedArmorUpgrade
           defs={defs}
@@ -301,7 +301,7 @@ function LockArmorAndPerks({
           />,
           document.body
         )}
-    </div>
+    </>
   );
 }
 

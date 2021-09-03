@@ -21,14 +21,12 @@ const MinMaxSelect = React.memo(MinMaxSelectInner);
 export default function TierSelect({
   stats,
   statRanges,
-  rowClassName,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
   stats: { [statHash in ArmorStatHashes]: MinMaxIgnored };
   statRanges: { [statHash in ArmorStatHashes]: MinMax };
-  rowClassName: string;
   order: number[]; // stat hashes in user order
   onStatOrderChanged(order: number[]): void;
   onStatFiltersChanged(stats: { [statHash in ArmorStatHashes]: MinMaxIgnored }): void;
@@ -70,7 +68,7 @@ export default function TierSelect({
                 key={statHash}
                 id={statHash.toString()}
                 index={index}
-                className={rowClassName}
+                className={styles.row}
                 name={
                   <span className={stats[statHash].ignored ? styles.ignored : ''}>
                     <BungieImage
