@@ -253,6 +253,9 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Ghost]: 'ghost',
   [DestinyEnergyType.Subclass]: 'subclass',
 };
+// to-do: add this properly into the above object, once the enum is set up in bungie's docs
+energyNamesByEnum[6] = 'stasis';
+
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
 export const damageNamesByEnum: Record<DamageType, string | null> = {
