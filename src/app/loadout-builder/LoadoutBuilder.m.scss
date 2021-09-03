@@ -46,3 +46,15 @@
     width: 100%;
   }
 }
+
+.toolbar {
+  @include horizontal-space-children(4px);
+  margin-top: 12px;
+}
+
+.guide {
+  p,
+  li {
+    font-size: 14px;
+  }
+}

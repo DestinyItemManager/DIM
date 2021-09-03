@@ -6,11 +6,13 @@ import {
 import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -307,6 +309,24 @@ function LoadoutBuilder({
             </motion.div>
           )}
         </AnimatePresence>
+        <div className={styles.toolbar}>
+          <UserGuideLink topic="Loadout_Optimizer" />
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+          >
+            {t('LoadoutBuilder.NewEmptyLoadout')}
+          </button>
+        </div>
+        <div className={styles.guide}>
+          <ol>
+            <li>{t('LoadoutBuilder.OptimizerExplanation1')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanation2')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanation3')}</li>
+          </ol>
+          <p>{t('LoadoutBuilder.OptimizerExplanation4')}</p>
+        </div>
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}

@@ -1,23 +1,5 @@
 @import '../../variables.scss';
 
 .sets {
-  margin-top: 12px;
   max-width: max-content;
-
-  p {
-    font-size: 14px;
-  }
-
-  @include phone-portrait {
-    h2 {
-      margin-right: 12px;
-    }
-    p {
-      margin: 0 12px 4px 12px;
-    }
-  }
-}
-
-.toolbar {
-  @include horizontal-space-children(4px);
 }

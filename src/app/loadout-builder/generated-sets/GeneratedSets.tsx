@@ -1,10 +1,7 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -146,17 +143,6 @@ export default function GeneratedSets({
 
   return (
     <div className={styles.sets}>
-      <div className={styles.toolbar}>
-        <UserGuideLink topic="Loadout_Optimizer" />
-        <button
-          type="button"
-          className="dim-button"
-          onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
-        >
-          {t('LoadoutBuilder.NewEmptyLoadout')}
-        </button>
-      </div>
-      <p>{t('LoadoutBuilder.OptimizerExplanation')}</p>
       {measureSet ? (
         <GeneratedSet
           ref={setRowHeight}
