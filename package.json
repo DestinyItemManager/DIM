@@ -91,7 +91,6 @@
     "autoprefixer": "^10.0.0",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.0.2",
-    "babel-plugin-const-enum": "^1.0.1",
     "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-optimize-clsx": "^2.5.0",
     "babel-plugin-transform-imports": "^2.0.0",
