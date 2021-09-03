@@ -20,6 +20,8 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Subclass]: '',
   [DestinyEnergyType.Any]: '',
 };
+// to-do: add this properly into the above object, once the enum is set up in bungie's docs
+energyTypeStyles[6] = styles.stasis;
 
 interface Props {
   item: DimItem;
@@ -51,6 +53,13 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (isGeneric && item.primStat?.value.toString()) ||
     (item.classified && (savedNotes ?? '???'));
 
+  const fixContrast =
+    (item.energy &&
+      (item.energy.energyType === DestinyEnergyType.Arc ||
+        item.energy.energyType === DestinyEnergyType.Void)) ||
+    (item.element &&
+      (item.element.enumValue === DamageType.Arc || item.element.enumValue === DamageType.Void));
+
   return (
     <div
       className={clsx(styles.badge, {
@@ -77,12 +86,18 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       {item.energy ? (
         <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
           {item.energy.energyCapacity}
-          <ElementIcon element={item.element} className={styles.energyCapacityIcon} />
+          <ElementIcon
+            element={item.element}
+            className={clsx(styles.energyCapacityIcon, { [styles.fixContrast]: fixContrast })}
+          />
         </span>
       ) : (
         item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-          <ElementIcon element={item.element} className={styles.lightBackgroundElement} />
+          <ElementIcon
+            element={item.element}
+            className={clsx({ [styles.fixContrast]: fixContrast })}
+          />
         )
       )}
       <span>{badgeContent}</span>
