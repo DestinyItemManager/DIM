@@ -94,13 +94,13 @@
   color: #4d88ff;
 }
 
-.lightBackgroundElement {
+/* some element icons don't show up well on polaroid white. we darken these. */
+.fixContrast {
   filter: brightness(75%) saturate(200%);
   background-color: transparent !important;
 }
 
 .energyCapacityIcon {
-  composes: lightBackgroundElement;
   margin-right: 0;
   margin-left: 1px;
 }
