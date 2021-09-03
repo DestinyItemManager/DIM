@@ -12,6 +12,7 @@ interface CssExports {
   'masterwork': string;
   'quality': string;
   'solar': string;
+  'stasis': string;
   'void': string;
   'wishlistRoll': string;
 }
