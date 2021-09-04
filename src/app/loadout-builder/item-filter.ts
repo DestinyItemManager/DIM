@@ -23,7 +23,7 @@ export function filterItems(
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExotic: LoadoutBuilderState['lockedExotic'],
   upgradeSpendTier: UpgradeSpendTier,
-  filter: ItemFilter
+  searchFilter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
 
@@ -33,57 +33,58 @@ export function filterItems(
 
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
-  Object.keys(items).forEach((bucketStr) => {
-    const bucket = parseInt(bucketStr, 10);
-    const locked = lockedMap[bucket];
-
-    // if we are locking an item in that bucket, filter to only include that single item
-    if (locked?.length) {
-      const lockedItem = locked[0];
-      if (lockedItem.type === 'item') {
-        filteredItems[bucket] = [lockedItem.item];
-        return;
-      }
-    }
-
-    // otherwise flatten all item instances to each bucket
-    filteredItems[bucket] = items[bucket].filter(filter);
-    if (!filteredItems[bucket].length) {
-      // If nothing matches, just include everything so we can make valid sets
-      filteredItems[bucket] = items[bucket];
-    }
-  });
-
-  // filter to only include items that are in the locked map and items that have the correct energy
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
-    if (filteredItems[bucket]) {
-      filteredItems[bucket] = filteredItems[bucket].filter(
-        (item) =>
-          (!lockedExotic ||
-            (bucket === lockedExotic.bucketHash
-              ? item.hash === lockedExotic.def.hash
-              : item.equippingLabel !== lockedExotic.def.equippingBlock!.uniqueLabel)) &&
-          // handle locked items and mods cases
-          (!locked || locked.every((lockedItem) => matchLockedItem(item, lockedItem))) &&
-          (!lockedModsByPlugCategoryHash ||
-            lockedModsByPlugCategoryHash.every((mod) =>
-              doEnergiesMatch(defs, mod, item, upgradeSpendTier)
-            ))
+    if (items[bucket]) {
+      const searchItems = items[bucket].filter(searchFilter);
+      const exotics = items[bucket].filter((item) => item.hash === lockedExotic?.def.hash);
+      const lockedItems = items[bucket].filter((item) => matchLockedItems(item, locked));
+
+      // No matter the results we need to filter by mod energy otherwise mod assignment
+      // will go haywire
+      filteredItems[bucket] = [...searchItems, ...exotics, ...lockedItems].filter((item) =>
+        matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
       );
+
+      // If no items match we remove the search and item filters and just filter by mod energy
+      if (!filteredItems[bucket].length) {
+        filteredItems[bucket] = items[bucket].filter((item) =>
+          matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
+        );
+      }
     }
   });
 
   return filteredItems;
 }
 
-export function matchLockedItem(item: DimItem, lockedItem: LockedItemType) {
-  switch (lockedItem.type) {
-    case 'exclude':
-      return item.id !== lockedItem.item.id;
-    case 'item':
-      return item.id === lockedItem.item.id;
+function matchLockedItems(item: DimItem, lockedItems?: readonly LockedItemType[]) {
+  if (!lockedItems) {
+    return false;
   }
+
+  return lockedItems.every((lockedItem) => {
+    switch (lockedItem.type) {
+      case 'exclude':
+        return item.id !== lockedItem.item.id;
+      case 'item':
+        return item.id === lockedItem.item.id;
+    }
+  });
+}
+
+function matchedLockedModEnergy(
+  defs: D2ManifestDefinitions,
+  item: DimItem,
+  lockedModsByPlugCategoryHash: PluggableInventoryItemDefinition[],
+  upgradeSpendTier: UpgradeSpendTier
+) {
+  if (!lockedModsByPlugCategoryHash) {
+    return true;
+  }
+  return lockedModsByPlugCategoryHash.every((mod) =>
+    doEnergiesMatch(defs, mod, item, upgradeSpendTier)
+  );
 }
