@@ -59,7 +59,7 @@ interface StoreProps {
     [classType: number]: ItemsByBucket;
   }>;
   loadouts: Loadout[];
-  filter: ItemFilter;
+  searchFilter: ItemFilter;
   searchQuery: string;
   halfTierMods: PluggableInventoryItemDefinition[];
 }
@@ -139,7 +139,7 @@ function mapStateToProps() {
       lockItemEnergyType: loLockItemEnergyType,
       items: itemsSelector(state),
       loadouts: loadoutsSelector(state),
-      filter: searchFilterSelector(state),
+      searchFilter: searchFilterSelector(state),
       searchQuery: querySelector(state),
       halfTierMods: halfTierModsSelector(state),
     };
@@ -156,7 +156,7 @@ function LoadoutBuilder({
   lockItemEnergyType,
   items,
   loadouts,
-  filter,
+  searchFilter,
   preloadedLoadout,
   searchQuery,
   halfTierMods,
@@ -197,9 +197,9 @@ function LoadoutBuilder({
         lockedMods,
         lockedExoticHash,
         upgradeSpendTier,
-        filter
+        searchFilter
       ),
-    [defs, characterItems, lockedMap, lockedMods, lockedExoticHash, upgradeSpendTier, filter]
+    [defs, characterItems, lockedMap, lockedMods, lockedExoticHash, upgradeSpendTier, searchFilter]
   );
 
   const { result, processing } = useProcess(
