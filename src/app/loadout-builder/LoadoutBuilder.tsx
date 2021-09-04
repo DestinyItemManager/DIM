@@ -20,6 +20,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
@@ -44,6 +45,7 @@ import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
+  classType: DestinyClass | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
 }
@@ -146,6 +148,7 @@ function LoadoutBuilder({
   loadouts,
   searchFilter,
   preloadedLoadout,
+  classType,
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
@@ -165,7 +168,7 @@ function LoadoutBuilder({
       compareSet,
     },
     lbDispatch,
-  ] = useLbState(stores, preloadedLoadout, initialLoadoutParameters, defs);
+  ] = useLbState(stores, preloadedLoadout, classType, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions

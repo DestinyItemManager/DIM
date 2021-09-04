@@ -11,6 +11,7 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import {
@@ -41,16 +42,20 @@ const lbStateInit = ({
   stores,
   preloadedLoadout,
   initialLoadoutParameters,
+  classType,
   defs,
 }: {
   stores: DimStore[];
   preloadedLoadout?: Loadout;
   initialLoadoutParameters: LoadoutParameters;
+  classType: DestinyClass | undefined;
   defs: D2ManifestDefinitions;
 }): LoadoutBuilderState => {
   let lockedMap: LockedMap = {};
 
-  let selectedStoreId = getCurrentStore(stores)?.id;
+  let selectedStoreId = classType
+    ? stores.find((store) => store.classType === classType)?.id
+    : getCurrentStore(stores)?.id;
 
   let loadoutParams = initialLoadoutParameters;
 
@@ -256,12 +261,13 @@ function lbStateReducer(
 export function useLbState(
   stores: DimStore[],
   preloadedLoadout: Loadout | undefined,
+  classType: DestinyClass | undefined,
   initialLoadoutParameters: LoadoutParameters,
   defs: D2ManifestDefinitions
 ) {
   return useReducer(
     lbStateReducer,
-    { stores, preloadedLoadout, initialLoadoutParameters, defs },
+    { stores, preloadedLoadout, initialLoadoutParameters, defs, classType },
     lbStateInit
   );
 }

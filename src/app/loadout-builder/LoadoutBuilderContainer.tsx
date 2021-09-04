@@ -34,7 +34,10 @@ export default function LoadoutBuilderContainer({ account }: Props) {
 
   const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
   // TODO: also take class type
-  const { p: urlLoadoutParametersJSON } = useParams<{ p?: string; class?: string }>();
+  const { p: urlLoadoutParametersJSON, class: urlClassTypeString } =
+    useParams<{ p?: string; class?: string }>();
+
+  const urlClassType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
 
   // TODO: Maybe have a separate handler route for setting this
   let urlLoadoutParameters: LoadoutParameters | undefined;
@@ -50,11 +53,14 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
+  const preloadedLoadout = location.state?.loadout;
+
   // TODO: key off the URL params?
   return (
     <LoadoutBuilder
       stores={stores}
-      preloadedLoadout={location.state?.loadout}
+      preloadedLoadout={preloadedLoadout}
+      classType={urlClassType}
       initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );
