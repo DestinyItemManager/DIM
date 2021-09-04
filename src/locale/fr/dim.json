@@ -304,6 +304,16 @@
     "Tab": "TAB",
     "Vault": "Envoyer un objet au coffre"
   },
+  "Infusion": {
+    "Filter": "Filtrer les objets",
+    "InfuseSource": "Sélectionnez un objet dans lequel infuser {{name}}",
+    "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}",
+    "InfusionMaterials": "Matériels d'Infusion",
+    "NoItems": "Pas d'objets infusibles disponibles.",
+    "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
+    "SwitchDirection": "Inverser",
+    "TransferItems": "Transférer"
+  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
     "Distributed": "{{name}} a été distribué\n{{name}} est maintenant divisé équitablement entre les personnages.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
     "EquipWithName": "Équiper à {{character}}",
+    "Infuse": "Infuser",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
       "Locked": "Verrouillé",

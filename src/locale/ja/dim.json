@@ -304,6 +304,16 @@
     "Tab": "タブ",
     "Vault": "アイテムを保管庫に送る"
   },
+  "Infusion": {
+    "Filter": "アイテムをフィルタする",
+    "InfuseSource": "{{name}} を融合するアイテムを選択してください",
+    "InfuseTarget": "{{name}} に融合するアイテムを選択してください",
+    "InfusionMaterials": "融合材料",
+    "NoItems": "融合可能なアイテムありません。",
+    "NoTransfer": "融合材を移動\n {{target}} 移動できません.",
+    "SwitchDirection": "変更",
+    "TransferItems": "転送"
+  },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
     "Distributed": "分散 {{name}}\n {{name}} は文字間で等しく分割されました。",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "EquipWithName": "{{character}} に装備させる",
+    "Infuse": "融合",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
       "Locked": "ロック",

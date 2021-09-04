@@ -304,6 +304,16 @@
     "Tab": "TAB",
     "Vault": "Sende Gegenstand zum Tresor"
   },
+  "Infusion": {
+    "Filter": "Gegenstände filtern",
+    "InfuseSource": "Gegenstand auswählen um ihn in {{name}} zu infundieren",
+    "InfuseTarget": "Gegenstand zum Infundieren in {{name}} auswählen",
+    "InfusionMaterials": "Infusions-Material",
+    "NoItems": "Keine infundierbaren Gegenstände verfügbar.",
+    "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
+    "SwitchDirection": "Wechseln",
+    "TransferItems": "Übertragen"
+  },
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
     "Distributed": "{{name}} verteilt\n{{name}} ist gleichermaßen zwischen Charakteren verteilt.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
     "EquipWithName": "Anlegen an {{character}}",
+    "Infuse": "Infundieren",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
       "Locked": "Gesperrt",

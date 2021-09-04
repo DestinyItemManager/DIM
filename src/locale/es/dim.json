@@ -304,6 +304,16 @@
     "Tab": "TABULADOR",
     "Vault": "Enviar objeto al depósito"
   },
+  "Infusion": {
+    "Filter": "Filtrar objetos",
+    "InfuseSource": "Selecciona objeto para infundir {{name}} en",
+    "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
+    "InfusionMaterials": "Materiales para infundir",
+    "NoItems": "No hay objetos disponibles para infundir.",
+    "NoTransfer": "El material para infundir\n{{target}} no puede ser movido.",
+    "SwitchDirection": "Cambiar",
+    "TransferItems": "Transferir"
+  },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} Distribuidos.\nAhora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
     "EquipWithName": "Equipar en {{character}}",
+    "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
       "Locked": "Bloqueado",

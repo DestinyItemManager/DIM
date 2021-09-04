@@ -304,6 +304,16 @@
     "Tab": "TAB",
     "Vault": "Wyślij przedmiot do schowka"
   },
+  "Infusion": {
+    "Filter": "Filtruj przedmioty",
+    "InfuseSource": "Wybierz przedmiot do nasycenia używając {{name}}",
+    "InfuseTarget": "Wybierz przedmiot do nasycenia {{name}}",
+    "InfusionMaterials": "Materiały do Nasycenia",
+    "NoItems": "Brak przedmiotów do użycia w nasyceniu.",
+    "NoTransfer": "Przenoszenie materiału do nasycenia\n {{target}} nie może być przeniesiony.",
+    "SwitchDirection": "Przełącz",
+    "TransferItems": "Przenieś"
+  },
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
     "Distributed": "Rozprowadzanie {{name}}\n {{name}} został równo rozprowadzony pomiędzy postaciami.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "EquipWithName": "Załóż na {{character}}",
+    "Infuse": "Nasyć",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
       "Locked": "Zablokowane",

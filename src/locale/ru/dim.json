@@ -304,6 +304,16 @@
     "Tab": "[TAB]",
     "Vault": "Отправить в Хранилище"
   },
+  "Infusion": {
+    "Filter": "Поиск/Фильтр",
+    "InfuseSource": "Выберите что улучшить за счёт {{name}}",
+    "InfuseTarget": "Выберите чем пожертвовать для улучшения {{name}}",
+    "InfusionMaterials": "Материалы для Синтеза",
+    "NoItems": "Нет предметов для синтеза.",
+    "NoTransfer": "Перемещение расходников синтеза\n {{target}} не удается переместить.",
+    "SwitchDirection": "Наоборот",
+    "TransferItems": "Передать"
+  },
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
     "Distributed": "Распределили {{name}}\nтеперь {{name}} поровну распределены между персонажами.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "EquipWithName": "Надеть на {{character}}",
+    "Infuse": "Синтез",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
       "Locked": "Заблокировано",
