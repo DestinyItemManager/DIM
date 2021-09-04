@@ -8,7 +8,7 @@ import { setSearchQuery } from 'app/shell/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router';
+import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { savedLoadoutParametersSelector } from '../dim-api/selectors';
 import { sortedStoresSelector } from '../inventory/selectors';
@@ -33,18 +33,17 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   useLoadStores(account, stores.length > 0);
 
   const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
-  // TODO: also take class type
-  const { p: urlLoadoutParametersJSON, class: urlClassTypeString } =
-    useParams<{ p?: string; class?: string }>();
+
+  const searchParams = new URLSearchParams(location.search);
+  const urlClassTypeString = searchParams.get('class');
+  const urlLoadoutParametersJSON = searchParams.get('p');
 
   const urlClassType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
 
-  // TODO: Maybe have a separate handler route for setting this
   let urlLoadoutParameters: LoadoutParameters | undefined;
   if (urlLoadoutParametersJSON) {
     urlLoadoutParameters = JSON.parse(urlLoadoutParametersJSON);
     if (urlLoadoutParameters?.query) {
-      // TODO: useEffect?
       dispatch(setSearchQuery(urlLoadoutParameters.query));
     }
   }

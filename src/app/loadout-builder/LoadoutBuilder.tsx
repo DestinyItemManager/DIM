@@ -11,6 +11,7 @@ import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-util
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -20,6 +21,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
+import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useMemo } from 'react';
@@ -258,6 +260,19 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
+  const shareBuild = () => {
+    const urlParams = new URLSearchParams({
+      class: selectedStore!.classType.toString(),
+      p: JSON.stringify(params),
+    });
+    const url = `${location.origin}/optimizer?${urlParams}`;
+    copyString(url);
+    showNotification({
+      type: 'success',
+      title: t('LoadoutBuilder.CopiedBuild'),
+    });
+  };
+
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -327,6 +342,14 @@ function LoadoutBuilder({
             onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
           >
             {t('LoadoutBuilder.NewEmptyLoadout')}
+          </button>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={shareBuild}
+            disabled={!filteredSets}
+          >
+            {t('LoadoutBuilder.ShareBuild')}
           </button>
         </div>
         <div className={styles.guide}>
