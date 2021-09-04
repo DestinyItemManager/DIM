@@ -18,10 +18,9 @@ const energyTypeStyles: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Void]: styles.void,
   [DestinyEnergyType.Ghost]: '',
   [DestinyEnergyType.Subclass]: '',
+  [DestinyEnergyType.Stasis]: styles.stasis,
   [DestinyEnergyType.Any]: '',
 };
-// to-do: add this properly into the above object, once the enum is set up in bungie's docs
-energyTypeStyles[6] = styles.stasis;
 
 interface Props {
   item: DimItem;
