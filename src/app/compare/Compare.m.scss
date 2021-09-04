@@ -19,6 +19,7 @@
   text-overflow: ellipsis;
   padding-right: 4px;
   padding-left: 0;
+  cursor: pointer;
 }
 
 .sorted {
@@ -30,7 +31,7 @@
 }
 
 .organizerLink {
-  compose: 'dim-button' from global;
+  composes: dim-button from global;
   margin-left: auto;
   @include phone-portrait {
     margin-left: 0;

@@ -1,11 +1,9 @@
-import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
@@ -43,7 +41,6 @@ export default function CompareItem({
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-  const itemNotes = useSelector(itemNoteSelector(item));
   const itemHeader = useMemo(
     () => (
       <div ref={headerRef}>
@@ -59,17 +56,16 @@ export default function CompareItem({
         >
           {item.name} <AppIcon icon={searchIcon} />
         </div>
-        <PressTip
-          elementType="span"
-          className={styles.itemAside}
-          tooltip={itemNotes}
-          allowClickThrough={true}
-        >
-          <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
-        </PressTip>
+        <ItemPopupTrigger item={item} noCompare={true}>
+          {(ref, onClick) => (
+            <div className={styles.itemAside} ref={ref} onClick={onClick}>
+              <ConnectedInventoryItem item={item} />
+            </div>
+          )}
+        </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, itemNotes, remove]
+    [isInitialItem, item, itemClick, remove]
   );
 
   return (

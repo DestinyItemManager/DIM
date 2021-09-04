@@ -215,6 +215,7 @@ function Compare({
   return (
     <Sheet
       onClose={cancel}
+      allowClickThrough={true}
       header={
         <div className={styles.options}>
           {comparingArmor && (
@@ -240,7 +241,7 @@ function Compare({
         </div>
       }
     >
-      <div id="loadout-drawer" className="compare">
+      <div className="loadout-drawer compare">
         <div className={styles.bucket} onMouseLeave={() => setHighlight(undefined)}>
           <div className={clsx('compare-item', styles.fixedLeft)}>
             <div className={styles.spacer} />

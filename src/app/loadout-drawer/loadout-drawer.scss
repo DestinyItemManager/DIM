@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-#loadout-drawer {
+.loadout-drawer {
   max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
   @include phone-portrait {
     @include max-sheet-height;
