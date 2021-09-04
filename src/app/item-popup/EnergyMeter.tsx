@@ -22,12 +22,14 @@ export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Arc]: styles.arc,
   [DestinyEnergyType.Thermal]: styles.solar,
   [DestinyEnergyType.Void]: styles.void,
+  [DestinyEnergyType.Stasis]: styles.stasis,
 } as const;
 
 const swappableEnergyTypes = [
   DestinyEnergyType.Arc,
   DestinyEnergyType.Thermal,
   DestinyEnergyType.Void,
+  DestinyEnergyType.Stasis,
 ];
 
 export default function EnergyMeter({ item }: { item: DimItem }) {

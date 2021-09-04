@@ -49,13 +49,7 @@ module.exports = function (api) {
     plugins.push(
       ['@babel/proposal-class-properties', { loose: true }],
       '@babel/proposal-object-rest-spread',
-      [
-        'const-enum',
-        {
-          transform: 'constObject',
-        },
-      ],
-      ['@babel/plugin-transform-typescript', { isTSX: true }]
+      ['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]
     );
   }
 

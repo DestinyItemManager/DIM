@@ -17,7 +17,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet } from '../types';
+import { ArmorSet, ArmorStats } from '../types';
 import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
@@ -86,7 +86,7 @@ export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
   characterClass: DestinyClass | undefined
 ) {
-  const totals: ArmorSet['stats'] = {
+  const totals: ArmorStats = {
     [StatHashes.Mobility]: 0,
     [StatHashes.Recovery]: 0,
     [StatHashes.Resilience]: 0,

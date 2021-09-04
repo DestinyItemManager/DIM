@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ArmorStatHashes, MinMax, MinMaxIgnored } from '../types';
+import { ArmorStatHashes, StatFilters, StatRanges } from '../types';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -25,11 +25,11 @@ export default function TierSelect({
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
-  stats: { [statHash in ArmorStatHashes]: MinMaxIgnored };
-  statRanges: { [statHash in ArmorStatHashes]: MinMax };
+  stats: StatFilters;
+  statRanges: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
-  onStatOrderChanged(order: number[]): void;
-  onStatFiltersChanged(stats: { [statHash in ArmorStatHashes]: MinMaxIgnored }): void;
+  onStatOrderChanged(order: ArmorStatHashes[]): void;
+  onStatFiltersChanged(stats: StatFilters): void;
 }) {
   const defs = useD2Definitions()!;
   const handleTierChange = (
@@ -155,7 +155,7 @@ function MinMaxSelectInner({
   min: number;
   max: number;
   ignored: boolean;
-  stats: { [statHash in ArmorStatHashes]: MinMaxIgnored };
+  stats: StatFilters;
   handleTierChange(
     statHash: number,
     changed: {
