@@ -35,17 +35,30 @@ export function filterItems(
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
-    const lockedExotic = lockedExoticHash ? defs.InventoryItem.get(lockedExoticHash) : undefined;
 
     if (items[bucket]) {
+      // There can only be one pinned item as we hide items from the item picker once
+      // a single item is pinned
+      const lockedItem = locked?.find((lockedItem) => lockedItem.type === 'item')?.item;
       const searchItems = items[bucket].filter(searchFilter);
-      const exotics = items[bucket].filter((item) => item.hash === lockedExotic?.def.hash);
-      const lockedItems = items[bucket].filter((item) => matchLockedItems(item, locked));
+      const exotics = items[bucket].filter((item) => item.hash === lockedExoticHash);
+
+      // We prefer most specific filtering since there can be competing conditions.
+      // This means locked item, then exotic, then search filter is preferred in that order.
+      let firstPassFilteredItems = searchItems;
+
+      if (lockedItem) {
+        firstPassFilteredItems = [lockedItem];
+      } else if (exotics.length) {
+        firstPassFilteredItems = exotics;
+      }
 
       // No matter the results we need to filter by mod energy otherwise mod assignment
-      // will go haywire
-      filteredItems[bucket] = [...searchItems, ...exotics, ...lockedItems].filter((item) =>
-        matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
+      // will go haywire, also we can exclude items at this point
+      filteredItems[bucket] = firstPassFilteredItems.filter(
+        (item) =>
+          matchExcludedItems(item, locked) &&
+          matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
       );
 
       // If no items match we remove the search and item filters and just filter by mod energy
@@ -60,17 +73,17 @@ export function filterItems(
   return filteredItems;
 }
 
-function matchLockedItems(item: DimItem, lockedItems?: readonly LockedItemType[]) {
+function matchExcludedItems(item: DimItem, lockedItems?: readonly LockedItemType[]) {
   if (!lockedItems) {
-    return false;
+    return true;
   }
 
   return lockedItems.every((lockedItem) => {
     switch (lockedItem.type) {
       case 'exclude':
         return item.id !== lockedItem.item.id;
-      case 'item':
-        return item.id === lockedItem.item.id;
+      default:
+        return true;
     }
   });
 }
