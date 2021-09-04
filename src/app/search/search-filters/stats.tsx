@@ -54,8 +54,8 @@ const statFilters: FilterDefinition[] = [
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, allItems }) => {
-      const highestStatsPerSlot = gatherHighestStatsPerSlot(allItems);
-      return (item: DimItem) => checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue);
+      const highestStatsPerSlot = gatherHighestStats(allItems);
+      return (item: DimItem) => checkIfStatMatchesMaxValue(highestStatsPerSlot, item, filterValue);
     },
   },
   {
@@ -65,9 +65,9 @@ const statFilters: FilterDefinition[] = [
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, allItems }) => {
-      const highestStatsPerSlot = gatherHighestStatsPerSlot(allItems);
+      const highestStatsPerSlot = gatherHighestStats(allItems);
       return (item: DimItem) =>
-        checkIfHasMaxStatValue(highestStatsPerSlot, item, filterValue, true);
+        checkIfStatMatchesMaxValue(highestStatsPerSlot, item, filterValue, true);
     },
   },
   {
@@ -114,7 +114,7 @@ function statFilterFromString(
   // this will be used to index into the right property of a DimStat
   const byWhichValue = byBaseValue ? 'base' : 'value';
 
-  // a special case filter where we check for any single stat matching the comparator
+  // a special case filter where we check for any single (natural) stat matching the comparator
   if (statNames === 'any') {
     const statMatches = (s: DimStat) =>
       armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue]);
@@ -177,55 +177,52 @@ function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: s
   );
 }
 
-function checkIfHasMaxStatValue(
-  maxStatValues: {
-    [key: string]: { [key: string]: { value: number; base: number } };
-  },
+interface MaxValuesDict {
+  [slotName: string]: { [statHash: string]: { value: number; base: number } };
+}
+
+/** given our known max stat dict, see if this item and stat are among the max stat havers */
+function checkIfStatMatchesMaxValue(
+  maxStatValues: MaxValuesDict,
   item: DimItem,
   statName: string,
   byBaseValue = false
 ) {
-  // filterValue stat must exist, and this must be armor
+  // this must be armor with stats
   if (!item.bucket.inArmor || !item.stats) {
     return false;
   }
   const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
   const byWhichValue = byBaseValue ? 'base' : 'value';
   const itemSlot = `${item.classType}${item.type}`;
+  const maxStatsForSlot = maxStatValues[itemSlot];
   const matchingStats = item.stats?.filter(
     (s) =>
       statHashes.includes(s.statHash) &&
-      s[byWhichValue] === maxStatValues[itemSlot][s.statHash][byWhichValue]
+      s[byWhichValue] === maxStatsForSlot?.[s.statHash][byWhichValue]
   );
   return matchingStats && Boolean(matchingStats.length);
 }
 
-function gatherHighestStatsPerSlot(allItems: DimItem[]) {
-  const maxStatValues: {
-    [key: string]: { [key: string]: { value: number; base: number } };
-  } | null = {};
+function gatherHighestStats(allItems: DimItem[]) {
+  const maxStatValues: MaxValuesDict = {};
+
   for (const i of allItems) {
+    // we only want armor with stats
     if (!i.bucket.inArmor || !i.stats) {
       continue;
     }
+
     const itemSlot = `${i.classType}${i.type}`;
-    if (!(itemSlot in maxStatValues)) {
-      maxStatValues[itemSlot] = {};
-    }
-    if (i.stats) {
-      for (const stat of i.stats) {
-        if (armorStatHashes.includes(stat.statHash)) {
-          maxStatValues[itemSlot][stat.statHash] =
-            // just assign if this is the first
-            !(stat.statHash in maxStatValues[itemSlot])
-              ? { value: stat.value, base: stat.base }
-              : // else we are looking for the biggest stat
-                {
-                  value: Math.max(maxStatValues[itemSlot][stat.statHash].value, stat.value),
-                  base: Math.max(maxStatValues[itemSlot][stat.statHash].base, stat.base),
-                };
-        }
-      }
+    const thisSlotMaxes = (maxStatValues[itemSlot] ??= {});
+
+    for (const stat of i.stats) {
+      const thisSlotThisStatMaxes = (thisSlotMaxes[stat.statHash] ??= {
+        value: 0,
+        base: 0,
+      });
+      thisSlotThisStatMaxes.value = Math.max(thisSlotThisStatMaxes.value, stat.value);
+      thisSlotThisStatMaxes.base = Math.max(thisSlotThisStatMaxes.base, stat.base);
     }
   }
   return maxStatValues;

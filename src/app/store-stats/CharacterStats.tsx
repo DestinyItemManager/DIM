@@ -37,7 +37,7 @@ function CharacterStat({ stats, storeId, className }: CharacterStatProps) {
               onClick={
                 isMaxGearPower
                   ? () => {
-                      showGearPower(storeId!);
+                      showGearPower(storeId);
                     }
                   : undefined
               }

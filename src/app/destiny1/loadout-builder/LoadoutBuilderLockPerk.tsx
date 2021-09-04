@@ -1,3 +1,4 @@
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import React, { useState } from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
@@ -64,10 +65,9 @@ export default function LoadoutBuilderLockPerk(
             </div>
           </div>
         ) : (
-          <div className="lock-container">
+          <ClosableContainer className="lock-container" onClose={() => onRemove({ type })}>
             <LoadoutBuilderItem item={lockeditem} />
-            <div className="close" onClick={() => onRemove({ type })} role="button" tabIndex={0} />
-          </div>
+          </ClosableContainer>
         )}
         <div className="label">{i18nItemNames[type]}</div>
         {dialogOpen && (

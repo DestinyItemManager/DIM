@@ -1,18 +1,26 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { Dispatch } from 'react';
-import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { LockedExoticWithPlugs } from '../types';
+import React from 'react';
 import styles from './ExoticTile.m.scss';
+
+export interface LockedExoticWithPlugs {
+  def: DestinyInventoryItemDefinition;
+  /** The intrinsic perk that is unique to this exotic. */
+  exoticPerk?: PluggableInventoryItemDefinition;
+  /** If the exotic has unique exotic mods (e.g. aeon soul) this will be populated with those mods. */
+  exoticMods?: PluggableInventoryItemDefinition[];
+  isArmor1: boolean;
+}
 
 interface Props {
   exotic: LockedExoticWithPlugs;
   selected: boolean;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
-  onClose(): void;
+  onSelected(): void;
 }
 
 /**
@@ -68,7 +76,7 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
   );
 }
 
-function ExoticTile({ exotic, selected, lbDispatch, onClose }: Props) {
+function ExoticTile({ exotic, selected, onSelected }: Props) {
   return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
@@ -77,13 +85,7 @@ function ExoticTile({ exotic, selected, lbDispatch, onClose }: Props) {
       <ExoticTileContents exotic={exotic} />
     </PressTip>
   ) : (
-    <div
-      className={clsx(styles.exotic, { [styles.selected]: selected })}
-      onClick={() => {
-        lbDispatch({ type: 'lockExotic', lockedExotic: exotic });
-        onClose();
-      }}
-    >
+    <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
       <ExoticTileContents exotic={exotic} />
     </div>
   );

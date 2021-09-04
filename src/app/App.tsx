@@ -6,6 +6,7 @@ import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
+import styles from './App.m.scss';
 import Developer from './developer/Developer';
 import ActivityTracker from './dim-ui/ActivityTracker';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
@@ -102,7 +103,7 @@ function App({
   return (
     <div
       key={`lang-${language}`}
-      className={clsx('app', `lang-${language}`, `char-cols-${charColMobile}`, {
+      className={clsx(styles.app, `lang-${language}`, `char-cols-${charColMobile}`, {
         itemQuality,
         'show-new-items': showNewItems,
       })}

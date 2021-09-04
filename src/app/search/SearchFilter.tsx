@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
+import MainSearchBarMenu from './MainSearchBarMenu';
 import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
 
@@ -65,7 +66,8 @@ export function SearchFilter(
     [isPhonePortrait, onRecords, onProgress, onOptimizer]
   );
 
-  const extras = useMemo(() => <MainSearchBarActions />, []);
+  const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);
+  const menu = useMemo(() => <MainSearchBarMenu key="actions-menu" />, []);
 
   return (
     <SearchBar
@@ -76,6 +78,7 @@ export function SearchFilter(
       searchQueryVersion={searchQueryVersion}
       searchQuery={searchQuery}
       mainSearchBar={true}
+      menu={menu}
     >
       {extras}
     </SearchBar>

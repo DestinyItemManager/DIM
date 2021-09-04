@@ -14,6 +14,10 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "allowJs": false,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "app/*": ["../../*"],
+      "data/*": ["../../../data/*"]
+    }
   }
 }

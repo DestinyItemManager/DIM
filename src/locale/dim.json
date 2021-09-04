@@ -84,7 +84,8 @@
     "CompareBaseStats": "Show Base Stats",
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
-    }
+    },
+    "InitialItem": "This is the item the Compare tool was launched from"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Curated": "Shows items that are a curated roll.",
+    "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
@@ -302,16 +304,6 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
-  "Infusion": {
-    "Filter": "Filter items",
-    "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
-    "InfusionMaterials": "Infusion Materials",
-    "NoItems": "No infusable items available.",
-    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
-    "SwitchDirection": "Switch",
-    "TransferItems": "Transfer"
-  },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
@@ -430,9 +422,7 @@
     "ExcludeItem": "Exclude Item",
     "ExistingLoadout": "Existing Loadout",
     "Filter": "Filters",
-    "GeneratedBuilds": "Builds",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
-    "LimitedCombos": "You have {{combosWithoutCaps, number}} possible armor combinations, but DIM only looked at the {{combos, number}} highest stat combos to keep your browser from crashing. Select some perks, use a search, or dismantle old armor to reduce the number of combos. Pinning general or seasonal mods increases the number of combos.",
     "LockElement": "Lock Element",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
@@ -444,10 +434,11 @@
     "NoUpgradesDetails": "The current stats, energy level, and element of your items will be used when determining totals and assigning mods.",
     "NotExotics": "{{material}} (Not Exotics)",
     "NotMasterworked": "{{material}} (Not Masterworked)",
-    "NumCombinations": "{{count, number}} combination",
-    "NumCombinations_plural": "{{count, number}} combinations",
-    "OptimizerExplanation": "Choose the stats you want, and their priority order, then choose which mods you want to use.",
-    "OptimizerExplanationArmour2Mods": "Stat changes from equipped Armor 2.0 Mods are excluded where possible, and are added back in when you select them.",
+    "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
+    "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}}",
     "ResetLocked": "Reset pinned items",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
-    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",

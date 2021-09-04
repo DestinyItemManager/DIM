@@ -14,10 +14,10 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import styles from './DimApiSettings.m.scss';
 import { exportBackupData, exportLocalData } from './export-data';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
-import './storage.scss';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -80,7 +80,7 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
   };
 
   return (
-    <section className="storage" id="storage">
+    <section className={styles.storage} id="storage">
       <h2>{t('Storage.MenuTitle')}</h2>
 
       <div className="setting">

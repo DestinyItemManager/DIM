@@ -318,6 +318,11 @@ export function isPlugStatActive(
   if (!isConditionallyActive) {
     return true;
   }
+
+  if (plugHash === modsWithConditionalStats.elementalCapacitor) {
+    return false;
+  }
+
   if (
     plugHash === modsWithConditionalStats.powerfulFriends ||
     plugHash === modsWithConditionalStats.radiantLight

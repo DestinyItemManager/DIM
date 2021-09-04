@@ -1,0 +1,10 @@
+@keyframes pop {
+  to {
+    transform: scale(1.5);
+  }
+}
+
+.itemPop {
+  animation: 0.25s linear 2 alternate pop;
+  z-index: 1;
+}

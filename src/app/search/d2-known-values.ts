@@ -252,7 +252,9 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Void]: 'void',
   [DestinyEnergyType.Ghost]: 'ghost',
   [DestinyEnergyType.Subclass]: 'subclass',
+  [DestinyEnergyType.Stasis]: 'stasis',
 };
+
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
 export const damageNamesByEnum: Record<DamageType, string | null> = {
@@ -279,6 +281,7 @@ export const modsWithConditionalStats = {
   powerfulFriends: 1484685887,
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
+  elementalCapacitor: 3511092054,
 } as const;
 
 export const UpgradeMaterialHashes = {

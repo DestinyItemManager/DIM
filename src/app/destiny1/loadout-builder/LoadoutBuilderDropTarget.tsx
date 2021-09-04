@@ -10,8 +10,10 @@ import {
 import { DimItem } from '../../inventory/item-types';
 
 interface ExternalProps {
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   bucketType: string;
   children?: React.ReactNode;
+  // eslint-disable-next-line react-redux/no-unused-prop-types
   onItemLocked(lockedItem: DimItem): void;
 }
 

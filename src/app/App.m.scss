@@ -1,0 +1,24 @@
+@import './variables.scss';
+
+.app {
+  &::before {
+    @include below-header;
+    background: $gradient;
+    background-position: center top;
+    background-repeat: no-repeat;
+    content: '';
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    will-change: transform;
+    z-index: -1;
+  }
+  @media (min-width: 1440px) {
+    --inventory-column-padding: 24px;
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+  }
+  @include phone-portrait {
+    --inventory-column-padding: 12px;
+  }
+}

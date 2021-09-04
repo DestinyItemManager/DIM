@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { amountOfItem, getCurrentStore, getStore, getVault } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -33,7 +33,6 @@ export default function DesktopItemActions({
   const stores = useSelector(sortedStoresSelector);
   const dispatch = useDispatch();
   const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
-  const itemOwner = getStore(stores, item.owner);
 
   const toggleSidecar = () => {
     dispatch(setSettingAction('sidecarCollapsed', !sidecarCollapsed));
@@ -86,30 +85,12 @@ export default function DesktopItemActions({
     setTimeout(reposition, 10);
   });
 
-  const canConsolidate =
-    !item.notransfer &&
-    item.location.hasTransferDestination &&
-    item.maxStackSize > 1 &&
-    stores.some((s) => s !== itemOwner && amountOfItem(s, item) > 0);
-  const canDistribute = item.destinyVersion === 1 && !item.notransfer && item.maxStackSize > 1;
-
-  const showCollapse =
-    item.taggable ||
-    item.lockable ||
-    item.trackable ||
-    !item.notransfer ||
-    item.comparable ||
-    canConsolidate ||
-    canDistribute ||
-    item.equipment ||
-    item.infusionFuel;
-
   return (
     <div
       className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
       ref={containerRef}
     >
-      {showCollapse && (
+      {actionsModel.hasControls && (
         <div
           className={styles.collapseButton}
           onClick={toggleSidecar}

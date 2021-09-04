@@ -7,7 +7,6 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import InfusionFinder from 'app/infuse/InfusionFinder';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
@@ -18,6 +17,7 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
+import styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
@@ -202,7 +202,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   return (
     <>
-      <div id="content">
+      <div className={styles.content}>
         <Switch>
           <Route path={`${path}/inventory`} exact>
             <Inventory account={account} />
@@ -265,7 +265,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <LoadoutDrawer />
       <Compare />
       <Farming />
-      <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
     </>

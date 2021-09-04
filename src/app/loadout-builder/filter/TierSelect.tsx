@@ -2,11 +2,12 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
+import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { ArmorStatHashes, StatFilters, StatRanges } from '../types';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -20,29 +21,33 @@ const MinMaxSelect = React.memo(MinMaxSelectInner);
 export default function TierSelect({
   stats,
   statRanges,
-  rowClassName,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
-  stats: { [statType in StatTypes]: MinMaxIgnored };
-  statRanges: { [statType in StatTypes]: MinMax };
-  rowClassName: string;
-  order: StatTypes[];
-  onStatOrderChanged(order: StatTypes[]): void;
-  onStatFiltersChanged(stats: { [statType in StatTypes]: MinMaxIgnored }): void;
+  stats: StatFilters;
+  statRanges: Readonly<StatRanges>;
+  order: number[]; // stat hashes in user order
+  onStatOrderChanged(order: ArmorStatHashes[]): void;
+  onStatFiltersChanged(stats: StatFilters): void;
 }) {
   const defs = useD2Definitions()!;
   const handleTierChange = (
-    which: StatTypes,
+    statHash: number,
     changed: { min?: number; max?: number; ignored: boolean }
   ) => {
-    const newTiers = { ...stats, [which]: { ...stats[which], ...changed } };
+    const newTiers = {
+      ...stats,
+      [statHash]: { ...stats[statHash], ...changed },
+    };
 
     onStatFiltersChanged(newTiers);
   };
 
-  const statDefs = _.mapValues(statHashes, (statHash) => defs.Stat.get(statHash));
+  const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
+  for (const statHash of order) {
+    statDefs[statHash] = defs.Stat.get(statHash);
+  }
 
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list
@@ -58,44 +63,42 @@ export default function TierSelect({
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
-            {_.sortBy(Object.keys(stats), (s: StatTypes) => order.indexOf(s)).map(
-              (stat: StatTypes, index) => (
-                <DraggableItem
-                  key={stat}
-                  id={stat}
-                  index={index}
-                  className={rowClassName}
-                  name={
-                    <span className={stats[stat].ignored ? styles.ignored : ''}>
-                      <BungieImage
-                        className={styles.iconStat}
-                        src={statDefs[stat].displayProperties.icon}
-                      />
-                      {statDefs[stat].displayProperties.name}
-                    </span>
-                  }
-                >
-                  <MinMaxSelect
-                    stat={stat}
-                    stats={stats}
-                    type="Min"
-                    min={statRanges[stat].min}
-                    max={statRanges[stat].max}
-                    ignored={stats[stat].ignored}
-                    handleTierChange={handleTierChange}
-                  />
-                  <MinMaxSelect
-                    stat={stat}
-                    stats={stats}
-                    type="Max"
-                    min={statRanges[stat].min}
-                    max={statRanges[stat].max}
-                    ignored={stats[stat].ignored}
-                    handleTierChange={handleTierChange}
-                  />
-                </DraggableItem>
-              )
-            )}
+            {order.map((statHash: number, index) => (
+              <DraggableItem
+                key={statHash}
+                id={statHash.toString()}
+                index={index}
+                className={styles.row}
+                name={
+                  <span className={stats[statHash].ignored ? styles.ignored : ''}>
+                    <BungieImage
+                      className={styles.iconStat}
+                      src={statDefs[statHash].displayProperties.icon}
+                    />
+                    {statDefs[statHash].displayProperties.name}
+                  </span>
+                }
+              >
+                <MinMaxSelect
+                  statHash={statHash}
+                  stats={stats}
+                  type="Min"
+                  min={statRanges[statHash].min}
+                  max={statRanges[statHash].max}
+                  ignored={stats[statHash].ignored}
+                  handleTierChange={handleTierChange}
+                />
+                <MinMaxSelect
+                  statHash={statHash}
+                  stats={stats}
+                  type="Max"
+                  min={statRanges[statHash].min}
+                  max={statRanges[statHash].max}
+                  ignored={stats[statHash].ignored}
+                  handleTierChange={handleTierChange}
+                />
+              </DraggableItem>
+            ))}
 
             {provided.placeholder}
           </div>
@@ -139,7 +142,7 @@ function DraggableItem({
 }
 
 function MinMaxSelectInner({
-  stat,
+  statHash,
   type,
   min,
   max,
@@ -147,14 +150,14 @@ function MinMaxSelectInner({
   stats,
   handleTierChange,
 }: {
-  stat: StatTypes;
+  statHash: number;
   type: 'Min' | 'Max';
   min: number;
   max: number;
   ignored: boolean;
-  stats: { [statType in StatTypes]: MinMaxIgnored };
+  stats: StatFilters;
   handleTierChange(
-    which: string,
+    statHash: number,
     changed: {
       min: number;
       max: number;
@@ -162,6 +165,8 @@ function MinMaxSelectInner({
     }
   ): void;
 }) {
+  const statSetting = stats[statHash];
+
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     let update: {
       min: number;
@@ -170,8 +175,8 @@ function MinMaxSelectInner({
     };
     if (e.target.value === IGNORE || e.target.value === INCLUDE) {
       update = {
-        min: stats[stat].min,
-        max: stats[stat].max,
+        min: statSetting.min,
+        max: statSetting.max,
         ignored: e.target.value === IGNORE,
       };
     } else {
@@ -181,15 +186,15 @@ function MinMaxSelectInner({
       update = {
         [lower]: value,
         [opposite]:
-          opposite === 'min' ? Math.min(stats[stat].min, value) : Math.max(stats[stat].max, value),
+          opposite === 'min' ? Math.min(statSetting.min, value) : Math.max(statSetting.max, value),
         ignored: false,
       } as typeof update;
     }
 
-    handleTierChange(stat, update);
+    handleTierChange(statHash, update);
   }
 
-  const value = type === 'Min' ? Math.max(min, stats[stat].min) : Math.min(max, stats[stat].max);
+  const value = type === 'Min' ? Math.max(min, statSetting.min) : Math.min(max, statSetting.max);
   return (
     <select value={ignored ? '-' : value} onChange={handleChange}>
       <option disabled={true}>

@@ -17,7 +17,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, statHashToType, StatTypes } from '../types';
+import { ArmorSet, ArmorStats } from '../types';
 import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
@@ -86,13 +86,13 @@ export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
   characterClass: DestinyClass | undefined
 ) {
-  const totals: { [stat in StatTypes]: number } = {
-    Mobility: 0,
-    Recovery: 0,
-    Resilience: 0,
-    Intellect: 0,
-    Discipline: 0,
-    Strength: 0,
+  const totals: ArmorStats = {
+    [StatHashes.Mobility]: 0,
+    [StatHashes.Recovery]: 0,
+    [StatHashes.Resilience]: 0,
+    [StatHashes.Intellect]: 0,
+    [StatHashes.Discipline]: 0,
+    [StatHashes.Strength]: 0,
   };
 
   // This should only happen on initialisation if the store is undefined.
@@ -102,9 +102,11 @@ export function getTotalModStatChanges(
 
   for (const mod of lockedMods) {
     for (const stat of mod.investmentStats) {
-      const statType = statHashToType[stat.statTypeHash];
-      if (statType && isModStatActive(characterClass, mod.hash, stat, lockedMods)) {
-        totals[statType] += stat.value;
+      if (
+        stat.statTypeHash in totals &&
+        isModStatActive(characterClass, mod.hash, stat, lockedMods)
+      ) {
+        totals[stat.statTypeHash] += stat.value;
       }
     }
   }
@@ -168,7 +170,6 @@ export function mapDimItemToProcessItem(
         }
       : undefined,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
-    hasLegacyModSocket: Boolean(modMetadatas?.some((m) => m.slotTag === 'legacy')),
   };
 }
 

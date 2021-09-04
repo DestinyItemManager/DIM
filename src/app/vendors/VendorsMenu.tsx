@@ -13,8 +13,8 @@ export default function VendorsMenu({ groups }: { groups: readonly D2VendorGroup
             <PageWithMenu.MenuButton anchor={vendor.def.hash.toString()} key={vendor.def.hash}>
               <BungieImage
                 src={
-                  vendor.def.displayProperties.icon ||
-                  vendor.def.displayProperties.smallTransparentIcon
+                  vendor.def.displayProperties.smallTransparentIcon ||
+                  vendor.def.displayProperties.icon
                 }
               />
               <span>{vendor.def.displayProperties.name}</span>

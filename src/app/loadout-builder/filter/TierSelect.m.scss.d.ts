@@ -5,6 +5,7 @@ interface CssExports {
   'hiddenOption': string;
   'iconStat': string;
   'ignored': string;
+  'row': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -1,10 +1,11 @@
-import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import { StatHashes } from 'app/../data/d2/generated-enums';
 import _ from 'lodash';
+import raidModPlugCategoryHashes from '../../../data/d2/raid-mod-plug-category-hashes.json';
+import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { LockableBuckets, MinMax, MinMaxIgnored, statHashes, StatTypes } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
 import { SetTracker } from './set-tracker';
@@ -26,12 +27,16 @@ const RETURNED_ARMOR_SETS = 200;
  * of existing masterwork mods and the upgradeSpendTier
  */
 function compareByStatOrder(
+  // Ordered list of enabled stats
   orderedConsideredStatHashes: number[],
-  // A reverse index from stat hash to the index in the statsCache ordered stats array
-  statHashToOrder: { [statHash: number]: number },
+  // The user's chosen order of all stats, by hash
+  statOrder: number[],
   // A map from item to stat values in user-selected order, with masterworks included
   statsCache: Map<ProcessItem, number[]>
 ) {
+  const statHashToOrder: { [statHash: number]: number } = {};
+  statOrder.forEach((statHash, index) => (statHashToOrder[statHash] = index));
+
   return chainComparator<ProcessItem>(
     // First compare by sum of considered stats
     compareBy((i) =>
@@ -54,43 +59,32 @@ function compareByStatOrder(
 export function process(
   filteredItems: ProcessItemsByBucket,
   /** Selected mods' total contribution to each stat */
-  // TODO: use stat hash, or order
-  modStatTotals: { [stat in StatTypes]: number },
+  modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
   lockedModMap: LockedProcessMods,
-  // TODO: replace with stat hashes
-  statOrder: StatTypes[],
-  // TODO: maps, eradicate StatTypes
-  statFilters: { [stat in StatTypes]: MinMaxIgnored }
+  /** The user's chosen stat order, including disabled stats */
+  statOrder: ArmorStatHashes[],
+  statFilters: StatFilters
 ): {
   sets: ProcessArmorSet[];
   combos: number;
   combosWithoutCaps: number;
-  statRanges?: { [stat in StatTypes]: MinMax };
+  statRanges?: StatRanges;
 } {
   const pstart = performance.now();
 
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
-  const orderedStatHashes = statOrder.map((statType) => statHashes[statType]);
   // Stat types excluding ignored stats
-  const orderedConsideredStats = statOrder.filter((statType) => !statFilters[statType].ignored);
-  const orderedConsideredStatHashes = orderedConsideredStats.map(
-    (statType) => statHashes[statType]
+  const orderedConsideredStatHashes = statOrder.filter(
+    (statHash) => !statFilters[statHash].ignored
   );
-  const statHashToOrder: { [statHash: number]: number } = {};
-  statOrder.forEach((statType, index) => (statHashToOrder[statHashes[statType]] = index));
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRanges: { [stat in StatTypes]: MinMax } = {
-    Mobility: statFilters.Mobility.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-    Resilience: statFilters.Resilience.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-    Recovery: statFilters.Recovery.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-    Discipline: statFilters.Discipline.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-    Intellect: statFilters.Intellect.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-    Strength: statFilters.Strength.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 },
-  };
+  const statRanges: StatRanges = _.mapValues(statFilters, (filter) =>
+    filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
+  );
 
   const statsCache: Map<ProcessItem, number[]> = new Map();
 
@@ -102,15 +96,11 @@ export function process(
     ...filteredItems[LockableBuckets.leg],
     ...filteredItems[LockableBuckets.classitem],
   ]) {
-    statsCache.set(item, getStatValuesWithMW(item, orderedStatHashes));
+    statsCache.set(item, getStatValuesWithMW(item, statOrder));
   }
 
   // Sort gear by the chosen stats so we consider the likely-best gear first
-  const itemComparator = compareByStatOrder(
-    orderedConsideredStatHashes,
-    statHashToOrder,
-    statsCache
-  );
+  const itemComparator = compareByStatOrder(orderedConsideredStatHashes, statOrder, statsCache);
   // TODO: make these a list/map
   const helms = (filteredItems[LockableBuckets.helmet] || []).sort(itemComparator);
   const gaunts = (filteredItems[LockableBuckets.gauntlets] || []).sort(itemComparator);
@@ -165,7 +155,7 @@ export function process(
   const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   let generalMods: ProcessMod[] = [];
-  let otherMods: ProcessMod[] = [];
+  let combatMods: ProcessMod[] = [];
   let raidMods: ProcessMod[] = [];
 
   for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
@@ -175,14 +165,14 @@ export function process(
     } else if (raidModPlugCategoryHashes.includes(pch)) {
       raidMods = raidMods.concat(mods);
     } else if (!knownModPlugCategoryHashes.includes(pch)) {
-      otherMods = otherMods.concat(mods);
+      combatMods = combatMods.concat(mods);
     }
   }
 
   const generalModsPermutations = generateModPermutations(generalMods);
-  const otherModPermutations = generateModPermutations(otherMods);
+  const combatModPermutations = generateModPermutations(combatMods);
   const raidModPermutations = generateModPermutations(raidMods);
-  const hasMods = otherMods.length || raidMods.length || generalMods.length;
+  const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
@@ -225,25 +215,25 @@ export function process(
 
             // TODO: why not just another ordered list?
             // Start with the contribution of mods. Spread operator is slow.
-            const stats: { [statType in StatTypes]: number } = {
-              Mobility: modStatTotals.Mobility,
-              Resilience: modStatTotals.Resilience,
-              Recovery: modStatTotals.Recovery,
-              Discipline: modStatTotals.Discipline,
-              Intellect: modStatTotals.Intellect,
-              Strength: modStatTotals.Strength,
+            const stats: ArmorStats = {
+              [StatHashes.Mobility]: modStatTotals[StatHashes.Mobility],
+              [StatHashes.Resilience]: modStatTotals[StatHashes.Resilience],
+              [StatHashes.Recovery]: modStatTotals[StatHashes.Recovery],
+              [StatHashes.Discipline]: modStatTotals[StatHashes.Discipline],
+              [StatHashes.Intellect]: modStatTotals[StatHashes.Intellect],
+              [StatHashes.Strength]: modStatTotals[StatHashes.Strength],
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
               let index = 0;
               // itemStats are already in the user's chosen stat order
-              for (const statType of statOrder) {
-                stats[statType] = stats[statType] + itemStats[index];
+              for (const statHash of statOrder) {
+                stats[statHash] = stats[statHash] + itemStats[index];
                 // Stats can't exceed 100 even with mods. At least, today they
                 // can't - we *could* pass the max value in from the stat def.
                 // Math.min is slow.
-                if (stats[statType] > 100) {
-                  stats[statType] = 100;
+                if (stats[statHash] > 100) {
+                  stats[statHash] = 100;
                 }
                 index++;
               }
@@ -251,18 +241,18 @@ export function process(
 
             let totalTier = 0;
             let statRangeExceeded = false;
-            for (const statKey of orderedConsideredStats) {
-              const tier = statTier(stats[statKey]);
+            for (const statHash of orderedConsideredStatHashes) {
+              const tier = statTier(stats[statHash]);
 
               // Update our global min/max for this stat
-              if (tier > statRanges[statKey].max) {
-                statRanges[statKey].max = tier;
+              if (tier > statRanges[statHash].max) {
+                statRanges[statHash].max = tier;
               }
-              if (tier < statRanges[statKey].min) {
-                statRanges[statKey].min = tier;
+              if (tier < statRanges[statHash].min) {
+                statRanges[statHash].min = tier;
               }
 
-              if (tier > statFilters[statKey].max || tier < statFilters[statKey].min) {
+              if (tier > statFilters[statHash].max || tier < statFilters[statHash].min) {
                 statRangeExceeded = true;
                 break;
               }
@@ -285,7 +275,7 @@ export function process(
               hasMods &&
               !canTakeSlotIndependantMods(
                 generalModsPermutations,
-                otherModPermutations,
+                combatModPermutations,
                 raidModPermutations,
                 armor
               )
@@ -302,8 +292,8 @@ export function process(
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             let tiers = '';
-            for (const statKey of orderedConsideredStats) {
-              const tier = statTier(stats[statKey]);
+            for (const statHash of orderedConsideredStatHashes) {
+              const tier = statTier(stats[statHash]);
               // Make each stat exactly one code unit so the string compares correctly
               tiers += tier.toString(11);
             }

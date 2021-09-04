@@ -61,7 +61,7 @@ function assignSlotIndependantMods(
   assignments: ModAssignments
 ): void {
   const generalMods: PluggableInventoryItemDefinition[] = [];
-  const otherMods: PluggableInventoryItemDefinition[] = [];
+  const combatMods: PluggableInventoryItemDefinition[] = [];
   const raidMods: PluggableInventoryItemDefinition[] = [];
 
   for (const mod of lockedMods) {
@@ -71,21 +71,21 @@ function assignSlotIndependantMods(
     } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
       raidMods.push(mod);
     } else if (!knownModPlugCategoryHashes.includes(plugCategoryHash)) {
-      otherMods.push(mod);
+      combatMods.push(mod);
     }
   }
 
-  if (!generalMods || !otherMods || !raidMods) {
+  if (!generalMods || !combatMods || !raidMods) {
     return;
   }
 
   // Mods need to be sorted before being passed to the assignment function
   const generalProcessMods = generalMods.map(mapArmor2ModToProcessMod);
-  const otherProcessMods = otherMods.map(mapArmor2ModToProcessMod);
+  const otherProcessMods = combatMods.map(mapArmor2ModToProcessMod);
   const raidProcessMods = raidMods.map(mapArmor2ModToProcessMod);
 
   const generalModPermutations = generateModPermutations(generalProcessMods);
-  const otherModPermutations = generateModPermutations(otherProcessMods);
+  const combatModPermutations = generateModPermutations(otherProcessMods);
   const raidModPermutations = generateModPermutations(raidProcessMods);
 
   // eslint-disable-next-line no-console
@@ -93,7 +93,7 @@ function assignSlotIndependantMods(
 
   canTakeSlotIndependantMods(
     generalModPermutations,
-    otherModPermutations,
+    combatModPermutations,
     raidModPermutations,
     setToMatch,
     assignments

@@ -51,7 +51,6 @@ it('handles an equipped item', async () => {
 
   expect(actions.taggable).toBe(true);
   expect(actions.lockable).toBe(true);
-  expect(actions.infusable).toBe(true);
   expect(actions.comparable).toBe(true);
   expect(actions.loadoutable).toBe(true);
 });

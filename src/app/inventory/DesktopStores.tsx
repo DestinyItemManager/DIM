@@ -1,18 +1,21 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ActiveMode from 'app/active-mode/ActiveMode';
 import InventoryModeToggle from 'app/active-mode/InventoryModeToggle';
+import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
+import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
 import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
+import { locateItem$ } from './locate-item';
 import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
 import { findItemsByBucket, getCurrentStore, getVault } from './stores-helpers';
@@ -40,6 +43,7 @@ export default function DesktopStores({
   const vault = getVault(stores);
   const currentStore = getCurrentStore(stores);
   const setSetting = useSetSetting();
+  useEventBusListener(locateItem$, itemPop);
 
   if (!stores.length || !buckets || !vault || !currentStore) {
     return null;

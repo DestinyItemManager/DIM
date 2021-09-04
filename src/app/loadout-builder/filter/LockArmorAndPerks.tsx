@@ -1,4 +1,5 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -6,7 +7,6 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import ClosableContainer from 'app/loadout/loadout-ui/ClosableContainer';
 import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -17,14 +17,12 @@ import _ from 'lodash';
 import React, { Dispatch, useState } from 'react';
 import ReactDom from 'react-dom';
 import { connect } from 'react-redux';
-import { isArmor2WithStats } from '../../loadout/item-utils';
+import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
-  ItemsByBucket,
   LockableBuckets,
   LockedExclude,
-  LockedExotic,
   LockedItemCase,
   LockedItemType,
   LockedMap,
@@ -41,9 +39,7 @@ interface ProvidedProps {
   lockedMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
-  lockedExotic?: LockedExotic;
-  characterItems?: ItemsByBucket;
-  unusableExotics?: DimItem[];
+  lockedExoticHash?: number;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -72,9 +68,7 @@ function LockArmorAndPerks({
   lockItemEnergyType,
   buckets,
   stores,
-  characterItems,
-  unusableExotics,
-  lockedExotic,
+  lockedExoticHash,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -87,7 +81,7 @@ function LockArmorAndPerks({
   const lockEquipped = () => {
     const newLockedMap: { [bucketHash: number]: LockedItemType[] } = {};
     selectedStore.items.forEach((item) => {
-      if (item.equipped && isArmor2WithStats(item)) {
+      if (item.equipped && isLoadoutBuilderItem(item)) {
         newLockedMap[item.bucket.hash] = [
           {
             type: 'item',
@@ -118,7 +112,7 @@ function LockArmorAndPerks({
         const { item } = await showItemPicker({
           filterItems: (item: DimItem) =>
             Boolean(
-              isArmor2WithStats(item) &&
+              isLoadoutBuilderItem(item) &&
                 itemCanBeEquippedBy(item, selectedStore, true) &&
                 (!filter || filter(item))
             ),
@@ -193,7 +187,7 @@ function LockArmorAndPerks({
     <LockedItem key={lockedItem.item.id} lockedItem={lockedItem} onRemove={removeLockedItemType} />
   );
   return (
-    <div>
+    <>
       <div className={styles.area}>
         <SelectedArmorUpgrade
           defs={defs}
@@ -233,13 +227,13 @@ function LockArmorAndPerks({
         </div>
       </div>
       <div className={styles.area}>
-        {lockedExotic && (
+        {lockedExoticHash && (
           <div className={styles.itemGrid}>
             <ClosableContainer
               showCloseIconOnHover={true}
               onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
             >
-              <DefItemIcon itemDef={lockedExotic.def} />
+              <DefItemIcon itemDef={defs.InventoryItem.get(lockedExoticHash)} />
             </ClosableContainer>
           </div>
         )}
@@ -290,10 +284,9 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
-            lockedExotic={lockedExotic}
-            characterItems={characterItems}
-            unusableExotics={unusableExotics}
-            lbDispatch={lbDispatch}
+            lockedExoticHash={lockedExoticHash}
+            classType={selectedStore.classType}
+            onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
             onClose={() => setShowExoticPicker(false)}
           />,
           document.body
@@ -307,7 +300,7 @@ function LockArmorAndPerks({
           />,
           document.body
         )}
-    </div>
+    </>
   );
 }
 

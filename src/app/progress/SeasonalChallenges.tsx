@@ -109,16 +109,14 @@ function PursuitsGroup({
 
   return (
     <>
-      {$featureFlags.bountyGuide && (
-        <BountyGuide
-          store={store}
-          bounties={pursuits}
-          selectedFilters={bountyFilters}
-          onSelectedFiltersChanged={setBountyFilters}
-          skipTypes={skipTypes}
-          pursuitsInfo={seasonalChallengesInfo}
-        />
-      )}
+      <BountyGuide
+        store={store}
+        bounties={pursuits}
+        selectedFilters={bountyFilters}
+        onSelectedFiltersChanged={setBountyFilters}
+        skipTypes={skipTypes}
+        pursuitsInfo={seasonalChallengesInfo}
+      />
       <div className="progress-for-character">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit

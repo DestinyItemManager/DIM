@@ -1,0 +1,52 @@
+@import '../variables.scss';
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  > div {
+    padding: 0;
+  }
+}
+
+.initialItem {
+  color: $orange;
+  font-weight: bold;
+}
+
+.itemName {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  :global(.app-icon) {
+    font-size: 8px;
+    margin-right: 2px;
+    vertical-align: initial;
+  }
+}
+
+.itemAside {
+  position: absolute;
+  padding: 0;
+  right: 4px;
+  z-index: 10;
+}
+
+.close {
+  float: right;
+  margin: 1px 4px;
+  padding-left: 0px;
+  width: 16px;
+  height: 16px;
+  top: 2px;
+  right: calc(2px + var(--item-margin));
+  background-image: url('../../images/close.png');
+  background-size: 16px 16px;
+  background-color: rgba(100, 100, 100, 0.8);
+  &:hover {
+    background-color: $orange;
+  }
+}

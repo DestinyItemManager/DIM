@@ -2,23 +2,4 @@
 
 .sets {
   max-width: max-content;
-
-  @include phone-portrait {
-    h2 {
-      margin-right: 12px;
-    }
-    p {
-      margin: 0 12px 4px 12px;
-    }
-  }
-}
-
-.newLoadout {
-  float: right;
-}
-
-.numSets {
-  font-size: 12px;
-  text-transform: none;
-  letter-spacing: normal;
 }

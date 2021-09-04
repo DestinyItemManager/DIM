@@ -21,7 +21,7 @@
     "ChangeFilter": "Фильтры",
     "Farming": "Предметы",
     "FarmingStart": "Режим Фарма",
-    "FarmingStop": "Stop Farming",
+    "FarmingStop": "Остановка Фарма",
     "Loading": "Текущая Активность",
     "NoQuests": "Задания не отслеживаются",
     "NoSearches": "Сохраняйте запросы поиска и фильтруйте их.",
@@ -52,7 +52,7 @@
     "Title": "Сообщение от Bungie:"
   },
   "BungieService": {
-    "AppNotPermitted": "DIM does not have permission to perform this action.",
+    "AppNotPermitted": "DIM не имеет разрешения на выполнение этого действия.",
     "DestinyLegacyPlatform": "Сервисы Bungie содержат баг, который препятствует DIM загрузить информацию вашего аккаунта в Destiny 2, если вы играли в Destiny 1 на консоли прошлого поколения. Bungie скоро это исправят, но до тех пор вы должны играть в Destiny 1 на консоли текущего поколения, чтобы иметь доступ к своим данным.",
     "DevVersion": "Вы используете версию DIM для разработчиков? Вы должны зарегистрироваться в расширении для браузера Chrome через Bungie.Net.",
     "Difficulties": "Bungie.net сейчас испытывает некоторые трудности при использовании.",
@@ -61,7 +61,7 @@
     "ItemUniquenessExplanation_female": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "ItemUniquenessExplanation_male": "Вы попытались переместить '{{name}}' {{type}} на {{character}}, но это целевое назначение уже содержит такой предмет и может содержать только один.",
     "Maintenance": "Сервера Bungie.net отключены для техобслуживания.",
-    "MissingInventory": "Bungie.net did not return your inventory, possibly because your privacy settings prevent it. Try logging out and logging back in.",
+    "MissingInventory": "Bungie.net не дал разрешения загрузить ваш инвентарь, возможно, потому что ваши настройки конфиденциальности препятствуют этому. Попробуйте выйти из аккаунта и снова войти в него.",
     "NetworkError": "Сетевая ошибка - {{status}} {{statusText}}",
     "NoAccount": "Аккаунт Destiny не найден. Вы выбрали правильную платформу?",
     "NoAccountForPlatform": "Не удалось найти ваш аккаунт Destiny на {{platform}}.",
@@ -83,7 +83,7 @@
     "ButtonHelp": "Сравнить предметы",
     "CompareBaseStats": "Показать Базовые характеристики",
     "Error": {
-      "Unmatched": "This item doesn't match the type of items being compared."
+      "Unmatched": "Этот предмет не соответствует выбранным критериям сравниваемых предметов."
     }
   },
   "Cooldown": {
@@ -113,7 +113,7 @@
     "Title": "Что-то пошло не так"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Description": "Скорее всего, это проблема, которая затрагивает все сторонние приложения. Проверьте, загружается ли Bungie.net или приложение-компаньон Destiny 2.",
     "Troubleshooting": "Устранение неполадок"
   },
   "FarmingMode": {
@@ -131,7 +131,7 @@
       "MakeRoom": "Освобождать место для лута путём перемещения снаряжения",
       "Tooltip": "Если включено, DIM переместит оружие и броню, чтобы освободить место в Хранилище для Энграмм."
     },
-    "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
+    "OutOfRoom": "Не хватает свободного места, чтобы переместить предметы с {{character}}. Самое время дешифровать несколько Энграмм и почистить всё от мусора!",
     "OutOfRoomTitle": "Недостаточно свободного места",
     "Stop": "Остановить"
   },

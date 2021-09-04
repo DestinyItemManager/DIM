@@ -42,8 +42,6 @@ declare const $featureFlags: {
   awa: boolean;
   /** Incorporate mods directly into loadouts */
   loadoutMods: boolean;
-  /** Show bounty guide */
-  bountyGuide: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
   /** Install prompt banners for mobile */
@@ -56,6 +54,7 @@ declare function ga(...params: string[]);
 
 interface Window {
   OC?: unknown;
+  MSStream?: unknown;
 
   // Service worker stuff
   __precacheManifest: string[] | undefined;

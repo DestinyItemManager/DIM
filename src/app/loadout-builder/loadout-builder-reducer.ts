@@ -5,30 +5,35 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useReducer } from 'react';
-import { isArmor2WithStats } from '../loadout/item-utils';
-import {
-  ArmorSet,
-  LockedExotic,
-  LockedItemType,
-  LockedMap,
-  MinMaxIgnored,
-  StatTypes,
-} from './types';
+import { isLoadoutBuilderItem } from '../loadout/item-utils';
+import { ArmorSet, LockedItemType, LockedMap, StatFilters } from './types';
 import { addLockedItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
-  lockedExotic?: LockedExotic;
+  lockedExoticHash?: number;
   selectedStoreId?: string;
-  statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
+  statFilters: Readonly<StatFilters>;
   modPicker: {
     open: boolean;
     initialQuery?: string;
   };
   compareSet?: ArmorSet;
 }
+
+export const defaultStatFilters = {
+  [StatHashes.Mobility]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Resilience]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Recovery]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Discipline]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Intellect]: { min: 0, max: 10, ignored: false },
+  [StatHashes.Strength]: { min: 0, max: 10, ignored: false },
+};
+Object.freeze(defaultStatFilters);
 
 const lbStateInit = ({
   stores,
@@ -47,7 +52,7 @@ const lbStateInit = ({
     for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
-        if (item && isArmor2WithStats(item)) {
+        if (item && isLoadoutBuilderItem(item)) {
           lockedMap = {
             ...lockedMap,
             [item.bucket.hash]: addLockedItem(
@@ -61,14 +66,7 @@ const lbStateInit = ({
   }
   return {
     lockedMap,
-    statFilters: {
-      Mobility: { min: 0, max: 10, ignored: false },
-      Resilience: { min: 0, max: 10, ignored: false },
-      Recovery: { min: 0, max: 10, ignored: false },
-      Discipline: { min: 0, max: 10, ignored: false },
-      Intellect: { min: 0, max: 10, ignored: false },
-      Strength: { min: 0, max: 10, ignored: false },
-    },
+    statFilters: _.cloneDeep(defaultStatFilters),
     lockedMods: [],
     selectedStoreId: selectedStoreId,
     modPicker: {
@@ -89,7 +87,7 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; lockedExotic: LockedExotic }
+  | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
@@ -107,15 +105,8 @@ function lbStateReducer(
         ...state,
         selectedStoreId: action.storeId,
         lockedMap: {},
-        lockedExotic: undefined,
-        statFilters: {
-          Mobility: { min: 0, max: 10, ignored: false },
-          Resilience: { min: 0, max: 10, ignored: false },
-          Recovery: { min: 0, max: 10, ignored: false },
-          Discipline: { min: 0, max: 10, ignored: false },
-          Intellect: { min: 0, max: 10, ignored: false },
-          Strength: { min: 0, max: 10, ignored: false },
-        },
+        statFilters: _.cloneDeep(defaultStatFilters),
+        lockedExoticHash: undefined,
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };
@@ -190,11 +181,11 @@ function lbStateReducer(
       };
     }
     case 'lockExotic': {
-      const { lockedExotic } = action;
-      return { ...state, lockedExotic };
+      const { lockedExoticHash } = action;
+      return { ...state, lockedExoticHash };
     }
     case 'removeLockedExotic': {
-      return { ...state, lockedExotic: undefined };
+      return { ...state, lockedExoticHash: undefined };
     }
     case 'openModPicker':
       return {

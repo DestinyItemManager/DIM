@@ -1,7 +1,7 @@
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import React from 'react';
-import ClosableContainer from './ClosableContainer';
 import styles from './LockedModIcon.m.scss';
 
 interface Props {

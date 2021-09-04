@@ -1,9 +1,11 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
+import styles from './About.m.scss';
 import {
   AppIcon,
   faDiscord,
@@ -51,9 +53,9 @@ export default function About() {
 
   const token = getToken();
   return (
-    <div className="dim-page dim-static-page">
-      <div className="about-header">
-        <img src={logo} className="about-logo" alt="DIM Logo" height="48" width="48" />
+    <div className={clsx('dim-page dim-static-page', styles.about)}>
+      <div className={styles.header}>
+        <img src={logo} className={styles.logo} alt="DIM Logo" height="48" width="48" />
         <h1>
           <span>{t('Views.About.Header')}</span>
         </h1>
@@ -85,7 +87,7 @@ export default function About() {
           </li>
         )}
       </ul>
-      <div className="social">
+      <div className={styles.social}>
         <div>
           <h2>
             <ExternalLink href={openCollectiveLinkDirect}>

@@ -1,0 +1,31 @@
+@import '../variables.scss';
+
+.editor {
+  display: flex;
+  flex-direction: row;
+}
+
+.item {
+  width: calc(400px - 25px / 3);
+  background: black;
+  padding: 8px;
+  text-align: center;
+  margin: 8px;
+}
+
+.character {
+  img {
+    height: 44px;
+    width: 44px;
+  }
+}
+
+.powerLevel {
+  color: $power;
+  &:before {
+    content: '\2726';
+    display: inline-block;
+    vertical-align: 25%;
+    font-size: 50%;
+  }
+}

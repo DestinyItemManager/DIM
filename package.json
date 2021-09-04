@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "6.79.0",
+  "version": "6.80.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -19,7 +19,7 @@
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
     "install": "git submodule update --init --recursive",
-    "dead-code": "ts-prune | grep -v cssExports | grep -v 'used in module'"
+    "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'"
   },
   "husky": {
     "hooks": {
@@ -66,7 +66,7 @@
     "@testing-library/react": "^12.0.0",
     "@types/body-scroll-lock": "^2.6.1",
     "@types/circuit-breaker-js": "^0.0.2",
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.0",
     "@types/mousetrap": "^1.6.8",
     "@types/node": "^16.3.1",
@@ -91,12 +91,11 @@
     "autoprefixer": "^10.0.0",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.0.2",
-    "babel-plugin-const-enum": "^1.0.1",
     "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-optimize-clsx": "^2.5.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "browserslist": "^4.0.0",
-    "clean-webpack-plugin": "^3.0.0",
+    "clean-webpack-plugin": "^4.0.0",
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^9.0.0",
     "cross-env": "^7.0.0",
@@ -110,7 +109,7 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-radar": "^0.2.1",
-    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-react-redux": "^3.1.0",
     "fork-ts-checker-notifier-webpack-plugin": "^4.0.0",
@@ -148,7 +147,7 @@
     "svgo-loader": "^3.0.0",
     "terser-webpack-plugin": "^5.0.2",
     "ts-loader": "^9.1.1",
-    "ts-prune": "^0.9.1",
+    "ts-prune": "^0.10.0",
     "ts-unused-exports": "^7.0.3",
     "typescript": "^4.0.2",
     "webpack": "^5.1.3",

@@ -1,6 +1,42 @@
 const D2Sources: {
   [key: string]: { itemHashes: number[]; sourceHashes: number[]; searchString: string[] };
 } = {
+  ada: {
+    itemHashes: [
+      417164956, // Jötunn
+      3211806999, // Izanagi's Burden
+      3588934839, // Le Monarque
+      3650581584, // New Age Black Armory
+      3650581585, // Refurbished Black Armory
+      3650581586, // Rasmussen Clan
+      3650581587, // House of Meyrin
+      3650581588, // Satou Tribe
+      3650581589, // Bergusian Night
+    ],
+    sourceHashes: [
+      266896577, // Source: Solve the Norse glyph puzzle.
+      439994003, // Source: Complete the "Master Smith" Triumph.
+      925197669, // Source: Complete a Bergusia Forge ignition.
+      948753311, // Source: Found by completing Volundr Forge ignitions.
+      1286332045, // Source: Found by completing Izanami Forge ignitions.
+      1457456824, // Source: Complete the "Reunited Siblings" Triumph.
+      1465990789, // Source: Solve the Japanese glyph puzzle.
+      1546689276, // Source: Acquired from Ada-1
+      1596507419, // Source: Complete a Gofannon Forge ignition.
+      2062058385, // Source: Crafted in a Black Armory forge.
+      2384327872, // Source: Solve the French glyph puzzle.
+      2541753910, // Source: Complete the "Master Blaster" Triumph.
+      2966694626, // Source: Found by solving the mysteries behind the Black Armory's founding families.
+      3047033583, // Source: Returned the Obsidian Accelerator.
+      3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
+      3390164851, // Source: Found by turning in Black Armory bounties.
+      3764925750, // Source: Complete an Izanami Forge ignition.
+      4101102010, // Source: Found by completing Bergusia Forge ignitions.
+      4247521481, // Source: Complete the "Beautiful but Deadly" Triumph.
+      4290227252, // Source: Complete a Volundr Forge ignition.
+    ],
+    searchString: [],
+  },
   adventure: {
     itemHashes: [],
     sourceHashes: [
@@ -27,6 +63,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  banshee: {
+    itemHashes: [],
+    sourceHashes: [
+      1788267693, // Source: Earn rank-up packages from Banshee-44.
+      2986841134, // Source: Salvager's Salvo Armament Quest
+      3512613235, // Source: A Sacred Fusion Quest
+    ],
+    searchString: [],
+  },
   battlegrounds: {
     itemHashes: [],
     sourceHashes: [
@@ -47,7 +92,6 @@ const D2Sources: {
       3650581589, // Bergusian Night
     ],
     sourceHashes: [
-      75031309, // Source: Found in forge ignitions.
       266896577, // Source: Solve the Norse glyph puzzle.
       439994003, // Source: Complete the "Master Smith" Triumph.
       925197669, // Source: Complete a Bergusia Forge ignition.
@@ -55,6 +99,7 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
+      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -77,7 +122,6 @@ const D2Sources: {
       3580904580, // Legend of Acrius
     ],
     sourceHashes: [
-      705895461, // Acquired from the Menagerie.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -94,7 +138,7 @@ const D2Sources: {
   campaign: {
     itemHashes: [],
     sourceHashes: [
-      13912404, // Source: Fully upgrade your Arc subclass.
+      13912404, // Source: Unlock your Arc subclass.
       100617404, // Requires Titan Class
       286427063, // Source: Fallen Empire campaign.
       569214265, // Source: Earned over the course of the Red War campaign.
@@ -104,7 +148,7 @@ const D2Sources: {
       1076222895, // Source: Defeat bosses in Flashpoints.
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
-      1281387702, // Source: Fully upgrade your Void subclass.
+      1281387702, // Source: Unlock your Void subclass.
       1670837732, // Source: Found in Legendary world engrams.
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
       2130345705, // Source: Unlocked by default.
@@ -113,7 +157,7 @@ const D2Sources: {
       2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
       2895784523, // Source: Pledge to all factions on a single character.
-      2929562373, // Source: Fully upgrade your Solar subclass.
+      2929562373, // Source: Unlock your Solar subclass.
       2988465950, // Source: Planetary faction chests.
       3083076965, // Source: Unlocked by default.
       3099553329, // Source: Complete the campaign as a Titan.
@@ -138,6 +182,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       4155903822, // Source: Obtained from Master Cryptarch Rahool.
+    ],
+    searchString: [],
+  },
+  compass: {
+    itemHashes: [],
+    sourceHashes: [
+      2939318890, // Source: Wayfinder's Compass
     ],
     searchString: [],
   },
@@ -185,8 +236,8 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
-      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
-      2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
+      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
+      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -194,6 +245,7 @@ const D2Sources: {
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -227,7 +279,6 @@ const D2Sources: {
       3875444086, // The Emperor's Chosen
     ],
     sourceHashes: [
-      75031309, // Source: Found in forge ignitions.
       80684972, // Source: Complete a Heroic Adventure on Mercury.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
@@ -237,7 +288,6 @@ const D2Sources: {
       439994003, // Source: Complete the "Master Smith" Triumph.
       482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
       636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
-      705895461, // Acquired from the Menagerie.
       925197669, // Source: Complete a Bergusia Forge ignition.
       948753311, // Source: Found by completing Volundr Forge ignitions.
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
@@ -326,6 +376,7 @@ const D2Sources: {
       1866448829, // Source: Deluxe Edition Bonus
       2968206374, // Source: Earned as a Deluxe Edition bonus.
       2985242208, // Source: Earned from a charity promotion.
+      3173463761, // Source: Earned as a pre-order bonus.
       3212282221, // Source: Forsaken Annual Pass
       4069355515, // Source: Handed out at US events in 2019.
       4166998204, // Source: Earned as a pre-order bonus.
@@ -378,6 +429,7 @@ const D2Sources: {
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
       3522070610, // Source: Gambit.
@@ -462,6 +514,7 @@ const D2Sources: {
       611838069, // Source: Earned during the seasonal Guardian Games event.
       641018908, // Source: Earned during the 2018 Solstice of Heroes event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
+      1054169368, // Source: Festival of the Lost 2021.
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1462687159, // Reached level 5 in the Ages of Triumph record book.
@@ -533,6 +586,7 @@ const D2Sources: {
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
       3522070610, // Source: Gambit.
@@ -656,6 +710,7 @@ const D2Sources: {
       1866448829, // Source: Deluxe Edition Bonus
       2968206374, // Source: Earned as a Deluxe Edition bonus.
       2985242208, // Source: Earned from a charity promotion.
+      3173463761, // Source: Earned as a pre-order bonus.
       3212282221, // Source: Forsaken Annual Pass
       4069355515, // Source: Handed out at US events in 2019.
       4166998204, // Source: Earned as a pre-order bonus.
@@ -693,7 +748,6 @@ const D2Sources: {
       3875444086, // The Emperor's Chosen
     ],
     sourceHashes: [
-      705895461, // Acquired from the Menagerie.
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
       4130543671, // Acquired from the Menagerie aboard the Leviathan with the requisite combination of runes in the Chalice of Opulence.
     ],
@@ -749,13 +803,15 @@ const D2Sources: {
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
+      860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
+      1618699950, // Source: Season of the Lost Nightfall Grandmaster
       1749037998, // Source: Nightfall
       1850609592, // Source: Nightfall
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
-      2376909801, // Source: Complete the "Beacon in the Black" Triumph by completing a Nightfall strike on Master difficulty
+      2376909801, // Source: Complete the "Master" Triumph in the Nightfall category by completing a Vanguard Nightfall on the Master difficulty setting.
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
@@ -903,6 +959,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1593696611, // Source: Season Pass Reward
+      1763998430, // Source: Season Pass
       1838401392, // Source: Earned as a Season Pass reward.
       2379344669, // Source: Season Pass.
     ],
@@ -911,8 +968,10 @@ const D2Sources: {
   servitor: {
     itemHashes: [],
     sourceHashes: [
+      139160732, // Source: Season of the Splicer
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       1600754038, // Source: Season of the Splicer Activities
+      1828592460, // Source: Splicer Servitor
       2040801502, // Source: Season of the Splicer Triumph
       2694738712, // Source: Season of the Splicer Quest
       2967385539, // Source: Season of the Splicer Seasonal Challenges
@@ -952,8 +1011,8 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
-      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory rank "Mythic."
-      2537301256, // Source: Reach a Glory rank of "Fabled" in the Crucible.
+      2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
+      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -961,6 +1020,7 @@ const D2Sources: {
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -1008,6 +1068,7 @@ const D2Sources: {
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
     ],
     searchString: [],
   },
@@ -1056,6 +1117,7 @@ const D2Sources: {
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       752988954, // Source: Flawless chest completion in the Trials of Osiris Lighthouse.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
+      2857787138, // Source: Trials of Osiris
       3390015730, // Source: Earned by completing challenges in the Trials of Osiris.
       3471208558, // Source: Win matches in the Trials of Osiris.
       3543690049, // Source: Complete a flawless Trials ticket.
@@ -1072,12 +1134,18 @@ const D2Sources: {
   },
   vexoffensive: {
     itemHashes: [
+      351285766, // Substitutional Alloy Greaves
+      377757362, // Substitutional Alloy Hood
       509561140, // Substitutional Alloy Gloves
       509561142, // Substitutional Alloy Gloves
       509561143, // Substitutional Alloy Gloves
+      695795213, // Substitutional Alloy Helm
+      844110491, // Substitutional Alloy Gloves
       1137424312, // Substitutional Alloy Cloak
       1137424314, // Substitutional Alloy Cloak
       1137424315, // Substitutional Alloy Cloak
+      1348357884, // Substitutional Alloy Gauntlets
+      1584183805, // Substitutional Alloy Cloak
       1721943440, // Substitutional Alloy Boots
       1721943441, // Substitutional Alloy Boots
       1721943442, // Substitutional Alloy Boots
@@ -1090,9 +1158,13 @@ const D2Sources: {
       2468603405, // Substitutional Alloy Plate
       2468603406, // Substitutional Alloy Plate
       2468603407, // Substitutional Alloy Plate
+      2657028416, // Substitutional Alloy Vest
+      2687273800, // Substitutional Alloy Grips
       2690973101, // Substitutional Alloy Hood
       2690973102, // Substitutional Alloy Hood
       2690973103, // Substitutional Alloy Hood
+      2742760292, // Substitutional Alloy Plate
+      2761292744, // Substitutional Alloy Bond
       2815379657, // Substitutional Alloy Bond
       2815379658, // Substitutional Alloy Bond
       2815379659, // Substitutional Alloy Bond
@@ -1108,12 +1180,17 @@ const D2Sources: {
       3192738009, // Substitutional Alloy Greaves
       3192738010, // Substitutional Alloy Greaves
       3192738011, // Substitutional Alloy Greaves
+      3364258850, // Substitutional Alloy Strides
+      3680920565, // Substitutional Alloy Robes
       3757338780, // Substitutional Alloy Mark
       3757338782, // Substitutional Alloy Mark
       3757338783, // Substitutional Alloy Mark
+      3911047865, // Substitutional Alloy Mark
+      4013678605, // Substitutional Alloy Boots
       4026120124, // Substitutional Alloy Grips
       4026120125, // Substitutional Alloy Grips
       4026120127, // Substitutional Alloy Grips
+      4070722289, // Substitutional Alloy Mask
       4078925540, // Substitutional Alloy Mask
       4078925541, // Substitutional Alloy Mask
       4078925542, // Substitutional Alloy Mask
@@ -1192,6 +1269,7 @@ const D2Sources: {
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
     ],
     searchString: [],
   },

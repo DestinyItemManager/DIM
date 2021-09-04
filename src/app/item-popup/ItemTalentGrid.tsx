@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
@@ -14,7 +14,7 @@ interface ProvidedProps {
 type Props = ProvidedProps;
 
 // TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
-export default function ItemTalentGrid({ item, perksOnly }: Props) {
+export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
   const talentGrid = item.talentGrid;
 
   if (!talentGrid) {
@@ -38,17 +38,18 @@ export default function ItemTalentGrid({ item, perksOnly }: Props) {
 
   const visibleNodes = talentGrid.nodes.filter((n) => !n.hidden);
   const numColumns = _.maxBy(visibleNodes, (n) => n.column)!.column + 1 - hiddenColumns;
-  const numRows = perksOnly ? 2 : _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
+  const numRows = _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
+
+  const height = (numRows * totalNodeSize - nodePadding) * scaleFactor;
+  const width = (numColumns * totalNodeSize - nodePadding) * scaleFactor;
 
   return (
     <svg
       preserveAspectRatio="xMaxYMin meet"
-      viewBox={`0 0 ${(numColumns * totalNodeSize - nodePadding) * scaleFactor} ${
-        (numRows * totalNodeSize - nodePadding) * scaleFactor + 1
-      }`}
+      viewBox={`0 0 ${width} ${height}`}
       className="talent-grid"
-      height={(numRows * totalNodeSize - nodePadding) * scaleFactor}
-      width={(numColumns * totalNodeSize - nodePadding) * scaleFactor}
+      height={height}
+      width={width}
     >
       <g transform={`scale(${scaleFactor})`}>
         {talentGridNodesFilter(talentGrid.nodes, hiddenColumns).map((node) => (
@@ -105,7 +106,7 @@ export default function ItemTalentGrid({ item, perksOnly }: Props) {
       </g>
     </svg>
   );
-}
+});
 
 function talentGridNodesFilter(nodes: DimGridNode[], hiddenColumns: number) {
   return (nodes || []).filter((node) => !node.hidden && node.column >= hiddenColumns);
