@@ -3,7 +3,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ItemFilter } from 'app/search/filter-types';
 import _ from 'lodash';
-import { LoadoutBuilderState } from './loadout-builder-reducer';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
@@ -21,7 +20,7 @@ export function filterItems(
   items: ItemsByBucket | undefined,
   lockedMap: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
-  lockedExotic: LoadoutBuilderState['lockedExotic'],
+  lockedExoticHash: number | undefined,
   upgradeSpendTier: UpgradeSpendTier,
   searchFilter: ItemFilter
 ): ItemsByBucket {
@@ -36,6 +35,7 @@ export function filterItems(
   Object.values(LockableBuckets).forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
+    const lockedExotic = lockedExoticHash ? defs.InventoryItem.get(lockedExoticHash) : undefined;
 
     if (items[bucket]) {
       const searchItems = items[bucket].filter(searchFilter);

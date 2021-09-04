@@ -23,7 +23,6 @@ import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
   LockableBuckets,
   LockedExclude,
-  LockedExotic,
   LockedItemCase,
   LockedItemType,
   LockedMap,
@@ -40,7 +39,7 @@ interface ProvidedProps {
   lockedMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
-  lockedExotic?: LockedExotic;
+  lockedExoticHash?: number;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -69,7 +68,7 @@ function LockArmorAndPerks({
   lockItemEnergyType,
   buckets,
   stores,
-  lockedExotic,
+  lockedExoticHash,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -188,7 +187,7 @@ function LockArmorAndPerks({
     <LockedItem key={lockedItem.item.id} lockedItem={lockedItem} onRemove={removeLockedItemType} />
   );
   return (
-    <div>
+    <>
       <div className={styles.area}>
         <SelectedArmorUpgrade
           defs={defs}
@@ -228,13 +227,13 @@ function LockArmorAndPerks({
         </div>
       </div>
       <div className={styles.area}>
-        {lockedExotic && (
+        {lockedExoticHash && (
           <div className={styles.itemGrid}>
             <ClosableContainer
               showCloseIconOnHover={true}
               onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
             >
-              <DefItemIcon itemDef={lockedExotic.def} />
+              <DefItemIcon itemDef={defs.InventoryItem.get(lockedExoticHash)} />
             </ClosableContainer>
           </div>
         )}
@@ -285,9 +284,9 @@ function LockArmorAndPerks({
       {showExoticPicker &&
         ReactDom.createPortal(
           <ExoticPicker
-            lockedExotic={lockedExotic}
+            lockedExoticHash={lockedExoticHash}
             classType={selectedStore.classType}
-            onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExotic: exotic })}
+            onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
             onClose={() => setShowExoticPicker(false)}
           />,
           document.body
@@ -301,7 +300,7 @@ function LockArmorAndPerks({
           />,
           document.body
         )}
-    </div>
+    </>
   );
 }
 

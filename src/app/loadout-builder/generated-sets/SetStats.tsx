@@ -7,13 +7,13 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { ArmorSet } from '../types';
+import { ArmorStats } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
-  stats: ArmorSet['stats'];
+  stats: ArmorStats;
   maxPower: number;
   statOrder: number[];
   enabledStats: Set<number>;

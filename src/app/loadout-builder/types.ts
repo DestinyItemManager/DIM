@@ -1,7 +1,6 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -27,12 +26,6 @@ export interface LockedExclude {
   bucket: InventoryBucket;
 }
 
-export interface LockedExotic {
-  def: DestinyInventoryItemDefinition;
-  /** The bucket has the exotic belongs to (e.g. arms). */
-  bucketHash: BucketHashes;
-}
-
 export type LockedItemType = LockedItemCase | LockedExclude;
 
 /** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
@@ -45,7 +38,7 @@ export type LockedMap = Readonly<{
  */
 export interface ArmorSet {
   /** The overall stats for the loadout as a whole. */
-  readonly stats: Readonly<{ [statHash in ArmorStatHashes]: number }>;
+  readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
 }
@@ -82,6 +75,10 @@ export type ArmorStatHashes =
   | StatHashes.Discipline
   | StatHashes.Intellect
   | StatHashes.Strength;
+
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
+export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
+export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
  * The resuablePlugSetHash from armour 2.0's general socket.

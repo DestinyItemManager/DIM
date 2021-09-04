@@ -1,10 +1,7 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -67,8 +64,6 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  combos: number;
-  combosWithoutCaps: number;
   lockedMap: LockedMap;
   statOrder: number[];
   enabledStats: Set<number>;
@@ -89,8 +84,6 @@ export default function GeneratedSets({
   selectedStore,
   sets,
   statOrder,
-  combos,
-  combosWithoutCaps,
   enabledStats,
   lockedMods,
   loadouts,
@@ -150,27 +143,6 @@ export default function GeneratedSets({
 
   return (
     <div className={styles.sets}>
-      <h2>
-        {t('LoadoutBuilder.GeneratedBuilds')}{' '}
-        <span className={styles.numSets}>
-          ({t('LoadoutBuilder.NumCombinations', { count: sets.length })})
-        </span>
-        <button
-          type="button"
-          className={`dim-button ${styles.newLoadout}`}
-          onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
-        >
-          {t('LoadoutBuilder.NewEmptyLoadout')}
-        </button>
-      </h2>
-      <UserGuideLink topic="Loadout_Optimizer" />
-      <p>
-        {t('LoadoutBuilder.OptimizerExplanation')}{' '}
-        {t('LoadoutBuilder.OptimizerExplanationArmour2Mods')}
-      </p>
-      {combos !== combosWithoutCaps && (
-        <p>{t('LoadoutBuilder.LimitedCombos', { combos, combosWithoutCaps })}</p>
-      )}
       {measureSet ? (
         <GeneratedSet
           ref={setRowHeight}

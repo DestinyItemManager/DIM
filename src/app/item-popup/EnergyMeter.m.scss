@@ -41,6 +41,15 @@
   &.void > .unused {
     border-color: #8e749e;
   }
+
+  &.stasis > .used {
+    border-color: #4d88ff;
+    background: #4d88ff;
+  }
+
+  &.stasis > .unused {
+    border-color: #4d88ff;
+  }
 }
 .increments {
   display: block;
