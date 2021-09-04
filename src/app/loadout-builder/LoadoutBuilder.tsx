@@ -1,5 +1,5 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { savedLoadoutParametersSelector, settingsSelector } from 'app/dim-api/selectors';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
@@ -36,21 +36,19 @@ import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
-import { defaultStatFilters, useLbState } from './loadout-builder-reducer';
+import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { ArmorStatHashes, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
+import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
-  preloadedLoadout?: Loadout;
+  preloadedLoadout: Loadout | undefined;
+  initialLoadoutParameters: LoadoutParameters;
 }
 
 interface StoreProps {
-  statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
   items: Readonly<{
     [classType: number]: ItemsByBucket;
   }>;
@@ -61,6 +59,51 @@ interface StoreProps {
 }
 
 type Props = ProvidedProps & StoreProps;
+
+const statOrderSelector = (state: RootState) =>
+  savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash!);
+
+/** A selector to pull out all half tier general mods so we can quick add them to sets. */
+const halfTierModsSelector = createSelector(
+  statOrderSelector,
+  d2ManifestSelector,
+  (statOrder, defs) => {
+    const halfTierMods: PluggableInventoryItemDefinition[] = [];
+
+    // Get all the item hashes for the general sockets whitelisted plugs.
+    const reusablePlugs =
+      defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
+        (p) => p.plugItemHash
+      ) || [];
+
+    for (const plugHash of reusablePlugs) {
+      const plug = defs?.InventoryItem.get(plugHash);
+
+      // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
+      // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
+      if (
+        isPluggableItem(plug) &&
+        isArmor2Mod(plug) &&
+        plug.investmentStats.some(
+          (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
+        )
+      ) {
+        halfTierMods.push(plug);
+      }
+    }
+
+    // Sort the mods so they are in the same order as our stat filters. This ensures the desired stats
+    // will be enhanced first.
+    return halfTierMods.sort(
+      compareBy((mod) => {
+        const stat = mod.investmentStats.find(
+          (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
+        );
+        return statOrder.indexOf(stat!.statTypeHash);
+      })
+    );
+  }
+);
 
 function mapStateToProps() {
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
@@ -85,62 +128,13 @@ function mapStateToProps() {
     }
   );
 
-  /** A selector to pull out all half tier general mods so we can quick add them to sets. */
-  const halfTierModsSelector = createSelector(
-    (state: RootState) =>
-      savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash!),
-    d2ManifestSelector,
-    (statOrder, defs) => {
-      const halfTierMods: PluggableInventoryItemDefinition[] = [];
-
-      // Get all the item hashes for the general sockets whitelisted plugs.
-      const reusablePlugs =
-        defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
-          (p) => p.plugItemHash
-        ) || [];
-
-      for (const plugHash of reusablePlugs) {
-        const plug = defs?.InventoryItem.get(plugHash);
-
-        // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
-        // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
-        if (
-          isPluggableItem(plug) &&
-          isArmor2Mod(plug) &&
-          plug.investmentStats.some(
-            (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
-          )
-        ) {
-          halfTierMods.push(plug);
-        }
-      }
-
-      // Sort the mods so they are in the same order as our stat filters. This ensures the desired stats
-      // will be enhanced first.
-      return halfTierMods.sort(
-        compareBy((mod) => {
-          const stat = mod.investmentStats.find(
-            (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
-          );
-          return statOrder.indexOf(stat!.statTypeHash);
-        })
-      );
-    }
-  );
-
-  return (state: RootState): StoreProps => {
-    const { loUpgradeSpendTier, loLockItemEnergyType } = settingsSelector(state);
-    return {
-      statOrder: settingsSelector(state).loStatSortOrder,
-      upgradeSpendTier: loUpgradeSpendTier,
-      lockItemEnergyType: loLockItemEnergyType,
-      items: itemsSelector(state),
-      loadouts: loadoutsSelector(state),
-      searchFilter: searchFilterSelector(state),
-      searchQuery: querySelector(state),
-      halfTierMods: halfTierModsSelector(state),
-    };
-  };
+  return (state: RootState): StoreProps => ({
+    items: itemsSelector(state),
+    loadouts: loadoutsSelector(state),
+    searchFilter: searchFilterSelector(state),
+    searchQuery: querySelector(state),
+    halfTierMods: halfTierModsSelector(state),
+  });
 }
 
 /**
@@ -148,18 +142,20 @@ function mapStateToProps() {
  */
 function LoadoutBuilder({
   stores,
-  statOrder,
-  upgradeSpendTier,
-  lockItemEnergyType,
   items,
   loadouts,
   searchFilter,
   preloadedLoadout,
   searchQuery,
   halfTierMods,
+  initialLoadoutParameters,
 }: Props) {
+  const defs = useD2Definitions()!;
   const [
     {
+      upgradeSpendTier,
+      statOrder,
+      lockItemEnergyType,
       lockedMap,
       lockedMods,
       lockedExoticHash,
@@ -169,9 +165,12 @@ function LoadoutBuilder({
       compareSet,
     },
     lbDispatch,
-  ] = useLbState(stores, preloadedLoadout);
-  const defs = useD2Definitions();
+  ] = useLbState(stores, preloadedLoadout, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
+
+  // TODO: maybe load from URL state async and fire a dispatch?
+  // TODO: save params to settings when they change
+  // TODO: save params to URL when they change? or leave it for the share...
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
 
@@ -237,8 +236,6 @@ function LoadoutBuilder({
 
   const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
 
-  const workingStatRanges = result?.statRanges || defaultStatFilters;
-
   // I dont think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -248,7 +245,7 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <TierSelect
         stats={statFilters}
-        statRanges={workingStatRanges}
+        statRanges={result?.statRanges}
         order={statOrder}
         onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
