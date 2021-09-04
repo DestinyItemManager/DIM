@@ -304,6 +304,16 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
+  "Infusion": {
+    "Filter": "Filter items",
+    "InfuseSource": "選擇要灌注入{{name}} 的物品",
+    "InfuseTarget": "選擇需要灌注至{{name}} 的物品：",
+    "InfusionMaterials": "灌注材料",
+    "NoItems": "沒有可用於灌注的物品.",
+    "NoTransfer": "移動灌注材料\n{{target}} 無法移動.",
+    "SwitchDirection": "轉換",
+    "TransferItems": "轉移"
+  },
   "ItemMove": {
     "Consolidate": "合併{{name}}",
     "Distributed": "拆分{{name}}\n{{name}} 已平均拆分於所有角色上.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "EquipWithName": "Equip to {{character}}",
+    "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
       "Locked": "Locked",

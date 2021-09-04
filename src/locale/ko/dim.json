@@ -304,6 +304,16 @@
     "Tab": "탭",
     "Vault": "아이템을 창고로 이동"
   },
+  "Infusion": {
+    "Filter": "아이템 필터",
+    "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
+    "InfuseTarget": "{{name}}에 주입할 아이템 선택",
+    "InfusionMaterials": "주입 재료",
+    "NoItems": "주입할 수 있는 아이템이 존재하지 않음",
+    "NoTransfer": "주입 재료 이동\n{{target}}은(는) 옮겨질 수 없습니다.",
+    "SwitchDirection": "전환",
+    "TransferItems": "이동"
+  },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
     "Distributed": "{{name}}을(를) 분배함\n{{name}}을(를) 모든 캐릭터에게 공평하게 나누었습니다.",
@@ -570,6 +580,7 @@
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "EquipWithName": "{{character}}에게 장착",
+    "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠금",

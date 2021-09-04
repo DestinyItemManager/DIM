@@ -1,5 +1,6 @@
 import { addCompareItem } from 'app/compare/actions';
 import { t } from 'app/i18next-t';
+import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -16,6 +17,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
+import d2Infuse from '../../images/d2infuse.png';
 import styles from './ActionButtons.m.scss';
 
 interface ActionButtonProps {
@@ -133,6 +135,28 @@ export function DistributeActionButton({
     <ActionButton onClick={dispatchDistribute}>
       <img src={arrowsOut} />
       {label && <span className={styles.label}>{t('MovePopup.DistributeEvenly')}</span>}
+    </ActionButton>
+  );
+}
+
+export function InfuseActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
+  if (!actionModel.infusable) {
+    return null;
+  }
+
+  const infuse = () => {
+    showInfuse(item);
+    hideItemPopup();
+  };
+
+  return (
+    <ActionButton onClick={infuse}>
+      <img src={d2Infuse} />
+      {label && <span className={styles.label}>{t('MovePopup.Infuse')}</span>}
     </ActionButton>
   );
 }

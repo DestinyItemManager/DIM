@@ -25,6 +25,8 @@ export interface ItemActionsModel {
   lockable: boolean;
   /** Show the Compare option for comparing similar items. */
   comparable: boolean;
+  /** Show the Infuse button for finding infusion materials. */
+  infusable: boolean;
   /** Show the Add to Loadout button. */
   loadoutable: boolean;
   /** This item is in the Postmaster, so it shouldn't get the standard move controls. This doesn't necessarily mean it can be pulled though. */
@@ -61,6 +63,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const taggable = item.taggable;
   const lockable = item.lockable || item.trackable;
   const comparable = item.comparable;
+  const infusable = !(!item.infusionFuel || !itemOwner);
   const loadoutable = !(!itemCanBeInLoadout(item) || !itemOwner);
 
   const inPostmaster = item.location.type === 'LostItems';
@@ -88,7 +91,13 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
     (inPostmaster && pullFromPostmaster) || equip.length || store.length
   );
   const hasAccessoryControls = Boolean(
-    taggable || lockable || comparable || loadoutable || canConsolidate || canDistribute
+    taggable ||
+      lockable ||
+      comparable ||
+      infusable ||
+      loadoutable ||
+      canConsolidate ||
+      canDistribute
   );
   const hasControls = hasAccessoryControls || hasMoveControls;
 
@@ -98,6 +107,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
     taggable,
     lockable,
     comparable,
+    infusable,
     loadoutable,
     inPostmaster,
     pullFromPostmaster,
