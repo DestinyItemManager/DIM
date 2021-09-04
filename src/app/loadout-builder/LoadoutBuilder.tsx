@@ -6,16 +6,19 @@ import {
 import { settingsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
+import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -32,13 +35,13 @@ import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/mod-picker/ModPicker';
-import FilterBuilds from './filter/FilterBuilds';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
+import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
-import { LoadoutBuilderState, useLbState } from './loadout-builder-reducer';
+import { defaultStatFilters, useLbState } from './loadout-builder-reducer';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
 import { ArmorStatHashes, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
@@ -241,14 +244,18 @@ function LoadoutBuilder({
     [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder, lockedExoticHash]
   );
 
-  const combos = result?.combos || 0;
-  const combosWithoutCaps = result?.combosWithoutCaps || 0;
   const sets = result?.sets;
 
   const filteredSets = useMemo(
     () => sortGeneratedSets(statOrder, enabledStats, sets),
     [statOrder, enabledStats, sets]
   );
+
+  const setSetting = useSetSetting();
+
+  const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
+
+  const workingStatRanges = result?.statRanges || defaultStatFilters;
 
   // I dont think this can actually happen?
   if (!selectedStore) {
@@ -257,13 +264,14 @@ function LoadoutBuilder({
 
   const menuContent = (
     <div className={styles.menuContent}>
-      <FilterBuilds
-        statRanges={result?.statRanges}
+      <TierSelect
         stats={statFilters}
-        onStatFiltersChanged={(statFilters: LoadoutBuilderState['statFilters']) =>
+        statRanges={workingStatRanges}
+        order={statOrder}
+        onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
-        order={statOrder}
+        onStatOrderChanged={onStatOrderChanged}
       />
 
       <LockArmorAndPerks
@@ -280,7 +288,7 @@ function LoadoutBuilder({
 
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu className={styles.menu}>
+      <PageWithMenu.Menu>
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -310,11 +318,28 @@ function LoadoutBuilder({
             </motion.div>
           )}
         </AnimatePresence>
+        <div className={styles.toolbar}>
+          <UserGuideLink topic="Loadout_Optimizer" />
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+          >
+            {t('LoadoutBuilder.NewEmptyLoadout')}
+          </button>
+        </div>
+        <div className={styles.guide}>
+          <ol>
+            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+          </ol>
+          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
+        </div>
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
-            combos={combos}
-            combosWithoutCaps={combosWithoutCaps}
             lockedMap={lockedMap}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
