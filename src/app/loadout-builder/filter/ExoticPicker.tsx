@@ -16,14 +16,13 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LockedExotic } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { LockedExoticWithPlugs } from './ExoticTile';
 
 interface Props {
-  lockedExotic?: LockedExotic;
+  lockedExoticHash?: number;
   classType: DestinyClass;
-  onSelected(lockedExotic: LockedExotic): void;
+  onSelected(lockedExoticHash: number): void;
   onClose(): void;
 }
 
@@ -84,7 +83,6 @@ function findLockableExotics(
 
       rtn.push({
         def,
-        bucketHash: item.bucket.hash,
         exoticPerk,
         exoticMods,
         isArmor1: !item.energy,
@@ -123,7 +121,10 @@ function filterAndGroupExotics(
 
   // Group by bucketHash then preserve the initial ordering as they were already
   // ordered helmet, arms, chest, and legs
-  const groupedExotics = _.groupBy(filteredExotics, (exotic) => exotic.bucketHash);
+  const groupedExotics = _.groupBy(
+    filteredExotics,
+    (exotic) => exotic.def.inventory!.bucketTypeHash
+  );
   const orderedAndGroupedExotics = Object.values(groupedExotics).sort(
     compareBy((exotics) => filteredExotics.indexOf(exotics[0]))
   );
@@ -137,7 +138,7 @@ function filterAndGroupExotics(
 }
 
 /** A drawer to select an exotic for your build. */
-export default function ExoticPicker({ lockedExotic, classType, onSelected, onClose }: Props) {
+export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const language = useSelector(languageSelector);
@@ -188,16 +189,16 @@ export default function ExoticPicker({ lockedExotic, classType, onSelected, onCl
       {({ onClose }) => (
         <div className={styles.container}>
           {filteredOrderedAndGroupedExotics.map((exotics) => (
-            <div key={exotics[0].bucketHash}>
+            <div key={exotics[0].def.inventory!.bucketTypeHash}>
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
               <div className={styles.items}>
                 {exotics.map((exotic) => (
                   <ExoticTile
                     key={exotic.def.hash}
-                    selected={lockedExotic?.def.hash === exotic.def.hash}
+                    selected={lockedExoticHash === exotic.def.hash}
                     exotic={exotic}
                     onSelected={() => {
-                      onSelected(exotic);
+                      onSelected(exotic.def.hash);
                       onClose();
                     }}
                   />

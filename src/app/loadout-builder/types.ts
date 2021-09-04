@@ -1,7 +1,6 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -25,12 +24,6 @@ export interface LockedExclude {
   type: 'exclude';
   item: DimItem;
   bucket: InventoryBucket;
-}
-
-export interface LockedExotic {
-  def: DestinyInventoryItemDefinition;
-  /** The bucket has the exotic belongs to (e.g. arms). */
-  bucketHash: BucketHashes;
 }
 
 export type LockedItemType = LockedItemCase | LockedExclude;

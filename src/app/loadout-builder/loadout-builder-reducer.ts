@@ -9,13 +9,13 @@ import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import { ArmorSet, LockedExotic, LockedItemType, LockedMap, StatFilters } from './types';
+import { ArmorSet, LockedItemType, LockedMap, StatFilters } from './types';
 import { addLockedItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
-  lockedExotic?: LockedExotic;
+  lockedExoticHash?: number;
   selectedStoreId?: string;
   statFilters: Readonly<StatFilters>;
   modPicker: {
@@ -87,7 +87,7 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; lockedExotic: LockedExotic }
+  | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; initialQuery?: string }
   | { type: 'closeModPicker' }
@@ -105,8 +105,8 @@ function lbStateReducer(
         ...state,
         selectedStoreId: action.storeId,
         lockedMap: {},
-        lockedExotic: undefined,
         statFilters: _.cloneDeep(defaultStatFilters),
+        lockedExoticHash: undefined,
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };
@@ -181,11 +181,11 @@ function lbStateReducer(
       };
     }
     case 'lockExotic': {
-      const { lockedExotic } = action;
-      return { ...state, lockedExotic };
+      const { lockedExoticHash } = action;
+      return { ...state, lockedExoticHash };
     }
     case 'removeLockedExotic': {
-      return { ...state, lockedExotic: undefined };
+      return { ...state, lockedExoticHash: undefined };
     }
     case 'openModPicker':
       return {

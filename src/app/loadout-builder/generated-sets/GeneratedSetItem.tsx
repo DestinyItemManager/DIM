@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
@@ -16,19 +15,17 @@ import { LockedItemType } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
 
+/**
+ * Shows how we recommend the energy of this armor be changed in order to fit its mods.
+ */
 function EnergySwap({
-  defs,
   item,
   lockedMods,
 }: {
-  defs: D2ManifestDefinitions;
   item: DimItem;
-  lockedMods?: PluggableInventoryItemDefinition[];
+  lockedMods: PluggableInventoryItemDefinition[];
 }) {
-  if (!lockedMods?.length) {
-    return null;
-  }
-
+  const defs = useD2Definitions()!;
   const modCost = _.sumBy(lockedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
   const itemEnergyCapacity = item.energy?.energyCapacity || 0;
   const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
@@ -79,7 +76,6 @@ export default function GeneratedSetItem({
   lockedMods?: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const defs = useD2Definitions()!;
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
   const removeLockedItem = (item: LockedItemType) =>
     lbDispatch({ type: 'removeItemFromLockedMap', item });
@@ -104,8 +100,7 @@ export default function GeneratedSetItem({
     const { plugCategoryHash } = plugDef.plug;
 
     if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
-      const def = defs.InventoryItem.get(item.hash);
-      lbDispatch({ type: 'lockExotic', lockedExotic: { def, bucketHash: item.bucket.hash } });
+      lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
     } else {
       lbDispatch({
         type: 'openModPicker',
@@ -118,7 +113,7 @@ export default function GeneratedSetItem({
 
   return (
     <div>
-      <EnergySwap defs={defs} item={item} lockedMods={lockedMods} />
+      {lockedMods && lockedMods.length > 0 && <EnergySwap item={item} lockedMods={lockedMods} />}
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />

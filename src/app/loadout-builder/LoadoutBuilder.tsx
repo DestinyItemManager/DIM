@@ -159,7 +159,15 @@ function LoadoutBuilder({
   halfTierMods,
 }: Props) {
   const [
-    { lockedMap, lockedMods, lockedExotic, selectedStoreId, statFilters, modPicker, compareSet },
+    {
+      lockedMap,
+      lockedMods,
+      lockedExoticHash,
+      selectedStoreId,
+      statFilters,
+      modPicker,
+      compareSet,
+    },
     lbDispatch,
   ] = useLbState(stores, preloadedLoadout);
   const defs = useD2Definitions();
@@ -184,11 +192,11 @@ function LoadoutBuilder({
         characterItems,
         lockedMap,
         lockedMods,
-        lockedExotic,
+        lockedExoticHash,
         upgradeSpendTier,
         filter
       ),
-    [defs, characterItems, lockedMap, lockedMods, lockedExotic, upgradeSpendTier, filter]
+    [defs, characterItems, lockedMap, lockedMods, lockedExoticHash, upgradeSpendTier, filter]
   );
 
   const { result, processing } = useProcess(
@@ -228,8 +236,9 @@ function LoadoutBuilder({
       mods: lockedMods.map((mod) => mod.hash),
       query: searchQuery,
       upgradeSpendTier,
+      exoticArmorHash: lockedExoticHash,
     }),
-    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder]
+    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder, lockedExoticHash]
   );
 
   const combos = result?.combos || 0;
@@ -263,7 +272,7 @@ function LoadoutBuilder({
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
-        lockedExotic={lockedExotic}
+        lockedExoticHash={lockedExoticHash}
         lbDispatch={lbDispatch}
       />
     </div>
