@@ -15,13 +15,14 @@ import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
 
 export function buildLoadoutParams(
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   lockedMods: PluggableInventoryItemDefinition[],
   searchQuery: string,
   statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
   statOrder: number[],
   exoticArmorHash?: number
 ): LoadoutParameters {
-  return {
+  const params: LoadoutParameters = {
     statConstraints: _.compact(
       statOrder.map((statHash) => {
         const minMax = statFilters[statHash];
@@ -40,11 +41,21 @@ export function buildLoadoutParams(
         return stat;
       })
     ),
-    mods: lockedMods.map((mod) => mod.hash),
-    query: searchQuery,
+    lockItemEnergyType,
     upgradeSpendTier,
-    exoticArmorHash,
   };
+
+  if (lockedMods) {
+    params.mods = lockedMods.map((mod) => mod.hash);
+  }
+  if (searchQuery) {
+    params.query = searchQuery;
+  }
+  if (exoticArmorHash) {
+    params.exoticArmorHash = exoticArmorHash;
+  }
+
+  return params;
 }
 
 /**
@@ -69,9 +80,10 @@ export function migrateLoadoutParametersFromSettings(settings: Settings): Settin
 }
 
 export function statOrderFromLoadoutParameters(params: LoadoutParameters): ArmorStatHashes[] {
-  return _.sortBy(armorStats, (h) =>
-    params.statConstraints!.findIndex((c) => c.statHash === h)
-  ) as ArmorStatHashes[];
+  return _.sortBy(armorStats, (h) => {
+    const index = params.statConstraints!.findIndex((c) => c.statHash === h);
+    return index >= 0 ? index : 100;
+  }) as ArmorStatHashes[];
 }
 
 export function statFiltersFromLoadoutParamaters(params: LoadoutParameters): StatFilters {

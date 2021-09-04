@@ -21,7 +21,7 @@ import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -168,8 +168,22 @@ function LoadoutBuilder({
   ] = useLbState(stores, preloadedLoadout, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
+  // Save a subset of the loadout parameters to settings in order to remember them between sessions
+  const setSetting = useSetSetting();
+  useEffect(() => {
+    const newSavedLoadoutParams = buildLoadoutParams(
+      upgradeSpendTier,
+      lockItemEnergyType,
+      [], // ignore locked mods
+      '', // and the search query
+      statFilters,
+      statOrder,
+      undefined // same with locked exotic
+    );
+    setSetting('loParameters', newSavedLoadoutParams);
+  }, [setSetting, statFilters, statOrder, upgradeSpendTier, lockItemEnergyType]);
+
   // TODO: maybe load from URL state async and fire a dispatch?
-  // TODO: save params to settings when they change
   // TODO: save params to URL when they change? or leave it for the share...
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId);
@@ -216,13 +230,22 @@ function LoadoutBuilder({
     () =>
       buildLoadoutParams(
         upgradeSpendTier,
+        lockItemEnergyType,
         lockedMods,
         searchQuery,
         statFilters,
         statOrder,
         lockedExoticHash
       ),
-    [upgradeSpendTier, lockedMods, searchQuery, statFilters, statOrder, lockedExoticHash]
+    [
+      upgradeSpendTier,
+      lockItemEnergyType,
+      lockedMods,
+      searchQuery,
+      statFilters,
+      statOrder,
+      lockedExoticHash,
+    ]
   );
 
   const sets = result?.sets;
@@ -231,10 +254,6 @@ function LoadoutBuilder({
     () => sortGeneratedSets(statOrder, enabledStats, sets),
     [statOrder, enabledStats, sets]
   );
-
-  const setSetting = useSetSetting();
-
-  const onStatOrderChanged = (sortOrder: number[]) => setSetting('loStatSortOrder', sortOrder);
 
   // I dont think this can actually happen?
   if (!selectedStore) {
@@ -250,7 +269,7 @@ function LoadoutBuilder({
         onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
         }
-        onStatOrderChanged={onStatOrderChanged}
+        onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
 
       <LockArmorAndPerks

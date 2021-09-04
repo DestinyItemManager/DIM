@@ -20,6 +20,7 @@ import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
+import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
@@ -387,6 +388,11 @@ export const dimApi = (
 };
 
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
+  // Don't worry about changing settings to their current value
+  if (deepEqual(state.settings[prop], value)) {
+    return state;
+  }
+
   return produce(state, (draft) => {
     const beforeValue = draft.settings[prop];
     draft.settings[prop] = value;

@@ -6,7 +6,6 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
-import { useSetSetting } from 'app/settings/hooks';
 import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
 import styles from './ArmorUpgradePicker.m.scss';
@@ -81,14 +80,17 @@ export function SelectedArmorUpgrade({
 function ArmorUpgradePicker({
   currentUpgradeSpendTier,
   lockItemEnergyType,
+  onLockItemEnergyTypeChanged,
+  onUpgradeSpendTierChanged,
   onClose,
 }: {
   currentUpgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
+  onLockItemEnergyTypeChanged(value: boolean): void;
+  onUpgradeSpendTierChanged(tier: UpgradeSpendTier): void;
   onClose(): void;
 }) {
   const defs = useD2Definitions()!;
-  const setSetting = useSetSetting();
 
   const upgradeOptions: { value: UpgradeSpendTier; content: ReactNode }[] = useMemo(() => {
     const elementLockDescription = lockItemEnergyType
@@ -195,7 +197,7 @@ function ArmorUpgradePicker({
               name="lo-lock-item-energy-type"
               className={styles.lockEnergyType}
               checked={lockItemEnergyType}
-              onChange={(checked) => setSetting('loLockItemEnergyType', checked)}
+              onChange={(checked) => onLockItemEnergyTypeChanged(checked)}
             >
               {t('LoadoutBuilder.LockElement')}
             </CheckButton>
@@ -208,7 +210,7 @@ function ArmorUpgradePicker({
                 })}
                 key={option.value}
                 onClick={() => {
-                  setSetting('loUpgradeSpendTier', option.value);
+                  onUpgradeSpendTierChanged(option.value);
                   onClose();
                 }}
               >

@@ -104,6 +104,12 @@ const lbStateInit = ({
 export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
+  | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
+  | {
+      type: 'lockItemEnergyTypeChanged';
+      lockItemEnergyType: LoadoutBuilderState['lockItemEnergyType'];
+    }
+  | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: LoadoutBuilderState['upgradeSpendTier'] }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -163,6 +169,24 @@ function lbStateReducer(
       return {
         ...state,
         lockedMods: action.lockedMods,
+      };
+    }
+    case 'sortOrderChanged': {
+      return {
+        ...state,
+        statOrder: action.sortOrder,
+      };
+    }
+    case 'lockItemEnergyTypeChanged': {
+      return {
+        ...state,
+        lockItemEnergyType: action.lockItemEnergyType,
+      };
+    }
+    case 'upgradeSpendTierChanged': {
+      return {
+        ...state,
+        upgradeSpendTier: action.upgradeSpendTier,
       };
     }
     case 'addGeneralMods': {
