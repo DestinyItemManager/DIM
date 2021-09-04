@@ -321,11 +321,12 @@ function LoadoutBuilder({
         </div>
         <div className={styles.guide}>
           <ol>
-            <li>{t('LoadoutBuilder.OptimizerExplanation1')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanation2')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanation3')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
+            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
           </ol>
-          <p>{t('LoadoutBuilder.OptimizerExplanation4')}</p>
+          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
         {filteredSets && (
           <GeneratedSets
