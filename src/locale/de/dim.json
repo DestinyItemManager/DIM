@@ -81,10 +81,11 @@
     "Armor2": "Rüstung 2.0",
     "Button": "Vergleichen",
     "ButtonHelp": "Gegenstände vergleichen",
-    "CompareBaseStats": "Basis-Stats anzeigen",
+    "CompareBaseStats": "Basis-Werte anzeigen",
     "Error": {
       "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
-    }
+    },
+    "InitialItem": "Das ist der Gegenstand, von dem aus der Vergleich gestartet wurde"
   },
   "Cooldown": {
     "Grenade": "Granaten Abklingzeit: {{cooldown}}",
@@ -113,7 +114,7 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "Description": "Dies ist wahrscheinlich ein Problem, das alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert.",
+    "Description": "Dies ist wahrscheinlich ein Problem, welches alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -155,7 +156,8 @@
     "Combine": "Filter können kombiniert oder mit Klammern gruppiert werden. Nutze \"or\" und \"and\", um deine Suche einzugrenzen, zum Beispiel \"{{example}}\".",
     "ContributePower": "Zeige Gegenstände die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
-    "Curated": "Zeigt Gegenstände, die eine kuratierter Roll sind.",
+    "Curated": "Zeigt Gegenstände, welche empfohlene Perks besitzen.",
+    "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
@@ -188,7 +190,7 @@
     "LockAllFailed": "Fehler beim Sperren von Gegenständen",
     "LockAllSuccess": "{{num}} Gegenstände gesperrt",
     "Locked": "Zeigt Gegenstände basierend auf deren Sperr-Status.",
-    "Masterwork": "Zeigt Gegenstände basierend auf deren Meisterwerk Stats oder Meisterwerk Level.",
+    "Masterwork": "Zeigt Gegenstände basierend auf deren Meisterwerk Werten oder Meisterwerk Level.",
     "MasterworkKills": "Zeigt Gegenstände basierend auf dem Wert des Meisterwerk-Kill-Trackers an.",
     "MaxPower": "Zeigt die Gegenstände, die die Leistungsstufe für jede Charakterklasse maximieren würden.",
     "ModSlot": "Zeigt Rüstungen mit einem bestimmten Saisonal Mod Slot.",
@@ -221,10 +223,10 @@
     "SeasonalDupe": "Zeigt doppelte Gegenstände, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
-    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Stat-Wert. Unterstützt das Verbinden mehrerer Stats-Namen mit dem + Symbol.",
-    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk-Stat-Boni. Unterstützt das Hinzufügen von Stats durch das Verbinden mehrerer Stat-Namen mit dem + Symbol.",
-    "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Stats geeignet sind.",
-    "StatsMax": "Findet Rüstung mit dem höchsten Wert für einen bestimmten Stat. Enthält alle Items mit den höchsten Stats.",
+    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Gegenstands-Wert. Unterstützt das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
+    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk-Wert-Boni. Unterstützt das Hinzufügen von Werten durch das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
+    "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
+    "StatsMax": "Findet Rüstung mit dem höchstmöglichen Wert für einen bestimmten Wert. Enthält alle Gegenstände mit den höchsten Werten.",
     "Tags": {
       "Tag": "Zeigt Items mit einem bestimmten Tag an.",
       "Tagged": "Zeigt Items mit irgend einem Tag an."
@@ -301,16 +303,6 @@
     "StartSearchClear": "Starte eine neue Suche",
     "Tab": "TAB",
     "Vault": "Sende Gegenstand zum Tresor"
-  },
-  "Infusion": {
-    "Filter": "Gegenstände filtern",
-    "InfuseSource": "Gegenstand auswählen um ihn in {{name}} zu infundieren",
-    "InfuseTarget": "Gegenstand zum Infundieren in {{name}} auswählen",
-    "InfusionMaterials": "Infusions-Material",
-    "NoItems": "Keine infundierbaren Gegenstände verfügbar.",
-    "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
-    "SwitchDirection": "Wechseln",
-    "TransferItems": "Übertragen"
   },
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
@@ -416,10 +408,10 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 Mods hinzufügen",
-    "AscendantShardDetails": "Für alle Gegenstände wird der Optimierer Meisterwerk-Bonus und Energie-Level verwenden. {{elementLockDescription}}",
-    "AscendantShardNotExoticDetails": "Bei legendären Gegenständen wird der Optimierer Meisterwerk-Bonus und Energie-Level verwenden. {{elementLockDescription}}\n\nFür Exotics mit einem Energie-Level von {{energyLevel}} oder darunter, geht der Optimierer von einem Energie-Level von {{energyLevel}} aus und tauscht die Affinität bei Bedarf, um Mods zuzuweisen. Exotics werden mit den aktuellen Stats verwendet.\n\nMomentan gemeisterte, legendäre Gegenstände und Exotics, mit einem Energie-Level über {{energyLevel}}, werden mit der bestehenden Affinität verwendet.",
-    "AscendantShardNotMasterworkedDetails": "Für alle Gegenstände wird der Optimierer Meisterwerk-Bonus und Energie-Level verwenden. {{elementLockDescription}}\n\nMomentan gemeisterte Gegenstände verwenden ihre bestehende Affinität.",
-    "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Stats:",
+    "AscendantShardDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}",
+    "AscendantShardNotExoticDetails": "Bei legendären Gegenständen geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nFür Exotics mit einer Energiekapazität von {{energyLevel}} oder darunter, geht der Optimierer von einer Energiekapazität von {{energyLevel}} aus und tauscht die Affinität bei Bedarf, um Mods zuzuweisen. Exotics werden mit den aktuellen Werten verwendet.\n\nMomentan gemeisterte, legendäre Gegenstände und Exotics, mit einer Energiekapazität über {{energyLevel}}, werden mit der bestehenden Affinität verwendet.",
+    "AscendantShardNotMasterworkedDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nMomentan gemeisterte Gegenstände verwenden ihre bestehende Affinität.",
+    "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Werten:",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deiner Ausrüstung \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",
@@ -430,9 +422,7 @@
     "ExcludeItem": "Gegenstand ausschließen",
     "ExistingLoadout": "Bestehende Ausrüstung",
     "Filter": "Filter",
-    "GeneratedBuilds": "Builds",
-    "LegendaryShardsAndEnhancementPrismDetails": "Die aktuellen Stats aller Gegenstände werden verwendet. Für Gegenstände mit einem Energie-Level von {{energyLevel}} oder darunter, geht der Optimierer von einem Energie-Level von {{energyLevel}} aus. {{elementLockDescription}}\n\nGegenstände mit einem Energie-Level über {{energyLevel}} werden ihr vorhandenes Energie-Level und Affinität verwenden.",
-    "LimitedCombos": "Du hast {{combosWithoutCaps, number}} mögliche Kombinationen, aber DIM hat nur die {{combos, number}} höchsten Kombinationen betrachtet, um den Browser vor dem Absturz zu bewahren. Wähle ein paar Perks, nutze die Suche oder zerlege alte Rüstung, um die Zahl der Kombinationen zu senken. Das Fixieren allgemeiner oder saisonaler Mods erhöht die Anzahl der Kombinationen.",
+    "LegendaryShardsAndEnhancementPrismDetails": "Die aktuellen Werte aller Gegenstände werden verwendet. Für Gegenstände mit einer Energiekapazität von {{energyLevel}} oder darunter, geht der Optimierer von einer Energiekapazität von {{energyLevel}} aus. {{elementLockDescription}}\n\nGegenstände mit einer Energiekapazität über {{energyLevel}} werden ihre vorhandene Energiekapazität und Affinität verwenden.",
     "LockElement": "Affinität sperren",
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
     "LockItem": "Gegenstand anpinnen",
@@ -441,13 +431,14 @@
     "NoComparableItems": "Diese Ausrüstung hat keine vergleichbaren Gegenstände. Das Speichern des Optimierer-Sets wird die Gegenstände zu dieser Ausrüstung hinzufügen.",
     "NoLoadoutsToCompare": "Keine Ausrüstungen für Vergleich",
     "NoUpgrades": "Keine Upgrades",
-    "NoUpgradesDetails": "Die aktuellen Stats, Energie-Level und die Affinität deiner Gegenstände werden verwendet, um die Gesamtsumme zu bestimmen und die Mods zuzuordnen.",
+    "NoUpgradesDetails": "Die aktuellen Werte, Energiekapazität und die Affinität deiner Gegenstände werden verwendet, um die Gesamtsumme zu bestimmen und die Mods zuzuordnen.",
     "NotExotics": "{{material}} (keine Exotik)",
     "NotMasterworked": "{{material}} (Nicht gemeisterwerkt)",
-    "NumCombinations": "{{count, number}} Kombinationen",
-    "NumCombinations_plural": "{{count, number}} Kombinationen",
-    "OptimizerExplanation": "Wähle die gewünschten Stats und die Reihenfolge der Prioritäten und wähle dann aus, welche Mods du verwenden möchtest.",
-    "OptimizerExplanationArmour2Mods": "Stat-Änderungen von ausgerüsteten Rüstungsmods sind, soweit wie möglich, ausgeschlossen und werden wieder hinzugefügt, wenn du sie auswählst.",
+    "OptimizerExplanationGuide": "Lies das Benutzerhandbuch für weitere Informationen und ein Video-Tutorial.",
+    "OptimizerExplanationMods": "Wähle ein Exotik und alle Mods, die du verwenden möchtest. Der Loadout Optimierer berücksichtigt nur Wert-Bonusse von Mods, die du wählst - alle Mods auf der Rüstung werden ignoriert.",
+    "OptimizerExplanationSearch": "Verwende die Suchleiste, um die Gegenstände für den Ausrüstungs-Optimierer zu filtern.",
+    "OptimizerExplanationStats": "Ziehe die wichtigsten Statistiken nach oben, und setze Werte, die dir nicht wichtig sind, auf ignorieren.",
+    "OptimizerExplanationUpgrades": "Wähle aus, für welche Rüstung der Ausrüstungs-Optimierer Materialien verwenden kann. Er kann Meisterwerke vorschlagen, um die Werte zu erhöhen, oder Energieverbesserungen und Affinität wechseln, um die gewünschten Mods zu benutzen.",
     "OptimizerSet": "Optimierer-Set",
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
     "ResetLocked": "Setze angepinnte Gegenstände zurück",
@@ -509,7 +500,7 @@
     "MaxSlots": "Du kannst nur {{slots}} Gegenstände dieser Art in einer Ausrüstung haben.",
     "MaximizeLight": "Licht maximieren",
     "MaximizePower": "Power maximieren",
-    "MaximizeStat": "Maximiere Stats",
+    "MaximizeStat": "Maximiere Werte",
     "Mods": "Mods",
     "ModsInfo": "DIM kann keine Mods ausstatten, das muss im Spiel geschehen.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
     "EquipWithName": "Anlegen an {{character}}",
-    "Infuse": "Infundieren",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
       "Locked": "Gesperrt",
@@ -654,7 +644,7 @@
       "Source": "Quelle",
       "StatQuality": "Wert-Qualität",
       "StatQualityStat": "{{stat}}%",
-      "Stats": "Stats",
+      "Stats": "Werte",
       "Tag": "Markierung",
       "Tier": "Tier",
       "Traits": "Waffeneigenschaften",
@@ -732,7 +722,7 @@
     "ColumnSize": "{{num}} Gegenstände",
     "ColumnSizeAuto": "Automatisch",
     "CsvImport": "Importiere CSV",
-    "CustomStatDesc": "Wähle Rüstungs-Stats, um eine benutzerdefinierte Gesamt-Stat zu erstellen, die im Popup, Organizer und Vergleich angezeigt wird. Suche mit stat:custom:>=30.",
+    "CustomStatDesc": "Wähle Rüstungswerte, um einen benutzerdefinierten Gesamtwert zu erstellen, der im Popup, Organizer und Vergleich angezeigt wird. Suche mit stat:custom:>=30.",
     "Data": "Excel Tabelle",
     "DefaultItemSizeNote": "Eine Größe von 50px wird am schärfsten aussehen, ohne das Bild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Gegenstände zu finden und du kannst das Vergleichstool nutzen, um verwandte Gegenstände zu evaluieren.",
@@ -779,7 +769,7 @@
   "Stats": {
     "BarricadeCooldown": "Abklingzeit Barrikade",
     "Custom": "Benutzerdefinierte Summe",
-    "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Stats, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Stats enthalten sind.",
+    "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Werte, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Werte enthalten sind.",
     "DarkGrenadeCooldown": "Dunkle Granate Abklingzeit",
     "DarkMeleeCooldown": "Dunkler Nahkampf Abklingzeit",
     "DarkSuperCooldown": "Dunkle Super Abklingzeit",

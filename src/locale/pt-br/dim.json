@@ -84,7 +84,8 @@
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
       "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
-    }
+    },
+    "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item"
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
     "Cosmetic": "Exibe itens que são de estilo ou cosméticos.",
     "Curated": "Exibe itens que possuem valores curados.",
+    "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
@@ -302,16 +304,6 @@
     "Tab": "TAB",
     "Vault": "Enviar item para o cofre"
   },
-  "Infusion": {
-    "Filter": "Filtrar itens",
-    "InfuseSource": "Selecione o item para infundir {{name}} em",
-    "InfuseTarget": "Selecione o item para infundir em {{name}}",
-    "InfusionMaterials": "Materiais de infusão",
-    "NoItems": "Nenhum item para infusão disponível.",
-    "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
-    "SwitchDirection": "Inverter",
-    "TransferItems": "Transferir"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
     "Distributed": "{{name}} distribuído\n{{name}} está agora dividido por igual entre os personagens.",
@@ -430,9 +422,7 @@
     "ExcludeItem": "Ignorar item",
     "ExistingLoadout": "Set Existente",
     "Filter": "Filtros",
-    "GeneratedBuilds": "Construções",
     "LegendaryShardsAndEnhancementPrismDetails": "Os atributos atuais dos itens serão mantidos. Para itens com {{energyLevel}} de energia ou inferior, o Otimizador assumirá {{energyLevel}} de energia. {{elementLockDescription}}\n\nItens acima de {{energyLevel}} de energia usarão a energia atual e manterão o tipo de elemento.",
-    "LimitedCombos": "Você tem {{combosWithoutCaps, number}} combinações de armaduras possíveis, mas o DIM só checou os {{combos, number}} combos com os atributos mais altos para impedir que seu navegador trave. Selecione alguns perks, use uma busca ou desmonte armaduras antigas para reduzir o número de combos. Fixar mods gerais ou sazonais aumentará o número de combos.",
     "LockElement": "Manter o elemento",
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
@@ -444,10 +434,11 @@
     "NoUpgradesDetails": "Os atributos, o nível de energia e o tipo de elemento atual dos seus itens serão mantidos para determinar os valores totais e mods que poderão ser atribuídos.",
     "NotExotics": "{{material}} (Exceto Exóticos)",
     "NotMasterworked": "{{material}} (Exceto Obras-primas)",
-    "NumCombinations": "{{count, number}} combinação",
-    "NumCombinations_plural": "{{count, number}} combinações",
-    "OptimizerExplanation": "Escolha os atributos desejados e suas prioridades, depois escolha quais mods você quer usar.",
-    "OptimizerExplanationArmour2Mods": "Alterações de atributos nos mods de Armaduras 2.0 equipados são ignoradas sempre que possível e reconsideradas ao selecioná-los.",
+    "OptimizerExplanationGuide": "Leia o Guia de Usuário para mais informações e um vídeo tutorial.",
+    "OptimizerExplanationMods": "Escolha um exótico e quaisquer mods que queira usar. O Otimizador de Set incluirá apenas os bônus de atributos dos mods que você escolher. Todos os mods que já estão nas armaduras serão ignorados.",
+    "OptimizerExplanationSearch": "Use a barra de pesquisa para filtrar os itens no Otimizador de Set.",
+    "OptimizerExplanationStats": "Arraste os atributos mais importantes para o topo, e escolha também os atributos que podem ser ignorados.",
+    "OptimizerExplanationUpgrades": "Selecione em quais melhorias de armadura o Otimizador de Set pode gastar materiais. O Otimizador poderá sugerir obras-primas para aumentar atributos, aumento de energia ou troca do tipo de energia para permitir usar os mods solicitados.",
     "OptimizerSet": "Set do Otimizador",
     "ProcessingSets": "Processando sets de\n{{character}}",
     "ResetLocked": "Resetar itens fixados",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "EquipWithName": "Equipar em {{character}}",
-    "Infuse": "Infunda",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
       "Locked": "Bloqueado",

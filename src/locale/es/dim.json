@@ -84,7 +84,8 @@
     "CompareBaseStats": "Mostrar Estadísticas Base",
     "Error": {
       "Unmatched": "Este artículo no coincide con el tipo de objetos siendo comparados."
-    }
+    },
+    "InitialItem": "Este es el objeto por el cual la herramienta de comparación fue lanzada"
   },
   "Cooldown": {
     "Grenade": "Enfriamiento de Granada: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
     "Cosmetic": "Muestra objetos que son cosméticos o estilo.",
     "Curated": "Muestra objetos que tengan una tirada de curador.",
+    "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
@@ -302,16 +304,6 @@
     "Tab": "TABULADOR",
     "Vault": "Enviar objeto al depósito"
   },
-  "Infusion": {
-    "Filter": "Filtrar objetos",
-    "InfuseSource": "Selecciona objeto para infundir {{name}} en",
-    "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
-    "InfusionMaterials": "Materiales para infundir",
-    "NoItems": "No hay objetos disponibles para infundir.",
-    "NoTransfer": "El material para infundir\n{{target}} no puede ser movido.",
-    "SwitchDirection": "Cambiar",
-    "TransferItems": "Transferir"
-  },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
     "Distributed": "{{name}} Distribuidos.\nAhora {{name}} se encuentra dividido entre los personajes de manera equitativa.",
@@ -430,9 +422,7 @@
     "ExcludeItem": "Excluir objeto",
     "ExistingLoadout": "Equipación Existente",
     "Filter": "Filtros",
-    "GeneratedBuilds": "Equipamientos",
     "LegendaryShardsAndEnhancementPrismDetails": "Todas las estadísticas actuales de los objetos serán usadas. Para los objetos a {{energyLevel}} de energía o por debajo, el Optimizador asumirá {{energyLevel}} de energía. {{elementLockDescription}}\n\nLos objetos por encima de {{energyLevel}} de energía usarán su nivel de energía y elemento actuales.",
-    "LimitedCombos": "Tienes {{combosWithoutCaps, number}} de combinaciones posibles, pero DIM sólo mostró las {{combos, number}} combinaciones de estadísticas más altas para prevenir que tu navegador se bloquee. Selecciona algunas ventajas, usa una búsqueda, o desmantela armadura antigua para reducir el número de combinaciones. Anclar modificadores generales o de temporada incremeneta el número de combinaciones.",
     "LockElement": "Bloquear Elemento",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
@@ -444,10 +434,11 @@
     "NoUpgradesDetails": "Las estadísticas actuales, nivel de energía y elemento de tus objetos serán usados cuando se determinen los totales y se asignen los modificadores.",
     "NotExotics": "{{material}} (No exótico)",
     "NotMasterworked": "{{material}} (Sin Obra Maestra Completa)",
-    "NumCombinations": "{{count, number}} combinación",
-    "NumCombinations_plural": "{{count, number}} combinaciones",
-    "OptimizerExplanation": "Elige las estadísticas que quieras, y su orden de prioridad, luego elige cuáles modificadores quieres usar.",
-    "OptimizerExplanationArmour2Mods": "Los cambios de estadísticas para Modificadores de Armadura 2.0 equipados estarán excluídos cuando sea posible, y luego añadidos de vuelta cuando los selecciones.",
+    "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
+    "OptimizerExplanationMods": "Elige un exótico y los cualquier modificador que quieras usar. El Optimizador de Equipaciones sólo incluirá los bonus de estadísticas desde los modificadores que elijas - todos los modificadores actuales en la armadura serán ignorados.",
+    "OptimizerExplanationSearch": "Usa la barra de búsqueda para filtrar los objetos que el Optimizador de Equipaciones use.",
+    "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba, y el set de estadísticas que no te importen a Ignorar.",
+    "OptimizerExplanationUpgrades": "Selecciona en qué Actualizaciones de Armadura puede gastar gastar el Optimizador de Equipaciones los materiales. Podría sugerir Obra Maestra Completa para aumentar las estadísticas, o mejoras de energía y cambios de elemento para encajar tus modificadores solicitados.",
     "OptimizerSet": "Set Optimizador",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
     "ResetLocked": "Reiniciar objetos anclados",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
     "EquipWithName": "Equipar en {{character}}",
-    "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
       "Locked": "Bloqueado",

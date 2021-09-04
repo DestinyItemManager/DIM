@@ -84,7 +84,8 @@
     "CompareBaseStats": "Mostra statistiche di base",
     "Error": {
       "Unmatched": "Impossibile confrontare oggetti di tipo diverso."
-    }
+    },
+    "InitialItem": "Questo è l'oggetto dal quale è stato lanciato lo Strumento di Confronto"
   },
   "Cooldown": {
     "Grenade": "Recupero delle granate: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
     "Cosmetic": "Mostra gli oggetti di stile o cosmetici.",
     "Curated": "Mostra gli oggetti che hanno un roll curato.",
+    "CurrentClass": "Mostra tutti gli oggetti che sono equipaggiabili sul Guardiano attualmente in uso.",
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti duplicati, compresi quelli ri-emessi",
@@ -302,16 +304,6 @@
     "Tab": "TAB",
     "Vault": "Invia l'oggetto al deposito"
   },
-  "Infusion": {
-    "Filter": "Filtra oggetti",
-    "InfuseSource": "Selezionare oggetto in cui infondere {{name}}",
-    "InfuseTarget": "Selezionare oggetto da infondere in {{name}}",
-    "InfusionMaterials": "Materiali da Infusione",
-    "NoItems": "Nessun oggetto disponibile per l'infusione.",
-    "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
-    "SwitchDirection": "Cambia",
-    "TransferItems": "Trasferisci"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
     "Distributed": "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
@@ -430,9 +422,7 @@
     "ExcludeItem": "Escludi Oggetto",
     "ExistingLoadout": "Loadout Esistente",
     "Filter": "Filtri",
-    "GeneratedBuilds": "Build Generate",
     "LegendaryShardsAndEnhancementPrismDetails": "Le statistiche attuali di tutti gli oggetti verranno utilizzate. Per gli oggetti a {{energyLevel}} energia o meno, l'Ottimizzatore presupporrà {{energyLevel}} energia. {{elementLockDescription}}\n\nGli oggetti sopra {{energyLevel}} energia useranno il loro livello di energia attuale ed elemento.",
-    "LimitedCombos": "Ci sono {{combosWithoutCaps, number}} possibili combinazioni di armature, ma DIM ha considerato solo le {{combos, number}} con le combinazioni di statistiche più alte per evitare che il tuo browser crashi. Seleziona perk, utilizza la ricerca oppure smantella le armature vecchie per ridurre il numero di combinazioni possibili. Bloccare Modifiche generiche o stagionali aumenta il numero di combinazioni.",
     "LockElement": "Blocca Elemento",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
@@ -444,10 +434,11 @@
     "NoUpgradesDetails": "Le statistiche attuali, livello di energia ed elemento dei tuoi oggetti saranno usati per determinare i totali e assegnare Modifiche.",
     "NotExotics": "{{material}} (Non Esotiche)",
     "NotMasterworked": "{{material}} (Non prodigioso)",
-    "NumCombinations": "{{count, number}} combinazione",
-    "NumCombinations_plural": "{{count, number}} combinazioni",
-    "OptimizerExplanation": "Scegli le statistiche che vuoi, e il loro ordine di priorità, quindi scegli quali Modifiche vuoi usare.",
-    "OptimizerExplanationArmour2Mods": "I cambiamenti dovuti alle Armature 2.0 equipaggiate sono esclusi ove possibile, e vengono aggiunti nuovamente quando li selezioni.",
+    "OptimizerExplanationGuide": "Leggi la Guida Utente per maggiori informazioni e un video tutorial.",
+    "OptimizerExplanationMods": "Scegli una Esotica e le Modifiche che vuoi usare. L'Ottimizzatore di Loadout include solo i bonus statistiche delle Modifiche che scegli - tutte quelle già sull'armatura vengono ignorate.",
+    "OptimizerExplanationSearch": "Usa la barra di ricerca per filtrare gli oggetti che l'Ottimizzatore di Loadout usa.",
+    "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e imposta quelle che non ti interessano su \"Ignora\".",
+    "OptimizerExplanationUpgrades": "Seleziona su quali potenziamenti armatura l'Ottimizzatore Loadout può spendere materiali. Potrebbe suggerire di renderla prodigiosa per aumentare le statistiche, oppure potenziamenti di energia e cambio di elemento per adattarla alle Modifiche richieste.",
     "OptimizerSet": "Set Ottimizzatore",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
     "ResetLocked": "Resetta oggetti bloccati",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
     "EquipWithName": "Equipaggia su {{character}}",
-    "Infuse": "Infondi",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
       "Locked": "Bloccato",

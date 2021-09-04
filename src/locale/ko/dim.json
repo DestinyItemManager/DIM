@@ -84,7 +84,8 @@
     "CompareBaseStats": "기본 능력치 표시",
     "Error": {
       "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
-    }
+    },
+    "InitialItem": "비교 도구가 실행된 아이템입니다."
   },
   "Cooldown": {
     "Grenade": "수류탄 재사용 대기시간: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "전투력을 높일 수 있는 아이템 표시",
     "Cosmetic": "장식 및 기타 아이템 표시",
     "Curated": "고정 특성 조합이 있는 아이템 표시",
+    "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템 표시",
     "DamageType": "대미지 유형에 따른 아이템 표시",
     "Description": "설명",
     "Dupe": "재출시를 포함하여 중복된 아이템 표시",
@@ -302,16 +304,6 @@
     "Tab": "탭",
     "Vault": "아이템을 창고로 이동"
   },
-  "Infusion": {
-    "Filter": "아이템 필터",
-    "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
-    "InfuseTarget": "{{name}}에 주입할 아이템 선택",
-    "InfusionMaterials": "주입 재료",
-    "NoItems": "주입할 수 있는 아이템이 존재하지 않음",
-    "NoTransfer": "주입 재료 이동\n{{target}}은(는) 옮겨질 수 없습니다.",
-    "SwitchDirection": "전환",
-    "TransferItems": "이동"
-  },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
     "Distributed": "{{name}}을(를) 분배함\n{{name}}을(를) 모든 캐릭터에게 공평하게 나누었습니다.",
@@ -430,9 +422,7 @@
     "ExcludeItem": "아이템 제외",
     "ExistingLoadout": "기존 로드아웃",
     "Filter": "필터",
-    "GeneratedBuilds": "빌드",
     "LegendaryShardsAndEnhancementPrismDetails": "모든 아이템의 현재 능력치가 사용됩니다. 로드아웃 최적화에서 {{energyLevel}} 에너지 이하의 아이템은 {{energyLevel}} 에너지 레벨로 가정합니다. {{elementLockDescription}}\n\n{{energyLevel}} 이상의 에너지를 가진 아이템은 현재 에너지의 유형과 레벨을 사용할 것입니다.",
-    "LimitedCombos": "총 {{combosWithoutCaps, number}}개의 방어구 능력치 조합이 있으나, DIM은 브라우저가 충돌하는 것을 막기 위해 {{combos, number}}개의 가장 높은 능력치의 조합만 살펴보았습니다. 조합의 수를 줄이려면 특성을 선택하거나 검색을 사용하고 오래된 방어구를 분해하세요. 일반이나 시즌 개조 부품을 고정하면 조합의 수가 늘어납니다.",
     "LockElement": "에너지 유형 잠금",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
@@ -444,10 +434,11 @@
     "NoUpgradesDetails": "능력치의 값과 개조 부품을 정하기 위해 아이템의 현재 능력치, 에너지 유형과 레벨이 사용될 것입니다.",
     "NotExotics": "{{material}} (경이 제외)",
     "NotMasterworked": "{{material}} (걸작 안됨)",
-    "NumCombinations": "조합 {{count, number}}개",
-    "NumCombinations_plural": "조합 {{count, number}}개",
-    "OptimizerExplanation": "원하는 능력치와 우선순위를 선택하고 사용할 개조 부품을 선택하세요.",
-    "OptimizerExplanationArmour2Mods": "장착된 방어구 2.0 개조 부품으로 인한 능력치 변경점은 가능한 제외하였으며, 선택 시 다시 추가됩니다.",
+    "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
+    "OptimizerExplanationMods": "사용하고 싶은 경이 아이템과 개조 부품을 선택하세요. 로드아웃 최적화는 선택된 개조 부품의 능력치 증가량만 반영하며 이미 방어구에 장착된 개조 부품은 무시합니다.",
+    "OptimizerExplanationSearch": "검색 창을 사용해서 로드아웃 최적화가 사용할 아이템을 필터링하세요.",
+    "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 필요 없는 능력치는 무시로 설정하세요.",
+    "OptimizerExplanationUpgrades": "로드아웃 최적화가 재료를 사용할 수 있는 방어구 업그레이드를 선택하세요. 걸작을 제작하여 능력치를 증가시키거나, 에너지 업그레이드나 속성을 변경하여 요청된 개조 부품에 맞추도록 제안할 수 있습니다.",
     "OptimizerSet": "최적화 조합",
     "ProcessingSets": "{{character}}의 조합 처리 중",
     "ResetLocked": "고정된 아이템 초기화",
@@ -579,7 +570,6 @@
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "EquipWithName": "{{character}}에게 장착",
-    "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠금",
