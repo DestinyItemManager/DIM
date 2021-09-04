@@ -38,7 +38,7 @@ export type LockedMap = Readonly<{
  */
 export interface ArmorSet {
   /** The overall stats for the loadout as a whole. */
-  readonly stats: Readonly<{ [statHash in ArmorStatHashes]: number }>;
+  readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
 }
@@ -75,6 +75,10 @@ export type ArmorStatHashes =
   | StatHashes.Discipline
   | StatHashes.Intellect
   | StatHashes.Strength;
+
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
+export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
+export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
  * The resuablePlugSetHash from armour 2.0's general socket.

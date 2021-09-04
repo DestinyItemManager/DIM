@@ -9,7 +9,7 @@ import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import { ArmorSet, ArmorStatHashes, LockedItemType, LockedMap, MinMaxIgnored } from './types';
+import { ArmorSet, LockedItemType, LockedMap, StatFilters } from './types';
 import { addLockedItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
@@ -17,7 +17,7 @@ export interface LoadoutBuilderState {
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash?: number;
   selectedStoreId?: string;
-  statFilters: Readonly<{ [statHash in ArmorStatHashes]: MinMaxIgnored }>;
+  statFilters: Readonly<StatFilters>;
   modPicker: {
     open: boolean;
     initialQuery?: string;

@@ -5,7 +5,7 @@ import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { ArmorSet, ArmorStatHashes, LockableBuckets, MinMax, MinMaxIgnored } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
 import { SetTracker } from './set-tracker';
@@ -59,18 +59,17 @@ function compareByStatOrder(
 export function process(
   filteredItems: ProcessItemsByBucket,
   /** Selected mods' total contribution to each stat */
-  // TODO: use stat hash, or order
-  modStatTotals: ArmorSet['stats'],
+  modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
   lockedModMap: LockedProcessMods,
   /** The user's chosen stat order, including disabled stats */
-  statOrder: number[],
-  statFilters: { [statHash in ArmorStatHashes]: MinMaxIgnored }
+  statOrder: ArmorStatHashes[],
+  statFilters: StatFilters
 ): {
   sets: ProcessArmorSet[];
   combos: number;
   combosWithoutCaps: number;
-  statRanges?: { [statHash in ArmorStatHashes]: MinMax };
+  statRanges?: StatRanges;
 } {
   const pstart = performance.now();
 
@@ -83,7 +82,7 @@ export function process(
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRanges: { [statHash in ArmorStatHashes]: MinMax } = _.mapValues(statFilters, (filter) =>
+  const statRanges: StatRanges = _.mapValues(statFilters, (filter) =>
     filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
   );
 
@@ -216,7 +215,7 @@ export function process(
 
             // TODO: why not just another ordered list?
             // Start with the contribution of mods. Spread operator is slow.
-            const stats: ArmorSet['stats'] = {
+            const stats: ArmorStats = {
               [StatHashes.Mobility]: modStatTotals[StatHashes.Mobility],
               [StatHashes.Resilience]: modStatTotals[StatHashes.Resilience],
               [StatHashes.Recovery]: modStatTotals[StatHashes.Recovery],

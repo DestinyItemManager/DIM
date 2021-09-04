@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { assignModsToArmorSet } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
-import { ArmorSet, ArmorStatHashes, LockableBucketHashes } from '../types';
+import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
@@ -31,11 +31,11 @@ function getItemStats(
   defs: D2ManifestDefinitions,
   item: DimItem,
   upgradeSpendTier: UpgradeSpendTier
-): { [statHash in ArmorStatHashes]: number } {
+): ArmorStats {
   const baseStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = item.stats?.find((s) => s.statHash === statHash)?.base || 0;
     return memo;
-  }, {}) as { [statHash in ArmorStatHashes]: number };
+  }, {}) as ArmorStats;
 
   if (
     upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10 ||
@@ -126,7 +126,7 @@ function CompareDrawer({
   const loadoutStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = 0;
     return memo;
-  }, {}) as { [statHash in ArmorStatHashes]: number };
+  }, {}) as ArmorStats;
 
   for (const item of loadoutItems) {
     const itemStats = getItemStats(defs, item, upgradeSpendTier);

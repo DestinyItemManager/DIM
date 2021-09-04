@@ -1,5 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ArmorSet, ArmorStatHashes } from '../types';
+import { ArmorStats } from '../types';
 
 export interface ProcessItem {
   bucketHash: number;
@@ -29,14 +29,14 @@ export type ProcessItemsByBucket = Readonly<{
 
 export interface ProcessArmorSet {
   /** The overall stats for the loadout as a whole. */
-  readonly stats: Readonly<{ [statHash in ArmorStatHashes]: number }>;
+  readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
 }
 
 export interface IntermediateProcessArmorSet {
   /** The overall stats for the loadout as a whole. */
-  stats: ArmorSet['stats'];
+  stats: ArmorStats;
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
 }

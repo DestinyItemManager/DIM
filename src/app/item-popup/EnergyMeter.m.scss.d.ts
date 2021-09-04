@@ -11,6 +11,7 @@ interface CssExports {
   'increments': string;
   'inner': string;
   'solar': string;
+  'stasis': string;
   'unused': string;
   'upgradeButton': string;
   'upgradePreview': string;

@@ -7,11 +7,12 @@ interface CssExports {
   'energyCapacity': string;
   'energyCapacityIcon': string;
   'engram': string;
+  'fixContrast': string;
   'fullstack': string;
-  'lightBackgroundElement': string;
   'masterwork': string;
   'quality': string;
   'solar': string;
+  'stasis': string;
   'void': string;
   'wishlistRoll': string;
 }
