@@ -4,6 +4,7 @@
 * Elemental Capacitor stats are no longer added to weapons with the perk enabled.
 * In the Loadout Optimizer, searching items now works in conjunction with locking exotics and items.
 * Added `is:currentclass` filter, which selects items currently equippable on the logged in guardian.
+* Fixed armor swaps away from Stasis in Loadout Optimizer.
 
 ## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
 
