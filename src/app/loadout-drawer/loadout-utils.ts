@@ -205,6 +205,28 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
+function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
+  for (const item of allItems) {
+    if (
+      (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
+      ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
+    ) {
+      return item;
+    }
+  }
+  return undefined;
+}
+
+export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
+  for (const loadoutItem of loadout.items) {
+    const item = findItem(allItems, loadoutItem);
+    if (!item) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
  * are returned as warnitems.
@@ -218,22 +240,10 @@ export function getItemsFromLoadoutItems(
     return [emptyArray(), emptyArray()];
   }
 
-  const findItem = (loadoutItem: LoadoutItem) => {
-    for (const item of allItems) {
-      if (
-        (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
-        ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
-      ) {
-        return item;
-      }
-    }
-    return undefined;
-  };
-
   const items: DimItem[] = [];
   const warnitems: DimItem[] = [];
   for (const loadoutItem of loadoutItems) {
-    const item = findItem(loadoutItem);
+    const item = findItem(allItems, loadoutItem);
     if (item) {
       items.push(item);
     } else {

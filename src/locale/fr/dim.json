@@ -84,7 +84,8 @@
     "CompareBaseStats": "Afficher les Statistiques de base",
     "Error": {
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
-    }
+    },
+    "InitialItem": "This is the item the Compare tool was launched from"
   },
   "Cooldown": {
     "Grenade": "Délai de la Grenade: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
     "Curated": "Affiche les objets qui ont des statistiques et attributs présélectionnés.",
+    "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Affiche les doublons, y compris les rééditions",
@@ -430,9 +432,7 @@
     "ExcludeItem": "Exclure L'Objet",
     "ExistingLoadout": "Arsenal Existant",
     "Filter": "Filtres",
-    "GeneratedBuilds": "Builds",
     "LegendaryShardsAndEnhancementPrismDetails": "Les stats actuels de tous les objets seront utilisés. Pour les objets à {{energyLevel}} d'énergie ou moins, l'optimiseur considéra qu'ils ont {{energyLevel}} d'énergie. {{elementLockDescription}}\n\nLes équipement au dessus de {{energyLevel}} d'énergie conserveront leur élément actuel.",
-    "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaison d'armure possible, mais DIM n'a regardé que les {{combos, number}} meilleurs combos de statistiques pour s'assurer que votre navigateur n'aies pas d'erreur. Sélectionnez des attributs, utiliser la recherche, ou démantelez de vieilles armures pour réduire le nombre de combos. Épingler des mods généraux ou saisonniers augmente le nombre de combos.",
     "LockElement": "Verrouiller l'élément",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
@@ -444,10 +444,11 @@
     "NoUpgradesDetails": "Les stats, le niveau d'énergie et l'élément actuels de vos objets seront utilisés lors du calcul du total et lors de l'assignation des mods.",
     "NotExotics": "{{material}} (Pas Exotique)",
     "NotMasterworked": "{{material}} (Pas de pièce maîtresse)",
-    "NumCombinations": "{{count, number}} combinaison",
-    "NumCombinations_plural": "{{count, number}} combinaisons",
-    "OptimizerExplanation": "Choisissez les statistiques que vous voulez, et leur ordre de priorité, puis choisissez quels mods vous voulez utiliser.",
-    "OptimizerExplanationArmour2Mods": "Les changement de statistiques des mods d'armure 2.0 équipés sont exclus lorsque possible, et sont rajoutés lorsque vous les sélectionnez.",
+    "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
+    "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Ensemble de l'Optimiseur",
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
     "ResetLocked": "Réinitialiser les objets épinglés",

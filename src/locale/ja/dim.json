@@ -84,7 +84,8 @@
     "CompareBaseStats": "基本Statsを表示",
     "Error": {
       "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
-    }
+    },
+    "InitialItem": "比較ツールが起動されたアイテムです"
   },
   "Cooldown": {
     "Grenade": "グレネードのクールダウン: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "パワーがあり、パワーレベルに貢献できる項目を表示します。",
     "Cosmetic": "フレアーやコスメティックのアイテムを表示",
     "Curated": "キュレートされたロールのアイテムを表示。",
+    "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
     "Description": "説明",
     "Dupe": "再発行を含み、重複するアイテムを表示。",
@@ -430,9 +432,7 @@
     "ExcludeItem": "アイテムを除外",
     "ExistingLoadout": "既存のロードアウト",
     "Filter": "フィルター",
-    "GeneratedBuilds": "ビルド",
     "LegendaryShardsAndEnhancementPrismDetails": "全アイテムの現在のステータスが使用されます。エネルギーが {{energyLevel}} 以下のアイテムについては、オプティマイザーは{{energyLevel}} エネルギーを想定します。 {{elementLockDescription}}\n\n{{energyLevel}} エネルギー以上のアイテムは、既存のエネルギーレベルとエレメントを使用します。",
-    "LimitedCombos": "{{{combosWithoutCaps, number}} 個の可能な組み合わせがありますが、DIMがクラッシュしないように、高い数値順で{{{combos, number}}} だけを見ました。その結果、いくつかの可能性は表示されていません。いくつかのアイテムやパークをロックしたり、古いアーマーを解体したりして制限値を下回るようにしましょう。一般的なmodやシーズンのmodをロックすると、組み合わせの数が増えます。",
     "LockElement": "要素をロック",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
@@ -444,10 +444,11 @@
     "NoUpgradesDetails": "現在のステータス、エネルギーレベル、アイテムのエレメントは、合計値の決定やMODの割り当ての際に使用されます。",
     "NotExotics": "{{material}} (Exotics ではありません)",
     "NotMasterworked": "{{material}} (非マスターワーク化)",
-    "NumCombinations": "{{count, number}} の組み合わせ",
-    "NumCombinations_plural": "{{count, number}} の組み合わせ",
-    "OptimizerExplanation": "必要なスタッツと優先順位を選択し、使用するMODを選択します。",
-    "OptimizerExplanationArmour2Mods": "装備されたArmor2.0 Modからのステータスの変更は、可能な場合は除外され、選択すると再び追加されます。",
+    "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
+    "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "最適化セット",
     "ProcessingSets": "{{character}} のセットを処理しています",
     "ResetLocked": "ピン留めされたアイテムをリセットする",

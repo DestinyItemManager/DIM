@@ -5,6 +5,7 @@ import {
   CompareActionButton,
   ConsolidateActionButton,
   DistributeActionButton,
+  InfuseActionButton,
   LoadoutActionButton,
   LockActionButton,
   TagActionButton,
@@ -39,6 +40,9 @@ export default function ItemAccessoryButtons({
       )}
       {actionsModel.loadoutable && (
         <LoadoutActionButton item={item} label={showLabel} actionModel={actionsModel} />
+      )}
+      {actionsModel.infusable && (
+        <InfuseActionButton item={item} label={showLabel} actionModel={actionsModel} />
       )}
     </>
   );

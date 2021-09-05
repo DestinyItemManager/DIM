@@ -84,7 +84,8 @@
     "CompareBaseStats": "Pokaż podstawowe statystyki",
     "Error": {
       "Unmatched": "Ten przedmiot nie pasuje do typu porównywanych przedmiotów."
-    }
+    },
+    "InitialItem": "To przedmiot dla którego uruchomiono narzędzie porównania"
   },
   "Cooldown": {
     "Grenade": "Odnowienie granatu: {{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "Pokazuje przedmioty, które mają moc i mogą przyczynić się do twojego poziomu mocy.",
     "Cosmetic": "Pokazuje przedmioty, które są znaczkami lub kosmetykami.",
     "Curated": "Pokazuje przedmioty, które są kurowanym rollem.",
+    "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty, włącznie z powtórzeniami",
@@ -430,9 +432,7 @@
     "ExcludeItem": "Wyklucz Przedmiot",
     "ExistingLoadout": "Istniejące uzbrojenie",
     "Filter": "Filtry",
-    "GeneratedBuilds": "Zestawy",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
-    "LimitedCombos": "Masz {{combosWithoutCaps, number}} możliwe kombinacje pancerzy, ale DIM przyjrzał się tylko {{combos, number}} najwyższym kombinacjom statystyk, aby powstrzymać twoją przeglądarkę przed awarią. Wybierz jakieś atuty, użyj wyszukania, albo zdemontuj stary pancerz, aby zmniejszyć ilość kombinacji. Przypinanie ogólnych lub sezonowych modyfikacji zwiększa liczbę kombinacji.",
     "LockElement": "Lock Element",
     "LockEquipped": "Przypnij założone",
     "LockItem": "Przypnij przedmiot",
@@ -444,10 +444,11 @@
     "NoUpgradesDetails": "Bieżące statystyki, poziom energii i element Twoich przedmiotów będą używane do określania sumy i przypisywania modyfikacji.",
     "NotExotics": "{{material}} (nie egzotyczne)",
     "NotMasterworked": "{{material}} (Nie Mistrzowskie)",
-    "NumCombinations": "{{count, number}} kombinacja",
-    "NumCombinations_plural": "{{count, number}} kombinacji",
-    "OptimizerExplanation": "Wybierz statystyki, które chcesz i ich kolejność priorytetu, a następnie wybierz które modyfikacje chcesz użyć.",
-    "OptimizerExplanationArmour2Mods": "Zmiany statystyk z wyposażonego Pancerza 2.0 są w miarę możliwości wykluczane i dodawane po ich wybraniu.",
+    "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
+    "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Zestaw optymalizatora",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
     "ResetLocked": "Zresetuj przypięte przedmioty",
@@ -723,8 +724,8 @@
     "UsageCount": "# Używanych"
   },
   "Settings": {
-    "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
-    "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
+    "BadgePostmaster": "Pokarz liczbę przedmiotów u kuriera dla obecnej postaci w ikonie aplikacji",
+    "BadgePostmasterExplanation": "Aby to zadziałało, musisz zainstalować DIM jako aplikację, a system operacyjny musi obsługiwać wyświetlanie powiadomień",
     "CharacterOrder": "Sortuj postaci wg",
     "CharacterOrderFixed": "Wiek postaci (buguje się na PC)",
     "CharacterOrderRecent": "Ostatnio używana postać",

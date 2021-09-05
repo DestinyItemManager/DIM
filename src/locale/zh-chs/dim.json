@@ -84,7 +84,8 @@
     "CompareBaseStats": "显示基础属性",
     "Error": {
       "Unmatched": "此物品和要比较的物品类别不同。"
-    }
+    },
+    "InitialItem": "比较工具从这个物品启动"
   },
   "Cooldown": {
     "Grenade": "手雷冷却：{{cooldown}}",
@@ -156,6 +157,7 @@
     "ContributePower": "显示拥有光等的物品.",
     "Cosmetic": "显示饰品或装饰物品。",
     "Curated": "显示拥有指定特性的物品。",
+    "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
@@ -430,9 +432,7 @@
     "ExcludeItem": "排除项目",
     "ExistingLoadout": "已有配装",
     "Filter": "过滤",
-    "GeneratedBuilds": "编译",
     "LegendaryShardsAndEnhancementPrismDetails": "将使用所有物品的当前属性。 对于能量为 {{energyLevel}} 或更低的物品，优化器将假定 {{energyLevel}} 能量。{{elementLockDescription}}\n\n超过 {{energyLevel}} 能量的物品将使用其现有能量等级和元素。",
-    "LimitedCombos": "你有 {{combosWithoutCaps, number}} 种可能的护甲组合，但是 DIM 只检索了 {{combos, number}} 个属性最高的组合以避免浏览器崩溃。选择一些特性，进行搜索，或拆解旧护甲便可减少组合数量。固定通用或赛季模组会增加组合数量。",
     "LockElement": "锁定元素",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
@@ -444,10 +444,11 @@
     "NoUpgradesDetails": "为了计算总属性与分配模组，会用到当前的属性、能量等级，以及你物品的元素。",
     "NotExotics": "{{material}}（非异域）",
     "NotMasterworked": "{{material}}（非大师杰作）",
-    "NumCombinations": "{{count, number}} 个组合",
-    "NumCombinations_plural": "{{count, number}} 个组合",
-    "OptimizerExplanation": "选择并排序你想要的属性，然后选择你想使用的模组。",
-    "OptimizerExplanationArmour2Mods": "将尽可能排除已装备的护甲 2.0 模组的变动，选择它们后便可加回。",
+    "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
+    "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "正在处理 {{character}} 的配装",
     "ResetLocked": "重置固定物品",

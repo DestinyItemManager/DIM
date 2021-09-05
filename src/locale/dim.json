@@ -304,6 +304,16 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
+  "Infusion": {
+    "Filter": "Filter items",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfusionMaterials": "Infusion Materials",
+    "NoItems": "No infusable items available.",
+    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
+  },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
     "Distributed": "Distributed {{name}}\n {{name}} is now equally divided between characters.",
@@ -572,6 +582,7 @@
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
+    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
