@@ -4,8 +4,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  > div {
-    padding: 0;
+  justify-content: space-between;
+  // pull & lock buttons
+  > div:nth-child(1),
+  > div:nth-child(2) {
+    padding: 4px;
+  }
+  // Tag selector
+  > div > div > button {
+    padding: 3px !important;
   }
 }
 
@@ -37,16 +44,12 @@
 }
 
 .close {
-  float: right;
-  margin: 1px 4px;
-  padding-left: 0px;
-  width: 16px;
-  height: 16px;
-  top: 2px;
-  right: calc(2px + var(--item-margin));
-  background-image: url('../../images/close.png');
-  background-size: 16px 16px;
-  background-color: rgba(100, 100, 100, 0.8);
+  width: 32px;
+  height: 32px;
+  background-size: 16px;
+  background-image: url('images/close.png');
+  background-position: center;
+  background-repeat: no-repeat;
   &:hover {
     background-color: $orange;
   }

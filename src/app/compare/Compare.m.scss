@@ -43,6 +43,9 @@
   flex-wrap: wrap;
   :global(.dim-button) {
     margin-bottom: 4px;
+    // Undo the general mobile "big-buttons"
+    padding: 4px 10px;
+    font-size: 12px;
     &:nth-last-child(n + 2) {
       margin-right: 3px;
     }

@@ -1,14 +1,19 @@
 import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { moveItemTo } from 'app/inventory/move-item';
+import { currentStoreSelector } from 'app/inventory/selectors';
+import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, searchIcon } from '../shell/icons';
+import { AppIcon, faArrowCircleDown, searchIcon } from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
@@ -41,12 +46,22 @@ export default function CompareItem({
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
+
+  const dispatch = useThunkDispatch();
+  const currentStore = useSelector(currentStoreSelector)!;
+  const pullItem = () => {
+    dispatch(moveItemTo(item, currentStore, false));
+  };
+
   const itemHeader = useMemo(
     () => (
       <div ref={headerRef}>
         <div className={styles.header}>
+          <ActionButton onClick={pullItem}>
+            <AppIcon icon={faArrowCircleDown} />
+          </ActionButton>
           <LockActionButton item={item} />
-          <TagActionButton item={item} label={true} hideKeys={true} />
+          <TagActionButton item={item} label={false} hideKeys={true} />
           <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>
         <div

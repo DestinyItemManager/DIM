@@ -41,11 +41,16 @@ export default function ItemPopupTrigger({
   );
 
   // Close the popup if this component is unmounted
-  useEffect(() => () => {
-    if (showItemPopup$.getCurrentValue()?.item === item) {
-      hideItemPopup();
-    }
-  });
+  useEffect(
+    () => () => {
+      if (showItemPopup$.getCurrentValue()?.item === item) {
+        console.log('UBMOUT');
+        hideItemPopup();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   return children(ref, clicked) as JSX.Element;
 }
