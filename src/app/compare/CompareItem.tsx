@@ -1,4 +1,6 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector } from 'app/inventory/selectors';
@@ -46,7 +48,7 @@ export default function CompareItem({
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-
+  const itemNotes = useSelector(itemNoteSelector(item));
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
   const pullItem = useCallback(() => {
@@ -74,13 +76,15 @@ export default function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <ConnectedInventoryItem item={item} />
+              <PressTip className={styles.itemAside} tooltip={itemNotes} allowClickThrough={true}>
+                <ConnectedInventoryItem item={item} />
+              </PressTip>
             </div>
           )}
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove]
+    [isInitialItem, item, itemClick, pullItem, remove, itemNotes]
   );
 
   return (
