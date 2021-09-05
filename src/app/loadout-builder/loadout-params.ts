@@ -64,13 +64,18 @@ export function buildLoadoutParams(
 export function migrateLoadoutParametersFromSettings(settings: Settings): Settings {
   // Only migrate if there aren't already settings
   if (_.isEmpty(settings.loParameters)) {
+    let upgradeSpendTier = settings.loUpgradeSpendTier;
+    if (upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType) {
+      upgradeSpendTier = UpgradeSpendTier.Nothing;
+    }
+
     return {
       ...settings,
       loParameters: {
         statConstraints: settings.loStatSortOrder.map((statHash) => ({
           statHash,
         })),
-        upgradeSpendTier: settings.loUpgradeSpendTier,
+        upgradeSpendTier,
         lockItemEnergyType: settings.loLockItemEnergyType,
       },
     };
