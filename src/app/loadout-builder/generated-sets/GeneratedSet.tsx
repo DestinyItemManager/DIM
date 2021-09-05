@@ -1,14 +1,12 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { assignModsToArmorSet } from '../mod-utils';
 import { ArmorSet, LockedMap } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
@@ -24,13 +22,10 @@ interface Props {
   statOrder: number[];
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<number>;
-  lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
 }
 
 /**
@@ -45,15 +40,11 @@ function GeneratedSet({
   statOrder,
   enabledStats,
   forwardedRef,
-  lockedMods,
   loadouts,
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
 }: Props) {
-  const defs = useD2Definitions();
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
@@ -66,14 +57,6 @@ function GeneratedSet({
     errorLog('loadout optimizer', 'No valid sets!');
     return null;
   }
-
-  const [assignedMods] = assignModsToArmorSet(
-    defs,
-    set.armor.map((items) => items[0]),
-    lockedMods,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
 
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
@@ -114,7 +97,7 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               locked={lockedMap[item.bucket.hash]}
               lbDispatch={lbDispatch}
-              lockedMods={assignedMods[item.id]}
+              lockedMods={[]}
             />
           ))}
         </div>

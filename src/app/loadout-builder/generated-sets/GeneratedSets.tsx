@@ -1,4 +1,4 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -67,13 +67,10 @@ interface Props {
   lockedMap: LockedMap;
   statOrder: number[];
   enabledStats: Set<number>;
-  lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
 }
 
 /**
@@ -85,13 +82,10 @@ export default function GeneratedSets({
   sets,
   statOrder,
   enabledStats,
-  lockedMods,
   loadouts,
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -153,12 +147,9 @@ export default function GeneratedSets({
           lbDispatch={lbDispatch}
           statOrder={statOrder}
           enabledStats={enabledStats}
-          lockedMods={lockedMods}
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -182,12 +173,9 @@ export default function GeneratedSets({
                   lbDispatch={lbDispatch}
                   statOrder={statOrder}
                   enabledStats={enabledStats}
-                  lockedMods={lockedMods}
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  upgradeSpendTier={upgradeSpendTier}
-                  lockItemEnergyType={lockItemEnergyType}
                 />
               )}
               scrollTop={scrollTop}

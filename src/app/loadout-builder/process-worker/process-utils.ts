@@ -133,8 +133,7 @@ export function canTakeSlotIndependantMods(
   generalModPermutations: (ProcessMod | null)[][],
   combatModPermutations: (ProcessMod | null)[][],
   raidModPermutations: (ProcessMod | null)[][],
-  items: ProcessItem[],
-  assignments?: Record<string, number[]>
+  items: ProcessItem[]
 ) {
   // Sort the items like the mods are to try and get a greedy result
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
@@ -241,25 +240,6 @@ export function canTakeSlotIndependantMods(
           // The raid mods wont fit in the item set so move on to the next set of mods
           if (!(raidEnergyIsValid && item.compatibleModSeasons?.includes(raidTag))) {
             continue raidModLoop;
-          }
-        }
-
-        // At this point all three assignments have been satisfied, so we can create the assignments
-        // if necessary and break out of the function
-        if (assignments) {
-          for (let i = 0; i < sortedItems.length; i++) {
-            const generalMod = generalP[i];
-            const combatMod = combatP[i];
-            const raidMod = raidP[i];
-            if (generalMod) {
-              assignments[sortedItems[i].id].push(generalMod.hash);
-            }
-            if (combatMod) {
-              assignments[sortedItems[i].id].push(combatMod.hash);
-            }
-            if (raidMod) {
-              assignments[sortedItems[i].id].push(raidMod.hash);
-            }
           }
         }
 

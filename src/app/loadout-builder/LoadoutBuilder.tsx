@@ -345,12 +345,9 @@ function LoadoutBuilder({
             lbDispatch={lbDispatch}
             statOrder={statOrder}
             enabledStats={enabledStats}
-            lockedMods={lockedMods}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            upgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType}
           />
         )}
         {modPicker.open &&
@@ -379,7 +376,6 @@ function LoadoutBuilder({
               statOrder={statOrder}
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
-              lockItemEnergyType={lockItemEnergyType}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
