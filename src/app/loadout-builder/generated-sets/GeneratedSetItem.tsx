@@ -36,7 +36,7 @@ function EnergySwap({
   )?.plug.energyCost?.energyTypeHash;
   const modEnergy = (modEnergyHash && defs.EnergyType.get(modEnergyHash)) || null;
 
-  const resultingEnergy = modEnergy ? modEnergy : armorEnergy;
+  const resultingEnergy = modEnergy ?? armorEnergy;
   let resultingEnergyCapacity = armorEnergyCapacity;
 
   if (modEnergyHash === armorEnergy.hash) {
