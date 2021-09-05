@@ -4,6 +4,10 @@
 * Elemental Capacitor stats are no longer added to weapons with the perk enabled.
 * In the Loadout Optimizer, searching items now works in conjunction with locking exotics and items.
 * Added `is:currentclass` filter, which selects items currently equippable on the logged in guardian.
+* Clicking on an item's picture in the Compare tool now opens the full item popup.
+* Added a "pull" button (down-arrow) to each item in the Compare tool that will pull the item to your current character.
+* Collapsed the Tag menu into an icon in Compare to allow more items to fit on screen.
+* Shortened the names of stats in Compare to allow more items to fit on screen.
 
 ## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
 
