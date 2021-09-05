@@ -25,19 +25,9 @@ export default function ClosableContainer({
       })}
     >
       {children}
-      {enabled && <CloseButton className={styles.close} onClose={onClose} />}
+      {enabled && (
+        <div className={clsx(styles.close)} onClick={onClose} role="button" tabIndex={0} />
+      )}
     </div>
-  );
-}
-
-export function CloseButton({
-  className,
-  onClose,
-}: {
-  className?: string;
-  onClose(e: React.MouseEvent): void;
-}) {
-  return (
-    <div className={clsx(className, styles.button)} onClick={onClose} role="button" tabIndex={0} />
   );
 }
