@@ -17,9 +17,15 @@
 .statLabel {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 4px;
+  padding-right: 8px;
   padding-left: 0;
   cursor: pointer;
+  img {
+    height: 16px;
+    width: 16px;
+    vertical-align: bottom;
+    margin-right: 2px;
+  }
 }
 
 .sorted {

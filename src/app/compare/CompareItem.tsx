@@ -7,7 +7,7 @@ import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButton
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -49,9 +49,9 @@ export default function CompareItem({
 
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
-  const pullItem = () => {
+  const pullItem = useCallback(() => {
     dispatch(moveItemTo(item, currentStore, false));
-  };
+  }, [currentStore, dispatch, item]);
 
   const itemHeader = useMemo(
     () => (
@@ -80,7 +80,7 @@ export default function CompareItem({
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, remove]
+    [isInitialItem, item, itemClick, pullItem, remove]
   );
 
   return (

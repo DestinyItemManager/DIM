@@ -1,6 +1,8 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
+import { statLabels } from 'app/organizer/Columns';
 import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
@@ -255,7 +257,12 @@ function Compare({
                 onMouseOver={() => setHighlight(stat.id)}
                 onClick={() => sort(stat.id)}
               >
-                {stat.displayProperties.name}{' '}
+                {stat.displayProperties.hasIcon && (
+                  <span title={stat.displayProperties.name}>
+                    <BungieImage src={stat.displayProperties.icon} />
+                  </span>
+                )}
+                {stat.id in statLabels ? t(statLabels[stat.id]) : stat.displayProperties.name}{' '}
                 {stat.id === sortedHash && (
                   <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
                 )}

@@ -44,10 +44,10 @@ export default function ItemPopupTrigger({
   useEffect(
     () => () => {
       if (showItemPopup$.getCurrentValue()?.item === item) {
-        console.log('UBMOUT');
         hideItemPopup();
       }
     },
+    // We really only want to do this on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );

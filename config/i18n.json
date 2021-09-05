@@ -735,7 +735,8 @@
       "Reload": "Reload",
       "Aim": "Aim",
       "Recoil": "Recoil",
-      "Inventory": "Inventory"
+      "Inventory": "Inventory",
+      "Power": "Power"
     }
   },
   "Progress": {
