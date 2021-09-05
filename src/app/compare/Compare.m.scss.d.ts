@@ -3,6 +3,7 @@
 interface CssExports {
   'bucket': string;
   'fixedLeft': string;
+  'highlightBar': string;
   'items': string;
   'options': string;
   'organizerLink': string;
