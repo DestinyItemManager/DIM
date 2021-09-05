@@ -2,6 +2,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ModPicker from 'app/loadout/mod-picker/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
+import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -576,7 +577,10 @@ function LoadoutDrawer({
           >
             {warnitems.length > 0 && (
               <div className="loadout-contents">
-                <p>{t('Loadouts.VendorsCannotEquip')}</p>
+                <p>
+                  <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+                  {t('Loadouts.VendorsCannotEquip')}
+                </p>
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
                     <div key={item.id} className="loadout-item">

@@ -23,6 +23,7 @@ import {
   banIcon,
   editIcon,
   engramIcon,
+  faExclamationTriangle,
   faRandom,
   levellingIcon,
   searchIcon,
@@ -40,7 +41,12 @@ import {
 import { applyLoadout } from './loadout-apply';
 import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, extractArmorModHashes, newLoadout } from './loadout-utils';
+import {
+  convertToLoadoutItem,
+  extractArmorModHashes,
+  isMissingItems,
+  newLoadout,
+} from './loadout-utils';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
 import {
   makeRoomForPostmaster,
@@ -350,6 +356,9 @@ function LoadoutPopup({
         {loadouts.map((loadout) => (
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={(e) => onApplyLoadout(loadout, e)}>
+              {isMissingItems(allItems, loadout) && (
+                <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+              )}
               <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
               {loadout.name}
             </span>
