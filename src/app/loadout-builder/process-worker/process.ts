@@ -7,7 +7,11 @@ import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
 import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { generatePermutationsOfFive, statTier } from '../utils';
-import { canTakeSlotIndependantMods, stringifyModPermutation } from './process-utils';
+import {
+  canTakeSlotIndependantMods,
+  sortProcessModsOrItems,
+  stringifyModPermutation,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
