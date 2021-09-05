@@ -45,11 +45,11 @@ function EnergySwap({
     resultingEnergyCapacity = modCost;
   }
 
-  const showChange =
-    resultingEnergyCapacity !== armorEnergyCapacity || resultingEnergy !== armorEnergy;
+  const noEnergyChange =
+    resultingEnergyCapacity === armorEnergyCapacity && resultingEnergy === armorEnergy;
 
   return (
-    <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: !showChange })}>
+    <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: noEnergyChange })}>
       <div className={styles.energyValue}>
         <div className={clsx({ [styles.masterworked]: armorEnergyCapacity === 10 })}>
           {armorEnergyCapacity}
