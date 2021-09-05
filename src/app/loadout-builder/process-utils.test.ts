@@ -16,10 +16,16 @@ import {
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
 import {
   canTakeSlotIndependantMods,
-  generateModPermutations,
+  sortProcessModsOrItems,
+  stringifyModPermutation,
 } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
+import { generatePermutationsOfFive } from './utils';
+
+function generateModPermutations(mods: ProcessMod[]) {
+  return generatePermutationsOfFive(mods.sort(sortProcessModsOrItems), stringifyModPermutation);
+}
 
 function modifyMod({
   mod,

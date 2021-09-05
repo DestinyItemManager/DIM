@@ -6,8 +6,8 @@ import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2
 import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
 import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
-import { statTier } from '../utils';
-import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
+import { generatePermutationsOfFive, statTier } from '../utils';
+import { canTakeSlotIndependantMods, stringifyModPermutation } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
@@ -169,9 +169,18 @@ export function process(
     }
   }
 
-  const generalModsPermutations = generateModPermutations(generalMods);
-  const combatModPermutations = generateModPermutations(combatMods);
-  const raidModPermutations = generateModPermutations(raidMods);
+  const generalModsPermutations = generatePermutationsOfFive(
+    generalMods.sort(sortProcessModsOrItems),
+    stringifyModPermutation
+  );
+  const combatModPermutations = generatePermutationsOfFive(
+    combatMods.sort(sortProcessModsOrItems),
+    stringifyModPermutation
+  );
+  const raidModPermutations = generatePermutationsOfFive(
+    raidMods.sort(sortProcessModsOrItems),
+    stringifyModPermutation
+  );
   const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
   let numSkippedLowTier = 0;
