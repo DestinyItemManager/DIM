@@ -296,6 +296,12 @@ function LockArmorAndPerks({
           <ArmorUpgradePicker
             currentUpgradeSpendTier={upgradeSpendTier}
             lockItemEnergyType={lockItemEnergyType}
+            onLockItemEnergyTypeChanged={(checked) =>
+              lbDispatch({ type: 'lockItemEnergyTypeChanged', lockItemEnergyType: checked })
+            }
+            onUpgradeSpendTierChanged={(upgradeSpendTier) =>
+              lbDispatch({ type: 'upgradeSpendTierChanged', upgradeSpendTier })
+            }
             onClose={() => setShowArmorUpgradePicker(false)}
           />,
           document.body

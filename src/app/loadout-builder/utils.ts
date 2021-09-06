@@ -129,10 +129,7 @@ export function upgradeSpendTierToMaxEnergy(
     return 0;
   }
 
-  if (
-    tier === UpgradeSpendTier.Nothing ||
-    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
-  ) {
+  if (tier === UpgradeSpendTier.Nothing) {
     return item.energy.energyCapacity;
   }
 

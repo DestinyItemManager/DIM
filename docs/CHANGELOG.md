@@ -1,5 +1,9 @@
 ## Next
 
+* Loadout Optimizer remembers stats you've Ignored between sessions.
+* Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
+* Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
+
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
 * Fixed wonky rank display in the phone portrait layout.

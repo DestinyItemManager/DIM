@@ -4,6 +4,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -15,18 +16,27 @@ const INCLUDE = 'include';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
+const defaultStatRanges: Readonly<StatRanges> = {
+  [StatHashes.Mobility]: { min: 0, max: 10 },
+  [StatHashes.Resilience]: { min: 0, max: 10 },
+  [StatHashes.Recovery]: { min: 0, max: 10 },
+  [StatHashes.Discipline]: { min: 0, max: 10 },
+  [StatHashes.Intellect]: { min: 0, max: 10 },
+  [StatHashes.Strength]: { min: 0, max: 10 },
+};
+
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function TierSelect({
   stats,
-  statRanges,
+  statRanges = defaultStatRanges,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
   stats: StatFilters;
-  statRanges: Readonly<StatRanges>;
+  statRanges?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
   onStatOrderChanged(order: ArmorStatHashes[]): void;
   onStatFiltersChanged(stats: StatFilters): void;
