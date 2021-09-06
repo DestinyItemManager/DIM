@@ -56,9 +56,9 @@ function stringifyMods(permutation: (PluggableInventoryItemDefinition | null)[])
 interface ItemEnergy {
   used: number;
   originalCapacity: number;
-  capacity: number;
+  derivedCapacity: number;
   originalType: DestinyEnergyType;
-  type: DestinyEnergyType;
+  derivedType: DestinyEnergyType;
 }
 
 function calculateEnergyChange(
@@ -69,8 +69,8 @@ function calculateEnergyChange(
 ) {
   let finalEnergy;
 
-  if (itemEnergy.type !== DestinyEnergyType.Any) {
-    finalEnergy = itemEnergy.type;
+  if (itemEnergy.derivedType !== DestinyEnergyType.Any) {
+    finalEnergy = itemEnergy.derivedType;
   } else if (
     generalMod?.plug.energyCost &&
     generalMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
@@ -91,9 +91,11 @@ function calculateEnergyChange(
   const generalModCost = generalMod?.plug.energyCost?.energyCost || 0;
   const combatModCost = combatMod?.plug.energyCost?.energyCost || 0;
   const raidModCost = raidMod?.plug.energyCost?.energyCost || 0;
+
   const modCost = itemEnergy.used + generalModCost + combatModCost + raidModCost;
   const energyUsedAndWasted = modCost + itemEnergy.originalCapacity;
   const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
+
   return finalEnergy === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
 }
 
@@ -177,9 +179,14 @@ export function getModAssignments(
         (mod) => mod.plug.energyCost?.energyCost || 0
       ),
       originalCapacity: item.energy?.energyCapacity || 0,
-      capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
+      derivedCapacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
       originalType: item.energy?.energyType || DestinyEnergyType.Any,
-      type: getItemEnergyType(defs, item, upgradeSpendTier, bucketSpecificAssignments[item.id]),
+      derivedType: getItemEnergyType(
+        defs,
+        item,
+        upgradeSpendTier,
+        bucketSpecificAssignments[item.id]
+      ),
     })
   );
 
@@ -204,8 +211,8 @@ export function getModAssignments(
 
       const combatEnergyIsValid =
         itemEnergy &&
-        itemEnergy.used + combatEnergyCost <= itemEnergy.capacity &&
-        energyTypesAreCompatible(itemEnergy.type, combatEnergyType);
+        itemEnergy.used + combatEnergyCost <= itemEnergy.derivedCapacity &&
+        energyTypesAreCompatible(itemEnergy.derivedType, combatEnergyType);
 
       // The other mods wont fit in the item set so move on to the next set of mods
       if (
@@ -239,8 +246,8 @@ export function getModAssignments(
 
         const generalEnergyIsValid =
           itemEnergy &&
-          itemEnergy.used + generalEnergyCost + combatEnergyCost <= itemEnergy.capacity &&
-          energyTypesAreCompatible(itemEnergy.type, generalEnergyType) &&
+          itemEnergy.used + generalEnergyCost + combatEnergyCost <= itemEnergy.derivedCapacity &&
+          energyTypesAreCompatible(itemEnergy.derivedType, generalEnergyType) &&
           energyTypesAreCompatible(generalEnergyType, combatEnergyType);
 
         // The general mods wont fit in the item set so move on to the next set of mods
@@ -272,8 +279,8 @@ export function getModAssignments(
           const raidEnergyIsValid =
             itemEnergy &&
             itemEnergy.used + generalEnergyCost + combatEnergyCost + raidEnergyCost <=
-              itemEnergy.capacity &&
-            energyTypesAreCompatible(itemEnergy.type, raidEnergyType) &&
+              itemEnergy.derivedCapacity &&
+            energyTypesAreCompatible(itemEnergy.derivedType, raidEnergyType) &&
             energyTypesAreCompatible(raidEnergyType, generalEnergyType) &&
             energyTypesAreCompatible(raidEnergyType, combatEnergyType);
 
