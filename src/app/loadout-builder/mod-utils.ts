@@ -76,6 +76,7 @@ function calculateEnergyChange(
 }
 
 function getItemEnergyType(
+  defs: D2ManifestDefinitions,
   item: DimItem,
   upgradeSpendTier: UpgradeSpendTier,
   bucketSpecificMods?: PluggableInventoryItemDefinition[]
@@ -151,7 +152,7 @@ export function getModAssignments(
       ),
       capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
       originalType: item.energy?.energyType || DestinyEnergyType.Any,
-      type: getItemEnergyType(item, upgradeSpendTier, bucketSpecificAssignments[item.id]),
+      type: getItemEnergyType(defs, item, upgradeSpendTier, bucketSpecificAssignments[item.id]),
     })
   );
 
@@ -290,8 +291,8 @@ export function getModAssignments(
   const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
   for (const item of items) {
     mergedResults.set(item.id, [
-      ...bucketSpecificAssignments.get(item.id),
-      ...bucketIndependantAssignments.get(item.id),
+      ...(bucketSpecificAssignments.get(item.id) || []),
+      ...(bucketIndependantAssignments.get(item.id) || []),
     ]);
   }
 
