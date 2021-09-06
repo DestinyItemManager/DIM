@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -72,6 +72,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
+  upgradeSpendTier: UpgradeSpendTier;
 }
 
 /**
@@ -88,6 +89,7 @@ export default function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
+  upgradeSpendTier,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
@@ -153,6 +155,7 @@ export default function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
+          upgradeSpendTier={upgradeSpendTier}
         />
       ) : sets.length > 0 ? (
         <WindowScroller ref={windowScroller}>
@@ -180,6 +183,7 @@ export default function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
+                  upgradeSpendTier={upgradeSpendTier}
                 />
               )}
               scrollTop={scrollTop}

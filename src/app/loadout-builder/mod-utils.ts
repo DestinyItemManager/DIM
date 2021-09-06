@@ -55,6 +55,7 @@ function stringifyMods(permutation: (PluggableInventoryItemDefinition | null)[])
 
 interface ItemEnergy {
   used: number;
+  originalCapacity: number;
   capacity: number;
   originalType: DestinyEnergyType;
   type: DestinyEnergyType;
@@ -66,13 +67,34 @@ function calculateEnergyChange(
   combatMod: PluggableInventoryItemDefinition | null,
   raidMod: PluggableInventoryItemDefinition | null
 ) {
+  let finalEnergy;
+
+  if (itemEnergy.type !== DestinyEnergyType.Any) {
+    finalEnergy = itemEnergy.type;
+  } else if (
+    generalMod?.plug.energyCost &&
+    generalMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
+  ) {
+    finalEnergy = generalMod.plug.energyCost.energyType;
+  } else if (
+    combatMod?.plug.energyCost &&
+    combatMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
+  ) {
+    finalEnergy = combatMod.plug.energyCost.energyType;
+  } else if (
+    raidMod?.plug.energyCost &&
+    raidMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
+  ) {
+    finalEnergy = raidMod.plug.energyCost.energyType;
+  }
+
   const generalModCost = generalMod?.plug.energyCost?.energyCost || 0;
   const combatModCost = combatMod?.plug.energyCost?.energyCost || 0;
   const raidModCost = raidMod?.plug.energyCost?.energyCost || 0;
   const modCost = itemEnergy.used + generalModCost + combatModCost + raidModCost;
-  const energyUsedAndWasted = modCost + itemEnergy.capacity;
-  const energyInvested = Math.max(0, modCost - itemEnergy.capacity);
-  return itemEnergy.type === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
+  const energyUsedAndWasted = modCost + itemEnergy.originalCapacity;
+  const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
+  return finalEnergy === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
 }
 
 function getItemEnergyType(
@@ -106,13 +128,17 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 export function getModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions,
+  defs: D2ManifestDefinitions | undefined,
   upgradeSpendTier: UpgradeSpendTier
-) {
+): Map<string, PluggableInventoryItemDefinition[]> {
+  if (!defs) {
+    return new Map();
+  }
+
   const bucketSpecificAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
   const bucketIndependantAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
   // just an arbitrarily large number
-  const assignmentEnergyCost = 10000;
+  let assignmentEnergyCost = 10000;
 
   for (const item of items) {
     bucketSpecificAssignments.set(item.id, []);
@@ -150,6 +176,7 @@ export function getModAssignments(
         bucketSpecificAssignments.get(item.id),
         (mod) => mod.plug.energyCost?.energyCost || 0
       ),
+      originalCapacity: item.energy?.energyCapacity || 0,
       capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
       originalType: item.energy?.energyType || DestinyEnergyType.Any,
       type: getItemEnergyType(defs, item, upgradeSpendTier, bucketSpecificAssignments[item.id]),
@@ -283,6 +310,7 @@ export function getModAssignments(
               _.compact([generalP[i], combatP[i], raidP[i]])
             );
           }
+          assignmentEnergyCost = energyUsedAndWasted;
         }
       }
     }

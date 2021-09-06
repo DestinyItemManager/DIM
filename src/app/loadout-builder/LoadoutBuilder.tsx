@@ -373,6 +373,7 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
+            upgradeSpendTier={upgradeSpendTier}
           />
         )}
         {modPicker.open &&
