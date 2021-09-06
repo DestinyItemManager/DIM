@@ -194,6 +194,8 @@ export function canTakeSlotIndependantMods(
           }
         }
 
+        // To hit this point we need to have found a valid set of raid mods
+        // if none is found the continue's will skip this.
         return true;
       }
     }

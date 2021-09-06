@@ -53,16 +53,69 @@ function stringifyMods(permutation: (PluggableInventoryItemDefinition | null)[])
   return permutationString;
 }
 
+interface ItemEnergy {
+  used: number;
+  capacity: number;
+  originalType: DestinyEnergyType;
+  type: DestinyEnergyType;
+}
+
+function calculateEnergyChange(
+  itemEnergy: ItemEnergy,
+  generalMod: PluggableInventoryItemDefinition | null,
+  combatMod: PluggableInventoryItemDefinition | null,
+  raidMod: PluggableInventoryItemDefinition | null
+) {
+  const generalModCost = generalMod?.plug.energyCost?.energyCost || 0;
+  const combatModCost = combatMod?.plug.energyCost?.energyCost || 0;
+  const raidModCost = raidMod?.plug.energyCost?.energyCost || 0;
+  const modCost = itemEnergy.used + generalModCost + combatModCost + raidModCost;
+  const energyUsedAndWasted = modCost + itemEnergy.capacity;
+  const energyInvested = Math.max(0, modCost - itemEnergy.capacity);
+  return itemEnergy.type === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
+}
+
+function getItemEnergyType(
+  item: DimItem,
+  upgradeSpendTier: UpgradeSpendTier,
+  bucketSpecificMods?: PluggableInventoryItemDefinition[]
+) {
+  if (!item.energy) {
+    return DestinyEnergyType.Any;
+  }
+
+  const bucketSpecificModType = bucketSpecificMods?.find(
+    (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
+  )?.plug.energyCost?.energyType;
+
+  // if we find bucket specific mods with an energy type we have to use that
+  if (bucketSpecificModType) {
+    return bucketSpecificModType;
+  }
+
+  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)
+    ? DestinyEnergyType.Any
+    : item.energy.energyType;
+}
+
+function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnergyType) {
+  return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
+}
+
 export function getModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions,
   upgradeSpendTier: UpgradeSpendTier
 ) {
-  const assignments = new Map<string, PluggableInventoryItemDefinition[]>();
+  const bucketSpecificAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
+  const bucketIndependantAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
+  // just an arbitrarily large number
+  const assignmentEnergyCost = 10000;
 
   for (const item of items) {
-    assignments.set(item.id, []);
+    bucketSpecificAssignments.set(item.id, []);
+    bucketIndependantAssignments.set(item.id, []);
   }
 
   const itemSocketMetadata = _.mapValues(
@@ -85,19 +138,20 @@ export function getModAssignments(
       const itemForMod = items.find(
         (item) => mod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
       );
-      itemForMod && assignments.get(itemForMod.id)?.push(mod);
+      itemForMod && bucketSpecificAssignments.get(itemForMod.id)?.push(mod);
     }
   }
 
   const itemEnergies = _.mapValues(
     _.keyBy(items, (item) => item.id),
     (item) => ({
-      used: _.sumBy(assignments.get(item.id), (mod) => mod.plug.energyCost?.energyCost || 0),
+      used: _.sumBy(
+        bucketSpecificAssignments.get(item.id),
+        (mod) => mod.plug.energyCost?.energyCost || 0
+      ),
       capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
-      type:
-        !item.energy || canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)
-          ? DestinyEnergyType.Any
-          : item.energy.energyType,
+      originalType: item.energy?.energyType || DestinyEnergyType.Any,
+      type: getItemEnergyType(item, upgradeSpendTier, bucketSpecificAssignments[item.id]),
     })
   );
 
@@ -123,9 +177,7 @@ export function getModAssignments(
       const combatEnergyIsValid =
         itemEnergy &&
         itemEnergy.used + combatEnergyCost <= itemEnergy.capacity &&
-        (itemEnergy.type === combatEnergyType ||
-          combatEnergyType === DestinyEnergyType.Any ||
-          itemEnergy.type === DestinyEnergyType.Any);
+        energyTypesAreCompatible(itemEnergy.type, combatEnergyType);
 
       // The other mods wont fit in the item set so move on to the next set of mods
       if (
@@ -160,12 +212,8 @@ export function getModAssignments(
         const generalEnergyIsValid =
           itemEnergy &&
           itemEnergy.used + generalEnergyCost + combatEnergyCost <= itemEnergy.capacity &&
-          (itemEnergy.type === generalEnergyType ||
-            generalEnergyType === DestinyEnergyType.Any ||
-            itemEnergy.type === DestinyEnergyType.Any) &&
-          (generalEnergyType === combatEnergyType ||
-            generalEnergyType === DestinyEnergyType.Any ||
-            combatEnergyType === DestinyEnergyType.Any);
+          energyTypesAreCompatible(itemEnergy.type, generalEnergyType) &&
+          energyTypesAreCompatible(generalEnergyType, combatEnergyType);
 
         // The general mods wont fit in the item set so move on to the next set of mods
         if (!generalEnergyIsValid) {
@@ -197,15 +245,9 @@ export function getModAssignments(
             itemEnergy &&
             itemEnergy.used + generalEnergyCost + combatEnergyCost + raidEnergyCost <=
               itemEnergy.capacity &&
-            (itemEnergy.type === raidEnergyType ||
-              raidEnergyType === DestinyEnergyType.Any ||
-              itemEnergy.type === DestinyEnergyType.Any) &&
-            (raidEnergyType === generalEnergyType ||
-              raidEnergyType === DestinyEnergyType.Any ||
-              generalEnergyType === DestinyEnergyType.Any) &&
-            (raidEnergyType === combatEnergyType ||
-              raidEnergyType === DestinyEnergyType.Any ||
-              combatEnergyType === DestinyEnergyType.Any);
+            energyTypesAreCompatible(itemEnergy.type, raidEnergyType) &&
+            energyTypesAreCompatible(raidEnergyType, generalEnergyType) &&
+            energyTypesAreCompatible(raidEnergyType, combatEnergyType);
 
           // The raid mods wont fit in the item set so move on to the next set of mods
           if (
@@ -221,10 +263,37 @@ export function getModAssignments(
           }
         }
 
-        // calculate best mod assignment here
+        // To hit this point we must have found a
+
+        let energyUsedAndWasted = 0;
+        for (let i = 0; i < items.length; i++) {
+          energyUsedAndWasted += calculateEnergyChange(
+            itemEnergies[items[i].id],
+            generalP[i],
+            combatP[i],
+            raidP[i]
+          );
+        }
+
+        if (energyUsedAndWasted < assignmentEnergyCost) {
+          for (let i = 0; i < items.length; i++) {
+            bucketIndependantAssignments.set(
+              items[i].id,
+              _.compact([generalP[i], combatP[i], raidP[i]])
+            );
+          }
+        }
       }
     }
   }
 
-  return assignments;
+  const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
+  for (const item of items) {
+    mergedResults.set(item.id, [
+      ...bucketSpecificAssignments.get(item.id),
+      ...bucketIndependantAssignments.get(item.id),
+    ]);
+  }
+
+  return mergedResults;
 }
