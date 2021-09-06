@@ -97,7 +97,8 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               locked={lockedMap[item.bucket.hash]}
               lbDispatch={lbDispatch}
-              lockedMods={[]}
+              assignedMods={assignedMods[item.id]}
+              showEnergyChanges={Boolean(lockedMods.length)}
             />
           ))}
         </div>

@@ -1,3 +1,9 @@
+import {
+  defaultLoadoutParameters,
+  LoadoutParameters,
+  UpgradeSpendTier,
+} from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -5,14 +11,21 @@ import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpe
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import { ArmorSet, LockedItemType, LockedMap, StatFilters } from './types';
+import {
+  lockedModsFromLoadoutParameters,
+  statFiltersFromLoadoutParamaters,
+  statOrderFromLoadoutParameters,
+} from './loadout-params';
+import { ArmorSet, ArmorStatHashes, LockedItemType, LockedMap, StatFilters } from './types';
 import { addLockedItem, removeLockedItem } from './utils';
 
 export interface LoadoutBuilderState {
+  statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
+  upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
   lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash?: number;
@@ -25,30 +38,31 @@ export interface LoadoutBuilderState {
   compareSet?: ArmorSet;
 }
 
-export const defaultStatFilters = {
-  [StatHashes.Mobility]: { min: 0, max: 10, ignored: false },
-  [StatHashes.Resilience]: { min: 0, max: 10, ignored: false },
-  [StatHashes.Recovery]: { min: 0, max: 10, ignored: false },
-  [StatHashes.Discipline]: { min: 0, max: 10, ignored: false },
-  [StatHashes.Intellect]: { min: 0, max: 10, ignored: false },
-  [StatHashes.Strength]: { min: 0, max: 10, ignored: false },
-};
-Object.freeze(defaultStatFilters);
-
 const lbStateInit = ({
   stores,
   preloadedLoadout,
+  initialLoadoutParameters,
+  classType,
+  defs,
 }: {
   stores: DimStore[];
   preloadedLoadout?: Loadout;
+  initialLoadoutParameters: LoadoutParameters;
+  classType: DestinyClass | undefined;
+  defs: D2ManifestDefinitions;
 }): LoadoutBuilderState => {
   let lockedMap: LockedMap = {};
 
-  let selectedStoreId = getCurrentStore(stores)?.id;
+  let selectedStoreId = classType
+    ? stores.find((store) => store.classType === classType)?.id
+    : getCurrentStore(stores)?.id;
+
+  let loadoutParams = initialLoadoutParameters;
 
   if (stores.length && preloadedLoadout) {
     selectedStoreId = stores.find((store) => store.classType === preloadedLoadout.classType)?.id;
 
+    // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
     for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
@@ -63,12 +77,29 @@ const lbStateInit = ({
         }
       }
     }
+
+    // Load all parameters from the loadout if we can
+    if (preloadedLoadout.parameters) {
+      loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
+    }
   }
+
+  const statOrder = statOrderFromLoadoutParameters(loadoutParams);
+  const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
+  const lockedMods = lockedModsFromLoadoutParameters(loadoutParams, defs);
+  const lockItemEnergyType = Boolean(loadoutParams?.lockItemEnergyType);
+  const upgradeSpendTier = loadoutParams.upgradeSpendTier!;
+  const lockedExoticHash = loadoutParams.exoticArmorHash;
+
   return {
+    lockItemEnergyType,
+    upgradeSpendTier,
+    statOrder,
     lockedMap,
-    statFilters: _.cloneDeep(defaultStatFilters),
-    lockedMods: [],
-    selectedStoreId: selectedStoreId,
+    statFilters,
+    lockedMods,
+    lockedExoticHash,
+    selectedStoreId,
     modPicker: {
       open: false,
     },
@@ -78,6 +109,12 @@ const lbStateInit = ({
 export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
+  | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
+  | {
+      type: 'lockItemEnergyTypeChanged';
+      lockItemEnergyType: LoadoutBuilderState['lockItemEnergyType'];
+    }
+  | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: LoadoutBuilderState['upgradeSpendTier'] }
   | { type: 'lockedMapChanged'; lockedMap: LockedMap }
   | { type: 'addItemToLockedMap'; item: LockedItemType }
   | { type: 'removeItemFromLockedMap'; item: LockedItemType }
@@ -105,7 +142,6 @@ function lbStateReducer(
         ...state,
         selectedStoreId: action.storeId,
         lockedMap: {},
-        statFilters: _.cloneDeep(defaultStatFilters),
         lockedExoticHash: undefined,
       };
     case 'statFiltersChanged':
@@ -138,6 +174,24 @@ function lbStateReducer(
       return {
         ...state,
         lockedMods: action.lockedMods,
+      };
+    }
+    case 'sortOrderChanged': {
+      return {
+        ...state,
+        statOrder: action.sortOrder,
+      };
+    }
+    case 'lockItemEnergyTypeChanged': {
+      return {
+        ...state,
+        lockItemEnergyType: action.lockItemEnergyType,
+      };
+    }
+    case 'upgradeSpendTierChanged': {
+      return {
+        ...state,
+        upgradeSpendTier: action.upgradeSpendTier,
       };
     }
     case 'addGeneralMods': {
@@ -204,6 +258,16 @@ function lbStateReducer(
   }
 }
 
-export function useLbState(stores: DimStore[], preloadedLoadout?: Loadout) {
-  return useReducer(lbStateReducer, { stores, preloadedLoadout }, lbStateInit);
+export function useLbState(
+  stores: DimStore[],
+  preloadedLoadout: Loadout | undefined,
+  classType: DestinyClass | undefined,
+  initialLoadoutParameters: LoadoutParameters,
+  defs: D2ManifestDefinitions
+) {
+  return useReducer(
+    lbStateReducer,
+    { stores, preloadedLoadout, initialLoadoutParameters, defs, classType },
+    lbStateInit
+  );
 }

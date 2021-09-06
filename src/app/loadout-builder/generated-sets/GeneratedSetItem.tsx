@@ -20,42 +20,50 @@ import Sockets from './Sockets';
  */
 function EnergySwap({
   item,
-  lockedMods,
+  assignedMods,
 }: {
   item: DimItem;
-  lockedMods: PluggableInventoryItemDefinition[];
+  assignedMods?: PluggableInventoryItemDefinition[];
 }) {
   const defs = useD2Definitions()!;
-  const modCost = _.sumBy(lockedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const itemEnergyCapacity = item.energy?.energyCapacity || 0;
+
+  const armorEnergyCapacity = item.energy?.energyCapacity || 0;
   const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
-  const modEnergyHash = lockedMods.find(
+
+  const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+  const modEnergyHash = assignedMods?.find(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyTypeHash;
   const modEnergy = (modEnergyHash && defs.EnergyType.get(modEnergyHash)) || null;
-  const resultingEnergyCapacity =
-    modEnergy && armorEnergy.hash === modEnergy.hash
-      ? Math.max(itemEnergyCapacity, modCost)
-      : modCost;
+
+  const resultingEnergy = modEnergy ?? armorEnergy;
+  let resultingEnergyCapacity = armorEnergyCapacity;
+
+  if (modEnergyHash === armorEnergy.hash) {
+    resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
+  } else if (modEnergy) {
+    resultingEnergyCapacity = modCost;
+  }
+
+  const noEnergyChange =
+    resultingEnergyCapacity === armorEnergyCapacity && resultingEnergy === armorEnergy;
 
   return (
-    modEnergy && (
-      <div className={styles.energySwapContainer}>
-        <div className={styles.energyValue}>
-          <div className={clsx({ [styles.masterworked]: itemEnergyCapacity === 10 })}>
-            {itemEnergyCapacity}
-          </div>
-          <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
+    <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: noEnergyChange })}>
+      <div className={styles.energyValue}>
+        <div className={clsx({ [styles.masterworked]: armorEnergyCapacity === 10 })}>
+          {armorEnergyCapacity}
         </div>
-        <div className={styles.arrow}>{'➜'}</div>
-        <div className={styles.energyValue}>
-          <div className={clsx({ [styles.masterworked]: resultingEnergyCapacity === 10 })}>
-            {resultingEnergyCapacity}
-          </div>
-          <BungieImage className={styles.energyIcon} src={modEnergy.displayProperties.icon} />
-        </div>
+        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
-    )
+      <div className={styles.arrow}>{'➜'}</div>
+      <div className={styles.energyValue}>
+        <div className={clsx({ [styles.masterworked]: resultingEnergyCapacity === 10 })}>
+          {resultingEnergyCapacity}
+        </div>
+        <BungieImage className={styles.energyIcon} src={resultingEnergy.displayProperties.icon} />
+      </div>
+    </div>
   );
 }
 
@@ -67,13 +75,15 @@ export default function GeneratedSetItem({
   item,
   locked,
   itemOptions,
-  lockedMods,
+  assignedMods,
+  showEnergyChanges,
   lbDispatch,
 }: {
   item: DimItem;
   locked?: readonly LockedItemType[];
   itemOptions: DimItem[];
-  lockedMods?: PluggableInventoryItemDefinition[];
+  assignedMods?: PluggableInventoryItemDefinition[];
+  showEnergyChanges: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
@@ -113,7 +123,7 @@ export default function GeneratedSetItem({
 
   return (
     <div>
-      {lockedMods && lockedMods.length > 0 && <EnergySwap item={item} lockedMods={lockedMods} />}
+      {showEnergyChanges && <EnergySwap item={item} assignedMods={assignedMods} />}
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
@@ -140,7 +150,7 @@ export default function GeneratedSetItem({
           )}
         </div>
         <div className={styles.lockedSockets}>
-          <Sockets item={item} lockedMods={lockedMods} onSocketClick={onSocketClick} />
+          <Sockets item={item} lockedMods={assignedMods} onSocketClick={onSocketClick} />
         </div>
       </div>
     </div>

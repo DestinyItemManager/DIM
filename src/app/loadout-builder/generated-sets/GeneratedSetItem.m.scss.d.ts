@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'arrow': string;
+  'energyHidden': string;
   'energyIcon': string;
   'energySwapContainer': string;
   'energyValue': string;

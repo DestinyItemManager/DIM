@@ -1,16 +1,21 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { moveItemTo } from 'app/inventory/move-item';
+import { currentStoreSelector } from 'app/inventory/selectors';
+import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, searchIcon } from '../shell/icons';
+import { AppIcon, faArrowCircleDown, searchIcon } from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
@@ -44,12 +49,21 @@ export default function CompareItem({
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
   const itemNotes = useSelector(itemNoteSelector(item));
+  const dispatch = useThunkDispatch();
+  const currentStore = useSelector(currentStoreSelector)!;
+  const pullItem = useCallback(() => {
+    dispatch(moveItemTo(item, currentStore, false));
+  }, [currentStore, dispatch, item]);
+
   const itemHeader = useMemo(
     () => (
       <div ref={headerRef}>
         <div className={styles.header}>
+          <ActionButton onClick={pullItem}>
+            <AppIcon icon={faArrowCircleDown} />
+          </ActionButton>
           <LockActionButton item={item} />
-          <TagActionButton item={item} label={true} hideKeys={true} />
+          <TagActionButton item={item} label={false} hideKeys={true} />
           <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>
         <div
@@ -59,17 +73,18 @@ export default function CompareItem({
         >
           {item.name} <AppIcon icon={searchIcon} />
         </div>
-        <PressTip
-          elementType="span"
-          className={styles.itemAside}
-          tooltip={itemNotes}
-          allowClickThrough={true}
-        >
-          <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
-        </PressTip>
+        <ItemPopupTrigger item={item} noCompare={true}>
+          {(ref, onClick) => (
+            <div className={styles.itemAside} ref={ref} onClick={onClick}>
+              <PressTip className={styles.itemAside} tooltip={itemNotes} allowClickThrough={true}>
+                <ConnectedInventoryItem item={item} />
+              </PressTip>
+            </div>
+          )}
+        </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, itemNotes, remove]
+    [isInitialItem, item, itemClick, pullItem, remove, itemNotes]
   );
 
   return (

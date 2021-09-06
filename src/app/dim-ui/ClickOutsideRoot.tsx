@@ -10,7 +10,13 @@ import { ClickOutsideContext } from './ClickOutside';
  * React DOM heirarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
-export default function ClickOutsideRoot({ children }: { children: React.ReactNode }) {
+export default function ClickOutsideRoot({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const [clickOutsideSubject] = useState(() => new EventBus<React.MouseEvent>());
 
   const onClick = (e: React.MouseEvent) => {
@@ -19,7 +25,9 @@ export default function ClickOutsideRoot({ children }: { children: React.ReactNo
 
   return (
     <ClickOutsideContext.Provider value={clickOutsideSubject}>
-      <div onClick={onClick}>{children}</div>
+      <div className={className} onClick={onClick}>
+        {children}
+      </div>
     </ClickOutsideContext.Provider>
   );
 }

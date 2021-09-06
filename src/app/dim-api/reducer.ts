@@ -20,10 +20,12 @@ import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
+import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
+import { migrateLoadoutParametersFromSettings } from '../loadout-builder/loadout-params';
 import * as loadoutActions from '../loadout-drawer/actions';
 import {
   Loadout as DimLoadout,
@@ -179,10 +181,10 @@ export const dimApi = (
         ? {
             ...state,
             profileLoadedFromIndexedDb: true,
-            settings: {
+            settings: migrateLoadoutParametersFromSettings({
               ...state.settings,
               ...action.payload.settings,
-            },
+            }),
             profiles: {
               ...state.profiles,
               ...action.payload.profiles,
@@ -208,10 +210,10 @@ export const dimApi = (
         profileLoaded: true,
         profileLoadedError: undefined,
         profileLastLoaded: Date.now(),
-        settings: {
+        settings: migrateLoadoutParametersFromSettings({
           ...state.settings,
           ...profileResponse.settings,
-        },
+        }),
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
@@ -386,6 +388,11 @@ export const dimApi = (
 };
 
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
+  // Don't worry about changing settings to their current value
+  if (deepEqual(state.settings[prop], value)) {
+    return state;
+  }
+
   return produce(state, (draft) => {
     const beforeValue = draft.settings[prop];
     draft.settings[prop] = value;
