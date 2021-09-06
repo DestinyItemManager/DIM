@@ -7,6 +7,7 @@
 * Added a "pull" button (down-arrow) to each item in the Compare tool that will pull the item to your current character.
 * Collapsed the Tag menu into an icon in Compare to allow more items to fit on screen.
 * Shortened the names of stats in Compare to allow more items to fit on screen.
+* Added hover titles to the new compare buttons for more clarity.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
