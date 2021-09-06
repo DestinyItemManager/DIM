@@ -59,7 +59,7 @@ export default function CompareItem({
     () => (
       <div ref={headerRef}>
         <div className={styles.header}>
-          <ActionButton onClick={pullItem}>
+          <ActionButton title={t('Hotkey.Pull')} onClick={pullItem}>
             <AppIcon icon={faArrowCircleDown} />
           </ActionButton>
           <LockActionButton item={item} />
