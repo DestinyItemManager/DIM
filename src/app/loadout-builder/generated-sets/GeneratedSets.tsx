@@ -65,6 +65,7 @@ interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
   lockedMap: LockedMap;
+  lockedMods: PluggableInventoryItemDefinition[];
   statOrder: number[];
   enabledStats: Set<number>;
   loadouts: Loadout[];
@@ -78,6 +79,7 @@ interface Props {
  */
 export default function GeneratedSets({
   lockedMap,
+  lockedMods,
   selectedStore,
   sets,
   statOrder,
@@ -144,6 +146,7 @@ export default function GeneratedSets({
           set={measureSet}
           selectedStore={selectedStore}
           lockedMap={lockedMap}
+          lockedMods={lockedMods}
           lbDispatch={lbDispatch}
           statOrder={statOrder}
           enabledStats={enabledStats}
@@ -170,6 +173,7 @@ export default function GeneratedSets({
                   set={sets[index]}
                   selectedStore={selectedStore}
                   lockedMap={lockedMap}
+                  lockedMods={lockedMods}
                   lbDispatch={lbDispatch}
                   statOrder={statOrder}
                   enabledStats={enabledStats}

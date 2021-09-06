@@ -365,6 +365,7 @@ function LoadoutBuilder({
           <GeneratedSets
             sets={filteredSets}
             lockedMap={lockedMap}
+            lockedMods={lockedMods}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}

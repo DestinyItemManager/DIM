@@ -18,6 +18,7 @@ interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
   lockedMap: LockedMap;
+  lockedMods: PluggableInventoryItemDefinition[];
   style: React.CSSProperties;
   statOrder: number[];
   forwardedRef?: React.Ref<HTMLDivElement>;
@@ -36,6 +37,7 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
+  lockedMods,
   style,
   statOrder,
   enabledStats,
@@ -97,7 +99,7 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               locked={lockedMap[item.bucket.hash]}
               lbDispatch={lbDispatch}
-              assignedMods={assignedMods[item.id]}
+              assignedMods={[]}
               showEnergyChanges={Boolean(lockedMods.length)}
             />
           ))}
