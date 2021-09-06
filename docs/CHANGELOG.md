@@ -3,6 +3,10 @@
 * Loadout Optimizer remembers stats you've Ignored between sessions.
 * Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
 * Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
+* Clicking on an item's picture in the Compare tool now opens the full item popup.
+* Added a "pull" button (down-arrow) to each item in the Compare tool that will pull the item to your current character.
+* Collapsed the Tag menu into an icon in Compare to allow more items to fit on screen.
+* Shortened the names of stats in Compare to allow more items to fit on screen.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 

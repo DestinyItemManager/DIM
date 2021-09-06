@@ -679,6 +679,7 @@
     "Stats": {
       "Aim": "Aim",
       "Inventory": "Inventory",
+      "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Recoil",
       "Reload": "Reload"

@@ -7,8 +7,8 @@
 @import '../variables.scss';
 
 .movePopupDialog {
-  // Mod drawer has z-index of 12 and needs to sit over this
-  z-index: 11;
+  // Mod drawer has z-index of 14 and needs to sit over this
+  z-index: 13;
 
   --backgroundColor: 0, 0%, 0%;
 

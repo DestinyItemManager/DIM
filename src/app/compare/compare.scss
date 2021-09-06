@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-#loadout-drawer.compare {
+.loadout-drawer.compare {
   padding-left: 10px;
   padding-top: 8px;
   @include max-sheet-height;
@@ -17,7 +17,6 @@
   }
   .highlight {
     background-color: rgba(128, 128, 128, 0.25);
-    cursor: pointer;
   }
 
   span > .app-icon {
@@ -48,10 +47,7 @@
   }
 
   .item-socket-category {
-    margin-right: 12px;
-    &:last-child {
-      margin-right: 0;
-    }
+    margin-right: 4px;
   }
 
   .item-socket-category-Reusable .item-socket {
