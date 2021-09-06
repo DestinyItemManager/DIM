@@ -1,5 +1,7 @@
 ## Next
 
+## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
+
 * Fixed wonky rank display in the phone portrait layout.
 * Elemental Capacitor stats are no longer added to weapons with the perk enabled.
 * In the Loadout Optimizer, searching items now works in conjunction with locking exotics and items.
