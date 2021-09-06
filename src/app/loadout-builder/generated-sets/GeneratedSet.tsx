@@ -18,6 +18,7 @@ interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
   lockedMap: LockedMap;
+  lockedMods: PluggableInventoryItemDefinition[];
   style: React.CSSProperties;
   statOrder: number[];
   forwardedRef?: React.Ref<HTMLDivElement>;
@@ -36,6 +37,7 @@ function GeneratedSet({
   set,
   selectedStore,
   lockedMap,
+  lockedMods,
   style,
   statOrder,
   enabledStats,
