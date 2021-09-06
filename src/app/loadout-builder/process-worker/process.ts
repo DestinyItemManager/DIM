@@ -90,11 +90,11 @@ export function process(
 
   // Precompute the stats of each item in the order the user asked for
   for (const item of [
-    ...filteredItems[LockableBuckets.helmet],
-    ...filteredItems[LockableBuckets.gauntlets],
-    ...filteredItems[LockableBuckets.chest],
-    ...filteredItems[LockableBuckets.leg],
-    ...filteredItems[LockableBuckets.classitem],
+    ...(filteredItems[LockableBuckets.helmet] || []),
+    ...(filteredItems[LockableBuckets.gauntlets] || []),
+    ...(filteredItems[LockableBuckets.chest] || []),
+    ...(filteredItems[LockableBuckets.leg] || []),
+    ...(filteredItems[LockableBuckets.classitem] || []),
   ]) {
     statsCache.set(item, getStatValuesWithMW(item, statOrder));
   }

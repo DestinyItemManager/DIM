@@ -568,7 +568,7 @@ function LoadoutDrawer({
 
   return (
     <Sheet onClose={close} header={header}>
-      <div id="loadout-drawer" className="loadout-create">
+      <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget
             bucketTypes={bucketTypes}

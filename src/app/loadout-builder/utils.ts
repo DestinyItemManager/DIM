@@ -3,7 +3,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { energyUpgrade } from 'app/inventory/store/energy';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
-import { warnLog } from 'app/utils/log';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
@@ -130,10 +129,7 @@ export function upgradeSpendTierToMaxEnergy(
     return 0;
   }
 
-  if (
-    tier === UpgradeSpendTier.Nothing ||
-    tier === UpgradeSpendTier.AscendantShardsLockEnergyType
-  ) {
+  if (tier === UpgradeSpendTier.Nothing) {
     return item.energy.energyCapacity;
   }
 
@@ -195,29 +191,12 @@ export function canSwapEnergyFromUpgradeSpendTier(
     return false;
   }
 
-  let differentEnergy: DestinyEnergyType;
-
-  // Find any armour energy that is not the current energy
-  switch (item.energy.energyType) {
-    case DestinyEnergyType.Arc:
-      differentEnergy = DestinyEnergyType.Thermal;
-      break;
-    case DestinyEnergyType.Thermal:
-      differentEnergy = DestinyEnergyType.Void;
-      break;
-    case DestinyEnergyType.Void:
-      differentEnergy = DestinyEnergyType.Arc;
-      break;
-    default: {
-      warnLog(
-        'loadout-builder',
-        `Armor expected to have an energy type of ${DestinyEnergyType.Arc},
-        ${DestinyEnergyType.Thermal} or ${DestinyEnergyType.Void} but had
-        ${item.energy.energyType}`
-      );
-      differentEnergy = item.energy.energyType;
-    }
-  }
+  // Find any armour energy that is not the current energy, just so we correctly
+  // calculate the cost of a switch.
+  const differentEnergy =
+    item.energy.energyType === DestinyEnergyType.Arc
+      ? DestinyEnergyType.Thermal
+      : DestinyEnergyType.Arc;
 
   // gets a single upgrade for swapping energy at the current level
   const availableEnergyUpgrades = energyUpgrade(
