@@ -9,6 +9,7 @@
 * Shortened the names of stats in Compare to allow more items to fit on screen.
 * Added hover titles to the new compare buttons for more clarity.
 * Selecting "Add Unequipped" in the loadout editor no longer tries to equip all your unequipped items.
+* Progress win streak will now correctly display when a user hits a 5 win streak.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
