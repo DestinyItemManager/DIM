@@ -15,10 +15,13 @@ import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
 const itemSort = chainComparator<VendorItem>(
-  compareBy((item) => item.item?.typeName),
-  compareBy((item) => item.item?.tier),
-  compareBy((item) => item.item?.icon),
-  compareBy((item) => item.item?.name)
+  compareBy((item) => (item.item?.bucket.name === 'Quests' ? item.item?.typeName : '')),
+  compareBy((item) =>
+    item.item?.bucket.sort === 'Weapons'
+      ? item.item?.itemCategoryHashes
+      : parseInt(item.item?.id ?? '', 10)
+  ),
+  compareBy((item) => (item.item?.bucket.sort !== 'Weapons' ? item.item?.itemCategoryHashes : ''))
 );
 
 // ignore what i think is the loot pool preview on some tower vendors?
@@ -108,7 +111,7 @@ export default function VendorItems({
               )}
               {rewardVendorHash && rewardItem && (
                 <Link to={`vendors/${rewardVendorHash}?characterId=${characterId}`}>
-                  <div className="item" title={rewardItem.displayProperties.name}>
+                  <div className="item" title={rewardItem.displayProperties.name} id="test">
                     <BungieImage
                       className="item-img transparent"
                       src={rewardItem.displayProperties.icon}
