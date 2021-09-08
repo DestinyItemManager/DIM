@@ -1,30 +1,29 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
+import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import React from 'react';
-import { LockedItemType } from '../types';
 
+/**
+ * Render a pinned or excluded item.
+ */
 export default function LockedItem({
   lockedItem,
   onRemove,
 }: {
-  lockedItem: LockedItemType;
-  onRemove(item: LockedItemType): void;
+  lockedItem: DimItem;
+  onRemove(item: DimItem): void;
 }) {
-  switch (lockedItem.type) {
-    case 'item':
-    case 'exclude':
-      return (
-        <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.item.id}>
-          <DraggableInventoryItem item={lockedItem.item}>
-            <ItemPopupTrigger item={lockedItem.item}>
-              {(ref, onClick) => (
-                <ConnectedInventoryItem item={lockedItem.item} onClick={onClick} innerRef={ref} />
-              )}
-            </ItemPopupTrigger>
-          </DraggableInventoryItem>
-        </ClosableContainer>
-      );
-  }
+  return (
+    <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.id}>
+      <DraggableInventoryItem item={lockedItem}>
+        <ItemPopupTrigger item={lockedItem}>
+          {(ref, onClick) => (
+            <ConnectedInventoryItem item={lockedItem} onClick={onClick} innerRef={ref} />
+          )}
+        </ItemPopupTrigger>
+      </DraggableInventoryItem>
+    </ClosableContainer>
+  );
 }

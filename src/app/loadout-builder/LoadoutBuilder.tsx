@@ -161,7 +161,8 @@ function LoadoutBuilder({
       upgradeSpendTier,
       statOrder,
       lockItemEnergyType,
-      lockedMap,
+      pinnedItems,
+      excludedItems,
       lockedMods,
       lockedExoticHash,
       selectedStoreId,
@@ -208,20 +209,29 @@ function LoadoutBuilder({
       filterItems(
         defs,
         characterItems,
-        lockedMap,
+        pinnedItems,
+        excludedItems,
         lockedMods,
         lockedExoticHash,
         upgradeSpendTier,
         searchFilter
       ),
-    [defs, characterItems, lockedMap, lockedMods, lockedExoticHash, upgradeSpendTier, searchFilter]
+    [
+      defs,
+      characterItems,
+      pinnedItems,
+      excludedItems,
+      lockedMods,
+      lockedExoticHash,
+      upgradeSpendTier,
+      searchFilter,
+    ]
   );
 
   const { result, processing } = useProcess(
     defs,
     selectedStore,
     filteredItems,
-    lockedMap,
     lockedMods,
     upgradeSpendTier,
     lockItemEnergyType,
@@ -292,7 +302,8 @@ function LoadoutBuilder({
 
       <LockArmorAndPerks
         selectedStore={selectedStore}
-        lockedMap={lockedMap}
+        pinnedItems={pinnedItems}
+        excludedItems={excludedItems}
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
@@ -364,7 +375,7 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
-            lockedMap={lockedMap}
+            pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}
