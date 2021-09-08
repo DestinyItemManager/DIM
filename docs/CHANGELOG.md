@@ -11,6 +11,7 @@
 * Selecting "Add Unequipped" in the loadout editor no longer tries to equip all your unequipped items.
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
+* Fixed the order of items in vendors and seasonal vendor upgrade grids
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
@@ -24,7 +25,7 @@
 ## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
 
 * Fix sorting by power and energy in Compare when "Show Base Stats" is enabled.
-* Fixed misaligment in stat rows, and vertical scrolling, in Compare.
+* Fixed misalignment in stat rows, and vertical scrolling, in Compare.
 * Highlighting stats in Compare is faster.
 * You can click any perk in Compare, not just the first couple.
 * Clicking an item's name to find it in the inventory view will now change character on mobile to wherever the item is.
