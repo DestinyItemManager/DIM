@@ -24,6 +24,11 @@ const itemSort = chainComparator<VendorItem>(
   compareBy((item) => (item.item?.bucket.sort !== 'Weapons' ? item.item?.itemCategoryHashes : ''))
 );
 
+const rankRewardsSort = chainComparator<VendorItem>(
+  compareBy((item) => item.item?.tier),
+  compareBy((item) => parseInt(item.item?.id ?? '', 10)),
+)
+
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
 const ignoreCategories = ['category_preview', 'category_reset'];
@@ -111,7 +116,7 @@ export default function VendorItems({
               )}
               {rewardVendorHash && rewardItem && (
                 <Link to={`vendors/${rewardVendorHash}?characterId=${characterId}`}>
-                  <div className="item" title={rewardItem.displayProperties.name} id="test">
+                  <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage
                       className="item-img transparent"
                       src={rewardItem.displayProperties.icon}
@@ -133,7 +138,7 @@ export default function VendorItems({
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
-                    .sort(itemSort)
+                    .sort(vendor.def.displayCategories[categoryIndex]?.identifier === "category.rank_rewards_seasonal" ? rankRewardsSort : itemSort)
                     .map(
                       (item) =>
                         item.item && (
