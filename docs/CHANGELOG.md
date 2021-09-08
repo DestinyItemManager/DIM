@@ -10,6 +10,7 @@
 * Added hover titles to the new compare buttons for more clarity.
 * Selecting "Add Unequipped" in the loadout editor no longer tries to equip all your unequipped items.
 * Progress win streak will now correctly display when a user hits a 5 win streak.
+* Loadout Optimizer won't let you pin an item you can't use with LO (e.g. sunset armor)
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 

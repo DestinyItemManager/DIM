@@ -163,7 +163,9 @@ function LockArmorAndPerks({
     addLockItem,
     // Exclude types that already have a locked item represented
     (item) =>
-      !lockedMap[item.bucket.hash] || !lockedMap[item.bucket.hash]!.some((li) => li.type === 'item')
+      isLoadoutBuilderItem(item) &&
+      (!lockedMap[item.bucket.hash] ||
+        !lockedMap[item.bucket.hash]!.some((li) => li.type === 'item'))
   );
   const chooseExcludeItem = chooseItem(addExcludeItem);
 
