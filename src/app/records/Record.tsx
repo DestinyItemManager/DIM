@@ -1,6 +1,7 @@
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import PressTip from 'app/dim-ui/PressTip';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
@@ -186,7 +187,11 @@ export default function Record({
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
-        {description && <p>{description}</p>}
+        {description && (
+          <p>
+            <RichDestinyText text={description} />
+          </p>
+        )}
         {showObjectives && (
           <div className={styles.objectives}>
             {objectives.map((objective) => (
