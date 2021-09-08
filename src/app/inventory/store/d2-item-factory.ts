@@ -385,7 +385,12 @@ export function makeItem(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
-    id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
+    id:
+      item.itemHash === 3675595381 // Fix for ada-1 bounties ...
+        ? '1'
+        : item.itemHash === 171866827
+        ? '4'
+        : item.itemInstanceId || '0', // zero for non-instanced is legacy hack
     equipped: Boolean(instanceDef?.isEquipped),
     equipment:
       Boolean(itemDef.equippingBlock) && normalBucket.hash !== BucketHashes.SeasonalArtifact, // TODO: this has a ton of good info for the item move logic
