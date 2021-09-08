@@ -7,7 +7,7 @@ import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
   ItemsByBucket,
-  LockableBuckets,
+  LockableBucketHashes,
   LockedItemType,
   LockedMap,
 } from './types';
@@ -32,7 +32,7 @@ export function filterItems(
 
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
-  Object.values(LockableBuckets).forEach((bucket) => {
+  LockableBucketHashes.forEach((bucket) => {
     const locked = lockedMap[bucket];
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 

@@ -21,7 +21,7 @@ import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import {
-  LockableBuckets,
+  LockableBucketHashes,
   LockedExclude,
   LockedItemCase,
   LockedItemType,
@@ -107,7 +107,6 @@ function LockArmorAndPerks({
     async (e: React.MouseEvent) => {
       e.preventDefault();
 
-      const order = Object.values(LockableBuckets);
       try {
         const { item } = await showItemPicker({
           filterItems: (item: DimItem) =>
@@ -116,7 +115,7 @@ function LockArmorAndPerks({
                 itemCanBeEquippedBy(item, selectedStore, true) &&
                 (!filter || filter(item))
             ),
-          sortBy: (item) => order.indexOf(item.bucket.hash),
+          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
         });
 
         updateFunc(item);
@@ -172,9 +171,8 @@ function LockArmorAndPerks({
     (item) => item.type
   );
 
-  const order = Object.values(LockableBuckets);
   flatLockedMap = _.mapValues(flatLockedMap, (items) =>
-    _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
+    _.sortBy(items, (i: LockedItemCase) => LockableBucketHashes.indexOf(i.bucket.hash))
   );
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
