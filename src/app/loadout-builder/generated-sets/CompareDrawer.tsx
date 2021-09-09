@@ -18,6 +18,7 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
+import { getAssignedAndUnassignedMods, getModAssignments } from '../mod-utils';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
@@ -138,6 +139,19 @@ function CompareDrawer({
     loadoutStats[statHash] += lockedModStats[statHash];
   }
 
+  const loSetAssignedMods = getModAssignments(
+    set.armor.map((items) => items[0]),
+    lockedMods,
+    defs,
+    upgradeSpendTier
+  );
+  const [loadoutAssignedMods, loadoutUnassignedMods] = getAssignedAndUnassignedMods(
+    loadoutItems,
+    lockedMods,
+    defs,
+    upgradeSpendTier
+  );
+
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -211,7 +225,7 @@ function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={[]} />
+                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} />
               </div>
             ))}
           </div>
@@ -251,17 +265,17 @@ function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets item={item} lockedMods={[]} />
+                    <Sockets item={item} lockedMods={loadoutAssignedMods.get(item.id)} />
                   </div>
                 ))}
               </div>
-              {Boolean([].length) && (
+              {Boolean(loadoutUnassignedMods.length) && (
                 <div className={styles.unassigned}>
                   {t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}
                 </div>
               )}
               <div className={styles.unassignedMods}>
-                {[].map((unassigned) => (
+                {loadoutUnassignedMods.map((unassigned) => (
                   <Mod
                     key={getModRenderKey(unassigned, modCounts)}
                     plugDef={unassigned}
