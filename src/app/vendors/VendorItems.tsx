@@ -26,8 +26,8 @@ const itemSort = chainComparator<VendorItem>(
 
 const rankRewardsSort = chainComparator<VendorItem>(
   compareBy((item) => item.item?.tier),
-  compareBy((item) => parseInt(item.item?.id ?? '', 10)),
-)
+  compareBy((item) => parseInt(item.item?.id ?? '', 10))
+);
 
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
@@ -58,6 +58,7 @@ export default function VendorItems({
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor?.component?.progression;
+  const isArtifact = vendor.def.displayCategories[7].identifier === 'category_reset';
   let currencies = vendor.currencies;
 
   // add in faction tokens if this vendor has them
@@ -138,7 +139,14 @@ export default function VendorItems({
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
-                    .sort(vendor.def.displayCategories[categoryIndex]?.identifier === "category.rank_rewards_seasonal" ? rankRewardsSort : itemSort)
+                    .sort(
+                      vendor.def.displayCategories[categoryIndex]?.identifier ===
+                        'category.rank_rewards_seasonal'
+                        ? rankRewardsSort
+                        : isArtifact
+                        ? undefined
+                        : itemSort
+                    )
                     .map(
                       (item) =>
                         item.item && (
