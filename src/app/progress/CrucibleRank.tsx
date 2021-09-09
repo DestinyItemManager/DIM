@@ -39,7 +39,9 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
       </div>
       <div className={styles.factionInfo}>
         <div className={styles.factionLevel}>{progressionDef.displayProperties.name}</div>
-        <div className={styles.factionName}>{step.stepName}</div>
+        <div className={styles.factionName}>
+          {step.stepName} / Rank {progress.level + 1}
+        </div>
         <div className={styles.factionLevel}>
           <BungieImage className={styles.rankIcon} src={progressionDef.rankIcon} />
           {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
