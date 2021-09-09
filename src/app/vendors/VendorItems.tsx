@@ -58,7 +58,7 @@ export default function VendorItems({
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor?.component?.progression;
-  const isArtifact = vendor.def.displayCategories[7]?.identifier === 'category_reset' ?? false;
+  const isArtifact = vendor.def.displayCategories.some((i) => i.identifier === 'category_reset');
   let currencies = vendor.currencies;
 
   // add in faction tokens if this vendor has them
