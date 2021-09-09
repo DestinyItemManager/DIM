@@ -12,6 +12,8 @@
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
 * Fixed the order of items in vendors and seasonal vendor upgrade grids
+* Seasonal artifact display now matches the games display
+* Vendor progress bars now match their icon shape
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
