@@ -1,0 +1,44 @@
+import React from 'react';
+import styles from './DiamondProgress.m.scss';
+
+interface Props {
+  /** 0-1 progress for the outer ring */
+  progress: number;
+  /** Level to display */
+  level?: number;
+  /** The icon to use */
+  icon: string;
+  className?: string;
+}
+
+/**
+ * A circle-shaped progress bar (from faction icons).
+ */
+export default function CirlceProgress({ progress, level, icon, className }: Props) {
+  const style = {
+    strokeDashoffset: 121.622368 - 121.622368 * progress,
+  };
+
+  return (
+    <div className={className}>
+      <svg viewBox="0 0 48 48">
+        <image xlinkHref={icon} width="48" height="48" />
+        {progress > 0 && (
+          <circle
+            strokeDasharray="121.622368"
+            style={style}
+            fillOpacity="0"
+            stroke="#FFF"
+            strokeWidth="3"
+            cx="24"
+            cy="24"
+            r="21"
+            strokeLinecap="butt"
+            transform="rotate(-90 24 24)"
+          />
+        )}
+      </svg>
+      {level !== undefined && <div className={styles.level}>{level}</div>}
+    </div>
+  );
+}
