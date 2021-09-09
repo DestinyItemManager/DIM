@@ -99,7 +99,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {!filtering && ((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
+        {((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
