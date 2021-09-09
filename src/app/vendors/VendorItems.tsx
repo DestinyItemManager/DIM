@@ -108,6 +108,7 @@ export default function VendorItems({
                 >
                   <div>
                     <FactionIcon
+                      defs={defs}
                       factionProgress={factionProgress}
                       factionDef={faction}
                       vendor={vendor.component}
