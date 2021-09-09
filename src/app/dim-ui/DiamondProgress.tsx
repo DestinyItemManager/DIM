@@ -14,7 +14,7 @@ interface Props {
 /**
  * A diamond-shaped progress bar (from faction icons).
  */
-export default function DiamondProgres({ progress, level, icon, className }: Props) {
+export default function DiamondProgress({ progress, level, icon, className }: Props) {
   const style = {
     strokeDashoffset: 121.622368 - 121.622368 * progress,
   };

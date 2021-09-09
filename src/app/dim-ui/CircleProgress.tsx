@@ -15,7 +15,7 @@ interface Props {
 /**
  * A circle-shaped progress bar (from faction icons).
  */
-export default function CirlceProgress({ progress, level, icon, icon2, className }: Props) {
+export default function CircleProgress({ progress, level, icon, icon2, className }: Props) {
   const style = {
     strokeDashoffset: 121.622368 - 121.622368 * progress,
   };
