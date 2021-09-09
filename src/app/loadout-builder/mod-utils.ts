@@ -13,13 +13,14 @@ export const doEnergiesMatch = (
   defs: D2ManifestDefinitions,
   mod: PluggableInventoryItemDefinition,
   item: DimItem,
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ) =>
   item.energy &&
   (!mod.plug.energyCost ||
     mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
     mod.plug.energyCost.energyType === item.energy.energyType ||
-    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item));
+    (!lockItemEnergyType && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)));
 
 /**
  * Checks to see if some mod in a collection of LockedMod or LockedMod,
