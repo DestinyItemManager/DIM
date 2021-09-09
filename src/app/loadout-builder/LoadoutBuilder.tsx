@@ -212,9 +212,19 @@ function LoadoutBuilder({
         lockedMods,
         lockedExoticHash,
         upgradeSpendTier,
+        lockItemEnergyType,
         searchFilter
       ),
-    [defs, characterItems, lockedMap, lockedMods, lockedExoticHash, upgradeSpendTier, searchFilter]
+    [
+      defs,
+      characterItems,
+      lockedMap,
+      lockedMods,
+      lockedExoticHash,
+      upgradeSpendTier,
+      lockItemEnergyType,
+      searchFilter,
+    ]
   );
 
   const { result, processing } = useProcess(
@@ -402,6 +412,7 @@ function LoadoutBuilder({
               statOrder={statOrder}
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
+              params={params}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
