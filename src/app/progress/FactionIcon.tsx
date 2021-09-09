@@ -17,15 +17,13 @@ export default function FactionIcon(props: {
   vendor?: DestinyVendorComponent;
 }) {
   const { factionProgress, factionDef, vendor, defs } = props;
-  const level = (vendor?.seasonalRank ?? factionProgress.level) + 1;
-  const progressionType = vendor?.vendorHash
-    ? defs.Vendor.get(vendor.vendorHash).vendorProgressionType ?? 0
-    : 0;
-  const icon2 = vendor?.vendorHash
-    ? defs.Vendor.get(vendor.vendorHash).displayProperties.smallTransparentIcon ?? undefined
-    : undefined;
 
-  if (progressionType === 1) {
+  const level = (vendor?.seasonalRank ?? factionProgress.level) + 1;
+  const vendorDef = (vendor?.vendorHash ? defs.Vendor.get(vendor.vendorHash) : undefined) ?? undefined;
+  const progressionType = vendorDef?.vendorProgressionType;
+  const icon2 = vendorDef?.displayProperties.smallTransparentIcon;
+
+  if (progressionType) {
     return (
       <CircleProgress
         icon={bungieNetPath(factionDef.displayProperties.icon)}
@@ -36,6 +34,7 @@ export default function FactionIcon(props: {
       />
     );
   }
+
   return (
     <DiamondProgress
       icon={bungieNetPath(factionDef.displayProperties.icon)}
