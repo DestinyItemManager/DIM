@@ -386,7 +386,7 @@ export function makeItem(
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id:
-      item.itemHash === 3675595381 // Fix for ada-1 bounties ...
+      item.itemHash === 3675595381 // Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
         ? '1'
         : item.itemHash === 171866827
         ? '4'
