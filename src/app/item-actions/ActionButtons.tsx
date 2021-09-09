@@ -78,6 +78,7 @@ export function TagActionButton({
 
   return (
     <div
+      title={t('Tags.TagItem')}
       className={clsx(styles.entry, {
         [styles.tagSelectorLabelHidden]: !label,
       })}

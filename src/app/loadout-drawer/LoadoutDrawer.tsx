@@ -109,7 +109,7 @@ type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[] }
+  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -151,7 +151,7 @@ function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items } = action;
+      const { item, shift, items, equip } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -160,7 +160,7 @@ function stateReducer(state: State, action: Action): State {
 
       return {
         ...state,
-        loadout: addItem(loadout || newLoadout('', []), item, shift, items),
+        loadout: addItem(loadout || newLoadout('', []), item, shift, items, equip),
         isNew: !loadout,
       };
     }
@@ -205,7 +205,8 @@ function addItem(
   loadout: Readonly<Loadout>,
   item: DimItem,
   shift: boolean,
-  items: DimItem[]
+  items: DimItem[],
+  equip?: boolean
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -225,7 +226,8 @@ function addItem(
 
     if (!dupe) {
       if (typeInventory.length < maxSlots) {
-        loadoutItem.equipped = item.equipment && typeInventory.length === 0;
+        loadoutItem.equipped =
+          equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
         if (loadoutItem.equipped) {
           for (const otherItem of typeInventory) {
             findItem(otherItem).equipped = false;
@@ -414,8 +416,8 @@ function LoadoutDrawer({
   );
 
   const onAddItem = useCallback(
-    (item: DimItem, e?: MouseEvent | React.MouseEvent) =>
-      stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items }),
+    (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
+      stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
     [items]
   );
 
