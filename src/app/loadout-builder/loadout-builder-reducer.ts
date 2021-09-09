@@ -53,9 +53,10 @@ const lbStateInit = ({
 }): LoadoutBuilderState => {
   let lockedMap: LockedMap = {};
 
-  let selectedStoreId = classType
-    ? stores.find((store) => store.classType === classType)?.id
-    : getCurrentStore(stores)?.id;
+  let selectedStoreId =
+    classType !== undefined
+      ? stores.find((store) => store.classType === classType)?.id
+      : getCurrentStore(stores)?.id;
 
   let loadoutParams = initialLoadoutParameters;
 

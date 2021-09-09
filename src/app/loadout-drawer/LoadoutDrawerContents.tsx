@@ -84,7 +84,7 @@ export default function LoadoutDrawerContents(
     itemSortOrder: string[];
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
-    add(item: DimItem, e?: MouseEvent): void;
+    add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
@@ -247,6 +247,6 @@ async function fillLoadoutFromUnequipped(
   );
 
   for (const item of items) {
-    add(item, undefined, true);
+    add(item, undefined, false);
   }
 }
