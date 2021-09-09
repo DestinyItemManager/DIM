@@ -165,7 +165,7 @@ function SingleVendor({
 
   let displayName = d2Vendor.def.displayProperties.name;
   let displayDesc = d2Vendor.def.displayProperties.description;
-  let artifactCheck = 'notArtifact';
+  let artifactCheck: string | undefined;
 
   // if this vendor is the seasonal artifact
   if (vendorDef.displayCategories.find((c) => c.identifier === 'category_reset')) {
