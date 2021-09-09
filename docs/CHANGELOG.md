@@ -3,6 +3,7 @@
 * Loadout Optimizer remembers stats you've Ignored between sessions.
 * Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
 * Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
+* Fixed issue in Loadout Optimizer where locking energy type didn't work for slot specific mods.
 * Clicking on an item's picture in the Compare tool now opens the full item popup.
 * Added a "pull" button (down-arrow) to each item in the Compare tool that will pull the item to your current character.
 * Collapsed the Tag menu into an icon in Compare to allow more items to fit on screen.
