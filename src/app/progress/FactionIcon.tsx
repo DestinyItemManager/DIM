@@ -1,4 +1,4 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyFactionDefinition,
   DestinyProgression,
@@ -11,13 +11,12 @@ import DiamondProgress from '../dim-ui/DiamondProgress';
 import styles from './FactionIcon.m.scss';
 
 export default function FactionIcon(props: {
-  defs: D2ManifestDefinitions;
   factionProgress: DestinyProgression;
   factionDef: DestinyFactionDefinition;
   vendor?: DestinyVendorComponent;
 }) {
-  const { factionProgress, factionDef, vendor, defs } = props;
-
+  const { factionProgress, factionDef, vendor } = props;
+  const defs = useD2Definitions()!
   const level = (vendor?.seasonalRank ?? factionProgress.level) + 1;
   const vendorDef = (vendor?.vendorHash ? defs.Vendor.get(vendor.vendorHash) : undefined) ?? undefined;
   const progressionType = vendorDef?.vendorProgressionType;
