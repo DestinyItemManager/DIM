@@ -7,7 +7,7 @@ import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, LockedMap } from '../types';
+import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -17,10 +17,10 @@ import SetStats from './SetStats';
 interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
-  lockedMap: LockedMap;
   lockedMods: PluggableInventoryItemDefinition[];
+  pinnedItems: PinnedItems;
   style: React.CSSProperties;
-  statOrder: number[];
+  statOrder: ArmorStatHashes[];
   forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<number>;
   loadouts: Loadout[];
@@ -36,8 +36,8 @@ interface Props {
 function GeneratedSet({
   set,
   selectedStore,
-  lockedMap,
   lockedMods,
+  pinnedItems,
   style,
   statOrder,
   enabledStats,
@@ -97,7 +97,7 @@ function GeneratedSet({
               key={item.index}
               item={item}
               itemOptions={set.armor[i]}
-              locked={lockedMap[item.bucket.hash]}
+              pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={[]}
               showEnergyChanges={Boolean(lockedMods.length)}

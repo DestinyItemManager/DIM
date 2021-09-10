@@ -1,4 +1,3 @@
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
@@ -14,24 +13,15 @@ export interface MinMaxIgnored {
   ignored: boolean;
 }
 
-export interface LockedItemCase {
-  type: 'item';
-  item: DimItem;
-  bucket: InventoryBucket;
-}
+/** A map from bucketHash to the pinned item if there is one. */
+export type PinnedItems = {
+  [bucketHash: number]: DimItem | undefined;
+};
 
-export interface LockedExclude {
-  type: 'exclude';
-  item: DimItem;
-  bucket: InventoryBucket;
-}
-
-export type LockedItemType = LockedItemCase | LockedExclude;
-
-/** A map from bucketHash to the list of locked and excluded perks, items, and burns. */
-export type LockedMap = Readonly<{
-  [bucketHash: number]: readonly LockedItemType[] | undefined;
-}>;
+/** A map from bucketHash to any excluded items. */
+export type ExcludedItems = {
+  [bucketHash: number]: DimItem[] | undefined;
+};
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.

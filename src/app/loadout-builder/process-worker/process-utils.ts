@@ -206,7 +206,10 @@ export function canTakeSlotIndependantMods(
           item.energy.val + generalEnergy.val + otherEnergy.val <= item.energy.capacity &&
           (item.energy.type === generalEnergy.type ||
             generalEnergy.type === DestinyEnergyType.Any ||
-            item.energy.type === DestinyEnergyType.Any);
+            item.energy.type === DestinyEnergyType.Any) &&
+          (otherEnergy.type === generalEnergy.type ||
+            generalEnergy.type === DestinyEnergyType.Any ||
+            otherEnergy.type === DestinyEnergyType.Any);
 
         // The general mods wont fit in the item set so move on to the next set of mods
         if (!generalEnergyIsValid) {
@@ -235,7 +238,13 @@ export function canTakeSlotIndependantMods(
               item.energy.capacity &&
             (item.energy.type === raidEnergy.type ||
               raidEnergy.type === DestinyEnergyType.Any ||
-              item.energy.type === DestinyEnergyType.Any);
+              item.energy.type === DestinyEnergyType.Any) &&
+            (otherEnergy.type === raidEnergy.type ||
+              raidEnergy.type === DestinyEnergyType.Any ||
+              otherEnergy.type === DestinyEnergyType.Any) &&
+            (generalEnergy.type === raidEnergy.type ||
+              raidEnergy.type === DestinyEnergyType.Any ||
+              generalEnergy.type === DestinyEnergyType.Any);
 
           // The raid mods wont fit in the item set so move on to the next set of mods
           if (!(raidEnergyIsValid && item.compatibleModSeasons?.includes(raidTag))) {
