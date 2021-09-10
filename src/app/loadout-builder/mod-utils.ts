@@ -42,11 +42,21 @@ export function someModHasEnergyRequirement(mods: PluggableInventoryItemDefiniti
   );
 }
 
+/**
+ * This is used to create a string representation of each mod for the purpose of
+ * creating permutations when we are calculating assignments.
+ *
+ * The reason we do this instead of using say the hash, is that if we have 5 general
+ * mods that all cost 1 energy and have energy type Any, we would generate 1
+ * permutation of that set, as opposed to 5! if we used hashes and they were all
+ * unique.
+ */
 function stringifyMods(permutation: (PluggableInventoryItemDefinition | null)[]) {
   let permutationString = '';
   for (const modOrNull of permutation) {
     if (modOrNull) {
       const energy = modOrNull.plug.energyCost;
+      // TODO ryan, is plug category hash needed for anything other than raid mods??
       permutationString += `(${energy?.energyType},${energy?.energyCost},${modOrNull.plug.plugCategoryHash})`;
     }
     permutationString += ',';
@@ -55,13 +65,33 @@ function stringifyMods(permutation: (PluggableInventoryItemDefinition | null)[])
 }
 
 interface ItemEnergy {
+  /** The energy currently used by slot dependant mods. */
   used: number;
+  /** The original energy capacity of the item. */
   originalCapacity: number;
+  /** The derived energy capacity of the item after considering armour upgrade options. */
   derivedCapacity: number;
+  /** The original energy type of the item. */
   originalType: DestinyEnergyType;
+  /** The derived energy type of the item after considering armour upgrade options. */
   derivedType: DestinyEnergyType;
 }
 
+/**
+ * This calculates the energy change of an item with the provided mods applied.
+ * This is used to score how good an set of mod assignments is.
+ *
+ * The idea is we want to find the mod assignments that cost the user as little
+ * as possible to apply. To we this by adding up
+ * - The energy investment if an item keeps it's original energy type
+ * - The energy investment + the wasted energy if an energy changes energy type.
+ *
+ * For example if an item is solar before and after the mod assignments, it has
+ * original energy of 2 and the mods cost 7, then the energy change returned is 5.
+ *
+ * If an item is solar then statis after mods assignments, it has original energy
+ * of 5 and a resulting energy of 8, then the energy change will be 5 + 8 = 13.
+ */
 function calculateEnergyChange(
   itemEnergy: ItemEnergy,
   generalMod: PluggableInventoryItemDefinition | null,
@@ -100,6 +130,15 @@ function calculateEnergyChange(
   return finalEnergy === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
 }
 
+/**
+ * This is used to figure out the energy type of an item used in mod assignments.
+ *
+ * It first considers if there are bucket specific mods applied, and returns that
+ * energy type if it's not Any. If not then it considers armour upgrade options
+ * and returns the appropriate energy type from that.
+ *
+ * It can return the Any energy type if armour upgrade options allow energy changes.
+ */
 function getItemEnergyType(
   defs: D2ManifestDefinitions,
   item: DimItem,
@@ -129,6 +168,15 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
   return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
 }
 
+/**
+ * This finds the cheapest possible mod assignments for an armour set and a set of mods.
+ *
+ * It uses the idea of total energy spent and wasted to rank mod assignments.
+ *
+ * To do this we create permutations of general, combat and raid mods and loop over each
+ * set of permutations and validate the possibility of the mod assignment at every level.
+ * This is to ensure that we can exit early if a invalid assignment is found.
+ */
 export function getModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
@@ -150,6 +198,8 @@ export function getModAssignments(
     bucketIndependantAssignments.set(item.id, []);
   }
 
+  // An object of item id's to specialty socket metadata, this is used to ensure that
+  // combat and raid mods can be slotted into an item.
   const itemSocketMetadata = _.mapValues(
     _.keyBy(items, (item) => item.id),
     (item) => getSpecialtySocketMetadatas(item)
@@ -174,6 +224,9 @@ export function getModAssignments(
     }
   }
 
+  // A object of item id's to energy information. This is so we can precalculate
+  // working energy used, capacity and type and use this to validate whether a mod
+  // can be used in an item.
   const itemEnergies = _.mapValues(
     _.keyBy(items, (item) => item.id),
     (item) => ({
@@ -198,7 +251,9 @@ export function getModAssignments(
   const combatModPermutations = generatePermutationsOfFive(combatMods, stringifyMods);
   const raidModPermutations = generatePermutationsOfFive(raidMods, stringifyMods);
 
+  // loop depth 0
   combatModLoop: for (const combatP of combatModPermutations) {
+    // loop depth 1
     combatItemLoop: for (let i = 0; i < items.length; i++) {
       const combatMod = combatP[i];
 
@@ -218,7 +273,8 @@ export function getModAssignments(
         itemEnergy.used + combatEnergyCost <= itemEnergy.derivedCapacity &&
         energyTypesAreCompatible(itemEnergy.derivedType, combatEnergyType);
 
-      // The other mods wont fit in the item set so move on to the next set of mods
+      // The combat mods wont fit in the item set so move on to the next set of mods
+      // TODO ryan, this probably isn't needed with the current combat mod system.
       if (
         !(
           combatEnergyIsValid &&
@@ -231,8 +287,9 @@ export function getModAssignments(
         continue combatModLoop;
       }
     }
-
+    // loop depth 1
     generalModLoop: for (const generalP of generalModPermutations) {
+      // loop depth 2
       generalItemLoop: for (let i = 0; i < items.length; i++) {
         const generalMod = generalP[i];
 
@@ -259,8 +316,9 @@ export function getModAssignments(
           continue generalModLoop;
         }
       }
-
+      // loop depth 2
       raidModLoop: for (const raidP of raidModPermutations) {
+        // loop depth 3
         raidItemLoop: for (let i = 0; i < items.length; i++) {
           const raidMod = raidP[i];
 
@@ -301,9 +359,10 @@ export function getModAssignments(
             continue raidModLoop;
           }
         }
-
-        // To hit this point we must have found a
-
+        // loop depth 2
+        // To hit this point we must have found a valud mod assignment.
+        // The loop set is designed to exit early through a continue if a
+        // set of mods is found to be invalid.
         let energyUsedAndWasted = 0;
         for (let i = 0; i < items.length; i++) {
           energyUsedAndWasted += calculateEnergyChange(
@@ -314,6 +373,8 @@ export function getModAssignments(
           );
         }
 
+        // if the cost of the new assignment set is better than the old one
+        // we replace it and carry on until we have exhausted all permutations.
         if (energyUsedAndWasted < assignmentEnergyCost) {
           for (let i = 0; i < items.length; i++) {
             bucketIndependantAssignments.set(
