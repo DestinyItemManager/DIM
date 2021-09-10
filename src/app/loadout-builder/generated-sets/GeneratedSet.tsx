@@ -30,6 +30,7 @@ interface Props {
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
 }
 
 /**
@@ -50,6 +51,7 @@ function GeneratedSet({
   params,
   halfTierMods,
   upgradeSpendTier,
+  lockItemEnergyType,
 }: Props) {
   const defs = useD2Definitions();
   // Set the loadout property to show/hide the loadout menu
@@ -87,7 +89,8 @@ function GeneratedSet({
     set.armor.map((items) => items[0]),
     lockedMods,
     defs,
-    upgradeSpendTier
+    upgradeSpendTier,
+    lockItemEnergyType
   );
 
   return (

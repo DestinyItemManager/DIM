@@ -143,8 +143,7 @@ export function mapDimItemToProcessItem(
 
   if (
     !energyType &&
-    !lockItemEnergyType &&
-    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem)
+    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem, lockItemEnergyType)
   ) {
     energyType = DestinyEnergyType.Any;
   }
