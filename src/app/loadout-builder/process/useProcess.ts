@@ -15,14 +15,7 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import {
-  ArmorSet,
-  bucketsToCategories,
-  ItemsByBucket,
-  LockedMap,
-  StatFilters,
-  StatRanges,
-} from '../types';
+import { ArmorSet, bucketsToCategories, ItemsByBucket, StatFilters, StatRanges } from '../types';
 import { upgradeSpendTierToMaxEnergy } from '../utils';
 import {
   getTotalModStatChanges,
@@ -50,7 +43,6 @@ export function useProcess(
   defs: D2ManifestDefinitions | undefined,
   selectedStore: DimStore | undefined,
   filteredItems: ItemsByBucket,
-  lockedItems: LockedMap,
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
@@ -176,13 +168,12 @@ export function useProcess(
   }, [
     defs,
     filteredItems,
-    lockedItems,
-    lockedMods,
-    upgradeSpendTier,
-    statOrder,
-    statFilters,
-    selectedStore,
     lockItemEnergyType,
+    lockedMods,
+    selectedStore,
+    statFilters,
+    statOrder,
+    upgradeSpendTier,
   ]);
 
   return { result, processing };

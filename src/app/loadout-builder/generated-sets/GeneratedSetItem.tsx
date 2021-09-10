@@ -11,7 +11,6 @@ import React, { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
-import { LockedItemType } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 import Sockets from './Sockets';
 
@@ -73,22 +72,21 @@ function EnergySwap({
  */
 export default function GeneratedSetItem({
   item,
-  locked,
+  pinned,
   itemOptions,
   assignedMods,
   showEnergyChanges,
   lbDispatch,
 }: {
   item: DimItem;
-  locked?: readonly LockedItemType[];
+  pinned: boolean;
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
   showEnergyChanges: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const addLockedItem = (item: LockedItemType) => lbDispatch({ type: 'addItemToLockedMap', item });
-  const removeLockedItem = (item: LockedItemType) =>
-    lbDispatch({ type: 'removeItemFromLockedMap', item });
+  const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
+  const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
 
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));
@@ -99,7 +97,7 @@ export default function GeneratedSetItem({
         filterItems: (item: DimItem) => ids.has(item.id),
       });
 
-      addLockedItem({ type: 'item', item, bucket: item.bucket });
+      pinItem(item);
     } catch (e) {}
   };
 
@@ -126,7 +124,7 @@ export default function GeneratedSetItem({
       {showEnergyChanges && <EnergySwap item={item} assignedMods={assignedMods} />}
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
-          <LoadoutBuilderItem item={item} locked={locked} addLockedItem={addLockedItem} />
+          <LoadoutBuilderItem item={item} onShiftClick={() => pinItem(item)} />
           {itemOptions.length > 1 ? (
             <button
               type="button"
@@ -137,12 +135,12 @@ export default function GeneratedSetItem({
               <AppIcon icon={faRandom} />
             </button>
           ) : (
-            locked?.some((li) => li.type === 'item') && (
+            pinned && (
               <button
                 type="button"
                 className={styles.swapButton}
                 title={t('LoadoutBuilder.UnlockItem')}
-                onClick={() => removeLockedItem({ type: 'item', item, bucket: item.bucket })}
+                onClick={unpinItem}
               >
                 <AppIcon icon={lockIcon} />
               </button>

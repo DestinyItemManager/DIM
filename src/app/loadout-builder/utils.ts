@@ -6,50 +6,6 @@ import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
-import { LockedItemType } from './types';
-
-/**
- * Add a locked item to the locked item list for a bucket.
- */
-export function addLockedItem(
-  lockedItem: LockedItemType,
-  locked: readonly LockedItemType[] = []
-): readonly LockedItemType[] | undefined {
-  // Locking an item clears out the other locked properties in that bucket
-  if (lockedItem.type === 'item') {
-    return [lockedItem];
-  }
-
-  // Only add if it's not already there.
-  if (!locked.some((existing) => lockedItemsEqual(existing, lockedItem))) {
-    const newLockedItems = Array.from(locked);
-    newLockedItems.push(lockedItem);
-    return newLockedItems;
-  }
-
-  return locked.length === 0 ? undefined : locked;
-}
-
-/**
- * Remove a locked item from the locked item list for a bucket.
- */
-export function removeLockedItem(
-  lockedItem: LockedItemType,
-  locked: readonly LockedItemType[] = []
-): readonly LockedItemType[] | undefined {
-  // Filter anything equal to the passed in item
-  const newLockedItems = locked.filter((existing) => !lockedItemsEqual(existing, lockedItem));
-  return newLockedItems.length === 0 ? undefined : newLockedItems;
-}
-
-export function lockedItemsEqual(first: LockedItemType, second: LockedItemType) {
-  switch (first.type) {
-    case 'item':
-      return second.type === 'item' && first.item.id === second.item.id;
-    case 'exclude':
-      return second.type === 'exclude' && first.item.id === second.item.id;
-  }
-}
 
 /** Gets the stat tier from a stat value. */
 export function statTier(stat: number) {
