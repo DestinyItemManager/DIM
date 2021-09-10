@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import { ExcludedItems, LockableBuckets, PinnedItems } from '../types';
+import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
 import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
@@ -69,14 +69,13 @@ export default memo(function LockArmorAndPerks({
     async (e: React.MouseEvent) => {
       e.preventDefault();
 
-      const order = Object.values(LockableBuckets);
       try {
         const { item } = await showItemPicker({
           filterItems: (item: DimItem) =>
             isLoadoutBuilderItem(item) &&
             itemCanBeEquippedBy(item, selectedStore, true) &&
             (!filter || filter(item)),
-          sortBy: (item) => order.indexOf(item.bucket.hash),
+          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
         });
 
         updateFunc(item);
@@ -101,12 +100,11 @@ export default memo(function LockArmorAndPerks({
   );
   const chooseExcludeItem = chooseItem(excludeItem);
 
-  const order = Object.values(LockableBuckets);
   const allPinnedItems = _.sortBy(_.compact(Object.values(pinnedItems)), (i) =>
-    order.indexOf(i.bucket.hash)
+    LockableBucketHashes.indexOf(i.bucket.hash)
   );
   const allExcludedItems = _.sortBy(_.compact(Object.values(excludedItems)).flat(), (i) =>
-    order.indexOf(i.bucket.hash)
+    LockableBucketHashes.indexOf(i.bucket.hash)
   );
 
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);

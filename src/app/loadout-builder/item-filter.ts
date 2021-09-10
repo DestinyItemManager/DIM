@@ -8,7 +8,7 @@ import {
   bucketsToCategories,
   ExcludedItems,
   ItemsByBucket,
-  LockableBuckets,
+  LockableBucketHashes,
   PinnedItems,
 } from './types';
 
@@ -34,7 +34,7 @@ export function filterItems(
 
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
-  Object.values(LockableBuckets).forEach((bucket) => {
+  for (const bucket of LockableBucketHashes) {
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (items[bucket]) {
@@ -81,7 +81,7 @@ export function filterItems(
         );
       }
     }
-  });
+  }
 
   return filteredItems;
 }
