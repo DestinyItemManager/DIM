@@ -6,10 +6,10 @@ import _ from 'lodash';
 import { doEnergiesMatch } from './mod-utils';
 import {
   bucketsToCategories,
+  ExcludedItems,
   ItemsByBucket,
-  LockableBuckets,
-  LockedItemType,
-  LockedMap,
+  LockableBucketHashes,
+  PinnedItems,
 } from './types';
 
 /**
@@ -18,7 +18,8 @@ import {
 export function filterItems(
   defs: D2ManifestDefinitions | undefined,
   items: ItemsByBucket | undefined,
-  lockedMap: LockedMap,
+  pinnedItems: PinnedItems,
+  excludedItems: ExcludedItems,
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExoticHash: number | undefined,
   upgradeSpendTier: UpgradeSpendTier,
@@ -33,14 +34,13 @@ export function filterItems(
 
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
-  Object.values(LockableBuckets).forEach((bucket) => {
-    const locked = lockedMap[bucket];
+  for (const bucket of LockableBucketHashes) {
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (items[bucket]) {
+      const pinnedItem = pinnedItems[bucket];
       // There can only be one pinned item as we hide items from the item picker once
       // a single item is pinned
-      const lockedItem = locked?.find((lockedItem) => lockedItem.type === 'item')?.item;
       const searchItems = items[bucket].filter(searchFilter);
       const exotics = items[bucket].filter((item) => item.hash === lockedExoticHash);
 
@@ -48,8 +48,8 @@ export function filterItems(
       // This means locked item, then exotic, then search filter is preferred in that order.
       let firstPassFilteredItems = searchItems;
 
-      if (lockedItem) {
-        firstPassFilteredItems = [lockedItem];
+      if (pinnedItem) {
+        firstPassFilteredItems = [pinnedItem];
       } else if (exotics.length) {
         firstPassFilteredItems = exotics;
       }
@@ -58,7 +58,7 @@ export function filterItems(
       // will go haywire, also we can exclude items at this point
       filteredItems[bucket] = firstPassFilteredItems.filter(
         (item) =>
-          matchExcludedItems(item, locked) &&
+          !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
           matchedLockedModEnergy(
             defs,
             item,
@@ -81,24 +81,9 @@ export function filterItems(
         );
       }
     }
-  });
-
-  return filteredItems;
-}
-
-function matchExcludedItems(item: DimItem, lockedItems?: readonly LockedItemType[]) {
-  if (!lockedItems) {
-    return true;
   }
 
-  return lockedItems.every((lockedItem) => {
-    switch (lockedItem.type) {
-      case 'exclude':
-        return item.id !== lockedItem.item.id;
-      default:
-        return true;
-    }
-  });
+  return filteredItems;
 }
 
 function matchedLockedModEnergy(
