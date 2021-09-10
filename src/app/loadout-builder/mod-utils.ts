@@ -24,13 +24,14 @@ export const doEnergiesMatch = (
   defs: D2ManifestDefinitions,
   mod: PluggableInventoryItemDefinition,
   item: DimItem,
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ) =>
   item.energy &&
   (!mod.plug.energyCost ||
     mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
     mod.plug.energyCost.energyType === item.energy.energyType ||
-    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item));
+    (!lockItemEnergyType && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)));
 
 /**
  * If the energies match, this will assign the mods to the item in assignments.
@@ -42,9 +43,13 @@ function assignModsForSlot(
   item: DimItem,
   assignments: Record<string, number[]>,
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   mods?: PluggableInventoryItemDefinition[]
 ): void {
-  if (mods?.length && mods.every((mod) => doEnergiesMatch(defs, mod, item, upgradeSpendTier))) {
+  if (
+    mods?.length &&
+    mods.every((mod) => doEnergiesMatch(defs, mod, item, upgradeSpendTier, lockItemEnergyType))
+  ) {
     assignments[item.id] = [...assignments[item.id], ...mods.map((mod) => mod.hash)];
   }
 }
@@ -117,7 +122,14 @@ export function assignModsToArmorSet(
 
     if (item && defs) {
       const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[hash]];
-      assignModsForSlot(defs, item, assignments, upgradeSpendTier, lockedModsByPlugCategoryHash);
+      assignModsForSlot(
+        defs,
+        item,
+        assignments,
+        upgradeSpendTier,
+        lockItemEnergyType,
+        lockedModsByPlugCategoryHash
+      );
       processItems.push(
         mapDimItemToProcessItem(
           defs,

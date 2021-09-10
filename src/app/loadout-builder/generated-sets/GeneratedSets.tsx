@@ -8,7 +8,7 @@ import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } fr
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, LockedMap } from '../types';
+import { ArmorSet, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -64,7 +64,7 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  lockedMap: LockedMap;
+  pinnedItems: PinnedItems;
   statOrder: number[];
   enabledStats: Set<number>;
   lockedMods: PluggableInventoryItemDefinition[];
@@ -80,7 +80,7 @@ interface Props {
  * Renders the entire list of generated stat mixes, one per mix.
  */
 export default function GeneratedSets({
-  lockedMap,
+  pinnedItems,
   selectedStore,
   sets,
   statOrder,
@@ -149,7 +149,7 @@ export default function GeneratedSets({
           style={{}}
           set={measureSet}
           selectedStore={selectedStore}
-          lockedMap={lockedMap}
+          pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
           statOrder={statOrder}
           enabledStats={enabledStats}
@@ -178,7 +178,7 @@ export default function GeneratedSets({
                   style={style}
                   set={sets[index]}
                   selectedStore={selectedStore}
-                  lockedMap={lockedMap}
+                  pinnedItems={pinnedItems}
                   lbDispatch={lbDispatch}
                   statOrder={statOrder}
                   enabledStats={enabledStats}
