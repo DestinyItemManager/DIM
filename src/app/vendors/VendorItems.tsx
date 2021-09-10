@@ -15,29 +15,27 @@ import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
 function itemSort(category: string) {
-  let comparator: any;
   if (category === 'category.rank_rewards_seasonal') {
-    comparator = chainComparator<VendorItem>(
+    return chainComparator<VendorItem>(
       compareBy((item) => item.item?.tier),
       compareBy((item) => parseInt(item.item?.id ?? '', 10))
     );
   } else if (category === 'category_bounties') {
-    comparator = chainComparator<VendorItem>(
+    return chainComparator<VendorItem>(
       compareBy((item) => item.item?.typeName),
       compareBy((item) => parseInt(item.item?.id ?? '', 10)),
       compareBy((item) => item.item?.itemCategoryHashes)
     );
   } else if (category === 'category_weapon') {
-    comparator = chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes));
+    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes));
   } else if (category.startsWith('category_tier')) {
-    comparator = undefined;
+    return undefined;
   } else {
-    comparator = chainComparator<VendorItem>(
+    return chainComparator<VendorItem>(
       compareBy((item) => parseInt(item.item?.id ?? '', 10)),
       compareBy((item) => item.item?.itemCategoryHashes)
     );
   }
-  return comparator;
 }
 
 // ignore what i think is the loot pool preview on some tower vendors?

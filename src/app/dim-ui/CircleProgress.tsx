@@ -8,6 +8,7 @@ interface Props {
   level?: number;
   /** The icon to use */
   icon: string;
+  /** The small transparent icon overlay for ritual vendors */
   icon2?: string;
   className?: string;
 }
