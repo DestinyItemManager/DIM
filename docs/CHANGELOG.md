@@ -3,6 +3,7 @@
 * Loadout Optimizer remembers stats you've Ignored between sessions.
 * Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
 * Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
+* Fixed issue in Loadout Optimizer where locking energy type didn't work for slot specific mods.
 * Clicking on an item's picture in the Compare tool now opens the full item popup.
 * Added a "pull" button (down-arrow) to each item in the Compare tool that will pull the item to your current character.
 * Collapsed the Tag menu into an icon in Compare to allow more items to fit on screen.
@@ -11,6 +12,7 @@
 * Selecting "Add Unequipped" in the loadout editor no longer tries to equip all your unequipped items.
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
+* Loadout Optimizer's exotic picker now consistently orders slots.
 * Added numerical faction ranks alongside rank names of the Progress page.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>

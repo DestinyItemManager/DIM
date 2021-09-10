@@ -5,13 +5,14 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import {
@@ -19,14 +20,14 @@ import {
   statFiltersFromLoadoutParamaters,
   statOrderFromLoadoutParameters,
 } from './loadout-params';
-import { ArmorSet, ArmorStatHashes, LockedItemType, LockedMap, StatFilters } from './types';
-import { addLockedItem, removeLockedItem } from './utils';
+import { ArmorSet, ArmorStatHashes, ExcludedItems, PinnedItems, StatFilters } from './types';
 
 export interface LoadoutBuilderState {
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
-  lockedMap: LockedMap;
+  pinnedItems: PinnedItems;
+  excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash?: number;
   selectedStoreId?: string;
@@ -51,7 +52,7 @@ const lbStateInit = ({
   classType: DestinyClass | undefined;
   defs: D2ManifestDefinitions;
 }): LoadoutBuilderState => {
-  let lockedMap: LockedMap = {};
+  const pinnedItems: PinnedItems = {};
 
   let selectedStoreId =
     classType !== undefined
@@ -68,13 +69,7 @@ const lbStateInit = ({
       if (loadoutItem.equipped) {
         const item = getItemAcrossStores(stores, loadoutItem);
         if (item && isLoadoutBuilderItem(item)) {
-          lockedMap = {
-            ...lockedMap,
-            [item.bucket.hash]: addLockedItem(
-              { type: 'item', item, bucket: item.bucket },
-              lockedMap[item.bucket.hash]
-            ),
-          };
+          pinnedItems[item.bucket.hash] = item;
         }
       }
     }
@@ -96,7 +91,8 @@ const lbStateInit = ({
     lockItemEnergyType,
     upgradeSpendTier,
     statOrder,
-    lockedMap,
+    pinnedItems,
+    excludedItems: [],
     statFilters,
     lockedMods,
     lockedExoticHash,
@@ -116,9 +112,11 @@ export type LoadoutBuilderAction =
       lockItemEnergyType: LoadoutBuilderState['lockItemEnergyType'];
     }
   | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: LoadoutBuilderState['upgradeSpendTier'] }
-  | { type: 'lockedMapChanged'; lockedMap: LockedMap }
-  | { type: 'addItemToLockedMap'; item: LockedItemType }
-  | { type: 'removeItemFromLockedMap'; item: LockedItemType }
+  | { type: 'pinItem'; item: DimItem }
+  | { type: 'setPinnedItems'; items: DimItem[] }
+  | { type: 'unpinItem'; item: DimItem }
+  | { type: 'excludeItem'; item: DimItem }
+  | { type: 'unexcludeItem'; item: DimItem }
   | {
       type: 'lockedModsChanged';
       lockedMods: PluggableInventoryItemDefinition[];
@@ -142,32 +140,72 @@ function lbStateReducer(
       return {
         ...state,
         selectedStoreId: action.storeId,
-        lockedMap: {},
+        pinnedItems: {},
+        excludedItems: {},
         lockedExoticHash: undefined,
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };
-    case 'lockedMapChanged':
-      return { ...state, lockedMap: action.lockedMap };
-    case 'addItemToLockedMap': {
+    case 'pinItem': {
       const { item } = action;
       const bucketHash = item.bucket.hash;
       return {
         ...state,
-        lockedMap: {
-          ...state.lockedMap,
-          [bucketHash]: addLockedItem(item, state.lockedMap[bucketHash]),
+        // Remove any previously locked item in that bucket and add this one
+        pinnedItems: {
+          ...state.pinnedItems,
+          [bucketHash]: item,
+        },
+        // Locking an item clears excluded items in this bucket
+        excludedItems: {
+          ...state.excludedItems,
+          [bucketHash]: undefined,
         },
       };
     }
-    case 'removeItemFromLockedMap': {
+    case 'setPinnedItems': {
+      const { items } = action;
+      return {
+        ...state,
+        pinnedItems: _.keyBy(items, (i) => i.bucket.hash),
+        excludedItems: {},
+      };
+    }
+    case 'unpinItem': {
       const { item } = action;
       const bucketHash = item.bucket.hash;
       return {
         ...state,
-        lockedMap: {
-          ...state.lockedMap,
-          [bucketHash]: removeLockedItem(item, state.lockedMap[bucketHash]),
+        pinnedItems: {
+          ...state.pinnedItems,
+          [bucketHash]: undefined,
+        },
+      };
+    }
+    case 'excludeItem': {
+      const { item } = action;
+      const bucketHash = item.bucket.hash;
+      if (state.excludedItems[bucketHash]?.some((i) => i.id === item.id)) {
+        return state; // item's already there
+      }
+      const existingExcluded = state.excludedItems[bucketHash] ?? [];
+      return {
+        ...state,
+        excludedItems: {
+          ...state.excludedItems,
+          [bucketHash]: [...existingExcluded, item],
+        },
+      };
+    }
+    case 'unexcludeItem': {
+      const { item } = action;
+      const bucketHash = item.bucket.hash;
+      const newExcluded = (state.excludedItems[bucketHash] ?? []).filter((i) => i.id !== item.id);
+      return {
+        ...state,
+        excludedItems: {
+          ...state.excludedItems,
+          [bucketHash]: newExcluded.length > 0 ? newExcluded : undefined,
         },
       };
     }

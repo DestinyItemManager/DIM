@@ -16,6 +16,7 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { LockableBucketHashes } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { LockedExoticWithPlugs } from './ExoticTile';
 
@@ -38,7 +39,10 @@ function findLockableExotics(
   const exotics = allItems.filter(
     (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item)
   );
-  const uniqueExotics = _.uniqBy(exotics, (item) => item.hash);
+  const orderedExotics = _.sortBy(exotics, (item) =>
+    LockableBucketHashes.indexOf(item.bucket.hash)
+  );
+  const uniqueExotics = _.uniqBy(orderedExotics, (item) => item.hash);
 
   // Add in armor 1 exotics that don't have an armor 2 version
   const exoticArmorWithoutEnergy = allItems.filter(
