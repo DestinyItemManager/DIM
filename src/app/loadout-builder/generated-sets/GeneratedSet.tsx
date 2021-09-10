@@ -86,7 +86,7 @@ function GeneratedSet({
   }
 
   const modAssignments = getModAssignments(
-    set.armor.map((items) => items[0]),
+    displayedItems,
     lockedMods,
     defs,
     upgradeSpendTier,
@@ -114,7 +114,7 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
-              assignedMods={modAssignments.get(item.id) || []}
+              assignedMods={modAssignments.get(item.id)}
               showEnergyChanges={Boolean(lockedMods.length)}
             />
           ))}
