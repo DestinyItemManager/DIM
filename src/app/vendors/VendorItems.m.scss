@@ -33,7 +33,7 @@
   @include phone-portrait {
     display: block;
   }
-  :global(#seasonalArtifact) & {
+  :global(.seasonalArtifact) & {
     @include phone-portrait {
       display: flex;
       flex-wrap: nowrap;
@@ -61,7 +61,7 @@
     margin-bottom: 4px;
   }
 
-  :global(#seasonalArtifact) & {
+  :global(.seasonalArtifact) & {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -81,7 +81,7 @@
   @include phone-portrait {
     margin-right: 0;
   }
-  :global(#seasonalArtifact) & {
+  :global(.seasonalArtifact) & {
     margin-right: 0px;
     text-align: center;
   }
