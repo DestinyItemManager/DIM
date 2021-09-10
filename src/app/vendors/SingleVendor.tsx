@@ -165,7 +165,7 @@ function SingleVendor({
 
   let displayName = d2Vendor.def.displayProperties.name;
   let displayDesc = d2Vendor.def.displayProperties.description;
-  let artifactCheck: string | undefined;
+  let artifactCheck = '';
 
   // if this vendor is the seasonal artifact
   if (vendorDef.displayCategories.find((c) => c.identifier === 'category_reset')) {
@@ -183,7 +183,7 @@ function SingleVendor({
   }
 
   return (
-    <div className={clsx(styles.page, 'dim-page')} id={artifactCheck}>
+    <div className={clsx(styles.page, `dim-page ${artifactCheck}`)}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
