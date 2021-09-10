@@ -384,6 +384,7 @@ function LoadoutBuilder({
             params={params}
             halfTierMods={halfTierMods}
             upgradeSpendTier={upgradeSpendTier}
+            lockItemEnergyType={lockItemEnergyType}
           />
         )}
         {modPicker.open &&

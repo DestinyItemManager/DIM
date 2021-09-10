@@ -30,7 +30,7 @@ export const doEnergiesMatch = (
   (!mod.plug.energyCost ||
     mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
     mod.plug.energyCost.energyType === item.energy.energyType ||
-    (!lockItemEnergyType && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)));
+    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType));
 
 /**
  * Checks to see if some mod in a collection of LockedMod or LockedMod,
@@ -104,6 +104,7 @@ function getItemEnergyType(
   defs: D2ManifestDefinitions,
   item: DimItem,
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   bucketSpecificMods?: PluggableInventoryItemDefinition[]
 ) {
   if (!item.energy) {
@@ -119,7 +120,7 @@ function getItemEnergyType(
     return bucketSpecificModType;
   }
 
-  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)
+  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
     ? DestinyEnergyType.Any
     : item.energy.energyType;
 }
@@ -132,7 +133,8 @@ export function getModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions | undefined,
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ): Map<string, PluggableInventoryItemDefinition[]> {
   if (!defs) {
     return new Map();
@@ -186,6 +188,7 @@ export function getModAssignments(
         defs,
         item,
         upgradeSpendTier,
+        lockItemEnergyType,
         bucketSpecificAssignments[item.id]
       ),
     })
