@@ -144,7 +144,7 @@ function CompareDrawer({
   }
 
   const loSetAssignedMods = getModAssignments(
-    set.armor.map((items) => items[0]),
+    setItems,
     lockedMods,
     defs,
     upgradeSpendTier,
