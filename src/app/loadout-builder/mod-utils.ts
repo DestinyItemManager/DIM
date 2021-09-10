@@ -346,9 +346,10 @@ export function getAssignedAndUnassignedMods(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions | undefined,
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ): [ReturnType<typeof getModAssignments>, PluggableInventoryItemDefinition[]] {
-  const assignedMods = getModAssignments(items, mods, defs, upgradeSpendTier);
+  const assignedMods = getModAssignments(items, mods, defs, upgradeSpendTier, lockItemEnergyType);
   const flatAssignedMods = Array.from(assignedMods.values()).flat();
   const unassignedMods = mods.filter((mod) => !flatAssignedMods.includes(mod));
   return [assignedMods, unassignedMods];
