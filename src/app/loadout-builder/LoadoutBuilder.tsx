@@ -214,6 +214,7 @@ function LoadoutBuilder({
         lockedMods,
         lockedExoticHash,
         upgradeSpendTier,
+        lockItemEnergyType,
         searchFilter
       ),
     [
@@ -224,6 +225,7 @@ function LoadoutBuilder({
       lockedMods,
       lockedExoticHash,
       upgradeSpendTier,
+      lockItemEnergyType,
       searchFilter,
     ]
   );
@@ -415,6 +417,7 @@ function LoadoutBuilder({
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
               lockItemEnergyType={lockItemEnergyType}
+              params={params}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

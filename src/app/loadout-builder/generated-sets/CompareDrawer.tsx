@@ -1,4 +1,4 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -58,6 +58,7 @@ interface ProvidedProps {
   enabledStats: Set<number>;
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
+  params: LoadoutParameters;
   onClose(): void;
 }
 
@@ -97,6 +98,7 @@ function CompareDrawer({
   enabledStats,
   upgradeSpendTier,
   lockItemEnergyType,
+  params,
   onClose,
   dispatch,
 }: Props) {
@@ -184,6 +186,7 @@ function CompareDrawer({
           }
         }
         draftLoadout.items = newItems;
+        draftLoadout.parameters = params;
       }
     });
 

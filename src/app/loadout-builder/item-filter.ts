@@ -23,6 +23,7 @@ export function filterItems(
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExoticHash: number | undefined,
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   searchFilter: ItemFilter
 ): ItemsByBucket {
   const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
@@ -58,13 +59,25 @@ export function filterItems(
       filteredItems[bucket] = firstPassFilteredItems.filter(
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
-          matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
+          matchedLockedModEnergy(
+            defs,
+            item,
+            lockedModsByPlugCategoryHash,
+            upgradeSpendTier,
+            lockItemEnergyType
+          )
       );
 
       // If no items match we remove the search and item filters and just filter by mod energy
       if (!filteredItems[bucket].length) {
         filteredItems[bucket] = items[bucket].filter((item) =>
-          matchedLockedModEnergy(defs, item, lockedModsByPlugCategoryHash, upgradeSpendTier)
+          matchedLockedModEnergy(
+            defs,
+            item,
+            lockedModsByPlugCategoryHash,
+            upgradeSpendTier,
+            lockItemEnergyType
+          )
         );
       }
     }
@@ -77,12 +90,13 @@ function matchedLockedModEnergy(
   defs: D2ManifestDefinitions,
   item: DimItem,
   lockedModsByPlugCategoryHash: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTier
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
 ) {
   if (!lockedModsByPlugCategoryHash) {
     return true;
   }
   return lockedModsByPlugCategoryHash.every((mod) =>
-    doEnergiesMatch(defs, mod, item, upgradeSpendTier)
+    doEnergiesMatch(defs, mod, item, upgradeSpendTier, lockItemEnergyType)
   );
 }
