@@ -14,20 +14,31 @@ import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
-const itemSort = chainComparator<VendorItem>(
-  compareBy((item) => (item.item?.bucket.name === 'Quests' ? item.item?.typeName : '')),
-  compareBy((item) =>
-    item.item?.bucket.sort === 'Weapons'
-      ? item.item?.itemCategoryHashes
-      : parseInt(item.item?.id ?? '', 10)
-  ),
-  compareBy((item) => (item.item?.bucket.sort !== 'Weapons' ? item.item?.itemCategoryHashes : ''))
-);
-
-const rankRewardsSort = chainComparator<VendorItem>(
-  compareBy((item) => item.item?.tier),
-  compareBy((item) => parseInt(item.item?.id ?? '', 10))
-);
+function itemSort(category: string) {
+  let comparator: any;
+  if (category === 'category.rank_rewards_seasonal') {
+    comparator = chainComparator<VendorItem>(
+      compareBy((item) => item.item?.tier),
+      compareBy((item) => parseInt(item.item?.id ?? '', 10))
+    );
+  } else if (category === 'category_bounties') {
+    comparator = chainComparator<VendorItem>(
+      compareBy((item) => item.item?.typeName),
+      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
+      compareBy((item) => item.item?.itemCategoryHashes)
+    );
+  } else if (category === 'category_weapon') {
+    comparator = chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes));
+  } else if (category.startsWith('category_tier')) {
+    comparator = undefined;
+  } else {
+    comparator = chainComparator<VendorItem>(
+      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
+      compareBy((item) => item.item?.itemCategoryHashes)
+    );
+  }
+  return comparator;
+}
 
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
@@ -58,7 +69,6 @@ export default function VendorItems({
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor?.component?.progression;
-  const isArtifact = vendor.def.displayCategories.some((i) => i.identifier === 'category_reset');
 
   let currencies = vendor.currencies;
 
@@ -141,14 +151,7 @@ export default function VendorItems({
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
-                    .sort(
-                      vendor.def.displayCategories[categoryIndex]?.identifier ===
-                        'category.rank_rewards_seasonal'
-                        ? rankRewardsSort
-                        : isArtifact
-                        ? undefined
-                        : itemSort
-                    )
+                    .sort(itemSort(vendor.def.displayCategories[categoryIndex]?.identifier))
                     .map(
                       (item) =>
                         item.item && (
