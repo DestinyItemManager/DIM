@@ -169,6 +169,35 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 }
 
 /**
+ * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
+ *
+ * This checks that the summed mod energies are within the dervided mod capacity for
+ * an item (derived from armour upgrade options). It also ensures that all the mod
+ * energy types align and that the mod can be slotted into an item socket based on
+ * item energy type.
+ */
+function isModEnergyValid(
+  itemEnergy: ItemEnergy,
+  modToAssign: PluggableInventoryItemDefinition,
+  ...assignedMods: (PluggableInventoryItemDefinition | null)[]
+) {
+  const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
+  const modToAssignType = modToAssign.plug.energyCost?.energyType || DestinyEnergyType.Any;
+  const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
+
+  return (
+    itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity &&
+    energyTypesAreCompatible(itemEnergy.derivedType, modToAssignType) &&
+    assignedMods.every((mod) =>
+      energyTypesAreCompatible(
+        modToAssignType,
+        mod?.plug.energyCost?.energyType || DestinyEnergyType.Any
+      )
+    )
+  );
+}
+
+/**
  * This finds the cheapest possible mod assignments for an armour set and a set of mods.
  *
  * It uses the idea of total energy spent and wasted to rank mod assignments.
@@ -209,6 +238,9 @@ export function getModAssignments(
   const combatMods: PluggableInventoryItemDefinition[] = [];
   const raidMods: PluggableInventoryItemDefinition[] = [];
 
+  // Divide up the locked mods into general, combat and raid mod arrays. Also we
+  // take the bucket specific mods and put them in a map of item id's to mods so
+  // we can calcualte the used energy values for each item
   for (const mod of mods) {
     if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
       generalMods.push(mod);
@@ -265,19 +297,13 @@ export function getModAssignments(
       const item = items[i];
       const itemEnergy = itemEnergies[item.id];
       const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
-      const combatEnergyCost = combatMod.plug.energyCost?.energyCost || 0;
-      const combatEnergyType = combatMod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-
-      const combatEnergyIsValid =
-        itemEnergy &&
-        itemEnergy.used + combatEnergyCost <= itemEnergy.derivedCapacity &&
-        energyTypesAreCompatible(itemEnergy.derivedType, combatEnergyType);
 
       // The combat mods wont fit in the item set so move on to the next set of mods
-      // TODO ryan, this probably isn't needed with the current combat mod system.
+      // TODO ryan, checking the compatible mod tags probably isn't needed with the
+      // current combat mod system.
       if (
         !(
-          combatEnergyIsValid &&
+          isModEnergyValid(itemEnergy, combatMod) &&
           modTag &&
           itemSocketMetadata[item.id]?.some((metadata) =>
             metadata.compatibleModTags.includes(modTag)
@@ -300,19 +326,9 @@ export function getModAssignments(
 
         const item = items[i];
         const itemEnergy = itemEnergies[item.id];
-        const generalEnergyCost = generalMod.plug.energyCost?.energyCost || 0;
-        const generalEnergyType = generalMod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-        const combatEnergyCost = combatP?.[i]?.plug.energyCost?.energyCost || 0;
-        const combatEnergyType = combatP?.[i]?.plug.energyCost?.energyType || DestinyEnergyType.Any;
-
-        const generalEnergyIsValid =
-          itemEnergy &&
-          itemEnergy.used + generalEnergyCost + combatEnergyCost <= itemEnergy.derivedCapacity &&
-          energyTypesAreCompatible(itemEnergy.derivedType, generalEnergyType) &&
-          energyTypesAreCompatible(generalEnergyType, combatEnergyType);
 
         // The general mods wont fit in the item set so move on to the next set of mods
-        if (!generalEnergyIsValid) {
+        if (!isModEnergyValid(itemEnergy, generalMod, combatP[i])) {
           continue generalModLoop;
         }
       }
@@ -330,26 +346,11 @@ export function getModAssignments(
           const item = items[i];
           const itemEnergy = itemEnergies[item.id];
           const modTag = getModTypeTagByPlugCategoryHash(raidMod.plug.plugCategoryHash);
-          const raidEnergyCost = raidMod.plug.energyCost?.energyCost || 0;
-          const raidEnergyType = raidMod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-          const generalEnergyCost = generalP[i]?.plug.energyCost?.energyCost || 0;
-          const generalEnergyType =
-            generalP[i]?.plug.energyCost?.energyType || DestinyEnergyType.Any;
-          const combatEnergyCost = combatP[i]?.plug.energyCost?.energyCost || 0;
-          const combatEnergyType = combatP[i]?.plug.energyCost?.energyType || DestinyEnergyType.Any;
-
-          const raidEnergyIsValid =
-            itemEnergy &&
-            itemEnergy.used + generalEnergyCost + combatEnergyCost + raidEnergyCost <=
-              itemEnergy.derivedCapacity &&
-            energyTypesAreCompatible(itemEnergy.derivedType, raidEnergyType) &&
-            energyTypesAreCompatible(raidEnergyType, generalEnergyType) &&
-            energyTypesAreCompatible(raidEnergyType, combatEnergyType);
 
           // The raid mods wont fit in the item set so move on to the next set of mods
           if (
             !(
-              raidEnergyIsValid &&
+              isModEnergyValid(itemEnergy, raidMod, generalP[i], combatP[i]) &&
               modTag &&
               itemSocketMetadata[item.id]?.some((metadata) =>
                 metadata.compatibleModTags.includes(modTag)
