@@ -13,7 +13,7 @@
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
 * Loadout Optimizer's exotic picker now consistently orders slots.
-* Added numerical faction ranks alongside rank names of the Progress page.
+* Added numerical faction ranks alongside rank names on the Progress page.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
