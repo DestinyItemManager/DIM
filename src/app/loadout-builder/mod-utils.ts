@@ -189,7 +189,7 @@ export function getModAssignments(
         item,
         upgradeSpendTier,
         lockItemEnergyType,
-        bucketSpecificAssignments[item.id]
+        bucketSpecificAssignments.get(item.id)
       ),
     })
   );
