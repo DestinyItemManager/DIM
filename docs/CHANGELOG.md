@@ -14,6 +14,10 @@
 * Fixed broken description for some new triumphs.
 * Loadout Optimizer's exotic picker now consistently orders slots.
 * Added numerical faction ranks alongside rank names on the Progress page.
+* Fixed the order of items in vendors and seasonal vendor upgrade grids.
+* Seasonal artifact display now matches the games display.
+* Ritual rank progress for vendors now matches the ritual rank circle shape.
+* Fixed vendor ranks being off by 1.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
@@ -27,7 +31,7 @@
 ## 6.80.0 <span class="changelog-date">(2021-08-29)</span>
 
 * Fix sorting by power and energy in Compare when "Show Base Stats" is enabled.
-* Fixed misaligment in stat rows, and vertical scrolling, in Compare.
+* Fixed misalignment in stat rows, and vertical scrolling, in Compare.
 * Highlighting stats in Compare is faster.
 * You can click any perk in Compare, not just the first couple.
 * Clicking an item's name to find it in the inventory view will now change character on mobile to wherever the item is.
