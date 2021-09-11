@@ -124,7 +124,10 @@ async function generatePlatforms(
   const accountPromises = accounts.profiles
     .flatMap((destinyAccount) => {
       const account: DestinyAccount = {
-        displayName: destinyAccount.displayName,
+        displayName:
+          destinyAccount.bungieGlobalDisplayName +
+          (destinyAccount.bungieGlobalDisplayNameCode &&
+            `#${destinyAccount.bungieGlobalDisplayNameCode}`),
         originalPlatformType: destinyAccount.membershipType,
         membershipId: destinyAccount.membershipId,
         platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
@@ -147,7 +150,10 @@ async function generatePlatforms(
       accounts.profilesWithErrors.flatMap((errorProfile) => {
         const destinyAccount = errorProfile.infoCard;
         const account: DestinyAccount = {
-          displayName: destinyAccount.displayName,
+          displayName:
+            destinyAccount.bungieGlobalDisplayName +
+            (destinyAccount.bungieGlobalDisplayNameCode &&
+              `#${destinyAccount.bungieGlobalDisplayNameCode}`),
           originalPlatformType: destinyAccount.membershipType,
           membershipId: destinyAccount.membershipId,
           platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
