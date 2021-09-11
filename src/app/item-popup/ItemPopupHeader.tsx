@@ -106,7 +106,7 @@ function ItemTypeName({ item }: { item: DimItem }) {
   );
 }
 
-function destinyDBLink(item: DimItem, language: string) {
+export function destinyDBLink(item: DimItem, language: string) {
   // DTR 404s on the new D2 languages for D1 items
   if (item.destinyVersion === 1) {
     switch (language) {

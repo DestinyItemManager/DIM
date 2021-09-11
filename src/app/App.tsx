@@ -150,6 +150,7 @@ function App({
                   '/vendors',
                   '/record-books',
                   '/activities',
+                  '/armory',
                 ]}
                 exact
               >
