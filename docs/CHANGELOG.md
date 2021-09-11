@@ -18,6 +18,8 @@
 * Seasonal artifact display now matches the games display.
 * Ritual rank progress for vendors now matches the ritual rank circle shape.
 * Fixed vendor ranks being off by 1.
+* Accounts list shows your Bungie Name.
+* Add a tip for how to scroll Compare on iOS.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
