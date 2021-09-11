@@ -183,7 +183,7 @@ function SingleVendor({
   }
 
   return (
-    <div className={clsx(styles.page, `dim-page ${artifactCheck}`)}>
+    <div className={clsx(styles.page, 'dim-page', artifactCheck)}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
