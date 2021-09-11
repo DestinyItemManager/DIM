@@ -703,6 +703,7 @@
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
