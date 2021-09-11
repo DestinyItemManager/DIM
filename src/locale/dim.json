@@ -452,6 +452,7 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}}",
+    "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
