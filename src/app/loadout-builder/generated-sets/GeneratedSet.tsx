@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { getModAssignments } from '../mod-utils';
+import { getModAssignments } from '../mod-assignments';
 import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
