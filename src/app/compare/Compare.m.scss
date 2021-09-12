@@ -15,8 +15,7 @@
 }
 
 .statLabel {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  position: relative;
   padding-right: 8px;
   padding-left: 0;
   cursor: pointer;
@@ -79,4 +78,14 @@
   white-space: normal;
   color: #999;
   padding: 8px 0;
+}
+
+.highlightBar {
+  background-color: #202020;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100vw;
+  z-index: -1;
 }

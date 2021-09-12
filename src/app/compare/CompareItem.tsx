@@ -27,7 +27,6 @@ export default function CompareItem({
   compareBaseStats,
   itemClick,
   remove,
-  highlight,
   setHighlight,
   updateSocketComparePlug,
   adjustedItemPlugs,
@@ -37,7 +36,6 @@ export default function CompareItem({
   item: DimItem;
   stats: StatInfo[];
   compareBaseStats?: boolean;
-  highlight: number | string | undefined;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
@@ -96,7 +94,6 @@ export default function CompareItem({
           item={item}
           stat={stat}
           setHighlight={setHighlight}
-          highlight={highlight}
           adjustedItemStats={adjustedItemStats}
           compareBaseStats={compareBaseStats}
         />

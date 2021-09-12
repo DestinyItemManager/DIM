@@ -185,10 +185,6 @@ function Compare({
     [cancel, compareItems.length, dispatch]
   );
 
-  if (!show) {
-    return null;
-  }
-
   const sort = (newSortedHash?: string | number) => {
     // TODO: put sorting together?
     setSortedHash(newSortedHash);
@@ -209,45 +205,76 @@ function Compare({
     ? compareItems
     : Array.from(compareItems).sort(comparator);
 
-  // TODO: test/handle removing all items (no results)
+  const items = useMemo(
+    () => (
+      <div className={styles.items}>
+        {sortedComparisonItems.map((item) => (
+          <CompareItem
+            item={item}
+            key={item.id}
+            stats={allStats}
+            itemClick={locateItem}
+            remove={remove}
+            setHighlight={setHighlight}
+            updateSocketComparePlug={doUpdateSocketComparePlug}
+            adjustedItemPlugs={adjustedPlugs?.[item.id]}
+            adjustedItemStats={adjustedStats?.[item.id]}
+            compareBaseStats={doCompareBaseStats}
+            isInitialItem={session?.initialItemId === item.id}
+          />
+        ))}
+      </div>
+    ),
+    [
+      adjustedPlugs,
+      adjustedStats,
+      allStats,
+      doCompareBaseStats,
+      doUpdateSocketComparePlug,
+      remove,
+      session?.initialItemId,
+      sortedComparisonItems,
+    ]
+  );
+
+  if (!show) {
+    return null;
+  }
 
   // If the session was started with a specific item, this is it
-  // TODO: highlight this item
   const initialItem = session?.initialItemId
     ? categoryItems.find((i) => i.id === session.initialItemId)
     : undefined;
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
+  const header = (
+    <div className={styles.options}>
+      {comparingArmor && (
+        <Checkbox
+          label={t('Compare.CompareBaseStats')}
+          name="compareBaseStats"
+          value={compareBaseStats}
+          onChange={onChangeSetting}
+        />
+      )}
+      {exampleItem && (
+        <CompareSuggestions
+          exampleItem={exampleItem}
+          categoryItems={categoryItems}
+          onQueryChanged={updateQuery}
+        />
+      )}
+      {organizerLink && (
+        <Link className={styles.organizerLink} to={organizerLink}>
+          <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
+        </Link>
+      )}
+    </div>
+  );
+
   return (
-    <Sheet
-      onClose={cancel}
-      allowClickThrough={true}
-      header={
-        <div className={styles.options}>
-          {comparingArmor && (
-            <Checkbox
-              label={t('Compare.CompareBaseStats')}
-              name="compareBaseStats"
-              value={compareBaseStats}
-              onChange={onChangeSetting}
-            />
-          )}
-          {exampleItem && (
-            <CompareSuggestions
-              exampleItem={exampleItem}
-              categoryItems={categoryItems}
-              onQueryChanged={updateQuery}
-            />
-          )}
-          {organizerLink && (
-            <Link className={styles.organizerLink} to={organizerLink}>
-              <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
-            </Link>
-          )}
-        </div>
-      }
-    >
+    <Sheet onClose={cancel} allowClickThrough={true} header={header}>
       <div className="loadout-drawer compare">
         <div className={styles.bucket} onMouseLeave={() => setHighlight(undefined)}>
           <div className={clsx('compare-item', styles.fixedLeft)}>
@@ -256,7 +283,6 @@ function Compare({
               <div
                 key={stat.id}
                 className={clsx(styles.statLabel, {
-                  highlight: stat.id === highlight,
                   [styles.sorted]: stat.id === sortedHash,
                 })}
                 onMouseOver={() => setHighlight(stat.id)}
@@ -271,30 +297,14 @@ function Compare({
                 {stat.id === sortedHash && (
                   <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
                 )}
+                {stat.id === highlight && <div className={styles.highlightBar} />}
               </div>
             ))}
             {isPhonePortrait && isiOSBrowser() && (
               <div className={styles.swipeAdvice}>{t('Compare.SwipeAdvice')}</div>
             )}
           </div>
-          <div className={styles.items}>
-            {sortedComparisonItems.map((item) => (
-              <CompareItem
-                item={item}
-                key={item.id}
-                stats={allStats}
-                itemClick={locateItem}
-                remove={remove}
-                setHighlight={setHighlight}
-                highlight={highlight}
-                updateSocketComparePlug={doUpdateSocketComparePlug}
-                adjustedItemPlugs={adjustedPlugs?.[item.id]}
-                adjustedItemStats={adjustedStats?.[item.id]}
-                compareBaseStats={doCompareBaseStats}
-                isInitialItem={session?.initialItemId === item.id}
-              />
-            ))}
-          </div>
+          {items}
         </div>
       </div>
     </Sheet>

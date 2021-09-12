@@ -1,9 +1,8 @@
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import RecoilStat from 'app/item-popup/RecoilStat';
-import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import React, { memo } from 'react';
+import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { AppIcon, starIcon } from '../shell/icons';
@@ -11,18 +10,16 @@ import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 import { DimAdjustedItemStat } from './types';
 
-export default memo(function CompareStat({
+export default function CompareStat({
   stat,
   compareBaseStats,
   item,
-  highlight,
   setHighlight,
   adjustedItemStats,
 }: {
   stat: StatInfo;
   compareBaseStats?: boolean;
   item: DimItem;
-  highlight?: number | string | undefined;
   setHighlight?(value?: string | number): void;
   adjustedItemStats?: DimAdjustedItemStat;
 }) {
@@ -31,7 +28,6 @@ export default memo(function CompareStat({
 
   return (
     <div
-      className={clsx({ highlight: stat.id === highlight })}
       onMouseOver={() => setHighlight?.(stat.id)}
       style={getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color')}
     >
@@ -62,7 +58,7 @@ export default memo(function CompareStat({
       </span>
     </div>
   );
-});
+}
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
