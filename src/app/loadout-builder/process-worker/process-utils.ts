@@ -184,7 +184,7 @@ export function canTakeSlotIndependantMods(
           item.energy.type === DestinyEnergyType.Any);
 
       // The raid mods wont fit in the item set so move on to the next set of mods
-      if (!(raidEnergyIsValid && item.compatibleModSeasons?.includes(tag))) {
+      if (!raidEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
         continue raidModLoop;
       }
     }
@@ -214,7 +214,7 @@ export function canTakeSlotIndependantMods(
             raidEnergy.type === DestinyEnergyType.Any);
 
         // The combat mods wont fit in the item set so move on to the next set of mods
-        if (!combatEnergyIsValid && item.compatibleModSeasons?.includes(tag)) {
+        if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
           continue combatModLoop;
         }
       }
