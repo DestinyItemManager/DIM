@@ -15,7 +15,7 @@ export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
         if (mod) {
           const energyType = mod.energy?.type || DestinyEnergyType.Any;
           const energyCost = mod.energy?.val || 0;
-          return `${energyType}${energyCost}${mod.plugCategoryHash}`;
+          return `${energyType}${energyCost}${mod.tag}`;
         }
       })
       .filter(Boolean)
