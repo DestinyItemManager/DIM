@@ -18,7 +18,6 @@ export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
           return `${energyType}${energyCost}${mod.tag}`;
         }
       })
-      .filter(Boolean)
       .join(',');
   return generatePermutationsOfFive(mods, createPermutationKey);
 }
@@ -39,7 +38,6 @@ export function generateModPermutations(mods: (PluggableInventoryItemDefinition 
           return `${energyType}${energyCost}${mod.plug.plugCategoryHash}`;
         }
       })
-      .filter(Boolean)
       .join(',');
   return generatePermutationsOfFive(mods, createPermutationKey);
 }
