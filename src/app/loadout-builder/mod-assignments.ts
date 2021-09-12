@@ -271,9 +271,18 @@ export function getModAssignments(
 
         const item = items[i];
         const itemEnergy = itemEnergies[item.id];
+        const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
 
         // The combat mods wont fit in the item set so move on to the next set of mods
-        if (!isModEnergyValid(itemEnergy, combatMod, raidPermutation[i])) {
+        if (
+          !(
+            isModEnergyValid(itemEnergy, combatMod, raidPermutation[i]) &&
+            modTag &&
+            itemSocketMetadata[item.id]?.some((metadata) =>
+              metadata.compatibleModTags.includes(modTag)
+            )
+          )
+        ) {
           continue combatModLoop;
         }
       }
