@@ -231,80 +231,69 @@ export function getModAssignments(
   const raidModPermutations = generateModPermutations(raidMods);
 
   // loop depth 0
-  combatModLoop: for (const combatP of combatModPermutations) {
+  raidModLoop: for (const raidPermutation of raidModPermutations) {
     // loop depth 1
-    combatItemLoop: for (let i = 0; i < items.length; i++) {
-      const combatMod = combatP[i];
+    raidItemLoop: for (let i = 0; i < items.length; i++) {
+      const raidMod = raidPermutation[i];
 
       // If a mod is null there is nothing being socketed into the item so move on
-      if (!combatMod) {
-        continue combatItemLoop;
+      if (!raidMod) {
+        continue raidItemLoop;
       }
 
       const item = items[i];
       const itemEnergy = itemEnergies[item.id];
-      const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
+      const modTag = getModTypeTagByPlugCategoryHash(raidMod.plug.plugCategoryHash);
 
-      // The combat mods wont fit in the item set so move on to the next set of mods
-      // TODO ryan, checking the compatible mod tags probably isn't needed with the
-      // current combat mod system.
+      // The raid mods wont fit in the item set so move on to the next set of mods
       if (
         !(
-          isModEnergyValid(itemEnergy, combatMod) &&
+          isModEnergyValid(itemEnergy, raidMod) &&
           modTag &&
           itemSocketMetadata[item.id]?.some((metadata) =>
             metadata.compatibleModTags.includes(modTag)
           )
         )
       ) {
-        continue combatModLoop;
+        continue raidModLoop;
       }
     }
     // loop depth 1
-    generalModLoop: for (const generalP of generalModPermutations) {
+    combatModLoop: for (const combatPermutation of combatModPermutations) {
       // loop depth 2
-      generalItemLoop: for (let i = 0; i < items.length; i++) {
-        const generalMod = generalP[i];
+      combatItemLoop: for (let i = 0; i < items.length; i++) {
+        const combatMod = combatPermutation[i];
 
         // If a mod is null there is nothing being socketed into the item so move on
-        if (!generalMod) {
-          continue generalItemLoop;
+        if (!combatMod) {
+          continue combatItemLoop;
         }
 
         const item = items[i];
         const itemEnergy = itemEnergies[item.id];
 
-        // The general mods wont fit in the item set so move on to the next set of mods
-        if (!isModEnergyValid(itemEnergy, generalMod, combatP[i])) {
-          continue generalModLoop;
+        // The combat mods wont fit in the item set so move on to the next set of mods
+        if (!isModEnergyValid(itemEnergy, combatMod, raidPermutation[i])) {
+          continue combatModLoop;
         }
       }
       // loop depth 2
-      raidModLoop: for (const raidP of raidModPermutations) {
+      generalModLoop: for (const generalPermutation of generalModPermutations) {
         // loop depth 3
-        raidItemLoop: for (let i = 0; i < items.length; i++) {
-          const raidMod = raidP[i];
+        generalItemLoop: for (let i = 0; i < items.length; i++) {
+          const generalMod = generalPermutation[i];
 
           // If a mod is null there is nothing being socketed into the item so move on
-          if (!raidMod) {
-            continue raidItemLoop;
+          if (!generalMod) {
+            continue generalItemLoop;
           }
 
           const item = items[i];
           const itemEnergy = itemEnergies[item.id];
-          const modTag = getModTypeTagByPlugCategoryHash(raidMod.plug.plugCategoryHash);
 
-          // The raid mods wont fit in the item set so move on to the next set of mods
-          if (
-            !(
-              isModEnergyValid(itemEnergy, raidMod, generalP[i], combatP[i]) &&
-              modTag &&
-              itemSocketMetadata[item.id]?.some((metadata) =>
-                metadata.compatibleModTags.includes(modTag)
-              )
-            )
-          ) {
-            continue raidModLoop;
+          // The general mods wont fit in the item set so move on to the next set of mods
+          if (!isModEnergyValid(itemEnergy, generalMod, combatPermutation[i], raidPermutation[i])) {
+            continue generalModLoop;
           }
         }
         // loop depth 2
@@ -315,9 +304,9 @@ export function getModAssignments(
         for (let i = 0; i < items.length; i++) {
           energyUsedAndWasted += calculateEnergyChange(
             itemEnergies[items[i].id],
-            generalP[i],
-            combatP[i],
-            raidP[i]
+            generalPermutation[i],
+            combatPermutation[i],
+            raidPermutation[i]
           );
         }
 
@@ -327,7 +316,7 @@ export function getModAssignments(
           for (let i = 0; i < items.length; i++) {
             bucketIndependantAssignments.set(
               items[i].id,
-              _.compact([generalP[i], combatP[i], raidP[i]])
+              _.compact([generalPermutation[i], combatPermutation[i], raidPermutation[i]])
             );
           }
           assignmentEnergyCost = energyUsedAndWasted;
