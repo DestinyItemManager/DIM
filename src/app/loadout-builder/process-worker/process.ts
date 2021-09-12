@@ -174,13 +174,6 @@ export function process(
   const raidModPermutations = generateModPermutations(raidMods);
   const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
-  // eslint-disable-next-line no-console
-  console.log(`general mod permutations: ${generalModsPermutations.length}`);
-  // eslint-disable-next-line no-console
-  console.log(`combat mod permutations: ${combatModPermutations.length}`);
-  // eslint-disable-next-line no-console
-  console.log(`raid mod permutations: ${raidModPermutations.length}`);
-
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
   let numCantSlotMods = 0;
