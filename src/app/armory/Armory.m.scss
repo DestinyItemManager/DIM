@@ -7,9 +7,11 @@
   padding: 16px;
   box-sizing: border-box;
   background-color: #0b0c0f;
+  min-height: 9/16 * 100%;
 
-  :global(.collapse-content) {
-    background: rgba(0, 0, 0, 0.2);
+  :global(.item-details) {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 

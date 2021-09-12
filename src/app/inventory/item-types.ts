@@ -420,4 +420,5 @@ export interface DimPursuit {
   modifierHashes: number[];
   questStepNum?: number;
   questStepsTotal?: number;
+  questLineDescription?: string;
 }
