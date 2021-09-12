@@ -7,7 +7,11 @@ import { chainComparator, compareBy } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
 import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { statTier } from '../utils';
-import { canTakeSlotIndependantMods, generateModPermutations } from './process-utils';
+import {
+  canTakeSlotIndependantMods,
+  generateModPermutations,
+  stringifyRaidModPermutation,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
@@ -169,10 +173,17 @@ export function process(
     }
   }
 
-  const generalModsPermutations = generateModPermutations(generalMods);
-  const combatModPermutations = generateModPermutations(combatMods);
-  const raidModPermutations = generateModPermutations(raidMods);
+  const generalModsPermutations = generateModPermutations(generalMods, stringifyRaidModPermutation);
+  const combatModPermutations = generateModPermutations(combatMods, stringifyRaidModPermutation);
+  const raidModPermutations = generateModPermutations(raidMods, stringifyRaidModPermutation);
   const hasMods = combatMods.length || raidMods.length || generalMods.length;
+
+  // eslint-disable-next-line no-console
+  console.log(`general mod permutations: ${generalModsPermutations.length}`);
+  // eslint-disable-next-line no-console
+  console.log(`combat mod permutations: ${combatModPermutations.length}`);
+  // eslint-disable-next-line no-console
+  console.log(`raid mod permutations: ${raidModPermutations.length}`);
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;

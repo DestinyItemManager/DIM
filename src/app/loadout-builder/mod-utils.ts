@@ -9,6 +9,8 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import {
   canTakeSlotIndependantMods,
   generateModPermutations,
+  stringifyModPermutation,
+  stringifyRaidModPermutation,
 } from './process-worker/process-utils';
 import { ProcessItem } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
@@ -88,9 +90,12 @@ function assignSlotIndependantMods(
   const otherProcessMods = combatMods.map(mapArmor2ModToProcessMod);
   const raidProcessMods = raidMods.map(mapArmor2ModToProcessMod);
 
-  const generalModPermutations = generateModPermutations(generalProcessMods);
-  const combatModPermutations = generateModPermutations(otherProcessMods);
-  const raidModPermutations = generateModPermutations(raidProcessMods);
+  const generalModPermutations = generateModPermutations(
+    generalProcessMods,
+    stringifyModPermutation
+  );
+  const combatModPermutations = generateModPermutations(otherProcessMods, stringifyModPermutation);
+  const raidModPermutations = generateModPermutations(raidProcessMods, stringifyRaidModPermutation);
 
   canTakeSlotIndependantMods(
     generalModPermutations,
