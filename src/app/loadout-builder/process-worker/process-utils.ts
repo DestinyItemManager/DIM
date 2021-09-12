@@ -32,22 +32,11 @@ export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
 
 const noModsPermutations = [[null, null, null, null, null]];
 
-export function stringifyRaidModPermutation(perm: (ProcessMod | null)[]) {
+function stringifyModPermutation(perm: (ProcessMod | null)[]) {
   let permString = '';
   for (const modOrNull of perm) {
     if (modOrNull) {
       permString += `(${modOrNull.energy?.type},${modOrNull.energy?.val},${modOrNull.tag || ''})`;
-    }
-    permString += ',';
-  }
-  return permString;
-}
-
-export function stringifyModPermutation(perm: (ProcessMod | null)[]) {
-  let permString = '';
-  for (const modOrNull of perm) {
-    if (modOrNull) {
-      permString += `(${modOrNull.energy?.type},${modOrNull.energy?.val}})`;
     }
     permString += ',';
   }
@@ -61,10 +50,7 @@ export function stringifyModPermutation(perm: (ProcessMod | null)[]) {
  * Note that we ensure the array length is always 5 so mods are aligned
  * with the 5 items.
  */
-export function generateModPermutations(
-  mods: ProcessMod[],
-  permutationToString: (perm: (ProcessMod | null)[]) => string
-): (ProcessMod | null)[][] {
+export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)[][] {
   if (!mods.length) {
     return noModsPermutations;
   }
@@ -79,7 +65,7 @@ export function generateModPermutations(
   let i = 0;
 
   const rtn = [Array.from(modsCopy)];
-  containsSet.add(permutationToString(modsCopy));
+  containsSet.add(stringifyModPermutation(modsCopy));
 
   while (i < 5) {
     if (cursorArray[i] < i) {
