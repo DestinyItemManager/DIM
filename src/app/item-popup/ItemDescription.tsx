@@ -18,10 +18,6 @@ export default function ItemDescription({ item }: { item: DimItem }) {
   // to make room for all that other delicious info
   const showFlavor = !item.bucket.inWeapons && !item.bucket.inArmor;
 
-  const loreLink = item.loreHash
-    ? `http://www.ishtar-collective.net/entries/${item.loreHash}`
-    : undefined;
-
   return (
     <>
       {showFlavor && (
@@ -29,17 +25,7 @@ export default function ItemDescription({ item }: { item: DimItem }) {
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
               <RichDestinyText text={item.description} ownerId={item.owner} />
-              {loreLink && (
-                <ExternalLink
-                  className={styles.loreLink}
-                  href={loreLink}
-                  title={t('MovePopup.ReadLore')}
-                  onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
-                >
-                  <img src={ishtarLogo} height="16" width="16" />
-                  {t('MovePopup.ReadLoreLink')}
-                </ExternalLink>
-              )}
+              {item.loreHash && <LoreLink loreHash={item.loreHash} />}
             </div>
           )}
           {Boolean(item.displaySource?.length) && (
@@ -57,5 +43,25 @@ export default function ItemDescription({ item }: { item: DimItem }) {
       )}
       <NotesArea item={item} className={styles.description} />
     </>
+  );
+}
+
+export function LoreLink({ loreHash }: { loreHash: number }) {
+  if (!loreHash) {
+    return null;
+  }
+
+  const loreLink = `http://www.ishtar-collective.net/entries/${loreHash}`;
+
+  return (
+    <ExternalLink
+      className={styles.loreLink}
+      href={loreLink}
+      title={t('MovePopup.ReadLore')}
+      onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
+    >
+      <img src={ishtarLogo} height="16" width="16" />
+      {t('MovePopup.ReadLoreLink')}
+    </ExternalLink>
   );
 }

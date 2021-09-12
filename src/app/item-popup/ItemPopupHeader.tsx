@@ -1,4 +1,5 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
@@ -22,7 +23,7 @@ const tierClassName = {
 };
 
 export default function ItemPopupHeader({ item }: { item: DimItem }) {
-  const language = useSelector(settingsSelector).language;
+  const account = useSelector(currentAccountSelector)!;
 
   return (
     <div
@@ -32,12 +33,12 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
       })}
     >
       <div className={styles.title}>
-        <ExternalLink href={destinyDBLink(item, language)}>{item.name}</ExternalLink>
+        <ExternalLink href={armoryLink(account, item)}>{item.name}</ExternalLink>
       </div>
 
       <div className={styles.subtitle}>
         <div className={styles.type}>
-          <ItemTypeName item={item} />
+          <ItemTypeName item={item} className={styles.itemType} />
           {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
           {item.breakerType && (
             <BungieImage
@@ -74,7 +75,7 @@ const ammoIcons = {
   [DestinyAmmunitionType.Heavy]: heavy,
 };
 
-function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
+export function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
   return (
     <img
       className={clsx(styles.ammoIcon, {
@@ -85,7 +86,7 @@ function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
   );
 }
 
-function ItemTypeName({ item }: { item: DimItem }) {
+export function ItemTypeName({ item, className }: { item: DimItem; className?: string }) {
   const classType =
     (item.classType !== DestinyClass.Unknown &&
       // These already include the class name
@@ -94,16 +95,36 @@ function ItemTypeName({ item }: { item: DimItem }) {
       item.type !== 'Class' &&
       !item.classified &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
-    ' ';
+    '';
+
+  if (!(item.typeName || classType)) {
+    return null;
+  }
 
   return (
-    <div className={styles.itemType}>
+    <div className={className}>
       {t('MovePopup.Subtitle.Type', {
         classType,
         typeName: item.typeName,
       })}
     </div>
   );
+}
+
+export function armoryLink(account: DestinyAccount, item: DimItem) {
+  const DimItem = item;
+  let perkQueryString = '';
+
+  if (DimItem) {
+    const perkCsv = buildPerksCsv(DimItem);
+    // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
+    if (perkCsv?.length) {
+      perkQueryString = `?perks=${perkCsv}`;
+    }
+  }
+
+  // TODO: put account info here?
+  return `/${account.membershipId}/d${item.destinyVersion}/armory/${item.hash}${perkQueryString}`;
 }
 
 export function destinyDBLink(item: DimItem, language: string) {
