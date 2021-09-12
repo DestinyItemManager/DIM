@@ -227,6 +227,16 @@ function buildDefinedSocket(
           }
         }
       }
+    } else if (socketDef.randomizedPlugSetHash) {
+      const plugSet = defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem);
+      if (plugSet) {
+        for (const reusablePlug of plugSet.reusablePlugItems) {
+          const built = buildDefinedPlug(defs, reusablePlug);
+          if (built) {
+            reusablePlugs.push(built);
+          }
+        }
+      }
     } else if (socketDef.reusablePlugItems) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
         const built = buildDefinedPlug(defs, reusablePlug);
