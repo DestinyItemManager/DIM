@@ -5,6 +5,7 @@ interface CssExports {
   'flavor': string;
   'header': string;
   'links': string;
+  'roll': string;
   'source': string;
   'stats': string;
   'subtitle': string;

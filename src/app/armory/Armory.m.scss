@@ -1,4 +1,5 @@
 @import '../variables';
+@import 'smooth-gradient-sass-function/src/smooth-gradient';
 
 .armory {
   background-repeat: no-repeat;
@@ -7,7 +8,7 @@
   padding: 16px;
   box-sizing: border-box;
   background-color: #0b0c0f;
-  min-height: 9/16 * 100%;
+  aspect-ratio: 16/9;
 
   :global(.item-details) {
     margin-left: 0;
@@ -58,9 +59,9 @@
 .source {
   display: flex;
   align-items: center;
-  &:nth-child(2) {
-    border-left: 1px solid white;
-    padding-left: 6px;
+  &:nth-child(n + 1) {
+    border-left: 1px solid #ccc;
+    padding-left: 8px;
     margin-left: 4px;
   }
   > img {
@@ -74,4 +75,9 @@
 
 .stats {
   width: 300px;
+}
+
+.roll {
+  display: flex;
+  flex-direction: row;
 }

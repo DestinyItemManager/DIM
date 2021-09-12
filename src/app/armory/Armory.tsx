@@ -1,4 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { addCompareItem } from 'app/compare/actions';
 import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -10,24 +11,26 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import RatingIcon from 'app/inventory/RatingIcon';
 import { allItemsSelector, bucketsSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { LoreLink } from 'app/item-popup/ItemDescription';
 import { AmmoIcon, destinyDBLink, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
 import MetricCategories from 'app/item-popup/MetricCategories';
+import Plug from 'app/item-popup/Plug';
 import { useDefinitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { AppIcon, faClock } from 'app/shell/icons';
+import { AppIcon, compareIcon, faClock } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
-import { UiWishListRoll } from 'app/wishlists/wishlists';
+import { WishListRoll } from 'app/wishlists/types';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -51,6 +54,7 @@ export default function Armory({
   account: DestinyAccount;
   itemHash: number;
 }) {
+  const dispatch = useThunkDispatch();
   const defs = useDefinitions();
   const storesLoaded = useSelector(storesLoadedSelector);
   useLoadStores(account, storesLoaded);
@@ -94,13 +98,15 @@ export default function Armory({
 
   console.log({ item });
 
+  const [goodRolls, badRolls] = _.partition(wishlistRolls, (r) => !r.isUndesirable);
+
   return (
     <div
       className={clsx('dim-page', styles.armory)}
       style={
         screenshot
           ? {
-              backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.75) 0px, rgba(0,0,0,0) 200px), url("${bungieNetPath(
+              backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.75) 0px, rgba(0,0,0,0) 200px), linear-gradient(180deg, rgba(0,0,0,0) 400px, #0b0c0f 500px), url("${bungieNetPath(
                 screenshot
               )}")`,
             }
@@ -191,13 +197,9 @@ export default function Armory({
       )}
 
       {item.sockets && (
-        <>
+        <div className={styles.stats}>
           <ItemSockets item={item} />
-          <h2>Perks</h2>
-          <div>Archetype</div>
-          <div>Curated Roll</div>
-          <div>perk options</div>
-        </>
+        </div>
       )}
       {item.pursuit && (
         <>
@@ -239,7 +241,21 @@ export default function Armory({
       {item.isExotic && item.bucket.inWeapons && <h2>Catalyst??</h2>}
       {storeItems.length > 0 && (
         <>
-          <h2>Yours</h2>
+          <h2>
+            Your Items
+            {storeItems[0].comparable && (
+              <button
+                className="dim-button"
+                type="button"
+                onClick={() => {
+                  hideItemPopup();
+                  dispatch(addCompareItem(storeItems[0]));
+                }}
+              >
+                <AppIcon icon={compareIcon} /> Compare
+              </button>
+            )}
+          </h2>
           <div className="sub-bucket">
             {storeItems.length > 0 ? (
               storeItems.map((i) => (
@@ -255,25 +271,63 @@ export default function Armory({
           </div>
         </>
       )}
-      {wishlistRolls.length > 0 && (
+      <h2>TODO: which rolls do you have?</h2>
+      {goodRolls.length > 0 && (
         <>
-          <h2>Wishlisted Rolls</h2>
-          {wishlistRolls.map((r, i) => (
-            <div key={i}>
-              <RatingIcon
-                uiWishListRoll={r.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good}
-              />
-              <div>
-                {Array.from(
-                  r.recommendedPerks,
-                  (h) => defs.InventoryItem.get(h).displayProperties.name
-                )}
-              </div>
-              <div>{r.notes}</div>
-            </div>
-          ))}
+          <h2>
+            {goodRolls.length}/
+            {item
+              .sockets!.allSockets.filter((s) => s.isPerk)
+              .reduce((combos, s) => combos * s.plugOptions.length, 1)
+              .toLocaleString()}{' '}
+            Wishlisted Rolls
+          </h2>
+          <WishlistRolls item={item} wishlistRolls={goodRolls} />
+        </>
+      )}
+      {badRolls.length > 0 && (
+        <>
+          <h2>{badRolls.length} Trashlisted Rolls</h2>
+          <WishlistRolls item={item} wishlistRolls={badRolls} />
         </>
       )}
     </div>
+  );
+}
+
+function WishlistRolls({ wishlistRolls, item }: { wishlistRolls: WishListRoll[]; item: DimItem }) {
+  const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes);
+
+  // TODO: group by making a tree of least cardinality -> most?
+
+  return (
+    <>
+      {_.map(groupedWishlistRolls, (rolls, notes) => (
+        <div key={notes}>
+          <div>{notes || 'No Notes'}</div>
+          <ul>
+            {rolls.map((r, i) => (
+              <li key={i} className={styles.roll}>
+                {Array.from(r.recommendedPerks, (h) => {
+                  const socket = item.sockets!.allSockets.find((s) =>
+                    s.plugOptions.some((p) => p.plugDef.hash === h)
+                  )!;
+                  const plug = socket.plugOptions.find((p) => p.plugDef.hash === h)!;
+                  return (
+                    <Plug
+                      key={plug.plugDef.hash}
+                      plug={plug}
+                      item={item}
+                      socketInfo={socket}
+                      hasMenu={true}
+                    />
+                  );
+                })}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </>
   );
 }
