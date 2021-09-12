@@ -247,12 +247,10 @@ export function getModAssignments(
 
       // The raid mods wont fit in the item set so move on to the next set of mods
       if (
-        !(
-          isModEnergyValid(itemEnergy, raidMod) &&
-          modTag &&
-          itemSocketMetadata[item.id]?.some((metadata) =>
-            metadata.compatibleModTags.includes(modTag)
-          )
+        !isModEnergyValid(itemEnergy, raidMod) ||
+        !modTag ||
+        !itemSocketMetadata[item.id]?.some((metadata) =>
+          metadata.compatibleModTags.includes(modTag)
         )
       ) {
         continue raidModLoop;
@@ -275,12 +273,10 @@ export function getModAssignments(
 
         // The combat mods wont fit in the item set so move on to the next set of mods
         if (
-          !(
-            isModEnergyValid(itemEnergy, combatMod, raidPermutation[i]) &&
-            modTag &&
-            itemSocketMetadata[item.id]?.some((metadata) =>
-              metadata.compatibleModTags.includes(modTag)
-            )
+          !isModEnergyValid(itemEnergy, combatMod, raidPermutation[i]) ||
+          !modTag ||
+          !itemSocketMetadata[item.id]?.some((metadata) =>
+            metadata.compatibleModTags.includes(modTag)
           )
         ) {
           continue combatModLoop;
