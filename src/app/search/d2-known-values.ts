@@ -21,24 +21,6 @@ export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 // SOCKETS KNOWN VALUES
 //
 
-/**
- * Plugs to hide from plug options (if not socketed)
- * removes the "Default Ornament" plug, "Default Shader" and "Rework Masterwork"
- * TODO: with AWA we may want to put some of these back
- */
-export const EXCLUDED_PLUGS = new Set([
-  // Default ornament
-  2931483505, // InventoryItem "Default Ornament"
-  1959648454, // InventoryItem "Default Ornament"
-  702981643, // InventoryItem "Default Ornament"
-  // Rework Masterwork
-  39869035, // InventoryItem "Rework Armor"
-  1961001474, // InventoryItem "Rework Weapon"
-  3612467353, // InventoryItem "Rework Weapon"
-  // Default Shader
-  4248210736, // InventoryItem "Default Shader"
-]);
-
 /** the default shader InventoryItem in every empty shader slot */
 export const DEFAULT_SHADER = 4248210736; // InventoryItem "Default Shader"
 

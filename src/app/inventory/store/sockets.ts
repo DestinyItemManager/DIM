@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { EXCLUDED_PLUGS } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import {
   DestinyInventoryItemDefinition,
@@ -175,7 +174,6 @@ function buildDefinedSockets(
 function filterReusablePlug(reusablePlug: DimPlug) {
   const itemCategoryHashes = reusablePlug.plugDef.itemCategoryHashes || [];
   return (
-    !EXCLUDED_PLUGS.has(reusablePlug.plugDef.hash) &&
     !itemCategoryHashes.includes(ItemCategoryHashes.MasterworksMods) &&
     !itemCategoryHashes.includes(ItemCategoryHashes.GhostModsProjections) &&
     (!reusablePlug.plugDef.plug ||
@@ -237,14 +235,15 @@ function buildDefinedSocket(
         }
       }
     }
-    if (
-      socketDef.singleInitialItemHash &&
-      !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
-    ) {
-      const built = buildDefinedPlug(defs, { plugItemHash: socketDef.singleInitialItemHash });
-      if (built) {
-        reusablePlugs.unshift(built);
-      }
+  }
+
+  if (
+    socketDef.singleInitialItemHash &&
+    !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
+  ) {
+    const built = buildDefinedPlug(defs, { plugItemHash: socketDef.singleInitialItemHash });
+    if (built) {
+      reusablePlugs.unshift(built);
     }
   }
 
