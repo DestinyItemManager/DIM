@@ -1,5 +1,4 @@
 @import '../variables';
-@import 'smooth-gradient-sass-function/src/smooth-gradient';
 
 .armory {
   background-repeat: no-repeat;
@@ -13,13 +12,14 @@
   :global(.item-details) {
     margin-left: 0;
     margin-right: 0;
+    max-width: 300px;
   }
-}
 
-.links {
-  float: right;
-  margin: 0 0 0 32px;
-  padding: 0;
+  h2 {
+    > button {
+      margin-left: 1em;
+    }
+  }
 }
 
 .header {
@@ -73,11 +73,7 @@
   font-style: italic;
 }
 
-.stats {
+.section {
   width: 300px;
-}
-
-.roll {
-  display: flex;
-  flex-direction: row;
+  margin-bottom: 10px;
 }
