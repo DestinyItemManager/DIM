@@ -86,6 +86,15 @@ export function getWeaponSvgIcon(item: DimItem) {
     }
   }
 }
+/** an SVG of the weapon's slot, if possible */
+export function getWeaponSlotSvgIcon(item: DimItem) {
+  for (const ich of [...item.itemCategoryHashes].reverse()) {
+    const svg: string = weaponSlotSvgByCategoryHash[ich];
+    if (svg) {
+      return svg;
+    }
+  }
+}
 
 /** an SVG of the weapon's type, or slot, if possible */
 export function getArmorSvgIcon(item: DimItem) {
@@ -107,9 +116,9 @@ export function getItemSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
     const svg: string =
       weaponTypeSvgByCategoryHash[ich] ??
-      // weaponSlotSvgByCategoryHash[ich] ??
-      // armorSlotSvgByCategoryHash[ich] ??
-      // armorClassSvgByCategoryHash[ich] ??
+      weaponSlotSvgByCategoryHash[ich] ??
+      armorSlotSvgByCategoryHash[ich] ??
+      armorClassSvgByCategoryHash[ich] ??
       cosmeticSvgByCategoryHash[ich] ??
       consumableSvgByCategoryHash[ich];
     if (svg) {
