@@ -1,11 +1,5 @@
 @import '../variables.scss';
 
-.loadout-drawer.compare {
-  padding-left: 10px;
-  padding-top: 8px;
-  @include max-sheet-height;
-}
-
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);
   display: flex;
@@ -14,9 +8,6 @@
 
   > div {
     padding-left: 4px;
-  }
-  .highlight {
-    background-color: rgba(128, 128, 128, 0.25);
   }
 
   span > .app-icon {
