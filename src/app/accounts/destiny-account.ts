@@ -116,8 +116,9 @@ function couldBeD1Account(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
 function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoCard) {
   return (
     destinyAccount.bungieGlobalDisplayName +
-    (destinyAccount.bungieGlobalDisplayNameCode &&
-      `#${destinyAccount.bungieGlobalDisplayNameCode.toString().padStart(4, '0')}`)
+    (destinyAccount.bungieGlobalDisplayNameCode
+      ? `#${destinyAccount.bungieGlobalDisplayNameCode.toString().padStart(4, '0')}`
+      : '')
   );
 }
 
