@@ -18,6 +18,8 @@
 * Seasonal artifact display now matches the games display.
 * Ritual rank progress for vendors now matches the ritual rank circle shape.
 * Fixed vendor ranks being off by 1.
+* Random-roll items in Collections now show all the perk possibilities they could roll with.
+* Armor in Collections now shows what mod slots it has.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 
