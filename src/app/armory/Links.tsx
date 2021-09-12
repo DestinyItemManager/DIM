@@ -9,6 +9,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
 
+// TODO: permalink for sharing
 const links = [
   {
     name: 'Light.gg',

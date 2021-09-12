@@ -1,5 +1,4 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { currentAccountSelector } from 'app/accounts/selectors';
+import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
@@ -8,9 +7,8 @@ import clsx from 'clsx';
 import heavy from 'destiny-icons/general/ammo_heavy.svg';
 import primary from 'destiny-icons/general/ammo_primary.svg';
 import special from 'destiny-icons/general/ammo_special.svg';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import ExternalLink from '../dim-ui/ExternalLink';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
@@ -23,7 +21,7 @@ const tierClassName = {
 };
 
 export default function ItemPopupHeader({ item }: { item: DimItem }) {
-  const account = useSelector(currentAccountSelector)!;
+  const [showArmory, setShowArmory] = useState(false);
 
   return (
     <div
@@ -32,9 +30,9 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
         [styles.pursuit]: item.pursuit,
       })}
     >
-      <div className={styles.title}>
-        <ExternalLink href={armoryLink(account, item)}>{item.name}</ExternalLink>
-      </div>
+      <a className={styles.title} onClick={() => setShowArmory(true)}>
+        {item.name}
+      </a>
 
       <div className={styles.subtitle}>
         <div className={styles.type}>
@@ -65,6 +63,11 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           )}
         </div>
       </div>
+      {showArmory &&
+        ReactDOM.createPortal(
+          <ArmorySheet onClose={() => setShowArmory(false)} itemHash={item.hash} />,
+          document.body
+        )}
     </div>
   );
 }
@@ -109,9 +112,4 @@ export function ItemTypeName({ item, className }: { item: DimItem; className?: s
       })}
     </div>
   );
-}
-
-function armoryLink(account: DestinyAccount, item: DimItem) {
-  // TODO: link to current perks
-  return `/${account.membershipId}/d${item.destinyVersion}/armory/${item.hash}`;
 }
