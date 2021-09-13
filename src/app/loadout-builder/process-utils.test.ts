@@ -14,10 +14,8 @@ import {
   recoveryModHash,
 } from '../../testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
-import {
-  canTakeSlotIndependantMods,
-  generateModPermutations,
-} from './process-worker/process-utils';
+import { generateProcessModPermutations } from './mod-permutations';
+import { canTakeSlotIndependantMods } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 
@@ -170,7 +168,7 @@ describe('process-utils', () => {
     [5, 120],
   ])('generates the correct number of permutations for %i unique mods', (n, result) => {
     const mods = generalMods.map((mod, i) => modifyMod({ mod, energyVal: i % n }));
-    expect(generateModPermutations(mods)).toHaveLength(result);
+    expect(generateProcessModPermutations(mods)).toHaveLength(result);
   });
 
   it('can fit all mods when there are no mods', () => {
@@ -181,7 +179,7 @@ describe('process-utils', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({ item, energyVal: generalMod.energy!.val })
     );
-    const generalModPerms = generateModPermutations(generalMods);
+    const generalModPerms = generateProcessModPermutations(generalMods);
     expect(canTakeSlotIndependantMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
   });
 
@@ -195,7 +193,7 @@ describe('process-utils', () => {
           energyVal: itemIndex === i ? generalMod.energy!.val : generalMod.energy!.val + 1,
         })
       );
-      const combatModPerms = generateModPermutations([combatMod]);
+      const combatModPerms = generateProcessModPermutations([combatMod]);
       expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
     }
   );
@@ -212,7 +210,7 @@ describe('process-utils', () => {
         compatibleModSeasons: [tag],
       })
     );
-    const combatModPerms = generateModPermutations(combatMods);
+    const combatModPerms = generateProcessModPermutations(combatMods);
     // sanity check
     expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(
       canFit === 'can'
@@ -230,7 +228,7 @@ describe('process-utils', () => {
           compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
         })
       );
-      const combatModPerms = generateModPermutations([combatMod]);
+      const combatModPerms = generateProcessModPermutations([combatMod]);
       expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
     }
   );
@@ -247,7 +245,7 @@ describe('process-utils', () => {
         compatibleModSeasons: [tag],
       })
     );
-    const raidModPerms = generateModPermutations(raidMods);
+    const raidModPerms = generateProcessModPermutations(raidMods);
     // sanity check
     expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(
       canFit === 'can'
@@ -265,7 +263,7 @@ describe('process-utils', () => {
           compatibleModSeasons: i === itemIndex ? [raidMod.tag!] : [],
         })
       );
-      const raidModPerms = generateModPermutations([raidMod]);
+      const raidModPerms = generateProcessModPermutations([raidMod]);
       expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(true);
     }
   );
@@ -295,9 +293,9 @@ describe('process-utils', () => {
       energyVal: 3,
     });
 
-    const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-    const combatModPerms = generateModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateModPermutations([modifiedRaidMod]);
+    const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
+    const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
+    const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
     expect(
       canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
@@ -331,9 +329,9 @@ describe('process-utils', () => {
         energyVal: modType === 'raid' ? 4 : 3,
       });
 
-      const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-      const combatModPerms = generateModPermutations([modifiedCombatMod]);
-      const raidModPerms = generateModPermutations([modifiedRaidMod]);
+      const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
+      const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
+      const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
       expect(
         canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
@@ -368,9 +366,9 @@ describe('process-utils', () => {
         energyVal: 3,
       });
 
-      const generalModPerms = generateModPermutations([modifiedGeneralMod]);
-      const combatModPerms = generateModPermutations([modifiedCombatMod]);
-      const raidModPerms = generateModPermutations([modifiedRaidMod]);
+      const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
+      const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
+      const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
       expect(
         canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)

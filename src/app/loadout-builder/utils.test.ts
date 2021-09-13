@@ -51,9 +51,9 @@ describe('Spend tier tests', () => {
     'Upgrade spend tier %s can swap energy on a masterworked item = %p',
     (tier: string, result: boolean) => {
       const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 10 } };
-      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
-        result
-      );
+      expect(
+        canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem, false)
+      ).toBe(result);
     }
   );
 
@@ -71,9 +71,9 @@ describe('Spend tier tests', () => {
         ...exoticItem,
         energy: { ...exoticItem.energy!, energyCapacity: 10 },
       };
-      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
-        result
-      );
+      expect(
+        canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem, false)
+      ).toBe(result);
     }
   );
 
@@ -89,9 +89,9 @@ describe('Spend tier tests', () => {
     'Upgrade spend tier %s can swap energy on an item with 9 energy = %p',
     (tier: string, result: boolean) => {
       const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 9 } };
-      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
-        result
-      );
+      expect(
+        canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem, false)
+      ).toBe(result);
     }
   );
 
@@ -106,9 +106,9 @@ describe('Spend tier tests', () => {
     'Upgrade spend tier %s can swap energy on an item with 7 energy = %p',
     (tier: string, result: boolean) => {
       const updatedItem: DimItem = { ...item, energy: { ...item.energy!, energyCapacity: 7 } };
-      expect(canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem)).toBe(
-        result
-      );
+      expect(
+        canSwapEnergyFromUpgradeSpendTier(defs, UpgradeSpendTier[tier], updatedItem, false)
+      ).toBe(result);
     }
   );
 

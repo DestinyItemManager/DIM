@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer finds better mod assignments.
+
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
 * Loadout Optimizer remembers stats you've Ignored between sessions.

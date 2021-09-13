@@ -64,10 +64,10 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
+  lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];
   enabledStats: Set<number>;
-  lockedMods: PluggableInventoryItemDefinition[];
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -80,12 +80,12 @@ interface Props {
  * Renders the entire list of generated stat mixes, one per mix.
  */
 export default function GeneratedSets({
+  lockedMods,
   pinnedItems,
   selectedStore,
   sets,
   statOrder,
   enabledStats,
-  lockedMods,
   loadouts,
   lbDispatch,
   params,
@@ -149,11 +149,11 @@ export default function GeneratedSets({
           style={{}}
           set={measureSet}
           selectedStore={selectedStore}
+          lockedMods={lockedMods}
           pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
           statOrder={statOrder}
           enabledStats={enabledStats}
-          lockedMods={lockedMods}
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
@@ -178,11 +178,11 @@ export default function GeneratedSets({
                   style={style}
                   set={sets[index]}
                   selectedStore={selectedStore}
+                  lockedMods={lockedMods}
                   pinnedItems={pinnedItems}
                   lbDispatch={lbDispatch}
                   statOrder={statOrder}
                   enabledStats={enabledStats}
-                  lockedMods={lockedMods}
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
