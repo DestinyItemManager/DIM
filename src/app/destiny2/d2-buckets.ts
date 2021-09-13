@@ -43,7 +43,7 @@ const bucketToTypeRaw = {
   3683254069: 'Finishers',
 } as const;
 
-type D2AdditionalBucketTypes = 'Milestone' | 'Unknown' | 'Class';
+type D2AdditionalBucketTypes = 'Milestone' | 'Class' | 'Unknown';
 type D1BucketTypes = 'Artifact' | 'Material';
 
 export type DimBucketType =
