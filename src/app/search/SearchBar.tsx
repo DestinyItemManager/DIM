@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isiOSBrowser } from 'app/utils/browsers';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
@@ -200,10 +201,7 @@ function SearchBar(
   const isPhonePortrait = useIsPhonePortrait();
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
-  const autoFocus =
-    !mainSearchBar &&
-    !isPhonePortrait &&
-    !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+  const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
 
   const [liveQuery, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
