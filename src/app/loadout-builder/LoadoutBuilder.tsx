@@ -294,7 +294,6 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <TierSelect
         stats={statFilters}
-        statRanges={result?.statRanges}
         order={statOrder}
         onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })
