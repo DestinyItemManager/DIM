@@ -6,7 +6,7 @@ import { D2Categories } from './d2-bucket-categories';
 import { D2ManifestDefinitions } from './d2-definitions';
 
 // A mapping from the bucket hash to DIM item types
-const bucketToType: { [hash: number]: string | undefined } = {
+const bucketToTypeRaw = {
   2465295065: 'Energy',
   2689798304: 'UpgradePoint',
   2689798305: 'StrangeCoin',
@@ -32,7 +32,7 @@ const bucketToType: { [hash: number]: string | undefined } = {
   953998645: 'Power',
   1269569095: 'Auras',
   1367666825: 'SpecialOrders',
-  1498876634: 'Kinetic',
+  1498876634: 'KineticSlot',
   1585787867: 'ClassItem',
   2025709351: 'Vehicle',
   1469714392: 'Consumables',
@@ -41,7 +41,20 @@ const bucketToType: { [hash: number]: string | undefined } = {
   1345459588: 'Pursuits',
   1506418338: 'SeasonalArtifacts',
   3683254069: 'Finishers',
-};
+} as const;
+
+type D2AdditionalBucketTypes = 'Milestone' | 'Unknown' | 'Class';
+type D1BucketTypes = 'Artifact' | 'Material';
+
+export type DimBucketType =
+  | typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw]
+  | D2AdditionalBucketTypes
+  | D1BucketTypes;
+
+// A mapping from the bucket hash to DIM item types
+const bucketToType: {
+  [hash: number]: DimBucketType | undefined;
+} = bucketToTypeRaw;
 
 const typeToSort: { [type: string]: string } = {};
 _.forIn(D2Categories, (types, category) => {
