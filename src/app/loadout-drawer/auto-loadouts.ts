@@ -261,7 +261,7 @@ const randomLoadoutTypes = new Set([
   'Primary',
   'Special',
   'Heavy',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Helmet',
