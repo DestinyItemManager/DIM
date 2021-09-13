@@ -19,7 +19,7 @@ const loadoutTypes = [
   'Primary',
   'Special',
   'Heavy',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Helmet',
