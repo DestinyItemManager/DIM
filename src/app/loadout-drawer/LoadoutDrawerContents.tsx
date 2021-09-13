@@ -46,7 +46,7 @@ const loadoutTypes = [
 // like emblems and ships and horns.
 export const fromEquippedTypes = [
   'Class',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Primary',
