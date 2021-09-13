@@ -1,6 +1,6 @@
 ## Next
 
-* Still adjusting to Stasis... `is:kineticslot` now identifies items in the "Kinetic" slot (the top weapon slot) but aren't Kinetic type damage.
+* Still adjusting to Stasis... `is:kineticslot` now identifies items which are in the "Kinetic" slot (the top weapon slot) but aren't Kinetic type damage.
 * Loadout Optimizer finds better mod assignments.
 * Engram power level is now also shown on hover.
 
