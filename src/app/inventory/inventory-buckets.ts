@@ -1,4 +1,5 @@
-import { DimBucketType } from 'app/destiny2/d2-buckets';
+import { D1BucketTypes } from 'app/destiny1/d1-buckets';
+import type { D2AdditionalBucketTypes, D2BucketTypes } from 'app/destiny2/d2-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 export interface InventoryBucket {
@@ -19,6 +20,8 @@ export interface InventoryBucket {
   inGeneral?: boolean;
   inProgress?: boolean;
 }
+
+export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTypes;
 
 export interface InventoryBuckets {
   byHash: { [hash: number]: InventoryBucket };

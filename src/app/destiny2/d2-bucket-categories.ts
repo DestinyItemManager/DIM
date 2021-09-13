@@ -1,4 +1,4 @@
-import { DimBucketType } from './d2-buckets';
+import type { DimBucketType } from 'app/inventory/inventory-buckets';
 
 export const D2Categories: {
   [key in 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Inventory']: DimBucketType[];

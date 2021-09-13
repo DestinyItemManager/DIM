@@ -1,7 +1,11 @@
 import { VENDORS } from 'app/search/d2-known-values';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import type {
+  DimBucketType,
+  InventoryBucket,
+  InventoryBuckets,
+} from '../inventory/inventory-buckets';
 import { D2Categories } from './d2-bucket-categories';
 import { D2ManifestDefinitions } from './d2-definitions';
 
@@ -43,13 +47,10 @@ const bucketToTypeRaw = {
   3683254069: 'Finishers',
 } as const;
 
-type D2AdditionalBucketTypes = 'Milestone' | 'Class' | 'Unknown';
-type D1BucketTypes = 'Artifact' | 'Material';
+export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
 
-export type DimBucketType =
-  | typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw]
-  | D2AdditionalBucketTypes
-  | D1BucketTypes;
+// these don't have bucket hashes but may be manually assigned to DimItems
+export type D2AdditionalBucketTypes = 'Milestone' | 'Unknown';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType: {
