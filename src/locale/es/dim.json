@@ -307,10 +307,10 @@
   "Infusion": {
     "Filter": "Filtrar objetos",
     "InfuseSource": "Selecciona objeto para infundir {{name}} en",
-    "InfuseTarget": "Selecciona objetos para infundir en {{name}}",
-    "InfusionMaterials": "Materiales para infundir",
-    "NoItems": "No hay objetos disponibles para infundir.",
-    "NoTransfer": "El material para infundir\n{{target}} no puede ser movido.",
+    "InfuseTarget": "Selecciona objeto para infundir en {{name}}",
+    "InfusionMaterials": "Materiales de infusión",
+    "NoItems": "No hay materiales de infusión disponibles.",
+    "NoTransfer": "El material de infusión para transferir {{target}} no se pudo mover.",
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
   },
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
+    "CopiedBuild": "Copiada la URL de la configuración de la equipación al portapapeles",
     "CreateLoadout": "Guardar Equipación",
     "ElementLockedDescription": "Los objetos usarán su elemento existente.",
     "ElementNotLockedDescription": "Los objetos cambiarán el elemento según sea necesario para asignar los modificadores.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Seleccina las estrategias de mejora de armadura basadas en los materiales que quieras gastar. El Opimizador de Equipaciones planea mejoras de armadura, que pueden incrementar estadísticas o modificadores de energía, o cambiar el elemento de un objeto.",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
+    "ShareBuild": "Compartir Configuración de la Equipación",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Puntería",
       "Inventory": "Inventario",
+      "Power": "Poder",
       "RPM": "DPM",
       "Recoil": "Retroceso",
       "Reload": "Recarga"

@@ -85,7 +85,8 @@
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
-    "InitialItem": "This is the item the Compare tool was launched from"
+    "InitialItem": "This is the item the Compare tool was launched from",
+    "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
@@ -452,7 +453,6 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}}",
-    "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -703,6 +703,7 @@
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
     "Quests": "Quests",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",

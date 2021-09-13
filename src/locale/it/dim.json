@@ -306,11 +306,11 @@
   },
   "Infusion": {
     "Filter": "Filtra oggetti",
-    "InfuseSource": "Selezionare oggetto in cui infondere {{name}}",
-    "InfuseTarget": "Selezionare oggetto da infondere in {{name}}",
-    "InfusionMaterials": "Materiali da Infusione",
-    "NoItems": "Nessun oggetto disponibile per l'infusione.",
-    "NoTransfer": "Trasferimento materiale per infusione\n {{target}} non può essere spostato.",
+    "InfuseSource": "Seleziona gli oggetti in cui infondere {{name}}",
+    "InfuseTarget": "Seleziona oggetto da infondere in {{name}}",
+    "InfusionMaterials": "Materiali per Infusione",
+    "NoItems": "Nessun oggetto disponibile per l'Infusione.",
+    "NoTransfer": "Trasferimento materiale d'Infusione\n{{target}} non può essere spostato.",
     "SwitchDirection": "Cambia",
     "TransferItems": "Trasferisci"
   },
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nel loadout \"{{name}}\" con questo nuovo set di armature?",
+    "CopiedBuild": "Copiate le impostazioni della build negli appunti",
     "CreateLoadout": "Salva loadout",
     "ElementLockedDescription": "Gli oggetti utilizzeranno il loro elemento attuale.",
     "ElementNotLockedDescription": "Gli oggetti cambieranno elemento se necessario per assegnare Modifiche.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Seleziona le strategie di potenziamento dell'armatura in base ai materiali che vuoi spendere. L'Ottimizzatore di Loadout pianifica i potenziamenti, che potrebbero aumentare le statistiche o l'energia per le Modifiche, oppure cambiare l'elemento energetico dell'oggetto.",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "ShareBuild": "Condividi le impostazioni della build",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Mira Assistita",
       "Inventory": "Inventario",
+      "Power": "Potere",
       "RPM": "p.a.m.",
       "Recoil": "Direzione Rinculo",
       "Reload": "Velocità Ricarica"

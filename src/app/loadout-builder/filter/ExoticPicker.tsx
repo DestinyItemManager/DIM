@@ -10,6 +10,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -160,8 +161,7 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
     [language, query, lockableExotics]
   );
 
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+  const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
   return (
     <Sheet

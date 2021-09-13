@@ -309,8 +309,8 @@
     "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
     "InfuseTarget": "{{name}}에 주입할 아이템 선택",
     "InfusionMaterials": "주입 재료",
-    "NoItems": "주입할 수 있는 아이템이 존재하지 않음",
-    "NoTransfer": "주입 재료 이동\n{{target}}은(는) 옮겨질 수 없습니다.",
+    "NoItems": "주입할 수 있는 아이템이 없음.",
+    "NoTransfer": "주입 재료 이동\n{{target}}을(를) 옮길 수 없습니다.",
     "SwitchDirection": "전환",
     "TransferItems": "이동"
   },
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
+    "CopiedBuild": "빌드 설정 URL이 클립보드로 복사됨",
     "CreateLoadout": "로드아웃 저장",
     "ElementLockedDescription": "아이템의 현재 에너지 유형이 사용됩니다.",
     "ElementNotLockedDescription": "개조 부품을 할당하기 위해 필요한 경우 아이템의 에너지 유형이 변경됩니다.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "사용할 재료에 따라 방어구 업그레이드 전략을 선택합니다. 로드아웃 최적화는 방어구 업그레이드 계획을 세워 능력치나 개조 부품 에너지를 증가시키거나 아이템의 에너지 유형을 변경시킬 수 있습니다.",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
+    "ShareBuild": "빌드 설정 공유",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "조준",
       "Inventory": "소지품",
+      "Power": "전투력",
       "RPM": "RPM",
       "Recoil": "반동",
       "Reload": "재장전"

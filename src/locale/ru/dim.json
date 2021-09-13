@@ -305,14 +305,14 @@
     "Vault": "Отправить в Хранилище"
   },
   "Infusion": {
-    "Filter": "Поиск/Фильтр",
-    "InfuseSource": "Выберите что улучшить за счёт {{name}}",
-    "InfuseTarget": "Выберите чем пожертвовать для улучшения {{name}}",
-    "InfusionMaterials": "Материалы для Синтеза",
-    "NoItems": "Нет предметов для синтеза.",
-    "NoTransfer": "Перемещение расходников синтеза\n {{target}} не удается переместить.",
-    "SwitchDirection": "Наоборот",
-    "TransferItems": "Передать"
+    "Filter": "Filter items",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfusionMaterials": "Infusion Materials",
+    "NoItems": "No infusable items available.",
+    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
     "ConfirmOverwrite": "Выбранные предметы заменят аналоги в Наборе \"{{name}}\". Продолжаем? ",
+    "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Сохранить Набор",
     "ElementLockedDescription": "Items will use their existing element.",
     "ElementNotLockedDescription": "Items will change element as needed to assign mods.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Select armor upgrade strategies based on the materials you want to spend. Loadout Optimizer plans armor upgrades, which may increase stats or mod energy, or change an item's element.",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
+    "ShareBuild": "Share Build Settings",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",
@@ -580,7 +582,7 @@
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "EquipWithName": "Надеть на {{character}}",
-    "Infuse": "Синтез",
+    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
       "Locked": "Заблокировано",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Помощь в прицеливании",
       "Inventory": "Инвентарь",
+      "Power": "Power",
       "RPM": "Выстрелов в минуту",
       "Recoil": "Отдача",
       "Reload": "Скорость перезарядки"

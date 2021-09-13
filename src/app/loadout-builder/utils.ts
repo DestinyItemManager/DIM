@@ -137,9 +137,11 @@ export function upgradeSpendTierToMaxEnergy(
 export function canSwapEnergyFromUpgradeSpendTier(
   defs: D2ManifestDefinitions,
   tier: UpgradeSpendTier,
-  item: DimItem
+  item: DimItem,
+  lockItemEnergyType: boolean
 ) {
   if (
+    lockItemEnergyType ||
     !item.energy ||
     tier === UpgradeSpendTier.Nothing ||
     tier === UpgradeSpendTier.AscendantShardsLockEnergyType

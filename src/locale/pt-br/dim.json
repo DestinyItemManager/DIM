@@ -306,11 +306,11 @@
   },
   "Infusion": {
     "Filter": "Filtrar itens",
-    "InfuseSource": "Selecione o item para infundir {{name}} em",
+    "InfuseSource": "Selecione o item para infundir {{name}}",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
-    "NoTransfer": "O material para infusão\n{{target}} não pôde ser movido.",
+    "NoTransfer": "O material de infusão\n {{target}} não pode ser movido.",
     "SwitchDirection": "Inverter",
     "TransferItems": "Transferir"
   },
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",
+    "CopiedBuild": "URL de compartilhamento copiada",
     "CreateLoadout": "Salvar set",
     "ElementLockedDescription": "O elemento atual dos itens serão mantidos.",
     "ElementNotLockedDescription": "O elemento dos itens serão modificados se necessário para atribuir mods.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Selecione a estratégia de aperfeiçoamento em armaduras baseando-se nos materiais que você pretende investir. O Otimizador planejará as melhorias nas armaduras, podendo aumentar os atributos, indicar mods energéticos específicos ou então sugerir mudanças no tipo de elemento do item.",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
+    "ShareBuild": "Compartilhar esta configuração",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
@@ -580,7 +582,7 @@
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "EquipWithName": "Equipar em {{character}}",
-    "Infuse": "Infunda",
+    "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
       "Locked": "Bloqueado",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Mira",
       "Inventory": "Inventário",
+      "Power": "Poder",
       "RPM": "RPM",
       "Recoil": "Recuo",
       "Reload": "Recarregamento"
