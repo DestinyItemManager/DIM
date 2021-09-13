@@ -89,7 +89,7 @@ export function findSimilarArmors(
 }
 
 const bucketToSearch = {
-  [BucketHashes.KineticWeapons]: `is:kinetic`,
+  [BucketHashes.KineticWeapons]: `is:kineticslot`,
   [BucketHashes.EnergyWeapons]: `is:energy`,
   [BucketHashes.PowerWeapons]: `is:heavy`,
 };
