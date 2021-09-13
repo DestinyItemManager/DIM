@@ -116,7 +116,11 @@ export default function InventoryItem({
       id={id || item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      title={`${item.name}\n${item.typeName}`}
+      title={
+        item.destinyVersion === 2 && item.isEngram
+          ? `${item.name}\n${item.primStat?.value}`
+          : `${item.name}\n${item.typeName}`
+      }
       className={itemStyles}
       ref={innerRef}
     >
