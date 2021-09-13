@@ -31,11 +31,7 @@ export function SpecialtyModSlotIcon({
       {modMetadatas.map((m) => {
         const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
         return (
-          <PressTip
-            elementType="span"
-            tooltip={emptySlotItem.itemTypeDisplayName}
-            key={emptySlotItem.hash}
-          >
+          <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
             <div
               className={clsx(className, styles.specialtyModIcon, {
                 [styles.lowRes]: lowRes,

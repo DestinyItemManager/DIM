@@ -75,17 +75,18 @@ export const cosmeticSvgByCategoryHash = {
 
 export const consumableSvgByCategoryHash = {};
 
-/** an SVG of the weapon's type, or slot, if possible */
-export function getWeaponSvgIcon(item: DimItem) {
+/** an SVG of the weapon's type, if determinable */
+export function getWeaponTypeSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponTypeSvgByCategoryHash[ich] ?? weaponSlotSvgByCategoryHash[ich];
+    const svg: string = weaponTypeSvgByCategoryHash[ich];
     if (svg) {
       return svg;
     }
   }
 }
+
 /** an SVG of the weapon's slot, if possible */
 export function getWeaponSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
@@ -96,31 +97,10 @@ export function getWeaponSlotSvgIcon(item: DimItem) {
   }
 }
 
-/** an SVG of the weapon's type, or slot, if possible */
-export function getArmorSvgIcon(item: DimItem) {
-  // reverse through the ICHs because most specific is last,
-  // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
+/** an SVG of the armor's slot, if determinable */
+export function getArmorSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
     const svg: string = armorSlotSvgByCategoryHash[ich];
-    if (svg) {
-      return svg;
-    }
-  }
-}
-
-/**
- * an SVG of the item's type, or undefined.
- * i like this idea but not sure where to employ it yet.
- */
-export function getItemSvgIcon(item: DimItem) {
-  for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string =
-      weaponTypeSvgByCategoryHash[ich] ??
-      weaponSlotSvgByCategoryHash[ich] ??
-      armorSlotSvgByCategoryHash[ich] ??
-      armorClassSvgByCategoryHash[ich] ??
-      cosmeticSvgByCategoryHash[ich] ??
-      consumableSvgByCategoryHash[ich];
     if (svg) {
       return svg;
     }
