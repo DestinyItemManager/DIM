@@ -305,14 +305,14 @@
     "Vault": "Wyślij przedmiot do schowka"
   },
   "Infusion": {
-    "Filter": "Filtruj przedmioty",
-    "InfuseSource": "Wybierz przedmiot do nasycenia używając {{name}}",
-    "InfuseTarget": "Wybierz przedmiot do nasycenia {{name}}",
-    "InfusionMaterials": "Materiały do Nasycenia",
-    "NoItems": "Brak przedmiotów do użycia w nasyceniu.",
-    "NoTransfer": "Przenoszenie materiału do nasycenia\n {{target}} nie może być przeniesiony.",
-    "SwitchDirection": "Przełącz",
-    "TransferItems": "Przenieś"
+    "Filter": "Filter items",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfusionMaterials": "Infusion Materials",
+    "NoItems": "No infusable items available.",
+    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",
+    "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Zapisz Uzbrojenie",
     "ElementLockedDescription": "Items will use their existing element.",
     "ElementNotLockedDescription": "Items will change element as needed to assign mods.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Wybierz strategie ulepszenia pancerza na podstawie materiałów, które chcesz wydać. Optymalizator uzbrojenia planuje ulepszenia pancerza, które mogą zwiększyć statystyki lub energię modyfikacji lub zmienić element przedmiotu.",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
+    "ShareBuild": "Share Build Settings",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
@@ -580,7 +582,7 @@
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "EquipWithName": "Załóż na {{character}}",
-    "Infuse": "Nasyć",
+    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
       "Locked": "Zablokowane",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Cel",
       "Inventory": "Ekwipunek",
+      "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Odrzut",
       "Reload": "Przeładowanie"

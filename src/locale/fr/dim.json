@@ -305,14 +305,14 @@
     "Vault": "Envoyer un objet au coffre"
   },
   "Infusion": {
-    "Filter": "Filtrer les objets",
-    "InfuseSource": "Sélectionnez un objet dans lequel infuser {{name}}",
-    "InfuseTarget": "Sélectionner un objet à infuser dans {{name}}",
-    "InfusionMaterials": "Matériels d'Infusion",
-    "NoItems": "Pas d'objets infusibles disponibles.",
-    "NoTransfer": "Transférer matériel d'infusion\n{{target}} ne peut pas être déplacé.",
-    "SwitchDirection": "Inverser",
-    "TransferItems": "Transférer"
+    "Filter": "Filter items",
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfusionMaterials": "Infusion Materials",
+    "NoItems": "No infusable items available.",
+    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "Choisissez un autre objet",
     "CompareLoadout": "Comparer Arsenal",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'arsenal \"{{name}}\" par ce nouvel ensemble d'armure?",
+    "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Sauvegarder Arsenal",
     "ElementLockedDescription": "Les objets utiliseront leur élément actuel.",
     "ElementNotLockedDescription": "Les objets changeront leur élément pour permettre l'équipement de mods.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Sélectionnez la stratégie d'amélioration d'armure en fonction des matériaux que vous souhaitez dépenser. L'optimiseur d'arsenal prévois les améliorations d'armure, ce qui peut augmenter le total de stats ou d'énergie, ou changer l'élément d'un objet.",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
+    "ShareBuild": "Share Build Settings",
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
     "TheseModsCouldNotBeAssigned": "Ces mods n'ont pas pu être assigné à l'arsenal existant.",
@@ -580,7 +582,7 @@
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
     "EquipWithName": "Équiper à {{character}}",
-    "Infuse": "Infuser",
+    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
       "Locked": "Verrouillé",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Visée",
       "Inventory": "Inventaire",
+      "Power": "Power",
       "RPM": "CPM",
       "Recoil": "Recul",
       "Reload": "Recharger"

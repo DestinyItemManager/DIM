@@ -14,12 +14,29 @@ import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
-const itemSort = chainComparator<VendorItem>(
-  compareBy((item) => item.item?.typeName),
-  compareBy((item) => item.item?.tier),
-  compareBy((item) => item.item?.icon),
-  compareBy((item) => item.item?.name)
-);
+function itemSort(category: string) {
+  if (category === 'category.rank_rewards_seasonal') {
+    return chainComparator<VendorItem>(
+      compareBy((item) => item.item?.tier),
+      compareBy((item) => parseInt(item.item?.id ?? '', 10))
+    );
+  } else if (category === 'category_bounties') {
+    return chainComparator<VendorItem>(
+      compareBy((item) => item.item?.typeName),
+      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
+      compareBy((item) => item.item?.itemCategoryHashes)
+    );
+  } else if (category === 'category_weapon') {
+    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes));
+  } else if (category.startsWith('category_tier')) {
+    return undefined;
+  } else {
+    return chainComparator<VendorItem>(
+      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
+      compareBy((item) => item.item?.itemCategoryHashes)
+    );
+  }
+}
 
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
@@ -50,6 +67,7 @@ export default function VendorItems({
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
   const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
   const factionProgress = vendor?.component?.progression;
+
   let currencies = vendor.currencies;
 
   // add in faction tokens if this vendor has them
@@ -89,7 +107,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {!filtering && ((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
+        {((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
@@ -130,7 +148,7 @@ export default function VendorItems({
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
-                    .sort(itemSort)
+                    .sort(itemSort(vendor.def.displayCategories[categoryIndex]?.identifier))
                     .map(
                       (item) =>
                         item.item && (

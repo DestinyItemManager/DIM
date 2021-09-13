@@ -8,13 +8,15 @@ interface Props {
   level?: number;
   /** The icon to use */
   icon: string;
+  /** The small transparent icon overlay for ritual vendors */
+  icon2?: string;
   className?: string;
 }
 
 /**
- * A diamond-shaped progress bar (from faction icons).
+ * A circle-shaped progress bar (from faction icons).
  */
-export default function DiamondProgress({ progress, level, icon, className }: Props) {
+export default function CircleProgress({ progress, level, icon, icon2, className }: Props) {
   const style = {
     strokeDashoffset: 121.622368 - 121.622368 * progress,
   };
@@ -23,15 +25,19 @@ export default function DiamondProgress({ progress, level, icon, className }: Pr
     <div className={className}>
       <svg viewBox="0 0 48 48">
         <image xlinkHref={icon} width="48" height="48" />
+        <image xlinkHref={icon2} x="6" y="6" width="36" height="36" />
         {progress > 0 && (
-          <polygon
+          <circle
             strokeDasharray="121.622368"
             style={style}
             fillOpacity="0"
             stroke="#FFF"
             strokeWidth="3"
-            points="24,2.5 45.5,24 24,45.5 2.5,24"
+            cx="24"
+            cy="24"
+            r="21"
             strokeLinecap="butt"
+            transform="rotate(-90 24 24)"
           />
         )}
       </svg>
