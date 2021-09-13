@@ -4,13 +4,13 @@
   "files.trimTrailingWhitespace": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
-  "jest.autoEnable": false,
+  "jest.autoRun": "off",
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {
     "**/data/d1/manifests": true
   },
-  "jest.pathToConfig": "jest.config.js",
+  "jest.jestCommandLine": "yarn test",
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": false
@@ -26,7 +26,8 @@
       "source.organizeImports": false
     }
   },
-  "cSpell.enabledLanguageIds": ["jsonc", "json", "markdown"],
+  "cSpell.language": "en",
+  "cSpell.enabledLanguageIds": ["jsonc", "json", "markdown", "typescript", "typescriptreact"],
   "cSpell.allowCompoundWords": true,
   "cSpell.ignorePaths": [
     ".vscode",
