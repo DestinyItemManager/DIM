@@ -67,9 +67,9 @@ export default function LoadoutDrawerBucket({
                 {unequippedItems.map((item) => (
                   <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
                 ))}
-                {equippedItems.length > 0 &&
-                  unequippedItems.length < bucket.capacity - 1 &&
-                  bucket.type !== 'Class' && <AddButton onClick={() => pickLoadoutItem(bucket)} />}
+                {equippedItems.length > 0 && unequippedItems.length < bucket.capacity - 1 && (
+                  <AddButton onClick={() => pickLoadoutItem(bucket)} />
+                )}
               </div>
             )}
           </div>

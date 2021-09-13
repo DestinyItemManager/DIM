@@ -16,9 +16,10 @@ export default function FactionIcon(props: {
   vendor?: DestinyVendorComponent;
 }) {
   const { factionProgress, factionDef, vendor } = props;
-  const defs = useD2Definitions()!
+  const defs = useD2Definitions()!;
   const level = (vendor?.seasonalRank ?? factionProgress.level) + 1;
-  const vendorDef = (vendor?.vendorHash ? defs.Vendor.get(vendor.vendorHash) : undefined) ?? undefined;
+  const vendorDef =
+    (vendor?.vendorHash ? defs.Vendor.get(vendor.vendorHash) : undefined) ?? undefined;
   const progressionType = vendorDef?.vendorProgressionType;
   const icon2 = vendorDef?.displayProperties.smallTransparentIcon;
 

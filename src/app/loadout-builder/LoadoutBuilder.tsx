@@ -376,12 +376,12 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
+            lockedMods={lockedMods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}
             enabledStats={enabledStats}
-            lockedMods={lockedMods}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}

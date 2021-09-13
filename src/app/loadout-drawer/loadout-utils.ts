@@ -18,7 +18,7 @@ import { Loadout, LoadoutItem } from './loadout-types';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
-const gearSlotOrder = [
+const gearSlotOrder: DimItem['type'][] = [
   ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
   ...D2Categories.Armor,
 ];

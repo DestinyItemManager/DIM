@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { assignModsToArmorSet } from '../mod-utils';
+import { getModAssignments } from '../mod-assignments';
 import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
@@ -19,12 +19,12 @@ import SetStats from './SetStats';
 interface Props {
   set: ArmorSet;
   selectedStore?: DimStore;
+  lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   style: React.CSSProperties;
   statOrder: ArmorStatHashes[];
   forwardedRef?: React.Ref<HTMLDivElement>;
-  enabledStats: Set<ArmorStatHashes>;
-  lockedMods: PluggableInventoryItemDefinition[];
+  enabledStats: Set<number>;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -40,12 +40,12 @@ interface Props {
 function GeneratedSet({
   set,
   selectedStore,
+  lockedMods,
   pinnedItems,
   style,
   statOrder,
   enabledStats,
   forwardedRef,
-  lockedMods,
   loadouts,
   lbDispatch,
   params,
@@ -67,14 +67,6 @@ function GeneratedSet({
     return null;
   }
 
-  const [assignedMods] = assignModsToArmorSet(
-    defs,
-    set.armor.map((items) => items[0]),
-    lockedMods,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
-
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
     loadouts.some((l) => l.classType === selectedStore?.classType);
@@ -92,6 +84,14 @@ function GeneratedSet({
       break;
     }
   }
+
+  const modAssignments = getModAssignments(
+    displayedItems,
+    lockedMods,
+    defs,
+    upgradeSpendTier,
+    lockItemEnergyType
+  );
 
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
@@ -114,7 +114,7 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
-              assignedMods={assignedMods[item.id]}
+              assignedMods={modAssignments.get(item.id)}
               showEnergyChanges={Boolean(lockedMods.length)}
             />
           ))}

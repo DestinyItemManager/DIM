@@ -6,7 +6,6 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
-import { DamageType } from 'bungie-api-ts/destiny2';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -115,7 +114,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 }
 
 const bucketToSearch = {
-  [BucketHashes.KineticWeapons]: `is:kinetic`,
+  [BucketHashes.KineticWeapons]: `is:kineticslot`,
   [BucketHashes.EnergyWeapons]: `is:energy`,
   [BucketHashes.PowerWeapons]: `is:heavy`,
 };
@@ -175,15 +174,13 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     },
 
     // same weapon type and also matching element (& usually same-slot because same element)
-    exampleItem.element &&
-      // Don't bother with this for kinetic, since we also have "kinetic slot" as an option
-      exampleItem.element.enumValue !== DamageType.Kinetic && {
-        buttonLabel: [
-          <ElementIcon key={exampleItem.id} element={exampleItem.element} />,
-          <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: `is:${getItemDamageShortName(exampleItem)}`,
-      },
+    exampleItem.element && {
+      buttonLabel: [
+        <ElementIcon key={exampleItem.id} element={exampleItem.element} />,
+        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+      ],
+      query: `is:${getItemDamageShortName(exampleItem)}`,
+    },
 
     // exact same weapon, judging by name. might span multiple expansions.
     {
