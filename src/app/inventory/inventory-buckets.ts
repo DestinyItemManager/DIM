@@ -1,3 +1,4 @@
+import { DimBucketType } from 'app/destiny2/d2-buckets';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 export interface InventoryBucket {
@@ -8,7 +9,7 @@ export interface InventoryBucket {
   readonly capacity: number;
   readonly accountWide: boolean;
   readonly category: BucketCategory;
-  readonly type?: string;
+  readonly type?: DimBucketType;
   readonly sort?: string;
   vaultBucket?: InventoryBucket;
   // TODO: how to handle inPostmaster, etc? should probably be a function

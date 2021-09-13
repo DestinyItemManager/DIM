@@ -137,7 +137,7 @@ function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   const toMove = store.items.filter(
     (i) =>
       !i.notransfer &&
-      (i.isEngram || (i.equipment && i.type === 'Uncommon') || glimmerHashes.has(i.hash))
+      (i.isEngram || (i.equipment && i.tier === 'Uncommon') || glimmerHashes.has(i.hash))
   );
 
   if (toMove.length === 0) {
