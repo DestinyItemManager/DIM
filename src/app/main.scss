@@ -300,12 +300,6 @@ select {
     margin: 0 0.3em;
     filter: drop-shadow(0 0 1px black);
     transition: filter 150ms ease-out;
-    & + img {
-      margin-left: 0;
-    }
-    // &:first-child {
-    //   margin: 0 0.3em 0 0;
-    // }
   }
   &.danger {
     &:hover {

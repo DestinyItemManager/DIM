@@ -65,6 +65,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             lowRes
             item={exampleItem}
           />,
+          <ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         // buttonLabel: specialtyModSlotNames?.join(' + '),
         query: `not:sunset ${exampleItemModSlotMetadatas
@@ -95,6 +96,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             lowRes
             item={exampleItem}
           />,
+          <ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `not:sunset is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
