@@ -30,9 +30,7 @@ export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   return -1;
 }
 
-const noModsPermutations = [[null, null, null, null, null]];
-
-function stringifyModPermutation(perm: (ProcessMod | null)[]) {
+export function stringifyModPermutation(perm: (ProcessMod | null)[]) {
   let permString = '';
   for (const modOrNull of perm) {
     if (modOrNull) {
@@ -41,53 +39,6 @@ function stringifyModPermutation(perm: (ProcessMod | null)[]) {
     permString += ',';
   }
   return permString;
-}
-
-/**
- * This is heaps algorithm implemented for generating mod permutations.
- * https://en.wikipedia.org/wiki/Heap%27s_algorithm
- *
- * Note that we ensure the array length is always 5 so mods are aligned
- * with the 5 items.
- */
-export function generateModPermutations(mods: ProcessMod[]): (ProcessMod | null)[][] {
-  if (!mods.length) {
-    return noModsPermutations;
-  }
-  const cursorArray = [0, 0, 0, 0, 0];
-  const modsCopy: (ProcessMod | null)[] = Array.from(mods).sort(sortProcessModsOrItems);
-  const containsSet = new Set<string>();
-
-  while (modsCopy.length < 5) {
-    modsCopy.push(null);
-  }
-
-  let i = 0;
-
-  const rtn = [Array.from(modsCopy)];
-  containsSet.add(stringifyModPermutation(modsCopy));
-
-  while (i < 5) {
-    if (cursorArray[i] < i) {
-      if (i % 2 === 0) {
-        [modsCopy[0], modsCopy[i]] = [modsCopy[i], modsCopy[0]];
-      } else {
-        [modsCopy[cursorArray[i]], modsCopy[i]] = [modsCopy[i], modsCopy[cursorArray[i]]];
-      }
-      const uniqueConstraint = stringifyModPermutation(modsCopy);
-      if (!containsSet.has(uniqueConstraint)) {
-        rtn.push(Array.from(modsCopy));
-        containsSet.add(uniqueConstraint);
-      }
-      cursorArray[i] += 1;
-      i = 0;
-    } else {
-      cursorArray[i] = 0;
-      i += 1;
-    }
-  }
-
-  return rtn;
 }
 
 function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
@@ -252,6 +203,8 @@ export function canTakeSlotIndependantMods(
           }
         }
 
+        // To hit this point we need to have found a valid set of raid mods
+        // if none is found the continue's will skip this.
         return true;
       }
     }

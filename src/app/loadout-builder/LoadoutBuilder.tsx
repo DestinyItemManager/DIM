@@ -386,6 +386,8 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
+            upgradeSpendTier={upgradeSpendTier}
+            lockItemEnergyType={lockItemEnergyType}
           />
         )}
         {modPicker.open &&
@@ -414,6 +416,7 @@ function LoadoutBuilder({
               statOrder={statOrder}
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
+              lockItemEnergyType={lockItemEnergyType}
               params={params}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,

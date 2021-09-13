@@ -20,7 +20,7 @@ export const doEnergiesMatch = (
   (!mod.plug.energyCost ||
     mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
     mod.plug.energyCost.energyType === item.energy.energyType ||
-    (!lockItemEnergyType && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item)));
+    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType));
 
 /**
  * Checks to see if some mod in a collection of LockedMod or LockedMod,
