@@ -113,6 +113,15 @@ function couldBeD1Account(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
   );
 }
 
+function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoCard) {
+  return (
+    destinyAccount.bungieGlobalDisplayName +
+    (destinyAccount.bungieGlobalDisplayNameCode
+      ? `#${destinyAccount.bungieGlobalDisplayNameCode.toString().padStart(4, '0')}`
+      : '')
+  );
+}
+
 /**
  * @param accounts raw Bungie API accounts response
  */
@@ -124,7 +133,7 @@ async function generatePlatforms(
   const accountPromises = accounts.profiles
     .flatMap((destinyAccount) => {
       const account: DestinyAccount = {
-        displayName: destinyAccount.displayName,
+        displayName: formatBungieName(destinyAccount),
         originalPlatformType: destinyAccount.membershipType,
         membershipId: destinyAccount.membershipId,
         platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
@@ -147,7 +156,7 @@ async function generatePlatforms(
       accounts.profilesWithErrors.flatMap((errorProfile) => {
         const destinyAccount = errorProfile.infoCard;
         const account: DestinyAccount = {
-          displayName: destinyAccount.displayName,
+          displayName: formatBungieName(destinyAccount),
           originalPlatformType: destinyAccount.membershipType,
           membershipId: destinyAccount.membershipId,
           platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
