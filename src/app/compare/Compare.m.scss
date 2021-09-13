@@ -55,8 +55,16 @@
     // Undo the general mobile "big-buttons"
     padding: 4px 10px;
     font-size: 12px;
+    // button outer spacing margin
     &:nth-last-child(n + 2) {
       margin-right: 3px;
+    }
+    // button's children's spacing margin
+    :nth-child(n + 2) {
+      margin-left: 4px;
+    }
+    img {
+      margin: 0;
     }
   }
   :global(.setting) {

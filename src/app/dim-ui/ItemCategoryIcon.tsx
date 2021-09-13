@@ -27,7 +27,7 @@ export function WeaponSlotIcon({ item, className }: { item: DimItem; className?:
 
 export function WeaponTypeIcon({ item, className }: { item: DimItem; className?: string }) {
   return (
-    <PressTip elementType="span" tooltip={item.bucket.name}>
+    <PressTip elementType="span" tooltip={item.typeName}>
       <img src={getWeaponTypeSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
     </PressTip>
   );

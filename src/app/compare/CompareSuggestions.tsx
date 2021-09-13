@@ -1,10 +1,8 @@
 import { DimItem } from 'app/inventory/item-types';
 import { filterFactorySelector } from 'app/search/search-filter';
-import clsx from 'clsx';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
-import styles from './CompareSuggestions.m.scss';
 
 /**
  * Display a row of buttons that suggest alternate queries based on an example item.
@@ -62,7 +60,7 @@ export default memo(function CompareSuggestions({
         <button
           key={query}
           type="button"
-          className={clsx('dim-button', styles.compareButton)}
+          className={'dim-button'}
           title={query}
           onClick={() => onQueryChanged(query)}
         >
