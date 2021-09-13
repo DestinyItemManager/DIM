@@ -1,4 +1,4 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ItemCategoryIcon, WeaponSlotIcon } from 'app/dim-ui/ItemCategoryIcon';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
@@ -7,6 +7,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
 import { DamageType } from 'bungie-api-ts/destiny2';
+import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -14,7 +15,7 @@ import styles from './CompareButtons.m.scss';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
 export interface CompareButton {
-  buttonLabel: React.ReactNode;
+  buttonLabel: React.ReactNode[];
   /** The query that results in this list of items */
   query: string;
 }
@@ -22,21 +23,16 @@ export interface CompareButton {
 /**
  * Generate possible comparisons for armor, given a reference item.
  */
-export function findSimilarArmors(
-  defs: D2ManifestDefinitions | undefined,
-  exampleItem: DimItem
-): CompareButton[] {
+export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
   const exampleItemElementIcon = <ElementIcon key={exampleItem.id} element={exampleItem.element} />;
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
-  // const specialtyModSlotNames =
-  //   defs && getItemInterestingSpecialtyModSlotDisplayNames(exampleItem, defs);
 
   let comparisonSets: CompareButton[] = _.compact([
     // same slot on the same class
     {
       buttonLabel: [
         <ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        ' + ' + 'Y1&2 Armor', // t() this
+        '+ ' + t('Stats.Sunset'), // t() this
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
@@ -44,20 +40,17 @@ export function findSimilarArmors(
     // above but also has to be armor 2.0
     exampleItem.destinyVersion === 2 && {
       buttonLabel: [<ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
-      query: 'is:armor2.0',
+      query: 'not:sunset',
     },
 
     // above but also has to be legendary
     exampleItem.destinyVersion === 2 &&
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
+          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
           <ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-          <img
-            key="rarity"
-            src="https://www.bungie.net/common/destiny2_content/icons/7eea47cc31d9b065213f85169e668b6e.png"
-          />,
         ],
-        query: 'is:armor2.0 is:legendary',
+        query: 'not:sunset is:legendary',
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -74,7 +67,7 @@ export function findSimilarArmors(
           />,
         ],
         // buttonLabel: specialtyModSlotNames?.join(' + '),
-        query: `is:armor2.0 ${exampleItemModSlotMetadatas
+        query: `not:sunset ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
@@ -86,7 +79,7 @@ export function findSimilarArmors(
           exampleItemElementIcon,
           <ItemCategoryIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `is:armor2.0 is:${getItemDamageShortName(exampleItem)}`,
+        query: `not:sunset is:${getItemDamageShortName(exampleItem)}`,
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -103,14 +96,14 @@ export function findSimilarArmors(
             item={exampleItem}
           />,
         ],
-        query: `is:armor2.0 is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
+        query: `not:sunset is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
 
     // basically stuff with the same name & categories
     {
-      buttonLabel: exampleItem.name,
+      buttonLabel: [exampleItem.name],
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: `name:"${exampleItem.name}"`,
     },
@@ -151,7 +144,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // same weapon type
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
-      buttonLabel: <ItemCategoryIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+      buttonLabel: [<ItemCategoryIcon key="type" item={exampleItem} className={styles.svgIcon} />],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
@@ -164,17 +157,20 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       query: bucketToSearch[exampleItem.bucket.hash],
     },
 
-    // same weapon type plus matching intrinsic (rpm+impact..... ish)
+    // above, but also matching intrinsic (rpm+impact..... ish)
     {
       buttonLabel: [
         intrinsicName,
+        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         <ItemCategoryIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
       query:
-        exampleItem.destinyVersion === 2 && intrinsic
+        bucketToSearch[exampleItem.bucket.hash] +
+        ' ' +
+        (exampleItem.destinyVersion === 2 && intrinsic
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
             `perkname:"${intrinsic.displayProperties.name}"`
-          : `stat:rpm:${getRpm(exampleItem)}`,
+          : `stat:rpm:${getRpm(exampleItem)}`),
     },
 
     // same weapon type and also matching element (& usually same-slot because same element)
@@ -190,7 +186,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
 
     // exact same weapon, judging by name. might span multiple expansions.
     {
-      buttonLabel: adeptStripped,
+      buttonLabel: [adeptStripped],
       query: `name:"${adeptStripped}"`,
     },
   ]);
@@ -206,13 +202,13 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     // same item type
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
-      buttonLabel: exampleItem.typeName,
+      buttonLabel: [exampleItem.typeName],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
     // exact same item, judging by name. might span multiple expansions.
     {
-      buttonLabel: exampleItem.name,
+      buttonLabel: [exampleItem.name],
       query: `name:"${exampleItem.name}"`,
     },
   ]);
