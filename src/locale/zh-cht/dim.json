@@ -306,13 +306,13 @@
   },
   "Infusion": {
     "Filter": "Filter items",
-    "InfuseSource": "選擇要灌注入{{name}} 的物品",
-    "InfuseTarget": "選擇需要灌注至{{name}} 的物品：",
-    "InfusionMaterials": "灌注材料",
-    "NoItems": "沒有可用於灌注的物品.",
-    "NoTransfer": "移動灌注材料\n{{target}} 無法移動.",
-    "SwitchDirection": "轉換",
-    "TransferItems": "轉移"
+    "InfuseSource": "Select item to infuse {{name}} into",
+    "InfuseTarget": "Select item to infuse into {{name}}",
+    "InfusionMaterials": "Infusion Materials",
+    "NoItems": "No infusable items available.",
+    "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
+    "SwitchDirection": "Switch",
+    "TransferItems": "Transfer"
   },
   "ItemMove": {
     "Consolidate": "合併{{name}}",
@@ -425,6 +425,7 @@
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
+    "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Save Loadout",
     "ElementLockedDescription": "Items will use their existing element.",
     "ElementNotLockedDescription": "Items will change element as needed to assign mods.",
@@ -458,6 +459,7 @@
     "SelectAssumedArmorUpgradeDescription": "Select armor upgrade strategies based on the materials you want to spend. Loadout Optimizer plans armor upgrades, which may increase stats or mod energy, or change an item's element.",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
+    "ShareBuild": "Share Build Settings",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
@@ -580,7 +582,7 @@
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "EquipWithName": "Equip to {{character}}",
-    "Infuse": "灌注",
+    "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
       "Locked": "Locked",
@@ -677,6 +679,7 @@
     "Stats": {
       "Aim": "Aim",
       "Inventory": "Inventory",
+      "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Recoil",
       "Reload": "Reload"

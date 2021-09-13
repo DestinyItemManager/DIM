@@ -33,6 +33,12 @@
   @include phone-portrait {
     display: block;
   }
+  :global(.seasonalArtifact) & {
+    @include phone-portrait {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+  }
 }
 
 .categoryTitle {
@@ -54,6 +60,12 @@
     cursor: pointer;
     margin-bottom: 4px;
   }
+
+  :global(.seasonalArtifact) & {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
 }
 
 .vendorContents {
@@ -68,5 +80,9 @@
   margin-right: 32px;
   @include phone-portrait {
     margin-right: 0;
+  }
+  :global(.seasonalArtifact) & {
+    margin-right: 0px;
+    text-align: center;
   }
 }

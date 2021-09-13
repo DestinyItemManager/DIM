@@ -3,12 +3,14 @@
 interface CssExports {
   'bucket': string;
   'fixedLeft': string;
+  'highlightBar': string;
   'items': string;
   'options': string;
   'organizerLink': string;
   'sorted': string;
   'spacer': string;
   'statLabel': string;
+  'swipeAdvice': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
