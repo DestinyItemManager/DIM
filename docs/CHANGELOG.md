@@ -1,5 +1,7 @@
 ## Next
 
+* Still adjusting to Stasis... `is:kineticslot` now identifies items in the "Kinetic" slot (the top weapon slot) but aren't Kinetic type damage.
+
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
 * Loadout Optimizer remembers stats you've Ignored between sessions.
