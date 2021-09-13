@@ -32,7 +32,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [
         <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        '+ ' + t('Stats.Sunset'), // t() this
+        '+ ' + t('Stats.Sunset'),
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
@@ -67,7 +67,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        // buttonLabel: specialtyModSlotNames?.join(' + '),
         query: `not:sunset ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
