@@ -5,8 +5,6 @@
 
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
-## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
-
 * Loadout Optimizer remembers stats you've Ignored between sessions.
 * Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
 * Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
