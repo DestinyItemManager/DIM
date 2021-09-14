@@ -3,6 +3,8 @@
 * Loadout Optimizer finds better mod assignments.
 * Still adjusting to Stasis... `is:kineticslot` now identifies items in the "Kinetic" slot (the top weapon slot) but not Kinetic type damage.
 * Engram power level is now also shown on hover.
+* Clicking on the title of an item now brings up a new item detail page which shows all possible perks and wishlist rolls.
+* Note that D1 items no longer have a link at all. We're not adding D1 features anymore.
 
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
