@@ -150,7 +150,7 @@ function App({
                   '/vendors',
                   '/record-books',
                   '/activities',
-                  '/armory',
+                  '/armory/:itemHash',
                 ]}
                 exact
               >
