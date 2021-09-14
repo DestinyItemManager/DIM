@@ -58,24 +58,7 @@ export default function Links({ item }: { item: DimItem }) {
   );
 }
 
-function destinyDBLink(item: DimItem, language: string) {
-  // DTR 404s on the new D2 languages for D1 items
-  if (item.destinyVersion === 1) {
-    switch (language) {
-      case 'es-mx':
-        language = 'es';
-        break;
-      case 'pl':
-      case 'ru':
-      case 'zh-cht':
-      case 'zh-chs':
-        language = 'en';
-        break;
-    }
-
-    return `http://db.destinytracker.com/d${item.destinyVersion}/${language}/items/${item.hash}`;
-  }
-
+export function destinyDBLink(item: DimItem) {
   const DimItem = item;
   let perkQueryString = '';
 

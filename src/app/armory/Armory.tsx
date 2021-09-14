@@ -17,7 +17,7 @@ import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
 import MetricCategories from 'app/item-popup/MetricCategories';
-import { useDefinitions } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { AppIcon, compareIcon, faClock } from 'app/shell/icons';
@@ -41,7 +41,7 @@ export default function Armory({
   itemHash: number;
 }) {
   const dispatch = useThunkDispatch();
-  const defs = useDefinitions();
+  const defs = useD2Definitions();
   const storesLoaded = useSelector(storesLoadedSelector);
   useLoadStores(account, storesLoaded);
   const buckets = useSelector(bucketsSelector)!;
@@ -50,10 +50,6 @@ export default function Armory({
 
   if (!storesLoaded || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
-
-  if (defs.isDestiny1()) {
-    return <div>TODO: add D1 support</div>;
   }
 
   const itemDef = defs.InventoryItem.get(itemHash);

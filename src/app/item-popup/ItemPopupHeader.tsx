@@ -37,7 +37,7 @@ export default function ItemPopupHeader({
         [styles.pursuit]: item.pursuit,
       })}
     >
-      {noLink ? (
+      {noLink || item.destinyVersion === 1 ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
         <a className={styles.title} onClick={() => setShowArmory(true)}>
