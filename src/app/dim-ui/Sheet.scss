@@ -87,5 +87,9 @@ $control-color: rgba(255, 255, 255, 0.5);
     &:active {
       color: rgba(255, 255, 255, 1);
     }
+
+    &.sheet-no-header {
+      right: 8px;
+    }
   }
 }

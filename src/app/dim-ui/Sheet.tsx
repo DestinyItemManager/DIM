@@ -163,7 +163,7 @@ export default function Sheet({
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
     >
-      <a href="#" className="sheet-close" onClick={onClose}>
+      <a href="#" className={clsx('sheet-close', { 'sheet-no-header': !header })} onClick={onClose}>
         <AppIcon icon={disabledIcon} />
       </a>
 
@@ -181,7 +181,9 @@ export default function Sheet({
         )}
 
         <div
-          className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
+          className={clsx('sheet-contents', {
+            'sheet-has-footer': footer,
+          })}
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContentsRefFn}
         >
@@ -216,7 +218,7 @@ function useGlobalEscapeKey(onEscapePressed: () => void) {
 
 /**
  * Locks body scroll except for touches in the sheet contents, and adds a block-events
- * touch handler to sheeet contents.
+ * touch handler to sheet contents.
  */
 function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
   /** Block touch/click events for the inner scrolling area if it's not at the top. */
