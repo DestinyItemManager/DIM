@@ -1,11 +1,11 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import ItemGrid from 'app/inventory/ItemGrid';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
@@ -21,6 +21,7 @@ import { useDefinitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { AppIcon, compareIcon, faClock } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -45,6 +46,7 @@ export default function Armory({
   useLoadStores(account, storesLoaded);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const isPhonePortrait = useIsPhonePortrait();
 
   if (!storesLoaded || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -85,7 +87,7 @@ export default function Armory({
     <div
       className={clsx('dim-page', styles.armory)}
       style={
-        screenshot
+        screenshot && !isPhonePortrait
           ? {
               backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.75) 0px, rgba(0,0,0,0) 200px), linear-gradient(180deg, rgba(0,0,0,0) 400px, #0b0c0f 500px), url("${bungieNetPath(
                 screenshot
@@ -99,10 +101,10 @@ export default function Armory({
         <div className="item">
           <ItemIcon item={item} />
         </div>
-        <div>
-          <h1>{item.name}</h1>
+        <h1>{item.name}</h1>
+        <div className={styles.headerContent}>
           <div className={styles.subtitle}>
-            <ElementIcon element={item.element} />
+            <ElementIcon element={item.element} className={styles.element} />
             {item.breakerType && <BungieImage src={item.breakerType.displayProperties.icon} />}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
@@ -146,6 +148,12 @@ export default function Armory({
           {flavorText && <p className={styles.flavor}>{flavorText}</p>}
         </div>
       </div>
+
+      {isPhonePortrait && screenshot && (
+        <div className="item-details">
+          <BungieImage width="100%" src={screenshot} />
+        </div>
+      )}
 
       {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">

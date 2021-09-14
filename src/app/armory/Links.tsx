@@ -2,8 +2,10 @@ import { languageSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { DimItem } from 'app/inventory/item-types';
 import { LoreLink } from 'app/item-popup/ItemDescription';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
+import logo from 'images/dimlogo.svg';
 import lightgg from 'images/lightgg.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -11,6 +13,11 @@ import styles from './Links.m.scss';
 
 // TODO: permalink for sharing
 const links = [
+  {
+    name: 'DIM',
+    icon: logo,
+    link: (item: DimItem) => `armory/${item.hash}`,
+  },
   {
     name: 'Light.gg',
     icon: lightgg,
@@ -23,20 +30,25 @@ const links = [
     icon: destinysets,
     link: (item: DimItem, language: string) =>
       `https://data.destinysets.com/i/InventoryItem:${item.hash}?lang=${language}`,
+    hideOnPhone: true,
   },
 ];
 
 export default function Links({ item }: { item: DimItem }) {
   const language = useSelector(languageSelector);
+  const isPhonePortrait = useIsPhonePortrait();
   return (
     <ul className={styles.links}>
-      {links.map(({ link, name, icon }) => (
-        <li key={name}>
-          <ExternalLink href={link(item, language)}>
-            <img src={icon} height={16} width={16} /> {name}
-          </ExternalLink>
-        </li>
-      ))}
+      {links.map(
+        ({ link, name, icon, hideOnPhone }) =>
+          !(isPhonePortrait && hideOnPhone) && (
+            <li key={name}>
+              <ExternalLink href={link(item, language)}>
+                <img src={icon} height={16} width={16} /> {name}
+              </ExternalLink>
+            </li>
+          )
+      )}
       {item.loreHash && (
         <li>
           <LoreLink loreHash={item.loreHash} />

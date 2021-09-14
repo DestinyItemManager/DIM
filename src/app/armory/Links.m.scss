@@ -14,4 +14,16 @@
       margin-right: 0.2em;
     }
   }
+
+  @media (max-width: 675px) {
+    margin: 0 0 8px 0;
+    float: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  @include phone-portrait {
+    margin-right: 38px;
+  }
 }

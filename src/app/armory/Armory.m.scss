@@ -13,6 +13,9 @@
     margin-left: 0;
     margin-right: 0;
     max-width: 300px;
+    @include phone-portrait {
+      max-width: 100%;
+    }
   }
 
   h2 {
@@ -24,17 +27,31 @@
 
 .header {
   --item-size: 100px;
-  display: flex;
-  flex-direction: row;
+
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    'item title'
+    'item subtitle';
+  gap: 0 16px;
   margin-bottom: 16px;
 
+  @include phone-portrait {
+    --item-size: 50px;
+    grid-template-areas:
+      'item title'
+      'subtitle subtitle';
+    gap: 8px 8px;
+  }
+
   h1 {
+    grid-area: title;
     @include destiny-header;
     margin: 0 0 4px 0;
   }
 
   :global(.item) {
-    margin: 0 16px 16px 0;
+    grid-area: item;
     img {
       // We're scaling up, keep it sharp
       image-rendering: pixelated;
@@ -47,13 +64,24 @@
   }
 }
 
+.headerContent {
+  grid-area: subtitle;
+}
+
 .subtitle {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  margin-bottom: 4px;
   > * {
     margin: 0;
   }
   @include horizontal-space-children(4px);
+}
+
+.element {
+  height: 16px;
+  width: 16px;
 }
 
 .source {
@@ -76,4 +104,7 @@
 .section {
   width: 300px;
   margin-bottom: 10px;
+  @include phone-portrait {
+    width: 100%;
+  }
 }

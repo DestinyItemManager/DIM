@@ -48,6 +48,7 @@ class ActivityTracker extends React.Component<Props> {
   private refreshSubscription: () => void = _.noop;
 
   componentDidMount() {
+    document.addEventListener('focus', this.visibilityHandler);
     document.addEventListener('visibilitychange', this.visibilityHandler);
     document.addEventListener('online', this.refreshAccountData);
 
@@ -67,6 +68,7 @@ class ActivityTracker extends React.Component<Props> {
   }
 
   componentWillUnmount() {
+    document.removeEventListener('focus', this.visibilityHandler);
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     document.removeEventListener('online', this.refreshAccountData);
     this.clearTimer();

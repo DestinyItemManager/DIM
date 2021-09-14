@@ -2,8 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'armory': string;
+  'element': string;
   'flavor': string;
   'header': string;
+  'headerContent': string;
   'section': string;
   'source': string;
   'subtitle': string;
