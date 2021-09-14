@@ -267,7 +267,8 @@ function Compare({
       )}
       {organizerLink && (
         <Link className={styles.organizerLink} to={organizerLink}>
-          <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
+          <AppIcon icon={faList} />
+          <span>{t('Organizer.OpenIn')}</span>
         </Link>
       )}
     </div>

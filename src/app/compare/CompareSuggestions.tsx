@@ -1,5 +1,4 @@
 import { DimItem } from 'app/inventory/item-types';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
@@ -17,12 +16,11 @@ export default memo(function CompareSuggestions({
   categoryItems: DimItem[];
   onQueryChanged(query: string): void;
 }) {
-  const defs = useD2Definitions();
   const filterFactory = useSelector(filterFactorySelector);
 
   // Find all possible buttons
   const compareButtons = exampleItem.bucket.inArmor
-    ? findSimilarArmors(defs, exampleItem)
+    ? findSimilarArmors(exampleItem)
     : exampleItem.bucket.inWeapons
     ? findSimilarWeapons(exampleItem)
     : defaultComparisons(exampleItem);
@@ -62,11 +60,12 @@ export default memo(function CompareSuggestions({
         <button
           key={query}
           type="button"
-          className="dim-button"
+          className={'dim-button'}
           title={query}
           onClick={() => onQueryChanged(query)}
         >
-          {buttonLabel} ({items.length})
+          {buttonLabel.map((l) => (typeof l === 'string' ? <span key={l}>{l}</span> : l))}
+          <span key="itemcount">({items.length})</span>
         </button>
       ))}
     </>
