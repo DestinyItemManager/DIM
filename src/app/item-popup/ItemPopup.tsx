@@ -35,12 +35,17 @@ export default function ItemPopup({
   element,
   extraInfo,
   boundarySelector,
+  zIndex,
+  noLink,
   onClose,
 }: {
   item: DimItem;
   element?: HTMLElement;
   extraInfo?: ItemPopupExtraInfo;
   boundarySelector?: string;
+  zIndex?: number;
+  /** Don't allow opening Armory from the header link */
+  noLink?: boolean;
   onClose(): void;
 }) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
@@ -71,10 +76,13 @@ export default function ItemPopup({
     />
   );
 
+  const header = <ItemPopupHeader item={item} key={`header${item.index}`} noLink={noLink} />;
+
   return isPhonePortrait ? (
     <Sheet
       onClose={onClose}
-      header={<ItemPopupHeader item={item} key={`header${item.index}`} />}
+      zIndex={zIndex}
+      header={header}
       sheetClassName={clsx(
         'item-popup',
         `is-${item.tier}`,
@@ -109,6 +117,7 @@ export default function ItemPopup({
         tierClasses[item.tier],
         styles.desktopPopupRoot
       )}
+      style={{ zIndex }}
       ref={popupRef}
       role="dialog"
       aria-modal="false"
@@ -117,7 +126,7 @@ export default function ItemPopup({
         <ItemTagHotkeys item={item} />
         <div className={styles.desktopPopup}>
           <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-            <ItemPopupHeader item={item} key={`header${item.index}`} />
+            {header}
             {body}
           </div>
           {itemActionsModel.hasControls && (

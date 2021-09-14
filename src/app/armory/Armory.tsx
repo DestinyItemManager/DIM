@@ -5,9 +5,8 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import ItemGrid from 'app/inventory/ItemGrid';
 import ItemIcon from 'app/inventory/ItemIcon';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, bucketsSelector, storesLoadedSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -231,19 +230,7 @@ export default function Armory({
               </button>
             )}
           </h2>
-          <div className="sub-bucket">
-            {storeItems.length > 0 ? (
-              storeItems.map((i) => (
-                <ItemPopupTrigger item={i} key={i.index}>
-                  {(ref, onClick) => (
-                    <ConnectedInventoryItem innerRef={ref} onClick={onClick} item={i} />
-                  )}
-                </ItemPopupTrigger>
-              ))
-            ) : (
-              <p>{t('Armory.NoItems')}</p>
-            )}
-          </div>
+          <ItemGrid items={storeItems} noLink />
         </>
       )}
       <AllWishlistRolls item={item} />

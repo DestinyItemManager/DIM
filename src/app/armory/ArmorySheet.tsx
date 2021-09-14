@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -9,7 +10,9 @@ export default function ArmorySheet({ itemHash, onClose }: { itemHash: number; o
   const account = useSelector(currentAccountSelector)!;
   return (
     <Sheet onClose={onClose} sheetClassName={styles.sheet}>
-      <Armory account={account} itemHash={itemHash} />
+      <ClickOutsideRoot>
+        <Armory account={account} itemHash={itemHash} />
+      </ClickOutsideRoot>
     </Sheet>
   );
 }

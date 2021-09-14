@@ -11,6 +11,7 @@ interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  zIndex?: number;
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
@@ -42,6 +43,7 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  zIndex,
   freezeInitialHeight,
   allowClickThrough,
   onClose: onCloseCallback,
@@ -151,7 +153,7 @@ export default function Sheet({
   return (
     <animated.div
       {...bindDrag()}
-      style={{ ...springProps, touchAction: 'none' }}
+      style={{ ...springProps, touchAction: 'none', zIndex }}
       className={clsx('sheet', sheetClassName)}
       ref={sheet}
       role="dialog"

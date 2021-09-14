@@ -34,7 +34,7 @@ export default function AllWishlistRolls({ item }: { item: DimItem }) {
 }
 
 function WishlistRolls({ wishlistRolls, item }: { wishlistRolls: WishListRoll[]; item: DimItem }) {
-  const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes);
+  const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
 
   // TODO: group by making a tree of least cardinality -> most?
 
@@ -42,23 +42,26 @@ function WishlistRolls({ wishlistRolls, item }: { wishlistRolls: WishListRoll[];
     <>
       {_.map(groupedWishlistRolls, (rolls, notes) => (
         <div key={notes}>
-          <div>{notes || t('Armory.NoNotes')}</div>
+          <div>{notes}</div>
           <ul>
             {rolls.map((r, i) => (
               <li key={i} className={styles.roll}>
                 {Array.from(r.recommendedPerks, (h) => {
-                  const socket = item.sockets!.allSockets.find((s) =>
+                  const socket = item.sockets?.allSockets.find((s) =>
                     s.plugOptions.some((p) => p.plugDef.hash === h)
-                  )!;
-                  const plug = socket.plugOptions.find((p) => p.plugDef.hash === h)!;
+                  );
+                  const plug = socket?.plugOptions.find((p) => p.plugDef.hash === h);
                   return (
-                    <Plug
-                      key={plug.plugDef.hash}
-                      plug={plug}
-                      item={item}
-                      socketInfo={socket}
-                      hasMenu={false}
-                    />
+                    plug &&
+                    socket && (
+                      <Plug
+                        key={plug.plugDef.hash}
+                        plug={plug}
+                        item={item}
+                        socketInfo={socket}
+                        hasMenu={false}
+                      />
+                    )
                   );
                 })}
               </li>

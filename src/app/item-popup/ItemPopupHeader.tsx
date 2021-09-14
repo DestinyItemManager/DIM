@@ -20,7 +20,14 @@ const tierClassName = {
   Exotic: styles.exotic,
 };
 
-export default function ItemPopupHeader({ item }: { item: DimItem }) {
+export default function ItemPopupHeader({
+  item,
+  noLink,
+}: {
+  item: DimItem;
+  /** Don't allow opening Armory from the header link */
+  noLink?: boolean;
+}) {
   const [showArmory, setShowArmory] = useState(false);
 
   return (
@@ -30,9 +37,13 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
         [styles.pursuit]: item.pursuit,
       })}
     >
-      <a className={styles.title} onClick={() => setShowArmory(true)}>
-        {item.name}
-      </a>
+      {noLink ? (
+        <span className={styles.title}>{item.name}</span>
+      ) : (
+        <a className={styles.title} onClick={() => setShowArmory(true)}>
+          {item.name}
+        </a>
+      )}
 
       <div className={styles.subtitle}>
         <div className={styles.type}>
