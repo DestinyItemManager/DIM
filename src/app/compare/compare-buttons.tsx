@@ -148,15 +148,6 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
-    // above, but also same (kinetic/energy/heavy) slot
-    {
-      buttonLabel: [
-        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-      ],
-      query: bucketToSearch[exampleItem.bucket.hash],
-    },
-
     // above, but also matching intrinsic (rpm+impact..... ish)
     {
       buttonLabel: [
@@ -171,6 +162,15 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
             `perkname:"${intrinsic.displayProperties.name}"`
           : `stat:rpm:${getRpm(exampleItem)}`),
+    },
+
+    // above, but also same (kinetic/energy/heavy) slot
+    {
+      buttonLabel: [
+        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+      ],
+      query: bucketToSearch[exampleItem.bucket.hash],
     },
 
     // same weapon type and also matching element (& usually same-slot because same element)

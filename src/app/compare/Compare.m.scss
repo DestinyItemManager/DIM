@@ -63,6 +63,9 @@
     :nth-child(n + 2) {
       margin-left: 4px;
     }
+    &:hover img {
+      filter: drop-shadow(0 0 1px black);
+    }
     img {
       margin: 0;
     }
