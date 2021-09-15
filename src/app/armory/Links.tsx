@@ -44,7 +44,8 @@ export default function Links({ item }: { item: DimItem }) {
           !(isPhonePortrait && hideOnPhone) && (
             <li key={name}>
               <ExternalLink href={link(item, language)}>
-                <img src={icon} height={16} width={16} /> {name}
+                <img src={icon} height={16} width={16} />
+                {name}
               </ExternalLink>
             </li>
           )
