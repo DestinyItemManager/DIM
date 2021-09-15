@@ -5,6 +5,8 @@
 * Engram power level is now also shown on hover.
 * Clicking on the title of an item now brings up a new item detail page which shows all possible perks and wishlist rolls.
 * Note that D1 items no longer have a link at all. We're not adding D1 features anymore.
+* Random-roll items in Collections now show all the perk possibilities they could roll with.
+* Armor in Collections now shows what mod slots it has.
 
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
