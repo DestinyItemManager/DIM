@@ -25,6 +25,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
+  "Armory": {
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "NoNotes": "No Notes",
+    "YourItems": "Your Items",
+    "Unknown": "Unknown Item",
+    "Season": "Season {{season}}, Year {{year}}"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
@@ -75,7 +85,8 @@
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
-    "Splits": "Compare similar splits ({{quantity}})"
+    "Splits": "Compare similar splits ({{quantity}})",
+    "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",

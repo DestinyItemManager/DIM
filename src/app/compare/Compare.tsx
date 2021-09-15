@@ -7,7 +7,9 @@ import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
+import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { getSocketByIndex } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -43,6 +45,7 @@ interface StoreProps {
   session?: CompareSession;
   compareBaseStats: boolean;
   organizerLink?: string;
+  isPhonePortrait: boolean;
 }
 
 type Props = StoreProps & ThunkDispatchProp;
@@ -54,6 +57,7 @@ function mapStateToProps(state: RootState): StoreProps {
     compareItems: compareItemsSelector(state),
     session: compareSessionSelector(state),
     organizerLink: compareOrganizerLinkSelector(state),
+    isPhonePortrait: isPhonePortraitSelector(state),
   };
 }
 
@@ -79,6 +83,7 @@ function Compare({
   compareItems,
   session,
   organizerLink,
+  isPhonePortrait,
   dispatch,
 }: Props) {
   /** The stat row to highlight */
@@ -262,7 +267,8 @@ function Compare({
       )}
       {organizerLink && (
         <Link className={styles.organizerLink} to={organizerLink}>
-          <AppIcon icon={faList} /> {t('Organizer.OpenIn')}
+          <AppIcon icon={faList} />
+          <span>{t('Organizer.OpenIn')}</span>
         </Link>
       )}
     </div>
@@ -295,6 +301,9 @@ function Compare({
                 {stat.id === highlight && <div className={styles.highlightBar} />}
               </div>
             ))}
+            {isPhonePortrait && isiOSBrowser() && (
+              <div className={styles.swipeAdvice}>{t('Compare.SwipeAdvice')}</div>
+            )}
           </div>
           {items}
         </div>

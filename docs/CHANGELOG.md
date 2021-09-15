@@ -1,5 +1,15 @@
 ## Next
 
+* Still adjusting to Stasis... `is:kineticslot` now identifies items which are in the "Kinetic" slot (the top weapon slot) but aren't Kinetic type damage.
+* Loadout Optimizer finds better mod assignments.
+* Engram power level is now also shown on hover.
+* Clicking on the title of an item now brings up a new item detail page which shows all possible perks and wishlist rolls.
+* Note that D1 items no longer have a link at all. We're not adding D1 features anymore.
+* Random-roll items in Collections now show all the perk possibilities they could roll with.
+* Armor in Collections now shows what mod slots it has.
+
+## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
+
 * Loadout Optimizer remembers stats you've Ignored between sessions.
 * Opening a saved loadout in Loadout Optimizer restores all the mods and other settings from when it was originally created.
 * Share your Loadout Optimizer build - the new share button copies a link to all your build settings. Share great mod combos with other DIM users!
@@ -13,13 +23,14 @@
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
 * Loadout Optimizer's exotic picker now consistently orders slots.
+* Loadout Optimizer's stat filters no longer attempt to automatically limit to possible ranges.
 * Added numerical faction ranks alongside rank names on the Progress page.
 * Fixed the order of items in vendors and seasonal vendor upgrade grids.
 * Seasonal artifact display now matches the games display.
 * Ritual rank progress for vendors now matches the ritual rank circle shape.
 * Fixed vendor ranks being off by 1.
-* Random-roll items in Collections now show all the perk possibilities they could roll with.
-* Armor in Collections now shows what mod slots it has.
+* Accounts list shows your Bungie Name.
+* Add a tip for how to scroll Compare on iOS.
 
 ## 6.81.0 <span class="changelog-date">(2021-09-05)</span>
 

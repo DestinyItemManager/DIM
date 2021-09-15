@@ -5,7 +5,11 @@ import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import type {
+  DimBucketType,
+  InventoryBucket,
+  InventoryBuckets,
+} from '../inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
@@ -14,12 +18,12 @@ import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
 
-const loadoutTypes = [
+const loadoutTypes: DimBucketType[] = [
   'Class',
   'Primary',
   'Special',
   'Heavy',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Helmet',
@@ -44,9 +48,9 @@ const loadoutTypes = [
 
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
 // like emblems and ships and horns.
-export const fromEquippedTypes = [
+export const fromEquippedTypes: DimBucketType[] = [
   'Class',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Primary',

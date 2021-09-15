@@ -11,6 +11,7 @@ import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -210,8 +211,7 @@ function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose
     _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
   ).sort(sortModGroups);
 
-  const autoFocus =
-    !isPhonePortrait && !(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+  const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
   const footer = lockedModsInternal.length
     ? ({ onClose }: { onClose(): void }) => (

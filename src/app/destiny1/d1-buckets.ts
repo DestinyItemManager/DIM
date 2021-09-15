@@ -1,11 +1,15 @@
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
+import type {
+  DimBucketType,
+  InventoryBucket,
+  InventoryBuckets,
+} from '../inventory/inventory-buckets';
 import { D1Categories } from './d1-bucket-categories';
-import { D1ManifestDefinitions } from './d1-definitions';
+import type { D1ManifestDefinitions } from './d1-definitions';
 
 // A mapping from the bucket hash to DIM item types
-const bucketToType = {
+const bucketToTypeRaw = {
   14239492: 'Chest',
   20886954: 'Leg',
   215593132: 'LostItems',
@@ -34,7 +38,14 @@ const bucketToType = {
   3865314626: 'Material',
   4023194814: 'Ghost',
   4274335291: 'Emblem',
-};
+} as const;
+
+export type D1BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
+
+// A mapping from the bucket hash to DIM item types
+const bucketToType: {
+  [hash: number]: DimBucketType | undefined;
+} = bucketToTypeRaw;
 
 export const vaultTypes = {
   3003523923: 'Armor',

@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import type { DimBucketType } from 'app/inventory/inventory-buckets';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -256,12 +257,12 @@ function addUpStackables(items: DimItem[]) {
   });
 }
 
-const randomLoadoutTypes = new Set([
+const randomLoadoutTypes = new Set<DimBucketType>([
   'Class',
   'Primary',
   'Special',
   'Heavy',
-  'Kinetic',
+  'KineticSlot',
   'Energy',
   'Power',
   'Helmet',

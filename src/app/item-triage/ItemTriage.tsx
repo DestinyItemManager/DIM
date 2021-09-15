@@ -11,7 +11,7 @@ import {
   ArmorSlotSpecificModSocketIcon,
   SpecialtyModSlotIcon,
 } from 'app/dim-ui/SpecialtyModSlotIcon';
-import { getArmorSvgIcon, getWeaponSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
@@ -276,12 +276,12 @@ const itemFactors: Record<string, Factor> = {
     id: 'weaponType',
     runIf: (item) => item.bucket.inWeapons,
     render: (item) => {
-      const weaponIcon = getWeaponSvgIcon(item);
+      const weaponIcon = getWeaponTypeSvgIcon(item);
       return weaponIcon ? (
         <PressTip elementType="span" tooltip={item.typeName}>
           <img
             className={clsx(styles.inlineIcon, styles.smaller, styles.weaponSvg)}
-            src={getWeaponSvgIcon(item)}
+            src={weaponIcon}
           />
         </PressTip>
       ) : (
@@ -308,7 +308,10 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => item.bucket.inArmor,
     render: (item) => (
       <PressTip elementType="span" tooltip={item.typeName}>
-        <img src={getArmorSvgIcon(item)} className={clsx(styles.inlineIcon, styles.weaponSvg)} />
+        <img
+          src={getArmorSlotSvgIcon(item)}
+          className={clsx(styles.inlineIcon, styles.weaponSvg)}
+        />
       </PressTip>
     ),
     filter: itemTypeFilter.fromItem!,

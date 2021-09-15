@@ -678,6 +678,7 @@ function buildPursuitInfo(
   ) {
     createdItem.pursuit = {
       ...createdItem.pursuit,
+      questLineDescription: itemDef.setData.questLineDescription,
       questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
       questStepsTotal: itemDef.setData.itemList.length,
     };
