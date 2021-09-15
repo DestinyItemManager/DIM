@@ -1,0 +1,29 @@
+@import '../variables';
+
+.links {
+  float: right;
+  margin: 0 0 0 32px;
+  padding: 0;
+  list-style: none;
+  @include vertical-space-children(4px);
+
+  li {
+    white-space: nowrap;
+    img {
+      vertical-align: text-bottom;
+      margin-right: 0.2em;
+    }
+  }
+
+  @media (max-width: 675px) {
+    margin: 0 0 8px 0;
+    float: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  @include phone-portrait {
+    margin-right: 38px;
+  }
+}

@@ -84,7 +84,11 @@ export default function ItemDetails({
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
-      <ItemStats item={item} />
+      {item.stats && (
+        <div className="item-details">
+          <ItemStats item={item} />
+        </div>
+      )}
 
       {item.talentGrid && (
         <div className="item-details item-perks">

@@ -505,16 +505,14 @@ export function makeItem(
     reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
-  const objectiveData = itemComponents?.objectives?.data;
   try {
-    if (objectiveData) {
-      createdItem.objectives = buildObjectives(
-        item,
-        objectiveData,
-        defs,
-        uninstancedItemObjectives
-      );
-    }
+    createdItem.objectives = buildObjectives(
+      item,
+      itemDef,
+      itemComponents?.objectives?.data,
+      defs,
+      uninstancedItemObjectives
+    );
   } catch (e) {
     errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
     reportException('Objectives', e, { itemHash: item.itemHash });
@@ -680,6 +678,7 @@ function buildPursuitInfo(
   ) {
     createdItem.pursuit = {
       ...createdItem.pursuit,
+      questLineDescription: itemDef.setData.questLineDescription,
       questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
       questStepsTotal: itemDef.setData.itemList.length,
     };

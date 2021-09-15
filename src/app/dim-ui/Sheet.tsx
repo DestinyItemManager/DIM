@@ -11,6 +11,7 @@ interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  zIndex?: number;
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
@@ -42,6 +43,7 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  zIndex,
   freezeInitialHeight,
   allowClickThrough,
   onClose: onCloseCallback,
@@ -151,7 +153,7 @@ export default function Sheet({
   return (
     <animated.div
       {...bindDrag()}
-      style={{ ...springProps, touchAction: 'none' }}
+      style={{ ...springProps, touchAction: 'none', zIndex }}
       className={clsx('sheet', sheetClassName)}
       ref={sheet}
       role="dialog"
@@ -161,7 +163,7 @@ export default function Sheet({
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
     >
-      <a href="#" className="sheet-close" onClick={onClose}>
+      <a href="#" className={clsx('sheet-close', { 'sheet-no-header': !header })} onClick={onClose}>
         <AppIcon icon={disabledIcon} />
       </a>
 
@@ -179,7 +181,9 @@ export default function Sheet({
         )}
 
         <div
-          className={clsx('sheet-contents', { 'sheet-has-footer': footer })}
+          className={clsx('sheet-contents', {
+            'sheet-has-footer': footer,
+          })}
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContentsRefFn}
         >
@@ -214,7 +218,7 @@ function useGlobalEscapeKey(onEscapePressed: () => void) {
 
 /**
  * Locks body scroll except for touches in the sheet contents, and adds a block-events
- * touch handler to sheeet contents.
+ * touch handler to sheet contents.
  */
 function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
   /** Block touch/click events for the inner scrolling area if it's not at the top. */

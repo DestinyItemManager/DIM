@@ -1,4 +1,4 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
@@ -7,9 +7,8 @@ import clsx from 'clsx';
 import heavy from 'destiny-icons/general/ammo_heavy.svg';
 import primary from 'destiny-icons/general/ammo_primary.svg';
 import special from 'destiny-icons/general/ammo_special.svg';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import ExternalLink from '../dim-ui/ExternalLink';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
@@ -21,8 +20,15 @@ const tierClassName = {
   Exotic: styles.exotic,
 };
 
-export default function ItemPopupHeader({ item }: { item: DimItem }) {
-  const language = useSelector(settingsSelector).language;
+export default function ItemPopupHeader({
+  item,
+  noLink,
+}: {
+  item: DimItem;
+  /** Don't allow opening Armory from the header link */
+  noLink?: boolean;
+}) {
+  const [showArmory, setShowArmory] = useState(false);
 
   return (
     <div
@@ -31,13 +37,17 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
         [styles.pursuit]: item.pursuit,
       })}
     >
-      <div className={styles.title}>
-        <ExternalLink href={destinyDBLink(item, language)}>{item.name}</ExternalLink>
-      </div>
+      {noLink || item.destinyVersion === 1 ? (
+        <span className={styles.title}>{item.name}</span>
+      ) : (
+        <a className={styles.title} onClick={() => setShowArmory(true)}>
+          {item.name}
+        </a>
+      )}
 
       <div className={styles.subtitle}>
         <div className={styles.type}>
-          <ItemTypeName item={item} />
+          <ItemTypeName item={item} className={styles.itemType} />
           {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
           {item.breakerType && (
             <BungieImage
@@ -64,6 +74,11 @@ export default function ItemPopupHeader({ item }: { item: DimItem }) {
           )}
         </div>
       </div>
+      {showArmory &&
+        ReactDOM.createPortal(
+          <ArmorySheet onClose={() => setShowArmory(false)} itemHash={item.hash} />,
+          document.body
+        )}
     </div>
   );
 }
@@ -74,7 +89,7 @@ const ammoIcons = {
   [DestinyAmmunitionType.Heavy]: heavy,
 };
 
-function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
+export function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
   return (
     <img
       className={clsx(styles.ammoIcon, {
@@ -85,7 +100,7 @@ function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
   );
 }
 
-function ItemTypeName({ item }: { item: DimItem }) {
+export function ItemTypeName({ item, className }: { item: DimItem; className?: string }) {
   const classType =
     (item.classType !== DestinyClass.Unknown &&
       // These already include the class name
@@ -94,76 +109,18 @@ function ItemTypeName({ item }: { item: DimItem }) {
       item.type !== 'Class' &&
       !item.classified &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
-    ' ';
+    '';
+
+  if (!(item.typeName || classType)) {
+    return null;
+  }
 
   return (
-    <div className={styles.itemType}>
+    <div className={className}>
       {t('MovePopup.Subtitle.Type', {
         classType,
         typeName: item.typeName,
       })}
     </div>
   );
-}
-
-function destinyDBLink(item: DimItem, language: string) {
-  // DTR 404s on the new D2 languages for D1 items
-  if (item.destinyVersion === 1) {
-    switch (language) {
-      case 'es-mx':
-        language = 'es';
-        break;
-      case 'pl':
-      case 'ru':
-      case 'zh-cht':
-      case 'zh-chs':
-        language = 'en';
-        break;
-    }
-
-    return `http://db.destinytracker.com/d${item.destinyVersion}/${language}/items/${item.hash}`;
-  }
-
-  const DimItem = item;
-  let perkQueryString = '';
-
-  if (DimItem) {
-    const perkCsv = buildPerksCsv(DimItem);
-    // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
-    if (perkCsv?.length) {
-      perkQueryString = `?perks=${perkCsv}`;
-    }
-  }
-
-  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
-}
-
-/**
- * Banshee-44 puts placeholder entries in for the still-mysterious socketTypeHash 0.
- * If you look at Scathelocke https://data.destinysets.com/i/InventoryItem:3762467078
- * for one example, socketEntires[5] has a socketTypeHash of 0. We discard this
- * (and other sockets), as we build our definition of sockets we care about, so
- * I look for gaps in the index and drop a zero in where I see them.
- */
-function buildPerksCsv(item: DimItem): string {
-  const perkValues: number[] = [];
-
-  if (item.sockets) {
-    item.sockets.allSockets.forEach((socket, socketIndex) => {
-      if (socketIndex > 0) {
-        const currentSocketPosition = socket.socketIndex;
-        const priorSocketPosition = item.sockets!.allSockets[socketIndex - 1].socketIndex;
-
-        if (currentSocketPosition > priorSocketPosition + 1) {
-          perkValues.push(0);
-        }
-      }
-
-      if (socket.plugged) {
-        perkValues.push(socket.plugged.plugDef.hash);
-      }
-    });
-  }
-
-  return perkValues.join(',');
 }

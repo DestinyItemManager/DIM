@@ -1,0 +1,110 @@
+@import '../variables';
+
+.armory {
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  background-color: #0b0c0f;
+  aspect-ratio: 16/9;
+
+  :global(.item-details) {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 300px;
+    @include phone-portrait {
+      max-width: 100%;
+    }
+  }
+
+  h2 {
+    > button {
+      margin-left: 1em;
+    }
+  }
+}
+
+.header {
+  --item-size: 100px;
+
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    'item title'
+    'item subtitle';
+  gap: 0 16px;
+  margin-bottom: 16px;
+
+  @include phone-portrait {
+    --item-size: 50px;
+    grid-template-areas:
+      'item title'
+      'subtitle subtitle';
+    gap: 8px 8px;
+  }
+
+  h1 {
+    grid-area: title;
+    @include destiny-header;
+    margin: 0 0 4px 0;
+  }
+
+  :global(.item) {
+    grid-area: item;
+    img {
+      // We're scaling up, keep it sharp
+      image-rendering: pixelated;
+    }
+  }
+
+  p {
+    margin: 8px 0 0 0;
+    white-space: pre-wrap;
+  }
+}
+
+.headerContent {
+  grid-area: subtitle;
+}
+
+.subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 4px;
+  > * {
+    margin: 0;
+  }
+  @include horizontal-space-children(4px);
+}
+
+.element {
+  height: 16px;
+  width: 16px;
+}
+
+.source {
+  display: flex;
+  align-items: center;
+  &:nth-child(n + 1) {
+    border-left: 1px solid #ccc;
+    padding-left: 8px;
+    margin-left: 4px;
+  }
+  > img {
+    margin-right: 2px;
+  }
+}
+
+.flavor {
+  font-style: italic;
+}
+
+.section {
+  width: 300px;
+  margin-bottom: 10px;
+  @include phone-portrait {
+    width: 100%;
+  }
+}

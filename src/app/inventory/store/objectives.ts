@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
+  DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemObjectivesComponent,
   DestinyObjectiveDefinition,
@@ -18,20 +19,31 @@ import {
  */
 export function buildObjectives(
   item: DestinyItemComponent,
-  objectivesMap: { [key: string]: DestinyItemObjectivesComponent },
+  itemDef: DestinyInventoryItemDefinition,
+  objectivesMap: { [key: string]: DestinyItemObjectivesComponent } | undefined,
   defs: D2ManifestDefinitions,
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   }
 ): DestinyObjectiveProgress[] | null {
   const objectives =
-    item.itemInstanceId && objectivesMap[item.itemInstanceId]
+    item.itemInstanceId && objectivesMap?.[item.itemInstanceId]
       ? objectivesMap[item.itemInstanceId].objectives
       : uninstancedItemObjectives
       ? uninstancedItemObjectives[item.itemHash]
       : [];
 
   if (!objectives || !objectives.length) {
+    // Hmm, it should have objectives
+    if (itemDef.objectives) {
+      return itemDef.objectives.objectiveHashes.map((o) => ({
+        objectiveHash: o,
+        complete: false,
+        visible: true,
+        completionValue: defs.Objective.get(o).completionValue,
+      }));
+    }
+
     return null;
   }
 

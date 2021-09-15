@@ -25,6 +25,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
+  "Armory": {
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "NoNotes": "No Notes",
+    "YourItems": "Your Items",
+    "Unknown": "Unknown Item",
+    "Season": "Season {{season}}, Year {{year}}"
+  },
   "Bucket": {
     "Armor": "Armor",
     "General": "General",
