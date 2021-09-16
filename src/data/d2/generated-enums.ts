@@ -642,6 +642,8 @@ export const enum PlugCategoryHashes {
   V520TitanNewLegs0Skins = 1237800331,
   V530NewLinearFusionRifle0Masterwork = 196432975,
   V530NewLinearFusionRifle0Skins = 2706864319,
+  V530NewTraceRifle0Masterwork = 2975259730,
+  V530NewTraceRifleSkins = 1307969312,
   V530PursuitRocketLauncher0Skins = 2974188781,
   VehiclesModSpeed = 821963863,
   WarlockStasisClassAbilities = 1960796738,
