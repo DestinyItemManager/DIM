@@ -38,6 +38,7 @@ const richTextManifestSourceData: RichTextManifestSourceData = {
   '[Small Blocker]': ['Objective', 276438067],
   '[Sniper Rifle]': ['Objective', 55815981],
   '[Solar]': ['Objective', 85535853],
+  '[Special Grenade Launcher]': ['Objective', 1408767523],
   '[Stagger]': ['SandboxPerk', 72139184],
   '[Stasis: Glyph 0]': ['Objective', 1397002441],
   '[Stasis: Glyph 1 Locked]': ['Objective', 1851419582],
@@ -49,7 +50,6 @@ const richTextManifestSourceData: RichTextManifestSourceData = {
   '[Trace Rifle]': ['Objective', 704693244],
   '[Void]': ['Objective', 33657378],
   '': ['Objective', 4231452845],
-  '': ['Objective', 1408767523],
 };
 
 export default richTextManifestSourceData;
