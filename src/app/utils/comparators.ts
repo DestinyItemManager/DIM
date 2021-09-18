@@ -7,22 +7,23 @@ export type Comparator<T> = (a: T, b: T) => -1 | 0 | 1;
  * // Returns a comparator that compares items by primary stat
  * compareBy((item) => item.primStat.value)
  */
-export function compareBy<T, V>(fn: (arg: T) => V): Comparator<T> {
+export function compareBy<T>(
+  fn: (arg: T) => number | string | undefined | boolean | bigint
+): Comparator<T> {
   return (a, b) => {
     const aVal = fn(a);
     const bVal = fn(b);
     // Undefined is neither greater than or less than anything. This considers it less than everything.
-    return aVal === undefined
-      ? bVal === undefined
-        ? 0
-        : -1
+
+    return aVal === bVal
+      ? 0 // neither goes first
       : bVal === undefined
-      ? 1
-      : aVal < bVal
-      ? -1
+      ? 1 // b goes first
+      : aVal === undefined || aVal < bVal
+      ? -1 // a goes first
       : aVal > bVal
-      ? 1
-      : 0;
+      ? 1 // b goes first
+      : 0; // a fallback that would catch only invalid inputs
   };
 }
 
