@@ -29,6 +29,8 @@ function itemSort(category: string) {
       compareBy((item) => item.item?.typeName),
       compareBy(vendorItemIndex)
     );
+  } else if (category === 'category_weapon') {
+    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
   } else if (category.startsWith('category_tier')) {
     return undefined;
   } else {
