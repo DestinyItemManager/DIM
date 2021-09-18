@@ -1032,7 +1032,9 @@ export function sortMoveAsideCandidatesForStore(
       // Prefer moving lower-tier into the vault and higher tier out
       compareBy((i) => (fromStore.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
       // Prefer keeping higher-stat items on characters
-      compareBy((i) => i.primStat && (fromStore.isVault ? i.primStat.value : -i.primStat.value))
+      compareBy(
+        (i) => (i.primStat && (fromStore.isVault ? i.primStat.value : -i.primStat.value)) || 0
+      )
     )
   );
 

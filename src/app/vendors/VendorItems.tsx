@@ -14,27 +14,27 @@ import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
+function vendorItemIndex(item: VendorItem) {
+  return item.key;
+}
+
 function itemSort(category: string) {
   if (category === 'category.rank_rewards_seasonal') {
     return chainComparator<VendorItem>(
       compareBy((item) => item.item?.tier),
-      compareBy((item) => parseInt(item.item?.id ?? '', 10))
+      compareBy(vendorItemIndex)
     );
   } else if (category === 'category_bounties') {
     return chainComparator<VendorItem>(
       compareBy((item) => item.item?.typeName),
-      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
-      compareBy((item) => item.item?.itemCategoryHashes)
+      compareBy(vendorItemIndex)
     );
   } else if (category === 'category_weapon') {
-    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes));
+    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
   } else if (category.startsWith('category_tier')) {
     return undefined;
   } else {
-    return chainComparator<VendorItem>(
-      compareBy((item) => parseInt(item.item?.id ?? '', 10)),
-      compareBy((item) => item.item?.itemCategoryHashes)
-    );
+    return chainComparator<VendorItem>(compareBy(vendorItemIndex));
   }
 }
 
