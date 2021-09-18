@@ -7,6 +7,7 @@
 * Note that D1 items no longer have a link at all. We're not adding D1 features anymore.
 * Random-roll items in Collections now show all the perk possibilities they could roll with.
 * Armor in Collections now shows what mod slots it has.
+* Fixed vendor items showing some incorrect wishlist matches.
 
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
