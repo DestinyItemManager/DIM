@@ -36,6 +36,16 @@
     "Normal": "Normalne",
     "WeeklyHeroic": "Cotygodniowy Heroiczny Szturm"
   },
+  "Armory": {
+    "NoNotes": "No Notes",
+    "Season": "Season {{season}}, Year {{year}}",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "Unknown": "Unknown Item",
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "YourItems": "Your Items"
+  },
   "Bucket": {
     "Armor": "Pancerz",
     "General": "Ogólne",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Ten przedmiot nie pasuje do typu porównywanych przedmiotów."
     },
-    "InitialItem": "To przedmiot dla którego uruchomiono narzędzie porównania"
+    "InitialItem": "To przedmiot dla którego uruchomiono narzędzie porównania",
+    "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
     "Grenade": "Odnowienie granatu: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Zestaw optymalizatora",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}}",
-    "ResetLocked": "Zresetuj przypięte przedmioty",
     "SaveAs": "Zapisz jako",
     "SelectArmorUpgrade": "Wybierz ulepszenia pancerza",
     "SelectAssumedArmorUpgrade": "Wybierz przypuszczane ulepszenia pancerza",
@@ -582,7 +592,7 @@
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "EquipWithName": "Załóż na {{character}}",
-    "Infuse": "Infuse",
+    "Infuse": "Nasyć",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",
       "Locked": "Zablokowane",
@@ -679,7 +689,7 @@
     "Stats": {
       "Aim": "Cel",
       "Inventory": "Ekwipunek",
-      "Power": "Power",
+      "Power": "Moc",
       "RPM": "RPM",
       "Recoil": "Odrzut",
       "Reload": "Przeładowanie"
@@ -703,6 +713,7 @@
     "QuestExpired": "Wygasło",
     "QuestExpires": "Wygasa za ",
     "Quests": "Zadania",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pkt",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",

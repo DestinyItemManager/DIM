@@ -36,6 +36,16 @@
     "Normal": "ノーマル",
     "WeeklyHeroic": "週間英雄ストライク"
   },
+  "Armory": {
+    "NoNotes": "メモなし",
+    "Season": "シーズン {{season}}, イヤー {{year}}",
+    "TrashlistedRolls": "トラッシュリストのロール",
+    "TrashlistedRolls_plural": "{{count, number}} ウイッシュリストのロール",
+    "Unknown": "不明のアイテム",
+    "WishlistedRolls": "ウイッシュリストのロール",
+    "WishlistedRolls_plural": "{{count, number}} ウイッシュリストのロール",
+    "YourItems": "あなたのアイテム"
+  },
   "Bucket": {
     "Armor": "防具",
     "General": "全般",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
     },
-    "InitialItem": "比較ツールが起動されたアイテムです"
+    "InitialItem": "比較ツールが起動されたアイテムです",
+    "SwipeAdvice": "2本の指でスクロール"
   },
   "Cooldown": {
     "Grenade": "グレネードのクールダウン: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Loadout optimizierで装備アップグレードさせたい装備を選択してください。 Modに合わせて数値を上げるためのマスターワーク、エネルギーアップグレードや要素交換を提案することもあります。",
     "OptimizerSet": "最適化セット",
     "ProcessingSets": "{{character}} のセットを処理しています",
-    "ResetLocked": "ピン留めされたアイテムをリセットする",
     "SaveAs": "名前をつけて保存",
     "SelectArmorUpgrade": "アーマーアップグレードの選択",
     "SelectAssumedArmorUpgrade": "想定されるアーマーアップグレードの選択",
@@ -703,6 +713,7 @@
     "QuestExpired": "期限切れ",
     "QuestExpires": "有効期限 ",
     "Quests": "クエスト",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 リセット",
     "Resets_plural": "{{count}} リセット",

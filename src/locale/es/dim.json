@@ -36,6 +36,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Asalto Heroico Semanal"
   },
+  "Armory": {
+    "NoNotes": "Sin Notas",
+    "Season": "Temporada {{season}}, Año {{year}}",
+    "TrashlistedRolls": "Tirada en listabasura",
+    "TrashlistedRolls_plural": "{{count, number}} Tiradas en listabasura",
+    "Unknown": "Objeto Desconocido",
+    "WishlistedRolls": "Tirada en listadeseos",
+    "WishlistedRolls_plural": "{{count, number}} Tiradas en listadeseos",
+    "YourItems": "Tus Objetos"
+  },
   "Bucket": {
     "Armor": "Armadura",
     "General": "General",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Este artículo no coincide con el tipo de objetos siendo comparados."
     },
-    "InitialItem": "Este es el objeto por el cual la herramienta de comparación fue lanzada"
+    "InitialItem": "Este es el objeto por el cual la herramienta de comparación fue lanzada",
+    "SwipeAdvice": "Usa dos dedos para desplazarte"
   },
   "Cooldown": {
     "Grenade": "Enfriamiento de Granada: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Selecciona en qué Actualizaciones de Armadura puede gastar gastar el Optimizador de Equipaciones los materiales. Podría sugerir Obra Maestra Completa para aumentar las estadísticas, o mejoras de energía y cambios de elemento para encajar tus modificadores solicitados.",
     "OptimizerSet": "Set Optimizador",
     "ProcessingSets": "Procesando equipaciones para {{character}}",
-    "ResetLocked": "Reiniciar objetos anclados",
     "SaveAs": "Guardar como",
     "SelectArmorUpgrade": "Seleccionar Mejoras de Armadura",
     "SelectAssumedArmorUpgrade": "Seleccionar Mejoras de Armadura Asumidas",
@@ -703,6 +713,7 @@
     "QuestExpired": "Caducado",
     "QuestExpires": "Expira en ",
     "Quests": "Aventuras",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",

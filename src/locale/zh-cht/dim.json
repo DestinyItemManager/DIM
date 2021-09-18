@@ -36,6 +36,16 @@
     "Normal": "普通",
     "WeeklyHeroic": "每週英雄突擊"
   },
+  "Armory": {
+    "NoNotes": "No Notes",
+    "Season": "Season {{season}}, Year {{year}}",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "Unknown": "Unknown Item",
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "YourItems": "Your Items"
+  },
   "Bucket": {
     "Armor": "防具",
     "General": "雜項",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
-    "InitialItem": "This is the item the Compare tool was launched from"
+    "InitialItem": "This is the item the Compare tool was launched from",
+    "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
     "Grenade": "手雷冷卻：{{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}}",
-    "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -703,6 +713,7 @@
     "QuestExpired": "已過期",
     "QuestExpires": "有效期至 ",
     "Quests": "任務",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}點",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",

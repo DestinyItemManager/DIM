@@ -36,6 +36,16 @@
     "Normal": "普通",
     "WeeklyHeroic": "每周英雄突击"
   },
+  "Armory": {
+    "NoNotes": "无注释",
+    "Season": "年 {{year}}，第 {{season}} 赛季",
+    "TrashlistedRolls": "垃圾列表特性组合",
+    "TrashlistedRolls_plural": "{{count, number}} 个垃圾列表特性组合",
+    "Unknown": "未知物品",
+    "WishlistedRolls": "愿望清单特性组合",
+    "WishlistedRolls_plural": "{{count, number}} 个愿望清单特性组合",
+    "YourItems": "你的物品"
+  },
   "Bucket": {
     "Armor": "防具",
     "General": "杂项",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "此物品和要比较的物品类别不同。"
     },
-    "InitialItem": "比较工具从这个物品启动"
+    "InitialItem": "比较工具从这个物品启动",
+    "SwipeAdvice": "使用双指滚动"
   },
   "Cooldown": {
     "Grenade": "手雷冷却：{{cooldown}}",
@@ -452,14 +463,13 @@
     "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级或更换元素来装下你想要的模组。",
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "正在处理 {{character}} 的配装",
-    "ResetLocked": "重置固定物品",
     "SaveAs": "保存为",
     "SelectArmorUpgrade": "选择护甲升级",
     "SelectAssumedArmorUpgrade": "选择假定的护甲升级",
     "SelectAssumedArmorUpgradeDescription": "根据你想花费的材料选择护甲升级策略。配装优化器会计划护甲升级，可能会提升属性或模组能量，也可能更改物品的元素。",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
-    "ShareBuild": "Share Build Settings",
+    "ShareBuild": "分享配装设置",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",
@@ -582,7 +592,7 @@
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "EquipWithName": "装备到 {{character}}",
-    "Infuse": "Infuse",
+    "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
       "Locked": "已锁定",
@@ -679,7 +689,7 @@
     "Stats": {
       "Aim": "瞄准",
       "Inventory": "物品栏",
-      "Power": "Power",
+      "Power": "能量",
       "RPM": "弹夹数每分钟",
       "Recoil": "后坐力",
       "Reload": "重新装弹"
@@ -703,6 +713,7 @@
     "QuestExpired": "已过期",
     "QuestExpires": "有效期至 ",
     "Quests": "任务",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}点",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",

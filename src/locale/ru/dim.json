@@ -36,6 +36,16 @@
     "Normal": "Нормальный",
     "WeeklyHeroic": "Недельный Героический Налёт"
   },
+  "Armory": {
+    "NoNotes": "No Notes",
+    "Season": "Season {{season}}, Year {{year}}",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "Unknown": "Unknown Item",
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "YourItems": "Your Items"
+  },
   "Bucket": {
     "Armor": "Броня",
     "General": "Общее",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Этот предмет не соответствует выбранным критериям сравниваемых предметов."
     },
-    "InitialItem": "This is the item the Compare tool was launched from"
+    "InitialItem": "This is the item the Compare tool was launched from",
+    "SwipeAdvice": "Прокрутка двумя пальцами"
   },
   "Cooldown": {
     "Grenade": "Перезарядка гранаты: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Обработка наборов для\n{{character}}",
-    "ResetLocked": "Очистить предметы",
     "SaveAs": "Сохранить как",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -703,6 +713,7 @@
     "QuestExpired": "Просрочен",
     "QuestExpires": "Устареет через:",
     "Quests": "Задания",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",

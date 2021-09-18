@@ -36,6 +36,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Assalto Heroico Semanal"
   },
+  "Armory": {
+    "NoNotes": "Sem anotações",
+    "Season": "Temporada {{season}}, ano {{year}}",
+    "TrashlistedRolls": "Valores indesejáveis",
+    "TrashlistedRolls_plural": "{{count, number}} valores indesejáveis",
+    "Unknown": "Item desconhecido",
+    "WishlistedRolls": "Valores desejáveis",
+    "WishlistedRolls_plural": "{{count, number}} valores desejáveis",
+    "YourItems": "Seus itens"
+  },
   "Bucket": {
     "Armor": "Armaduras",
     "General": "Geral",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     },
-    "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item"
+    "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item",
+    "SwipeAdvice": "Use dois dedos para rolar"
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -306,7 +317,7 @@
   },
   "Infusion": {
     "Filter": "Filtrar itens",
-    "InfuseSource": "Selecione o item para infundir {{name}}",
+    "InfuseSource": "Selecione o item para infundir {{name}} em",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Selecione em quais melhorias de armadura o Otimizador de Set pode gastar materiais. O Otimizador poderá sugerir obras-primas para aumentar atributos, aumento de energia ou troca do tipo de energia para permitir usar os mods solicitados.",
     "OptimizerSet": "Set do Otimizador",
     "ProcessingSets": "Processando sets de\n{{character}}",
-    "ResetLocked": "Resetar itens fixados",
     "SaveAs": "Salvar como",
     "SelectArmorUpgrade": "Selecionar melhorias",
     "SelectAssumedArmorUpgrade": "Selecione as possíveis melhorias nas armaduras",
@@ -703,6 +713,7 @@
     "QuestExpired": "Expirado",
     "QuestExpires": "Expira em ",
     "Quests": "Jornadas",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
@@ -794,7 +805,7 @@
     "LightMeleeCooldown": "Carregamento do Corpo-a-corpo de Luz",
     "LightSuperCooldown": "Carregamento do Super de Luz",
     "MaxGearPower": "Poder máximo de itens equipáveis",
-    "MaxGearPowerAll": "Poder Máximo de todos os equipamentos",
+    "MaxGearPowerAll": "Poder máximo de todos os equipamentos",
     "MaxTotalPower": "Poder máximo total",
     "Milliseconds": "ms",
     "NoBonus": "Sem bônus",

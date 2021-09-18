@@ -36,6 +36,16 @@
     "Normal": "Normale",
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
+  "Armory": {
+    "NoNotes": "Nessuna Nota",
+    "Season": "Stagione {{season}}, Anno {{year}}",
+    "TrashlistedRolls": "Roll Lista degli Scarti",
+    "TrashlistedRolls_plural": "{{count, number}} Roll Lista degli Scarti",
+    "Unknown": "Oggetto Sconosciuto",
+    "WishlistedRolls": "Roll Lista dei Desideri",
+    "WishlistedRolls_plural": "{{count, number}} Roll Lista dei Desideri",
+    "YourItems": "I tuoi oggetti"
+  },
   "Bucket": {
     "Armor": "Armatura",
     "General": "Generale",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Impossibile confrontare oggetti di tipo diverso."
     },
-    "InitialItem": "Questo è l'oggetto dal quale è stato lanciato lo Strumento di Confronto"
+    "InitialItem": "Questo è l'oggetto dal quale è stato lanciato lo Strumento di Confronto",
+    "SwipeAdvice": "Usa due dita per scorrere"
   },
   "Cooldown": {
     "Grenade": "Recupero delle granate: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Seleziona su quali potenziamenti armatura l'Ottimizzatore Loadout può spendere materiali. Potrebbe suggerire di renderla prodigiosa per aumentare le statistiche, oppure potenziamenti di energia e cambio di elemento per adattarla alle Modifiche richieste.",
     "OptimizerSet": "Set Ottimizzatore",
     "ProcessingSets": "Elaborazione set per \n{{character}}",
-    "ResetLocked": "Resetta oggetti bloccati",
     "SaveAs": "Salva come",
     "SelectArmorUpgrade": "Seleziona potenziamenti armatura",
     "SelectAssumedArmorUpgrade": "Seleziona potenziamenti armatura presunti",
@@ -703,6 +713,7 @@
     "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
     "Quests": "Imprese",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}punti",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",

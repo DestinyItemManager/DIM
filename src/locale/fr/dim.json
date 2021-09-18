@@ -36,6 +36,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Assaut « Épique » de la Semaine"
   },
+  "Armory": {
+    "NoNotes": "No Notes",
+    "Season": "Season {{season}}, Year {{year}}",
+    "TrashlistedRolls": "Trashlisted Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
+    "Unknown": "Unknown Item",
+    "WishlistedRolls": "Wishlisted Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
+    "YourItems": "Your Items"
+  },
   "Bucket": {
     "Armor": "Armure",
     "General": "Général",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     },
-    "InitialItem": "This is the item the Compare tool was launched from"
+    "InitialItem": "This is the item the Compare tool was launched from",
+    "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
     "Grenade": "Délai de la Grenade: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Ensemble de l'Optimiseur",
     "ProcessingSets": "Calcul des possibilités pour {{character}}",
-    "ResetLocked": "Réinitialiser les objets épinglés",
     "SaveAs": "Enregistrer sous",
     "SelectArmorUpgrade": "Sélectionner les améliorations",
     "SelectAssumedArmorUpgrade": "Sélectionner les améliorations d'armure souhaitées",
@@ -703,6 +713,7 @@
     "QuestExpired": "Expiré",
     "QuestExpires": "Expire dans ",
     "Quests": "Quêtes",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets": "1 réinitialisation",
     "Resets_plural": "{{count}} réinitialisations",

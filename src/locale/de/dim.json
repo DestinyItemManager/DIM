@@ -36,6 +36,16 @@
     "Normal": "Normal",
     "WeeklyHeroic": "Wöchentlicher Heroischer Strike"
   },
+  "Armory": {
+    "NoNotes": "Keine Notizen",
+    "Season": "Saison {{season}}, Jahr {{year}}",
+    "TrashlistedRolls": "Mülllisten Roll",
+    "TrashlistedRolls_plural": "{{count, number}} Mülllisten Rolls",
+    "Unknown": "Unbekannter Gegenstand",
+    "WishlistedRolls": "Wunschlisten Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wunschlisten Rolls",
+    "YourItems": "Deine Gegenstände"
+  },
   "Bucket": {
     "Armor": "Rüstung",
     "General": "Allgemein",
@@ -85,7 +95,8 @@
     "Error": {
       "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
     },
-    "InitialItem": "Das ist der Gegenstand, von dem aus der Vergleich gestartet wurde"
+    "InitialItem": "Das ist der Gegenstand, von dem aus der Vergleich gestartet wurde",
+    "SwipeAdvice": "Zum Scrollen zwei Finger benutzen"
   },
   "Cooldown": {
     "Grenade": "Granaten Abklingzeit: {{cooldown}}",
@@ -452,7 +463,6 @@
     "OptimizerExplanationUpgrades": "Wähle aus, für welche Rüstung der Ausrüstungs-Optimierer Materialien verwenden kann. Er kann Meisterwerke vorschlagen, um die Werte zu erhöhen, oder Energieverbesserungen und Affinität wechseln, um die gewünschten Mods zu benutzen.",
     "OptimizerSet": "Optimierer-Set",
     "ProcessingSets": "Verarbeite Sets für\n{{character}}",
-    "ResetLocked": "Setze angepinnte Gegenstände zurück",
     "SaveAs": "Speichern unter",
     "SelectArmorUpgrade": "Rüstungsverbesserungen auswählen",
     "SelectAssumedArmorUpgrade": "Wähle anzunehmende Rüstungsverbesserungen",
@@ -697,12 +707,13 @@
     "LegacyRecord": "Dieser Triumph wird nicht mehr verfügbar sein, nachdem Jenseits des Lichts veröffentlicht wurde.",
     "Milestones": "Meilensteine & Herausforderungen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge einen im Spiel oder so vielen wie du möchtest in DIM.",
-    "PercentPrestige": "{{pct}}% bis zum Zurücksetzen",
+    "PercentPrestige": "{{pct}}% vor Zurücksetzung",
     "Progress": "Fortschritt",
     "QueryFilteredTrackedTriumphs": "Keiner deiner verfolgten Triumphe entsprach der Suche",
     "QuestExpired": "Abgelaufen",
     "QuestExpires": "Läuft ab in ",
     "Quests": "Quests",
+    "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}Pkte",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
