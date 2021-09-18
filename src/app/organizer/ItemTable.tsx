@@ -590,7 +590,7 @@ function sortRows(
       if (column) {
         const compare = column.sort
           ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-          : compareBy((row: Row) => row.values[column.id]);
+          : compareBy((row: Row) => row.values[column.id] || 0);
         return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
       }
       return compareBy(() => 0);
