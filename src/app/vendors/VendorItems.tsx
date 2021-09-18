@@ -15,7 +15,7 @@ import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 
 function vendorItemIndex(item: VendorItem) {
-  return parseInt(item.item?.index ?? '', 10);
+  return item.key;
 }
 
 function itemSort(category: string) {
