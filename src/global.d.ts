@@ -40,8 +40,6 @@ declare const $featureFlags: {
   awa: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
-  /** Install prompt banners for mobile */
-  installBanner: boolean;
 };
 
 declare function ga(...params: string[]);

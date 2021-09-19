@@ -345,9 +345,7 @@ export default function Header() {
           <SearchFilter onClear={hideSearch} ref={searchFilter} />
         </span>
       )}
-      {$featureFlags.installBanner && isPhonePortrait && installable && (
-        <AppInstallBanner onClick={installDim} />
-      )}
+      {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
       <PostmasterWarningBanner />
       {promptIosPwa &&
         ReactDOM.createPortal(
