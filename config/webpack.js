@@ -409,8 +409,6 @@ module.exports = (env) => {
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
-        // Incorporate mods directly into loadouts
-        '$featureFlags.loadoutMods': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
         // Install prompt banners for mobile
