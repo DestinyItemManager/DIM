@@ -18,8 +18,6 @@ declare const $featureFlags: {
   sentry: boolean;
   /** D2 Vendors */
   vendors: boolean;
-  /** Respect the "do not track" header. */
-  respectDNT: boolean;
   /** Community-curated wish lists */
   wishLists: boolean;
   /** Show a banner for supporting a charitable cause */

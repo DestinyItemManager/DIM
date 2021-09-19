@@ -393,8 +393,6 @@ module.exports = (env) => {
         '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta/prod only
         '$featureFlags.sentry': JSON.stringify(!env.dev),
-        // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Show a banner for supporting a charitable cause
