@@ -403,8 +403,6 @@ module.exports = (env) => {
         '$featureFlags.mobileInspect': JSON.stringify(env.release),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(false),
-        // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(true),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
