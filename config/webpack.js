@@ -402,7 +402,7 @@ module.exports = (env) => {
         // Drag and drop mobile inspect
         '$featureFlags.mobileInspect': JSON.stringify(env.release),
         // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
+        '$featureFlags.altInventoryMode': JSON.stringify(false),
         // Enable search results
         '$featureFlags.searchResults': JSON.stringify(true),
         // Alternate perks display on item popup
