@@ -348,7 +348,7 @@ export default function Header() {
       {$featureFlags.installBanner && isPhonePortrait && installable && (
         <AppInstallBanner onClick={installDim} />
       )}
-      {$featureFlags.postmasterBanner && <PostmasterWarningBanner />}
+      <PostmasterWarningBanner />
       {promptIosPwa &&
         ReactDOM.createPortal(
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>

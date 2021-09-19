@@ -413,8 +413,6 @@ module.exports = (env) => {
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
         // Install prompt banners for mobile
         '$featureFlags.installBanner': JSON.stringify(true),
-        // Header banner when postmaster is full
-        '$featureFlags.postmasterBanner': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({

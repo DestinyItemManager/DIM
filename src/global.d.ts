@@ -42,8 +42,6 @@ declare const $featureFlags: {
   abilityCooldowns: boolean;
   /** Install prompt banners for mobile */
   installBanner: boolean;
-  /** Header banner when postmaster is full */
-  postmasterBanner: boolean;
 };
 
 declare function ga(...params: string[]);
