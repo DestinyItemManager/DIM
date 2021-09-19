@@ -11,7 +11,6 @@
 
 ### Beta Only
 
-* Removed the press-and-hold mobile item menu, which saw very limited use.
 * Removed the press-and-hold mobile item menu, which saw very limited use. This will also be removed in the release version after some time.
 * Removed the "Active Mode" experiment - its ideas will come back in the future in other forms, but for now it doesn't offer enough above the Progress page (which can be opened in another tab/window next to Inventory if you want to see both).
 
