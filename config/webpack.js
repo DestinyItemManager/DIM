@@ -400,7 +400,7 @@ module.exports = (env) => {
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(true),
+        '$featureFlags.mobileInspect': JSON.stringify(env.release),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
         // Enable search results
