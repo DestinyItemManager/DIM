@@ -15,9 +15,14 @@ import { DimItem } from '../inventory/item-types';
 import { makeFakeItem } from '../inventory/store/d2-item-factory';
 
 /**
- * A displayable vendor item.
+ * Not actually always a vendor item.
+ * This represents an item inside a vendor or an item contained in a plugset.
  */
 export class VendorItem {
+  /**
+   * creates a VendorItem that's not actually at a vendor. it's part of a plug set.
+   * this serves something about the collections interface?
+   */
   static forPlugSetItem(
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
@@ -38,11 +43,18 @@ export class VendorItem {
     );
   }
 
+  /**
+   * creates a VendorItem being sold by a vendor in the API vendors response.
+   * this can include "instanced" stats plugs etc which describe the specifics
+   * of that copy they're selling
+   */
   static forVendorSaleItem(
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
     vendorDef: DestinyVendorDefinition,
     saleItem: DestinyVendorSaleItemComponent,
+    // all DIM vendor calls are character-specific. any sale item should have an associated character.
+    characterId: string,
     itemComponents?: DestinyItemComponentSetOfint32,
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;
@@ -63,10 +75,16 @@ export class VendorItem {
       vendorItemDef,
       saleItem,
       itemComponents,
-      mergedCollectibles
+      mergedCollectibles,
+      true, // why?
+      characterId
     );
   }
 
+  /**
+   * creates a VendorItem solely according to a vendor's definition.
+   * some vendors are set up so statically, that they have no data in the live Vendors response
+   */
   static forVendorDefinitionItem(
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
@@ -113,7 +131,9 @@ export class VendorItem {
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;
     },
-    canPurchase = true
+    canPurchase = true,
+    // the character to whom this item is being offered
+    characterId?: string
   ) {
     const inventoryItem = defs.InventoryItem.get(itemHash);
 
@@ -155,8 +175,8 @@ export class VendorItem {
       this.item.id = `${vendorHash}-${this.key}`;
 
       // if this is sold by a vendor, add vendor information
-      if (saleItem) {
-        this.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId: '' };
+      if (saleItem && characterId) {
+        this.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId };
       }
     }
 

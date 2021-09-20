@@ -9,7 +9,7 @@ import { refresh } from 'app/shell/refresh';
 import { RootState } from 'app/store/types';
 import { toVendor } from 'app/vendors/d2-vendors';
 import { vendorsByCharacterSelector } from 'app/vendors/selectors';
-import { VendorItem } from 'app/vendors/vendor-item';
+import type { VendorItem } from 'app/vendors/vendor-item';
 import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfo from 'data/d2/pursuits.json';
@@ -98,6 +98,7 @@ export const purchasableBountiesSelector = (store: DimStore) =>
           buckets,
           vendor,
           account,
+          store.id,
           itemComponents[vendorHash],
           sales.data?.[vendorHash]?.saleItems,
           {}

@@ -48,6 +48,7 @@ export function toVendorGroups(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   account: DestinyAccount,
+  characterId: string,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
   }
@@ -70,6 +71,7 @@ export function toVendorGroups(
                 buckets,
                 vendorsResponse.vendors.data?.[vendorHash],
                 account,
+                characterId,
                 vendorsResponse.itemComponents[vendorHash],
                 vendorsResponse.sales.data?.[vendorHash]?.saleItems,
                 mergedCollectibles
@@ -93,6 +95,7 @@ export function toVendor(
   buckets: InventoryBuckets,
   vendor: DestinyVendorComponent | undefined,
   account: DestinyAccount,
+  characterId: string,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
@@ -112,6 +115,7 @@ export function toVendor(
     defs,
     buckets,
     vendorDef,
+    characterId,
     itemComponents,
     sales,
     mergedCollectibles
@@ -152,6 +156,7 @@ export function getVendorItems(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorDef: DestinyVendorDefinition,
+  characterId: string,
   itemComponents?: DestinyItemComponentSetOfint32,
   sales?: {
     [key: string]: DestinyVendorSaleItemComponent;
@@ -168,6 +173,7 @@ export function getVendorItems(
         buckets,
         vendorDef,
         component,
+        characterId,
         itemComponents,
         mergedCollectibles
       )
