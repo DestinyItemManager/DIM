@@ -1,5 +1,7 @@
 ## Next
 
+* Items in the Compare view no longer move around according to the character they're on.
+
 ## 6.83.0 <span class="changelog-date">(2021-09-19)</span>
 
 * Still adjusting to Stasis... `is:kineticslot` now identifies items which are in the "Kinetic" slot (the top weapon slot) but aren't Kinetic type damage.

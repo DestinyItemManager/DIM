@@ -107,6 +107,10 @@ const ITEM_SORT_DENYLIST = new Set([
   BucketHashes.LostItems, // LostItems
 ]);
 
+export const acquisitionRecencyComparator = reverseComparator(
+  compareBy((item: DimItem) => BigInt(item.id))
+);
+
 // TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
@@ -147,7 +151,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
-  acquisitionRecency: reverseComparator(compareBy((item: DimItem) => BigInt(item.id))),
+  acquisitionRecency: acquisitionRecencyComparator,
   default: () => 0,
 };
 
