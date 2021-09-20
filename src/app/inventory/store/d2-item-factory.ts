@@ -7,6 +7,7 @@ import {
   DestinyAmmunitionType,
   DestinyClass,
   DestinyCollectibleComponent,
+  DestinyCollectibleState,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -206,7 +207,9 @@ export function makeItemSingle(
  * @param previousItems a set of item IDs representing the previous store's items
  * @param newItems a set of item IDs representing the previous list of new items
  * @param item "raw" item from the Destiny API
- * @param owner the ID of the owning store.
+ * @param owner the ID of the owning store
+ * @param mergedCollectibles collectible information so each DimItem is self-aware of whether it's already owned
+ * @param uninstancedItemObjectives the owning character's dictionary of uninstanced objectives
  */
 // TODO: extract individual item components first!
 export function makeItem(
@@ -329,9 +332,17 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectible =
-    itemDef.collectibleHash && mergedCollectibles && mergedCollectibles[itemDef.collectibleHash];
+  // collection stuff: establish a collectedness state, and hashes leading to the collectible and source
+  const { collectibleHash } = itemDef;
+  let collectibleState: DestinyCollectibleState | undefined;
+  if (collectibleHash) {
+    collectibleState = mergedCollectibles?.[collectibleHash]?.state;
+  }
+  const source = collectibleHash
+    ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
+    : undefined;
 
+  // items' appearance can be overridden at bungie's request
   let overrideStyleItem = item.overrideStyleItemHash
     ? defs.InventoryItem.get(item.overrideStyleItemHash)
     : null;
@@ -371,7 +382,6 @@ export function makeItem(
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
     tier: tiers[itemDef.inventory!.tierType] || 'Common',
     isExotic: tiers[itemDef.inventory!.tierType] === 'Exotic',
-    isVendorItem: !owner || owner.id === null,
     name,
     description: displayProperties.description,
     icon:
@@ -385,12 +395,7 @@ export function makeItem(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
-    id:
-      item.itemHash === 3675595381 // Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
-        ? '1'
-        : item.itemHash === 171866827
-        ? '4'
-        : item.itemInstanceId || '0', // zero for non-instanced is legacy hack
+    id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
     equipped: Boolean(instanceDef?.isEquipped),
     equipment:
       Boolean(itemDef.equippingBlock) && normalBucket.hash !== BucketHashes.SeasonalArtifact, // TODO: this has a ton of good info for the item move logic
@@ -417,11 +422,9 @@ export function makeItem(
     loreHash: itemDef.loreHash,
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
-    source: itemDef.collectibleHash
-      ? defs.Collectible.get(itemDef.collectibleHash, itemDef.hash)?.sourceHash
-      : undefined,
-    collectibleState: collectible ? collectible.state : undefined,
-    collectibleHash: itemDef.collectibleHash,
+    source,
+    collectibleState,
+    collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {

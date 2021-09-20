@@ -193,7 +193,8 @@ export function getSetBucketsStep(
                         };
                       }
 
-                      set.includesVendorItems = pieces.some((armor) => armor.item.isVendorItem);
+                      // no owner means this is a vendor item
+                      set.includesVendorItems = pieces.some((armor) => !armor.item.owner);
                     }
 
                     processedCount++;
