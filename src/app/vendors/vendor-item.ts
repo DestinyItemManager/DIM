@@ -130,15 +130,31 @@ export class VendorItem {
       this.previewVendorHash = inventoryItem.preview.previewVendorHash;
     }
 
+    // Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
+    // changes their sort to match the game
+    if (itemHash === 3675595381 || itemHash === 171866827) {
+      this.key = itemHash === 3675595381 ? 1 : 4;
+    }
+
+    // override the DimItem.id for vendor items, so they are each unique enough to identify
+    // (otherwise they'd get their vendor index as an id, which is only unique per-vendor)
+    const overrides: Partial<DimItem> = { id: `${vendorHash}-${this.key.toString()}` };
+
+    // if this is sold by a vendor, add vendor information
+    if (saleItem) {
+      overrides.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex };
+    }
+
     this.item = makeFakeItem(
       defs,
       buckets,
       itemComponents,
       itemHash,
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
-      saleItem ? saleItem.vendorItemIndex.toString() : itemHash.toString(),
+      this.key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
-      mergedCollectibles
+      mergedCollectibles,
+      overrides
     );
 
     if (this.item) {

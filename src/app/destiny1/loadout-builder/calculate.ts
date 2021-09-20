@@ -193,7 +193,7 @@ export function getSetBucketsStep(
                         };
                       }
 
-                      set.includesVendorItems = pieces.some((armor) => armor.item.isVendorItem);
+                      set.includesVendorItems = pieces.some((armor) => !armor.item.owner);
                     }
 
                     processedCount++;

@@ -239,7 +239,6 @@ function makeFakePursuitItem(
     itemCategoryHashes: [], // see defs.ItemCategory
     tier: 'Rare',
     isExotic: false,
-    isVendorItem: false,
     name: displayProperties.name,
     description: displayProperties.description,
     icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',

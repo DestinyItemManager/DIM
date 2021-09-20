@@ -59,8 +59,8 @@ export interface DimItem {
   tier: Tier;
   /** Is this an Exotic item? */
   isExotic: boolean;
-  /** Did this come from a vendor instead of character inventory? */
-  isVendorItem: boolean;
+  /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */
+  vendor?: { vendorHash: number; saleIndex: number };
   /** Localized name of the item. */
   name: string;
   /** Localized description of the item. */
