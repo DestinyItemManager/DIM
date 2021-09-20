@@ -116,8 +116,6 @@ function Vendors({
     )
   );
 
-  const onCharacterChanged = (storeId: string) => setSelectedStoreId(storeId);
-
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms
     if (Math.abs(info.offset.x) < 10 || Math.abs(info.velocity.x) < 300) {
@@ -200,7 +198,7 @@ function Vendors({
           <CharacterSelect
             stores={stores}
             selectedStore={selectedStore}
-            onCharacterChanged={onCharacterChanged}
+            onCharacterChanged={setSelectedStoreId}
           />
         )}
         {selectedStore && (

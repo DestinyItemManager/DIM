@@ -9,7 +9,6 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
-import { DestinyCollectibleComponent } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -23,9 +22,7 @@ export const mergedCollectiblesSelector = createSelector(
           profileResponse.profileCollectibles,
           profileResponse.characterCollectibles
         )
-      : emptyObject<{
-          [x: number]: DestinyCollectibleComponent;
-        }>()
+      : emptyObject<ReturnType<typeof mergeCollectibles>>()
 );
 
 /**
@@ -33,15 +30,14 @@ export const mergedCollectiblesSelector = createSelector(
  */
 export const vendorGroupsForCharacterSelector = createSelector(
   d2ManifestSelector,
-  sortedStoresSelector,
   vendorsByCharacterSelector,
   mergedCollectiblesSelector,
   bucketsSelector,
   currentAccountSelector,
   // get character ID from props not state
-  (_state: any, characterId: string | undefined) => characterId,
-  (defs, stores, vendors, mergedCollectibles, buckets, currentAccount, characterId) => {
-    const selectedStoreId = characterId || getCurrentStore(stores)?.id;
+  (state: any, characterId: string | undefined) =>
+    characterId || getCurrentStore(sortedStoresSelector(state))?.id,
+  (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
     const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
 
