@@ -185,7 +185,7 @@ function Compare({
     [cancel, compareItems.length, dispatch]
   );
 
-  const sort = (newSortedHash?: string | number) => {
+  const changeSort = (newSortedHash?: string | number) => {
     // TODO: put sorting together?
     setSortedHash(newSortedHash);
     setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
@@ -202,7 +202,7 @@ function Compare({
     allStats
   );
   const sortedComparisonItems = !sortedHash
-    ? compareItems
+    ? Array.from(compareItems).sort(compareBy((i) => i.index))
     : Array.from(compareItems).sort(comparator);
 
   const items = useMemo(
@@ -287,7 +287,7 @@ function Compare({
                   [styles.sorted]: stat.id === sortedHash,
                 })}
                 onMouseOver={() => setHighlight(stat.id)}
-                onClick={() => sort(stat.id)}
+                onClick={() => changeSort(stat.id)}
               >
                 {stat.displayProperties.hasIcon && (
                   <span title={stat.displayProperties.name}>
