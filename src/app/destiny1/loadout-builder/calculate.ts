@@ -193,6 +193,7 @@ export function getSetBucketsStep(
                         };
                       }
 
+                      // no owner means this is a vendor item
                       set.includesVendorItems = pieces.some((armor) => !armor.item.owner);
                     }
 
