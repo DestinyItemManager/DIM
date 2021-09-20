@@ -202,7 +202,7 @@ function Compare({
     allStats
   );
   const sortedComparisonItems = !sortedHash
-    ? Array.from(compareItems).sort(compareBy((i) => i.index))
+    ? Array.from(compareItems).sort(reverseComparator(compareBy((i) => i.index)))
     : Array.from(compareItems).sort(comparator);
 
   const items = useMemo(
