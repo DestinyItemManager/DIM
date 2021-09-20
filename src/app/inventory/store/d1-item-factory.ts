@@ -246,7 +246,6 @@ function makeItem(
     itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.tierType] || 'Common',
     isExotic: tiers[itemDef.tierType] === 'Exotic',
-    isVendorItem: !owner || owner.id === null,
     name: itemDef.itemName,
     description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
     icon: itemDef.icon,

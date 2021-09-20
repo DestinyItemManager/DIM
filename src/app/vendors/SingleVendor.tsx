@@ -157,6 +157,7 @@ function SingleVendor({
     buckets,
     vendor,
     account,
+    characterId,
     vendorResponse?.itemComponents[vendorHash],
     vendorResponse?.sales.data?.[vendorHash]?.saleItems,
     mergedCollectibles

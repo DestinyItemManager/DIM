@@ -19,7 +19,8 @@ export default function LoadoutBuilderItem({ item, shiftClickCallback }: Props) 
       shiftClickCallback(item);
     });
 
-  if (item.isVendorItem) {
+  // no owner means this is a vendor item
+  if (!item.owner) {
     return (
       <div className="loadout-builder-item">
         <DraggableInventoryItem item={item}>
