@@ -41,8 +41,15 @@ export const vendorGroupsForCharacterSelector = createSelector(
     const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
 
-    return vendorsResponse && defs && buckets && currentAccount
-      ? toVendorGroups(vendorsResponse, defs, buckets, currentAccount, mergedCollectibles)
+    return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
+      ? toVendorGroups(
+          vendorsResponse,
+          defs,
+          buckets,
+          currentAccount,
+          selectedStoreId,
+          mergedCollectibles
+        )
       : emptyArray<D2VendorGroup>();
   }
 );
