@@ -1,0 +1,22 @@
+name: Feature Request
+description: Let us know what you want to see next in DIM
+labels: [Enhancement]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thank you for taking the time to fill out a feature request and let us know what you'd like to see in DIM! To save both you and us time, please make sure to check the [Frequently Requested Features](https://github.com/DestinyItemManager/DIM/wiki/Frequently-Requested-Features) and [search issues](https://github.com/DestinyItemManager/DIM/issues?q=is%3Aissue) to see if this has already been reported.
+- type: input
+  id: ChangeDesc
+  attributes:
+    label: Proposed change
+    description: Explain what you'd like to see as a new feature or enhancement to DIM.
+  validations:
+    required: true
+- type: input
+  id: Workflow
+  attributes:
+    label: How does this fit into your workflow?
+    description: Tell us how you'd use this. Having this context is very helpful for us to understand how a proposed change would fit into the way you play.
+  validations:
+    required: true
