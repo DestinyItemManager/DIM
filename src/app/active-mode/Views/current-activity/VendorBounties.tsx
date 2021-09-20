@@ -11,7 +11,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { PursuitsGroup } from 'app/progress/Pursuits';
 import { RootState } from 'app/store/types';
-import { VendorItem } from 'app/vendors/vendor-item';
+import type { VendorItem } from 'app/vendors/vendor-item';
 import { DestinyCharacterActivitiesComponent } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { connect } from 'react-redux';
