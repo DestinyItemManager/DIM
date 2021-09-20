@@ -6,6 +6,7 @@ import { statLabels } from 'app/organizer/Columns';
 import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
+import { acquisitionRecencyComparator } from 'app/shell/filters';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -202,7 +203,7 @@ function Compare({
     allStats
   );
   const sortedComparisonItems = !sortedHash
-    ? Array.from(compareItems).sort(reverseComparator(compareBy((i) => i.index)))
+    ? Array.from(compareItems).sort(acquisitionRecencyComparator)
     : Array.from(compareItems).sort(comparator);
 
   const items = useMemo(
