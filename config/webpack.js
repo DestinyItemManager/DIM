@@ -393,8 +393,6 @@ module.exports = (env) => {
         '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta/prod only
         '$featureFlags.sentry': JSON.stringify(!env.dev),
-        // Respect the "do not track" header
-        '$featureFlags.respectDNT': JSON.stringify(!env.release),
         // Community-curated wish lists
         '$featureFlags.wishLists': JSON.stringify(true),
         // Show a banner for supporting a charitable cause
@@ -402,23 +400,15 @@ module.exports = (env) => {
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
         // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(true),
+        '$featureFlags.mobileInspect': JSON.stringify(env.release),
         // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(!env.release),
-        // Enable search results
-        '$featureFlags.searchResults': JSON.stringify(true),
+        '$featureFlags.altInventoryMode': JSON.stringify(false),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
-        // Incorporate mods directly into loadouts
-        '$featureFlags.loadoutMods': JSON.stringify(true),
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
-        // Install prompt banners for mobile
-        '$featureFlags.installBanner': JSON.stringify(true),
-        // Header banner when postmaster is full
-        '$featureFlags.postmasterBanner': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({

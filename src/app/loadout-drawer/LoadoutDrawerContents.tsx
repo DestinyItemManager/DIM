@@ -154,13 +154,11 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      {$featureFlags.loadoutMods && (
-        <SavedMods
-          savedMods={savedMods}
-          onOpenModPicker={onOpenModPicker}
-          removeModByHash={removeModByHash}
-        />
-      )}
+      <SavedMods
+        savedMods={savedMods}
+        onOpenModPicker={onOpenModPicker}
+        removeModByHash={removeModByHash}
+      />
     </>
   );
 }

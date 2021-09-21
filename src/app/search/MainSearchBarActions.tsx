@@ -66,7 +66,7 @@ function MainSearchBarActions({
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
         >
-          {$featureFlags.searchResults && showSearchResults ? (
+          {showSearchResults ? (
             <button
               type="button"
               className={styles.resultButton}
@@ -86,8 +86,7 @@ function MainSearchBarActions({
         </motion.div>
       )}
 
-      {$featureFlags.searchResults &&
-        showSearchResults &&
+      {showSearchResults &&
         searchResultsOpen &&
         ReactDOM.createPortal(
           <SearchResults

@@ -13,6 +13,11 @@
 * Armor in Collections now shows what mod slots it has.
 * Fixed vendor items showing some incorrect wishlist matches.
 
+### Beta Only
+
+* Removed the press-and-hold mobile item menu, which saw very limited use. This will also be removed in the release version after some time.
+* Removed the "Active Mode" experiment - its ideas will come back in the future in other forms, but for now it doesn't offer enough above the Progress page (which can be opened in another tab/window next to Inventory if you want to see both).
+
 ## 6.82.0 <span class="changelog-date">(2021-09-12)</span>
 
 * Loadout Optimizer remembers stats you've Ignored between sessions.
