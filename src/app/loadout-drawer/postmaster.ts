@@ -100,8 +100,9 @@ export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
 export function canBePulledFromPostmaster(i: DimItem, store: DimStore, stores: DimStore[]) {
   return (
     i.canPullFromPostmaster && // Can be pulled
-    // Either has space, or is going to a bucket we can make room in
-    ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
+    i.bucket.vaultBucket && // Does vaultBucket exists
+    (spaceLeftForItem(store, i, stores) > 0 || //Check for space in current store. If store isn't current char, this is 0.
+      spaceLeftForItem(getVault(stores)!, i, stores) > 0) //Also checking the vault for space in case previous check for space is 0.
   );
 }
 
