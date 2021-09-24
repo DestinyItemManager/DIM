@@ -12,7 +12,7 @@
   src: url('../fonts/DestinySymbols.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
-  font-display: block;
+  font-display: fallback;
 }
 
 :root {
