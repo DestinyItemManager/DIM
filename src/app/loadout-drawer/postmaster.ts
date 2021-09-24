@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { t } from 'app/i18next-t';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
