@@ -89,30 +89,32 @@ function Vendors({
   const isPhonePortrait = useIsPhonePortrait();
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 
-  // once the page is loaded, user can select this. on initial load, default to current char.
-  const [selectedStoreId, setSelectedStoreId] = useState(getCurrentStore(stores)?.id);
+  // once the page is loaded, user can select this
+  const [userSelectedStoreId, setUserSelectedStoreId] = useState<string>();
+  // each render without a user selection, retry getting a character ID to use
+  const storeId = userSelectedStoreId || getCurrentStore(stores)?.id;
 
   let vendorGroups = useSelector((state: RootState) =>
-    vendorGroupsForCharacterSelector(state, selectedStoreId)
+    vendorGroupsForCharacterSelector(state, storeId)
   );
 
   useLoadStores(account, stores.length > 0);
 
   useEffect(() => {
-    if (selectedStoreId) {
-      dispatch(loadAllVendors(account, selectedStoreId));
+    if (storeId) {
+      dispatch(loadAllVendors(account, storeId));
     }
-  }, [account, selectedStoreId, dispatch]);
+  }, [account, storeId, dispatch]);
 
   useEventBusListener(
     refresh$,
     useCallback(
       () => () => {
-        if (selectedStoreId) {
-          loadingTracker.addPromise(dispatch(loadAllVendors(account, selectedStoreId, true)));
+        if (storeId) {
+          loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId, true)));
         }
       },
-      [account, dispatch, selectedStoreId]
+      [account, dispatch, storeId]
     )
   );
 
@@ -126,18 +128,18 @@ function Vendors({
 
     const characters = stores.filter((s) => !s.isVault);
 
-    const selectedStoreIndex = selectedStoreId
-      ? characters.findIndex((s) => s.id === selectedStoreId)
+    const selectedStoreIndex = storeId
+      ? characters.findIndex((s) => s.id === storeId)
       : characters.findIndex((s) => s.current);
 
     if (direction > 0 && selectedStoreIndex < characters.length - 1) {
-      setSelectedStoreId(characters[selectedStoreIndex + 1].id);
+      setUserSelectedStoreId(characters[selectedStoreIndex + 1].id);
     } else if (direction < 0 && selectedStoreIndex > 0) {
-      setSelectedStoreId(characters[selectedStoreIndex - 1].id);
+      setUserSelectedStoreId(characters[selectedStoreIndex - 1].id);
     }
   };
 
-  const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
+  const vendorData = storeId ? vendors[storeId] : undefined;
   const vendorsResponse = vendorData?.vendorsResponse;
 
   if (!vendorsResponse && vendorData?.error) {
@@ -156,7 +158,7 @@ function Vendors({
     );
   }
 
-  const selectedStore = stores.find((s) => s.id === selectedStoreId)!;
+  const selectedStore = stores.find((s) => s.id === storeId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
   if (vendorGroups) {
@@ -198,7 +200,7 @@ function Vendors({
           <CharacterSelect
             stores={stores}
             selectedStore={selectedStore}
-            onCharacterChanged={setSelectedStoreId}
+            onCharacterChanged={setUserSelectedStoreId}
           />
         )}
         {selectedStore && (
