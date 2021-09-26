@@ -84,7 +84,11 @@ const lbStateInit = ({
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
   const lockedMods = lockedModsFromLoadoutParameters(loadoutParams, defs);
   const lockItemEnergyType = Boolean(loadoutParams?.lockItemEnergyType);
-  const upgradeSpendTier = loadoutParams.upgradeSpendTier!;
+  // We need to handle the deprecated case
+  const upgradeSpendTier =
+    loadoutParams.upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType
+      ? UpgradeSpendTier.Nothing
+      : loadoutParams.upgradeSpendTier!;
   const lockedExoticHash = loadoutParams.exoticArmorHash;
 
   return {
