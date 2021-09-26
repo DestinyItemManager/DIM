@@ -1,6 +1,7 @@
 ## Next
 
 * Items in the Compare view no longer move around according to the character they're on.
+* Fixed an issue where the Loadout Optimizer would not load due to deprecated settings.
 
 ## 6.83.0 <span class="changelog-date">(2021-09-19)</span>
 
