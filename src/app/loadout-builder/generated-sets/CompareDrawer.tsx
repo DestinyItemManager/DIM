@@ -227,6 +227,7 @@ function CompareDrawer({
             statOrder={statOrder}
             enabledStats={enabledStats}
             className={styles.fillRow}
+            characterClass={characterClass}
           />
           <div className={clsx(styles.fillRow, styles.set)}>
             {setItems.map((item) => (

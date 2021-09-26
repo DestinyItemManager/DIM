@@ -2,6 +2,7 @@
 
 * Items in the Compare view no longer move around according to the character they're on.
 * Fixed an issue where the Loadout Optimizer would not load due to deprecated settings.
+* Hovering over stat tiers in the Loadout Optimizer's compare drawer now shows stat tier effects for the new set too.
 
 ## 6.83.0 <span class="changelog-date">(2021-09-19)</span>
 
