@@ -37,7 +37,6 @@
 * Progress win streak will now correctly display when a user hits a 5 win streak.
 * Fixed broken description for some new triumphs.
 * Loadout Optimizer's exotic picker now consistently orders slots.
-* Loadout Optimizer's stat filters no longer attempt to automatically limit to possible ranges.
 * Added numerical faction ranks alongside rank names on the Progress page.
 * Fixed the order of items in vendors and seasonal vendor upgrade grids.
 * Seasonal artifact display now matches the games display.

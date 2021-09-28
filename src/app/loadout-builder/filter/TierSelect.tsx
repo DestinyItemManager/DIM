@@ -4,10 +4,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters } from '../types';
+import { ArmorStatHashes, StatFilters, StatRanges } from '../types';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -15,16 +16,27 @@ const INCLUDE = 'include';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
+const defaultStatRanges: Readonly<StatRanges> = {
+  [StatHashes.Mobility]: { min: 0, max: 10 },
+  [StatHashes.Resilience]: { min: 0, max: 10 },
+  [StatHashes.Recovery]: { min: 0, max: 10 },
+  [StatHashes.Discipline]: { min: 0, max: 10 },
+  [StatHashes.Intellect]: { min: 0, max: 10 },
+  [StatHashes.Strength]: { min: 0, max: 10 },
+};
+
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function TierSelect({
   stats,
+  statRanges = defaultStatRanges,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
   stats: StatFilters;
+  statRanges?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
   onStatOrderChanged(order: ArmorStatHashes[]): void;
   onStatFiltersChanged(stats: StatFilters): void;
@@ -79,19 +91,19 @@ export default function TierSelect({
               >
                 <MinMaxSelect
                   statHash={statHash}
-                  stat={stats[statHash]}
+                  stats={stats}
                   type="Min"
-                  min={0}
-                  max={10}
+                  min={statRanges[statHash].min}
+                  max={statRanges[statHash].max}
                   ignored={stats[statHash].ignored}
                   handleTierChange={handleTierChange}
                 />
                 <MinMaxSelect
                   statHash={statHash}
-                  stat={stats[statHash]}
+                  stats={stats}
                   type="Max"
-                  min={0}
-                  max={10}
+                  min={statRanges[statHash].min}
+                  max={statRanges[statHash].max}
                   ignored={stats[statHash].ignored}
                   handleTierChange={handleTierChange}
                 />
@@ -145,7 +157,7 @@ function MinMaxSelectInner({
   min,
   max,
   ignored,
-  stat,
+  stats,
   handleTierChange,
 }: {
   statHash: number;
@@ -153,7 +165,7 @@ function MinMaxSelectInner({
   min: number;
   max: number;
   ignored: boolean;
-  stat: MinMaxIgnored;
+  stats: StatFilters;
   handleTierChange(
     statHash: number,
     changed: {
@@ -163,7 +175,7 @@ function MinMaxSelectInner({
     }
   ): void;
 }) {
-  const statSetting = stat;
+  const statSetting = stats[statHash];
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     let update: {
