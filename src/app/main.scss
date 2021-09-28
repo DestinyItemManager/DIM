@@ -3,9 +3,17 @@
 //
 // The main stylesheet for all of the styles!
 //
-// Prefer CSS modules, or at least stylesheets that are impored directly by the components that need them, to putting things here.
+// Prefer CSS modules, or at least stylesheets that are imported directly by the components that need them, to putting things here.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @import 'variables.scss';
+
+@font-face {
+  font-family: 'Destiny Symbols';
+  src: url('../fonts/DestinySymbols.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
 
 :root {
   // Item width including border
@@ -161,7 +169,7 @@ body {
   margin: 0 auto;
   background-color: #313233;
   color: white;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
   font-size: 12px;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
@@ -182,7 +190,7 @@ h4 {
 input,
 select,
 option {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
 }
 
 input[type='search'] {
@@ -198,6 +206,7 @@ textarea {
   outline: none;
   color: white;
   box-sizing: border-box;
+  font-family: monospace, 'Destiny Symbols';
 }
 
 select {
@@ -215,7 +224,6 @@ select {
   height: 27px;
   font-size: 12px;
   color: white;
-  font-family: 'Open Sans', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
 
@@ -256,7 +264,7 @@ select {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
   font-size: 12px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   transition: all 150ms ease-out;

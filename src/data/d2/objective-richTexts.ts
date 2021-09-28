@@ -1,6 +1,4 @@
-type RichTextManifestSourceData = Record<string, [string, number]>;
-
-const richTextManifestSourceData: RichTextManifestSourceData = {
+const richTextManifestSourceData = {
   '[Aim Down Sights]': ['SandboxPerk', 2169611095],
   '[Alternate Weapon Action]': ['SandboxPerk', 250262009],
   '[Arc]': ['Objective', 85535852],
@@ -50,6 +48,13 @@ const richTextManifestSourceData: RichTextManifestSourceData = {
   '[Trace Rifle]': ['Objective', 704693244],
   '[Void]': ['Objective', 33657378],
   '': ['Objective', 4231452845],
-};
+} as const;
 
-export default richTextManifestSourceData;
+export type StringsNeedingReplacement = keyof typeof richTextManifestSourceData;
+
+const richTextManifestExamples: Record<
+  StringsNeedingReplacement,
+  readonly [tableName: 'Objective' | 'SandboxPerk', hash: number]
+> = richTextManifestSourceData;
+
+export default richTextManifestExamples;
