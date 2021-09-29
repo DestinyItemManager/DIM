@@ -1,6 +1,7 @@
 ## Next
 
 * Loadout Optimizer now shows the maximum stat tier you can get for each stat, taking into account all of your loadout settings including min/max stats, mods, and search filter.
+* Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 
