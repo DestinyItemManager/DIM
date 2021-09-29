@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer now shows the maximum stat tier you can get for each stat, taking into account all of your loadout settings including min/max stats, mods, and search filter.
+
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 
 * Items in the Compare view no longer move around according to the character they're on.

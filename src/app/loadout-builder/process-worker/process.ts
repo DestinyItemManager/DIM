@@ -184,7 +184,7 @@ export function process(
   const raidModPermutations = generateProcessModPermutations(raidMods.sort(sortProcessModsOrItems));
   const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
-  const numSkippedLowTier = 0;
+  let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
   let numCantSlotMods = 0;
   let numInserted = 0;
@@ -251,21 +251,26 @@ export function process(
 
             let totalTier = 0;
             let statRangeExceeded = false;
-            for (const statHash of orderedConsideredStatHashes) {
-              const tier = statTier(stats[statHash]);
+            for (const statHash of statOrder) {
+              const value = stats[statHash];
+              const tier = statTier(value);
 
               // Update our global min/max for this stat
-              if (tier > statRanges[statHash].max) {
-                statRanges[statHash].max = tier;
+              const range = statRanges[statHash];
+              if (value > range.max) {
+                range.max = value;
               }
-              if (tier < statRanges[statHash].min) {
-                statRanges[statHash].min = tier;
+              if (value < range.min) {
+                range.min = value;
               }
 
-              if (tier > statFilters[statHash].max || tier < statFilters[statHash].min) {
-                statRangeExceeded = true;
+              const filter = statFilters[statHash];
+              if (!filter.ignored) {
+                if (tier > filter.max || tier < filter.min) {
+                  statRangeExceeded = true;
+                }
+                totalTier += tier;
               }
-              totalTier += tier;
             }
 
             if (statRangeExceeded) {
@@ -274,10 +279,10 @@ export function process(
             }
 
             // Drop this set if it could never make it
-            //if (!setTracker.couldInsert(totalTier)) {
-            //  numSkippedLowTier++;
-            //continue;
-            //}
+            if (!setTracker.couldInsert(totalTier)) {
+              numSkippedLowTier++;
+              continue;
+            }
 
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
@@ -301,17 +306,22 @@ export function process(
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             let tiers = '';
-            for (const statHash of orderedConsideredStatHashes) {
-              const tier = statTier(stats[statHash]);
+            for (const statHash of statOrder) {
+              const value = stats[statHash];
+              const tier = statTier(value);
               // Make each stat exactly one code unit so the string compares correctly
-              tiers += tier.toString(11);
+              const filter = statFilters[statHash];
+              if (!filter.ignored) {
+                tiers += tier.toString(11);
+              }
 
               // Separately track the stat ranges of sets that made it through all our filters
-              if (tier > statRangesFiltered[statHash].max) {
-                statRangesFiltered[statHash].max = tier;
+              const range = statRangesFiltered[statHash];
+              if (value > range.max) {
+                range.max = value;
               }
-              if (tier < statRangesFiltered[statHash].min) {
-                statRangesFiltered[statHash].min = tier;
+              if (value < range.min) {
+                range.min = value;
               }
             }
 

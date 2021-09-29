@@ -9,6 +9,7 @@ import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { ArmorStatHashes, MinMax, MinMaxIgnored, StatFilters, StatRanges } from '../types';
+import { statTier, statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -17,12 +18,12 @@ const INCLUDE = 'include';
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
 const defaultStatRanges: Readonly<StatRanges> = {
-  [StatHashes.Mobility]: { min: 0, max: 10 },
-  [StatHashes.Resilience]: { min: 0, max: 10 },
-  [StatHashes.Recovery]: { min: 0, max: 10 },
-  [StatHashes.Discipline]: { min: 0, max: 10 },
-  [StatHashes.Intellect]: { min: 0, max: 10 },
-  [StatHashes.Strength]: { min: 0, max: 10 },
+  [StatHashes.Mobility]: { min: 0, max: 100 },
+  [StatHashes.Resilience]: { min: 0, max: 100 },
+  [StatHashes.Recovery]: { min: 0, max: 100 },
+  [StatHashes.Discipline]: { min: 0, max: 100 },
+  [StatHashes.Intellect]: { min: 0, max: 100 },
+  [StatHashes.Strength]: { min: 0, max: 100 },
 };
 
 /**
@@ -37,13 +38,9 @@ export default function TierSelect({
   onStatFiltersChanged,
 }: {
   stats: StatFilters;
-  /**
-   * The ranges the stats could have gotten to, EXCLUDING all filters
-   */
+  /** The ranges the stats could have gotten to, EXCLUDING all filters */
   statRanges?: Readonly<StatRanges>;
-  /**
-   * The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility
-   */
+  /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
   onStatOrderChanged(order: ArmorStatHashes[]): void;
@@ -98,12 +95,9 @@ export default function TierSelect({
                 }
               >
                 <span className={styles.range}>
+                  Max{' '}
                   {t('LoadoutBuilder.TierNumber', {
-                    tier: statRangesFiltered[statHash].min,
-                  })}{' '}
-                  -{' '}
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: statRangesFiltered[statHash].max,
+                    tier: statTierWithHalf(statRangesFiltered[statHash].max),
                   })}
                 </span>
                 <MinMaxSelect
@@ -175,10 +169,9 @@ function MinMaxSelectInner({
 }: {
   statHash: number;
   type: 'Min' | 'Max';
+  /** Filter config for a single stat */
   stat: MinMaxIgnored;
-  /**
-   * The range this stat could have gotten to, EXCLUDING all filters
-   */
+  /** The range this stat could have gotten to, EXCLUDING all filters */
   statRange: MinMax;
   handleTierChange(
     statHash: number,
@@ -189,8 +182,8 @@ function MinMaxSelectInner({
     }
   ): void;
 }) {
-  const min = statRange.min;
-  const max = statRange.max;
+  const min = statTier(statRange.min);
+  const max = statTier(statRange.max);
   const ignored = stat.ignored;
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
