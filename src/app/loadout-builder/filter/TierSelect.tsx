@@ -95,9 +95,10 @@ export default function TierSelect({
                 }
               >
                 <span className={styles.range}>
-                  Max{' '}
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                  {t('LoadoutBuilder.MaxTier', {
+                    tier: t('LoadoutBuilder.TierNumber', {
+                      tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                    }),
                   })}
                 </span>
                 <MinMaxSelect

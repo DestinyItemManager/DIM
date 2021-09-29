@@ -447,6 +447,7 @@
     "LockElement": "Lock Element",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
+    "MaxTier": "Max {{tier}}",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
