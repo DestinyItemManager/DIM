@@ -24,6 +24,7 @@ import { isArmor2Mod } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion } from 'framer-motion';
+import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -182,7 +183,12 @@ function LoadoutBuilder({
       lockItemEnergyType,
       [], // ignore locked mods
       '', // and the search query
-      statFilters,
+      // and don't save stat ranges either, just whether they're ignored
+      _.mapValues(statFilters, (m) => ({
+        ignored: m.ignored,
+        min: 0,
+        max: 10,
+      })),
       statOrder,
       undefined // same with locked exotic
     );
