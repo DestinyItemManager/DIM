@@ -71,6 +71,7 @@ export function process(
   combos: number;
   combosWithoutCaps: number;
   statRanges?: StatRanges;
+  statRangesFiltered?: StatRanges;
 } {
   const pstart = performance.now();
 
@@ -84,6 +85,10 @@ export function process(
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
   const statRanges: StatRanges = _.mapValues(statFilters, (filter) =>
+    filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
+  );
+
+  const statRangesFiltered: StatRanges = _.mapValues(statFilters, (filter) =>
     filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
   );
 
@@ -179,7 +184,7 @@ export function process(
   const raidModPermutations = generateProcessModPermutations(raidMods.sort(sortProcessModsOrItems));
   const hasMods = combatMods.length || raidMods.length || generalMods.length;
 
-  let numSkippedLowTier = 0;
+  const numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
   let numCantSlotMods = 0;
   let numInserted = 0;
@@ -259,7 +264,6 @@ export function process(
 
               if (tier > statFilters[statHash].max || tier < statFilters[statHash].min) {
                 statRangeExceeded = true;
-                break;
               }
               totalTier += tier;
             }
@@ -270,10 +274,10 @@ export function process(
             }
 
             // Drop this set if it could never make it
-            if (!setTracker.couldInsert(totalTier)) {
-              numSkippedLowTier++;
-              continue;
-            }
+            //if (!setTracker.couldInsert(totalTier)) {
+            //  numSkippedLowTier++;
+            //continue;
+            //}
 
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
@@ -301,6 +305,14 @@ export function process(
               const tier = statTier(stats[statHash]);
               // Make each stat exactly one code unit so the string compares correctly
               tiers += tier.toString(11);
+
+              // Separately track the stat ranges of sets that made it through all our filters
+              if (tier > statRangesFiltered[statHash].max) {
+                statRangesFiltered[statHash].max = tier;
+              }
+              if (tier < statRangesFiltered[statHash].min) {
+                statRangesFiltered[statHash].min = tier;
+              }
             }
 
             numInserted++;
@@ -340,7 +352,13 @@ export function process(
     }
   );
 
-  return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
+  return {
+    sets: flattenSets(finalSets),
+    combos,
+    combosWithoutCaps,
+    statRanges,
+    statRangesFiltered,
+  };
 }
 
 /**

@@ -295,6 +295,7 @@ function LoadoutBuilder({
       <TierSelect
         stats={statFilters}
         statRanges={result?.statRanges}
+        statRangesFiltered={result?.statRangesFiltered}
         order={statOrder}
         onStatFiltersChanged={(statFilters) =>
           lbDispatch({ type: 'statFiltersChanged', statFilters })

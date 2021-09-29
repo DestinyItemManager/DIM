@@ -32,6 +32,7 @@ interface ProcessState {
     combos: number;
     combosWithoutCaps: number;
     statRanges?: StatRanges;
+    statRangesFiltered?: StatRanges;
   } | null;
 }
 
@@ -140,7 +141,7 @@ export function useProcess(
         statOrder,
         statFilters
       )
-      .then(({ sets, combos, combosWithoutCaps, statRanges }) => {
+      .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
         infoLog(
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
@@ -155,6 +156,7 @@ export function useProcess(
             combos,
             combosWithoutCaps,
             statRanges,
+            statRangesFiltered,
           },
         }));
 
