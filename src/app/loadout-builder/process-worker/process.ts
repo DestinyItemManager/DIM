@@ -84,13 +84,12 @@ export function process(
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRanges: StatRanges = _.mapValues(statFilters, (filter) =>
-    filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
-  );
+  const statRanges: StatRanges = _.mapValues(statFilters, () => ({ min: 100, max: 0 }));
 
-  const statRangesFiltered: StatRanges = _.mapValues(statFilters, (filter) =>
-    filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
-  );
+  const statRangesFiltered: StatRanges = _.mapValues(statFilters, () => ({
+    min: 100,
+    max: 0,
+  }));
 
   const statsCache: Map<ProcessItem, number[]> = new Map();
 
