@@ -163,7 +163,7 @@ export function process(
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
   }
 
-  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
+  const setTracker = new SetTracker(10_000);
 
   let generalMods: ProcessMod[] = [];
   let combatMods: ProcessMod[] = [];
@@ -369,7 +369,7 @@ export function process(
   );
 
   return {
-    sets: flattenSets(finalSets),
+    sets: flattenSets(_.take(finalSets, RETURNED_ARMOR_SETS)),
     combos,
     combosWithoutCaps,
     statRanges,
