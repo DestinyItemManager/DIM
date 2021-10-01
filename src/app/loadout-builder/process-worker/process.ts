@@ -121,11 +121,14 @@ export function process(
   // The maximum possible combos we could have
   const combosWithoutCaps =
     helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+  const initialNumItems =
+    helms.length + gaunts.length + chests.length + legs.length + classItems.length;
 
   let combos = combosWithoutCaps;
 
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
+  let numDiscarded = 0;
   while (combos > combosLimit) {
     const sortedTypes = [helms, gaunts, chests, legs]
       // Don't ever remove the last item in a category
@@ -136,6 +139,7 @@ export function process(
       );
     // Pop the last item off the worst-sorted list
     sortedTypes[sortedTypes.length - 1].pop();
+    numDiscarded++;
     // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
     combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
@@ -146,7 +150,12 @@ export function process(
       'Reduced armor combinations from',
       combosWithoutCaps,
       'to',
-      combos
+      combos,
+      'by discarding',
+      numDiscarded,
+      'of',
+      initialNumItems,
+      'items'
     );
   }
 
