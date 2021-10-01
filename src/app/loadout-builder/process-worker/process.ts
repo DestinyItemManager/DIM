@@ -40,7 +40,14 @@ function compareByStatOrder(
   return chainComparator<ProcessItem>(
     // First compare by sum of considered stats
     compareBy((i) =>
-      _.sumBy(orderedConsideredStatHashes, (h) => -statsCache.get(i)![statHashToOrder[h]])
+      _.sumBy(
+        orderedConsideredStatHashes,
+        // Use sum of squares to pick high-single-stat or "spiky" items
+        (h) => {
+          const value = statsCache.get(i)![statHashToOrder[h]];
+          return -(value * value);
+        }
+      )
     ),
     // Then by each stat individually in order
     ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
