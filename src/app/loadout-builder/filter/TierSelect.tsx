@@ -8,8 +8,8 @@ import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ArmorStatHashes, MinMax, MinMaxIgnored, StatFilters, StatRanges } from '../types';
-import { statTier, statTierWithHalf } from '../utils';
+import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
+import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -31,15 +31,12 @@ const defaultStatRanges: Readonly<StatRanges> = {
  */
 export default function TierSelect({
   stats,
-  statRanges = defaultStatRanges,
   statRangesFiltered = defaultStatRanges,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
   stats: StatFilters;
-  /** The ranges the stats could have gotten to, EXCLUDING all filters */
-  statRanges?: Readonly<StatRanges>;
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
@@ -104,14 +101,12 @@ export default function TierSelect({
                 <MinMaxSelect
                   statHash={statHash}
                   stat={stats[statHash]}
-                  statRange={statRanges[statHash]}
                   type="Min"
                   handleTierChange={handleTierChange}
                 />
                 <MinMaxSelect
                   statHash={statHash}
                   stat={stats[statHash]}
-                  statRange={statRanges[statHash]}
                   type="Max"
                   handleTierChange={handleTierChange}
                 />
@@ -165,15 +160,12 @@ function MinMaxSelectInner({
   statHash,
   type,
   stat,
-  statRange,
   handleTierChange,
 }: {
   statHash: number;
   type: 'Min' | 'Max';
   /** Filter config for a single stat */
   stat: MinMaxIgnored;
-  /** The range this stat could have gotten to, EXCLUDING all filters */
-  statRange: MinMax;
   handleTierChange(
     statHash: number,
     changed: {
@@ -183,8 +175,8 @@ function MinMaxSelectInner({
     }
   ): void;
 }) {
-  const min = statTier(statRange.min);
-  const max = statTier(statRange.max);
+  const min = 0;
+  const max = 10;
   const ignored = stat.ignored;
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
