@@ -3,6 +3,7 @@ import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
@@ -36,7 +37,7 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-type Props = StoreProps;
+type Props = StoreProps & RouteComponentProps;
 
 /**
  * The activity tracker watches for user activity on the page, and periodically fires
@@ -128,8 +129,10 @@ class ActivityTracker extends React.Component<Props> {
     const isDimVisible = !document.hidden;
     const isOnline = navigator.onLine;
     const notDragging = !isDragging;
+    // Don't auto reload on the optimizer page, it makes it recompute all the time
+    const onOptimizer = this.props.location.pathname.endsWith('/optimizer');
 
-    if (dimHasNoActivePromises && isDimVisible && isOnline && notDragging) {
+    if (dimHasNoActivePromises && isDimVisible && isOnline && notDragging && !onOptimizer) {
       this.refresh();
     } else if (!dimHasNoActivePromises) {
       // Try again once the loading tracker goes back to inactive
@@ -146,4 +149,4 @@ class ActivityTracker extends React.Component<Props> {
   };
 }
 
-export default connect<StoreProps>(mapStateToProps)(ActivityTracker);
+export default withRouter(connect<StoreProps>(mapStateToProps)(ActivityTracker));
