@@ -4,7 +4,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -17,21 +16,12 @@ const INCLUDE = 'include';
 
 const MinMaxSelect = React.memo(MinMaxSelectInner);
 
-const defaultStatRanges: Readonly<StatRanges> = {
-  [StatHashes.Mobility]: { min: 0, max: 100 },
-  [StatHashes.Resilience]: { min: 0, max: 100 },
-  [StatHashes.Recovery]: { min: 0, max: 100 },
-  [StatHashes.Discipline]: { min: 0, max: 100 },
-  [StatHashes.Intellect]: { min: 0, max: 100 },
-  [StatHashes.Strength]: { min: 0, max: 100 },
-};
-
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function TierSelect({
   stats,
-  statRangesFiltered = defaultStatRanges,
+  statRangesFiltered,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
@@ -92,11 +82,13 @@ export default function TierSelect({
                 }
               >
                 <span className={styles.range}>
-                  {t('LoadoutBuilder.MaxTier', {
-                    tier: t('LoadoutBuilder.TierNumber', {
-                      tier: statTierWithHalf(statRangesFiltered[statHash].max),
-                    }),
-                  })}
+                  {statRangesFiltered
+                    ? t('LoadoutBuilder.MaxTier', {
+                        tier: t('LoadoutBuilder.TierNumber', {
+                          tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                        }),
+                      })
+                    : '-'}
                 </span>
                 <MinMaxSelect
                   statHash={statHash}
