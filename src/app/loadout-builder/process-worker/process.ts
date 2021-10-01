@@ -1,4 +1,3 @@
-import { StatHashes } from 'app/../data/d2/generated-enums';
 import _ from 'lodash';
 import raidModPlugCategoryHashes from '../../../data/d2/raid-mod-plug-category-hashes.json';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
@@ -44,9 +43,7 @@ function compareByStatOrder(
       _.sumBy(orderedConsideredStatHashes, (h) => -statsCache.get(i)![statHashToOrder[h]])
     ),
     // Then by each stat individually in order
-    ...orderedConsideredStatHashes.map((h) =>
-      compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])
-    ),
+    ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
     // Then by overall total
     compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
   );
@@ -118,7 +115,7 @@ export function process(
   const classItems = (filteredItems[LockableBuckets.classitem] || []).sort(itemComparator);
 
   // We won't search through more than this number of stat combos because it takes too long.
-  // On my machine (bhollis) it takes ~1s per 500,000 combos
+  // On my machine (bhollis) it takes ~1s per 270,000 combos
   const combosLimit = 2_000_000;
 
   // The maximum possible combos we could have
@@ -224,13 +221,14 @@ export function process(
 
             // TODO: why not just another ordered list?
             // Start with the contribution of mods. Spread operator is slow.
+            // Also dynamic property syntax is slow which is why we use the raw hashes here.
             const stats: ArmorStats = {
-              [StatHashes.Mobility]: modStatTotals[StatHashes.Mobility],
-              [StatHashes.Resilience]: modStatTotals[StatHashes.Resilience],
-              [StatHashes.Recovery]: modStatTotals[StatHashes.Recovery],
-              [StatHashes.Discipline]: modStatTotals[StatHashes.Discipline],
-              [StatHashes.Intellect]: modStatTotals[StatHashes.Intellect],
-              [StatHashes.Strength]: modStatTotals[StatHashes.Strength],
+              2996146975: modStatTotals[2996146975],
+              392767087: modStatTotals[392767087],
+              1943323491: modStatTotals[1943323491],
+              1735777505: modStatTotals[1735777505],
+              144602215: modStatTotals[144602215],
+              4244567218: modStatTotals[4244567218],
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
@@ -346,7 +344,7 @@ export function process(
     'stat combinations in',
     totalTime,
     'ms - ',
-    (combos * 1000) / totalTime,
+    Math.floor((combos * 1000) / totalTime),
     'combos/s',
     // Split into two objects so console.log will show them all expanded
     {
