@@ -300,7 +300,6 @@ function LoadoutBuilder({
     <div className={styles.menuContent}>
       <TierSelect
         stats={statFilters}
-        statRanges={result?.statRanges}
         statRangesFiltered={result?.statRangesFiltered}
         order={statOrder}
         onStatFiltersChanged={(statFilters) =>
