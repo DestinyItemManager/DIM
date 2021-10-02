@@ -65,7 +65,7 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps;
 
 const statOrderSelector = (state: RootState) =>
-  savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash!);
+  savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash);
 
 /** A selector to pull out all half tier general mods so we can quick add them to sets. */
 const halfTierModsSelector = createSelector(
