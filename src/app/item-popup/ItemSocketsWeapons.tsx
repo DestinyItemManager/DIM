@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import {
   getSocketByIndex,
   getSocketsByIndexes,
@@ -140,7 +140,7 @@ export default function ItemSocketsWeapons({
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
                 (socketInfo) =>
-                  socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
+                  !isKillTrackerSocket(socketInfo) && (
                     <Socket
                       key={socketInfo.socketIndex}
                       item={item}

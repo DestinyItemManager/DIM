@@ -1,5 +1,7 @@
 ## Next
 
+* The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
+
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 
 * Items in the Compare view no longer move around according to the character they're on.
