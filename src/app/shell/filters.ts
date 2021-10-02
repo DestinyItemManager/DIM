@@ -98,13 +98,10 @@ const D1_MATERIAL_SORT_ORDER = [
 ];
 
 // Bucket IDs that'll never be sorted.
-// Don't resort postmaster items - that way people can see
-// what'll get bumped when it's full.
 const ITEM_SORT_DENYLIST = new Set([
   2197472680, // Bounties (D1)
   375726501, // Mission (D1)
   1801258597, // Quests (D1)
-  BucketHashes.LostItems, // LostItems
 ]);
 
 export const acquisitionRecencyComparator = reverseComparator(
@@ -206,6 +203,11 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
         ITEM_COMPARATORS.amount
       )
     );
+  }
+
+  // Engrams and Postmaster always sort by recency, oldest to newest, like in game
+  if (itemLocationId === BucketHashes.Engrams || itemLocationId === BucketHashes.LostItems) {
+    return items.sort(reverseComparator(acquisitionRecencyComparator));
   }
 
   // always sort by archive first
