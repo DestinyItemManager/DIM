@@ -9,7 +9,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isInsertableArmor2Mod } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { Settings } from 'app/settings/initial-settings';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
 
@@ -58,32 +57,6 @@ export function buildLoadoutParams(
   return params;
 }
 
-/**
- * Given a Settings object, migrate the old-style toplevel LO settings into the new LoadoutParameters setting.
- */
-export function migrateLoadoutParametersFromSettings(settings: Settings): Settings {
-  // Only migrate if there aren't already settings
-  if (_.isEmpty(settings.loParameters)) {
-    let upgradeSpendTier = settings.loUpgradeSpendTier;
-    if (upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType) {
-      upgradeSpendTier = UpgradeSpendTier.Nothing;
-    }
-
-    return {
-      ...settings,
-      loParameters: {
-        statConstraints: settings.loStatSortOrder.map((statHash) => ({
-          statHash,
-        })),
-        upgradeSpendTier,
-        lockItemEnergyType: settings.loLockItemEnergyType,
-      },
-    };
-  }
-
-  return settings;
-}
-
 export function statOrderFromLoadoutParameters(params: LoadoutParameters): ArmorStatHashes[] {
   return _.sortBy(armorStats, (h) => {
     const index = params.statConstraints!.findIndex((c) => c.statHash === h);
@@ -92,7 +65,7 @@ export function statOrderFromLoadoutParameters(params: LoadoutParameters): Armor
 }
 
 export function statFiltersFromLoadoutParamaters(params: LoadoutParameters): StatFilters {
-  const statConstraintsByStatHash = _.keyBy(params.statConstraints, (c) => c.statHash!);
+  const statConstraintsByStatHash = _.keyBy(params.statConstraints, (c) => c.statHash);
   return armorStats.reduce((memo, statHash) => {
     const c = statConstraintsByStatHash[statHash];
     memo[statHash] = c

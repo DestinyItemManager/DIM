@@ -168,7 +168,6 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
-    setSetting('itemSort', 'custom');
     setSetting(
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)

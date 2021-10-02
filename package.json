@@ -3,6 +3,7 @@
   "version": "6.84.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
+  "private": true,
   "scripts": {
     "test": "jest --verbose",
     "lint": "jsonsort src/locale && eslint --fix src --ext .js,.ts,.tsx && stylelint --fix \"src/**/*.scss\"",
