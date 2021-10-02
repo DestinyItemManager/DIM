@@ -65,7 +65,7 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 export interface StatInfo {
-  id: string | number;
+  id: number | 'EnergyCapacity';
   displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
@@ -548,7 +548,7 @@ function getAllStats(
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
-            lowerBetter: false,
+            lowerBetter: stat.smallerIsBetter,
             getStat(item: DimItem) {
               const itemStat = item.stats
                 ? item.stats.find((s) => s.statHash === stat.statHash)
@@ -590,7 +590,6 @@ function getAllStats(
             : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.enabled = stat.min !== stat.max;
-        stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
     }
   }
@@ -598,12 +597,8 @@ function getAllStats(
   return stats;
 }
 
-function isDimStat(stat: DimStat | unknown): stat is DimStat {
-  return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
-}
-
 function makeFakeStat(
-  id: string | number,
+  id: StatInfo['id'],
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
   lowerBetter = false

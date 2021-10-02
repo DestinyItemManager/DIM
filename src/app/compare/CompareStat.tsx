@@ -5,7 +5,6 @@ import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
-import { AppIcon, starIcon } from '../shell/icons';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 import { DimAdjustedItemStat } from './types';
@@ -28,23 +27,24 @@ export default function CompareStat({
 
   const color = getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color');
 
+  const statValue = itemStat
+    ? (compareBaseStats ? itemStat.base : adjustedStatValue) ?? itemStat.value
+    : 0;
+
   return (
     <div onMouseOver={() => setHighlight?.(stat.id)} className={styles.stat} style={color}>
       <span>
-        {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
         {stat.id === 'EnergyCapacity' && itemStat && item.energy && (
           <ElementIcon element={item.element} />
         )}
         {itemStat?.value !== undefined ? (
           itemStat.statHash === StatHashes.RecoilDirection ? (
             <span className={styles.recoil}>
-              <span>{adjustedItemStats?.[itemStat.statHash] ?? itemStat.value}</span>
-              <RecoilStat value={adjustedItemStats?.[itemStat.statHash] ?? itemStat.value} />
+              <span>{statValue}</span>
+              <RecoilStat value={statValue} />
             </span>
-          ) : compareBaseStats ? (
-            itemStat.base ?? itemStat.value
           ) : (
-            adjustedItemStats?.[itemStat.statHash] ?? itemStat.value
+            statValue
           )
         ) : (
           t('Stats.NotApplicable')
