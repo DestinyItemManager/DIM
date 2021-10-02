@@ -232,12 +232,12 @@ export function process(
             // Start with the contribution of mods. Spread operator is slow.
             // Also dynamic property syntax is slow which is why we use the raw hashes here.
             const stats: ArmorStats = {
-              2996146975: modStatTotals[2996146975],
-              392767087: modStatTotals[392767087],
-              1943323491: modStatTotals[1943323491],
-              1735777505: modStatTotals[1735777505],
-              144602215: modStatTotals[144602215],
-              4244567218: modStatTotals[4244567218],
+              2996146975: modStatTotals[2996146975], // Stat "Mobility"
+              392767087: modStatTotals[392767087], // Stat "Resilience"
+              1943323491: modStatTotals[1943323491], // Stat "Recovery"
+              1735777505: modStatTotals[1735777505], // Stat "Discipline"
+              144602215: modStatTotals[144602215], // Stat "Intellect"
+              4244567218: modStatTotals[4244567218], // Stat "Strength"
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
