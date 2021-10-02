@@ -1,4 +1,3 @@
-import { StatHashes } from 'app/../data/d2/generated-enums';
 import _ from 'lodash';
 import raidModPlugCategoryHashes from '../../../data/d2/raid-mod-plug-category-hashes.json';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
@@ -44,9 +43,7 @@ function compareByStatOrder(
       _.sumBy(orderedConsideredStatHashes, (h) => -statsCache.get(i)![statHashToOrder[h]])
     ),
     // Then by each stat individually in order
-    ...orderedConsideredStatHashes.map((h) =>
-      compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])
-    ),
+    ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
     // Then by overall total
     compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
   );
@@ -71,6 +68,7 @@ export function process(
   combos: number;
   combosWithoutCaps: number;
   statRanges?: StatRanges;
+  statRangesFiltered?: StatRanges;
 } {
   const pstart = performance.now();
 
@@ -83,9 +81,12 @@ export function process(
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRanges: StatRanges = _.mapValues(statFilters, (filter) =>
-    filter.ignored ? { min: 0, max: 10 } : { min: 10, max: 0 }
-  );
+  const statRanges: StatRanges = _.mapValues(statFilters, () => ({ min: 100, max: 0 }));
+
+  const statRangesFiltered: StatRanges = _.mapValues(statFilters, () => ({
+    min: 100,
+    max: 0,
+  }));
 
   const statsCache: Map<ProcessItem, number[]> = new Map();
 
@@ -114,17 +115,20 @@ export function process(
   const classItems = (filteredItems[LockableBuckets.classitem] || []).sort(itemComparator);
 
   // We won't search through more than this number of stat combos because it takes too long.
-  // On my machine (bhollis) it takes ~1s per 500,000 combos
+  // On my machine (bhollis) it takes ~1s per 270,000 combos
   const combosLimit = 2_000_000;
 
   // The maximum possible combos we could have
   const combosWithoutCaps =
     helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+  const initialNumItems =
+    helms.length + gaunts.length + chests.length + legs.length + classItems.length;
 
   let combos = combosWithoutCaps;
 
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
+  let numDiscarded = 0;
   while (combos > combosLimit) {
     const sortedTypes = [helms, gaunts, chests, legs]
       // Don't ever remove the last item in a category
@@ -135,6 +139,7 @@ export function process(
       );
     // Pop the last item off the worst-sorted list
     sortedTypes[sortedTypes.length - 1].pop();
+    numDiscarded++;
     // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
     combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
   }
@@ -145,7 +150,12 @@ export function process(
       'Reduced armor combinations from',
       combosWithoutCaps,
       'to',
-      combos
+      combos,
+      'by discarding',
+      numDiscarded,
+      'of',
+      initialNumItems,
+      'items'
     );
   }
 
@@ -220,13 +230,14 @@ export function process(
 
             // TODO: why not just another ordered list?
             // Start with the contribution of mods. Spread operator is slow.
+            // Also dynamic property syntax is slow which is why we use the raw hashes here.
             const stats: ArmorStats = {
-              [StatHashes.Mobility]: modStatTotals[StatHashes.Mobility],
-              [StatHashes.Resilience]: modStatTotals[StatHashes.Resilience],
-              [StatHashes.Recovery]: modStatTotals[StatHashes.Recovery],
-              [StatHashes.Discipline]: modStatTotals[StatHashes.Discipline],
-              [StatHashes.Intellect]: modStatTotals[StatHashes.Intellect],
-              [StatHashes.Strength]: modStatTotals[StatHashes.Strength],
+              2996146975: modStatTotals[2996146975], // Stat "Mobility"
+              392767087: modStatTotals[392767087], // Stat "Resilience"
+              1943323491: modStatTotals[1943323491], // Stat "Recovery"
+              1735777505: modStatTotals[1735777505], // Stat "Discipline"
+              144602215: modStatTotals[144602215], // Stat "Intellect"
+              4244567218: modStatTotals[4244567218], // Stat "Strength"
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
@@ -246,22 +257,26 @@ export function process(
 
             let totalTier = 0;
             let statRangeExceeded = false;
-            for (const statHash of orderedConsideredStatHashes) {
-              const tier = statTier(stats[statHash]);
+            for (const statHash of statOrder) {
+              const value = stats[statHash];
+              const tier = statTier(value);
 
               // Update our global min/max for this stat
-              if (tier > statRanges[statHash].max) {
-                statRanges[statHash].max = tier;
+              const range = statRanges[statHash];
+              if (value > range.max) {
+                range.max = value;
               }
-              if (tier < statRanges[statHash].min) {
-                statRanges[statHash].min = tier;
+              if (value < range.min) {
+                range.min = value;
               }
 
-              if (tier > statFilters[statHash].max || tier < statFilters[statHash].min) {
-                statRangeExceeded = true;
-                break;
+              const filter = statFilters[statHash];
+              if (!filter.ignored) {
+                if (tier > filter.max || tier < filter.min) {
+                  statRangeExceeded = true;
+                }
+                totalTier += tier;
               }
-              totalTier += tier;
             }
 
             if (statRangeExceeded) {
@@ -297,10 +312,23 @@ export function process(
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             let tiers = '';
-            for (const statHash of orderedConsideredStatHashes) {
-              const tier = statTier(stats[statHash]);
+            for (const statHash of statOrder) {
+              const value = stats[statHash];
+              const tier = statTier(value);
               // Make each stat exactly one code unit so the string compares correctly
-              tiers += tier.toString(11);
+              const filter = statFilters[statHash];
+              if (!filter.ignored) {
+                tiers += tier.toString(11);
+              }
+
+              // Separately track the stat ranges of sets that made it through all our filters
+              const range = statRangesFiltered[statHash];
+              if (value > range.max) {
+                range.max = value;
+              }
+              if (value < range.min) {
+                range.min = value;
+              }
             }
 
             numInserted++;
@@ -325,7 +353,7 @@ export function process(
     'stat combinations in',
     totalTime,
     'ms - ',
-    (combos * 1000) / totalTime,
+    Math.floor((combos * 1000) / totalTime),
     'combos/s',
     // Split into two objects so console.log will show them all expanded
     {
@@ -340,7 +368,13 @@ export function process(
     }
   );
 
-  return { sets: flattenSets(finalSets), combos, combosWithoutCaps, statRanges };
+  return {
+    sets: flattenSets(finalSets),
+    combos,
+    combosWithoutCaps,
+    statRanges,
+    statRangesFiltered,
+  };
 }
 
 /**
