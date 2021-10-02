@@ -4,6 +4,9 @@
 * Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * We've tweaked the way Loadout Optimizer chooses which subset of items to look at when you have too many items to process. We should be better at making use of items that have "spiky" stats.
+* Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
+* We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
+* The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 

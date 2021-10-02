@@ -43,12 +43,14 @@ import {
   getItemYear,
   getMasterworkStatNames,
   isD1Item,
+  isKillTrackerSocket,
   isSunset,
 } from 'app/utils/item-utils';
 import {
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
+  isEmptyModSocket,
   isUsedModSocket,
 } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -535,6 +537,8 @@ function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }
   let sockets = item.sockets.categories.flatMap((c) =>
     getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
+        !isKillTrackerSocket(s) &&
+        !isEmptyModSocket(s) &&
         s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
           isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
