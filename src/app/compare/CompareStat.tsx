@@ -5,7 +5,7 @@ import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
-import { getColor } from '../shell/filters';
+import { getColor, percent } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 
@@ -30,7 +30,13 @@ export default function CompareStat({
 
   return (
     <div onMouseOver={() => setHighlight?.(stat.id)} className={styles.stat} style={color}>
-      <span>
+      {statValue && stat.bar && item.bucket.sort === 'Armor' && (
+        <span
+          className={styles.bar}
+          style={{ width: percent(statValue / stat.statMaximumValue) }}
+        />
+      )}
+      <span className={styles.value}>
         {stat.id === 'EnergyCapacity' && itemStat && item.energy && (
           <ElementIcon element={item.element} />
         )}

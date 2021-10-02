@@ -10,4 +10,17 @@
 .stat {
   height: 16px;
   margin-right: calc(var(--item-size) + 16px);
+  position: relative;
+}
+
+.bar {
+  background-color: rgba(255, 255, 255, 0.15);
+  position: absolute;
+  top: 10%;
+  height: 80%;
+  z-index: -1;
+}
+
+.value {
+  z-index: 1;
 }
