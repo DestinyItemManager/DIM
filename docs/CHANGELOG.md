@@ -1,6 +1,7 @@
 ## Next
 
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
+* The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 

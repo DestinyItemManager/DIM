@@ -1,6 +1,6 @@
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import RecoilStat from 'app/item-popup/RecoilStat';
+import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
@@ -26,11 +26,10 @@ export default function CompareStat({
   const itemStat = stat.getStat(item);
   const adjustedStatValue = itemStat ? adjustedItemStats?.[itemStat.statHash] : undefined;
 
+  const color = getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color');
+
   return (
-    <div
-      onMouseOver={() => setHighlight?.(stat.id)}
-      style={getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color')}
-    >
+    <div onMouseOver={() => setHighlight?.(stat.id)} className={styles.stat} style={color}>
       <span>
         {stat.id === 'Rating' && <AppIcon icon={starIcon} />}
         {stat.id === 'EnergyCapacity' && itemStat && item.energy && (
@@ -78,33 +77,15 @@ function statRange(
     return -1;
   }
 
+  const statValue = (compareBaseStats ? stat.base : adjustedStatValue ?? stat.value) ?? 0;
+
+  if (statInfo.id === StatHashes.RecoilDirection) {
+    return recoilValue(statValue);
+  }
+
   if (statInfo.lowerBetter) {
-    if (adjustedStatValue) {
-      return (
-        (100 *
-          (statInfo.max - (compareBaseStats ? stat.base ?? adjustedStatValue : statInfo.max))) /
-        (statInfo.max - statInfo.min)
-      );
-    }
-
-    return (
-      (100 *
-        (statInfo.max -
-          ((compareBaseStats ? stat.base ?? stat.value : stat.value) || statInfo.max))) /
-      (statInfo.max - statInfo.min)
-    );
+    return (100 * (statInfo.max - statValue)) / (statInfo.max - statInfo.min);
   }
 
-  if (adjustedStatValue) {
-    return (
-      (100 *
-        ((compareBaseStats ? stat.base ?? adjustedStatValue : adjustedStatValue) - statInfo.min)) /
-      (statInfo.max - statInfo.min)
-    );
-  }
-
-  return (
-    (100 * (((compareBaseStats ? stat.base ?? stat.value : stat.value) || 0) - statInfo.min)) /
-    (statInfo.max - statInfo.min)
-  );
+  return (100 * (statValue - statInfo.min)) / (statInfo.max - statInfo.min);
 }
