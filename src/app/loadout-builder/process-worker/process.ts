@@ -7,7 +7,7 @@ import { infoLog } from '../../utils/log';
 import { generateProcessModPermutations } from '../mod-permutations';
 import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { statTier } from '../utils';
-import { canTakeSlotIndependantMods, sortProcessModsOrItems } from './process-utils';
+import { canTakeSlotIndependentMods, sortProcessModsOrItems } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,
@@ -300,7 +300,7 @@ export function process(
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             if (
               hasMods &&
-              !canTakeSlotIndependantMods(
+              !canTakeSlotIndependentMods(
                 generalModsPermutations,
                 combatModPermutations,
                 raidModPermutations,
