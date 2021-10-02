@@ -7,8 +7,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
-import { statTierWithHalf } from '../utils';
+import { ArmorStatHashes, MinMaxIgnored, StatFilters } from '../types';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -21,14 +20,11 @@ const MinMaxSelect = React.memo(MinMaxSelectInner);
  */
 export default function TierSelect({
   stats,
-  statRangesFiltered,
   order,
   onStatOrderChanged,
   onStatFiltersChanged,
 }: {
   stats: StatFilters;
-  /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
-  statRangesFiltered?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
   onStatOrderChanged(order: ArmorStatHashes[]): void;
   onStatFiltersChanged(stats: StatFilters): void;
@@ -81,15 +77,6 @@ export default function TierSelect({
                   </span>
                 }
               >
-                <span className={styles.range}>
-                  {statRangesFiltered
-                    ? t('LoadoutBuilder.MaxTier', {
-                        tier: t('LoadoutBuilder.TierNumber', {
-                          tier: statTierWithHalf(statRangesFiltered[statHash].max),
-                        }),
-                      })
-                    : '-'}
-                </span>
                 <MinMaxSelect
                   statHash={statHash}
                   stat={stats[statHash]}
