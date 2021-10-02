@@ -3,7 +3,7 @@ import Select, { Option } from 'app/dim-ui/Select';
 import { t, tl } from 'app/i18next-t';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { tagSelector } from 'app/inventory/selectors';
-import { AppIcon, clearIcon } from 'app/shell/icons';
+import { AppIcon, banIcon, boltIcon, clearIcon, heartIcon, tagIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -73,7 +73,16 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
 function TagOption({ tagOption, hideKeys }: { tagOption: TagInfo; hideKeys?: boolean }) {
   return (
     <div className={styles.item}>
-      {tagOption.icon ? <AppIcon icon={tagOption.icon} /> : <div className={styles.null} />}
+      {tagOption.icon ? (
+        <AppIcon icon={tagOption.icon} />
+      ) : (
+        <div className={styles.null}>
+          <AppIcon icon={heartIcon} />
+          <AppIcon icon={tagIcon} />
+          <AppIcon icon={banIcon} />
+          <AppIcon icon={boltIcon} />
+        </div>
+      )}
       <span>{t(tagOption.label)}</span>
       {!hideKeys && tagOption.hotkey && (
         <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />

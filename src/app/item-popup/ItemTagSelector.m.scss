@@ -25,16 +25,14 @@
 
 .null {
   composes: app-icon from global;
-  display: flex !important;
+  display: grid !important;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
   align-items: center;
   justify-content: center;
-  &::before {
-    content: '';
-    display: block;
-    height: 6px;
-    width: 6px;
-    border-radius: 3px;
-    background-color: white;
+  > :global(.app-icon) {
+    font-size: 8px !important;
+    margin: 0;
   }
 }
 
