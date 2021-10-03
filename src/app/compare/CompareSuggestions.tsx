@@ -3,19 +3,19 @@ import { filterFactorySelector } from 'app/search/search-filter';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
+import { compareCategoryItemsSelector } from './selectors';
 
 /**
  * Display a row of buttons that suggest alternate queries based on an example item.
  */
 export default memo(function CompareSuggestions({
   exampleItem,
-  categoryItems,
   onQueryChanged,
 }: {
   exampleItem: DimItem;
-  categoryItems: DimItem[];
   onQueryChanged(query: string): void;
 }) {
+  const categoryItems = useSelector(compareCategoryItemsSelector);
   const filterFactory = useSelector(filterFactorySelector);
 
   // Find all possible buttons

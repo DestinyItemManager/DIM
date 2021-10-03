@@ -23,7 +23,6 @@ export default function Plug({
   wishlistRoll,
   hasMenu,
   onClick,
-  adjustedPlug,
 }: {
   plug: DimPlug;
   item: DimItem;
@@ -31,7 +30,6 @@ export default function Plug({
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
   onClick?(plug: DimPlug): void;
-  adjustedPlug?: DimPlug;
 }) {
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
@@ -50,7 +48,7 @@ export default function Plug({
 
   const itemCategories = plug?.plugDef.itemCategoryHashes || [];
 
-  const handleShiftClick = onClick && (() => onClick(plug));
+  const doClick = onClick && (() => onClick(plug));
 
   const contents = (
     <div ref={drop}>
@@ -60,21 +58,24 @@ export default function Plug({
 
   const tooltip = () => <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
 
+  // Is this the currently active plug - either because it's what's slotted in game or the user has clicked to preview it
+  const plugged = plug === socketInfo.plugged;
+  const selectable = socketInfo.plugOptions.length > 1;
+
   return (
     <div
       key={plug.plugDef.hash}
       className={clsx('socket-container', {
         disabled: !plug.enabled,
-        notChosen: plug !== socketInfo.plugged,
-        selectable: socketInfo.plugOptions.length > 1 && socketInfo.socketIndex <= 2,
-        selected: plug.plugDef.hash === adjustedPlug?.plugDef.hash,
-        notSelected:
-          plug === socketInfo.plugged &&
-          adjustedPlug?.plugDef.hash &&
-          plug.plugDef.hash !== adjustedPlug?.plugDef.hash,
+        notChosen: !plugged,
+        selectable,
+        // This has been selected by the user but isn't the original plugged item
+        selected: socketInfo.actuallyPlugged && plugged,
+        // Another plug was selected by the user
+        notSelected: socketInfo.actuallyPlugged && !plugged,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
       })}
-      onClick={handleShiftClick}
+      onClick={hasMenu || selectable ? doClick : undefined}
     >
       {!(hasMenu && isPhonePortrait) || hovering ? (
         hovering ? (

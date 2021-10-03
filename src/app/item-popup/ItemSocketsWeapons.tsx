@@ -14,7 +14,6 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
@@ -28,16 +27,10 @@ interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: DimAdjustedItemPlug;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
 }
 
-export default function ItemSocketsWeapons({
-  item,
-  minimal,
-  updateSocketComparePlug,
-  adjustedItemPlugs,
-}: Props) {
+export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Props) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
@@ -45,8 +38,8 @@ export default function ItemSocketsWeapons({
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
       setSocketInMenu(socket);
-    } else if (updateSocketComparePlug) {
-      updateSocketComparePlug({
+    } else if (onPlugClicked) {
+      onPlugClicked({
         item,
         socket,
         plug,
@@ -95,7 +88,6 @@ export default function ItemSocketsWeapons({
       socket={socketInfo}
       wishlistRoll={wishlistRoll}
       onClick={handleSocketClick}
-      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
     />
   );
 
@@ -147,7 +139,6 @@ export default function ItemSocketsWeapons({
                       socket={socketInfo}
                       wishlistRoll={wishlistRoll}
                       onClick={handleSocketClick}
-                      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
                     />
                   )
               )}
