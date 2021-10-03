@@ -10,8 +10,8 @@ interface State {
   dimAppName?: string;
 }
 
-export default class Developer extends React.Component<{}, State> {
-  constructor(props: {}) {
+export default class Developer extends React.Component<Record<string, never>, State> {
+  constructor(props: Record<string, never>) {
     super(props);
     // we ask typescript to trust that we won't do array values as URL params
     const urlParams = new URLSearchParams(window.location.search);

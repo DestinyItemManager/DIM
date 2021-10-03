@@ -204,9 +204,7 @@ function Compare({
     doCompareBaseStats,
     allStats
   );
-  const sortedComparisonItems = !sortedHash
-    ? Array.from(compareItems).sort(acquisitionRecencyComparator)
-    : Array.from(compareItems).sort(comparator);
+  const sortedComparisonItems = Array.from(compareItems).sort(comparator);
 
   const items = useMemo(
     () => (
@@ -321,6 +319,10 @@ function sortCompareItemsComparator(
   compareBaseStats: boolean,
   allStats: StatInfo[]
 ) {
+  if (!sortedHash) {
+    return acquisitionRecencyComparator;
+  }
+
   const sortStat = allStats.find((s) => s.id === sortedHash);
 
   if (!sortStat) {
