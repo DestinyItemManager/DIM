@@ -2,6 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
+import { recoilValue } from 'app/item-popup/RecoilStat';
 import { statLabels } from 'app/organizer/Columns';
 import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
@@ -15,6 +16,7 @@ import { emptyArray } from 'app/utils/empty';
 import { getSocketByIndex } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -63,7 +65,7 @@ function mapStateToProps(state: RootState): StoreProps {
 }
 
 export interface StatInfo {
-  id: string | number;
+  id: number | 'EnergyCapacity';
   displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
@@ -335,6 +337,9 @@ function sortCompareItemsComparator(
           return -1;
         }
         const statValue = compareBaseStats ? stat.base ?? stat.value : stat.value;
+        if (stat.statHash === StatHashes.RecoilDirection) {
+          return recoilValue(stat.value);
+        }
         return shouldReverse ? -statValue : statValue;
       }),
       compareBy((i) => i.index),
@@ -543,7 +548,7 @@ function getAllStats(
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
-            lowerBetter: false,
+            lowerBetter: stat.smallerIsBetter,
             getStat(item: DimItem) {
               const itemStat = item.stats
                 ? item.stats.find((s) => s.statHash === stat.statHash)
@@ -585,7 +590,6 @@ function getAllStats(
             : adjustedStatValue ?? itemStat.value) || 0
         );
         stat.enabled = stat.min !== stat.max;
-        stat.lowerBetter = isDimStat(itemStat) ? itemStat.smallerIsBetter : false;
       }
     }
   }
@@ -593,12 +597,8 @@ function getAllStats(
   return stats;
 }
 
-function isDimStat(stat: DimStat | unknown): stat is DimStat {
-  return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
-}
-
 function makeFakeStat(
-  id: string | number,
+  id: StatInfo['id'],
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
   lowerBetter = false

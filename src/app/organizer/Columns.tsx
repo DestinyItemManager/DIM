@@ -22,6 +22,7 @@ import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { recoilValue } from 'app/item-popup/RecoilStat';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -140,7 +141,13 @@ export function getColumns(
           ),
           statHash,
           columnGroup: statsGroup,
-          value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
+          value: (item: DimItem) => {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat?.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(stat.value);
+            }
+            return stat?.value || 0;
+          },
           cell: (_val, item: DimItem) => {
             const stat = item.stats?.find((s) => s.statHash === statHash);
             if (!stat) {
@@ -166,7 +173,13 @@ export function getColumns(
           ...column,
           id: `base_${column.statHash}`,
           columnGroup: baseStatsGroup,
-          value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
+          value: (item: DimItem) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (stat?.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(stat.base);
+            }
+            return stat?.base || 0;
+          },
           cell: (value) => <div className={styles.statValue}>{value}</div>,
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
