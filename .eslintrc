@@ -139,8 +139,8 @@
       "error",
       {
         "types": {
-          "BigInt": "BigInt isn't supported in old versios (pre-14) of Safari",
-          "bigint": "BigInt isn't supported in old versios (pre-14) of Safari"
+          "BigInt": "BigInt isn't supported in old versions (pre-14) of Safari",
+          "bigint": "BigInt isn't supported in old versions (pre-14) of Safari"
         },
         "extendDefaults": false
       }
