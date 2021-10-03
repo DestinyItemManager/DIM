@@ -1,10 +1,23 @@
 import React from 'react';
 
-export default function RecoilStat({ value }: { value: number }) {
-  // A value from 100 to -100 where positive is right and negative is left
-  // See https://imgur.com/LKwWUNV
-  const direction = Math.sin((value + 5) * ((2 * Math.PI) / 20)) * (100 - value) * (Math.PI / 180);
+/**
+ * A value from 100 to -100 where positive is right and negative is left
+ * See https://imgur.com/LKwWUNV
+ */
+export function recoilDirection(value: number) {
+  return Math.sin((value + 5) * ((2 * Math.PI) / 20)) * (100 - value) * (Math.PI / 180);
+}
 
+/**
+ * A value from 0 to 100 describing how straight up and down the recoil is, for sorting
+ */
+export function recoilValue(value: number) {
+  const deviation = Math.abs(recoilDirection(value));
+  return 100 - deviation + value / 100000;
+}
+
+export default function RecoilStat({ value }: { value: number }) {
+  const direction = recoilDirection(value);
   const x = Math.sin(direction);
   const y = Math.cos(direction);
 

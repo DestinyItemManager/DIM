@@ -3,6 +3,7 @@
 interface CssExports {
   'range': string;
   'recoil': string;
+  'stat': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
