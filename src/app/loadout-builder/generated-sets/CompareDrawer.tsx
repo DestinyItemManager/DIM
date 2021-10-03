@@ -35,7 +35,8 @@ function getItemStats(
   const baseStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = item.stats?.find((s) => s.statHash === statHash)?.base || 0;
     return memo;
-  }, {}) as ArmorStats;
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+  }, {} as ArmorStats);
 
   if (
     upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10 ||
@@ -128,7 +129,8 @@ function CompareDrawer({
   const loadoutStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = 0;
     return memo;
-  }, {}) as ArmorStats;
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+  }, {} as ArmorStats);
 
   for (const item of loadoutItems) {
     const itemStats = getItemStats(defs, item, upgradeSpendTier);
