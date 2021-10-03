@@ -105,7 +105,7 @@ const ITEM_SORT_DENYLIST = new Set([
 ]);
 
 export const acquisitionRecencyComparator = reverseComparator(
-  compareBy((item: DimItem) => BigInt(item.id))
+  compareBy((item: DimItem) => item.id.padStart(20, '0'))
 );
 
 // TODO: pass in state

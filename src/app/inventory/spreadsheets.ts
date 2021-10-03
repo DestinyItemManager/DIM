@@ -234,7 +234,7 @@ function getMaxPerks(items: DimItem[]) {
   );
 }
 
-function addPerks(row: object, item: DimItem, maxPerks: number) {
+function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number) {
   const perks = item.talentGrid
     ? buildNodeNames(item.talentGrid.nodes)
     : item.sockets
