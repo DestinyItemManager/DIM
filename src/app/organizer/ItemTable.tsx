@@ -568,7 +568,7 @@ function ItemTable({
 function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
   const unsortedRows: Row[] = items.map((item) => ({
     item,
-    values: filteredColumns.reduce((memo, col) => {
+    values: filteredColumns.reduce<Row['values']>((memo, col) => {
       memo[col.id] = col.value(item);
       return memo;
     }, {}),
