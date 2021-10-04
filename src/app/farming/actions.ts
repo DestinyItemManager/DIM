@@ -108,7 +108,7 @@ export function stopFarming(): ThunkResult {
   };
 }
 
-// Ensure that there's one open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number open space in each category that could
 // hold an item, so they don't go to the postmaster.
 function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResult {
   return (dispatch, getState) => {
@@ -147,7 +147,7 @@ function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return moveItemsToVault(store, toMove, [], cancelToken);
 }
 
-// Ensure that there's one open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number open space in each category that could
 // hold an item, so they don't go to the postmaster.
 function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {
@@ -159,7 +159,7 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
   };
 }
 
-// Ensure that there's one open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number of open space in each category that could
 // hold an item, so they don't go to the postmaster.
 export function makeRoomForItemsInBuckets(
   stores: DimStore[],
@@ -172,9 +172,12 @@ export function makeRoomForItemsInBuckets(
     const itemsToMove: DimItem[] = [];
     const itemInfos = itemInfosSelector(getState());
     const itemHashTags = itemHashTagsSelector(getState());
+    const inventoryClearSpaces = settingsSelector(getState()).inventoryClearSpaces;
     makeRoomBuckets.forEach((bucket) => {
       const items = findItemsByBucket(store, bucket.hash);
-      if (items.length > 0 && items.length >= capacityForItem(store, items[0])) {
+      const capacityIncludingClearSpacesSetting =
+        capacityForItem(store, items[0]) - inventoryClearSpaces + 1;
+      if (items.length > 0 && items.length >= capacityIncludingClearSpacesSetting) {
         const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
         const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
           moveAsideCandidates,
