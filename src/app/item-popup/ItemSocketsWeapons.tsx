@@ -120,7 +120,7 @@ export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Pro
       )}
       {perks &&
         ($featureFlags.newPerks && !minimal ? (
-          <ItemPerksList item={item} perks={perks} />
+          <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
         ) : (
           <div
             className={clsx(
