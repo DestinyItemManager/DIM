@@ -5,6 +5,7 @@
 * Postmaster and Engrams should be sorted exactly like in game now.
 * Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
+* Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
 * The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
 
