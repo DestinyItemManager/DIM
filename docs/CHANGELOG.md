@@ -5,6 +5,7 @@
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
 * The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
+* Farming mode can now be configured in settings to clear a preferred number of slots (1-9)
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 
