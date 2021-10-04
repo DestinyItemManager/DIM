@@ -14,7 +14,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -107,6 +107,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
     }
   }, [dispatch, isD2]);
 
+  const { pathname, search } = useLocation();
   const { path, url } = useRouteMatch();
 
   // Define some hotkeys without implementation, so they show up in the help
@@ -171,17 +172,22 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useHotkeys(hotkeys);
 
   if (!account) {
-    return accountsLoaded ? (
-      <div className="dim-page">
-        <ErrorPanel
-          title={t('Accounts.MissingTitle')}
-          fallbackMessage={t('Accounts.MissingDescription')}
-          showTwitters={true}
-        />
-      </div>
-    ) : (
-      <ShowPageLoading message={t('Loading.Accounts')} />
-    );
+    if (pathname.includes('/armory/')) {
+      console.log(pathname.replace(/\/\d+\/d2/, '') + search, path);
+      return <Redirect to={pathname.replace(/\/\d+\/d2/, '') + search} />;
+    } else {
+      return accountsLoaded ? (
+        <div className="dim-page">
+          <ErrorPanel
+            title={t('Accounts.MissingTitle')}
+            fallbackMessage={t('Accounts.MissingDescription')}
+            showTwitters={true}
+          />
+        </div>
+      ) : (
+        <ShowPageLoading message={t('Loading.Accounts')} />
+      );
+    }
   }
 
   if (profileError) {
