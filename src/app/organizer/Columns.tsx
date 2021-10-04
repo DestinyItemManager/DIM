@@ -445,7 +445,9 @@ export function getColumns(
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
-        cell: (_val, item) => <PerksCell item={item} traitsOnly={true} />,
+        cell: (_val, item) => (
+          <PerksCell item={item} traitsOnly={true} onPlugClicked={onPlugClicked} />
+        ),
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -603,9 +605,19 @@ function PerksCell({
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
+                  [styles.perkSelectable]: socket.plugOptions.length > 1,
                 })}
                 data-perk-name={p.plugDef.displayProperties.name}
-                onClick={onPlugClicked && (() => onPlugClicked({ item, socket, plug: p }))}
+                onClick={
+                  onPlugClicked && socket.plugOptions.length > 1
+                    ? (e: React.MouseEvent) => {
+                        if (!e.shiftKey) {
+                          e.stopPropagation();
+                          onPlugClicked({ item, socket, plug: p });
+                        }
+                      }
+                    : undefined
+                }
               >
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />
