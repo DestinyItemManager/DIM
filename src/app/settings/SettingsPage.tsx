@@ -440,7 +440,7 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
               <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
             </div>
             <Select
-              label={t('Settings.InventoryNumberOfItemsToClear')}
+              label={t('Settings.InventoryNumberOfSpacesToClear')}
               name="inventoryClearSpaces"
               value={settings.inventoryClearSpaces}
               options={numberOfSpacesOptions}

@@ -814,7 +814,7 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
-    "InventoryNumberOfItemsToClear": "Number of empty spaces to make when using Farming Mode (make space)",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
