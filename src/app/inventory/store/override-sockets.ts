@@ -1,7 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { errorLog } from 'app/utils/log';
+import produce from 'immer';
 import _ from 'lodash';
-import { DimItem, DimSocket } from '../item-types';
+import { useCallback, useState } from 'react';
+import { DimItem, DimPlug, DimSocket } from '../item-types';
 import { buildStats } from './stats';
 
 /**
@@ -78,4 +80,72 @@ export function applySocketOverrides(
   updatedItem.stats = buildStats(defs, updatedItem);
 
   return updatedItem;
+}
+
+/**
+ * A hook to manage socket overrides for a single item.
+ */
+export function useSocketOverrides(): [
+  socketOverrides: SocketOverrides,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void
+] {
+  const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
+  const onPlugClicked = useCallback(
+    ({ socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+      setSocketOverrides(
+        produce((so) => {
+          if (
+            so[socket.socketIndex] &&
+            plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash
+          ) {
+            delete so[socket.socketIndex];
+          } else {
+            so[socket.socketIndex] = plug.plugDef.hash;
+          }
+        })
+      );
+    },
+    []
+  );
+  return [socketOverrides, onPlugClicked];
+}
+
+/**
+ * A hook to manage socket overrides for multiple items.
+ */
+export function useSocketOverridesForItems(): [
+  socketOverrides: { [itemId: string]: SocketOverrides },
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void,
+  resetSocketOverrides: () => void
+] {
+  const [socketOverrides, setSocketOverrides] = useState<{ [itemId: string]: SocketOverrides }>({});
+  const onPlugClicked = useCallback(
+    ({ item, socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+      setSocketOverrides(
+        produce((so) => {
+          if (!so[item.id]) {
+            so[item.id] = {};
+          }
+
+          if (
+            so[item.id][socket.socketIndex] &&
+            plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash
+          ) {
+            delete so[item.id][socket.socketIndex];
+          } else {
+            so[item.id][socket.socketIndex] = plug.plugDef.hash;
+          }
+
+          if (_.isEmpty(so[item.id])) {
+            delete so[item.id];
+          }
+        })
+      );
+    },
+    []
+  );
+
+  const resetSocketOverrides = useCallback(() => setSocketOverrides({}), []);
+
+  return [socketOverrides, onPlugClicked, resetSocketOverrides];
 }

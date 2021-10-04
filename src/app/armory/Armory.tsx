@@ -4,11 +4,14 @@ import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
-import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
+import {
+  applySocketOverrides,
+  SocketOverrides,
+  useSocketOverrides,
+} from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -26,8 +29,7 @@ import { getItemYear } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import produce from 'immer';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
 import styles from './Armory.m.scss';
@@ -45,7 +47,7 @@ export default function Armory({
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
-  const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
+  const [socketOverrides, onPlugClicked] = useSocketOverrides();
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
@@ -58,19 +60,6 @@ export default function Armory({
       </div>
     );
   }
-
-  const onPlugClicked = ({ socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
-    // TODO: clean up when going back to original items
-    setSocketOverrides(
-      produce((so) => {
-        if (so[socket.socketIndex] && plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash) {
-          delete so[socket.socketIndex];
-        } else {
-          so[socket.socketIndex] = plug.plugDef.hash;
-        }
-      })
-    );
-  };
 
   // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
   const item = applySocketOverrides(

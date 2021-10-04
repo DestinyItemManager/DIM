@@ -1,7 +1,7 @@
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
-import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
+import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
@@ -14,12 +14,11 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import produce from 'immer';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { AppIcon, faCheck, faClock } from '../shell/icons';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
@@ -40,7 +39,7 @@ export default function ItemDetails({
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
-  const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
+  const [socketOverrides, onPlugClicked] = useSocketOverrides();
   const item = defs.isDestiny2()
     ? applySocketOverrides(defs, originalItem, socketOverrides)
     : originalItem;
@@ -50,19 +49,6 @@ export default function ItemDetails({
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
-
-  const onPlugClicked = ({ socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
-    // TODO: clean up when going back to original items
-    setSocketOverrides(
-      produce((so) => {
-        if (so[socket.socketIndex] && plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash) {
-          delete so[socket.socketIndex];
-        } else {
-          so[socket.socketIndex] = plug.plugDef.hash;
-        }
-      })
-    );
-  };
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
   return (

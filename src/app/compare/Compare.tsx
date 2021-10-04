@@ -3,7 +3,10 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
-import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
+import {
+  applySocketOverrides,
+  useSocketOverridesForItems,
+} from 'app/inventory/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
@@ -24,7 +27,7 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
@@ -98,7 +101,7 @@ function Compare({
   /** The stat row to sort by */
   const [sortedHash, setSortedHash] = useState<string | number>();
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
-  const [socketOverrides, setSocketOverrides] = useState<{ [itemId: string]: SocketOverrides }>({});
+  const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverridesForItems();
 
   // Produce new items which have had their sockets changed
   const compareItems = useMemo(
@@ -113,7 +116,7 @@ function Compare({
     // TODO: this is why we need a container, right? So we don't have to reset state
     setHighlight(undefined);
     setSortedHash(undefined);
-    setSocketOverrides({});
+    resetSocketOverrides();
     dispatch(endCompareSession());
   }, [dispatch]);
 
@@ -166,17 +169,6 @@ function Compare({
       dispatch(updateCompareQuery(newQuery));
     },
     [dispatch]
-  );
-
-  const onPlugClicked = useCallback(
-    ({ item, socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
-      // TODO: clean up when going back to original items
-      setSocketOverrides((so) => ({
-        ...so,
-        [item.id]: { ...so[item.id], [socket.socketIndex]: plug.plugDef.hash },
-      }));
-    },
-    []
   );
 
   const remove = useCallback(
