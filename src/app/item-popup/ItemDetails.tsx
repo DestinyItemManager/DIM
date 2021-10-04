@@ -1,6 +1,7 @@
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
+import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
@@ -13,11 +14,12 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import React from 'react';
+import produce from 'immer';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { AppIcon, faCheck, faClock } from '../shell/icons';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
@@ -31,19 +33,36 @@ import MetricCategories from './MetricCategories';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
-  item,
+  item: originalItem,
   extraInfo = {},
 }: {
   item: DimItem;
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
+  const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
+  const item = defs.isDestiny2()
+    ? applySocketOverrides(defs, originalItem, socketOverrides)
+    : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon
     : handCannonIcon;
 
   const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
+
+  const onPlugClicked = ({ socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+    // TODO: clean up when going back to original items
+    setSocketOverrides(
+      produce((so) => {
+        if (so[socket.socketIndex] && plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash) {
+          delete so[socket.socketIndex];
+        } else {
+          so[socket.socketIndex] = plug.plugDef.hash;
+        }
+      })
+    );
+  };
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
   return (
@@ -101,7 +120,7 @@ export default function ItemDetails({
       )}
 
       {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
-      {item.sockets && <ItemSockets item={item} />}
+      {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
 
       {item.perks && (
         <div className="item-details item-perks">
