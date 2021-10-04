@@ -38,12 +38,6 @@
     max-height: 55px;
   }
 
-  &.mobileInspectButton {
-    height: 36px;
-    width: 36px;
-    margin-right: 4px;
-  }
-
   &:nth-child(n + 2) {
     margin-left: 8px;
     @include phone-portrait {
@@ -112,11 +106,5 @@
   margin-left: 8px;
   @include phone-portrait {
     margin-left: 5px;
-  }
-
-  &.mobileInspectButton {
-    height: 36px;
-    width: 36px;
-    margin-left: 0px;
   }
 }

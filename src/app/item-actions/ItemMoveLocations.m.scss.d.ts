@@ -3,7 +3,6 @@
 interface CssExports {
   'disabled': string;
   'equip': string;
-  'mobileInspectButton': string;
   'move': string;
   'moveLocationIcons': string;
   'moveLocationPadding': string;
