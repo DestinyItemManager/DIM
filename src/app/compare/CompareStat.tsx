@@ -3,10 +3,16 @@ import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { animated, config, useSpring } from 'react-spring';
 import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
+
+const spring = {
+  ...config.stiff,
+  clamp: true,
+};
 
 export default function CompareStat({
   stat,
@@ -27,6 +33,8 @@ export default function CompareStat({
     ? (compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value
     : 0;
 
+  const animatedValue = useSpring<{ val: number }>({ val: statValue, config: spring });
+
   return (
     <div onMouseOver={() => setHighlight?.(stat.id)} className={styles.stat} style={color}>
       <span>
@@ -40,7 +48,9 @@ export default function CompareStat({
               <RecoilStat value={statValue} />
             </span>
           ) : (
-            statValue
+            <animated.span>
+              {animatedValue.val.interpolate((val: number) => Math.floor(val))}
+            </animated.span>
           )
         ) : (
           t('Stats.NotApplicable')
