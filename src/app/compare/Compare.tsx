@@ -118,7 +118,7 @@ function Compare({
     setSortedHash(undefined);
     resetSocketOverrides();
     dispatch(endCompareSession());
-  }, [dispatch]);
+  }, [dispatch, resetSocketOverrides]);
 
   const hasSession = Boolean(session);
   const hasItems = compareItems.length > 0;
@@ -306,7 +306,10 @@ function sortCompareItemsComparator(
   initialItem?: DimItem
 ) {
   if (!sortedHash) {
-    return acquisitionRecencyComparator;
+    return chainComparator(
+      compareBy((item) => item !== initialItem),
+      acquisitionRecencyComparator
+    );
   }
 
   const sortStat = allStats.find((s) => s.id === sortedHash);
@@ -319,7 +322,6 @@ function sortCompareItemsComparator(
 
   return reverseComparator(
     chainComparator<DimItem>(
-      compareBy((item) => item === initialItem),
       compareBy((item) => {
         const stat = sortStat.getStat(item);
         if (!stat) {
