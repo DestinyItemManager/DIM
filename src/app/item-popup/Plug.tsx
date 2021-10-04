@@ -72,8 +72,9 @@ export default function Plug({
         // This has been selected by the user but isn't the original plugged item
         selected: socketInfo.actuallyPlugged && plugged,
         // Another plug was selected by the user
-        notSelected: socketInfo.actuallyPlugged && !plugged,
+        notSelected: socketInfo.actuallyPlugged && !plugged && plug === socketInfo.actuallyPlugged,
         notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
+        cannotRoll: plug.cannotCurrentlyRoll,
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >

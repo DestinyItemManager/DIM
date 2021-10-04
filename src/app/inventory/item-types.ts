@@ -363,6 +363,8 @@ export interface DimPlug {
   stats: {
     [statHash: number]: number;
   } | null;
+  /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
+  cannotCurrentlyRoll?: boolean;
 }
 
 export interface DimSocket {

@@ -16,7 +16,7 @@ const links = [
   {
     name: 'DIM',
     icon: logo,
-    link: (item: DimItem) => `armory/${item.hash}`,
+    link: (item: DimItem) => `armory/${item.hash}?perks=${buildPerksCsv(item)}`,
   },
   {
     name: 'Light.gg',

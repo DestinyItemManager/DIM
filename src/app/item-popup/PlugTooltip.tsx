@@ -92,7 +92,7 @@ export default function PlugTooltip({
         </div>
       )}
       {plug.enableFailReasons && <div>{plug.enableFailReasons}</div>}
-
+      {plug.cannotCurrentlyRoll && <div>{t('MovePopup.CannotCurrentlyRoll')}</div>}
       {wishListTip && (
         <p>
           <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}

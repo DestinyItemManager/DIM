@@ -637,6 +637,7 @@
     "AddNote": "Add a note",
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CannotCurrentlyRoll": "This perk cannot be rolled for the current version of this item.",
     "Consolidate": "Consolidate",
     "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
