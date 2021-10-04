@@ -173,7 +173,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
 
   if (!account) {
     if (pathname.includes('/armory/')) {
-      console.log(pathname.replace(/\/\d+\/d2/, '') + search, path);
       return <Redirect to={pathname.replace(/\/\d+\/d2/, '') + search} />;
     } else {
       return accountsLoaded ? (
