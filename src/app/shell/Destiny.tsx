@@ -2,7 +2,7 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
-import Armory from 'app/armory/Armory';
+import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -249,17 +249,19 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <D1Vendors account={account} />
             )}
           </Route>
-          <Route
-            path={`${path}/armory/:itemHash`}
-            exact
-            render={({ match }) => (
-              <Armory
-                key={match.params.itemHash}
-                account={account}
-                itemHash={parseInt(match.params.itemHash!, 10)}
-              />
-            )}
-          />
+          {account.destinyVersion === 2 && (
+            <Route
+              path={`${path}/armory/:itemHash`}
+              exact
+              render={({ match }) => (
+                <ArmoryPage
+                  key={match.params.itemHash}
+                  account={account}
+                  itemHash={parseInt(match.params.itemHash!, 10)}
+                />
+              )}
+            />
+          )}
           {account.destinyVersion === 1 && (
             <Route path={`${path}/record-books`} exact>
               <RecordBooks account={account} />

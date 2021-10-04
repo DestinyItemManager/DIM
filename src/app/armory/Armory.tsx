@@ -1,16 +1,13 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector, storesLoadedSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
-import { useLoadStores } from 'app/inventory/store/hooks';
 import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
@@ -37,26 +34,18 @@ import styles from './Armory.m.scss';
 import Links from './Links';
 
 export default function Armory({
-  account,
   itemHash,
   sockets,
 }: {
-  account: DestinyAccount;
   itemHash: number;
   sockets?: SocketOverrides;
 }) {
   const dispatch = useThunkDispatch();
-  const defs = useD2Definitions();
-  const storesLoaded = useSelector(storesLoadedSelector);
-  useLoadStores(account, storesLoaded);
+  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
-
-  if (!storesLoaded || !defs) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
@@ -64,7 +53,7 @@ export default function Armory({
 
   if (!itemWithoutSockets) {
     return (
-      <div className="dim-page">
+      <div>
         <h1>{t('Armory.Unknown')}</h1>
       </div>
     );
@@ -107,7 +96,7 @@ export default function Armory({
 
   return (
     <div
-      className={clsx('dim-page', styles.armory)}
+      className={styles.armory}
       style={
         screenshot && !isPhonePortrait
           ? {
