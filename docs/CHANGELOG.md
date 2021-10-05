@@ -1,6 +1,7 @@
 ## Next
 
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
+* Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 
