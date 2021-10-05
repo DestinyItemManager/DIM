@@ -27,7 +27,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:contenthash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
 
 const packageJson = require('../package.json');
 
