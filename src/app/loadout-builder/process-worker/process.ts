@@ -9,7 +9,6 @@ import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges }
 import { statTier } from '../utils';
 import { canTakeSlotIndependantMods, sortProcessModsOrItems } from './process-utils';
 import { SetTracker } from './set-tracker';
-import { StatsSet } from './stats-set';
 import {
   IntermediateProcessArmorSet,
   LockedProcessMods,
@@ -105,36 +104,15 @@ export function process(
   // Sort gear by the chosen stats so we consider the likely-best gear first
   const itemComparator = compareByStatOrder(orderedConsideredStatHashes, statOrder, statsCache);
   // TODO: make these a list/map
-  const helms = filterSubsetStatItems(filteredItems[LockableBuckets.helmet] || [], statsCache).sort(
-    itemComparator
-  );
-  console.log('helms', (filteredItems[LockableBuckets.helmet] || []).length, helms.length);
-  const gaunts = filterSubsetStatItems(
-    filteredItems[LockableBuckets.gauntlets] || [],
-    statsCache
-  ).sort(itemComparator);
-  console.log('gaunts', (filteredItems[LockableBuckets.gauntlets] || []).length, gaunts.length);
-  const chests = filterSubsetStatItems(filteredItems[LockableBuckets.chest] || [], statsCache).sort(
-    itemComparator
-  );
-  console.log('chests', (filteredItems[LockableBuckets.chest] || []).length, chests.length);
-  const legs = filterSubsetStatItems(filteredItems[LockableBuckets.leg] || [], statsCache).sort(
-    itemComparator
-  );
-  console.log('legs', (filteredItems[LockableBuckets.leg] || []).length, legs.length);
+  const helms = (filteredItems[LockableBuckets.helmet] || []).sort(itemComparator);
+  const gaunts = (filteredItems[LockableBuckets.gauntlets] || []).sort(itemComparator);
+  const chests = (filteredItems[LockableBuckets.chest] || []).sort(itemComparator);
+  const legs = (filteredItems[LockableBuckets.leg] || []).sort(itemComparator);
   // TODO: we used to do these in chunks, where items w/ same stats were considered together. For class items that
   // might still be useful. In practice there are only 1/2 class items you need to care about - all of them that are
   // masterworked and all of them that aren't. I think we may want to go back to grouping like items but we'll need to
   // incorporate modslots and energy maybe.
-  const classItems = filterSubsetStatItems(
-    filteredItems[LockableBuckets.classitem] || [],
-    statsCache
-  ).sort(itemComparator);
-  console.log(
-    'classItems',
-    (filteredItems[LockableBuckets.classitem] || []).length,
-    classItems.length
-  );
+  const classItems = (filteredItems[LockableBuckets.classitem] || []).sort(itemComparator);
 
   // We won't search through more than this number of stat combos because it takes too long.
   // On my machine (bhollis) it takes ~1s per 270,000 combos
@@ -419,36 +397,4 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
     ...set,
     armor: set.armor.map((item) => item.id),
   }));
-}
-function filterSubsetStatItems(items: ProcessItem[], statsCache: Map<ProcessItem, number[]>) {
-  // 1. Group by element and modslot(s). This could be optimized to make larger
-  //    groups by looking at the inputs (e.g. if no mods, don't bother with
-  //    element/modslot, if no raid mods don't break those out, if only solar
-  //    mods break out solar vs other instead of each element). The idea is that
-  //    we are going to remove items which have strictly worse stats than some
-  //    other item, but you wouldn't want to say "we don't need this solar helm
-  //    because there's a strictly better arc helm".
-
-  const groups = [items]; //Object.values(
-  //_.groupBy(items, (i) => `${i.energy?.type};${(i.compatibleModSeasons || []).join(',')}`)
-  //);
-
-  const rejectedItems = new Set<ProcessItem>();
-  for (const group of groups) {
-    const tracker = new StatsSet<ProcessItem>();
-    for (const item of group) {
-      tracker.insert(statsCache.get(item)!, item);
-    }
-
-    // Now go back through and see if any are subsets of other items
-    for (const item of group) {
-      // TODO: what about when two items have the same stats? We'd need to do some extra work.
-      if (tracker.doBetterStatsExist(statsCache.get(item)!)) {
-        console.log('Dropping ', item.name, ' for subset stats');
-        rejectedItems.add(item);
-      }
-    }
-  }
-
-  return items.filter((i) => !rejectedItems.has(i));
 }
