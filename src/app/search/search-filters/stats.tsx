@@ -71,12 +71,21 @@ const statFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: 'maxpower',
-    description: tl('Filter.MaxPower'),
+    keywords: 'maxpowerloadout',
+    description: tl('Filter.MaxPowerLoadout'),
     destinyVersion: 2,
     filter: ({ stores, allItems }) => {
       const maxPowerLoadoutItems = calculateMaxPowerLoadoutItems(stores, allItems);
       return (item: DimItem) => maxPowerLoadoutItems.includes(item.id);
+    },
+  },
+  {
+    keywords: 'maxpower',
+    description: tl('Filter.MaxPower'),
+    destinyVersion: 2,
+    filter: ({ allItems }) => {
+      const maxPowerLoadoutItems = calculateMaxPowerPerBucket(allItems);
+      return (item: DimItem) => maxPowerLoadoutItems[maxPowerKey(item)] <= item.basePower;
     },
   },
 ];
@@ -230,4 +239,15 @@ function gatherHighestStats(allItems: DimItem[]) {
 
 function calculateMaxPowerLoadoutItems(stores: DimStore[], allItems: DimItem[]) {
   return stores.flatMap((store) => maxLightItemSet(allItems, store).equippable.map((i) => i.id));
+}
+
+function maxPowerKey(item: DimItem) {
+  return `${item.bucket.hash}-${item.bucket.inArmor ? item.classType : ''}`;
+}
+
+function calculateMaxPowerPerBucket(allItems: DimItem[]) {
+  return _.mapValues(
+    _.groupBy(allItems, (i) => maxPowerKey(i)),
+    (items) => _.maxBy(items, (i) => i.basePower)?.basePower ?? 0
+  );
 }
