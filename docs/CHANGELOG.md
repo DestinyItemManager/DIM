@@ -1,12 +1,12 @@
 ## Next
 
-* Clicking perks in the item popup now changes the stats for the item to reflect the effects of switching to that perk.
-* Clicking perks in the Organizer view also changes the stats for that item.
-* Changes to th Armory view (when you click an item's title):
-  * The perks on the item you clicked from are highlighted.
-  * You can click on other perk options to preview their stat effects.
+* Clicking a perk in the item popup now previews the stat changes from switching to that perk.
+* Clicking a perk in the Organizer view also previews the stats for that perk.
+* Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
+  * Armory highlights which perks cannot roll on new copies of the weapon.
+  * Armory highlights the perks rolled on the item you clicked.
+  * Clicking other perk option previews their stat effects.
   * You can click the "DIM" link to open the item info on its own, and share a roll with others.
-  * Perks that cannot roll on new copies of the item are highlighted in red.
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 
