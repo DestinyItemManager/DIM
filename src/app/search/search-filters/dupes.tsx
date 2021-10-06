@@ -3,10 +3,11 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
+import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { DEFAULT_SHADER } from '../d2-known-values';
+import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
@@ -148,6 +149,14 @@ const dupeFilters: FilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: 'statlower',
+    description: tl('Filter.StatLower'),
+    filter: ({ allItems }) => {
+      const duplicates = computeStatDupeLower(allItems);
+      return (item) => item.bucket.inArmor && duplicates.has(item.id);
+    },
+  },
 ];
 
 export default dupeFilters;
@@ -165,4 +174,40 @@ export function checkIfIsDupe(
     item.hash !== DEFAULT_SHADER &&
     item.bucket.hash !== BucketHashes.SeasonalArtifact
   );
+}
+
+function computeStatDupeLower(allItems: DimItem[]) {
+  const armor = allItems.filter((i) => i.bucket.inArmor);
+
+  const grouped = Object.values(_.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}`));
+
+  const statsCache = new Map<DimItem, number[]>();
+  const dupes = new Set<string>();
+
+  for (const item of armor) {
+    if (item.stats) {
+      statsCache.set(
+        item,
+        item.stats.filter((s) => armorStats.includes(s.statHash)).map((s) => s.base)
+      );
+    }
+  }
+
+  for (const group of grouped) {
+    const statSet = new StatsSet<DimItem>();
+    for (const item of group) {
+      const stats = statsCache.get(item);
+      if (stats) {
+        statSet.insert(stats, item);
+      }
+    }
+    for (const item of group) {
+      const stats = statsCache.get(item);
+      if (stats && statSet.doBetterStatsExist(stats)) {
+        dupes.add(item.id);
+      }
+    }
+  }
+
+  return dupes;
 }
