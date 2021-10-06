@@ -192,7 +192,8 @@
     "Locked": "Shows items based on their locked status.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
+    "MaxPower": "Shows the items at the highest power per slot.",
     "Mods": {
       "Y2": "Shows items with a Year 2 mod attached.",
       "Y3": "Shows items with any Armor 2.0 mods selected."
