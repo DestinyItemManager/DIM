@@ -29,8 +29,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
       setSocketInMenu(socket);
-    } else if (onPlugClicked) {
-      onPlugClicked({
+    } else {
+      onPlugClicked?.({
         item,
         socket,
         plug,
