@@ -1,6 +1,7 @@
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
+import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
@@ -31,13 +32,17 @@ import MetricCategories from './MetricCategories';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
-  item,
+  item: originalItem,
   extraInfo = {},
 }: {
   item: DimItem;
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
+  const [socketOverrides, onPlugClicked] = useSocketOverrides();
+  const item = defs.isDestiny2()
+    ? applySocketOverrides(defs, originalItem, socketOverrides)
+    : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon
     : handCannonIcon;
@@ -101,7 +106,7 @@ export default function ItemDetails({
       )}
 
       {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
-      {item.sockets && <ItemSockets item={item} />}
+      {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
 
       {item.perks && (
         <div className="item-details item-perks">

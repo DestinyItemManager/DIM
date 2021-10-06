@@ -1,3 +1,4 @@
+import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
@@ -7,28 +8,24 @@ import { D1Stat, DimItem } from '../inventory/item-types';
 import { getColor } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
-import { DimAdjustedItemStat } from './types';
 
 export default function CompareStat({
   stat,
   compareBaseStats,
   item,
   setHighlight,
-  adjustedItemStats,
 }: {
   stat: StatInfo;
   compareBaseStats?: boolean;
   item: DimItem;
   setHighlight?(value?: string | number): void;
-  adjustedItemStats?: DimAdjustedItemStat;
 }) {
   const itemStat = stat.getStat(item);
-  const adjustedStatValue = itemStat ? adjustedItemStats?.[itemStat.statHash] : undefined;
 
-  const color = getColor(statRange(itemStat, stat, compareBaseStats, adjustedStatValue), 'color');
+  const color = getColor(statRange(itemStat, stat, compareBaseStats), 'color');
 
   const statValue = itemStat
-    ? (compareBaseStats ? itemStat.base : adjustedStatValue) ?? itemStat.value
+    ? (compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value
     : 0;
 
   return (
@@ -44,7 +41,7 @@ export default function CompareStat({
               <RecoilStat value={statValue} />
             </span>
           ) : (
-            statValue
+            <AnimatedNumber value={statValue} />
           )
         ) : (
           t('Stats.NotApplicable')
@@ -63,8 +60,7 @@ export default function CompareStat({
 function statRange(
   stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
   statInfo: StatInfo,
-  compareBaseStats = false,
-  adjustedStatValue: number | undefined
+  compareBaseStats = false
 ) {
   if (!stat) {
     return -1;
@@ -73,11 +69,11 @@ function statRange(
     return stat.qualityPercentage.min;
   }
 
-  if (!statInfo || !statInfo.enabled) {
+  if (!statInfo.enabled) {
     return -1;
   }
 
-  const statValue = (compareBaseStats ? stat.base : adjustedStatValue ?? stat.value) ?? 0;
+  const statValue = (compareBaseStats ? stat.base : stat.value) ?? stat.value;
 
   if (statInfo.id === StatHashes.RecoilDirection) {
     return recoilValue(statValue);

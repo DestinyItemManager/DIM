@@ -1,5 +1,12 @@
 ## Next
 
+* Clicking a perk in the item popup now previews the stat changes from switching to that perk.
+* Clicking a perk in the Organizer view also previews the stats for that perk.
+* Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
+  * Armory highlights which perks cannot roll on new copies of the weapon.
+  * Armory highlights the perks rolled on the item you clicked.
+  * Clicking other perk option previews their stat effects.
+  * You can click the "DIM" link to open the item info on its own, and share a roll with others.
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 

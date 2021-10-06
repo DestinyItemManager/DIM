@@ -363,6 +363,8 @@ export interface DimPlug {
   stats: {
     [statHash: number]: number;
   } | null;
+  /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
+  cannotCurrentlyRoll?: boolean;
 }
 
 export interface DimSocket {
@@ -370,6 +372,14 @@ export interface DimSocket {
   socketIndex: number;
   /** The currently inserted plug item, if any. */
   plugged: DimPlug | null;
+
+  /**
+   * If the "plugged" plug has been overridden by SocketOverrides, this captures
+   * which plug option is actually still plugged on the item, even though we're
+   * viewing an alternative.
+   */
+  actuallyPlugged?: DimPlug;
+
   /**
    * The displayable/searchable list of potential plug choices for this socket.
    * For perks, this is all the potential perks in the perk column.

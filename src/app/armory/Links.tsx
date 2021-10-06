@@ -6,6 +6,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
+import gunsmith from 'images/gunsmith.png';
 import lightgg from 'images/lightgg.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -16,7 +17,7 @@ const links = [
   {
     name: 'DIM',
     icon: logo,
-    link: (item: DimItem) => `armory/${item.hash}`,
+    link: (item: DimItem) => `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
   },
   {
     name: 'Light.gg',
@@ -25,6 +26,13 @@ const links = [
       `https://www.light.gg/db/${language}/items/${item.hash}`,
   },
   { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
+  {
+    name: 'Gunsmith',
+    icon: gunsmith,
+    link: (item: DimItem) =>
+      `https://d2gunsmith.com/w/${item.hash}?s=${buildSocketParam(item, true)}`,
+    hideOnPhone: true,
+  },
   {
     name: 'data.destinysets.com',
     icon: destinysets,
@@ -39,17 +47,19 @@ export default function Links({ item }: { item: DimItem }) {
   const isPhonePortrait = useIsPhonePortrait();
   return (
     <ul className={styles.links}>
-      {links.map(
-        ({ link, name, icon, hideOnPhone }) =>
-          !(isPhonePortrait && hideOnPhone) && (
-            <li key={name}>
-              <ExternalLink href={link(item, language)}>
-                <img src={icon} height={16} width={16} />
-                {name}
-              </ExternalLink>
-            </li>
-          )
-      )}
+      {links
+        .filter((l) => l.name !== 'Gunsmith' || item.bucket.inWeapons)
+        .map(
+          ({ link, name, icon, hideOnPhone }) =>
+            !(isPhonePortrait && hideOnPhone) && (
+              <li key={name}>
+                <ExternalLink href={link(item, language)}>
+                  <img src={icon} height={16} width={16} />
+                  {name}
+                </ExternalLink>
+              </li>
+            )
+        )}
       {item.loreHash && (
         <li>
           <LoreLink loreHash={item.loreHash} />
@@ -64,7 +74,7 @@ export function destinyDBLink(item: DimItem) {
   let perkQueryString = '';
 
   if (DimItem) {
-    const perkCsv = buildPerksCsv(DimItem);
+    const perkCsv = buildSocketParam(DimItem);
     // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
     if (perkCsv?.length) {
       perkQueryString = `?perks=${perkCsv}`;
@@ -75,30 +85,27 @@ export function destinyDBLink(item: DimItem) {
 }
 
 /**
- * Banshee-44 puts placeholder entries in for the still-mysterious socketTypeHash 0.
- * If you look at Scathelocke https://data.destinysets.com/i/InventoryItem:3762467078
- * for one example, socketEntires[5] has a socketTypeHash of 0. We discard this
- * (and other sockets), as we build our definition of sockets we care about, so
- * I look for gaps in the index and drop a zero in where I see them.
+ * Build a comma-separated list of perks where each entry in the list corresponds to a socket ID and the value is the plugged item hash. A zero corresponds to "no choice".
  */
-function buildPerksCsv(item: DimItem): string {
+function buildSocketParam(item: DimItem, d2Gunsmith = false): string {
   const perkValues: number[] = [];
 
   if (item.sockets) {
-    item.sockets.allSockets.forEach((socket, socketIndex) => {
-      if (socketIndex > 0) {
-        const currentSocketPosition = socket.socketIndex;
-        const priorSocketPosition = item.sockets!.allSockets[socketIndex - 1].socketIndex;
-
-        if (currentSocketPosition > priorSocketPosition + 1) {
-          perkValues.push(0);
-        }
-      }
-
-      if (socket.plugged) {
-        perkValues.push(socket.plugged.plugDef.hash);
+    item.sockets.allSockets.forEach((socket) => {
+      if (socket.isPerk && socket.hasRandomizedPlugItems) {
+        perkValues[socket.socketIndex] = socket.plugged?.plugDef.hash ?? 0;
       }
     });
+  }
+
+  // Fill in those empty array elements
+  for (let i = 0; i < perkValues.length; i++) {
+    perkValues[i] ||= 0;
+  }
+
+  if (d2Gunsmith) {
+    perkValues.shift();
+    perkValues.push(0, 0);
   }
 
   return perkValues.join(',');

@@ -492,7 +492,7 @@ export function makeItem(
   }
 
   try {
-    createdItem.stats = buildStats(createdItem, itemDef, defs);
+    createdItem.stats = buildStats(defs, createdItem, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
