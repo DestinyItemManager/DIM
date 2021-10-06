@@ -132,7 +132,7 @@ function betterStatsHelper<T>(
         // equal.
         return node.value === stat ? BetterStatsResult.SAME : BetterStatsResult.BETTER_STATS_EXIST;
 
-      // case Compared.HIGHER_STAT: - Keep looking, this subtree didn't pan out because our input stat was higher than some of them
+      case BetterStatsResult.HIGHER_STAT: // - Keep looking, this subtree didn't pan out because our input stat was higher than some of them
     }
   }
   // This can happen if nodes is empty - in which case we consider the input higher than any known stat since none are known
