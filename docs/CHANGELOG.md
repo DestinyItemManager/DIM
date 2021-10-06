@@ -2,6 +2,7 @@
 
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
+* DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 
