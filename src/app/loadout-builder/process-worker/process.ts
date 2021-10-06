@@ -62,7 +62,8 @@ export function process(
   lockedModMap: LockedProcessMods,
   /** The user's chosen stat order, including disabled stats */
   statOrder: ArmorStatHashes[],
-  statFilters: StatFilters
+  statFilters: StatFilters,
+  onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -198,6 +199,8 @@ export function process(
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
 
+  let numProcessed = 0;
+  let elapsedSeconds = 0;
   for (const helm of helms) {
     for (const gaunt of gaunts) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
@@ -226,6 +229,7 @@ export function process(
           }
 
           for (const classItem of classItems) {
+            numProcessed++;
             const armor = [helm, gaunt, chest, leg, classItem];
 
             // TODO: why not just another ordered list?
@@ -335,6 +339,17 @@ export function process(
             if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
               numRejectedAfterInsert++;
             }
+          }
+
+          // Report speed
+          const totalTime = performance.now() - pstart;
+          const newElapsedSeconds = Math.floor(totalTime / 500);
+
+          if (newElapsedSeconds > elapsedSeconds) {
+            elapsedSeconds = newElapsedSeconds;
+            const speed = (numProcessed * 1000) / totalTime;
+            const remaining = Math.round((combos - numProcessed) / speed);
+            onProgress(remaining);
           }
         }
       }

@@ -194,6 +194,7 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
     season: t('Settings.SortBySeason'),
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
+    masterworked: t('Settings.Masterworked'),
     // archetype: 'Archetype'
   };
 

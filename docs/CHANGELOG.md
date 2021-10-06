@@ -7,6 +7,8 @@
   * Armory highlights the perks rolled on the item you clicked.
   * Clicking other perk option previews their stat effects.
   * You can click the "DIM" link to open the item info on its own, and share a roll with others.
+* Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
+* Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 
