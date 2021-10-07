@@ -25,6 +25,7 @@ interface CssExports {
   'negative': string;
   'new': string;
   'noItems': string;
+  'perkSelectable': string;
   'perkSelected': string;
   'perks': string;
   'positive': string;

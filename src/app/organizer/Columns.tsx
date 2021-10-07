@@ -9,7 +9,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -102,7 +102,8 @@ export function getColumns(
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
-  destinyVersion: DestinyVersion
+  destinyVersion: DestinyVersion,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void
 ): ColumnDefinition[] {
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -430,7 +431,11 @@ export function getColumns(
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_val, item) =>
-        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell item={item} />,
+        isD1Item(item) ? (
+          <D1PerksCell item={item} />
+        ) : (
+          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+        ),
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -440,7 +445,9 @@ export function getColumns(
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
-        cell: (_val, item) => <PerksCell item={item} traitsOnly={true} />,
+        cell: (_val, item) => (
+          <PerksCell item={item} traitsOnly={true} onPlugClicked={onPlugClicked} />
+        ),
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -542,7 +549,15 @@ export function getColumns(
   return columns;
 }
 
-function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }) {
+function PerksCell({
+  item,
+  traitsOnly,
+  onPlugClicked,
+}: {
+  item: DimItem;
+  traitsOnly?: boolean;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+}) {
   if (!item.sockets) {
     return null;
   }
@@ -590,8 +605,19 @@ function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
+                  [styles.perkSelectable]: socket.plugOptions.length > 1,
                 })}
                 data-perk-name={p.plugDef.displayProperties.name}
+                onClick={
+                  onPlugClicked && socket.plugOptions.length > 1
+                    ? (e: React.MouseEvent) => {
+                        if (!e.shiftKey) {
+                          e.stopPropagation();
+                          onPlugClicked({ item, socket, plug: p });
+                        }
+                      }
+                    : undefined
+                }
               >
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />

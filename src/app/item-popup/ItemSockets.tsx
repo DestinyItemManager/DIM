@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import './ItemSockets.scss';
 import ItemSocketsGeneral from './ItemSocketsGeneral';
@@ -9,8 +8,7 @@ interface ProvidedProps {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: DimAdjustedItemPlug;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
 }
 
 type Props = ProvidedProps;

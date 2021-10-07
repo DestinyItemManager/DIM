@@ -10,7 +10,7 @@ import {
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { releaseProxy, wrap } from 'comlink';
+import { proxy, releaseProxy, wrap } from 'comlink';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
@@ -50,6 +50,7 @@ export function useProcess(
   statOrder: number[],
   statFilters: StatFilters
 ) {
+  const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStore?.id,
@@ -80,6 +81,7 @@ export function useProcess(
     const { worker, cleanup } = createWorker();
     cleanupRef.current = cleanup;
 
+    setRemainingTime(0);
     setState((state) => ({
       processing: true,
       resultStoreId: selectedStore?.id,
@@ -139,7 +141,8 @@ export function useProcess(
         getTotalModStatChanges(lockedMods, selectedStore?.classType),
         lockedProcessMods,
         statOrder,
-        statFilters
+        statFilters,
+        proxy(setRemainingTime)
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
         infoLog(
@@ -178,7 +181,7 @@ export function useProcess(
     upgradeSpendTier,
   ]);
 
-  return { result, processing };
+  return { result, processing, remainingTime };
 }
 
 function createWorker() {

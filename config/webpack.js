@@ -27,7 +27,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:contenthash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
 
 const packageJson = require('../package.json');
 
@@ -399,8 +399,6 @@ module.exports = (env) => {
         '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
-        // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(env.release),
         // Enable alternative inventory mode
         '$featureFlags.altInventoryMode': JSON.stringify(false),
         // Alternate perks display on item popup
