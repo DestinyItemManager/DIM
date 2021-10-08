@@ -20,15 +20,22 @@ export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['any', 'none']),
+  suggestions: modSlotTags.concat(['any', 'none', 'extra']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
     (item: DimItem) => {
-      const modSocketTags = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
+      const metadatas =
+        filterValue === 'extra'
+          ? getInterestingSocketMetadatas(item)
+          : getSpecialtySocketMetadatas(item);
+
+      const modSocketTags = metadatas?.map((m) => m.slotTag);
+
       return (
         (filterValue === 'none' && !modSocketTags) ||
-        (modSocketTags && (filterValue === 'any' || modSocketTags.includes(filterValue)))
+        (modSocketTags &&
+          (filterValue === 'any' || filterValue === 'extra' || modSocketTags.includes(filterValue)))
       );
     },
   fromItem: (item) => {
