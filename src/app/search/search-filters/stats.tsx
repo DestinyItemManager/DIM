@@ -8,6 +8,7 @@ import {
   allStatNames,
   armorAnyStatHashes,
   armorStatHashes,
+  lightStats,
   searchableArmorStatNames,
   statHashByName,
 } from '../search-filter-values';
@@ -85,7 +86,15 @@ const statFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ allItems }) => {
       const maxPowerLoadoutItems = calculateMaxPowerPerBucket(allItems);
-      return (item: DimItem) => maxPowerLoadoutItems[maxPowerKey(item)] <= item.basePower;
+      return (item: DimItem) =>
+        Boolean(
+          // items can be 0pl but king of their own little kingdom,
+          // like halloween masks, so let's exclude 0pl
+          item.basePower &&
+            maxPowerLoadoutItems[maxPowerKey(item)] <= item.basePower &&
+            // is:haspower condition. excludes sparrows
+            lightStats.includes(item.primStat!.statHash)
+        );
     },
   },
 ];
