@@ -85,13 +85,13 @@ const statFilters: FilterDefinition[] = [
     description: tl('Filter.MaxPower'),
     destinyVersion: 2,
     filter: ({ allItems }) => {
-      const maxPowerLoadoutItems = calculateMaxPowerPerBucket(allItems);
+      const maxPowerPerBucket = calculateMaxPowerPerBucket(allItems);
       return (item: DimItem) =>
         Boolean(
           // items can be 0pl but king of their own little kingdom,
           // like halloween masks, so let's exclude 0pl
           item.basePower &&
-            maxPowerLoadoutItems[maxPowerKey(item)] <= item.basePower &&
+            maxPowerPerBucket[maxPowerKey(item)] <= item.basePower &&
             // is:haspower condition. excludes sparrows
             lightStats.includes(item.primStat!.statHash)
         );
