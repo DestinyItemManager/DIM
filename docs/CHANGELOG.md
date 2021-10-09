@@ -12,7 +12,6 @@
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 * `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
 
-
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 
 * Postmaster and Engrams should be sorted exactly like in game now.
