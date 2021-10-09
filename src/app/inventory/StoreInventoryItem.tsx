@@ -1,4 +1,3 @@
-import { Inspect } from 'app/mobile-inspect/MobileInspect';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
@@ -22,11 +21,7 @@ export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
   };
 
   return (
-    <DraggableInventoryItem
-      item={item}
-      isPhonePortrait={isPhonePortrait}
-      inspect={Inspect.showMoveLocations}
-    >
+    <DraggableInventoryItem item={item} isPhonePortrait={isPhonePortrait}>
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
           <ConnectedInventoryItem

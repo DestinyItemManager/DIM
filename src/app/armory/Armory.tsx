@@ -1,15 +1,17 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector, storesLoadedSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import {
+  applySocketOverrides,
+  SocketOverrides,
+  useSocketOverrides,
+} from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -34,35 +36,37 @@ import styles from './Armory.m.scss';
 import Links from './Links';
 
 export default function Armory({
-  account,
   itemHash,
+  sockets,
 }: {
-  account: DestinyAccount;
   itemHash: number;
+  sockets?: SocketOverrides;
 }) {
   const dispatch = useThunkDispatch();
-  const defs = useD2Definitions();
-  const storesLoaded = useSelector(storesLoadedSelector);
-  useLoadStores(account, storesLoaded);
+  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
-
-  if (!storesLoaded || !defs) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
-  }
+  const [socketOverrides, onPlugClicked] = useSocketOverrides();
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const item = defs.isDestiny2() ? makeFakeItem(defs, buckets, undefined, itemHash) : undefined;
+  const itemWithoutSockets = makeFakeItem(defs, buckets, undefined, itemHash);
 
-  if (!item) {
+  if (!itemWithoutSockets) {
     return (
-      <div className="dim-page">
+      <div>
         <h1>{t('Armory.Unknown')}</h1>
       </div>
     );
   }
+
+  // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
+  const item = applySocketOverrides(
+    defs,
+    applySocketOverrides(defs, itemWithoutSockets, sockets),
+    socketOverrides
+  );
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 
@@ -81,7 +85,7 @@ export default function Armory({
 
   return (
     <div
-      className={clsx('dim-page', styles.armory)}
+      className={styles.armory}
       style={
         screenshot && !isPhonePortrait
           ? {
@@ -173,7 +177,7 @@ export default function Armory({
 
       {item.sockets && (
         <div className={styles.section}>
-          <ItemSockets item={item} minimal />
+          <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
         </div>
       )}
       {item.pursuit && (

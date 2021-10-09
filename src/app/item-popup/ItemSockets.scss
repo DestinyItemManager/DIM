@@ -156,17 +156,19 @@
     background-color: transparent;
   }
 
-  .compare & {
-    &.selectable {
-      cursor: pointer;
-    }
+  &.selectable {
+    cursor: pointer;
+  }
 
-    &.selected {
-      background-color: #48ba7bbb;
-    }
+  &.selected {
+    background-color: #48ba7bbb;
+  }
 
-    &.notSelected {
-      background-color: #4887ba80;
-    }
+  &.notSelected {
+    background-color: #4887ba80;
+  }
+
+  &.cannotRoll {
+    background-color: #ba594880;
   }
 }

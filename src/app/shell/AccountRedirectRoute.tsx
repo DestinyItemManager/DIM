@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { RootState } from 'app/store/types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useLocation, useRouteMatch } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 import ErrorPanel from './ErrorPanel';
 
 /**
@@ -27,8 +27,7 @@ export default function AccountRedirectRoute() {
     }
   }, [dispatch, accountsLoaded]);
 
-  const { path } = useRouteMatch();
-  const { search } = useLocation();
+  const { search, pathname } = useLocation();
 
   if (!account) {
     return accountsLoaded ? (
@@ -62,5 +61,7 @@ export default function AccountRedirectRoute() {
     );
   }
 
-  return <Redirect to={`/${account.membershipId}/d${account.destinyVersion}${path}${search}`} />;
+  return (
+    <Redirect to={`/${account.membershipId}/d${account.destinyVersion}${pathname}${search}`} />
+  );
 }

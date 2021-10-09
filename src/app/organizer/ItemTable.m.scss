@@ -229,6 +229,9 @@ $content-cells: 5;
 .perkSelected {
   font-weight: bold;
 }
+.perkSelectable {
+  cursor: pointer;
+}
 
 .locationCell,
 .killTrackerDisplay {

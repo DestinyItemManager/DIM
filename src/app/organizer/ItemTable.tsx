@@ -18,10 +18,15 @@ import {
 } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
+import {
+  applySocketOverrides,
+  useSocketOverridesForItems,
+} from 'app/inventory/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -127,7 +132,7 @@ type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 const MemoRow = React.memo(TableRow);
 
 function ItemTable({
-  items,
+  items: originalItems,
   categories,
   itemInfos,
   wishList,
@@ -146,6 +151,7 @@ function ItemTable({
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
+  const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -170,6 +176,15 @@ function ItemTable({
 
   // Are we at a item category that can show items?
   const terminal = Boolean(_.last(categories)?.terminal);
+
+  const defs = useD2Definitions();
+  const items = useMemo(
+    () =>
+      defs
+        ? originalItems.map((item) => applySocketOverrides(defs, item, socketOverrides[item.id]))
+        : originalItems,
+    [defs, originalItems, socketOverrides]
+  );
 
   // Build a list of all the stats relevant to this set of items
   const statHashes = useMemo(
@@ -201,7 +216,8 @@ function ItemTable({
         customStatTotal,
         loadouts,
         newItems,
-        destinyVersion
+        destinyVersion,
+        onPlugClicked
       ),
     [
       wishList,
@@ -214,6 +230,7 @@ function ItemTable({
       loadouts,
       newItems,
       destinyVersion,
+      onPlugClicked,
     ]
   );
 
@@ -590,7 +607,7 @@ function sortRows(
       if (column) {
         const compare = column.sort
           ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-          : compareBy((row: Row) => row.values[column.id] || 0);
+          : compareBy((row: Row) => row.values[column.id] ?? 0);
         return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
       }
       return compareBy(() => 0);
