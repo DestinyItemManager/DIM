@@ -540,7 +540,7 @@ export function getColumns(
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList(item)?.notes,
+        value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`,
       },
