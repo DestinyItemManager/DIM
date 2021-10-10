@@ -56,7 +56,7 @@ let intervalId = 0;
 
 /**
  * Start the farming process for a given store. This causes stores to auto refresh
- * and makes space for new drops. In D1 it can also move some other items around.
+ * and makes space(s) for new drops. In D1 it can also move some other items around.
  */
 export function startFarming(storeId: string): ThunkResult {
   return async (dispatch, getState) => {
@@ -108,7 +108,7 @@ export function stopFarming(): ThunkResult {
   };
 }
 
-// Ensure that there's {{inventoryClearSpaces}} number open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
 function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResult {
   return (dispatch, getState) => {
@@ -147,7 +147,7 @@ function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return moveItemsToVault(store, toMove, [], cancelToken);
 }
 
-// Ensure that there's {{inventoryClearSpaces}} number open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
 function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {
@@ -159,7 +159,7 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
   };
 }
 
-// Ensure that there's {{inventoryClearSpaces}} number of open space in each category that could
+// Ensure that there's {{inventoryClearSpaces}} number of open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
 export function makeRoomForItemsInBuckets(
   stores: DimStore[],
