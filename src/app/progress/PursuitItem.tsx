@@ -6,6 +6,7 @@ import { percent } from 'app/shell/filters';
 import { count } from 'app/utils/util';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
@@ -34,8 +35,13 @@ function PursuitItem(
     !item.complete &&
     !expired &&
     showProgressBoolean(item.objectives);
+
+  const trackedInGame = item.tracked && (!item.pursuit?.recordHash || item.pursuit.trackedInGame);
+  const trackedInDim = item.tracked && item.pursuit?.recordHash && !item.pursuit.trackedInGame;
+
   const itemImageStyles = {
-    [styles.tracked]: item.tracked,
+    [styles.tracked]: trackedInGame,
+    [styles.tracked]: trackedInDim,
   };
   return (
     <div
@@ -54,7 +60,8 @@ function PursuitItem(
       )}
       {isNew && <div className={styles.newItem} />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
-      {item.tracked && <img className={styles.trackedIcon} src={trackedIcon} />}
+      {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
+      {trackedInDim && <img className={styles.trackedIcon} src={dimTrackedIcon} />}
       {item.complete && <img className={styles.complete} src={pursuitComplete} />}
     </div>
   );
