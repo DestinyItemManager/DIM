@@ -1,9 +1,5 @@
 ## Next
 
-* Loadout Optimizer now shows the maximum stat tier you can get for each stat, taking into account all of your loadout settings including min/max stats, mods, and search filter.
-* Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
-* We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
-* We've tweaked the way Loadout Optimizer chooses which subset of items to look at when you have too many items to process. We should be better at making use of items that have "spiky" stats.
 * Clicking a perk in the item popup now previews the stat changes from switching to that perk.
 * Clicking a perk in the Organizer view also previews the stats for that perk.
 * Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
@@ -15,6 +11,12 @@
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 * `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
+
+### Beta Only
+
+* Loadout Optimizer now shows the maximum stat tier you can get for each stat, taking into account all of your loadout settings including min/max stats, mods, and search filter. We're still not sure of the best way to display this, so it's in Beta only for now to get some feedback.
+* We've tweaked the way Loadout Optimizer chooses which subset of items to look at when you have too many items to process. We should be better at making use of items that have "spiky" stats.
+
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 

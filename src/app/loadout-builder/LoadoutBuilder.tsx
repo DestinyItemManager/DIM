@@ -4,7 +4,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-utils';
@@ -23,6 +23,7 @@ import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
@@ -120,14 +121,20 @@ function mapStateToProps() {
       [classType: number]: ItemsByBucket;
     }> => {
       const items: {
-        [classType: number]: { [bucketHash: number]: DimItem[] };
+        [classType: number]: ItemsByBucket;
       } = {};
       for (const item of allItems) {
         if (!item || !isLoadoutBuilderItem(item)) {
           continue;
         }
         const { classType, bucket } = item;
-        ((items[classType] ??= {})[bucket.hash] ??= []).push(item);
+        (items[classType] ??= {
+          [BucketHashes.Helmet]: [],
+          [BucketHashes.Gauntlets]: [],
+          [BucketHashes.ChestArmor]: [],
+          [BucketHashes.LegArmor]: [],
+          [BucketHashes.ClassArmor]: [],
+        })[bucket.hash].push(item);
       }
       return items;
     }
