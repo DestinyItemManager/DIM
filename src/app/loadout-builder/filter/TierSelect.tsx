@@ -81,15 +81,17 @@ export default function TierSelect({
                   </span>
                 }
               >
-                <span className={styles.range}>
-                  {statRangesFiltered
-                    ? t('LoadoutBuilder.MaxTier', {
-                        tier: t('LoadoutBuilder.TierNumber', {
-                          tier: statTierWithHalf(statRangesFiltered[statHash].max),
-                        }),
-                      })
-                    : '-'}
-                </span>
+                {$featureFlags.loStatRanges && (
+                  <span className={styles.range}>
+                    {statRangesFiltered
+                      ? t('LoadoutBuilder.MaxTier', {
+                          tier: t('LoadoutBuilder.TierNumber', {
+                            tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                          }),
+                        })
+                      : '-'}
+                  </span>
+                )}
                 <MinMaxSelect
                   statHash={statHash}
                   stat={stats[statHash]}
