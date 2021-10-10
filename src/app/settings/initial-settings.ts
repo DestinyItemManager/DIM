@@ -6,10 +6,13 @@ import { defaultLanguage } from 'app/i18n';
  */
 export interface Settings extends DimApiSettings {
   activeMode: boolean;
+  /** How many spaces to clear when using Farming Mode(make space). */
+  inventoryClearSpaces: number;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
   activeMode: false,
+  inventoryClearSpaces: 1,
 };
