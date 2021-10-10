@@ -7,6 +7,7 @@ interface CssExports {
   'ignored': string;
   'maximum': string;
   'minimum': string;
+  'range': string;
   'row': string;
 }
 export const cssExports: CssExports;

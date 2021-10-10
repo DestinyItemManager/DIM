@@ -15,7 +15,7 @@ import {
 } from '../../testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
 import { generateProcessModPermutations } from './mod-permutations';
-import { canTakeSlotIndependantMods } from './process-worker/process-utils';
+import { canTakeSlotIndependentMods } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 
@@ -172,7 +172,7 @@ describe('process-utils', () => {
   });
 
   it('can fit all mods when there are no mods', () => {
-    expect(canTakeSlotIndependantMods([[]], [[]], [[]], items)).toBe(true);
+    expect(canTakeSlotIndependentMods([[]], [[]], [[]], items)).toBe(true);
   });
 
   it('can fit five general mods', () => {
@@ -180,7 +180,7 @@ describe('process-utils', () => {
       modifyItem({ item, energyVal: generalMod.energy!.val })
     );
     const generalModPerms = generateProcessModPermutations(generalMods);
-    expect(canTakeSlotIndependantMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
+    expect(canTakeSlotIndependentMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -194,7 +194,7 @@ describe('process-utils', () => {
         })
       );
       const combatModPerms = generateProcessModPermutations([combatMod]);
-      expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
     }
   );
 
@@ -212,7 +212,7 @@ describe('process-utils', () => {
     );
     const combatModPerms = generateProcessModPermutations(combatMods);
     // sanity check
-    expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(
+    expect(canTakeSlotIndependentMods([[]], combatModPerms, [[]], modifiedItems)).toBe(
       canFit === 'can'
     );
   });
@@ -229,7 +229,7 @@ describe('process-utils', () => {
         })
       );
       const combatModPerms = generateProcessModPermutations([combatMod]);
-      expect(canTakeSlotIndependantMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([[]], combatModPerms, [[]], modifiedItems)).toBe(true);
     }
   );
 
@@ -247,7 +247,7 @@ describe('process-utils', () => {
     );
     const raidModPerms = generateProcessModPermutations(raidMods);
     // sanity check
-    expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(
+    expect(canTakeSlotIndependentMods([[]], [[]], raidModPerms, modifiedItems)).toBe(
       canFit === 'can'
     );
   });
@@ -264,7 +264,7 @@ describe('process-utils', () => {
         })
       );
       const raidModPerms = generateProcessModPermutations([raidMod]);
-      expect(canTakeSlotIndependantMods([[]], [[]], raidModPerms, modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([[]], [[]], raidModPerms, modifiedItems)).toBe(true);
     }
   );
 
@@ -298,7 +298,7 @@ describe('process-utils', () => {
     const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
     expect(
-      canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+      canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
     ).toBe(false);
   });
 
@@ -334,7 +334,7 @@ describe('process-utils', () => {
       const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
       expect(
-        canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+        canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
       ).toBe(false);
     }
   );
@@ -371,7 +371,7 @@ describe('process-utils', () => {
       const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
 
       expect(
-        canTakeSlotIndependantMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+        canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
       ).toBe(false);
     }
   );

@@ -1,5 +1,5 @@
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -34,21 +34,21 @@ export interface ArmorSet {
 }
 
 export type ItemsByBucket = Readonly<{
-  [bucketHash: number]: readonly DimItem[];
+  [bucketHash in LockableBucketHash]: readonly DimItem[];
 }>;
 
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = {
-  helmet: armorBuckets.helmet,
-  gauntlets: armorBuckets.gauntlets,
-  chest: armorBuckets.chest,
-  leg: armorBuckets.leg,
-  classitem: armorBuckets.classitem,
-};
+export const LockableBuckets = armorBuckets;
+export type LockableBucketHash =
+  | BucketHashes.Helmet
+  | BucketHashes.Gauntlets
+  | BucketHashes.ChestArmor
+  | BucketHashes.LegArmor
+  | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets);
+export const LockableBucketHashes = Object.values(LockableBuckets) as LockableBucketHash[];
 
 export const bucketsToCategories = {
   [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
