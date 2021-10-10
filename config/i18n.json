@@ -119,9 +119,9 @@
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving {{inventoryClearSpaces}} space open per item type to prevent anything from going to the Postmaster.",
     "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving {{inventoryClearSpaces}} space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving {{inventoryClearSpaces}} space open per item type to prevent anything from going to the Postmaster.",
@@ -816,7 +816,7 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
+    "InventoryNumberOfSpacesToClear": "Number of empty space(s) to make when using Farming Mode (make space)",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -844,7 +844,7 @@
     "SortBySunset": "Has Been Sunset (D2)",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
-    "SpacesSize": "{{num}} spaces"
+    "SpacesSize": "{{num}} space(s)"
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
