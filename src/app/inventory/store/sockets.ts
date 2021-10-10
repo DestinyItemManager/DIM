@@ -6,7 +6,6 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemPlugBase,
   DestinyItemSocketEntryDefinition,
-  DestinyItemSocketEntryPlugItemDefinition,
   DestinyItemSocketState,
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
@@ -221,7 +220,7 @@ function buildDefinedSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildDefinedPlug(defs, reusablePlug);
+          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
@@ -232,7 +231,7 @@ function buildDefinedSocket(
       const plugSet = defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of _.uniqBy(plugSet.reusablePlugItems, (p) => p.plugItemHash)) {
-          const built = buildDefinedPlug(defs, reusablePlug);
+          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
@@ -241,7 +240,7 @@ function buildDefinedSocket(
       }
     } else if (socketDef.reusablePlugItems) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug);
+        const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
         if (built) {
           reusablePlugs.push(built);
         }
@@ -253,7 +252,7 @@ function buildDefinedSocket(
     socketDef.singleInitialItemHash &&
     !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
   ) {
-    const built = buildDefinedPlug(defs, { plugItemHash: socketDef.singleInitialItemHash });
+    const built = buildDefinedPlug(defs, socketDef.singleInitialItemHash);
     if (built) {
       reusablePlugs.unshift(built);
     }
@@ -350,12 +349,7 @@ function buildPlug(
   };
 }
 
-function buildDefinedPlug(
-  defs: D2ManifestDefinitions,
-  plug: DestinyItemSocketEntryPlugItemDefinition
-): DimPlug | null {
-  const plugHash = plug.plugItemHash;
-
+export function buildDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): DimPlug | null {
   const plugDef = plugHash && defs.InventoryItem.get(plugHash);
   if (!plugDef || !isPluggableItem(plugDef)) {
     return null;
@@ -449,7 +443,7 @@ function buildSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildDefinedPlug(defs, reusablePlug);
+          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           addPlugOption(built, plugged, plugOptions);
         }
         curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
@@ -457,7 +451,7 @@ function buildSocket(
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug);
+        const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
         addPlugOption(built, plugged, plugOptions);
       }
       curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);

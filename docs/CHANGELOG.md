@@ -7,6 +7,9 @@
   * Armory highlights the perks rolled on the item you clicked.
   * Clicking other perk option previews their stat effects.
   * You can click the "DIM" link to open the item info on its own, and share a roll with others.
+  * Clicking modslots lets you change mods.
+  * Selecting different ornaments shows what the ornament looks like on the item.
+  * Added a link to D2 Gunsmith for weapons.
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.

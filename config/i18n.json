@@ -846,6 +846,7 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
+    "SelectModButton": "Select Mod",
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
