@@ -188,7 +188,10 @@ function computeStatDupeLower(allItems: DimItem[]) {
     if (item.stats) {
       statsCache.set(
         item,
-        item.stats.filter((s) => armorStats.includes(s.statHash)).map((s) => s.base)
+        _.sortBy(
+          item.stats.filter((s) => armorStats.includes(s.statHash)),
+          (s) => s.statHash
+        ).map((s) => s.base)
       );
     }
   }
