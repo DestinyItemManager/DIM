@@ -20,8 +20,6 @@ declare const $featureFlags: {
   issueBanner: boolean;
   /** Show the triage tab in the item popup */
   triage: boolean;
-  /** Enable new mobile inspect view when dragging an item */
-  mobileInspect: boolean;
   /** Enable alt inv mode */
   altInventoryMode: boolean;
   /** Alternate perks display on item popup */

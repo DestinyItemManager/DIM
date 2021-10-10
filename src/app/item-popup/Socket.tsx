@@ -12,13 +12,11 @@ export default function Socket({
   socket,
   wishlistRoll,
   onClick,
-  adjustedPlug,
 }: {
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
-  adjustedPlug?: DimPlug;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
   if (!socket.plugOptions.length) {
@@ -39,7 +37,6 @@ export default function Socket({
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
-          adjustedPlug={adjustedPlug}
         />
       ))}
     </div>

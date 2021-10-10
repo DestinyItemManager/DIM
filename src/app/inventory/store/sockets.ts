@@ -223,6 +223,7 @@ function buildDefinedSocket(
         for (const reusablePlug of plugSet.reusablePlugItems) {
           const built = buildDefinedPlug(defs, reusablePlug);
           if (built) {
+            built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
           }
         }
@@ -230,9 +231,10 @@ function buildDefinedSocket(
     } else if (socketDef.randomizedPlugSetHash) {
       const plugSet = defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem);
       if (plugSet) {
-        for (const reusablePlug of plugSet.reusablePlugItems) {
+        for (const reusablePlug of _.uniqBy(plugSet.reusablePlugItems, (p) => p.plugItemHash)) {
           const built = buildDefinedPlug(defs, reusablePlug);
           if (built) {
+            built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
           }
         }

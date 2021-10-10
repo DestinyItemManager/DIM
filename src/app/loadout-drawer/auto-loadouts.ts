@@ -179,9 +179,9 @@ export function gatherEngramsLoadout(
     _.groupBy(engrams, (e) => e.type),
     (items) => {
       // Sort exotic engrams to the end so they don't crowd out other types
-      items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
+      const sortedItems = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
       // No more than 9 engrams of a type
-      return _.take(items, 9);
+      return _.take(sortedItems, 9);
     }
   );
 

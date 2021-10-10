@@ -6,3 +6,7 @@
 .range {
   font-size: 0.9em;
 }
+
+.stat {
+  margin-right: calc(var(--item-size) + 16px);
+}

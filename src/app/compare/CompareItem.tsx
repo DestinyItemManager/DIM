@@ -19,7 +19,6 @@ import { AppIcon, faArrowCircleDown, searchIcon } from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
-import { DimAdjustedItemPlug, DimAdjustedItemStat } from './types';
 
 export default function CompareItem({
   item,
@@ -28,9 +27,7 @@ export default function CompareItem({
   itemClick,
   remove,
   setHighlight,
-  updateSocketComparePlug,
-  adjustedItemPlugs,
-  adjustedItemStats,
+  onPlugClicked,
   isInitialItem,
 }: {
   item: DimItem;
@@ -39,9 +36,7 @@ export default function CompareItem({
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
-  updateSocketComparePlug(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: DimAdjustedItemPlug;
-  adjustedItemStats?: DimAdjustedItemStat;
+  onPlugClicked(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
   isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +89,6 @@ export default function CompareItem({
           item={item}
           stat={stat}
           setHighlight={setHighlight}
-          adjustedItemStats={adjustedItemStats}
           compareBaseStats={compareBaseStats}
         />
       ))}
@@ -102,14 +96,7 @@ export default function CompareItem({
       {item.missingSockets && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
-      {item.sockets && (
-        <ItemSockets
-          item={item}
-          minimal={true}
-          updateSocketComparePlug={updateSocketComparePlug}
-          adjustedItemPlugs={adjustedItemPlugs}
-        />
-      )}
+      {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
     </div>
   );
 }

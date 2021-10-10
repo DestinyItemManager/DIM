@@ -18,9 +18,10 @@ import PlugTooltip from './PlugTooltip';
 interface Props {
   item: DimItem;
   perks: DimSocketCategory;
+  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
 }
 
-export default function ItemPerksList({ item, perks }: Props) {
+export default function ItemPerksList({ item, perks, onClick }: Props) {
   // TODO: bring back clicking perks to see stats
   // TODO: click perk to see others
   // TODO: details?
@@ -30,13 +31,14 @@ export default function ItemPerksList({ item, perks }: Props) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
 
-  const [selectedPerk, setSelectedPerk] = useState<{ socket: DimSocket; perk: DimPlug }>();
+  const [selectedPerk, setSelectedPerk] = useState<{ socketIndex: number; perkHash: number }>();
   const onPerkSelected = (socket: DimSocket, perk: DimPlug) => {
-    if (selectedPerk?.perk === perk) {
+    if (selectedPerk?.perkHash === perk.plugDef.hash) {
       setSelectedPerk(undefined);
     } else {
-      setSelectedPerk({ socket, perk });
+      setSelectedPerk({ socketIndex: socket.socketIndex, perkHash: perk.plugDef.hash });
     }
+    onClick?.(item, socket, perk, false);
   };
 
   if (!perks.socketIndexes || !defs || !item.sockets) {
@@ -75,7 +77,7 @@ function PerkSocket({
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  selectedPerk?: { socket: DimSocket; perk: DimPlug };
+  selectedPerk?: { socketIndex: number; perkHash: number };
   onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
   return (
@@ -87,8 +89,8 @@ function PerkSocket({
           item={item}
           socketInfo={socket}
           wishlistRoll={wishlistRoll}
-          selectedSocket={selectedPerk?.socket === socket}
-          selectedPerk={selectedPerk?.perk === plug}
+          selectedSocket={selectedPerk?.socketIndex === socket.socketIndex}
+          selectedPerk={selectedPerk?.perkHash === plug.plugDef.hash}
           onPerkSelected={onPerkSelected}
         />
       ))}
@@ -126,7 +128,9 @@ function PerkPlug({
     <div
       key={plug.plugDef.hash}
       className={clsx(styles.plug, {
-        [styles.plugged]: plug === socketInfo.plugged,
+        [styles.plugged]: socketInfo.actuallyPlugged
+          ? plug === socketInfo.actuallyPlugged
+          : plug === socketInfo.plugged,
         [styles.disabled]: !plug.enabled,
         [styles.selected]: selected,
       })}

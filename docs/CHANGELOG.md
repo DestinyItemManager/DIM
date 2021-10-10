@@ -4,9 +4,25 @@
 * Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * We've tweaked the way Loadout Optimizer chooses which subset of items to look at when you have too many items to process. We should be better at making use of items that have "spiky" stats.
+* Clicking a perk in the item popup now previews the stat changes from switching to that perk.
+* Clicking a perk in the Organizer view also previews the stats for that perk.
+* Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
+  * Armory highlights which perks cannot roll on new copies of the weapon.
+  * Armory highlights the perks rolled on the item you clicked.
+  * Clicking other perk option previews their stat effects.
+  * You can click the "DIM" link to open the item info on its own, and share a roll with others.
+* Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
+* Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
+* DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
+* `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
+
+## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
+
+* Postmaster and Engrams should be sorted exactly like in game now.
 * Loadout Optimizer no longer saves stat min/max settings as the default for the next time you use it. Opening an existing loadout in the Optimizer will still reload the min/max settings for that loadout.
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
+* The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 

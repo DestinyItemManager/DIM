@@ -5,7 +5,7 @@ export const API_KEY =
     ? $DIM_WEB_API_KEY
     : localStorage.getItem('apiKey')!;
 
-export function bungieApiUpdate(path: string, data?: object): HttpClientConfig {
+export function bungieApiUpdate(path: string, data?: Record<string, unknown>): HttpClientConfig {
   return {
     method: 'POST',
     url: `https://www.bungie.net${path}`,
@@ -13,7 +13,7 @@ export function bungieApiUpdate(path: string, data?: object): HttpClientConfig {
   };
 }
 
-export function bungieApiQuery(path: string, params?: object): HttpClientConfig {
+export function bungieApiQuery(path: string, params?: Record<string, unknown>): HttpClientConfig {
   return {
     method: 'GET',
     url: `https://www.bungie.net${path}`,
