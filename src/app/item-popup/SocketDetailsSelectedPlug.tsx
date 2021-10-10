@@ -14,7 +14,11 @@ import { showNotification } from 'app/notifications/notifications';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
+import {
+  emptySpecialtySocketHashes,
+  isPlugStatActive,
+  itemIsInstanced,
+} from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
@@ -38,6 +42,7 @@ export default function SocketDetailsSelectedPlug({
   currentPlug,
   equippable,
   closeMenu,
+  onPlugSelected,
 }: {
   plug: PluggableInventoryItemDefinition;
   socket: DimSocket;
@@ -45,6 +50,8 @@ export default function SocketDetailsSelectedPlug({
   currentPlug: DimPlug | null;
   equippable: boolean;
   closeMenu(): void;
+  /** If this is set, instead of offering to slot the mod, we just notify above */
+  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
@@ -99,16 +106,24 @@ export default function SocketDetailsSelectedPlug({
     })
   );
 
+  // Can we actually insert this mod instead of just previewing it?
+  const canDoAWA = itemIsInstanced(item) && $featureFlags.awa;
+
   const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
-    setInsertInProgress(true);
-    try {
-      await dispatch(insertPlug(item, socket, plug.hash));
+    if (canDoAWA) {
+      setInsertInProgress(true);
+      try {
+        await dispatch(insertPlug(item, socket, plug.hash));
+        closeMenu();
+      } catch (e) {
+        showNotification({ type: 'error', title: t('Sockets.InsertPlugError'), body: e.message });
+      } finally {
+        setInsertInProgress(false);
+      }
+    } else {
+      onPlugSelected?.({ item, socket, plugHash: plug.hash });
       closeMenu();
-    } catch (e) {
-      showNotification({ type: 'error', title: t('Sockets.InsertPlugError'), body: e.message });
-    } finally {
-      setInsertInProgress(false);
     }
   };
 
@@ -157,13 +172,13 @@ export default function SocketDetailsSelectedPlug({
         ))}
       </div>
       <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
-      {$featureFlags.awa && (
+      {(canDoAWA || onPlugSelected) && (
         <motion.button
           layout
           type="button"
           className={styles.insertButton}
           onClick={onInsertPlug}
-          disabled={!equippable || insertInProgress}
+          disabled={(canDoAWA && !equippable) || insertInProgress}
         >
           {insertInProgress && (
             <motion.span layout>
@@ -171,7 +186,7 @@ export default function SocketDetailsSelectedPlug({
             </motion.span>
           )}
           <motion.span layout>
-            {t('Sockets.InsertModButton')}
+            {canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton')}
             {costs}
           </motion.span>
         </motion.button>

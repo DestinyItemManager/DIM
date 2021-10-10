@@ -593,7 +593,6 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
-    "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
@@ -615,7 +614,6 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -792,7 +790,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

@@ -4,6 +4,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';
+import { buildDefinedPlug } from './sockets';
 import { buildStats } from './stats';
 
 /**
@@ -34,10 +35,19 @@ export function applySocketOverrides(
     // This happens even for sockets that don't change, because we're going to regenerate their
     // stats and who knows, they could end up different than the original and we wouldn't want to
     // overwrite them.
-    const plugOptions = s.plugOptions.map((p) => ({ ...p, stats: null }));
+    let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
 
     if (override && s.plugged?.plugDef.hash !== override) {
-      const newPlug = plugOptions.find((p) => p.plugDef.hash === override);
+      let newPlug = plugOptions.find((p) => p.plugDef.hash === override);
+      if (!newPlug && !s.isPerk) {
+        // This is likely a mod selection!
+        const createdPlug = buildDefinedPlug(defs, override);
+        if (createdPlug) {
+          newPlug = createdPlug;
+          plugOptions = [newPlug];
+        }
+      }
+
       if (newPlug) {
         // Back up the real plug here
         const actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
@@ -87,20 +97,17 @@ export function applySocketOverrides(
  */
 export function useSocketOverrides(): [
   socketOverrides: SocketOverrides,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
 ] {
   const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
   const onPlugClicked = useCallback(
-    ({ socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+    ({ socket, plugHash }: { item: DimItem; socket: DimSocket; plugHash: number }) => {
       setSocketOverrides(
         produce((so) => {
-          if (
-            so[socket.socketIndex] &&
-            plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash
-          ) {
+          if (so[socket.socketIndex] && plugHash === socket.actuallyPlugged?.plugDef.hash) {
             delete so[socket.socketIndex];
           } else {
-            so[socket.socketIndex] = plug.plugDef.hash;
+            so[socket.socketIndex] = plugHash;
           }
         })
       );
@@ -115,12 +122,12 @@ export function useSocketOverrides(): [
  */
 export function useSocketOverridesForItems(): [
   socketOverrides: { [itemId: string]: SocketOverrides },
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
   resetSocketOverrides: () => void
 ] {
   const [socketOverrides, setSocketOverrides] = useState<{ [itemId: string]: SocketOverrides }>({});
   const onPlugClicked = useCallback(
-    ({ item, socket, plug }: { item: DimItem; socket: DimSocket; plug: DimPlug }) => {
+    ({ item, socket, plugHash }: { item: DimItem; socket: DimSocket; plugHash: number }) => {
       setSocketOverrides(
         produce((so) => {
           if (!so[item.id]) {
@@ -129,11 +136,11 @@ export function useSocketOverridesForItems(): [
 
           if (
             so[item.id][socket.socketIndex] &&
-            plug.plugDef.hash === socket.actuallyPlugged?.plugDef.hash
+            plugHash === socket.actuallyPlugged?.plugDef.hash
           ) {
             delete so[item.id][socket.socketIndex];
           } else {
-            so[item.id][socket.socketIndex] = plug.plugDef.hash;
+            so[item.id][socket.socketIndex] = plugHash;
           }
 
           if (_.isEmpty(so[item.id])) {
