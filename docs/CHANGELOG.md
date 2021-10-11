@@ -1,5 +1,7 @@
 ## Next
 
+## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
+
 * Clicking a perk in the item popup now previews the stat changes from switching to that perk.
 * Clicking a perk in the Organizer view also previews the stats for that perk.
 * Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
