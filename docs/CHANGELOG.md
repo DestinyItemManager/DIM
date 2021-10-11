@@ -2,6 +2,7 @@
 
 * Moved "Tracked Triumphs" section to the top of the Progress page.
 * You can now track and untrack Seasonal Challenges from the Progress page.
+* Added `is:infusionfodder` search to show items where a lower-power version of the same item exists. Use `tag:junk is:infusionfodder` to check your trash for its potential to infuse!
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
@@ -19,7 +20,6 @@
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 * `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
-* Added `is:infusionfodder` search to show items where a lower-power version of the same item exists. Use `tag:junk is:infusionfodder` to check your trash for its potential to infuse!
 
 ### Beta Only
 
