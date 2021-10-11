@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
+import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
@@ -23,14 +24,12 @@ import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import CharacterSelect from '../dim-ui/CharacterSelect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
@@ -45,11 +44,11 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
+import { emptyItemsByBucket, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
-  classType: DestinyClass | undefined;
+  initialClassType: DestinyClass | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
 }
@@ -128,13 +127,7 @@ function mapStateToProps() {
           continue;
         }
         const { classType, bucket } = item;
-        (items[classType] ??= {
-          [BucketHashes.Helmet]: [],
-          [BucketHashes.Gauntlets]: [],
-          [BucketHashes.ChestArmor]: [],
-          [BucketHashes.LegArmor]: [],
-          [BucketHashes.ClassArmor]: [],
-        })[bucket.hash].push(item);
+        (items[classType] ??= { ...emptyItemsByBucket })[bucket.hash].push(item);
       }
       return items;
     }
@@ -158,7 +151,7 @@ function LoadoutBuilder({
   loadouts,
   searchFilter,
   preloadedLoadout,
-  classType,
+  initialClassType,
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
@@ -179,7 +172,7 @@ function LoadoutBuilder({
       compareSet,
     },
     lbDispatch,
-  ] = useLbState(stores, preloadedLoadout, classType, initialLoadoutParameters, defs);
+  ] = useLbState(stores, preloadedLoadout, initialClassType, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
@@ -205,16 +198,18 @@ function LoadoutBuilder({
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
 
-  const selectedStore = stores.find((store) => store.id === selectedStoreId);
+  const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
+  const classType = selectedStore.classType;
 
   const enabledStats = useMemo(
     () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
     [statFilters]
   );
 
-  const characterItems: ItemsByBucket | undefined = selectedStore && items[selectedStore.classType];
+  const characterItems = items[classType];
 
-  const equippedLoadout: Loadout | undefined = selectedStore && loadoutFromEquipped(selectedStore);
+  const equippedLoadout: Loadout | undefined = loadoutFromEquipped(selectedStore);
+  // Huh... these aren't filtered by class...
   loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
 
   const filteredItems = useMemo(
@@ -287,7 +282,7 @@ function LoadoutBuilder({
 
   const shareBuild = () => {
     const urlParams = new URLSearchParams({
-      class: selectedStore!.classType.toString(),
+      class: classType.toString(),
       p: JSON.stringify(params),
     });
     const url = `${location.origin}/optimizer?${urlParams}`;
@@ -304,7 +299,7 @@ function LoadoutBuilder({
   }
 
   const menuContent = (
-    <div className={styles.menuContent}>
+    <>
       <TierSelect
         stats={statFilters}
         statRangesFiltered={result?.statRangesFiltered}
@@ -325,12 +320,12 @@ function LoadoutBuilder({
         lockedExoticHash={lockedExoticHash}
         lbDispatch={lbDispatch}
       />
-    </div>
+    </>
   );
 
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu>
+      <PageWithMenu.Menu className={styles.menuContent}>
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -411,7 +406,7 @@ function LoadoutBuilder({
         {modPicker.open &&
           ReactDOM.createPortal(
             <ModPicker
-              classType={selectedStore.classType}
+              classType={classType}
               lockedMods={lockedMods}
               initialQuery={modPicker.initialQuery}
               onAccept={(newLockedMods: PluggableInventoryItemDefinition[]) =>
@@ -430,7 +425,7 @@ function LoadoutBuilder({
               set={compareSet}
               loadouts={loadouts}
               lockedMods={lockedMods}
-              classType={selectedStore.classType}
+              classType={classType}
               statOrder={statOrder}
               enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
