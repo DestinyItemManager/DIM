@@ -39,6 +39,17 @@ export interface LoadoutBuilderState {
   compareSet?: ArmorSet;
 }
 
+function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
+  const missingClassName = Object.values(defs.Class).find((c) => c.classType === classType)!
+    .displayProperties.name;
+
+  showNotification({
+    type: 'error',
+    title: t('LoadoutBuilder.MissingClass', { className: missingClassName }),
+    body: t('LoadoutBuilder.MissingClassDescription', { className: missingClassName }),
+  });
+}
+
 const lbStateInit = ({
   stores,
   preloadedLoadout,
@@ -54,29 +65,39 @@ const lbStateInit = ({
 }): LoadoutBuilderState => {
   const pinnedItems: PinnedItems = {};
 
-  let selectedStoreId =
-    classType !== undefined
-      ? stores.find((store) => store.classType === classType)?.id
-      : getCurrentStore(stores)?.id;
+  const matchingClass =
+    classType !== undefined ? stores.find((store) => store.classType === classType) : undefined;
+
+  if (classType !== undefined && !matchingClass) {
+    warnMissingClass(classType, defs);
+    // Take out the exotic
+    initialLoadoutParameters = { ...initialLoadoutParameters, exoticArmorHash: undefined };
+  }
+
+  let selectedStoreId = (matchingClass ?? getCurrentStore(stores)!).id;
 
   let loadoutParams = initialLoadoutParameters;
 
   if (stores.length && preloadedLoadout) {
-    selectedStoreId = stores.find((store) => store.classType === preloadedLoadout.classType)?.id;
-
-    // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
-    for (const loadoutItem of preloadedLoadout.items) {
-      if (loadoutItem.equipped) {
-        const item = getItemAcrossStores(stores, loadoutItem);
-        if (item && isLoadoutBuilderItem(item)) {
-          pinnedItems[item.bucket.hash] = item;
+    const loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    if (!loadoutStore) {
+      warnMissingClass(preloadedLoadout.classType, defs);
+    } else {
+      selectedStoreId = loadoutStore.id;
+      // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
+      for (const loadoutItem of preloadedLoadout.items) {
+        if (loadoutItem.equipped) {
+          const item = getItemAcrossStores(stores, loadoutItem);
+          if (item && isLoadoutBuilderItem(item)) {
+            pinnedItems[item.bucket.hash] = item;
+          }
         }
       }
-    }
 
-    // Load all parameters from the loadout if we can
-    if (preloadedLoadout.parameters) {
-      loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
+      // Load all parameters from the loadout if we can
+      if (preloadedLoadout.parameters) {
+        loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
+      }
     }
   }
 
