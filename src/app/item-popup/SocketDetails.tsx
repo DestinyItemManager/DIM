@@ -28,6 +28,7 @@ interface ProvidedProps {
   item: DimItem;
   socket: DimSocket;
   onClose(): void;
+  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
 
 interface StoreProps {
@@ -131,7 +132,14 @@ export const SocketDetailsMod = React.memo(
   }
 );
 
-function SocketDetails({ item, socket, unlockedPlugs, inventoryPlugs, onClose }: Props) {
+function SocketDetails({
+  item,
+  socket,
+  unlockedPlugs,
+  inventoryPlugs,
+  onClose,
+  onPlugSelected,
+}: Props) {
   const defs = useD2Definitions()!;
   const initialPlug = socket.plugged?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
@@ -249,6 +257,7 @@ function SocketDetails({ item, socket, unlockedPlugs, inventoryPlugs, onClose }:
         socket={socket}
         currentPlug={socket.plugged}
         equippable={unlocked(selectedPlug)}
+        onPlugSelected={onPlugSelected}
         closeMenu={onClose}
       />
     ));

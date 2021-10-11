@@ -1,5 +1,7 @@
 ## Next
 
+## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
+
 * Clicking a perk in the item popup now previews the stat changes from switching to that perk.
 * Clicking a perk in the Organizer view also previews the stats for that perk.
 * Changes to the Armory view (bring up Armory by clicking an item's name in the item popup):
@@ -7,12 +9,21 @@
   * Armory highlights the perks rolled on the item you clicked.
   * Clicking other perk option previews their stat effects.
   * You can click the "DIM" link to open the item info on its own, and share a roll with others.
+  * Clicking modslots lets you change mods.
+  * Selecting different ornaments shows what the ornament looks like on the item.
+  * Added a link to D2 Gunsmith for weapons.
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 * `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
 * Moved "Tracked Triumphs" section to the top of the Progress page.
 * You can now track and untrack Seasonal Challenges from the Progress page.
+
+### Beta Only
+
+* Loadout Optimizer now shows the maximum stat tier you can get for each stat, taking into account all of your loadout settings including min/max stats, mods, and search filter. We're still not sure of the best way to display this, so it's in Beta only for now to get some feedback.
+* We've tweaked the way Loadout Optimizer chooses which subset of items to look at when you have too many items to process. We should be better at making use of items that have "spiky" stats.
+
 
 ## 6.85.0 <span class="changelog-date">(2021-10-03)</span>
 

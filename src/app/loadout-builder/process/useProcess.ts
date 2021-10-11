@@ -11,6 +11,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { proxy, releaseProxy, wrap } from 'comlink';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
@@ -96,11 +97,17 @@ export function useProcess(
         mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
-    const processItems: ProcessItemsByBucket = {};
+    const processItems: ProcessItemsByBucket = {
+      [BucketHashes.Helmet]: [],
+      [BucketHashes.Gauntlets]: [],
+      [BucketHashes.ChestArmor]: [],
+      [BucketHashes.LegArmor]: [],
+      [BucketHashes.ClassArmor]: [],
+    };
     const itemsById = new Map<string, DimItem[]>();
 
-    for (const [key, items] of Object.entries(filteredItems)) {
-      processItems[key] = [];
+    for (const [bucketHash, items] of Object.entries(filteredItems)) {
+      processItems[bucketHash] = [];
 
       const groupedItems = groupItems(
         defs,
@@ -115,7 +122,7 @@ export function useProcess(
         const item = group.length ? group[0] : null;
 
         if (item && defs) {
-          processItems[key].push(
+          processItems[bucketHash].push(
             mapDimItemToProcessItem(
               defs,
               item,

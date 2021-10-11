@@ -27,10 +27,11 @@ interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+  grid?: boolean;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
 
-export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Props) {
+export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked }: Props) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
@@ -42,7 +43,7 @@ export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Pro
       onPlugClicked?.({
         item,
         socket,
-        plug,
+        plugHash: plug.plugDef.hash,
       });
     }
   };
@@ -119,7 +120,7 @@ export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Pro
         </ArchetypeRow>
       )}
       {perks &&
-        ($featureFlags.newPerks && !minimal ? (
+        ($featureFlags.newPerks && !minimal && !grid ? (
           <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
         ) : (
           <div
@@ -157,6 +158,7 @@ export default function ItemSocketsWeapons({ item, minimal, onPlugClicked }: Pro
             item={item}
             socket={socketInMenu}
             onClose={() => setSocketInMenu(null)}
+            onPlugSelected={onPlugClicked}
           />,
           document.body
         )}

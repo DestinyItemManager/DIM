@@ -407,6 +407,8 @@ module.exports = (env) => {
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
+        // Show achievable stat ranges in LO
+        '$featureFlags.loStatRanges': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

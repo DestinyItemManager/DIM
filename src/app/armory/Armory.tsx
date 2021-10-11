@@ -78,7 +78,9 @@ export default function Armory({
     : undefined;
   const event = getEvent(item);
 
-  const screenshot = itemDef.screenshot;
+  // Use the ornament's screenshot if available
+  const ornamentSocket = item.sockets?.allSockets.find((s) => s.plugged?.plugDef.screenshot);
+  const screenshot = ornamentSocket?.plugged?.plugDef.screenshot || itemDef.screenshot;
   const flavorText = itemDef.flavorText || itemDef.displaySource;
 
   // TODO: Show Catalyst benefits for exotics
@@ -177,7 +179,7 @@ export default function Armory({
 
       {item.sockets && (
         <div className={styles.section}>
-          <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+          <ItemSockets item={item} grid onPlugClicked={onPlugClicked} />
         </div>
       )}
       {item.pursuit && (

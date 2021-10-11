@@ -520,6 +520,7 @@
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
+    "MaxTier": "Max {{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -846,6 +847,7 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
+    "SelectModButton": "Select Mod",
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {

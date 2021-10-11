@@ -15,6 +15,12 @@
   margin-right: 4px;
 }
 
+.range {
+  grid-area: range;
+  justify-self: flex-end;
+  font-size: 12px;
+}
+
 .minimum {
   grid-area: minimum;
 }
@@ -34,7 +40,9 @@
 .row {
   display: grid;
   grid-template-columns: 1fr 45px 45px;
-  grid-template-areas: 'name minimum maximum';
+  grid-template-areas:
+    'name range range'
+    'name minimum maximum';
   gap: 4px 4px;
   margin-bottom: 2px;
   padding-right: 4px;
