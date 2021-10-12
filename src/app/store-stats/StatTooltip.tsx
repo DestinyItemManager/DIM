@@ -17,11 +17,6 @@ interface Stat {
   description: string;
 }
 
-interface Props {
-  stat: Stat;
-  characterClass: DestinyClass;
-}
-
 function getClassAbilityCooldownTranslation(characterClass: DestinyClass) {
   switch (characterClass) {
     case DestinyClass.Hunter:
@@ -61,7 +56,13 @@ function getDarkAbilityTranslation(statHash: number) {
   }
 }
 
-function StatTooltip({ stat, characterClass }: Props) {
+function StatTooltip({
+  stat,
+  characterClass,
+}: {
+  stat: Stat;
+  characterClass: DestinyClass; // this can be DestinyClass.Unknown
+}) {
   const lightAbilityTranslation = getLightAbilityTranslation(stat.hash);
   const darkAbilityTranslation = getDarkAbilityTranslation(stat.hash);
 
