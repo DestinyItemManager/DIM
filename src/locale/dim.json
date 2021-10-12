@@ -186,6 +186,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -448,6 +449,7 @@
     "LockElement": "Lock Element",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
+    "MaxTier": "Max {{tier}}",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
@@ -592,7 +594,6 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
-    "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
@@ -614,7 +615,6 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +791,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

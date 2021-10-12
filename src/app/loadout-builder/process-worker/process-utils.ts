@@ -73,10 +73,10 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
 /**
- * This figures out if all general, other and activity mods can be assigned to an armour set.
+ * This figures out if all general, combat and activity mods can be assigned to an armour set.
  *
  * The params generalModPermutations, combatModPermutations, activityModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or activity mods.
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of general, combat or activity mods.
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */

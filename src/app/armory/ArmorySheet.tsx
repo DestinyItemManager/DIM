@@ -11,7 +11,7 @@ export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose(
       item.sockets
         ? Object.fromEntries(
             item.sockets.allSockets
-              .filter((s) => s.isPerk && s.plugged)
+              .filter((s) => s.plugged)
               .map((s) => [s.socketIndex, s.plugged!.plugDef.hash])
           )
         : {},

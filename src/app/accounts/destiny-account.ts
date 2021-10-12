@@ -160,15 +160,12 @@ async function generatePlatforms(
           originalPlatformType: destinyAccount.membershipType,
           membershipId: destinyAccount.membershipId,
           platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
-          destinyVersion: 1,
-          platforms: [destinyAccount.membershipType],
+          destinyVersion: 2,
+          platforms: destinyAccount.applicableMembershipTypes,
           lastPlayed: new Date(),
         };
 
-        if (
-          errorProfile.errorCode === PlatformErrorCodes.DestinyAccountNotFound ||
-          errorProfile.errorCode === PlatformErrorCodes.DestinyLegacyPlatformInaccessible
-        ) {
+        if (errorProfile.errorCode === PlatformErrorCodes.DestinyLegacyPlatformInaccessible) {
           // If the error positively identifies this as not being a D2 account, only look for D1 accounts
           return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
         } else {
@@ -181,7 +178,7 @@ async function generatePlatforms(
     );
 
   const allPromise = Promise.all(accountPromises);
-  return _.compact(await allPromise);
+  return _.compact(await allPromise).filter((a) => a.platforms.length > 0);
 }
 
 async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {

@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import { AppIcon, faArrowCircleDown, searchIcon } from '../shell/icons';
@@ -36,7 +36,7 @@ export default function CompareItem({
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
   setHighlight(value?: string | number): void;
-  onPlugClicked(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+  onPlugClicked(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
   isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);

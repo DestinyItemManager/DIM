@@ -171,6 +171,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
@@ -520,6 +521,7 @@
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
+    "MaxTier": "Max {{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -846,6 +848,7 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
+    "SelectModButton": "Select Mod",
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
