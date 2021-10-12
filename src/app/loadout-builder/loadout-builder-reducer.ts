@@ -46,7 +46,7 @@ function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) 
   showNotification({
     type: 'error',
     title: t('LoadoutBuilder.MissingClass', { className: missingClassName }),
-    body: t('LoadoutBuilder.MissingClassDescription', { className: missingClassName }),
+    body: t('LoadoutBuilder.MissingClassDescription'),
   });
 }
 
