@@ -24,6 +24,7 @@ import { compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
@@ -44,7 +45,7 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { emptyItemsByBucket, generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
+import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -127,7 +128,13 @@ function mapStateToProps() {
           continue;
         }
         const { classType, bucket } = item;
-        (items[classType] ??= { ...emptyItemsByBucket })[bucket.hash].push(item);
+        (items[classType] ??= {
+          [BucketHashes.Helmet]: [],
+          [BucketHashes.Gauntlets]: [],
+          [BucketHashes.ChestArmor]: [],
+          [BucketHashes.LegArmor]: [],
+          [BucketHashes.ClassArmor]: [],
+        })[bucket.hash].push(item);
       }
       return items;
     }

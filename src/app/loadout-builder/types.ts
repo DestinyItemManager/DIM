@@ -37,15 +37,6 @@ export type ItemsByBucket = Readonly<{
   [bucketHash in LockableBucketHash]: readonly DimItem[];
 }>;
 
-export const emptyItemsByBucket: ItemsByBucket = {
-  [BucketHashes.Helmet]: [],
-  [BucketHashes.Gauntlets]: [],
-  [BucketHashes.ChestArmor]: [],
-  [BucketHashes.LegArmor]: [],
-  [BucketHashes.ClassArmor]: [],
-};
-Object.freeze(emptyItemsByBucket);
-
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
