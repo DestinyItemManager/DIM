@@ -5,7 +5,7 @@ import vidboiProfile from '../../testing/data/vidboi-accounts.json';
 import { DestinyAccount, generatePlatforms } from './destiny-account';
 
 async function getCharactersAPI(_account: DestinyAccount) {
-  return [{ id: '1231541', dateLastPlayed: new Date(), base: '' }];
+  return [{ id: '1231541', dateLastPlayed: new Date(0), base: '' }];
 }
 
 const cases = [

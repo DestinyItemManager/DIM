@@ -1,5 +1,7 @@
 ## Next
 
+* D1 accounts should reappear for you if it had disappeared.
+
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
 * Clicking a perk in the item popup now previews the stat changes from switching to that perk.
