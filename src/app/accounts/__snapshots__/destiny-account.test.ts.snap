@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generatePlatforms ace's profile 1`] = `
+Array [
+  Object {
+    "destinyVersion": 2,
+    "displayName": "Ace#2060",
+    "lastPlayed": 2021-10-11T14:59:45.000Z,
+    "membershipId": "4611686018467367772",
+    "originalPlatformType": 3,
+    "platformLabel": "Steam",
+    "platforms": Array [
+      2,
+      5,
+      3,
+    ],
+  },
+  Object {
+    "destinyVersion": 1,
+    "displayName": "Ace#2060",
+    "lastPlayed": 2021-10-12T05:46:14.886Z,
+    "membershipId": "4611686018467367772",
+    "originalPlatformType": 3,
+    "platformLabel": "Steam",
+    "platforms": Array [
+      2,
+    ],
+  },
+]
+`;
+
+exports[`generatePlatforms vidboi's profile 1`] = `
+Array [
+  Object {
+    "destinyVersion": 2,
+    "displayName": "VidBoi-BMC#9226",
+    "lastPlayed": 2021-10-11T01:46:02.000Z,
+    "membershipId": "4611686018433092312",
+    "originalPlatformType": 2,
+    "platformLabel": "PlayStation",
+    "platforms": Array [
+      1,
+      3,
+      5,
+      2,
+    ],
+  },
+  Object {
+    "destinyVersion": 1,
+    "displayName": "VidBoi-BMC#9226",
+    "lastPlayed": 2021-10-12T05:46:14.893Z,
+    "membershipId": "4611686018433092312",
+    "originalPlatformType": 2,
+    "platformLabel": "PlayStation",
+    "platforms": Array [
+      2,
+    ],
+  },
+  Object {
+    "destinyVersion": 1,
+    "displayName": "VidBoi-BMC#9226",
+    "lastPlayed": 2021-10-12T05:46:14.893Z,
+    "membershipId": "4611686018429726245",
+    "originalPlatformType": 1,
+    "platformLabel": "Xbox",
+    "platforms": Array [
+      1,
+    ],
+  },
+]
+`;

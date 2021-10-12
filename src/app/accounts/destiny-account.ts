@@ -109,7 +109,9 @@ function couldBeD1Account(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
   // D1 was only available for PS/Xbox
   return (
     destinyAccount.membershipType === BungieMembershipType.TigerXbox ||
-    destinyAccount.membershipType === BungieMembershipType.TigerPsn
+    destinyAccount.membershipType === BungieMembershipType.TigerPsn ||
+    destinyAccount.applicableMembershipTypes.includes(BungieMembershipType.TigerXbox) ||
+    destinyAccount.applicableMembershipTypes.includes(BungieMembershipType.TigerPsn)
   );
 }
 
@@ -125,8 +127,9 @@ function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
 /**
  * @param accounts raw Bungie API accounts response
  */
-async function generatePlatforms(
-  accounts: DestinyLinkedProfilesResponse
+export async function generatePlatforms(
+  accounts: DestinyLinkedProfilesResponse,
+  getCharactersAPI = getCharacters
 ): Promise<DestinyAccount[]> {
   // accounts with errors could have had D1 characters!
 
@@ -144,10 +147,14 @@ async function generatePlatforms(
 
       // For accounts that were folded into Cross Save, only consider them as D1 accounts.
       if (destinyAccount.isOverridden) {
-        return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
+        return couldBeD1Account(destinyAccount)
+          ? [findD1Characters(account, getCharactersAPI)]
+          : [];
       }
 
-      return couldBeD1Account(destinyAccount) ? [account, findD1Characters(account)] : [account];
+      return couldBeD1Account(destinyAccount)
+        ? [account, findD1Characters(account, getCharactersAPI)]
+        : [account];
     })
     .concat(
       // Profiles with errors could be D1 accounts
@@ -167,11 +174,13 @@ async function generatePlatforms(
 
         if (errorProfile.errorCode === PlatformErrorCodes.DestinyLegacyPlatformInaccessible) {
           // If the error positively identifies this as not being a D2 account, only look for D1 accounts
-          return couldBeD1Account(destinyAccount) ? [findD1Characters(account)] : [];
+          return couldBeD1Account(destinyAccount)
+            ? [findD1Characters(account, getCharactersAPI)]
+            : [];
         } else {
           // Otherwise, this could be a D2 account while the API is having trouble.
           return couldBeD1Account(destinyAccount)
-            ? [account, findD1Characters(account)]
+            ? [account, findD1Characters(account, getCharactersAPI)]
             : [account];
         }
       })
@@ -181,15 +190,26 @@ async function generatePlatforms(
   return _.compact(await allPromise).filter((a) => a.platforms.length > 0);
 }
 
-async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
+async function findD1Characters(
+  account: DestinyAccount,
+  getCharactersAPI: typeof getCharacters
+): Promise<DestinyAccount | null> {
+  const probablePlatformType =
+    account.originalPlatformType === BungieMembershipType.TigerXbox ||
+    account.originalPlatformType === BungieMembershipType.TigerPsn
+      ? account.originalPlatformType
+      : account.platforms.find(
+          (p) => p === BungieMembershipType.TigerXbox || p === BungieMembershipType.TigerPsn
+        )!;
+
   try {
-    const response = await getCharacters(account);
+    const response = await getCharactersAPI(account);
     if (response?.length) {
       return {
         ...account,
         destinyVersion: 1,
         // D1 didn't support cross-save!
-        platforms: [account.originalPlatformType],
+        platforms: [probablePlatformType],
         lastPlayed: getLastPlayedD1Character(response),
       };
     }
@@ -210,7 +230,7 @@ async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount
       ...account,
       destinyVersion: 1,
       // D1 didn't support cross-save!
-      platforms: [account.originalPlatformType],
+      platforms: [probablePlatformType],
       lastPlayed: new Date(0),
     };
   }

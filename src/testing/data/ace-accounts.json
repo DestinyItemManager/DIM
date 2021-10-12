@@ -1,0 +1,119 @@
+{
+  "profiles": [
+    {
+      "dateLastPlayed": "2021-10-11T14:59:45Z",
+      "isOverridden": false,
+      "isCrossSavePrimary": true,
+      "platformSilver": {
+        "platformSilver": {
+          "TigerPsn": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798306,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerXbox": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798307,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerBlizzard": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798316,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerStadia": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798317,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerSteam": {
+            "itemHash": 3147280338,
+            "quantity": 2800,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 130233231,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "BungieNext": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 130233230,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          }
+        }
+      },
+      "crossSaveOverride": 3,
+      "applicableMembershipTypes": [2, 5, 3],
+      "isPublic": false,
+      "membershipType": 3,
+      "membershipId": "4611686018467367772",
+      "displayName": "Ace",
+      "bungieGlobalDisplayName": "Ace",
+      "bungieGlobalDisplayNameCode": 2060
+    }
+  ],
+  "bnetMembership": {
+    "supplementalDisplayName": "Ace#2060",
+    "iconPath": "/img/profile/avatars/cc28.jpg",
+    "crossSaveOverride": 0,
+    "isPublic": false,
+    "membershipType": 254,
+    "membershipId": "11001735",
+    "displayName": "Ace",
+    "bungieGlobalDisplayName": "Ace",
+    "bungieGlobalDisplayNameCode": 2060
+  },
+  "profilesWithErrors": [
+    {
+      "errorCode": 1601,
+      "infoCard": {
+        "crossSaveOverride": 3,
+        "applicableMembershipTypes": [],
+        "isPublic": true,
+        "membershipType": 5,
+        "membershipId": "4611686018509984698",
+        "displayName": "ace#2840",
+        "bungieGlobalDisplayName": "Ace",
+        "bungieGlobalDisplayNameCode": 2060
+      }
+    }
+  ]
+}
