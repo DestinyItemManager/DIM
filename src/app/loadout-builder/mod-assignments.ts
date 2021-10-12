@@ -5,10 +5,9 @@ import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { generateModPermutations } from './mod-permutations';
-import { bucketsToCategories } from './types';
+import { activityModPlugCategoryHashes, bucketsToCategories } from './types';
 import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from './utils';
 
 interface ItemEnergy {
@@ -43,7 +42,7 @@ function calculateEnergyChange(
   itemEnergy: ItemEnergy,
   generalMod: PluggableInventoryItemDefinition | null,
   combatMod: PluggableInventoryItemDefinition | null,
-  raidMod: PluggableInventoryItemDefinition | null
+  activityMod: PluggableInventoryItemDefinition | null
 ) {
   let finalEnergy;
 
@@ -60,17 +59,17 @@ function calculateEnergyChange(
   ) {
     finalEnergy = combatMod.plug.energyCost.energyType;
   } else if (
-    raidMod?.plug.energyCost &&
-    raidMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
+    activityMod?.plug.energyCost &&
+    activityMod?.plug.energyCost?.energyType !== DestinyEnergyType.Any
   ) {
-    finalEnergy = raidMod.plug.energyCost.energyType;
+    finalEnergy = activityMod.plug.energyCost.energyType;
   }
 
   const generalModCost = generalMod?.plug.energyCost?.energyCost || 0;
   const combatModCost = combatMod?.plug.energyCost?.energyCost || 0;
-  const raidModCost = raidMod?.plug.energyCost?.energyCost || 0;
+  const activityModCost = activityMod?.plug.energyCost?.energyCost || 0;
 
-  const modCost = itemEnergy.used + generalModCost + combatModCost + raidModCost;
+  const modCost = itemEnergy.used + generalModCost + combatModCost + activityModCost;
   const energyUsedAndWasted = modCost + itemEnergy.originalCapacity;
   const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
 
@@ -118,7 +117,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
  *
- * This checks that the summed mod energies are within the dervided mod capacity for
+ * This checks that the summed mod energies are within the derived mod capacity for
  * an item (derived from armour upgrade options). It also ensures that all the mod
  * energy types align and that the mod can be slotted into an item socket based on
  * item energy type.
@@ -149,7 +148,7 @@ function isModEnergyValid(
  *
  * It uses the idea of total energy spent and wasted to rank mod assignments.
  *
- * To do this we create permutations of general, combat and raid mods and loop over each
+ * To do this we create permutations of general, combat and activity mods and loop over each
  * set of permutations and validate the possibility of the mod assignment at every level.
  * This is to ensure that we can exit early if a invalid assignment is found.
  */
@@ -165,17 +164,17 @@ export function getModAssignments(
   }
 
   const bucketSpecificAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
-  const bucketIndependantAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
+  const bucketIndependentAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
   // just an arbitrarily large number
   let assignmentEnergyCost = 10000;
 
   for (const item of items) {
     bucketSpecificAssignments.set(item.id, []);
-    bucketIndependantAssignments.set(item.id, []);
+    bucketIndependentAssignments.set(item.id, []);
   }
 
   // An object of item id's to specialty socket metadata, this is used to ensure that
-  // combat and raid mods can be slotted into an item.
+  // combat and activity mods can be slotted into an item.
   const itemSocketMetadata = _.mapValues(
     _.keyBy(items, (item) => item.id),
     (item) => getSpecialtySocketMetadatas(item)
@@ -183,18 +182,18 @@ export function getModAssignments(
 
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const combatMods: PluggableInventoryItemDefinition[] = [];
-  const raidMods: PluggableInventoryItemDefinition[] = [];
+  const activityMods: PluggableInventoryItemDefinition[] = [];
 
-  // Divide up the locked mods into general, combat and raid mod arrays. Also we
+  // Divide up the locked mods into general, combat and activity mod arrays. Also we
   // take the bucket specific mods and put them in a map of item id's to mods so
-  // we can calcualte the used energy values for each item
+  // we can calculate the used energy values for each item
   for (const mod of mods) {
     if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
       generalMods.push(mod);
     } else if (combatCompatiblePlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
       combatMods.push(mod);
-    } else if (raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-      raidMods.push(mod);
+    } else if (activityModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
+      activityMods.push(mod);
     } else {
       const itemForMod = items.find(
         (item) => mod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
@@ -228,32 +227,32 @@ export function getModAssignments(
 
   const generalModPermutations = generateModPermutations(generalMods);
   const combatModPermutations = generateModPermutations(combatMods);
-  const raidModPermutations = generateModPermutations(raidMods);
+  const activityModPermutations = generateModPermutations(activityMods);
 
   // loop depth 0
-  raidModLoop: for (const raidPermutation of raidModPermutations) {
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
     // loop depth 1
-    raidItemLoop: for (let i = 0; i < items.length; i++) {
-      const raidMod = raidPermutation[i];
+    activityItemLoop: for (let i = 0; i < items.length; i++) {
+      const activityMod = activityPermutation[i];
 
       // If a mod is null there is nothing being socketed into the item so move on
-      if (!raidMod) {
-        continue raidItemLoop;
+      if (!activityMod) {
+        continue activityItemLoop;
       }
 
       const item = items[i];
       const itemEnergy = itemEnergies[item.id];
-      const modTag = getModTypeTagByPlugCategoryHash(raidMod.plug.plugCategoryHash);
+      const modTag = getModTypeTagByPlugCategoryHash(activityMod.plug.plugCategoryHash);
 
-      // The raid mods wont fit in the item set so move on to the next set of mods
+      // The activity mods wont fit in the item set so move on to the next set of mods
       if (
-        !isModEnergyValid(itemEnergy, raidMod) ||
+        !isModEnergyValid(itemEnergy, activityMod) ||
         !modTag ||
         !itemSocketMetadata[item.id]?.some((metadata) =>
           metadata.compatibleModTags.includes(modTag)
         )
       ) {
-        continue raidModLoop;
+        continue activityModLoop;
       }
     }
     // loop depth 1
@@ -273,7 +272,7 @@ export function getModAssignments(
 
         // The combat mods wont fit in the item set so move on to the next set of mods
         if (
-          !isModEnergyValid(itemEnergy, combatMod, raidPermutation[i]) ||
+          !isModEnergyValid(itemEnergy, combatMod, activityPermutation[i]) ||
           !modTag ||
           !itemSocketMetadata[item.id]?.some((metadata) =>
             metadata.compatibleModTags.includes(modTag)
@@ -297,12 +296,14 @@ export function getModAssignments(
           const itemEnergy = itemEnergies[item.id];
 
           // The general mods wont fit in the item set so move on to the next set of mods
-          if (!isModEnergyValid(itemEnergy, generalMod, combatPermutation[i], raidPermutation[i])) {
+          if (
+            !isModEnergyValid(itemEnergy, generalMod, combatPermutation[i], activityPermutation[i])
+          ) {
             continue generalModLoop;
           }
         }
         // loop depth 2
-        // To hit this point we must have found a valud mod assignment.
+        // To hit this point we must have found a valued mod assignment.
         // The loop set is designed to exit early through a continue if a
         // set of mods is found to be invalid.
         let energyUsedAndWasted = 0;
@@ -311,7 +312,7 @@ export function getModAssignments(
             itemEnergies[items[i].id],
             generalPermutation[i],
             combatPermutation[i],
-            raidPermutation[i]
+            activityPermutation[i]
           );
         }
 
@@ -319,9 +320,9 @@ export function getModAssignments(
         // we replace it and carry on until we have exhausted all permutations.
         if (energyUsedAndWasted < assignmentEnergyCost) {
           for (let i = 0; i < items.length; i++) {
-            bucketIndependantAssignments.set(
+            bucketIndependentAssignments.set(
               items[i].id,
-              _.compact([generalPermutation[i], combatPermutation[i], raidPermutation[i]])
+              _.compact([generalPermutation[i], combatPermutation[i], activityPermutation[i]])
             );
           }
           assignmentEnergyCost = energyUsedAndWasted;
@@ -334,7 +335,7 @@ export function getModAssignments(
   for (const item of items) {
     mergedResults.set(item.id, [
       ...(bucketSpecificAssignments.get(item.id) || []),
-      ...(bucketIndependantAssignments.get(item.id) || []),
+      ...(bucketIndependentAssignments.get(item.id) || []),
     ]);
   }
 
@@ -344,7 +345,7 @@ export function getModAssignments(
 // TODO (ryan) This is a super lazy way of getting unassigned mods but doing it properly
 // is hard. To do it properly we need to check every possible combination and even if its
 // not a valid fit for the mods, we need to calculate how good it is (least number of unassigned?).
-// This will make all slot independant mods unassigned if it doesn't find a valid fit.
+// This will make all slot independent mods unassigned if it doesn't find a valid fit.
 export function getAssignedAndUnassignedMods(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],

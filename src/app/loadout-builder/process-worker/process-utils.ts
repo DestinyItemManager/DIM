@@ -73,17 +73,17 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
 /**
- * This figures out if all general, combat and raid mods can be assigned to an armour set.
+ * This figures out if all general, combat and activity mods can be assigned to an armour set.
  *
- * The params generalModPermutations, combatModPermutations, raidModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of general, other or raid mods.
+ * The params generalModPermutations, combatModPermutations, activityModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of general, combat or activity mods.
  *
  * assignments is mutated by this function to store any mods assignments that were made.
  */
 export function canTakeSlotIndependentMods(
   generalModPermutations: (ProcessMod | null)[][],
   combatModPermutations: (ProcessMod | null)[][],
-  raidModPermutations: (ProcessMod | null)[][],
+  activityModPermutations: (ProcessMod | null)[][],
   items: ProcessItem[]
 ) {
   // Sort the items like the mods are to try and get a greedy result
@@ -96,46 +96,48 @@ export function canTakeSlotIndependentMods(
   const [arcGeneralMods, solarGeneralMods, voidGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
   );
-  const [arcRaidMods, solarRaidMods, voidRaidMods] = getEnergyCounts(raidModPermutations[0]);
+  const [arcActivityMods, solarActivityMods, voidActivityMods] = getEnergyCounts(
+    activityModPermutations[0]
+  );
 
   // A quick check to see if we have enough of each energy type for the mods
   if (
     voidItems + anyItems < voidGeneralMods ||
     voidItems + anyItems < voidSeasonalMods ||
-    voidItems + anyItems < voidRaidMods ||
+    voidItems + anyItems < voidActivityMods ||
     solarItems + anyItems < solarGeneralMods ||
     solarItems + anyItems < solarSeasonalMods ||
-    solarItems + anyItems < solarRaidMods ||
+    solarItems + anyItems < solarActivityMods ||
     arcItems + anyItems < arcGeneralMods ||
     arcItems + anyItems < arcSeasonalMods ||
-    arcItems + anyItems < arcRaidMods
+    arcItems + anyItems < arcActivityMods
   ) {
     return false;
   }
 
-  raidModLoop: for (const raidPermutation of raidModPermutations) {
-    raidItemLoop: for (let i = 0; i < sortedItems.length; i++) {
-      const raidMod = raidPermutation[i];
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
+    activityItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+      const activityMod = activityPermutation[i];
 
       // If a mod is null there is nothing being socketed into the item so move on
-      if (!raidMod) {
-        continue raidItemLoop;
+      if (!activityMod) {
+        continue activityItemLoop;
       }
 
       const item = sortedItems[i];
-      const tag = raidMod.tag!;
-      const raidEnergy = raidMod.energy || defaultModEnergy;
+      const tag = activityMod.tag!;
+      const activityEnergy = activityMod.energy || defaultModEnergy;
 
-      const raidEnergyIsValid =
+      const activityEnergyIsValid =
         item.energy &&
-        item.energy.val + raidEnergy.val <= item.energy.capacity &&
-        (item.energy.type === raidEnergy.type ||
-          raidEnergy.type === DestinyEnergyType.Any ||
+        item.energy.val + activityEnergy.val <= item.energy.capacity &&
+        (item.energy.type === activityEnergy.type ||
+          activityEnergy.type === DestinyEnergyType.Any ||
           item.energy.type === DestinyEnergyType.Any);
 
-      // The raid mods wont fit in the item set so move on to the next set of mods
-      if (!raidEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
-        continue raidModLoop;
+      // The activity mods wont fit in the item set so move on to the next set of mods
+      if (!activityEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
+        continue activityModLoop;
       }
     }
 
@@ -151,17 +153,17 @@ export function canTakeSlotIndependentMods(
         const item = sortedItems[i];
         const combatEnergy = combatMod.energy || defaultModEnergy;
         const tag = combatMod.tag!;
-        const raidEnergy = raidPermutation[i]?.energy || defaultModEnergy;
+        const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
 
         const combatEnergyIsValid =
           item.energy &&
-          item.energy.val + combatEnergy.val + raidEnergy.val <= item.energy.capacity &&
+          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity &&
           (item.energy.type === combatEnergy.type ||
             combatEnergy.type === DestinyEnergyType.Any ||
             item.energy.type === DestinyEnergyType.Any) &&
-          (raidEnergy.type === combatEnergy.type ||
+          (activityEnergy.type === combatEnergy.type ||
             combatEnergy.type === DestinyEnergyType.Any ||
-            raidEnergy.type === DestinyEnergyType.Any);
+            activityEnergy.type === DestinyEnergyType.Any);
 
         // The combat mods wont fit in the item set so move on to the next set of mods
         if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
@@ -181,11 +183,11 @@ export function canTakeSlotIndependentMods(
           const item = sortedItems[i];
           const generalEnergy = generalMod.energy || defaultModEnergy;
           const combatEnergy = combatPermutation[i]?.energy || defaultModEnergy;
-          const raidEnergy = raidPermutation[i]?.energy || defaultModEnergy;
+          const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
 
           const generalEnergyIsValid =
             item.energy &&
-            item.energy.val + generalEnergy.val + combatEnergy.val + raidEnergy.val <=
+            item.energy.val + generalEnergy.val + combatEnergy.val + activityEnergy.val <=
               item.energy.capacity &&
             (item.energy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any ||
@@ -193,9 +195,9 @@ export function canTakeSlotIndependentMods(
             (combatEnergy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any ||
               combatEnergy.type === DestinyEnergyType.Any) &&
-            (raidEnergy.type === generalEnergy.type ||
+            (activityEnergy.type === generalEnergy.type ||
               generalEnergy.type === DestinyEnergyType.Any ||
-              raidEnergy.type === DestinyEnergyType.Any);
+              activityEnergy.type === DestinyEnergyType.Any);
 
           // The general mods wont fit in the item set so move on to the next set of mods
           if (!generalEnergyIsValid) {
@@ -203,7 +205,7 @@ export function canTakeSlotIndependentMods(
           }
         }
 
-        // To hit this point we need to have found a valid set of raid mods
+        // To hit this point we need to have found a valid set of activity mods
         // if none is found the continue's will skip this.
         return true;
       }
