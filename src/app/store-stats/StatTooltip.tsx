@@ -19,10 +19,10 @@ interface Stat {
 
 interface Props {
   stat: Stat;
-  characterClass?: DestinyClass;
+  characterClass: DestinyClass;
 }
 
-function getClassAbilityCooldownTranslation(characterClass?: DestinyClass) {
+function getClassAbilityCooldownTranslation(characterClass: DestinyClass) {
   switch (characterClass) {
     case DestinyClass.Hunter:
       return tl('Stats.DodgeCooldown');
