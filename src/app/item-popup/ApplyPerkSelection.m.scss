@@ -3,7 +3,6 @@
 .buttons {
   composes: item-details from global;
   composes: flexRow from '../dim-ui/common.m.scss';
-  padding-top: 10px;
   @include horizontal-space-children(8px);
 }
 

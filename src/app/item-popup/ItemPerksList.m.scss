@@ -3,7 +3,6 @@
 .sockets {
   display: flex;
   flex-direction: column;
-  margin: -12px -10px -12px -10px;
 }
 
 .socket {
@@ -11,6 +10,11 @@
   align-items: flex-start;
   border-bottom: 1px solid #333;
   padding: 6px 10px;
+  flex-wrap: wrap;
+
+  &:first-child {
+    padding-right: 50px;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -56,6 +60,9 @@
   }
   .plugged & {
     background-color: #4887ba;
+  }
+  .cannotRoll & {
+    background-color: #ba594880;
   }
   :global(.thumbs-up) {
     position: absolute;

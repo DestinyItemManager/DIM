@@ -128,6 +128,7 @@ function PerkPlug({
           : plug === socketInfo.plugged,
         [styles.disabled]: !plug.enabled,
         [styles.selected]: selected,
+        [styles.cannotRoll]: plug.cannotCurrentlyRoll,
       })}
       onClick={perkSelected}
     >

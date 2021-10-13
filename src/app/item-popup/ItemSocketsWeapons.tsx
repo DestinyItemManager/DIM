@@ -1,6 +1,10 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { useSetSetting } from 'app/settings/hooks';
+import { AppIcon, faGrid, faList } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import {
   getSocketByIndex,
@@ -35,6 +39,8 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+  const listPerks = useSelector((state: RootState) => settingsSelector(state).perkList);
+  const setSetting = useSetSetting();
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -93,7 +99,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   );
 
   return (
-    <div className={clsx('item-details', 'sockets', styles.weaponSockets)}>
+    <div className={clsx('sockets', styles.weaponSockets, { [styles.minimal]: minimal })}>
       {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
           {archetypeSocket?.plugged && (
@@ -120,17 +126,31 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
         </ArchetypeRow>
       )}
       {perks &&
-        ($featureFlags.newPerks && !minimal && !grid ? (
-          <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
-        ) : (
-          <div
-            className={clsx(
-              'item-socket-category',
-              categoryStyle(perks.category.categoryStyle),
-              styles.perks
+        (listPerks && !minimal && !grid ? (
+          <div className={styles.perks}>
+            {!minimal && !grid && (
+              <button
+                className={styles.displayStyleButton}
+                type="button"
+                onClick={() => setSetting('perkList', false)}
+              >
+                <AppIcon icon={faGrid} />
+              </button>
             )}
-          >
-            <div className="item-sockets">
+            <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
+          </div>
+        ) : (
+          <div className={clsx(categoryStyle(perks.category.categoryStyle), styles.perks)}>
+            {!minimal && !grid && (
+              <button
+                className={styles.displayStyleButton}
+                type="button"
+                onClick={() => setSetting('perkList', true)}
+              >
+                <AppIcon icon={faList} />
+              </button>
+            )}
+            <div className={clsx('item-sockets', styles.grid)}>
               {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
                 (socketInfo) =>
                   !isKillTrackerSocket(socketInfo) && (
