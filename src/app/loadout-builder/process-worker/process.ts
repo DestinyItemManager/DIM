@@ -1,11 +1,17 @@
 import _ from 'lodash';
-import raidModPlugCategoryHashes from '../../../data/d2/raid-mod-plug-category-hashes.json';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
 import { generateProcessModPermutations } from '../mod-permutations';
-import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
+import {
+  activityModPlugCategoryHashes,
+  ArmorStatHashes,
+  ArmorStats,
+  LockableBuckets,
+  StatFilters,
+  StatRanges,
+} from '../types';
 import { statTier } from '../utils';
 import { canTakeSlotIndependentMods, sortProcessModsOrItems } from './process-utils';
 import { SetTracker } from './set-tracker';
@@ -237,14 +243,14 @@ export function process(
 
   let generalMods: ProcessMod[] = [];
   let combatMods: ProcessMod[] = [];
-  let raidMods: ProcessMod[] = [];
+  let activityMods: ProcessMod[] = [];
 
   for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
     const pch = Number(plugCategoryHash);
     if (pch === armor2PlugCategoryHashesByName.general) {
       generalMods = generalMods.concat(mods);
-    } else if (raidModPlugCategoryHashes.includes(pch)) {
-      raidMods = raidMods.concat(mods);
+    } else if (activityModPlugCategoryHashes.includes(pch)) {
+      activityMods = activityMods.concat(mods);
     } else if (!knownModPlugCategoryHashes.includes(pch)) {
       combatMods = combatMods.concat(mods);
     }
@@ -256,8 +262,10 @@ export function process(
   const combatModPermutations = generateProcessModPermutations(
     combatMods.sort(sortProcessModsOrItems)
   );
-  const raidModPermutations = generateProcessModPermutations(raidMods.sort(sortProcessModsOrItems));
-  const hasMods = combatMods.length || raidMods.length || generalMods.length;
+  const activityModPermutations = generateProcessModPermutations(
+    activityMods.sort(sortProcessModsOrItems)
+  );
+  const hasMods = combatMods.length || activityMods.length || generalMods.length;
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
@@ -369,7 +377,7 @@ export function process(
               !canTakeSlotIndependentMods(
                 generalModsPermutations,
                 combatModPermutations,
-                raidModPermutations,
+                activityModPermutations,
                 armor
               )
             ) {

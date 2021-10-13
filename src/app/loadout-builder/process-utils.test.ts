@@ -75,7 +75,7 @@ function modifyItem({
 describe('process-utils', () => {
   let generalMod: ProcessMod;
   let combatMod: ProcessMod;
-  let raidMod: ProcessMod;
+  let activityMod: ProcessMod;
 
   let helmet: ProcessItem;
   let arms: ProcessItem;
@@ -87,7 +87,7 @@ describe('process-utils', () => {
   let items: ProcessItem[];
   let generalMods: ProcessMod[];
   let combatMods: ProcessMod[];
-  let raidMods: ProcessMod[];
+  let activityMods: ProcessMod[];
 
   beforeAll(async () => {
     const [defs, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
@@ -146,14 +146,14 @@ describe('process-utils', () => {
     combatMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(elementalLightModHash) as PluggableInventoryItemDefinition
     );
-    raidMod = mapArmor2ModToProcessMod(
+    activityMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
     );
 
     items = [helmet, arms, chest, legs, classItem];
     generalMods = [generalMod, generalMod, generalMod, generalMod, generalMod];
     combatMods = [combatMod, combatMod, combatMod, combatMod, combatMod];
-    raidMods = [raidMod, raidMod, raidMod, raidMod, raidMod];
+    activityMods = [activityMod, activityMod, activityMod, activityMod, activityMod];
   });
 
   // Answers are derived as permutations of multisets
@@ -236,45 +236,45 @@ describe('process-utils', () => {
   test.each([
     ['can', 'deepstonecrypt'],
     ["can't", 'not-a-tag'],
-  ])('it %s fit five raid mods', (canFit, tag) => {
+  ])('it %s fit five activity mods', (canFit, tag) => {
     const modifiedItems = items.map((item) =>
       modifyItem({
         item,
-        energyType: raidMod.energy!.type,
-        energyVal: raidMod.energy!.val,
+        energyType: activityMod.energy!.type,
+        energyVal: activityMod.energy!.val,
         compatibleModSeasons: [tag],
       })
     );
-    const raidModPerms = generateProcessModPermutations(raidMods);
+    const activityModPerms = generateProcessModPermutations(activityMods);
     // sanity check
-    expect(canTakeSlotIndependentMods([[]], [[]], raidModPerms, modifiedItems)).toBe(
+    expect(canTakeSlotIndependentMods([[]], [[]], activityModPerms, modifiedItems)).toBe(
       canFit === 'can'
     );
   });
 
   test.each([0, 1, 2, 3, 4])(
-    'it can fit a raid mod into a single item at index %i',
+    'it can fit a activity mod into a single item at index %i',
     (itemIndex) => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
           energyType: combatMod.energy!.type,
           energyVal: combatMod.energy!.val,
-          compatibleModSeasons: i === itemIndex ? [raidMod.tag!] : [],
+          compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
       );
-      const raidModPerms = generateProcessModPermutations([raidMod]);
-      expect(canTakeSlotIndependentMods([[]], [[]], raidModPerms, modifiedItems)).toBe(true);
+      const activityModPerms = generateProcessModPermutations([activityMod]);
+      expect(canTakeSlotIndependentMods([[]], [[]], activityModPerms, modifiedItems)).toBe(true);
     }
   );
 
-  it('can fit general, raid, and combat mods if there is enough energy', () => {
+  it('can fit general, activity, and combat mods if there is enough energy', () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
       energyType: DestinyEnergyType.Void,
       energyVal: 9,
-      compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
+      compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
     });
 
     const modifiedGeneralMod = modifyMod({
@@ -287,22 +287,22 @@ describe('process-utils', () => {
       energyType: DestinyEnergyType.Void,
       energyVal: 3,
     });
-    const modifiedRaidMod = modifyMod({
-      mod: raidMod,
+    const modifiedActivityMod = modifyMod({
+      mod: activityMod,
       energyType: DestinyEnergyType.Void,
       energyVal: 3,
     });
 
     const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
     const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-    const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
+    const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
 
     expect(
-      canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+      canTakeSlotIndependentMods(generalModPerms, combatModPerms, activityModPerms, modifiedItems)
     ).toBe(false);
   });
 
-  test.each(['general', 'combat', 'raid'])(
+  test.each(['general', 'combat', 'activity'])(
     "can't fit mods if %s mods have too much energy",
     (modType) => {
       const modifiedItems: ProcessItem[] = [...items];
@@ -310,7 +310,7 @@ describe('process-utils', () => {
         item: modifiedItems[4],
         energyType: DestinyEnergyType.Void,
         energyVal: 9,
-        compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
+        compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
       });
 
       const modifiedGeneralMod = modifyMod({
@@ -323,23 +323,23 @@ describe('process-utils', () => {
         energyType: DestinyEnergyType.Void,
         energyVal: modType === 'combat' ? 4 : 3,
       });
-      const modifiedRaidMod = modifyMod({
-        mod: raidMod,
+      const modifiedActivityMod = modifyMod({
+        mod: activityMod,
         energyType: DestinyEnergyType.Void,
-        energyVal: modType === 'raid' ? 4 : 3,
+        energyVal: modType === 'activity' ? 4 : 3,
       });
 
       const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
       const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-      const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
+      const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
 
       expect(
-        canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+        canTakeSlotIndependentMods(generalModPerms, combatModPerms, activityModPerms, modifiedItems)
       ).toBe(false);
     }
   );
 
-  test.each(['general', 'combat', 'raid'])(
+  test.each(['general', 'combat', 'activity'])(
     "can't fit mods if a %s mod has the wrong element",
     (modType) => {
       const modifiedItems: ProcessItem[] = [...items];
@@ -347,7 +347,7 @@ describe('process-utils', () => {
         item: modifiedItems[4],
         energyType: DestinyEnergyType.Void,
         energyVal: 9,
-        compatibleModSeasons: [raidMod.tag!, combatMod.tag!],
+        compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
       });
 
       const modifiedGeneralMod = modifyMod({
@@ -360,18 +360,18 @@ describe('process-utils', () => {
         energyType: modType === 'combat' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
         energyVal: 3,
       });
-      const modifiedRaidMod = modifyMod({
-        mod: raidMod,
-        energyType: modType === 'raid' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
+      const modifiedActivityMod = modifyMod({
+        mod: activityMod,
+        energyType: modType === 'activity' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
         energyVal: 3,
       });
 
       const generalModPerms = generateProcessModPermutations([modifiedGeneralMod]);
       const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-      const raidModPerms = generateProcessModPermutations([modifiedRaidMod]);
+      const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
 
       expect(
-        canTakeSlotIndependentMods(generalModPerms, combatModPerms, raidModPerms, modifiedItems)
+        canTakeSlotIndependentMods(generalModPerms, combatModPerms, activityModPerms, modifiedItems)
       ).toBe(false);
     }
   );

@@ -136,6 +136,24 @@ const dupeFilters: FilterDefinition[] = [
     },
   },
   {
+    keywords: 'infusionfodder',
+    description: tl('Filter.InfusionFodder'),
+    destinyVersion: 2,
+    filter: ({ allItems }) => {
+      const duplicates = computeDupesByIdFn(
+        allItems.filter((i) => i.infusionFuel),
+        (i) => i.hash.toString()
+      );
+      return (item) => {
+        if (!item.infusionFuel) {
+          return false;
+        }
+
+        return duplicates[item.hash.toString()]?.some((i) => i.basePower < item.basePower);
+      };
+    },
+  },
+  {
     keywords: 'count',
     description: tl('Filter.DupeCount'),
     format: 'range',

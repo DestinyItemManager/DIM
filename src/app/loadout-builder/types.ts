@@ -1,5 +1,6 @@
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -71,7 +72,13 @@ export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
- * The resuablePlugSetHash from armour 2.0's general socket.
+ * The reusablePlugSetHash from armour 2.0's general socket.
  * TODO: Find a way to generate this in d2ai.
  */
 export const generalSocketReusablePlugSetHash = 3559124992;
+
+/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
+export const activityModPlugCategoryHashes = [
+  ...raidModPlugCategoryHashes,
+  PlugCategoryHashes.EnhancementsSeasonMaverick,
+];

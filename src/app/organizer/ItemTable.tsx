@@ -1,6 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-/* eslint-disable react/jsx-key, react/prop-types */
 import { StatInfo } from 'app/compare/Compare';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
