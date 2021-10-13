@@ -176,22 +176,14 @@ export function getCheapestModAssignments(
   // can be used in an item.
   const itemEnergies = _.mapValues(
     _.keyBy(items, (item) => item.id),
-    (item) => ({
-      used: _.sumBy(
-        bucketSpecificAssignments.get(item.id)?.assigned,
-        (mod) => mod.plug.energyCost?.energyCost || 0
-      ),
-      originalCapacity: item.energy?.energyCapacity || 0,
-      derivedCapacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
-      originalType: item.energy?.energyType || DestinyEnergyType.Any,
-      derivedType: getItemEnergyType(
+    (item) =>
+      buildItemEnergy(
         defs,
         item,
+        bucketSpecificAssignments.get(item.id)?.assigned || [],
         upgradeSpendTier,
-        lockItemEnergyType,
-        bucketSpecificAssignments.get(item.id)?.assigned
-      ),
-    })
+        lockItemEnergyType
+      )
   );
 
   const generalModPermutations = generateModPermutations(generalMods);
@@ -291,6 +283,22 @@ interface ItemEnergy {
   derivedType: DestinyEnergyType;
 }
 
+function buildItemEnergy(
+  defs: D2ManifestDefinitions,
+  item: DimItem,
+  assignedMods: PluggableInventoryItemDefinition[],
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean
+): ItemEnergy {
+  return {
+    used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
+    originalCapacity: item.energy?.energyCapacity || 0,
+    derivedCapacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
+    originalType: item.energy?.energyType || DestinyEnergyType.Any,
+    derivedType: getItemEnergyType(defs, item, upgradeSpendTier, lockItemEnergyType, assignedMods),
+  };
+}
+
 function isBucketSpecificModValid(
   defs: D2ManifestDefinitions,
   upgradeSpendTier: UpgradeSpendTier,
@@ -368,5 +376,7 @@ function calculateEnergyChange(
   const energyUsedAndWasted = modCost + itemEnergy.originalCapacity;
   const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
 
-  return finalEnergy === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
+  return finalEnergy === itemEnergy.originalType || finalEnergy === DestinyEnergyType.Any
+    ? energyInvested
+    : energyUsedAndWasted;
 }
