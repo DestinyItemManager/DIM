@@ -85,7 +85,7 @@ function calculateEnergyChange(
  *
  * It can return the Any energy type if armour upgrade options allow energy changes.
  */
-function getItemEnergyType(
+export function getItemEnergyType(
   defs: D2ManifestDefinitions,
   item: DimItem,
   upgradeSpendTier: UpgradeSpendTier,
@@ -122,7 +122,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
  * energy types align and that the mod can be slotted into an item socket based on
  * item energy type.
  */
-function isModEnergyValid(
+export function isModEnergyValid(
   itemEnergy: ItemEnergy,
   modToAssign: PluggableInventoryItemDefinition,
   ...assignedMods: (PluggableInventoryItemDefinition | null)[]
