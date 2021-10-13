@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmTitle": "Confirm Action",
+    "Error": "Error changing item",
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
@@ -433,7 +435,6 @@
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
-    "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -790,9 +791,11 @@
     "SortName": "Name"
   },
   "Sockets": {
+    "ApplyPerks": "Apply Perks",
     "InsertModButton": "Insert Mod",
     "InsertPlugError": "Couldn't insert mod",
-    "SelectModButton": "Select Mod"
+    "SelectModButton": "Select Mod",
+    "SelectWishlistPerks": "Use Wishlist Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

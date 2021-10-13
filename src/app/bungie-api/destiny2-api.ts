@@ -96,7 +96,6 @@ export function getStores(
     // TODO: we should defer this unless you're on the collections screen
     DestinyComponentType.Records,
     DestinyComponentType.Metrics,
-    // TODO: consume this
     DestinyComponentType.StringVariables,
   ];
 
@@ -164,7 +163,7 @@ async function getProfile(
  * Get extra information about a single instanced item. This should be called from the
  * item popup only.
  */
-export async function getItemDetails(
+export async function getItemPopupDetails(
   itemInstanceId: string,
   account: DestinyAccount
 ): Promise<DestinyItemResponse> {
@@ -174,6 +173,31 @@ export async function getItemDetails(
     itemInstanceId,
     components: [
       // Get plug objectives (kill trackers and catalysts)
+      DestinyComponentType.ItemPlugObjectives,
+    ],
+  });
+  return response.Response;
+}
+
+/**
+ * Get all information about a single instanced item.
+ */
+export async function getSingleItem(
+  itemInstanceId: string,
+  account: DestinyAccount
+): Promise<DestinyItemResponse> {
+  const response = await getItem(authenticatedHttpClient, {
+    destinyMembershipId: account.membershipId,
+    membershipType: account.originalPlatformType,
+    itemInstanceId,
+    components: [
+      DestinyComponentType.ItemInstances,
+      DestinyComponentType.ItemObjectives,
+      DestinyComponentType.ItemSockets,
+      DestinyComponentType.ItemTalentGrids,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.ItemPlugStates,
+      DestinyComponentType.ItemReusablePlugs,
       DestinyComponentType.ItemPlugObjectives,
     ],
   });
@@ -340,17 +364,17 @@ export function setTrackedState(
   });
 }
 
-// TODO: owner can't be "vault" I bet
 export async function requestAdvancedWriteActionToken(
   account: DestinyAccount,
   action: AwaType,
+  storeId: string,
   item?: DimItem
 ): Promise<AwaAuthorizationResult> {
   const awaInitResult = await awaInitializeRequest(authenticatedHttpClient, {
     type: action,
     membershipType: account.originalPlatformType,
     affectedItemId: item ? item.id : undefined,
-    characterId: item ? item.owner : undefined,
+    characterId: storeId,
   });
   const awaTokenResult = await awaGetActionToken(authenticatedHttpClient, {
     correlationId: awaInitResult.Response.correlationId,

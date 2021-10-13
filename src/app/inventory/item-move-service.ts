@@ -35,7 +35,12 @@ import {
 } from './dim-item-info';
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
-import { itemHashTagsSelector, itemInfosSelector, storesSelector } from './selectors';
+import {
+  currentStoreSelector,
+  itemHashTagsSelector,
+  itemInfosSelector,
+  storesSelector,
+} from './selectors';
 import { DimStore } from './store-types';
 import {
   amountOfItem,
@@ -68,8 +73,7 @@ export function setItemLockState(
     const account = currentAccountSelector(getState())!;
     // The state APIs require either the ID of the character that owns the item, or
     // the current character ID if the item is in the vault.
-    const storeId =
-      item.owner === 'vault' ? getCurrentStore(storesSelector(getState()))!.id : item.owner;
+    const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
     if (item.destinyVersion === 2) {
       if (type === 'lock') {
