@@ -244,8 +244,6 @@ export function sentryTraceHttpClient(httpClient: HttpClient): HttpClient {
     try {
       const result = await httpClient(config);
       if (result) {
-        // TODO (kmclb) remove this once types PR goes through
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         span.setHttpStatus(200);
       }
       return result;
