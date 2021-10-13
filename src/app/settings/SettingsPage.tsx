@@ -202,9 +202,9 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
-  const numberOfSpacesOptions = _.range(1, 10).map((num) => ({
-    value: num,
-    name: t('Settings.SpacesSize', { num }),
+  const numberOfSpacesOptions = _.range(1, 10).map((count) => ({
+    value: count,
+    name: t('Settings.SpacesSize', { count }),
   }));
   const vaultColOptions = _.range(5, 21).map((num) => ({
     value: num,
