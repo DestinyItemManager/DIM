@@ -169,7 +169,11 @@ export const pinnacleSources = [
 // BUCKETS KNOWN VALUES
 //
 
-/** a weird bucket for holding dummies, which items show up in only temporarily */
+/**
+ * a weird bucket for holding dummies, which items show up in only temporarily.
+ *
+ * see https://github.com/Bungie-net/api/issues/687
+ */
 export const THE_FORBIDDEN_BUCKET = 2422292810;
 
 export const armorBuckets = {
