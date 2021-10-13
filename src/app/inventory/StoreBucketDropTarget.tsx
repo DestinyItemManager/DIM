@@ -17,9 +17,7 @@ import { dropItem } from './move-item';
 
 interface ExternalProps extends ThunkDispatchProp {
   bucket: InventoryBucket;
-  // eslint-disable-next-line react-redux/no-unused-prop-types
   storeId: string;
-  // eslint-disable-next-line react-redux/no-unused-prop-types
   storeClassType: DestinyClass;
   equip?: boolean;
   children?: React.ReactNode;
@@ -31,7 +29,6 @@ interface InternalProps {
   connectDropTarget: ConnectDropTarget;
   isOver: boolean;
   canDrop: boolean;
-  // eslint-disable-next-line react-redux/no-unused-prop-types
   item?: DimItem;
 }
 

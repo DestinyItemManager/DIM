@@ -7,7 +7,6 @@ import { wishListSelector } from 'app/wishlists/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ishtarLogo from '../../images/ishtar-collective.svg';
-// eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemDescription.m.scss';
 import NotesArea from './NotesArea';
 
