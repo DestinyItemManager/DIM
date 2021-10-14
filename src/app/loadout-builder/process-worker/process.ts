@@ -1,19 +1,16 @@
+import { activityModPlugCategoryHashes } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { generateProcessModPermutations } from '../mod-permutations';
-import {
-  activityModPlugCategoryHashes,
-  ArmorStatHashes,
-  ArmorStats,
-  LockableBuckets,
-  StatFilters,
-  StatRanges,
-} from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
 import { statTier } from '../utils';
-import { canTakeSlotIndependentMods, sortProcessModsOrItems } from './process-utils';
+import {
+  canTakeSlotIndependentMods,
+  generateProcessModPermutations,
+  sortProcessModsOrItems,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   IntermediateProcessArmorSet,

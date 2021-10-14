@@ -7,6 +7,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -21,7 +22,7 @@ import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { getModAssignments } from '../mod-assignments';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
-import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
+import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
 import SetStats from './SetStats';

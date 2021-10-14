@@ -1,26 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ProcessMod } from './process-worker/types';
-
-export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
-  // Creates a string from the mod permutation containing the unique properties
-  // that we care about, so we can reduce to the minimum number of permutations.
-  // If two different mods that fit in the same socket have the same energy type
-  // and cost, they are identical from the mod assignment perspective.
-  // This works because we check to see if we have already recorded this string
-  // in heaps algorithm before we add the permutation to the result.
-  const createPermutationKey = (permutation: (ProcessMod | null)[]) =>
-    permutation
-      .map((mod) => {
-        if (mod) {
-          const energyType = mod.energy?.type || DestinyEnergyType.Any;
-          const energyCost = mod.energy?.val || 0;
-          return `${energyType}${energyCost}${mod.tag}`;
-        }
-      })
-      .join(',');
-  return generatePermutationsOfFive(mods, createPermutationKey);
-}
 
 export function generateModPermutations(mods: (PluggableInventoryItemDefinition | null)[]) {
   // Creates a string from the mod permutation containing the unique properties
@@ -49,7 +28,7 @@ export function generateModPermutations(mods: (PluggableInventoryItemDefinition 
  * Note that we ensure the array length is always 5 so mods are aligned
  * with the 5 items.
  */
-function generatePermutationsOfFive<T>(
+export function generatePermutationsOfFive<T>(
   items: T[],
   createPermutationKey: (items: (T | null)[]) => string
 ): (T | null)[][] {

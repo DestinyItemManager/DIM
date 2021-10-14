@@ -3,6 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { keyByStatHash } from 'app/inventory/store/stats';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import { bucketsToCategories } from 'app/loadout/mod-utils';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -16,8 +18,7 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import { ArmorSet, bucketsToCategories, ItemsByBucket, StatFilters, StatRanges } from '../types';
-import { upgradeSpendTierToMaxEnergy } from '../utils';
+import { ArmorSet, ItemsByBucket, StatFilters, StatRanges } from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
