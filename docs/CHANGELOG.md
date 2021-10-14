@@ -3,6 +3,7 @@
 * Moved "Tracked Triumphs" section to the top of the Progress page.
 * You can now track and untrack Seasonal Challenges from the Progress page.
 * Loadout Optimizer now correctly handles nightmare mods.
+* Loadout Optimizer makes a better attempt at assigning mods to compared loadouts.
 * Added `is:infusionfodder` search to show items where a lower-power version of the same item exists. Use `tag:junk is:infusionfodder` to check your trash for its potential to infuse!
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
