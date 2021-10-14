@@ -113,11 +113,11 @@ function PerkPlug({
   selectedPerk: boolean;
   onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
   if (!plug.plugDef.plug) {
     return null;
   }
 
-  const isPhonePortrait = useIsPhonePortrait();
   const perkSelected = () => onPerkSelected(socketInfo, plug);
   const selected = plug === socketInfo.plugged;
 

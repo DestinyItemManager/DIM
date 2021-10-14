@@ -4,6 +4,9 @@
 * You can now track and untrack Seasonal Challenges from the Progress page.
 * Loadout Optimizer now correctly handles nightmare mods.
 * Added `is:infusionfodder` search to show items where a lower-power version of the same item exists. Use `tag:junk is:infusionfodder` to check your trash for its potential to infuse!
+* The item popup has a toggle to choose between list-style perks (easier to read!) and grid-style perks (matches in game). No, we will not add an option to change the order of the list-style perks.
+* List-style perks in the item popup have a hover tooltip on desktop so you don't have to click them if you don't want to.
+* The item popup has a button to select all the wishlisted perks if they aren't already the active perks, so you can preview the wishlisted version of the item quickly.
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
