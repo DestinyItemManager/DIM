@@ -341,20 +341,3 @@ export function getModAssignments(
 
   return mergedResults;
 }
-
-// TODO (ryan) This is a super lazy way of getting unassigned mods but doing it properly
-// is hard. To do it properly we need to check every possible combination and even if its
-// not a valid fit for the mods, we need to calculate how good it is (least number of unassigned?).
-// This will make all slot independent mods unassigned if it doesn't find a valid fit.
-export function getAssignedAndUnassignedMods(
-  items: DimItem[],
-  mods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions | undefined,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean
-): [ReturnType<typeof getModAssignments>, PluggableInventoryItemDefinition[]] {
-  const assignedMods = getModAssignments(items, mods, defs, upgradeSpendTier, lockItemEnergyType);
-  const flatAssignedMods = Array.from(assignedMods.values()).flat();
-  const unassignedMods = mods.filter((mod) => !flatAssignedMods.includes(mod));
-  return [assignedMods, unassignedMods];
-}
