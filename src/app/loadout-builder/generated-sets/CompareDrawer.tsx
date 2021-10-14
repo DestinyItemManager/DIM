@@ -7,7 +7,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getModRenderKey } from 'app/loadout/mod-utils';
+import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -18,7 +18,7 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
-import { getAssignedAndUnassignedMods, getModAssignments } from '../mod-assignments';
+import { getModAssignments } from '../mod-assignments';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
@@ -152,7 +152,7 @@ function CompareDrawer({
     upgradeSpendTier,
     lockItemEnergyType
   );
-  const [loadoutAssignedMods, loadoutUnassignedMods] = getAssignedAndUnassignedMods(
+  const [loadoutAssignedMods, loadoutUnassignedMods] = getCheapestModAssignments(
     loadoutItems,
     lockedMods,
     defs,

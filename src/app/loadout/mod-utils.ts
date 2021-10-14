@@ -110,9 +110,9 @@ export function getCheapestModAssignments(
   defs: D2ManifestDefinitions | undefined,
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
-): Map<string, ModAssignments> {
+): [Map<string, PluggableInventoryItemDefinition[]>, PluggableInventoryItemDefinition[]] {
   if (!defs) {
-    return new Map();
+    return [new Map(), []];
   }
 
   let bucketIndependentAssignments = new Map<string, ModAssignments>();
@@ -249,7 +249,11 @@ export function getCheapestModAssignments(
 
         // if the cost of the new assignment set is better than the old one
         // we replace it and carry on until we have exhausted all permutations.
-        if (energyUsedAndWasted < assignmentEnergyCost) {
+        if (
+          unassignedModCount < assignmentUnassignedModCount ||
+          (unassignedModCount <= assignmentUnassignedModCount &&
+            energyUsedAndWasted < assignmentEnergyCost)
+        ) {
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
@@ -258,21 +262,21 @@ export function getCheapestModAssignments(
     }
   }
 
-  const mergedResults = new Map<string, ModAssignments>();
+  const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
+  let unassigned: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
-    mergedResults.set(item.id, {
-      assigned: [
-        ...(bucketIndependentAssignments.get(item.id)?.assigned || []),
-        ...(bucketSpecificAssignments.get(item.id)?.assigned || []),
-      ],
-      unassigned: [
-        ...(bucketIndependentAssignments.get(item.id)?.unassigned || []),
-        ...(bucketSpecificAssignments.get(item.id)?.unassigned || []),
-      ],
-    });
+    mergedResults.set(item.id, [
+      ...(bucketIndependentAssignments.get(item.id)?.assigned || []),
+      ...(bucketSpecificAssignments.get(item.id)?.assigned || []),
+    ]);
+    unassigned = [
+      ...unassigned,
+      ...(bucketIndependentAssignments.get(item.id)?.unassigned || []),
+      ...(bucketSpecificAssignments.get(item.id)?.unassigned || []),
+    ];
   }
 
-  return mergedResults;
+  return [mergedResults, unassigned];
 }
 
 interface ItemEnergy {
