@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 const D2ArmorStatNameByHash = _.invert(D2ArmorStatHashByName);
 
-export function getClassAbilityCooldowns(characterClass?: DestinyClass) {
+export function getClassAbilityCooldowns(characterClass: DestinyClass) {
   switch (characterClass) {
     case DestinyClass.Hunter:
       return statEffects.hunter.light.mobility;
@@ -18,7 +18,7 @@ export function getClassAbilityCooldowns(characterClass?: DestinyClass) {
   }
 }
 
-export function isClassAbilityStat(statHash: number, characterClass?: DestinyClass) {
+export function isClassAbilityStat(statHash: number, characterClass: DestinyClass) {
   return (
     (statHash === D2ArmorStatHashByName.mobility && characterClass === DestinyClass.Hunter) ||
     (statHash === D2ArmorStatHashByName.recovery && characterClass === DestinyClass.Warlock) ||
@@ -28,7 +28,7 @@ export function isClassAbilityStat(statHash: number, characterClass?: DestinyCla
 
 export function getStatEffects(
   statHash: number,
-  characterClass?: DestinyClass
+  characterClass: DestinyClass
 ): { light: string[] | undefined; dark: string[] | undefined } | undefined {
   const statName = D2ArmorStatNameByHash[statHash];
   if (statName) {

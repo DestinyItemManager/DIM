@@ -485,6 +485,8 @@
     "LockElement": "Lock Element",
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
