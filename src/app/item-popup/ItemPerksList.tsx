@@ -4,6 +4,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
@@ -116,6 +117,7 @@ function PerkPlug({
     return null;
   }
 
+  const isPhonePortrait = useIsPhonePortrait();
   const perkSelected = () => onPerkSelected(socketInfo, plug);
   const selected = plug === socketInfo.plugged;
 
@@ -133,9 +135,13 @@ function PerkPlug({
       onClick={perkSelected}
     >
       <div className={styles.perkIcon}>
-        <PressTip tooltip={<PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+        {isPhonePortrait ? (
           <DefItemIcon itemDef={plug.plugDef} borderless={true} />
-        </PressTip>
+        ) : (
+          <PressTip tooltip={<PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+            <DefItemIcon itemDef={plug.plugDef} borderless={true} />
+          </PressTip>
+        )}
         {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
           <AppIcon
             className="thumbs-up"
