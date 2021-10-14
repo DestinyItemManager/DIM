@@ -113,7 +113,8 @@ interface ModAssignments {
 }
 
 /**
- * This finds the cheapest possible mod assignments for an armour set and a set of mods.
+ * This finds the cheapest possible mod assignments for an armour set and a set of mods. It
+ * doesn't need to assign all mods but it will find a set with as many assigned as possible.
  *
  * It uses the idea of total energy spent and wasted to rank mod assignments.
  *
