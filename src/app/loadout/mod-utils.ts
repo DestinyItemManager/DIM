@@ -118,8 +118,8 @@ interface ModAssignments {
  * It uses the idea of total energy spent and wasted to rank mod assignments.
  *
  * To do this we create permutations of general, combat and activity mods and loop over each
- * set of permutations and validate the possibility of the mod assignment at every level.
- * This is to ensure that we can exit early if a invalid assignment is found.
+ * set of permutations and validate the combination. Validate is done via a lower number of
+ * unassigned mods or an equal amount of unassigned mods and a lower energy cost.
  */
 export function getCheapestModAssignments(
   items: DimItem[],
