@@ -229,6 +229,7 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
