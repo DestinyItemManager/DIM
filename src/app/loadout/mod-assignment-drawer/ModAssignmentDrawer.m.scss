@@ -1,0 +1,34 @@
+@import '../../variables.scss';
+
+.container {
+  padding: 16px;
+}
+
+.assigned {
+  display: flex;
+  flex-direction: row;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+.itemAndMods {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-right: 32px;
+
+  & > :first-child {
+    margin-right: 8px;
+  }
+
+  @include phone-portrait {
+    margin-bottom: 16px;
+  }
+}
+
+.unassigned {
+  display: flex;
+  flex-direction: row;
+}
