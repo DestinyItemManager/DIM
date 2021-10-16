@@ -792,10 +792,12 @@
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
+    "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insert Mod",
     "InsertPlugError": "Couldn't insert mod",
+    "ListStyle": "Display perks as a list",
     "SelectModButton": "Select Mod",
-    "SelectWishlistPerks": "Use Wishlist Perks"
+    "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

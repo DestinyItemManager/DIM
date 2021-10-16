@@ -850,10 +850,12 @@
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
-    "SelectWishlistPerks": "Use Wishlist Perks",
+    "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "ListStyle": "Display perks as a list",
+    "GridStyle": "Display perks as a grid"
   },
   "Stats": {
     "LightGrenadeCooldown": "Light Grenade Cooldown",

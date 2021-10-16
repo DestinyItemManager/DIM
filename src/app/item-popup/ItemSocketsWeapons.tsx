@@ -132,6 +132,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
               <button
                 className={styles.displayStyleButton}
                 type="button"
+                title={t('Sockets.GridStyle')}
                 onClick={() => setSetting('perkList', false)}
               >
                 <AppIcon icon={faGrid} />
@@ -145,6 +146,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
               <button
                 className={styles.displayStyleButton}
                 type="button"
+                title={t('Sockets.ListStyle')}
                 onClick={() => setSetting('perkList', true)}
               >
                 <AppIcon icon={faList} />

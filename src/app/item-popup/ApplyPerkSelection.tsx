@@ -79,7 +79,7 @@ export default function ApplyPerkSelection({
     }
   };
 
-  if (!(wishListSocketChanges.length > 0 || hasOverrides)) {
+  if (!(wishListSocketChanges.length > 0 || ($featureFlags.awa && hasOverrides))) {
     return null;
   }
 
