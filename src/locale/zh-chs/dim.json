@@ -186,6 +186,7 @@
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
     "InLoadout": "显示已被用于配装的物品.",
     "Infusable": "显示可以灌注的物品.",
+    "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
     "IsSunset": "显示已退环境且不能再被灌注到光等上限的物品。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
     "ItemId": "显示具有给定物品 ID 的物品。此为高级用户选项。",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "对于传奇物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n对于在 {{energyLevel}} 或以下的异域物品，优化器将假定 {{energyLevel}} 的能量，并将根据分配模组的需要交换元素。异域物品将使用其当前属性。\n\n目前大师杰作的传奇物品和超过 {{energyLevel}} 能量的异域物品将使用其现有的元素。",
     "AscendantShardNotMasterworkedDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n目前大师杰作的物品将使用其现有的元素。",
-    "ChooseAlternate": "选择另一个拥有相同属性的物品：",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -448,6 +448,9 @@
     "LockElement": "锁定元素",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
@@ -592,7 +595,6 @@
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
-    "EquipWithName": "装备到 {{character}}",
     "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
@@ -614,7 +616,6 @@
     "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "插入模组",
-    "InsertPlugError": "无法插入模组"
+    "InsertPlugError": "无法插入模组",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "屏障冷却",

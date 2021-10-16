@@ -186,6 +186,7 @@
     "HoldsMod": "Affiche les armures compatible avec un type de Mod Saisonnier spécifique.",
     "InLoadout": "Affiche les objets inclus dans un arsenal.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsSunset": "Affiche les objets qui ont atteint leur puissance maximale et ne peuvent plus être infusés.",
     "ItemHash": "Affiche les objets avec le hash d'objet spécifié. Pour les utilisateurs avancés.",
     "ItemId": "Affiche les objets avec l'ID d'objet d'inventaire spécifié. Pour les utilisateurs avancés.",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "Pour tous les objets, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Pour les objets légendaires, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}\n\nPour les objets exotiques à {{energyLevel}} d'énergie ou moins, l'optimiseur considéra que la pièce d'équipement a {{energyLevel}} d'énergie et changera l'élément si nécessaire pour équiper des mods.\n\nLes équipement légendaire et exotique au dessus de {{energyLevel}} d'énergie conserveront leur élément actuel.",
     "AscendantShardNotMasterworkedDetails": "Pour tous les objets, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}\n\nLes équipement déjà en pièce maîtresse conserveront leur élément actuel.",
-    "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choisissez un autre objet",
     "CompareLoadout": "Comparer Arsenal",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'arsenal \"{{name}}\" par ce nouvel ensemble d'armure?",
@@ -448,6 +448,9 @@
     "LockElement": "Verrouiller l'élément",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFoundWithReasons": "Aucun arsenal trouvé. Cela arrive généralement lorsque DIM ne trouve pas d'arsenal pouvant équiper tous les mods sélectionnés.",
     "NoComparableItems": "Cet arsenal n'a aucun objet comparable.. Sauvegarder l'ensemble de l'optimiseur ajoutera ces objets à votre arsenal.",
@@ -592,7 +595,6 @@
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
-    "EquipWithName": "Équiper à {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
@@ -614,7 +616,6 @@
     "Store": "Dépôt",
     "StoreWithName": "Déposer sur {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Étape {{questStepNum}} sur {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insérer Mod",
-    "InsertPlugError": "Impossible d'insérer le mod"
+    "InsertPlugError": "Impossible d'insérer le mod",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Délai de Barricade",
