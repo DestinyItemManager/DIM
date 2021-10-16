@@ -200,7 +200,7 @@ function computeStatDupeLower(
   const dupes = new Set<string>();
 
   for (const item of armor) {
-    if (item.stats && item.basePower) {
+    if (item.stats && item.basePower && item.bucket.hash !== BucketHashes.ClassArmor) {
       const statsToConsider = customStats[item.classType] ?? armorStats;
       statsCache.set(
         item,
