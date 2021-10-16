@@ -5,6 +5,7 @@
 * Loadout Optimizer now correctly handles nightmare mods.
 * Added `is:infusionfodder` search to show items where a lower-power version of the same item exists. Use `tag:junk is:infusionfodder` to check your trash for its potential to infuse!
 * Loadout Optimizer will warn you if you try to load a build that's for a character class you don't have.
+* If your D1 account had disappeared from DIM, it's back now.
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
