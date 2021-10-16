@@ -22,8 +22,6 @@ declare const $featureFlags: {
   triage: boolean;
   /** Enable alt inv mode */
   altInventoryMode: boolean;
-  /** Alternate perks display on item popup */
-  newPerks: boolean;
   /** Advanced Write Actions (inserting mods) */
   awa: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
