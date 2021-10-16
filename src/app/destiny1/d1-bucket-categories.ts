@@ -1,7 +1,7 @@
-import type { DimBucketType } from 'app/inventory/inventory-buckets';
+import type { DimBucketCategory, DimBucketType } from 'app/inventory/inventory-buckets';
 
 export const D1Categories: {
-  [key in 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Progress']: DimBucketType[];
+  [key in DimBucketCategory]: DimBucketType[];
 } = {
   Postmaster: ['LostItems', 'SpecialOrders', 'Messages'],
   Weapons: ['Primary', 'Special', 'Heavy'],
