@@ -128,7 +128,7 @@
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty space per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
     "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always {{inventoryClearSpaces}} empty space(s) per item type on {{store}}. It is moving items to the vault to make room.",
     "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving {{inventoryClearSpaces}} space(s) open per item type to prevent anything from going to the Postmaster.",

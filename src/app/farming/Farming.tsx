@@ -55,7 +55,7 @@ function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Pr
                   {t('FarmingMode.D2Desc', {
                     store: store.name,
                     context: store.genderName,
-                    inventoryClearSpaces,
+                    count: inventoryClearSpaces,
                   })}
                 </p>
               </div>
@@ -66,12 +66,12 @@ function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Pr
                     ? t('FarmingMode.Desc', {
                         store: store.name,
                         context: store.genderName,
-                        inventoryClearSpaces,
+                        count: inventoryClearSpaces,
                       })
                     : t('FarmingMode.MakeRoom.Desc', {
                         store: store.name,
                         context: store.genderName,
-                        inventoryClearSpaces,
+                        count: inventoryClearSpaces,
                       })}
                 </p>
                 <p>
