@@ -48,7 +48,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
     (c) =>
       // hide socket category if there's no sockets in this category after
       // removing the exotic perk socket, which we handle specially
-      c.socketIndexes.filter((s) => s !== exoticArmorPerkSocket?.socketIndex).length > 0 &&
+      c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // Hidden sockets for intrinsic armor stats
