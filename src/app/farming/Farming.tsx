@@ -56,7 +56,8 @@ function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Pr
                     store: store.name,
                     context: store.genderName,
                     count: inventoryClearSpaces,
-                  })}
+                  })}{' '}
+                  {t('FarmingMode.Vault')}
                 </p>
               </div>
             ) : (
@@ -71,7 +72,6 @@ function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Pr
                     : t('FarmingMode.MakeRoom.Desc', {
                         store: store.name,
                         context: store.genderName,
-                        count: inventoryClearSpaces,
                       })}
                 </p>
                 <p>
