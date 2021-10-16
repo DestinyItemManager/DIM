@@ -59,7 +59,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     <LoadoutBuilder
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      classType={urlClassType}
+      initialClassType={urlClassType}
       initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );

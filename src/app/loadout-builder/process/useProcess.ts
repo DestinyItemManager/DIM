@@ -27,7 +27,7 @@ import {
 
 interface ProcessState {
   processing: boolean;
-  resultStoreId?: string;
+  resultStoreId: string;
   result: {
     sets: ArmorSet[];
     combos: number;
@@ -42,8 +42,8 @@ interface ProcessState {
  */
 // TODO: introduce params object
 export function useProcess(
-  defs: D2ManifestDefinitions | undefined,
-  selectedStore: DimStore | undefined,
+  defs: D2ManifestDefinitions,
+  selectedStore: DimStore,
   filteredItems: ItemsByBucket,
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
@@ -54,7 +54,7 @@ export function useProcess(
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
-    resultStoreId: selectedStore?.id,
+    resultStoreId: selectedStore.id,
     result: null,
   });
 
@@ -85,8 +85,8 @@ export function useProcess(
     setRemainingTime(0);
     setState((state) => ({
       processing: true,
-      resultStoreId: selectedStore?.id,
-      result: selectedStore?.id === state.resultStoreId ? state.result : null,
+      resultStoreId: selectedStore.id,
+      result: selectedStore.id === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
     }));
 
@@ -145,7 +145,7 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedMods, selectedStore?.classType),
+        getTotalModStatChanges(lockedMods, selectedStore.classType),
         lockedProcessMods,
         statOrder,
         statFilters,
@@ -182,7 +182,8 @@ export function useProcess(
     filteredItems,
     lockItemEnergyType,
     lockedMods,
-    selectedStore,
+    selectedStore.classType,
+    selectedStore.id,
     statFilters,
     statOrder,
     upgradeSpendTier,
