@@ -135,7 +135,7 @@ export default function LoadoutDrawerOptions({
             </button>
           </div>
         )}
-        {Boolean(loadout.parameters?.mods?.length) && (
+        {Boolean($featureFlags.loadoutModAssignments && loadout.parameters?.mods?.length) && (
           <div className="input-group">
             <button
               className="dim-button"
