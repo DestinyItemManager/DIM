@@ -46,14 +46,13 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
 
   let categories = item.sockets.categories.filter(
     (c) =>
-      // hide if there's no sockets in this category
-      c.socketIndexes.length > 0 &&
+      // hide socket category if there's no sockets in this category after
+      // removing the exotic perk socket, which we handle specially
+      c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // Hidden sockets for intrinsic armor stats
-      c.category.uiCategoryStyle !== 2251952357 &&
-      // we handle exotic perk specially too
-      (!exoticArmorPerkSocket || !c.socketIndexes.includes(exoticArmorPerkSocket?.socketIndex))
+      c.category.uiCategoryStyle !== 2251952357
   );
   if (minimal) {
     // Only show the first of each style of category
@@ -95,6 +94,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
           <div className="item-sockets">
             {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
               (socketInfo) =>
+                socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
                 socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket
                     key={socketInfo.socketIndex}
