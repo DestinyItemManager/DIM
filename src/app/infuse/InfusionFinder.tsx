@@ -331,7 +331,7 @@ function isInfusable(target: DimItem, source: DimItem) {
     target.infusionQuality.infusionCategoryHashes.some((h) =>
       source.infusionQuality!.infusionCategoryHashes.includes(h)
     ) &&
-    target.basePower < source.basePower
+    target.power < source.power
   );
 }
 

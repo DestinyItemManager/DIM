@@ -300,7 +300,7 @@ function makeItem(
     hidePercentage: false,
     taggable: false,
     comparable: false,
-    basePower: 0,
+    power: item.primaryStat?.value ?? 0,
     index: '',
     infusable: false,
     infusionFuel: false,

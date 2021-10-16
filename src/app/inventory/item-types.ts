@@ -47,7 +47,7 @@ export interface DimItem {
   classified: boolean;
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
-  /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash.  */
+  /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash. */
   type: NonNullable<InventoryBucket['type']>;
   /** Localized name of this item's type. */
   typeName: string;
@@ -163,14 +163,17 @@ export interface DimItem {
   complete: boolean;
   /** How many items does this represent? Only greater than one if maxStackSize is greater than one. */
   amount: number;
-  /** The primary stat (Attack, Defense, Speed) of the item. */
+  /**
+   * The primary stat (Attack, Defense, Speed) of the item.
+   * @deprecated use power instead
+   */
   primStat:
     | (DestinyStat & {
         stat: DestinyStatDefinition;
       })
     | null;
-  /** The "base power" without any power-enhancing mods. This is only defined for D2 and is a synonym for (primStat?.value || 0). */
-  basePower: number;
+  /** The "base power" without any power-enhancing mods. This is a synonym for (primStat?.value || 0). */
+  power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
   /** What percent complete is this item (considers XP and objectives). */

@@ -18,7 +18,7 @@ export interface ProcessItem {
      */
     val: number;
   };
-  basePower: number;
+  power: number;
   baseStats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
 }

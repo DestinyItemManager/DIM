@@ -448,7 +448,7 @@ export function makeItem(
     pursuit: null,
     taggable: false,
     comparable: false,
-    basePower: 0,
+    power: 0,
     index: '',
     infusable: false,
     infusionFuel: false,
@@ -620,7 +620,7 @@ export function makeItem(
   }
 
   if (createdItem.primStat) {
-    createdItem.basePower = createdItem.primStat.value;
+    createdItem.power = createdItem.primStat.value;
   }
 
   createdItem.index = createItemIndex(createdItem);
