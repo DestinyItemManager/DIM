@@ -17,7 +17,7 @@ interface Props {
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
-  characterClass?: DestinyClass;
+  characterClass: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
 }
