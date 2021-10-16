@@ -3,6 +3,9 @@
 interface CssExports {
   'assigned': string;
   'container': string;
+  'headerInfo': string;
+  'headerName': string;
+  'headerStats': string;
   'itemAndMods': string;
   'unassigned': string;
 }

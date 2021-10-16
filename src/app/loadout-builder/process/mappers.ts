@@ -44,7 +44,7 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
   return processMod;
 }
 
-function isModStatActive(
+export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
   stat: DestinyItemInvestmentStatDefinition,
