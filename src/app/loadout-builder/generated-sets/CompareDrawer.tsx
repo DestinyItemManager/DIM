@@ -4,19 +4,19 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { getAssignedAndUnassignedMods, getModAssignments } from '../mod-assignments';
 import { getTotalModStatChanges } from '../process/mappers';
@@ -50,7 +50,7 @@ function getItemStats(
   return baseStats;
 }
 
-interface ProvidedProps {
+interface Props {
   set: ArmorSet;
   loadouts: Loadout[];
   lockedMods: PluggableInventoryItemDefinition[];
@@ -61,20 +61,6 @@ interface ProvidedProps {
   lockItemEnergyType: boolean;
   params: LoadoutParameters;
   onClose(): void;
-}
-
-interface StoreProps {
-  characterClass?: DestinyClass;
-  allItems: DimItem[];
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    allItems: allItemsSelector(state),
-    characterClass: currentStoreSelector(state)?.classType,
-  };
 }
 
 function chooseSimilarLoadout(
@@ -88,12 +74,10 @@ function chooseSimilarLoadout(
   );
 }
 
-function CompareDrawer({
-  characterClass,
+export default function CompareDrawer({
   loadouts,
   set,
   lockedMods,
-  allItems,
   classType,
   statOrder,
   enabledStats,
@@ -101,8 +85,8 @@ function CompareDrawer({
   lockItemEnergyType,
   params,
   onClose,
-  dispatch,
 }: Props) {
+  const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
@@ -111,6 +95,8 @@ function CompareDrawer({
   const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
     chooseSimilarLoadout(setItems, useableLoadouts)
   );
+
+  const allItems = useSelector(allItemsSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {
@@ -139,7 +125,7 @@ function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedMods, characterClass);
+  const lockedModStats = getTotalModStatChanges(lockedMods, classType);
 
   for (const statHash of armorStats) {
     loadoutStats[statHash] += lockedModStats[statHash];
@@ -229,7 +215,7 @@ function CompareDrawer({
             statOrder={statOrder}
             enabledStats={enabledStats}
             className={styles.fillRow}
-            characterClass={characterClass}
+            characterClass={classType}
           />
           <div className={clsx(styles.fillRow, styles.set)}>
             {setItems.map((item) => (
@@ -265,7 +251,7 @@ function CompareDrawer({
                 statOrder={statOrder}
                 enabledStats={enabledStats}
                 className={styles.fillRow}
-                characterClass={characterClass}
+                characterClass={classType}
               />
               <div className={clsx(styles.fillRow, styles.set)}>
                 {loadoutItems.map((item) => (
@@ -302,5 +288,3 @@ function CompareDrawer({
     </Sheet>
   );
 }
-
-export default connect(mapStateToProps)(CompareDrawer);

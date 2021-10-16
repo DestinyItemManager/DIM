@@ -86,7 +86,13 @@ export function processItems(
       errorLog('d2-stores', 'Error processing item', item, e);
       reportException('Processing Dim item', e);
     }
-    if (createdItem !== null) {
+    if (
+      createdItem !== null &&
+      // we want to allow makeItem to generate dummy items. they're useful in vendors, as consumables, etc.
+      // but processItems is for building stores, and we don't want dummy weapons or armor,
+      // which can invisibly interfere with allItems calculations and measurements
+      createdItem.location.hash !== THE_FORBIDDEN_BUCKET
+    ) {
       createdItem.owner = owner.id;
       result.push(createdItem);
     } else {
@@ -261,12 +267,7 @@ export function makeItem(
   // def.bucketTypeHash is where it goes normally
   let normalBucket = buckets.byHash[itemDef.inventory!.bucketTypeHash];
 
-  // https://github.com/Bungie-net/api/issues/687
-  if (itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET) {
-    normalBucket = buckets.byHash[BucketHashes.Modifications];
-  }
-
-  // item.bucket is where it IS right now
+  // DimItem.bucket is where it IS right now
   let currentBucket = buckets.byHash[item.bucketHash] || normalBucket;
   if (!normalBucket) {
     currentBucket = normalBucket = buckets.unknown;

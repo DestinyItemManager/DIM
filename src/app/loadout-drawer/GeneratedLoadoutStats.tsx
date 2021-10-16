@@ -100,7 +100,7 @@ export function GeneratedLoadoutStats({
           </>
         </PressTip>
       </div>
-      <LoadoutStats stats={stats} />
+      <LoadoutStats stats={stats} characterClass={loadout.classType} />
     </div>
   );
 }

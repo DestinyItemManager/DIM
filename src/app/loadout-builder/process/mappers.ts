@@ -84,7 +84,7 @@ function isModStatActive(
  */
 export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
-  characterClass: DestinyClass | undefined
+  characterClass: DestinyClass
 ) {
   const totals: ArmorStats = {
     [StatHashes.Mobility]: 0,
@@ -94,11 +94,6 @@ export function getTotalModStatChanges(
     [StatHashes.Discipline]: 0,
     [StatHashes.Strength]: 0,
   };
-
-  // This should only happen on initialisation if the store is undefined.
-  if (characterClass === undefined) {
-    return totals;
-  }
 
   for (const mod of lockedMods) {
     for (const stat of mod.investmentStats) {
