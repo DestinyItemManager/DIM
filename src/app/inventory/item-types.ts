@@ -172,7 +172,7 @@ export interface DimItem {
         stat: DestinyStatDefinition;
       })
     | null;
-  /** The "base power" without any power-enhancing mods. This is a synonym for (primStat?.value || 0). */
+  /** The "base power" without any power-enhancing mods. This is a synonym for (primStat?.value || 0) but only for items that actually have power. */
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;

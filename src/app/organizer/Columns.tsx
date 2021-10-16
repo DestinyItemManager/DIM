@@ -243,7 +243,7 @@ export function getColumns(
     !isGhost && {
       id: 'power',
       header: <AppIcon icon={powerIndicatorIcon} />,
-      value: (item) => item.primStat?.value,
+      value: (item) => item.power,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`,
     },

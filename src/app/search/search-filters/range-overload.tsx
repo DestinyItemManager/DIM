@@ -104,7 +104,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
-      return (item) => item.primStat && compareTo(item.primStat.value);
+      return (item) => Boolean(item.power && compareTo(item.power));
     },
   },
   {

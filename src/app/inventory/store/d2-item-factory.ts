@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
+import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
   BucketCategory,
@@ -619,7 +620,7 @@ export function makeItem(
     reportException('Quest', e, { itemHash: item.itemHash });
   }
 
-  if (createdItem.primStat) {
+  if (createdItem.primStat && lightStats.includes(createdItem.primStat.statHash)) {
     createdItem.power = createdItem.primStat.value;
   }
 

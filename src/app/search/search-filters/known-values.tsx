@@ -15,7 +15,7 @@ import {
   powerfulSources,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { cosmeticTypes, damageTypeNames, lightStats } from '../search-filter-values';
+import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
 
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -139,7 +139,7 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: ['light', 'haslight', 'haspower'],
     description: tl('Filter.ContributePower'),
-    filter: () => (item) => item.primStat && lightStats.includes(item.primStat.statHash),
+    filter: () => (item) => item.power > 0,
   },
   {
     keywords: 'breaker',

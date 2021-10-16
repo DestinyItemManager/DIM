@@ -40,7 +40,7 @@ const sortDupes = (
   const dupeComparator = reverseComparator(
     chainComparator<DimItem>(
       // primary stat
-      compareBy((item) => item.primStat?.value),
+      compareBy((item) => item.power),
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
       compareBy((item) => {
