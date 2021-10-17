@@ -399,8 +399,6 @@ module.exports = (env) => {
         '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
-        // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(false),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
