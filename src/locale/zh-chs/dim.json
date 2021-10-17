@@ -186,6 +186,7 @@
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
     "InLoadout": "显示已被用于配装的物品.",
     "Infusable": "显示可以灌注的物品.",
+    "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
     "IsSunset": "显示已退环境且不能再被灌注到光等上限的物品。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
     "ItemId": "显示具有给定物品 ID 的物品。此为高级用户选项。",
@@ -202,7 +203,8 @@
     "Locked": "根据物品锁定状态显示.",
     "Masterwork": "按大师杰作属性或等级显示物品。",
     "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
-    "MaxPower": "显示每个职业的最大光等物品",
+    "MaxPower": "显示每个槽位最高光等的物品。",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
       "Y2": "显示带有年2模组的物品",
@@ -431,7 +433,6 @@
     "AscendantShardDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "对于传奇物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n对于在 {{energyLevel}} 或以下的异域物品，优化器将假定 {{energyLevel}} 的能量，并将根据分配模组的需要交换元素。异域物品将使用其当前属性。\n\n目前大师杰作的传奇物品和超过 {{energyLevel}} 能量的异域物品将使用其现有的元素。",
     "AscendantShardNotMasterworkedDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n目前大师杰作的物品将使用其现有的元素。",
-    "ChooseAlternate": "选择另一个拥有相同状态的物品：",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -447,6 +448,9 @@
     "LockElement": "锁定元素",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
@@ -461,7 +465,7 @@
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
     "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级或更换元素来装下你想要的模组。",
     "OptimizerSet": "优化器组合",
-    "ProcessingSets": "正在处理 {{character}} 的配装",
+    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "保存为",
     "SelectArmorUpgrade": "选择护甲升级",
     "SelectAssumedArmorUpgrade": "选择假定的护甲升级",
@@ -586,11 +590,11 @@
     "AddNote": "添加备注",
     "AddToLoadout": "配装",
     "All": "全部",
+    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
-    "EquipWithName": "装备到 {{character}}",
     "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",
@@ -612,7 +616,6 @@
     "Store": "寄存",
     "StoreWithName": "存储到 {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -763,6 +766,7 @@
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
+    "Masterworked": "Masterworked",
     "Ratings": "评分",
     "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",
@@ -788,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "插入模组",
-    "InsertPlugError": "无法插入模组"
+    "InsertPlugError": "无法插入模组",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "屏障冷却",

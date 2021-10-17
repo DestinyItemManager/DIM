@@ -431,4 +431,7 @@ export interface DimPursuit {
   questStepNum?: number;
   questStepsTotal?: number;
   questLineDescription?: string;
+  /** If this pursuit is really a Record (e.g. a seasonal challenge) */
+  recordHash?: number;
+  trackedInGame?: boolean;
 }

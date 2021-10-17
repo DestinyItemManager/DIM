@@ -9,7 +9,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -51,8 +51,8 @@ import {
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
-  isEmptyModSocket,
-  isUsedModSocket,
+  isEmptyArmorModSocket,
+  isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -60,7 +60,6 @@ import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-/* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
 import { useSelector } from 'react-redux';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -103,7 +102,7 @@ export function getColumns(
   loadouts: Loadout[],
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plug: DimPlug }) => void
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
 ): ColumnDefinition[] {
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -540,7 +539,7 @@ export function getColumns(
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList(item)?.notes,
+        value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`,
       },
@@ -556,7 +555,7 @@ function PerksCell({
 }: {
   item: DimItem;
   traitsOnly?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }) {
   if (!item.sockets) {
     return null;
@@ -566,10 +565,10 @@ function PerksCell({
     getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
         !isKillTrackerSocket(s) &&
-        !isEmptyModSocket(s) &&
+        !isEmptyArmorModSocket(s) &&
         s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
               !s.plugged.plugDef.itemCategoryHashes?.includes(
@@ -613,7 +612,7 @@ function PerksCell({
                     ? (e: React.MouseEvent) => {
                         if (!e.shiftKey) {
                           e.stopPropagation();
-                          onPlugClicked({ item, socket, plug: p });
+                          onPlugClicked({ item, socket, plugHash: p.plugDef.hash });
                         }
                       }
                     : undefined

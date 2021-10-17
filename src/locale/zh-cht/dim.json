@@ -186,6 +186,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -202,7 +203,8 @@
     "Locked": "根據物品鎖定狀態顯示.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
-    "MaxPower": "顯示每個職業的最大光等物品",
+    "MaxPower": "Shows the items at the highest power per slot.",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
       "Y2": "顯示帶有年2模組的物品",
@@ -431,7 +433,6 @@
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
-    "ChooseAlternate": "選擇另一個擁有相同狀態的物品：",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -447,6 +448,9 @@
     "LockElement": "Lock Element",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "創建配裝",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
@@ -461,7 +465,7 @@
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Processing sets for\n{{character}}",
+    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Save as",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -586,11 +590,11 @@
     "AddNote": "添加備註",
     "AddToLoadout": "Loadout",
     "All": "All",
+    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
-    "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
@@ -612,7 +616,6 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Gear": "{{light}}{{statName}}{{classType}}{{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -763,6 +766,7 @@
     "Items": "物品顯示",
     "Language": "語言",
     "LogOut": "註銷",
+    "Masterworked": "Masterworked",
     "Ratings": "評分",
     "ReloadDIM": "刷新頁面 [F5] 以完成語言切換",
     "ResetToDefault": "重置",
@@ -788,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

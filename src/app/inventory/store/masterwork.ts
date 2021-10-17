@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPlugStatActive } from 'app/utils/item-utils';
+import { isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
@@ -42,13 +43,7 @@ function buildMasterworkInfo(
   sockets: DimSockets,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
-  const socket = sockets.allSockets.find(
-    (socket) =>
-      socket.plugged?.plugDef.plug &&
-      (socket.plugged.plugDef.plug.uiPlugLabel === 'masterwork' ||
-        socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
-        socket.plugged.plugDef.plug.plugCategoryIdentifier.endsWith('_masterwork'))
-  );
+  const socket = sockets.allSockets.find(isWeaponMasterworkSocket);
   if (!socket || !socket.plugged) {
     return null;
   }

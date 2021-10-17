@@ -40,7 +40,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 // eslint-disable-next-line css-modules/no-unused-class
 import popupStyles from '../item-popup/ItemDescription.m.scss';
-// eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTriage.m.scss';
 
 /** whether an item's popup should contain the triage tab */

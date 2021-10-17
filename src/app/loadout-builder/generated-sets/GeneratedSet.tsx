@@ -18,7 +18,7 @@ import SetStats from './SetStats';
 
 interface Props {
   set: ArmorSet;
-  selectedStore?: DimStore;
+  selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   style: React.CSSProperties;
@@ -68,8 +68,8 @@ function GeneratedSet({
   }
 
   const canCompareLoadouts =
-    set.armor.every((items) => items[0].classType === selectedStore?.classType) &&
-    loadouts.some((l) => l.classType === selectedStore?.classType);
+    set.armor.every((items) => items[0].classType === selectedStore.classType) &&
+    loadouts.some((l) => l.classType === selectedStore.classType);
 
   let existingLoadout: Loadout | undefined;
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
@@ -103,7 +103,7 @@ function GeneratedSet({
             statOrder={statOrder}
             enabledStats={enabledStats}
             existingLoadoutName={existingLoadout?.name}
-            characterClass={selectedStore?.classType}
+            characterClass={selectedStore.classType}
           />
         </div>
         <div className={styles.items}>
@@ -122,7 +122,7 @@ function GeneratedSet({
       </div>
       <GeneratedSetButtons
         set={set}
-        store={selectedStore!}
+        store={selectedStore}
         canCompareLoadouts={canCompareLoadouts}
         halfTierMods={halfTierMods}
         onLoadoutSet={setCreateLoadout}

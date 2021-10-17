@@ -1,5 +1,9 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import {
+  canSwapEnergyFromUpgradeSpendTier,
+  upgradeSpendTierToMaxEnergy,
+} from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -18,7 +22,6 @@ import {
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import { ArmorSet, ArmorStats } from '../types';
-import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -84,7 +87,7 @@ function isModStatActive(
  */
 export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
-  characterClass: DestinyClass | undefined
+  characterClass: DestinyClass
 ) {
   const totals: ArmorStats = {
     [StatHashes.Mobility]: 0,
@@ -94,11 +97,6 @@ export function getTotalModStatChanges(
     [StatHashes.Discipline]: 0,
     [StatHashes.Strength]: 0,
   };
-
-  // This should only happen on initialisation if the store is undefined.
-  if (characterClass === undefined) {
-    return totals;
-  }
 
   for (const mod of lockedMods) {
     for (const stat of mod.investmentStats) {

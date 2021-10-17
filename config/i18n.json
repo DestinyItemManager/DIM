@@ -178,6 +178,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
@@ -491,6 +492,8 @@
     "LockElement": "Lock Element",
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
@@ -527,6 +530,7 @@
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
+    "MaxTier": "Max {{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -856,6 +860,7 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
+    "SelectModButton": "Select Mod",
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
@@ -1049,20 +1054,5 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  },
-  "ActiveMode": {
-    "ButtonOn": "Active Mode",
-    "Beta": "BETA",
-    "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests",
-    "Loadouts": "Loadouts",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here.",
-    "SuggestedBounties": "Suggested Bounties",
-    "Offline": "Offline",
-    "Loading": "Current Activity"
   }
 }

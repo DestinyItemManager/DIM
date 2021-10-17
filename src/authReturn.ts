@@ -39,7 +39,7 @@ function handleAuthReturn() {
       }
       errorLog('bungie auth', "Couldn't get access token", error);
       reportException('authReturn', error);
-      setError(error.message || error.data?.error_description || 'Unknown'); // eslint-disable-line @typescript-eslint/naming-convention
+      setError(error.message || error.data?.error_description || 'Unknown');
     });
 }
 

@@ -97,8 +97,9 @@ export function LoadoutStats({
   characterClass,
 }: {
   stats: DimStore['stats'];
+  /** Store is optional because in the loadout drawer we don't have a specific store */
   storeId?: string;
-  characterClass?: DestinyClass;
+  characterClass: DestinyClass; // this can be DestinyClass.Unknown
 }) {
   const statInfos = armorStats
     .map((h) => stats[h])

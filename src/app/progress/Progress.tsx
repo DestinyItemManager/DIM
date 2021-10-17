@@ -125,6 +125,7 @@ function Progress({
 
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
+    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
     ...(solsticeArmor.length ? [{ id: 'solstice', title: solsticeTitle }] : []),
     { id: 'milestones', title: t('Progress.Milestones') },
     ...(seasonalChallengesPresentationNode
@@ -139,7 +140,6 @@ function Progress({
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
     ...(raidNode ? [{ id: 'raids', title: raidTitle }] : []),
-    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
   ];
 
   return (
@@ -171,6 +171,16 @@ function Progress({
                 <div className="progress-row">
                   <ErrorBoundary name="CrucibleRanks">
                     <Ranks profileInfo={profileInfo} />
+                  </ErrorBoundary>
+                </div>
+              </CollapsibleTitle>
+            </section>
+
+            <section id="trackedTriumphs">
+              <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+                <div className="progress-row">
+                  <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
+                    <TrackedTriumphs searchQuery={searchQuery} />
                   </ErrorBoundary>
                 </div>
               </CollapsibleTitle>
@@ -214,16 +224,6 @@ function Progress({
                 </CollapsibleTitle>
               </section>
             )}
-
-            <section id="trackedTriumphs">
-              <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
-                <div className="progress-row">
-                  <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-                    <TrackedTriumphs searchQuery={searchQuery} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
           </motion.div>
         </PageWithMenu.Contents>
       </PageWithMenu>

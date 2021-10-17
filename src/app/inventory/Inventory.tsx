@@ -38,7 +38,7 @@ export default function Inventory({ account }: Props) {
 
   return (
     <ErrorBoundary name="Inventory">
-      <Stores account={account} />
+      <Stores />
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
     </ErrorBoundary>

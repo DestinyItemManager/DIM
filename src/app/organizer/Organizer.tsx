@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key, react/prop-types */
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
