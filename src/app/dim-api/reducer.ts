@@ -748,20 +748,15 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
 
 function updateLoadout(state: DimApiState, loadout: DimLoadout, account: DestinyAccount) {
   return produce(state, (draft) => {
-    loadout = {
-      ...loadout,
-      membershipId: account.membershipId,
-      destinyVersion: account.destinyVersion,
-    };
-    const profileKey = makeProfileKey(loadout.membershipId!, loadout.destinyVersion);
+    const profileKey = makeProfileKey(account.membershipId, account.destinyVersion);
     const profile = ensureProfile(draft, profileKey);
     const loadouts = profile.loadouts;
     const newLoadout = convertDimLoadoutToApiLoadout(loadout);
     const updateAction: ProfileUpdateWithRollback = {
       action: 'loadout',
       payload: newLoadout,
-      platformMembershipId: loadout.membershipId,
-      destinyVersion: loadout.destinyVersion,
+      platformMembershipId: account.membershipId,
+      destinyVersion: account.destinyVersion,
     };
 
     if (loadouts[loadout.id]) {
