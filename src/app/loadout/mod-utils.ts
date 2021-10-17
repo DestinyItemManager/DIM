@@ -272,14 +272,16 @@ export function getCheapestModAssignments(
   const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
+    const independentAssignments = bucketIndependentAssignments[item.id];
+    const specificAssignments = bucketSpecificAssignments[item.id];
     mergedResults.set(item.id, [
-      ...bucketIndependentAssignments[item.id].assigned,
-      ...bucketSpecificAssignments[item.id].assigned,
+      ...independentAssignments.assigned,
+      ...specificAssignments.assigned,
     ]);
     unassignedMods = [
       ...unassignedMods,
-      ...bucketIndependentAssignments[item.id].unassigned,
-      ...bucketSpecificAssignments[item.id].unassigned,
+      ...independentAssignments.unassigned,
+      ...specificAssignments.unassigned,
     ];
   }
 
