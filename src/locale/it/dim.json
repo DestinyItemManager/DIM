@@ -186,6 +186,7 @@
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
+    "InfusionFodder": "Mostra gli oggetti che potrebbero essere infusi in versioni con Potere più basso dello stesso oggetto usando solo lumen.",
     "IsSunset": "Mostra gli oggetti che sono stati resi obsoleti e non possono essere infusi al livello massimo di Potere.",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
     "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
@@ -432,11 +433,10 @@
     "AscendantShardDetails": "Per tutti gli oggetti, l'Ottimizzatore presupporrà i bonus alle statistiche del prodigio e livello di energia. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Per gli oggetti Leggendari, l'Ottimizzatore presupporrà le statistiche prodigiose e livello di energia. {{elementLockDescription}}\n\nPer gli oggetti Esotici a {{energyLevel}} o inferiore, l'Ottimizzatore presupporrà {{energyLevel}} energia e cambierà l'elemento se necessario per assegnare Modifiche. Gli Esotici useranno le loro statistiche attuali.\n\nGli oggetti Leggendari ed Esotici attuali con prodigio sopra {{energyLevel}} energia useranno il loro elemento energetico attuale.",
     "AscendantShardNotMasterworkedDetails": "Per tutti gli oggetti, l'Ottimizzatore presupporrà statistiche prodigiose bonus e livello di energia. {{elementLockDescription}}\n\nGli oggetti prodigiosi utilizzeranno il loro elemento energetico attuale.",
-    "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nel loadout \"{{name}}\" con questo nuovo set di armature?",
-    "CopiedBuild": "Copiate le impostazioni della build negli appunti",
+    "CopiedBuild": "Impostazioni della build copiate negli appunti",
     "CreateLoadout": "Salva loadout",
     "ElementLockedDescription": "Gli oggetti utilizzeranno il loro elemento attuale.",
     "ElementNotLockedDescription": "Gli oggetti cambieranno elemento se necessario per assegnare Modifiche.",
@@ -448,6 +448,9 @@
     "LockElement": "Blocca Elemento",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build per: {{className}}",
+    "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFoundWithReasons": "Nessuna build trovata. Questo succede tipicamente perché DIM non può assegnare tutte le Modifiche selezionate a nessun set di armature.",
     "NoComparableItems": "Questo loadout non ha oggetti confrontabili. Salvare il Set Ottimizzatore aggiungerà gli oggetti a questo loadout.",
@@ -592,7 +595,6 @@
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
-    "EquipWithName": "Equipaggia su {{character}}",
     "Infuse": "Infondi",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
@@ -614,7 +616,6 @@
     "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
       "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Inserisci Modifica",
-    "InsertPlugError": "Impossible inserire Modifica"
+    "InsertPlugError": "Impossible inserire Modifica",
+    "SelectModButton": "Seleziona Modifiche"
   },
   "Stats": {
     "BarricadeCooldown": "Recupero Barricata",

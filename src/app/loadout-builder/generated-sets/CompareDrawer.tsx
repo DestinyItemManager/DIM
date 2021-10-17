@@ -139,7 +139,7 @@ export default function CompareDrawer({
     upgradeSpendTier,
     lockItemEnergyType
   );
-  const [loadoutAssignedMods, loadoutUnassignedMods] = getCheapestModAssignments(
+  const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
     loadoutItems,
     lockedMods,
     defs,
@@ -264,19 +264,19 @@ export default function CompareDrawer({
                     <ConnectedInventoryItem item={item} />
                     <Sockets
                       item={item}
-                      lockedMods={loadoutAssignedMods.get(item.id)}
+                      lockedMods={itemModAssignments.get(item.id)}
                       size={'small'}
                     />
                   </div>
                 ))}
               </div>
-              {Boolean(loadoutUnassignedMods.length) && (
+              {Boolean(unassignedMods.length) && (
                 <div className={styles.unassigned}>
                   {t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}
                 </div>
               )}
               <div className={styles.unassignedMods}>
-                {loadoutUnassignedMods.map((unassigned) => (
+                {unassignedMods.map((unassigned) => (
                   <Mod
                     key={getModRenderKey(unassigned, modCounts)}
                     plugDef={unassigned}

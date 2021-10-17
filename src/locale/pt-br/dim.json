@@ -179,13 +179,14 @@
     "Equipped": "Itens que no momento estão equipados em outra personagem.",
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
     "Filter": "Filtro",
-    "Glimmer": "Exibe itens que são consumíveis que estão relacionados a ganho de lúmem.",
+    "Glimmer": "Exibe itens que são consumíveis que estão relacionados a ganho de lúmen.",
     "HasNotes": "Exibe itens que possuem anotações.",
     "HasOrnament": "Mostra itens que tem um ornamento aplicado.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
     "InLoadout": "Mostra itens que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
+    "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
     "IsSunset": "Exibe itens que tiveram o poder limitado e que não podem mais ser infundidos ao poder máximo.",
     "ItemHash": "Exibe itens com determinado hash de inventário de item. Para usuários avançados.",
     "ItemId": "Exibe o item com determinado ID de inventário de item. Para usuários avançados.",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "Para todos os itens, o Otimizador assumirá os bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Para itens lendários, o Otimizador assumirá bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}\n\nPara itens exóticos com {{energyLevel}} de energia ou inferior, o Otimizador assumirá {{energyLevel}} de energia e substituirá o elemento para usar mods, caso necessário. Exóticos usarão seus atributos atuais.\n\nItens lendários que já são obras-primas e exóticos de energia superior a {{energyLevel}} terão o elemento atual mantido.",
     "AscendantShardNotMasterworkedDetails": "Para todos os itens, o Otimizador assumirá bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}\n\nItens que já são obras-primas manterão o tipo de elemento atual.",
-    "ChooseAlternate": "Escolha outro item com os mesmos atributos:",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",
@@ -448,6 +448,9 @@
     "LockElement": "Manter o elemento",
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
+    "MaxTier": "Máx. {{tier}}",
+    "MissingClass": "Configuração é para: {{className}}",
+    "MissingClassDescription": "A configuração que você está tentando ver é para uma classe de personagem que você não possui.",
     "NewEmptyLoadout": "Criar set vazio",
     "NoBuildsFoundWithReasons": "Nenhum conjunto compatível encontrado. Isso geralmente ocorre quando o DIM não consegue atribuir todos os mods selecionados a nenhum conjunto de armadura.",
     "NoComparableItems": "Esse set não tem itens comparáveis. Salvando o Conjunto do Otimizador irá adicionar os itens para esse set.",
@@ -592,7 +595,6 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
-    "EquipWithName": "Equipar em {{character}}",
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
@@ -614,7 +616,6 @@
     "Store": "Armazenar",
     "StoreWithName": "Armazenar em {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Etapa {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Inserir mod",
-    "InsertPlugError": "Mod não pôde ser inserido"
+    "InsertPlugError": "Mod não pôde ser inserido",
+    "SelectModButton": "Selecionar mod"
   },
   "Stats": {
     "BarricadeCooldown": "Carregamento da Barricada",
