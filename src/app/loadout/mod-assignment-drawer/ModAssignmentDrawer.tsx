@@ -54,12 +54,12 @@ function ModAssignmentDrawer({ loadout, onClose }: { loadout: Loadout; onClose()
   const armor = useEquippedLoadoutArmor(loadout);
   const mods = useLoadoutMods(loadout);
 
-  const [assigned, unassigned] = useMemo(
+  const { itemModAssignments, unassignedMods } = useMemo(
     () => getCheapestModAssignments(armor, mods, defs, UpgradeSpendTier.Nothing, true),
     [defs, armor, mods]
   );
 
-  const flatAssigned = Array.from(assigned.values()).flat();
+  const flatAssigned = Array.from(itemModAssignments.values()).flat();
 
   if (!defs) {
     return null;
@@ -75,13 +75,13 @@ function ModAssignmentDrawer({ loadout, onClose }: { loadout: Loadout; onClose()
           {armor.map((item) => (
             <div key={item.id} className={styles.itemAndMods}>
               <ConnectedInventoryItem item={item} />
-              <Sockets item={item} lockedMods={assigned.get(item.id)} />
+              <Sockets item={item} lockedMods={itemModAssignments.get(item.id)} />
             </div>
           ))}
         </div>
         <h3>Unassigned Mods</h3>
         <div className={styles.unassigned}>
-          {unassigned.map((mod) => (
+          {unassignedMods.map((mod) => (
             <Mod key={mod.hash} plugDef={mod} />
           ))}
         </div>
