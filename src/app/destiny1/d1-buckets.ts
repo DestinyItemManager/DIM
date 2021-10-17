@@ -1,6 +1,7 @@
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import type {
+  D1BucketCategory,
   DimBucketType,
   InventoryBucket,
   InventoryBuckets,
@@ -59,8 +60,8 @@ const sortToVault = {
   General: 138197802,
 };
 
-const typeToSort = {};
-_.forIn(D1Categories, (types, category) => {
+const typeToSort: { [type: string]: D1BucketCategory } = {};
+_.forIn(D1Categories, (types, category: D1BucketCategory) => {
   types.forEach((type) => {
     typeToSort[type] = category;
   });
@@ -90,7 +91,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
   _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
       const type = bucketToType[def.hash];
-      let sort: string | undefined;
+      let sort: D1BucketCategory | undefined;
       if (type) {
         sort = typeToSort[type];
       } else if (vaultTypes[def.hash]) {
