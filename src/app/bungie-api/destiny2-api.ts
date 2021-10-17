@@ -62,7 +62,7 @@ export async function getLinkedAccounts(
   const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext,
-    getAllMemberships: false,
+    getAllMemberships: true,
   });
   return response.Response;
 }
