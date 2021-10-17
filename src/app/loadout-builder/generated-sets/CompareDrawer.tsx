@@ -7,7 +7,8 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { allItemsSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getModRenderKey } from 'app/loadout/mod-utils';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -18,10 +19,10 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
-import { getAssignedAndUnassignedMods, getModAssignments } from '../mod-assignments';
+import { getModAssignments } from '../mod-assignments';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
-import { getPower, upgradeSpendTierToMaxEnergy } from '../utils';
+import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
 import Mod from './Mod';
 import SetStats from './SetStats';
@@ -138,7 +139,7 @@ export default function CompareDrawer({
     upgradeSpendTier,
     lockItemEnergyType
   );
-  const [loadoutAssignedMods, loadoutUnassignedMods] = getAssignedAndUnassignedMods(
+  const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
     loadoutItems,
     lockedMods,
     defs,
@@ -261,17 +262,17 @@ export default function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets item={item} lockedMods={loadoutAssignedMods.get(item.id)} />
+                    <Sockets item={item} lockedMods={itemModAssignments.get(item.id)} />
                   </div>
                 ))}
               </div>
-              {Boolean(loadoutUnassignedMods.length) && (
+              {Boolean(unassignedMods.length) && (
                 <div className={styles.unassigned}>
                   {t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}
                 </div>
               )}
               <div className={styles.unassignedMods}>
-                {loadoutUnassignedMods.map((unassigned) => (
+                {unassignedMods.map((unassigned) => (
                   <Mod
                     key={getModRenderKey(unassigned, modCounts)}
                     plugDef={unassigned}

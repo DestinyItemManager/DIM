@@ -14,8 +14,10 @@ import {
   recoveryModHash,
 } from '../../testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
-import { generateProcessModPermutations } from './mod-permutations';
-import { canTakeSlotIndependentMods } from './process-worker/process-utils';
+import {
+  canTakeSlotIndependentMods,
+  generateProcessModPermutations,
+} from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 
