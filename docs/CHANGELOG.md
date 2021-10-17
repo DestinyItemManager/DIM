@@ -8,6 +8,7 @@
 * Loadout Optimizer will warn you if you try to load a build that's for a character class you don't have.
 * If your D1 account had disappeared from DIM, it's back now.
 * Aeon exotic armor pieces now show mod slots again.
+* If a loadout has items for multiple character classes in it, applying it to a character behaves as if only the items that can be equipped on that character are in the loadout.
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
