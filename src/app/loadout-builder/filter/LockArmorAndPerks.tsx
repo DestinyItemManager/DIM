@@ -11,6 +11,8 @@ import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import anyExoticIcon from 'images/anyExotic.svg';
+import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
 import React, { Dispatch, memo, useState } from 'react';
 import ReactDom from 'react-dom';
@@ -18,7 +20,13 @@ import { useSelector } from 'react-redux';
 import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
+import {
+  ExcludedItems,
+  LockableBucketHashes,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  LOCKED_EXOTIC_NO_EXOTIC,
+  PinnedItems,
+} from '../types';
 import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
@@ -159,7 +167,13 @@ export default memo(function LockArmorAndPerks({
               showCloseIconOnHover={true}
               onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
             >
-              <DefItemIcon itemDef={defs.InventoryItem.get(lockedExoticHash)} />
+              {lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC ? (
+                <img src={noExoticIcon} className="item-img" />
+              ) : lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC ? (
+                <img src={anyExoticIcon} className="item-img" />
+              ) : (
+                <DefItemIcon itemDef={defs.InventoryItem.get(lockedExoticHash)} />
+              )}
             </ClosableContainer>
           </div>
         )}

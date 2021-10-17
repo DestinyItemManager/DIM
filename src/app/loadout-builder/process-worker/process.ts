@@ -110,6 +110,8 @@ export function process(
   /** The user's chosen stat order, including disabled stats */
   statOrder: ArmorStatHashes[],
   statFilters: StatFilters,
+  /** Ensure every set includes one exotic */
+  anyExotic: boolean,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -270,6 +272,7 @@ export function process(
   let numInserted = 0;
   let numRejectedAfterInsert = 0;
   let numDoubleExotic = 0;
+  let numNoExotic = 0;
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
 
@@ -299,6 +302,17 @@ export function process(
               leg.equippingLabel === helm.equippingLabel)
           ) {
             numDoubleExotic += classItems.length;
+            continue;
+          }
+
+          if (
+            anyExotic &&
+            !helm.equippingLabel &&
+            !gaunt.equippingLabel &&
+            !chest.equippingLabel &&
+            !leg.equippingLabel
+          ) {
+            numNoExotic += classItems.length;
             continue;
           }
 
@@ -454,6 +468,7 @@ export function process(
       numInserted,
       numRejectedAfterInsert,
       numDoubleExotic,
+      numNoExotic,
     }
   );
 
