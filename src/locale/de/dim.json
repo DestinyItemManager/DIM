@@ -186,6 +186,7 @@
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
     "InLoadout": "Zeigt Gegenstände, welche in einer Ausrüstung verwendet werden.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
+    "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",
     "IsSunset": "Zeigt Gegenstände die gesunsetted sind und nicht mehr auf das maximale Powerlevel infundiert werden können.",
     "ItemHash": "Zeigt die Items mit dem angegebenen Inventar-Item Hash. Für fortgeschrittene Benutzer.",
     "ItemId": "Zeigt das Item mit der angegebenen Inventar-Item-ID. Für fortgeschrittene Benutzer.",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Bei legendären Gegenständen geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nFür Exotics mit einer Energiekapazität von {{energyLevel}} oder darunter, geht der Optimierer von einer Energiekapazität von {{energyLevel}} aus und tauscht die Affinität bei Bedarf, um Mods zuzuweisen. Exotics werden mit den aktuellen Werten verwendet.\n\nMomentan gemeisterte, legendäre Gegenstände und Exotics, mit einer Energiekapazität über {{energyLevel}}, werden mit der bestehenden Affinität verwendet.",
     "AscendantShardNotMasterworkedDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nMomentan gemeisterte Gegenstände verwenden ihre bestehende Affinität.",
-    "ChooseAlternate": "Wähle einen anderen Gegenstand mit den gleichen Werten:",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deiner Ausrüstung \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",
@@ -448,6 +448,9 @@
     "LockElement": "Affinität sperren",
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
     "LockItem": "Gegenstand anpinnen",
+    "MaxTier": "Max. {{tier}}",
+    "MissingClass": "Build ist für: {{className}}",
+    "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
     "NewEmptyLoadout": "Erstelle leere Ausrüstung",
     "NoBuildsFoundWithReasons": "Keine Builds gefunden. Dies liegt typischerweise daran, dass DIM nicht alle ausgewählten Mods einem Rüstungsset zuweisen konnte.",
     "NoComparableItems": "Diese Ausrüstung hat keine vergleichbaren Gegenstände. Das Speichern des Optimierer-Sets wird die Gegenstände zu dieser Ausrüstung hinzufügen.",
@@ -457,7 +460,7 @@
     "NotExotics": "{{material}} (keine Exotik)",
     "NotMasterworked": "{{material}} (Nicht gemeisterwerkt)",
     "OptimizerExplanationGuide": "Lies das Benutzerhandbuch für weitere Informationen und ein Video-Tutorial.",
-    "OptimizerExplanationMods": "Wähle ein Exotik und alle Mods, die du verwenden möchtest. Der Ausrüstungs-Optimierer berücksichtigt nur Wert-Bonusse von Mods, die du wählst - alle Mods auf der Rüstung werden ignoriert.",
+    "OptimizerExplanationMods": "Wähle ein Exotik und alle Mods, die du verwenden möchtest. Der Ausrüstungs-Optimierer berücksichtigt nur Wert-Boni von Mods, die du wählst - alle Mods auf der Rüstung werden ignoriert.",
     "OptimizerExplanationSearch": "Verwende die Suchleiste, um die Gegenstände für den Ausrüstungs-Optimierer zu filtern.",
     "OptimizerExplanationStats": "Ziehe die dir wichtigsten Werte nach oben, und setze andere, die dir nicht wichtig sind, auf ignorieren.",
     "OptimizerExplanationUpgrades": "Wähle aus, für welche Rüstung der Ausrüstungs-Optimierer Materialien verwenden kann. Er kann Meisterwerke vorschlagen, um die Werte zu erhöhen, oder Energieverbesserungen und Affinität wechseln, um die gewünschten Mods zu benutzen.",
@@ -592,7 +595,6 @@
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
-    "EquipWithName": "Anlegen an {{character}}",
     "Infuse": "Infundieren",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
@@ -614,7 +616,6 @@
     "Store": "Lagern",
     "StoreWithName": "Lagern auf {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Schritt {{questStepNum}} von {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Mod Einsetzen",
-    "InsertPlugError": "Konnte Mod nicht einfügen"
+    "InsertPlugError": "Konnte Mod nicht einfügen",
+    "SelectModButton": "Wähle Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Abklingzeit Barrikade",

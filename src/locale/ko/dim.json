@@ -186,6 +186,7 @@
     "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구 표시",
     "InLoadout": "로드아웃에 포함된 아이템 표시",
     "Infusable": "주입할 수 있는 장비 표시",
+    "InfusionFodder": "더 낮은 전투력의 동일한 아이템에 미광체만을 사용하여 주입할 수 있는 아이템 표시",
     "IsSunset": "만료되어 최고 전투력으로 주입할 수 없는 아이템 표시",
     "ItemHash": "주어진 소지품 아이템 해시와 일치하는 아이템 표시. 고급 사용자용.",
     "ItemId": "주어진 소지품 아이템 ID와 일치하는 아이템 표시. 고급 사용자용.",
@@ -203,7 +204,7 @@
     "Masterwork": "걸작 능력치나 단계에 따른 아이템 표시",
     "MasterworkKills": "걸작 처치 추적기 수치에 따른 아이템 표시",
     "MaxPower": "각 슬롯에서 가장 높은 전투력의 아이템 표시",
-    "MaxPowerLoadout": "로드아웃에서 각 캐릭터 직업의 전투력을 최대화할 수 있는 아이템 표시",
+    "MaxPowerLoadout": "로드아웃에서 각 직업의 전투력을 최대화할 수 있는 아이템 표시",
     "ModSlot": "특정 시즌의 개조 부품 슬롯이 있는 방어구 표시",
     "Mods": {
       "Y2": "2년 차 개조 부품이 장착된 아이템 표시",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "로드아웃 최적화는 모든 아이템에 대해 걸작의 추가 능력치와 에너지 레벨을 가정합니다. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "로드아웃 최적화는 전설 아이템에 대해 걸작의 추가 능력치와 에너지 레벨을 가정합니다. {{elementLockDescription}}\n\n로드아웃 최적화는 {{energyLevel}} 에너지 이하의 경이 아이템에 대해 {{energyLevel}} 에너지 레벨을 가정할 것이며, 개조 부품을 장착하기 위해 에너지 유형을 변경할 수 있습니다. 경이 아이템은 현재 능력치를 사용합니다.\n\n이미 걸작이 된 전설 아이템과 {{energyLevel}} 에너지 이상의 경이 아이템은 현재 에너지 유형을 사용합니다.",
     "AscendantShardNotMasterworkedDetails": "로드아웃 최적화는 모든 아이템에 대해 걸작의 추가 능력치와 에너지 레벨을 가정합니다. {{elementLockDescription}}\n\n이미 걸작이 된 아이템은 현재 에너지 유형을 그대로 사용합니다.",
-    "ChooseAlternate": "동일한 능력치를 가진 다른 아이템 선택:",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
@@ -448,6 +448,9 @@
     "LockElement": "에너지 유형 잠금",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
+    "MaxTier": "최대 {{tier}}",
+    "MissingClass": "빌드 대상: {{className}}",
+    "MissingClassDescription": "소지하지 않은 직업의 빌드입니다.",
     "NewEmptyLoadout": "빈 로드아웃 생성",
     "NoBuildsFoundWithReasons": "빌드를 찾을 수 없습니다. 일반적으로 DIM이 선택된 개조 부품을 어떤 방어구 세트에도 할당할 수 없기 때문입니다.",
     "NoComparableItems": "이 로드아웃은 비교 가능한 아이템이 없습니다. 최적화 조합을 저장하면 이 로드아웃에 아이템이 추가됩니다.",
@@ -592,7 +595,6 @@
     "Consolidate": "모으기",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
-    "EquipWithName": "{{character}}에게 장착",
     "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
@@ -614,7 +616,6 @@
     "Store": "보관",
     "StoreWithName": "{{character}}에게 보관",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "개조 부품 장착",
-    "InsertPlugError": "개조 부품 장착 불가"
+    "InsertPlugError": "개조 부품 장착 불가",
+    "SelectModButton": "개조 부품 선택"
   },
   "Stats": {
     "BarricadeCooldown": "방벽 재사용 대기시간",
