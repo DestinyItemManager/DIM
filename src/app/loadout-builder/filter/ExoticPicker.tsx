@@ -195,12 +195,12 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
       {({ onClose }) => (
         <div className={styles.container}>
           <div>
-            <div className={styles.header}>Special</div>
+            <div className={styles.header}>{t('LoadoutBuilder.ExoticSpecialCategory')}</div>
             <div className={styles.items}>
               <FakeExoticTile
                 selected={lockedExoticHash === -1}
-                title="No Exotic"
-                description='Equivalent to searching "not:exotic" in the search bar - no exotic armor will be included in sets.'
+                title={t('LoadoutBuilder.NoExotic')}
+                description={t('LoadoutBuilder.NoExoticDescription')}
                 icon={noExoticIcon}
                 onSelected={() => {
                   onSelected(-1);
@@ -209,8 +209,8 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
               />
               <FakeExoticTile
                 selected={lockedExoticHash === -2}
-                title="Any Exotic"
-                description="Sets must contain an exotic, but any exotic will do."
+                title={t('LoadoutBuilder.AnyExotic')}
+                description={t('LoadoutBuilder.AnyExoticDescription')}
                 icon={anyExoticIcon}
                 onSelected={() => {
                   onSelected(-2);
