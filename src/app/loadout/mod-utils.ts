@@ -2,11 +2,8 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getItemEnergyType, isModEnergyValid } from 'app/loadout-builder/mod-assignments';
-import { generateModPermutations } from 'app/loadout-builder/mod-permutations';
-import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout-builder/types';
-import { upgradeSpendTierToMaxEnergy } from 'app/loadout-builder/utils';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { generateModPermutations } from 'app/loadout/mod-permutations';
+import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import {
   combatCompatiblePlugCategoryHashes,
   ModSocketMetadata,
@@ -18,8 +15,28 @@ import {
   isArmor2Mod,
 } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
+import {
+  canSwapEnergyFromUpgradeSpendTier,
+  upgradeSpendTierToMaxEnergy,
+} from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
+
+/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
+export const activityModPlugCategoryHashes = [
+  ...raidModPlugCategoryHashes,
+  PlugCategoryHashes.EnhancementsSeasonMaverick,
+];
+
+export const bucketsToCategories = {
+  [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
+  [armorBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
+  [armorBuckets.chest]: armor2PlugCategoryHashesByName.chest,
+  [armorBuckets.leg]: armor2PlugCategoryHashesByName.leg,
+  [armorBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
+};
 
 /**
  * Sorts PluggableInventoryItemDefinition's by the following list of comparators.
@@ -392,4 +409,71 @@ function calculateEnergyChange(
   return finalEnergy === itemEnergy.originalType || finalEnergy === DestinyEnergyType.Any
     ? energyInvested
     : energyUsedAndWasted;
+}
+
+/**
+ * This is used to figure out the energy type of an item used in mod assignments.
+ *
+ * It first considers if there are bucket specific mods applied, and returns that
+ * energy type if it's not Any. If not then it considers armour upgrade options
+ * and returns the appropriate energy type from that.
+ *
+ * It can return the Any energy type if armour upgrade options allow energy changes.
+ */
+export function getItemEnergyType(
+  defs: D2ManifestDefinitions,
+  item: DimItem,
+  upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
+  bucketSpecificMods?: PluggableInventoryItemDefinition[]
+) {
+  if (!item.energy) {
+    return DestinyEnergyType.Any;
+  }
+
+  const bucketSpecificModType = bucketSpecificMods?.find(
+    (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
+  )?.plug.energyCost?.energyType;
+
+  // if we find bucket specific mods with an energy type we have to use that
+  if (bucketSpecificModType) {
+    return bucketSpecificModType;
+  }
+
+  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
+    ? DestinyEnergyType.Any
+    : item.energy.energyType;
+}
+
+/**
+ * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
+ *
+ * This checks that the summed mod energies are within the derived mod capacity for
+ * an item (derived from armour upgrade options). It also ensures that all the mod
+ * energy types align and that the mod can be slotted into an item socket based on
+ * item energy type.
+ */
+export function isModEnergyValid(
+  itemEnergy: ItemEnergy,
+  modToAssign: PluggableInventoryItemDefinition,
+  ...assignedMods: (PluggableInventoryItemDefinition | null)[]
+) {
+  const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
+  const modToAssignType = modToAssign.plug.energyCost?.energyType || DestinyEnergyType.Any;
+  const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
+
+  return (
+    itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity &&
+    energyTypesAreCompatible(itemEnergy.derivedType, modToAssignType) &&
+    assignedMods.every((mod) =>
+      energyTypesAreCompatible(
+        modToAssignType,
+        mod?.plug.energyCost?.energyType || DestinyEnergyType.Any
+      )
+    )
+  );
+}
+
+function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnergyType) {
+  return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
 }
