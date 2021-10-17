@@ -90,9 +90,12 @@ export const getModRenderKey = (
   return `${mod.hash}-${counts[mod.hash]++}`;
 };
 
+/** Used to track assigned and unassigned mods during the mod assignment algorithm.  */
 interface ModAssignments {
-  assigned: PluggableInventoryItemDefinition[];
-  unassigned: PluggableInventoryItemDefinition[];
+  [itemId: string]: {
+    assigned: PluggableInventoryItemDefinition[];
+    unassigned: PluggableInventoryItemDefinition[];
+  };
 }
 
 /**
@@ -111,21 +114,24 @@ export function getCheapestModAssignments(
   defs: D2ManifestDefinitions | undefined,
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
-): [Map<string, PluggableInventoryItemDefinition[]>, PluggableInventoryItemDefinition[]] {
+): {
+  itemModAssignments: Map<string, PluggableInventoryItemDefinition[]>;
+  unassignedMods: PluggableInventoryItemDefinition[];
+} {
   if (!defs) {
-    return [new Map(), []];
+    return { itemModAssignments: new Map(), unassignedMods: [] };
   }
 
-  let bucketIndependentAssignments = new Map<string, ModAssignments>();
-  const bucketSpecificAssignments = new Map<string, ModAssignments>();
+  let bucketIndependentAssignments: ModAssignments = {};
+  const bucketSpecificAssignments: ModAssignments = {};
 
   // just an arbitrarily large number
   let assignmentEnergyCost = 10000;
   let assignmentUnassignedModCount = 10000;
 
   for (const item of items) {
-    bucketSpecificAssignments.set(item.id, { assigned: [], unassigned: [] });
-    bucketIndependentAssignments.set(item.id, { assigned: [], unassigned: [] });
+    bucketSpecificAssignments[item.id] = { assigned: [], unassigned: [] };
+    bucketIndependentAssignments[item.id] = { assigned: [], unassigned: [] };
   }
 
   // An object of item id's to specialty socket metadata, this is used to ensure that
@@ -162,12 +168,12 @@ export function getCheapestModAssignments(
           lockItemEnergyType,
           itemForMod,
           mod,
-          bucketSpecificAssignments.get(itemForMod.id)?.assigned || []
+          bucketSpecificAssignments[itemForMod.id].assigned
         )
       ) {
-        bucketSpecificAssignments.get(itemForMod.id)?.assigned.push(mod);
+        bucketSpecificAssignments[itemForMod.id].assigned.push(mod);
       } else if (itemForMod) {
-        bucketSpecificAssignments.get(itemForMod.id)?.unassigned.push(mod);
+        bucketSpecificAssignments[itemForMod.id].unassigned.push(mod);
       }
     }
   }
@@ -181,7 +187,7 @@ export function getCheapestModAssignments(
       buildItemEnergy(
         defs,
         item,
-        bucketSpecificAssignments.get(item.id)?.assigned || [],
+        bucketSpecificAssignments[item.id].assigned,
         upgradeSpendTier,
         lockItemEnergyType
       )
@@ -195,7 +201,7 @@ export function getCheapestModAssignments(
     for (const combatPermutation of combatModPermutations) {
       modLoop: for (const generalPermutation of generalModPermutations) {
         let unassignedModCount = 0;
-        const assignments: Map<string, ModAssignments> = new Map();
+        const assignments: ModAssignments = {};
 
         for (let i = 0; i < items.length; i++) {
           const assigned = [];
@@ -239,12 +245,12 @@ export function getCheapestModAssignments(
           }
 
           unassignedModCount += unassigned.length;
-          assignments.set(item.id, { assigned, unassigned });
+          assignments[item.id] = { assigned, unassigned };
         }
 
         // This is after the item loop
         let energyUsedAndWasted = 0;
-        for (const [itemId, { assigned }] of assignments) {
+        for (const [itemId, { assigned }] of Object.entries(assignments)) {
           energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
         }
 
@@ -264,20 +270,20 @@ export function getCheapestModAssignments(
   }
 
   const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
-  let unassigned: PluggableInventoryItemDefinition[] = [];
+  let unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
     mergedResults.set(item.id, [
-      ...(bucketIndependentAssignments.get(item.id)?.assigned || []),
-      ...(bucketSpecificAssignments.get(item.id)?.assigned || []),
+      ...bucketIndependentAssignments[item.id].assigned,
+      ...bucketSpecificAssignments[item.id].assigned,
     ]);
-    unassigned = [
-      ...unassigned,
-      ...(bucketIndependentAssignments.get(item.id)?.unassigned || []),
-      ...(bucketSpecificAssignments.get(item.id)?.unassigned || []),
+    unassignedMods = [
+      ...unassignedMods,
+      ...bucketIndependentAssignments[item.id].unassigned,
+      ...bucketSpecificAssignments[item.id].unassigned,
     ];
   }
 
-  return [mergedResults, unassigned];
+  return { itemModAssignments: mergedResults, unassignedMods };
 }
 
 interface ItemEnergy {
