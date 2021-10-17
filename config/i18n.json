@@ -163,7 +163,7 @@
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
-    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. If several dupes all share the same highest power, one will be chosen as the best and the rest will be highlighted.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
