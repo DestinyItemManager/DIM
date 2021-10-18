@@ -18,7 +18,7 @@ import styles from './VaultCapacity.m.scss';
 
 const bucketIcons = {
   3313201758: modificationsIcon,
-  2973005342: shadersIcon,
+  18606351: shadersIcon,
   1469714392: consumablesIcon,
   138197802: vaultIcon,
 };
@@ -33,7 +33,7 @@ const vaultBucketOrder = [
   138197802,
   1469714392,
   3313201758,
-  2973005342,
+  18606351,
 ];
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */

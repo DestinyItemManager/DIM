@@ -19,7 +19,7 @@ const bucketToTypeRaw = {
   2689798309: 'Legendary Shards',
   2689798310: 'Silver',
   2689798311: 'Bright Dust',
-  2973005342: 'Shaders',
+  18606351: 'Shaders',
   3161908920: 'Messages',
   3284755031: 'Class',
   3313201758: 'Modifications',
