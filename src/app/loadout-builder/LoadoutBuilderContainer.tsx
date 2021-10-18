@@ -30,7 +30,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions();
   const stores = useSelector(sortedStoresSelector);
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
 
@@ -59,7 +59,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     <LoadoutBuilder
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      classType={urlClassType}
+      initialClassType={urlClassType}
       initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );

@@ -15,20 +15,6 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Active Mode",
-    "ChangeFilter": "Change Filter",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "Loading": "Current Activity",
-    "NoQuests": "You're not tracking any quests",
-    "NoSearches": "Create saved searches and filter them here.",
-    "Offline": "Offline",
-    "Pursuits": "Pursuits",
-    "SuggestedBounties": "Suggested Bounties"
-  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",
@@ -88,7 +74,6 @@
   },
   "Compare": {
     "Archetype": "Archetype",
-    "Armor2": "Armor 2.0",
     "Button": "Compare",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
@@ -187,6 +172,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -203,7 +189,8 @@
     "Locked": "Shows items based on their locked status.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPower": "Shows the items at the highest power per slot.",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "Mods": {
       "Y2": "Shows items with a Year 2 mod attached.",
@@ -432,7 +419,6 @@
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
-    "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -448,6 +434,9 @@
     "LockElement": "Lock Element",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
@@ -462,7 +451,7 @@
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Processing sets for\n{{character}}",
+    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Save as",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -550,10 +539,10 @@
     "PullMakeSpace": "Space",
     "Random": "Random",
     "Randomize": "Randomize",
-    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
-    "RandomizeWeapons": "Randomize your equipped class and weapons?",
+    "RandomizeWeapons": "Randomize your equipped weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save New",
@@ -587,11 +576,11 @@
     "AddNote": "Add a note",
     "AddToLoadout": "Loadout",
     "All": "All",
+    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
-    "EquipWithName": "Equip to {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
@@ -613,7 +602,6 @@
     "Store": "Store",
     "StoreWithName": "Store on {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -764,6 +752,7 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
+    "Masterworked": "Masterworked",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
@@ -789,7 +778,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

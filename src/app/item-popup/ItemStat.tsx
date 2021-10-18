@@ -1,3 +1,4 @@
+import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ExternalLink from 'app/dim-ui/ExternalLink';
@@ -94,7 +95,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
       <div className={clsx(styles.value, optionalClasses)}>
         {stat.additive && stat.value >= 0 && '+'}
-        {stat.value}
+        <AnimatedNumber value={stat.value} />
       </div>
 
       {item?.destinyVersion === 2 && statsMs.includes(stat.statHash) && (
@@ -215,7 +216,7 @@ export function ItemStatValue({ stat, item }: { stat: DimStat; item?: DimItem })
 
   return (
     <div className={clsx(styles.value, optionalClasses)}>
-      {stat.value}
+      <AnimatedNumber value={stat.value} />
       {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
       {stat.statHash === StatHashes.RecoilDirection && <RecoilStat value={stat.value} />}
     </div>

@@ -6,16 +6,13 @@
 // STATS KNOWN VALUES
 //
 
-/** hashes representing D1 PL stats */
-export const D1LightStats = [
-  3897883278, // Defense
-  368428387, // Attack
-];
-
 export const enum D1_StatHashes {
   Defense = 3897883278,
   Attack = 368428387,
 }
+
+/** hashes representing D1 PL stats */
+export const D1LightStats = [D1_StatHashes.Defense, D1_StatHashes.Attack];
 
 /** hashes representing D1 Progressions */
 export const enum D1ProgressionHashes {

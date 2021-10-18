@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import {
   getSocketByIndex,
   getSocketsByIndexes,
@@ -14,7 +14,6 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
@@ -28,16 +27,11 @@ interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: DimAdjustedItemPlug;
+  grid?: boolean;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
 
-export default function ItemSocketsWeapons({
-  item,
-  minimal,
-  updateSocketComparePlug,
-  adjustedItemPlugs,
-}: Props) {
+export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked }: Props) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
@@ -45,11 +39,11 @@ export default function ItemSocketsWeapons({
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
       setSocketInMenu(socket);
-    } else if (updateSocketComparePlug) {
-      updateSocketComparePlug({
+    } else {
+      onPlugClicked?.({
         item,
         socket,
-        plug,
+        plugHash: plug.plugDef.hash,
       });
     }
   };
@@ -95,7 +89,6 @@ export default function ItemSocketsWeapons({
       socket={socketInfo}
       wishlistRoll={wishlistRoll}
       onClick={handleSocketClick}
-      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
     />
   );
 
@@ -127,8 +120,8 @@ export default function ItemSocketsWeapons({
         </ArchetypeRow>
       )}
       {perks &&
-        ($featureFlags.newPerks && !minimal ? (
-          <ItemPerksList item={item} perks={perks} />
+        ($featureFlags.newPerks && !minimal && !grid ? (
+          <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
         ) : (
           <div
             className={clsx(
@@ -140,14 +133,13 @@ export default function ItemSocketsWeapons({
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
                 (socketInfo) =>
-                  socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
+                  !isKillTrackerSocket(socketInfo) && (
                     <Socket
                       key={socketInfo.socketIndex}
                       item={item}
                       socket={socketInfo}
                       wishlistRoll={wishlistRoll}
                       onClick={handleSocketClick}
-                      adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
                     />
                   )
               )}
@@ -166,6 +158,7 @@ export default function ItemSocketsWeapons({
             item={item}
             socket={socketInMenu}
             onClose={() => setSocketInMenu(null)}
+            onPlugSelected={onPlugClicked}
           />,
           document.body
         )}

@@ -93,7 +93,7 @@ export default function GeneratedSetItem({
 
     try {
       const { item } = await showItemPicker({
-        prompt: t('LoadoutBuilder.ChooseAlternate'),
+        prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
         filterItems: (item: DimItem) => ids.has(item.id),
       });
 

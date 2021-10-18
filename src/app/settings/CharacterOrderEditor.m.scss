@@ -23,7 +23,7 @@
 .powerLevel {
   color: $power;
   &:before {
-    content: '\2726';
+    content: '\2726'; /*  */
     display: inline-block;
     vertical-align: 25%;
     font-size: 50%;

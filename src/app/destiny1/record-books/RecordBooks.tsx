@@ -62,7 +62,7 @@ export default function RecordBooks({ account }: Props) {
     (state: RootState) => settingsSelector(state).hideCompletedRecords
   );
 
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
   const setSetting = useSetSetting();
   if (!defs || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

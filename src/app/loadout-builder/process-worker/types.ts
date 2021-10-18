@@ -1,5 +1,5 @@
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ArmorStats } from '../types';
+import { ArmorStats, LockableBucketHash } from '../types';
 
 export interface ProcessItem {
   bucketHash: number;
@@ -23,9 +23,9 @@ export interface ProcessItem {
   compatibleModSeasons?: string[];
 }
 
-export type ProcessItemsByBucket = Readonly<{
-  [bucketHash: number]: ProcessItem[];
-}>;
+export type ProcessItemsByBucket = {
+  [bucketHash in LockableBucketHash]: ProcessItem[];
+};
 
 export interface ProcessArmorSet {
   /** The overall stats for the loadout as a whole. */

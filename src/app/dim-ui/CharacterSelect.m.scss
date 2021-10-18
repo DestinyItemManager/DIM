@@ -17,8 +17,7 @@
       margin-bottom: 0;
     }
   }
-
-  .unselected {
+  .unselected > div > div {
     opacity: 0.4;
   }
 }

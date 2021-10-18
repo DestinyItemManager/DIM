@@ -7,9 +7,7 @@ export type Comparator<T> = (a: T, b: T) => -1 | 0 | 1;
  * // Returns a comparator that compares items by primary stat
  * compareBy((item) => item.primStat.value)
  */
-export function compareBy<T>(
-  fn: (arg: T) => number | string | undefined | boolean | bigint
-): Comparator<T> {
+export function compareBy<T>(fn: (arg: T) => number | string | undefined | boolean): Comparator<T> {
   return (a, b) => {
     const aVal = fn(a);
     const bVal = fn(b);

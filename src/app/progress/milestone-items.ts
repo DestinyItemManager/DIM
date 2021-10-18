@@ -346,7 +346,8 @@ export function recordToPursuitItem(
   record: DimRecord,
   buckets: InventoryBuckets,
   store: DimStore,
-  typeName: string
+  typeName: string,
+  tracked: boolean
 ) {
   const dimItem = makeFakePursuitItem(
     buckets,
@@ -369,11 +370,16 @@ export function recordToPursuitItem(
     suppressExpirationWhenObjectivesComplete: false,
     modifierHashes: [],
     rewards: [],
+    recordHash: record.recordDef.hash,
+    trackedInGame: record.trackedInGame,
   };
 
   if (record.recordDef.rewardItems) {
     dimItem.pursuit.rewards = record.recordDef.rewardItems;
   }
+
+  dimItem.trackable = true;
+  dimItem.tracked = record.trackedInGame || tracked;
 
   return dimItem;
 }

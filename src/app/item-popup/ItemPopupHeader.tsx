@@ -76,7 +76,7 @@ export default function ItemPopupHeader({
       </div>
       {showArmory &&
         ReactDOM.createPortal(
-          <ArmorySheet onClose={() => setShowArmory(false)} itemHash={item.hash} />,
+          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />,
           document.body
         )}
     </div>

@@ -179,6 +179,8 @@ $content-cells: 5;
 }
 .perks {
   columns: 2;
+  height: 100%;
+  box-sizing: border-box;
   @include vertical-space-children(4px);
   column-gap: 8px;
   &.header {
@@ -226,6 +228,9 @@ $content-cells: 5;
 }
 .perkSelected {
   font-weight: bold;
+}
+.perkSelectable {
+  cursor: pointer;
 }
 
 .locationCell,

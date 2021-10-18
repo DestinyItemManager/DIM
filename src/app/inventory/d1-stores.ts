@@ -53,11 +53,6 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         const currencies = processCurrencies(rawStores, defs);
 
-        // Let our styling know how many characters there are
-        document
-          .querySelector('html')!
-          .style.setProperty('--num-characters', String(stores.length - 1));
-
         dispatch(update({ stores, currencies }));
 
         return stores;

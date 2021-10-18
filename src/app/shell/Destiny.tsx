@@ -2,19 +2,23 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
-import Armory from 'app/armory/Armory';
+import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
+import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import { storesSelector } from 'app/inventory/selectors';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
+import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
+import { connect, useSelector } from 'react-redux';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -107,6 +111,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
     }
   }, [dispatch, isD2]);
 
+  const { pathname, search } = useLocation();
   const { path, url } = useRouteMatch();
 
   // Define some hotkeys without implementation, so they show up in the help
@@ -171,17 +176,21 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
   useHotkeys(hotkeys);
 
   if (!account) {
-    return accountsLoaded ? (
-      <div className="dim-page">
-        <ErrorPanel
-          title={t('Accounts.MissingTitle')}
-          fallbackMessage={t('Accounts.MissingDescription')}
-          showTwitters={true}
-        />
-      </div>
-    ) : (
-      <ShowPageLoading message={t('Loading.Accounts')} />
-    );
+    if (pathname.includes('/armory/')) {
+      return <Redirect to={pathname.replace(/\/\d+\/d2/, '') + search} />;
+    } else {
+      return accountsLoaded ? (
+        <div className="dim-page">
+          <ErrorPanel
+            title={t('Accounts.MissingTitle')}
+            fallbackMessage={t('Accounts.MissingDescription')}
+            showTwitters={true}
+          />
+        </div>
+      ) : (
+        <ShowPageLoading message={t('Loading.Accounts')} />
+      );
+    }
   }
 
   if (profileError) {
@@ -249,17 +258,19 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <D1Vendors account={account} />
             )}
           </Route>
-          <Route
-            path={`${path}/armory/:itemHash`}
-            exact
-            render={({ match }) => (
-              <Armory
-                key={match.params.itemHash}
-                account={account}
-                itemHash={parseInt(match.params.itemHash!, 10)}
-              />
-            )}
-          />
+          {account.destinyVersion === 2 && (
+            <Route
+              path={`${path}/armory/:itemHash`}
+              exact
+              render={({ match }) => (
+                <ArmoryPage
+                  key={match.params.itemHash}
+                  account={account}
+                  itemHash={parseInt(match.params.itemHash!, 10)}
+                />
+              )}
+            />
+          )}
           {account.destinyVersion === 1 && (
             <Route path={`${path}/record-books`} exact>
               <RecordBooks account={account} />
@@ -281,8 +292,39 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
+      <GlobalEffects />
     </>
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(Destiny);
+
+/**
+ * Set some global CSS properties and such in reaction to the store.
+ */
+function GlobalEffects() {
+  const stores = useSelector(storesSelector);
+
+  // Set a CSS var for how many characters there are
+  useEffect(() => {
+    if (stores.length > 1) {
+      document
+        .querySelector('html')!
+        .style.setProperty('--num-characters', String(stores.length - 1));
+    }
+  }, [stores.length]);
+
+  const badgePostmaster = useSelector(
+    (state: RootState) => settingsSelector(state).badgePostmaster
+  );
+
+  // Badge the app icon with the number of postmaster items
+  useEffect(() => {
+    if (stores.length > 0 && badgePostmaster && 'setAppBadge' in navigator) {
+      const activeStore = getCurrentStore(stores)!;
+      navigator.setAppBadge(totalPostmasterItems(activeStore));
+    }
+  }, [badgePostmaster, stores]);
+
+  return null;
+}

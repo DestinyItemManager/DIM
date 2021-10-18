@@ -171,6 +171,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
@@ -192,7 +193,8 @@
     "Locked": "Shows items based on their locked status.",
     "Masterwork": "Shows items based on their masterwork stat or masterwork level.",
     "MasterworkKills": "Shows items based on their masterwork kill tracker count.",
-    "MaxPower": "Shows the items which would maximize Power Level for each character class.",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
+    "MaxPower": "Shows the items at the highest power per slot.",
     "Mods": {
       "Y2": "Shows items with a Year 2 mod attached.",
       "Y3": "Shows items with any Armor 2.0 mods selected."
@@ -483,6 +485,8 @@
     "LockElement": "Lock Element",
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
@@ -500,7 +504,7 @@
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Processing sets for\n{{character}}",
+    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "ResetLocked": "Reset pinned items",
     "SaveAs": "Save as",
     "SeasonNum": "Season {{season}}",
@@ -519,6 +523,7 @@
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",
     "TierNumber": "T{{tier}}",
+    "MaxTier": "Max {{tier}}",
     "Traction": "The Traction perk provides +1 Mobility.",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -599,10 +604,10 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize",
-    "RandomizePrompt": "Randomize your equipped class, weapons, armor and ghost?",
+    "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
-    "RandomizeWeapons": "Randomize your equipped class and weapons?",
+    "RandomizeWeapons": "Randomize your equipped weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save New",
@@ -637,6 +642,7 @@
     "AddNote": "Add a note",
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "Consolidate": "Consolidate",
     "Details": "Popup",
     "DistributeEvenly": "Distribute Evenly",
@@ -817,6 +823,7 @@
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
+    "Masterworked": "Masterworked",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
@@ -843,6 +850,7 @@
   },
   "Sockets": {
     "InsertModButton": "Insert Mod",
+    "SelectModButton": "Select Mod",
     "InsertPlugError": "Couldn't insert mod"
   },
   "Stats": {
@@ -1036,20 +1044,5 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  },
-  "ActiveMode": {
-    "ButtonOn": "Active Mode",
-    "Beta": "BETA",
-    "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests",
-    "Loadouts": "Loadouts",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here.",
-    "SuggestedBounties": "Suggested Bounties",
-    "Offline": "Offline",
-    "Loading": "Current Activity"
   }
 }

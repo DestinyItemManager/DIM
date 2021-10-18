@@ -8,7 +8,7 @@ import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
@@ -40,14 +40,12 @@ import Spreadsheets from './Spreadsheets';
 interface StoreProps {
   currentAccount?: DestinyAccount;
   settings: Settings;
-  storesLoaded: boolean;
   stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
-    storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
     currentAccount: currentAccountSelector(state),
   };
@@ -116,9 +114,9 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
-function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch }: Props) {
+function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
-  useLoadStores(currentAccount, storesLoaded);
+  useLoadStores(currentAccount);
   const setSetting = useSetSetting();
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -168,7 +166,6 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
-    setSetting('itemSort', 'custom');
     setSetting(
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)
@@ -195,6 +192,7 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
     season: t('Settings.SortBySeason'),
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
+    masterworked: t('Settings.Masterworked'),
     // archetype: 'Archetype'
   };
 

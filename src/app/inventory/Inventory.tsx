@@ -3,13 +3,11 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import Stores from 'app/inventory/Stores';
-import MobileInspect from 'app/mobile-inspect/MobileInspect';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import GearPower from '../gear-power/GearPower';
-import DragGhostItem from './DragGhostItem';
 import { storesLoadedSelector } from './selectors';
 import { useLoadStores } from './store/hooks';
 
@@ -32,7 +30,7 @@ const components = [
 
 export default function Inventory({ account }: Props) {
   const storesLoaded = useSelector(storesLoadedSelector);
-  useLoadStores(account, storesLoaded, components);
+  useLoadStores(account, components);
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -40,11 +38,9 @@ export default function Inventory({ account }: Props) {
 
   return (
     <ErrorBoundary name="Inventory">
-      <Stores account={account} />
+      <Stores />
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
-      {$featureFlags.mobileInspect && <MobileInspect />}
-      <DragGhostItem />
     </ErrorBoundary>
   );
 }

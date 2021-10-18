@@ -9,7 +9,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -22,6 +22,7 @@ import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { recoilValue } from 'app/item-popup/RecoilStat';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -43,13 +44,15 @@ import {
   getItemYear,
   getMasterworkStatNames,
   isD1Item,
+  isKillTrackerSocket,
   isSunset,
 } from 'app/utils/item-utils';
 import {
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
-  isUsedModSocket,
+  isEmptyArmorModSocket,
+  isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -57,7 +60,6 @@ import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-/* eslint-disable react/jsx-key, react/prop-types */
 import React from 'react';
 import { useSelector } from 'react-redux';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -99,7 +101,8 @@ export function getColumns(
   customTotalStat: number[],
   loadouts: Loadout[],
   newItems: Set<string>,
-  destinyVersion: DestinyVersion
+  destinyVersion: DestinyVersion,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
 ): ColumnDefinition[] {
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -138,7 +141,13 @@ export function getColumns(
           ),
           statHash,
           columnGroup: statsGroup,
-          value: (item: DimItem) => item.stats?.find((s) => s.statHash === statHash)?.value,
+          value: (item: DimItem) => {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat?.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(stat.value);
+            }
+            return stat?.value || 0;
+          },
           cell: (_val, item: DimItem) => {
             const stat = item.stats?.find((s) => s.statHash === statHash);
             if (!stat) {
@@ -164,7 +173,13 @@ export function getColumns(
           ...column,
           id: `base_${column.statHash}`,
           columnGroup: baseStatsGroup,
-          value: (item: DimItem) => item.stats?.find((s) => s.statHash === column.statHash)?.base,
+          value: (item: DimItem) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (stat?.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(stat.base);
+            }
+            return stat?.base || 0;
+          },
           cell: (value) => <div className={styles.statValue}>{value}</div>,
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
@@ -415,7 +430,11 @@ export function getColumns(
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_val, item) =>
-        isD1Item(item) ? <D1PerksCell item={item} /> : <PerksCell item={item} />,
+        isD1Item(item) ? (
+          <D1PerksCell item={item} />
+        ) : (
+          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+        ),
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -425,7 +444,9 @@ export function getColumns(
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
-        cell: (_val, item) => <PerksCell item={item} traitsOnly={true} />,
+        cell: (_val, item) => (
+          <PerksCell item={item} traitsOnly={true} onPlugClicked={onPlugClicked} />
+        ),
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
@@ -518,7 +539,7 @@ export function getColumns(
       hasWishList && {
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList(item)?.notes,
+        value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
         filter: (value) => `wishlistnotes:"${value}"`,
       },
@@ -527,7 +548,15 @@ export function getColumns(
   return columns;
 }
 
-function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }) {
+function PerksCell({
+  item,
+  traitsOnly,
+  onPlugClicked,
+}: {
+  item: DimItem;
+  traitsOnly?: boolean;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+}) {
   if (!item.sockets) {
     return null;
   }
@@ -535,9 +564,11 @@ function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }
   let sockets = item.sockets.categories.flatMap((c) =>
     getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
+        !isKillTrackerSocket(s) &&
+        !isEmptyArmorModSocket(s) &&
         s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
             (item.isExotic || // ignore archetype if it's not exotic
               !s.plugged.plugDef.itemCategoryHashes?.includes(
@@ -573,8 +604,19 @@ function PerksCell({ item, traitsOnly }: { item: DimItem; traitsOnly?: boolean }
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
+                  [styles.perkSelectable]: socket.plugOptions.length > 1,
                 })}
                 data-perk-name={p.plugDef.displayProperties.name}
+                onClick={
+                  onPlugClicked && socket.plugOptions.length > 1
+                    ? (e: React.MouseEvent) => {
+                        if (!e.shiftKey) {
+                          e.stopPropagation();
+                          onPlugClicked({ item, socket, plugHash: p.plugDef.hash });
+                        }
+                      }
+                    : undefined
+                }
               >
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />

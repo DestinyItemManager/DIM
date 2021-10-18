@@ -1,6 +1,8 @@
+import { trackTriumph } from 'app/dim-api/basic-actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useState } from 'react';
@@ -24,8 +26,6 @@ export default function LockButton({ type, item, children }: Props) {
       return;
     }
 
-    setLocking(true);
-
     let state = false;
     if (type === 'lock') {
       state = !item.locked;
@@ -33,6 +33,13 @@ export default function LockButton({ type, item, children }: Props) {
       state = !item.tracked;
     }
 
+    if (item.pursuit?.recordHash) {
+      dispatch(trackTriumph({ recordHash: item.pursuit.recordHash, tracked: state }));
+      hideItemPopup();
+      return;
+    }
+
+    setLocking(true);
     try {
       await dispatch(setItemLockState(item, state, type));
     } finally {

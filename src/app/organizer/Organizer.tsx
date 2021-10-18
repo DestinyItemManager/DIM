@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key, react/prop-types */
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -54,7 +53,7 @@ export default function Organizer({ account }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSelector);
   const searchQuery = useSelector(querySelector);
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   const history = useHistory();
   const location = useLocation();
