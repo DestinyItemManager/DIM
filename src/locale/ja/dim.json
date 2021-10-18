@@ -186,6 +186,7 @@
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
     "InLoadout": "装備品に含まれるアイテムを表示",
     "Infusable": "融合可能なアイテムを表示",
+    "InfusionFodder": "グリマーだけで同じアイテムの低いパワーに融合できるアイテムを表示",
     "IsSunset": "リタイアし、最大パワーとして融合が出来なくなったアイテムを表示。",
     "ItemHash": "与えられた保管庫アイテムハッシュを持つアイテムを表示。上級ユーザー向け。",
     "ItemId": "与えられた保管庫アイテム ID を持つアイテムを表示。上級ユーザー向け。",
@@ -432,7 +433,6 @@
     "AscendantShardDetails": "すべてのアイテムについて、オプティマイザーはマスターワークのステータスボーナスとエネルギーレベルを想定します。{{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "レジェンダリーアイテムの場合、オプティマイザーはマスターワーク済みのステータスボーナスとエネルギーレベルを想定します。{{elementLockDescription}}\n\n{{energyLevel}} 以下のエキゾチックアイテムの場合、オプティマイザーは {{energyLevel}} のエネルギーを想定し、mod を割り当てるために必要に応じてエレメントを交換します。エキゾチックは現在のステータスを使用します。\n\nエネルギーが{{energyLevel}} 以上のエキゾチックアイテムやマスターワーク済みのレジェンドアイテムは既存のエレメントを使用します。",
     "AscendantShardNotMasterworkedDetails": "全アイテムについて、オプティマイザーはマスターワーク済みのステータスボーナスとエネルギーレベルを想定します。{{elementLockDescription}}\n\n現在マスターワーク済みのアイテムは、その既存のエレメントを使用します。",
-    "ChooseAlternate": "同じステータスを持つ別のアイテムを選択してください:",
     "ChooseAlternateTitle": "別のアイテムを選択してください。",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
@@ -448,6 +448,9 @@
     "LockElement": "要素をロック",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
+    "MaxTier": "最大 {{tier}}",
+    "MissingClass": "ビルド: {{className}}",
+    "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
     "NewEmptyLoadout": "新規のロードアウトを作成する",
     "NoBuildsFoundWithReasons": "ビルドが見つかりません。これは通常、DIMが選択したすべてのMODをどのアーマーセットにも割り当てられなかったためです。",
     "NoComparableItems": "このロードアウトには、同等のアイテムはありません。最適化セットを保存すると、このロードアウトにアイテムが追加されます。",
@@ -592,7 +595,6 @@
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
-    "EquipWithName": "{{character}} に装備させる",
     "Infuse": "融合する",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
@@ -614,7 +616,6 @@
     "Store": "保存",
     "StoreWithName": "{{character}} が装備しています",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -791,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Mod を挿入",
-    "InsertPlugError": "Mod を挿入できません"
+    "InsertPlugError": "Mod を挿入できません",
+    "SelectModButton": "Mod を選択"
   },
   "Stats": {
     "BarricadeCooldown": "グレネードのクールダウン",

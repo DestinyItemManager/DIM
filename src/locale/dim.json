@@ -17,20 +17,6 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Active Mode",
-    "ChangeFilter": "Change Filter",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "Loading": "Current Activity",
-    "NoQuests": "You're not tracking any quests",
-    "NoSearches": "Create saved searches and filter them here.",
-    "Offline": "Offline",
-    "Pursuits": "Pursuits",
-    "SuggestedBounties": "Suggested Bounties"
-  },
   "Activities": {
     "Activities": "Activities",
     "Hard": "Hard",

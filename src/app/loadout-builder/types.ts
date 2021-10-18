@@ -1,6 +1,5 @@
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import { armorBuckets } from 'app/search/d2-known-values';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -51,14 +50,6 @@ export type LockableBucketHash =
 
 export const LockableBucketHashes = Object.values(LockableBuckets) as LockableBucketHash[];
 
-export const bucketsToCategories = {
-  [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
-  [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
-  [LockableBuckets.chest]: armor2PlugCategoryHashesByName.chest,
-  [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
-  [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
-};
-
 export type ArmorStatHashes =
   | StatHashes.Mobility
   | StatHashes.Resilience
@@ -76,9 +67,3 @@ export type ArmorStats = { [statHash in ArmorStatHashes]: number };
  * TODO: Find a way to generate this in d2ai.
  */
 export const generalSocketReusablePlugSetHash = 3559124992;
-
-/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
-export const activityModPlugCategoryHashes = [
-  ...raidModPlugCategoryHashes,
-  PlugCategoryHashes.EnhancementsSeasonMaverick,
-];

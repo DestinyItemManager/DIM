@@ -11,7 +11,7 @@ export interface InventoryBucket {
   readonly accountWide: boolean;
   readonly category: BucketCategory;
   readonly type?: DimBucketType;
-  readonly sort?: string;
+  readonly sort?: D2BucketCategory | D1BucketCategory | 'Unknown';
   vaultBucket?: InventoryBucket;
   // TODO: how to handle inPostmaster, etc? should probably be a function
   inPostmaster?: boolean;
@@ -21,6 +21,9 @@ export interface InventoryBucket {
   inProgress?: boolean;
 }
 
+/** The major toplevel sections of the inventory. "Progress" is only in D1. */
+export type D2BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Inventory';
+export type D1BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Progress';
 export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTypes;
 
 export interface InventoryBuckets {

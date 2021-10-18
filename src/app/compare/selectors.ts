@@ -64,6 +64,8 @@ export const compareOrganizerLinkSelector = createSelector(
     }
     return `/${account.membershipId}/d${
       account.destinyVersion
-    }/organizer?category=${session.itemCategoryHashes.join('~')}&search=${session.query}`;
+    }/organizer?category=${session.itemCategoryHashes.join('~')}&search=${encodeURIComponent(
+      session.query
+    )}`;
   }
 );

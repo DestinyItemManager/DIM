@@ -1,14 +1,19 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import {
+  activityModPlugCategoryHashes,
+  bucketsToCategories,
+  getItemEnergyType,
+  isModEnergyValid,
+} from 'app/loadout/mod-utils';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { generateModPermutations } from './mod-permutations';
-import { activityModPlugCategoryHashes, bucketsToCategories } from './types';
-import { canSwapEnergyFromUpgradeSpendTier, upgradeSpendTierToMaxEnergy } from './utils';
+import { generateModPermutations } from '../loadout/mod-permutations';
 
 interface ItemEnergy {
   /** The energy currently used by slot dependant mods. */
@@ -74,73 +79,6 @@ function calculateEnergyChange(
   const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
 
   return finalEnergy === itemEnergy.originalType ? energyInvested : energyUsedAndWasted;
-}
-
-/**
- * This is used to figure out the energy type of an item used in mod assignments.
- *
- * It first considers if there are bucket specific mods applied, and returns that
- * energy type if it's not Any. If not then it considers armour upgrade options
- * and returns the appropriate energy type from that.
- *
- * It can return the Any energy type if armour upgrade options allow energy changes.
- */
-function getItemEnergyType(
-  defs: D2ManifestDefinitions,
-  item: DimItem,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean,
-  bucketSpecificMods?: PluggableInventoryItemDefinition[]
-) {
-  if (!item.energy) {
-    return DestinyEnergyType.Any;
-  }
-
-  const bucketSpecificModType = bucketSpecificMods?.find(
-    (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-  )?.plug.energyCost?.energyType;
-
-  // if we find bucket specific mods with an energy type we have to use that
-  if (bucketSpecificModType) {
-    return bucketSpecificModType;
-  }
-
-  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
-    ? DestinyEnergyType.Any
-    : item.energy.energyType;
-}
-
-function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnergyType) {
-  return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
-}
-
-/**
- * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
- *
- * This checks that the summed mod energies are within the derived mod capacity for
- * an item (derived from armour upgrade options). It also ensures that all the mod
- * energy types align and that the mod can be slotted into an item socket based on
- * item energy type.
- */
-function isModEnergyValid(
-  itemEnergy: ItemEnergy,
-  modToAssign: PluggableInventoryItemDefinition,
-  ...assignedMods: (PluggableInventoryItemDefinition | null)[]
-) {
-  const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
-  const modToAssignType = modToAssign.plug.energyCost?.energyType || DestinyEnergyType.Any;
-  const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
-
-  return (
-    itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity &&
-    energyTypesAreCompatible(itemEnergy.derivedType, modToAssignType) &&
-    assignedMods.every((mod) =>
-      energyTypesAreCompatible(
-        modToAssignType,
-        mod?.plug.energyCost?.energyType || DestinyEnergyType.Any
-      )
-    )
-  );
 }
 
 /**
@@ -340,21 +278,4 @@ export function getModAssignments(
   }
 
   return mergedResults;
-}
-
-// TODO (ryan) This is a super lazy way of getting unassigned mods but doing it properly
-// is hard. To do it properly we need to check every possible combination and even if its
-// not a valid fit for the mods, we need to calculate how good it is (least number of unassigned?).
-// This will make all slot independent mods unassigned if it doesn't find a valid fit.
-export function getAssignedAndUnassignedMods(
-  items: DimItem[],
-  mods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions | undefined,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean
-): [ReturnType<typeof getModAssignments>, PluggableInventoryItemDefinition[]] {
-  const assignedMods = getModAssignments(items, mods, defs, upgradeSpendTier, lockItemEnergyType);
-  const flatAssignedMods = Array.from(assignedMods.values()).flat();
-  const unassignedMods = mods.filter((mod) => !flatAssignedMods.includes(mod));
-  return [assignedMods, unassignedMods];
 }

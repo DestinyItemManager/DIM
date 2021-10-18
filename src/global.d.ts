@@ -20,8 +20,6 @@ declare const $featureFlags: {
   issueBanner: boolean;
   /** Show the triage tab in the item popup */
   triage: boolean;
-  /** Enable alt inv mode */
-  altInventoryMode: boolean;
   /** Advanced Write Actions (inserting mods) */
   awa: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */

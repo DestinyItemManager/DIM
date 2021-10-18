@@ -78,7 +78,7 @@ function Records({
   destiny2CoreSettings,
 }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
-  useLoadStores(account, Boolean(profileResponse));
+  useLoadStores(account);
   const setSetting = useSetSetting();
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr

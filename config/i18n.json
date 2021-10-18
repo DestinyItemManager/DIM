@@ -1050,20 +1050,5 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  },
-  "ActiveMode": {
-    "ButtonOn": "Active Mode",
-    "Beta": "BETA",
-    "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests",
-    "Loadouts": "Loadouts",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here.",
-    "SuggestedBounties": "Suggested Bounties",
-    "Offline": "Offline",
-    "Loading": "Current Activity"
   }
 }
