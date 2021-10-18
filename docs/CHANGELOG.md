@@ -1,5 +1,7 @@
 ## Next
 
+## 6.87.0 <span class="changelog-date">(2021-10-17)</span>
+
 * Moved "Tracked Triumphs" section to the top of the Progress page.
 * You can now track and untrack Seasonal Challenges from the Progress page.
 * Loadout Optimizer now correctly handles nightmare mods.
