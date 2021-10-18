@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimAdjustedItemPlug } from '../compare/types';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
@@ -19,16 +18,10 @@ interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  updateSocketComparePlug?(value: { item: DimItem; socket: DimSocket; plug: DimPlug }): void;
-  adjustedItemPlugs?: DimAdjustedItemPlug;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
 
-export default function ItemSocketsGeneral({
-  item,
-  minimal,
-  updateSocketComparePlug,
-  adjustedItemPlugs,
-}: Props) {
+export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Props) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
@@ -36,11 +29,11 @@ export default function ItemSocketsGeneral({
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
       setSocketInMenu(socket);
-    } else if (updateSocketComparePlug) {
-      updateSocketComparePlug({
+    } else {
+      onPlugClicked?.({
         item,
         socket,
-        plug,
+        plugHash: plug.plugDef.hash,
       });
     }
   };
@@ -53,14 +46,13 @@ export default function ItemSocketsGeneral({
 
   let categories = item.sockets.categories.filter(
     (c) =>
-      // hide if there's no sockets in this category
-      c.socketIndexes.length > 0 &&
+      // hide socket category if there's no sockets in this category after
+      // removing the exotic perk socket, which we handle specially
+      c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // Hidden sockets for intrinsic armor stats
-      c.category.uiCategoryStyle !== 2251952357 &&
-      // we handle exotic perk specially too
-      (!exoticArmorPerkSocket || !c.socketIndexes.includes(exoticArmorPerkSocket?.socketIndex))
+      c.category.uiCategoryStyle !== 2251952357
   );
   if (minimal) {
     // Only show the first of each style of category
@@ -102,6 +94,7 @@ export default function ItemSocketsGeneral({
           <div className="item-sockets">
             {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
               (socketInfo) =>
+                socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
                 socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                   <Socket
                     key={socketInfo.socketIndex}
@@ -109,7 +102,6 @@ export default function ItemSocketsGeneral({
                     socket={socketInfo}
                     wishlistRoll={wishlistRoll}
                     onClick={handleSocketClick}
-                    adjustedPlug={adjustedItemPlugs?.[socketInfo.socketIndex]}
                   />
                 )
             )}
@@ -123,6 +115,7 @@ export default function ItemSocketsGeneral({
             item={item}
             socket={socketInMenu}
             onClose={() => setSocketInMenu(null)}
+            onPlugSelected={onPlugClicked}
           />,
           document.body
         )}

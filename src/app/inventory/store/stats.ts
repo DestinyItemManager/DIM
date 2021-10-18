@@ -98,9 +98,9 @@ type StatLookup = { [statHash: number]: DimStat | undefined };
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
+  defs: D2ManifestDefinitions,
   createdItem: DimItem,
-  itemDef: DestinyInventoryItemDefinition,
-  defs: D2ManifestDefinitions
+  itemDef = defs.InventoryItem.get(createdItem.hash)
 ) {
   if (!itemDef.stats || !itemDef.stats.statGroupHash) {
     return null;

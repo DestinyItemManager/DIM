@@ -56,6 +56,7 @@
     "css-modules",
     "radar"
   ],
+  "reportUnusedDisableDirectives": true,
   "rules": {
     "no-console": "error",
     "no-debugger": "error",
@@ -135,7 +136,16 @@
         "checksVoidReturn": false
       }
     ],
-    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          "BigInt": "BigInt isn't supported in old versions (pre-14) of Safari",
+          "bigint": "BigInt isn't supported in old versions (pre-14) of Safari"
+        },
+        "extendDefaults": false
+      }
+    ],
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

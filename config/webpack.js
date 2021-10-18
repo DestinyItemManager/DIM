@@ -27,7 +27,7 @@ const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[md5:contenthash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
 
 const packageJson = require('../package.json');
 
@@ -399,16 +399,14 @@ module.exports = (env) => {
         '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
         '$featureFlags.triage': JSON.stringify(env.dev),
-        // Drag and drop mobile inspect
-        '$featureFlags.mobileInspect': JSON.stringify(env.release),
-        // Enable alternative inventory mode
-        '$featureFlags.altInventoryMode': JSON.stringify(false),
         // Alternate perks display on item popup
         '$featureFlags.newPerks': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
+        // Show achievable stat ranges in LO
+        '$featureFlags.loStatRanges': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

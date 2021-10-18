@@ -186,6 +186,7 @@
     "HoldsMod": "По Сезонам Модификаторов, доступных в специальной ячейке брони.",
     "InLoadout": "В Наборе.",
     "Infusable": "Доступные для Синтеза.",
+    "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "По item hash предмета. Для тех, кто знает что делает.",
     "ItemId": "По item ID предмета. Для тех, кто знает что делает.",
@@ -202,7 +203,8 @@
     "Locked": "Заблокированные/разблокированные.",
     "Masterwork": "С указанным модификатором или уровнем Абсолюта.",
     "MasterworkKills": "По значению счётчика убийств.",
-    "MaxPower": "С максимумом Силы для каждого слота и класса.",
+    "MaxPower": "Shows the items at the highest power per slot.",
+    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "ModSlot": "Броню с ячейкой модификатора конкретного сезона.",
     "Mods": {
       "Y2": "Оружие с Модификатором (!не сезонного артефакта).",
@@ -431,7 +433,6 @@
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
-    "ChooseAlternate": "Предметы с такими же характеристиками:",
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
     "ConfirmOverwrite": "Выбранные предметы заменят аналоги в Наборе \"{{name}}\". Продолжаем? ",
@@ -447,6 +448,9 @@
     "LockElement": "Lock Element",
     "LockEquipped": "Надетые",
     "LockItem": "Обязательные Предметы",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build is for: {{className}}",
+    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Новый Набор",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
@@ -461,7 +465,7 @@
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Обработка наборов для\n{{character}}",
+    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Сохранить как",
     "SelectArmorUpgrade": "Select Armor Upgrades",
     "SelectAssumedArmorUpgrade": "Select Assumed Armor Upgrades",
@@ -586,11 +590,11 @@
     "AddNote": "Добавить заметку",
     "AddToLoadout": "в Набор",
     "All": "Все",
+    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
-    "EquipWithName": "Надеть на {{character}}",
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Заблокировать {{itemType}}",
@@ -612,7 +616,6 @@
     "Store": "Передать",
     "StoreWithName": "Передаем {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
       "QuestProgress": "Этап {{questStepNum}} из {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -763,6 +766,7 @@
     "Items": "Предметы",
     "Language": "Язык",
     "LogOut": "Выйти",
+    "Masterworked": "Masterworked",
     "Ratings": "Рейтинги",
     "ReloadDIM": "Обновите [F5] приложения для смены языка",
     "ResetToDefault": "Сбросить",
@@ -788,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Выбрать модификатор",
-    "InsertPlugError": "Не удалось установить модификатор"
+    "InsertPlugError": "Не удалось установить модификатор",
+    "SelectModButton": "Select Mod"
   },
   "Stats": {
     "BarricadeCooldown": "Время восстановления Баррикады",

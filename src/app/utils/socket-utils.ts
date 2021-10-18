@@ -9,17 +9,15 @@ import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
 
-export function getMasterworkSocketHashes(
+function getSocketHashesByCategoryStyle(
   sockets: DimSockets,
   style: DestinySocketCategoryStyle
 ): number[] {
-  const masterworkSocketCategory = sockets.categories.find(
+  const socketCategory = sockets.categories.find(
     (category) => category.category.categoryStyle === style
   );
 
-  return (
-    (masterworkSocketCategory && getPlugHashesFromCategory(sockets, masterworkSocketCategory)) || []
-  );
+  return (socketCategory && getPlugHashesFromCategory(sockets, socketCategory)) || [];
 }
 
 function getPlugHashesFromCategory(sockets: DimSockets, category: DimSocketCategory) {
@@ -32,29 +30,39 @@ export function getSocketsWithStyle(
   sockets: DimSockets,
   style: DestinySocketCategoryStyle
 ): DimSocket[] {
-  const masterworkSocketHashes = getMasterworkSocketHashes(sockets, style);
+  const socketHashes = getSocketHashesByCategoryStyle(sockets, style);
   return sockets.allSockets.filter(
-    (socket) => socket.plugged && masterworkSocketHashes.includes(socket.plugged.plugDef.hash)
+    (socket) => socket.plugged && socketHashes.includes(socket.plugged.plugDef.hash)
   );
 }
 
-/** whether a socket is a mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-export function isModSocket(socket: DimSocket) {
+/** Is this socket a weapon's masterwork socket */
+export function isWeaponMasterworkSocket(socket: DimSocket) {
+  return (
+    socket.plugged?.plugDef.plug &&
+    (socket.plugged.plugDef.plug.uiPlugLabel === 'masterwork' ||
+      socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
+      socket.plugged.plugDef.plug.plugCategoryIdentifier.endsWith('_masterwork'))
+  );
+}
+
+/** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
+function isArmorModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
 }
 
 /** isModSocket and contains its default plug */
-export function isEmptyModSocket(socket: DimSocket) {
+export function isEmptyArmorModSocket(socket: DimSocket) {
   return (
-    isModSocket(socket) &&
+    isArmorModSocket(socket) &&
     socket.socketDefinition.singleInitialItemHash === socket.plugged?.plugDef.hash
   );
 }
 
 /** isModSocket and contains something other than its default plug */
-export function isUsedModSocket(socket: DimSocket) {
+export function isUsedArmorModSocket(socket: DimSocket) {
   return (
-    isModSocket(socket) &&
+    isArmorModSocket(socket) &&
     socket.socketDefinition.singleInitialItemHash !== socket.plugged?.plugDef.hash
   );
 }

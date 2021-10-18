@@ -186,6 +186,7 @@
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
+    "InfusionFodder": "Mostra gli oggetti che potrebbero essere infusi in versioni con Potere più basso dello stesso oggetto usando solo lumen.",
     "IsSunset": "Mostra gli oggetti che sono stati resi obsoleti e non possono essere infusi al livello massimo di Potere.",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
     "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
@@ -202,7 +203,8 @@
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "Masterwork": "Mostra gli oggetti basandosi sulla loro statistica o livello di Prodigio.",
     "MasterworkKills": "Mostra gli oggetti in base al loro contatore uccisioni prodigioso.",
-    "MaxPower": "Mostra gli oggetti che potrebbero massimizzare il Potere per ogni personaggio.",
+    "MaxPower": "Mostra gli oggetti al livello di Potere più alto per ogni slot.",
+    "MaxPowerLoadout": "Mostra gli oggetti nel loadout che potrebbero massimizzare il tuo livello di Potere per ciascun personaggio.",
     "ModSlot": "Mostra armature con uno specifico slot Modifica stagionale.",
     "Mods": {
       "Y2": "Mostra gli oggetti con una Modifica anno 2 inserita.",
@@ -431,11 +433,10 @@
     "AscendantShardDetails": "Per tutti gli oggetti, l'Ottimizzatore presupporrà i bonus alle statistiche del prodigio e livello di energia. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Per gli oggetti Leggendari, l'Ottimizzatore presupporrà le statistiche prodigiose e livello di energia. {{elementLockDescription}}\n\nPer gli oggetti Esotici a {{energyLevel}} o inferiore, l'Ottimizzatore presupporrà {{energyLevel}} energia e cambierà l'elemento se necessario per assegnare Modifiche. Gli Esotici useranno le loro statistiche attuali.\n\nGli oggetti Leggendari ed Esotici attuali con prodigio sopra {{energyLevel}} energia useranno il loro elemento energetico attuale.",
     "AscendantShardNotMasterworkedDetails": "Per tutti gli oggetti, l'Ottimizzatore presupporrà statistiche prodigiose bonus e livello di energia. {{elementLockDescription}}\n\nGli oggetti prodigiosi utilizzeranno il loro elemento energetico attuale.",
-    "ChooseAlternate": "Scegli un altro oggetto con le stesse statistiche:",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nel loadout \"{{name}}\" con questo nuovo set di armature?",
-    "CopiedBuild": "Copiate le impostazioni della build negli appunti",
+    "CopiedBuild": "Impostazioni della build copiate negli appunti",
     "CreateLoadout": "Salva loadout",
     "ElementLockedDescription": "Gli oggetti utilizzeranno il loro elemento attuale.",
     "ElementNotLockedDescription": "Gli oggetti cambieranno elemento se necessario per assegnare Modifiche.",
@@ -447,6 +448,9 @@
     "LockElement": "Blocca Elemento",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
+    "MaxTier": "Max {{tier}}",
+    "MissingClass": "Build per: {{className}}",
+    "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFoundWithReasons": "Nessuna build trovata. Questo succede tipicamente perché DIM non può assegnare tutte le Modifiche selezionate a nessun set di armature.",
     "NoComparableItems": "Questo loadout non ha oggetti confrontabili. Salvare il Set Ottimizzatore aggiungerà gli oggetti a questo loadout.",
@@ -461,7 +465,7 @@
     "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e imposta quelle che non ti interessano su \"Ignora\".",
     "OptimizerExplanationUpgrades": "Seleziona su quali potenziamenti armatura l'Ottimizzatore Loadout può spendere materiali. Potrebbe suggerire di renderla prodigiosa per aumentare le statistiche, oppure potenziamenti di energia e cambio di elemento per adattarla alle Modifiche richieste.",
     "OptimizerSet": "Set Ottimizzatore",
-    "ProcessingSets": "Elaborazione set per \n{{character}}",
+    "ProcessingSets": "Elaborazione set per\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Salva come",
     "SelectArmorUpgrade": "Seleziona potenziamenti armatura",
     "SelectAssumedArmorUpgrade": "Seleziona potenziamenti armatura presunti",
@@ -586,11 +590,11 @@
     "AddNote": "Aggiungi una nota",
     "AddToLoadout": "Loadout",
     "All": "Tutto",
+    "CannotCurrentlyRoll": "Questo perk non può essere ottenuto sulla versione attuale di questo oggetto.",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
-    "EquipWithName": "Equipaggia su {{character}}",
     "Infuse": "Infondi",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
@@ -612,7 +616,6 @@
     "Store": "Sposta",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
-      "Gear": "{{light}} {{statName}} {{typeName}} {{classType}}",
       "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
@@ -763,6 +766,7 @@
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",
+    "Masterworked": "Grado Prodigio",
     "Ratings": "Giudizi",
     "ReloadDIM": "Ricarica DIM per completare il cambio di lingua",
     "ResetToDefault": "Ripristina",
@@ -788,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Inserisci Modifica",
-    "InsertPlugError": "Impossible inserire Modifica"
+    "InsertPlugError": "Impossible inserire Modifica",
+    "SelectModButton": "Seleziona Modifiche"
   },
   "Stats": {
     "BarricadeCooldown": "Recupero Barricata",

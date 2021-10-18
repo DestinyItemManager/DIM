@@ -186,6 +186,7 @@
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InLoadout": "Muestra objetos que estén incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
+    "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
     "IsSunset": "Muestra objetos que han sido caducados y ya no pueden ser infundidos al poder máximo.",
     "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
     "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
@@ -202,7 +203,8 @@
     "Locked": "Muestra objetos basado en su estado de bloqueo.",
     "Masterwork": "Muestra objetos basados en su nivel de estadística de Obra Maestra o nivel de Obra Maestra.",
     "MasterworkKills": "Muestra objetos basados en su registro de contador de bajas de Obra Maestra.",
-    "MaxPower": "Muestra objetos que maximizarían el Nivel de Poder para cada clase de personaje.",
+    "MaxPower": "Muestra los objetos en el nivel más alto de poder por ranura.",
+    "MaxPowerLoadout": "Muestra los objetos en la equipación que podrían maximizar tu Poder de Luz para cada clase de personaje.",
     "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
     "Mods": {
       "Y2": "Muestra objetos con un modificador de Año 2 aplicado.",
@@ -431,7 +433,6 @@
     "AscendantShardDetails": "Para todos los objetos, el Optimizador asumirá los bonus de estadística de Obra Maestra y el nivel de energía. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Para los objetos legendarios, el Optimizador asumirá los bonus de estadística de Obra Maestra y el nivel de energía. {{elementLockDescription}}\n\nPara los objetos Exóticos a {{energyLevel}} o por debajo, el Optimizador asumirá {{energyLevel}} energía y cambiará el elemento según sea necesario para asignar modificadores. Los exóticos usarán sus estadísticas acutales.\n\nLos objetos de leyenda y exóticos que ya sean Obras Maestras Completas por encima de {{energyLevel}} de energía usarán su elemento existente.",
     "AscendantShardNotMasterworkedDetails": "Para todos los objetos, el Optimizador asumirá los bonus de estadística de Obra Maestra Completa y el nivel de energía. {{elementLockDescription}}\n\nLos objetos que ya sean Obra Maestra Completa usarán su elemento existente.",
-    "ChooseAlternate": "Elige otro objeto con las mismas estadísticas:",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
@@ -447,6 +448,9 @@
     "LockElement": "Bloquear Elemento",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
+    "MaxTier": "Máximo {{tier}}",
+    "MissingClass": "La equipación es para: {{className}}",
+    "MissingClassDescription": "La equipación que estás intentando visualizar es para una clase de personaje que no tienes.",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFoundWithReasons": "No se encontraron equipaciones. Estos normalmente es porque DIM no pudo asignar todos los modificadores seleccionados a ningún conjunto de armadura.",
     "NoComparableItems": "Esta equipación no tiene objetos comparables. Guardar el Set Optimizador añadirá los objetos a esta equipación.",
@@ -461,7 +465,7 @@
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba, y el set de estadísticas que no te importen a Ignorar.",
     "OptimizerExplanationUpgrades": "Selecciona en qué Actualizaciones de Armadura puede gastar gastar el Optimizador de Equipaciones los materiales. Podría sugerir Obra Maestra Completa para aumentar las estadísticas, o mejoras de energía y cambios de elemento para encajar tus modificadores solicitados.",
     "OptimizerSet": "Set Optimizador",
-    "ProcessingSets": "Procesando equipaciones para {{character}}",
+    "ProcessingSets": "Procesando sets para {{character}} ({{remainingTime}}segundos)",
     "SaveAs": "Guardar como",
     "SelectArmorUpgrade": "Seleccionar Mejoras de Armadura",
     "SelectAssumedArmorUpgrade": "Seleccionar Mejoras de Armadura Asumidas",
@@ -586,11 +590,11 @@
     "AddNote": "Añadir una nota",
     "AddToLoadout": "Equipación",
     "All": "Todo",
+    "CannotCurrentlyRoll": "Esta ventaja no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
-    "EquipWithName": "Equipar en {{character}}",
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
@@ -612,7 +616,6 @@
     "Store": "Almacenar",
     "StoreWithName": "Almacenar en {{character}}",
     "Subtitle": {
-      "Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
       "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
@@ -763,6 +766,7 @@
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LogOut": "Cerrar sesión",
+    "Masterworked": "Obra Maestra Completa",
     "Ratings": "Calificaciones",
     "ReloadDIM": "Recarga DIM para terminar de cambiar el idioma",
     "ResetToDefault": "Reiniciar",
@@ -788,7 +792,8 @@
   },
   "Sockets": {
     "InsertModButton": "Insertar Modificador",
-    "InsertPlugError": "No se pudo insertar modificador"
+    "InsertPlugError": "No se pudo insertar modificador",
+    "SelectModButton": "Selecciona Modificadores"
   },
   "Stats": {
     "BarricadeCooldown": "Enfriamiento de Barricada",

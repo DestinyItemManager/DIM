@@ -72,7 +72,8 @@ export function statFiltersFromLoadoutParamaters(params: LoadoutParameters): Sta
       ? { min: c.minTier ?? 0, max: c.maxTier ?? 10, ignored: false }
       : { min: 0, max: 10, ignored: true };
     return memo;
-  }, {}) as StatFilters;
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+  }, {} as StatFilters);
 }
 
 export function lockedModsFromLoadoutParameters(

@@ -1,5 +1,5 @@
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
-import { StatHashes } from 'data/d2/generated-enums';
+import { armorBuckets } from 'app/search/d2-known-values';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 
 export interface MinMax {
@@ -34,29 +34,21 @@ export interface ArmorSet {
 }
 
 export type ItemsByBucket = Readonly<{
-  [bucketHash: number]: readonly DimItem[];
+  [bucketHash in LockableBucketHash]: readonly DimItem[];
 }>;
 
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = {
-  helmet: armorBuckets.helmet,
-  gauntlets: armorBuckets.gauntlets,
-  chest: armorBuckets.chest,
-  leg: armorBuckets.leg,
-  classitem: armorBuckets.classitem,
-};
+export const LockableBuckets = armorBuckets;
+export type LockableBucketHash =
+  | BucketHashes.Helmet
+  | BucketHashes.Gauntlets
+  | BucketHashes.ChestArmor
+  | BucketHashes.LegArmor
+  | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets);
-
-export const bucketsToCategories = {
-  [LockableBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
-  [LockableBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
-  [LockableBuckets.chest]: armor2PlugCategoryHashesByName.chest,
-  [LockableBuckets.leg]: armor2PlugCategoryHashesByName.leg,
-  [LockableBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
-};
+export const LockableBucketHashes = Object.values(LockableBuckets) as LockableBucketHash[];
 
 export type ArmorStatHashes =
   | StatHashes.Mobility
@@ -71,7 +63,7 @@ export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
- * The resuablePlugSetHash from armour 2.0's general socket.
+ * The reusablePlugSetHash from armour 2.0's general socket.
  * TODO: Find a way to generate this in d2ai.
  */
 export const generalSocketReusablePlugSetHash = 3559124992;

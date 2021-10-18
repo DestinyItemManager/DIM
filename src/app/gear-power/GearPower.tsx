@@ -2,6 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { locateItem } from 'app/inventory/locate-item';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
@@ -14,8 +15,8 @@ import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
-const bucketClassNames = {
-  Kinetic: styles.kinetic,
+const bucketClassNames: Partial<Record<DimItem['type'], string>> = {
+  KineticSlot: styles.kinetic,
   Energy: styles.energy,
   Power: styles.power,
   Helmet: styles.helmet,

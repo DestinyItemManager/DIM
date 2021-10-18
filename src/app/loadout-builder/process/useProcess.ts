@@ -3,6 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { keyByStatHash } from 'app/inventory/store/stats';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import { bucketsToCategories } from 'app/loadout/mod-utils';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -10,13 +12,13 @@ import {
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { releaseProxy, wrap } from 'comlink';
+import { proxy, releaseProxy, wrap } from 'comlink';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import { ArmorSet, bucketsToCategories, ItemsByBucket, StatFilters, StatRanges } from '../types';
-import { upgradeSpendTierToMaxEnergy } from '../utils';
+import { ArmorSet, ItemsByBucket, StatFilters, StatRanges } from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -26,7 +28,7 @@ import {
 
 interface ProcessState {
   processing: boolean;
-  resultStoreId?: string;
+  resultStoreId: string;
   result: {
     sets: ArmorSet[];
     combos: number;
@@ -41,8 +43,8 @@ interface ProcessState {
  */
 // TODO: introduce params object
 export function useProcess(
-  defs: D2ManifestDefinitions | undefined,
-  selectedStore: DimStore | undefined,
+  defs: D2ManifestDefinitions,
+  selectedStore: DimStore,
   filteredItems: ItemsByBucket,
   lockedMods: PluggableInventoryItemDefinition[],
   upgradeSpendTier: UpgradeSpendTier,
@@ -50,9 +52,10 @@ export function useProcess(
   statOrder: number[],
   statFilters: StatFilters
 ) {
+  const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
-    resultStoreId: selectedStore?.id,
+    resultStoreId: selectedStore.id,
     result: null,
   });
 
@@ -80,10 +83,11 @@ export function useProcess(
     const { worker, cleanup } = createWorker();
     cleanupRef.current = cleanup;
 
+    setRemainingTime(0);
     setState((state) => ({
       processing: true,
-      resultStoreId: selectedStore?.id,
-      result: selectedStore?.id === state.resultStoreId ? state.result : null,
+      resultStoreId: selectedStore.id,
+      result: selectedStore.id === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
     }));
 
@@ -94,11 +98,17 @@ export function useProcess(
         mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
-    const processItems: ProcessItemsByBucket = {};
+    const processItems: ProcessItemsByBucket = {
+      [BucketHashes.Helmet]: [],
+      [BucketHashes.Gauntlets]: [],
+      [BucketHashes.ChestArmor]: [],
+      [BucketHashes.LegArmor]: [],
+      [BucketHashes.ClassArmor]: [],
+    };
     const itemsById = new Map<string, DimItem[]>();
 
-    for (const [key, items] of Object.entries(filteredItems)) {
-      processItems[key] = [];
+    for (const [bucketHash, items] of Object.entries(filteredItems)) {
+      processItems[bucketHash] = [];
 
       const groupedItems = groupItems(
         defs,
@@ -113,7 +123,7 @@ export function useProcess(
         const item = group.length ? group[0] : null;
 
         if (item && defs) {
-          processItems[key].push(
+          processItems[bucketHash].push(
             mapDimItemToProcessItem(
               defs,
               item,
@@ -136,10 +146,11 @@ export function useProcess(
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedMods, selectedStore?.classType),
+        getTotalModStatChanges(lockedMods, selectedStore.classType),
         lockedProcessMods,
         statOrder,
-        statFilters
+        statFilters,
+        proxy(setRemainingTime)
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
         infoLog(
@@ -172,13 +183,14 @@ export function useProcess(
     filteredItems,
     lockItemEnergyType,
     lockedMods,
-    selectedStore,
+    selectedStore.classType,
+    selectedStore.id,
     statFilters,
     statOrder,
     upgradeSpendTier,
   ]);
 
-  return { result, processing };
+  return { result, processing, remainingTime };
 }
 
 function createWorker() {

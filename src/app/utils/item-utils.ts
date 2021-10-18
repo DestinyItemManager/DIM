@@ -138,12 +138,17 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
   );
 }
 
+// some DimItem.id are non-0 but represent vendor "instances" of an item
+// a real (owned) instanceId is a long int but in DIM it's a string
+// this checks DimItem.id for something that looks like an owned item
+const instancedId = /^\d+$/;
+
 /**
  * "Instanced" items are uniquely identifiable by an id, while "uninstanced" items don't have any such
  * identifier even though there may be multiple of them in a given location.
  */
 export function itemIsInstanced(item: DimItem): boolean {
-  return item.id !== '0';
+  return item.id !== '0' && instancedId.test(item.id);
 }
 
 /**
@@ -306,7 +311,7 @@ export function getItemYear(item: DimItem) {
  * This will return true if another arc mod is slotted or if we can pass in the
  * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
  *
- * If the plugHash isn't recognised then the default is to return true.
+ * If the plugHash isn't recognized then the default is to return true.
  */
 export function isPlugStatActive(
   item: DimItem,

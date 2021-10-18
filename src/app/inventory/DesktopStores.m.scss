@@ -1,14 +1,3 @@
-.activeModeHeader {
-  :global(.inventory-content) & {
-    background: radial-gradient(
-      circle at calc(50% - 305px) 70px,
-      hsl(240, 20%, 28%) 0%,
-      hsl(240, 27%, 12%) 100%
-    );
-    background-size: 100vw 100vh;
-  }
-}
-
 .buttons {
   display: grid;
   grid-template-rows: 46px 1fr;
@@ -22,7 +11,6 @@
   color: #9e9db5;
   font-size: 26px;
   width: min-content;
-  cursor: pointer;
   transition: transform 100ms ease-in-out, color 100ms ease-in-out;
   display: flex;
   align-items: center;

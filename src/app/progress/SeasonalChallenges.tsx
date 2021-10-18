@@ -1,3 +1,4 @@
+import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -16,6 +17,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import { recordToPursuitItem } from './milestone-items';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
@@ -56,6 +58,8 @@ export default function SeasonalChallenges({
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];
 
+  const trackedRecords = useSelector(trackedTriumphsSelector);
+
   const pursuits = allRecords
     .filter((r) => {
       // Don't show records that have been redeemed
@@ -68,7 +72,8 @@ export default function SeasonalChallenges({
         r,
         buckets,
         store,
-        seasonalChallengesPresentationNode.displayProperties.name
+        seasonalChallengesPresentationNode.displayProperties.name,
+        trackedRecords.includes(r.recordDef.hash)
       )
     );
 

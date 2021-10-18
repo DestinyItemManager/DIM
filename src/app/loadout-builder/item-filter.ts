@@ -1,13 +1,15 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { bucketsToCategories } from 'app/loadout/mod-utils';
 import { ItemFilter } from 'app/search/filter-types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { doEnergiesMatch } from './mod-utils';
 import {
-  bucketsToCategories,
   ExcludedItems,
   ItemsByBucket,
+  LockableBucketHash,
   LockableBucketHashes,
   PinnedItems,
 } from './types';
@@ -26,7 +28,15 @@ export function filterItems(
   lockItemEnergyType: boolean,
   searchFilter: ItemFilter
 ): ItemsByBucket {
-  const filteredItems: { [bucket: number]: readonly DimItem[] } = {};
+  const filteredItems: {
+    [bucketHash in LockableBucketHash]: readonly DimItem[];
+  } = {
+    [BucketHashes.Helmet]: [],
+    [BucketHashes.Gauntlets]: [],
+    [BucketHashes.ChestArmor]: [],
+    [BucketHashes.LegArmor]: [],
+    [BucketHashes.ClassArmor]: [],
+  };
 
   if (!items || !defs) {
     return filteredItems;

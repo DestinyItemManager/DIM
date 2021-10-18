@@ -8,7 +8,7 @@ import { RootState } from './types';
 
 declare global {
   interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__(options: any): typeof compose; // eslint-disable-line no-undef
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__(options: any): typeof compose;
   }
 }
 

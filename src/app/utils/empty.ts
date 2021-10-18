@@ -5,7 +5,7 @@
  */
 
 const EMPTY_OBJ = {};
-export function emptyObject<T extends object>(): T {
+export function emptyObject<T extends Record<string, unknown>>(): T {
   return EMPTY_OBJ as T;
 }
 
