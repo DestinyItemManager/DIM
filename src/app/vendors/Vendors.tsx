@@ -98,7 +98,7 @@ function Vendors({
     vendorGroupsForCharacterSelector(state, storeId)
   );
 
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   useEffect(() => {
     if (storeId) {

@@ -4,9 +4,11 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { queueAction } from '../../utils/action-queue';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
+import { storesLoadedSelector } from '../selectors';
 
 /**
  * A simple hook (probably too simple!) that loads and refreshes stores. This is
@@ -17,10 +19,10 @@ import { loadStores as d2LoadStores } from '../d2-stores';
  */
 export function useLoadStores(
   account: DestinyAccount | undefined,
-  loaded: boolean,
   components?: DestinyComponentType[]
 ) {
   const dispatch = useThunkDispatch();
+  const loaded = useSelector(storesLoadedSelector);
 
   useEffect(() => {
     if (account && !loaded) {
@@ -46,4 +48,6 @@ export function useLoadStores(
       }
     }, [account, dispatch])
   );
+
+  return loaded;
 }
