@@ -55,8 +55,8 @@ interface Props {
 }
 
 export default function Activities({ account }: Props) {
+  useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
-  useLoadStores(account, stores.length > 0);
 
   const defs = useD1Definitions();
 

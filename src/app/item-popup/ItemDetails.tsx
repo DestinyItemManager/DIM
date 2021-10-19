@@ -20,6 +20,7 @@ import { Link, useParams } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, faCheck, faClock } from '../shell/icons';
+import ApplyPerkSelection from './ApplyPerkSelection';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -39,7 +40,7 @@ export default function ItemDetails({
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
-  const [socketOverrides, onPlugClicked] = useSocketOverrides();
+  const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
   const item = defs.isDestiny2()
     ? applySocketOverrides(defs, originalItem, socketOverrides)
     : originalItem;
@@ -107,6 +108,13 @@ export default function ItemDetails({
 
       {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
       {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
+
+      <ApplyPerkSelection
+        item={item}
+        socketOverrides={socketOverrides}
+        setSocketOverride={onPlugClicked}
+        onApplied={resetSocketOverrides}
+      />
 
       {item.perks && (
         <div className="item-details item-perks">

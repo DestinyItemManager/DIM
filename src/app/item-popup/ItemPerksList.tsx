@@ -1,8 +1,10 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
@@ -22,12 +24,6 @@ interface Props {
 }
 
 export default function ItemPerksList({ item, perks, onClick }: Props) {
-  // TODO: bring back clicking perks to see stats
-  // TODO: click perk to see others
-  // TODO: details?
-  // TODO: tooltips
-  // TODO: AWA buttons
-  // TODO: grid for armor?
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
 
@@ -117,12 +113,13 @@ function PerkPlug({
   selectedPerk: boolean;
   onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
   if (!plug.plugDef.plug) {
     return null;
   }
 
   const perkSelected = () => onPerkSelected(socketInfo, plug);
-  const selected = selectedPerk || (plug === socketInfo.plugged && !selectedSocket);
+  const selected = plug === socketInfo.plugged;
 
   return (
     <div
@@ -133,11 +130,18 @@ function PerkPlug({
           : plug === socketInfo.plugged,
         [styles.disabled]: !plug.enabled,
         [styles.selected]: selected,
+        [styles.cannotRoll]: plug.cannotCurrentlyRoll,
       })}
       onClick={perkSelected}
     >
       <div className={styles.perkIcon}>
-        <DefItemIcon itemDef={plug.plugDef} borderless={true} />
+        {isPhonePortrait ? (
+          <DefItemIcon itemDef={plug.plugDef} borderless={true} />
+        ) : (
+          <PressTip tooltip={<PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+            <DefItemIcon itemDef={plug.plugDef} borderless={true} />
+          </PressTip>
+        )}
         {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
           <AppIcon
             className="thumbs-up"
@@ -151,7 +155,8 @@ function PerkPlug({
           <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
         </div>
       ) : (
-        selected && (
+        selected &&
+        !selectedSocket && (
           <div className={styles.perkInfo}>
             <h2 className={styles.plugLabel}>{plug.plugDef.displayProperties.name}</h2>
           </div>

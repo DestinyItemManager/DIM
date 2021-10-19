@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmTitle": "Confirm Action",
+    "Error": "Error changing item",
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "Blizzard": "PC",
@@ -163,7 +165,7 @@
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
-    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
@@ -851,9 +853,13 @@
     "SortName": "Name"
   },
   "Sockets": {
+    "ApplyPerks": "Apply Perks",
+    "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "ListStyle": "Display perks as a list",
+    "GridStyle": "Display perks as a grid"
   },
   "Stats": {
     "LightGrenadeCooldown": "Light Grenade Cooldown",
