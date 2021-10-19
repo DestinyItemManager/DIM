@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'exoticDescription': string;
+  'generalSockets': string;
   'minimalSockets': string;
 }
 export const cssExports: CssExports;

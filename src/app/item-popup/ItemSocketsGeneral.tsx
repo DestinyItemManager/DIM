@@ -67,7 +67,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   }
 
   return (
-    <div className={clsx('item-details', 'sockets', { [styles.minimalSockets]: minimal })}>
+    <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
       {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerkSocket?.plugged && (

@@ -5,3 +5,9 @@
   flex-direction: column;
   flex-wrap: nowrap;
 }
+.generalSockets {
+  margin: 10px;
+  &.minimalSockets {
+    margin: 0;
+  }
+}

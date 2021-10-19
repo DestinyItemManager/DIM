@@ -54,6 +54,7 @@ const faSync = 'fas fa-sync';
 const faTable = 'fas fa-table';
 const faTag = 'fas fa-tag';
 const faList = 'fas fa-list';
+const faGrid = 'fas fa-th';
 const faThumbsUp = 'fas fa-thumbs-up';
 const faThumbsUpRegular = 'far fa-thumbs-up';
 const faThumbsDown = 'fas fa-thumbs-down';
@@ -199,6 +200,7 @@ export {
   faGithub,
   faReddit,
   faList,
+  faGrid,
   faAngleLeft,
   faAngleRight,
 };
