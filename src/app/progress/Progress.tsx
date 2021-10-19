@@ -74,7 +74,7 @@ function Progress({
   const isPhonePortrait = useIsPhonePortrait();
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
-  useLoadStores(account, Boolean(profileInfo));
+  useLoadStores(account);
 
   if (!defs || !profileInfo || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

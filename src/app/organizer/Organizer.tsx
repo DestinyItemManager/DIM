@@ -53,7 +53,7 @@ export default function Organizer({ account }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSelector);
   const searchQuery = useSelector(querySelector);
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   const history = useHistory();
   const location = useLocation();

@@ -111,7 +111,7 @@ function SingleVendor({
     }
   }, [account, characterId, vendorDef, dispatch, vendorHash]);
 
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;
