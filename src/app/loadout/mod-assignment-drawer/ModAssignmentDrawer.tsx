@@ -8,9 +8,12 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
-import React, { useMemo } from 'react';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
+import ModPicker from '../mod-picker/ModPicker';
 import { getCheapestModAssignments } from '../mod-utils';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor, useLoadoutMods } from './selectors';
@@ -49,7 +52,20 @@ function Header({
   );
 }
 
-function ModAssignmentDrawer({ loadout, onClose }: { loadout: Loadout; onClose(): void }) {
+function ModAssignmentDrawer({
+  loadout,
+  onUpdateMods,
+  onClose,
+}: {
+  loadout: Loadout;
+  onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
+  onClose(): void;
+}) {
+  const [modPickerOpen, setModPickerOpen] = useState(false);
+  const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[] | undefined>(
+    undefined
+  );
+
   const defs = useD2Definitions();
   const armor = useEquippedLoadoutArmor(loadout);
   const mods = useLoadoutMods(loadout);
@@ -59,6 +75,20 @@ function ModAssignmentDrawer({ loadout, onClose }: { loadout: Loadout; onClose()
     [defs, armor, mods]
   );
 
+  const onSocketClick = (
+    plugDef: PluggableInventoryItemDefinition,
+    plugCategoryHashWhitelist?: number[]
+  ) => {
+    const { plugCategoryHash } = plugDef.plug;
+
+    if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
+      // Do nothing, it's an exotic plug
+    } else {
+      setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
+      setModPickerOpen(true);
+    }
+  };
+
   const flatAssigned = Array.from(itemModAssignments.values()).flat();
 
   if (!defs) {
@@ -66,27 +96,47 @@ function ModAssignmentDrawer({ loadout, onClose }: { loadout: Loadout; onClose()
   }
 
   return (
-    <Sheet
-      header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
-      onClose={onClose}
-    >
-      <div className={styles.container}>
-        <div className={styles.assigned}>
-          {armor.map((item) => (
-            <div key={item.id} className={styles.itemAndMods}>
-              <ConnectedInventoryItem item={item} />
-              <Sockets item={item} lockedMods={itemModAssignments.get(item.id)} />
-            </div>
-          ))}
+    <>
+      <Sheet
+        header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
+        onClose={onClose}
+      >
+        <div className={styles.container}>
+          <div className={styles.assigned}>
+            {armor.map((item) => (
+              <div key={item.id} className={styles.itemAndMods}>
+                <ConnectedInventoryItem item={item} />
+                <Sockets
+                  item={item}
+                  lockedMods={itemModAssignments.get(item.id)}
+                  onSocketClick={onSocketClick}
+                />
+              </div>
+            ))}
+          </div>
+          <h3>Unassigned Mods</h3>
+          <div className={styles.unassigned}>
+            {unassignedMods.map((mod) => (
+              <Mod key={mod.hash} plugDef={mod} />
+            ))}
+          </div>
         </div>
-        <h3>Unassigned Mods</h3>
-        <div className={styles.unassigned}>
-          {unassignedMods.map((mod) => (
-            <Mod key={mod.hash} plugDef={mod} />
-          ))}
-        </div>
-      </div>
-    </Sheet>
+      </Sheet>
+      {modPickerOpen &&
+        ReactDOM.createPortal(
+          <ModPicker
+            classType={loadout.classType}
+            lockedMods={mods}
+            plugCategoryHashWhitelist={plugCategoryHashWhitelist}
+            onAccept={onUpdateMods}
+            onClose={() => {
+              setModPickerOpen(false);
+              setPlugCategoryHashWhitelist(undefined);
+            }}
+          />,
+          document.body
+        )}
+    </>
   );
 }
 

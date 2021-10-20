@@ -36,6 +36,8 @@ interface ProvidedProps {
   classType: DestinyClass;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
+  /** A list of plugs we are restricting the available mods to. */
+  plugCategoryHashWhitelist?: number[];
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
@@ -60,11 +62,13 @@ function mapStateToProps() {
     allItemsSelector,
     d2ManifestSelector,
     (_state: RootState, props: ProvidedProps) => props.classType,
+    (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
     (
       profileResponse: DestinyProfileResponse,
       allItems: DimItem[],
       defs: D2ManifestDefinitions,
-      classType?: DestinyClass
+      classType?: DestinyClass,
+      plugCategoryHashWhitelist?: number[]
     ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse || classType === undefined) {
@@ -114,8 +118,11 @@ function mapStateToProps() {
 
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
-
-          if (isInsertableArmor2Mod(def)) {
+          const isWhitelisted =
+            def.plug &&
+            (!plugCategoryHashWhitelist ||
+              plugCategoryHashWhitelist?.includes(def.plug.plugCategoryHash));
+          if (isWhitelisted && isInsertableArmor2Mod(def)) {
             finalMods.push(def);
           }
         }

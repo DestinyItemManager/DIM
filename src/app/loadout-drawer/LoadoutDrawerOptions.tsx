@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getClass } from 'app/inventory/store/character-utils';
 import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
@@ -15,6 +16,7 @@ export default function LoadoutDrawerOptions({
   isNew,
   classTypeOptions,
   updateLoadout,
+  onUpdateMods,
   clashingLoadout,
   saveLoadout,
   saveAsNew,
@@ -29,6 +31,7 @@ export default function LoadoutDrawerOptions({
     value: DestinyClass;
   }[];
   updateLoadout(loadout: Loadout): void;
+  onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
@@ -172,6 +175,7 @@ export default function LoadoutDrawerOptions({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body
