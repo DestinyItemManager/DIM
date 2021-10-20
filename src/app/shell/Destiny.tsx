@@ -4,16 +4,20 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
+import { settingsSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import { storesSelector } from 'app/inventory/selectors';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
+import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
@@ -288,8 +292,39 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <InfusionFinder destinyVersion={account.destinyVersion} />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
+      <GlobalEffects />
     </>
   );
 }
 
 export default connect<StoreProps>(mapStateToProps)(Destiny);
+
+/**
+ * Set some global CSS properties and such in reaction to the store.
+ */
+function GlobalEffects() {
+  const stores = useSelector(storesSelector);
+
+  // Set a CSS var for how many characters there are
+  useEffect(() => {
+    if (stores.length > 1) {
+      document
+        .querySelector('html')!
+        .style.setProperty('--num-characters', String(stores.length - 1));
+    }
+  }, [stores.length]);
+
+  const badgePostmaster = useSelector(
+    (state: RootState) => settingsSelector(state).badgePostmaster
+  );
+
+  // Badge the app icon with the number of postmaster items
+  useEffect(() => {
+    if (stores.length > 0 && badgePostmaster && 'setAppBadge' in navigator) {
+      const activeStore = getCurrentStore(stores)!;
+      navigator.setAppBadge(totalPostmasterItems(activeStore));
+    }
+  }, [badgePostmaster, stores]);
+
+  return null;
+}

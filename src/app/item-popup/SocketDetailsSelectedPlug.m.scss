@@ -64,6 +64,7 @@
   align-items: center;
   grid-area: button;
   align-self: center;
+  transition: none;
 
   @include horizontal-space-children(8px);
 

@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
-    "ConfirmTitle": "Confirm Action"
+    "ConfirmTitle": "Confirm Action",
+    "Error": "Error changing item",
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "Blizzard": "PC",
@@ -163,7 +165,7 @@
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
-    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
     "Equipment": "Items that can be equipped.",
@@ -230,6 +232,8 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
@@ -852,9 +856,13 @@
     "SortName": "Name"
   },
   "Sockets": {
+    "ApplyPerks": "Apply Perks",
+    "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
-    "InsertPlugError": "Couldn't insert mod"
+    "InsertPlugError": "Couldn't insert mod",
+    "ListStyle": "Display perks as a list",
+    "GridStyle": "Display perks as a grid"
   },
   "Stats": {
     "LightGrenadeCooldown": "Light Grenade Cooldown",
@@ -1047,20 +1055,5 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
-  },
-  "ActiveMode": {
-    "ButtonOn": "Active Mode",
-    "Beta": "BETA",
-    "Pursuits": "Pursuits",
-    "NoQuests": "You're not tracking any quests",
-    "Loadouts": "Loadouts",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "ChangeFilter": "Change Filter",
-    "NoSearches": "Create saved searches and filter them here.",
-    "SuggestedBounties": "Suggested Bounties",
-    "Offline": "Offline",
-    "Loading": "Current Activity"
   }
 }

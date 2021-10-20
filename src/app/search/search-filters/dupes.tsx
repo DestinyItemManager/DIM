@@ -3,10 +3,12 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
+import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { DEFAULT_SHADER } from '../d2-known-values';
+import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { rangeStringToComparator } from './range-numeric';
 
@@ -166,6 +168,22 @@ const dupeFilters: FilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: 'statlower',
+    description: tl('Filter.StatLower'),
+    filter: ({ allItems }) => {
+      const duplicates = computeStatDupeLower(allItems);
+      return (item) => item.bucket.inArmor && duplicates.has(item.id);
+    },
+  },
+  {
+    keywords: 'customstatlower',
+    description: tl('Filter.CustomStatLower'),
+    filter: ({ allItems, customStats }) => {
+      const duplicates = computeStatDupeLower(allItems, customStats);
+      return (item) => item.bucket.inArmor && duplicates.has(item.id);
+    },
+  },
 ];
 
 export default dupeFilters;
@@ -183,4 +201,50 @@ export function checkIfIsDupe(
     item.hash !== DEFAULT_SHADER &&
     item.bucket.hash !== BucketHashes.SeasonalArtifact
   );
+}
+
+function computeStatDupeLower(
+  allItems: DimItem[],
+  customStats: Settings['customTotalStatsByClass'] = {}
+) {
+  const armor = allItems.filter((i) => i.bucket.inArmor);
+
+  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
+  const grouped = Object.values(
+    _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
+  );
+
+  const statsCache = new Map<DimItem, number[]>();
+  const dupes = new Set<string>();
+
+  for (const item of armor) {
+    if (item.stats && item.basePower && item.bucket.hash !== BucketHashes.ClassArmor) {
+      const statsToConsider = customStats[item.classType] ?? armorStats;
+      statsCache.set(
+        item,
+        _.sortBy(
+          item.stats.filter((s) => statsToConsider.includes(s.statHash)),
+          (s) => s.statHash
+        ).map((s) => s.base)
+      );
+    }
+  }
+
+  for (const group of grouped) {
+    const statSet = new StatsSet<DimItem>();
+    for (const item of group) {
+      const stats = statsCache.get(item);
+      if (stats) {
+        statSet.insert(stats, item);
+      }
+    }
+    for (const item of group) {
+      const stats = statsCache.get(item);
+      if (stats && statSet.doBetterStatsExist(stats)) {
+        dupes.add(item.id);
+      }
+    }
+  }
+
+  return dupes;
 }

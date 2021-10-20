@@ -186,8 +186,10 @@ export default function SocketDetailsSelectedPlug({
             </motion.span>
           )}
           <motion.span layout>
-            {canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton')}
-            {costs}
+            <motion.span layout>
+              {canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton')}
+            </motion.span>
+            <motion.span layout>{costs}</motion.span>
           </motion.span>
         </motion.button>
       )}

@@ -2,6 +2,7 @@ import { VENDORS } from 'app/search/d2-known-values';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import type {
+  D2BucketCategory,
   DimBucketType,
   InventoryBucket,
   InventoryBuckets,
@@ -57,8 +58,8 @@ const bucketToType: {
   [hash: number]: DimBucketType | undefined;
 } = bucketToTypeRaw;
 
-const typeToSort: { [type: string]: string } = {};
-_.forIn(D2Categories, (types, category) => {
+const typeToSort: { [type: string]: D2BucketCategory } = {};
+_.forIn(D2Categories, (types, category: D2BucketCategory) => {
   types.forEach((type) => {
     typeToSort[type] = category;
   });
@@ -87,7 +88,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
     const type = bucketToType[def.hash];
-    let sort: string | undefined;
+    let sort: D2BucketCategory | undefined;
     if (type) {
       sort = typeToSort[type];
     }

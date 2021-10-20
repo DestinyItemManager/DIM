@@ -5,6 +5,7 @@ import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Settings } from 'app/settings/initial-settings';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 type I18nInput = Parameters<typeof t>;
 
@@ -31,6 +32,7 @@ export interface FilterContext {
     [itemHash: string]: ItemHashTag;
   };
   language: string;
+  customStats: Settings['customTotalStatsByClass'];
 }
 
 /**
