@@ -50,7 +50,8 @@ export function useProcess(
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
   statOrder: number[],
-  statFilters: StatFilters
+  statFilters: StatFilters,
+  anyExotic: boolean
 ) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -150,6 +151,7 @@ export function useProcess(
         lockedProcessMods,
         statOrder,
         statFilters,
+        anyExotic,
         proxy(setRemainingTime)
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
@@ -188,6 +190,7 @@ export function useProcess(
     statFilters,
     statOrder,
     upgradeSpendTier,
+    anyExotic,
   ]);
 
   return { result, processing, remainingTime };

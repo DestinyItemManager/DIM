@@ -53,7 +53,7 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
           <DefItemIcon itemDef={def} />
         </div>
         {exoticPerk && (
-          <div key={exoticPerk.hash} className={styles.perkOrModInfo}>
+          <div className={styles.perkOrModInfo}>
             <div className={styles.perkOrModNameAndImage}>
               <DefItemIcon className={styles.perkOrModImage} itemDef={exoticPerk} />
               <div className={styles.perkOrModName}>{exoticPerk.displayProperties.name}</div>
@@ -87,6 +87,34 @@ function ExoticTile({ exotic, selected, onSelected }: Props) {
   ) : (
     <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
       <ExoticTileContents exotic={exotic} />
+    </div>
+  );
+}
+
+export function FakeExoticTile({
+  title,
+  description,
+  icon,
+  selected,
+  onSelected,
+}: {
+  title: string;
+  description: string;
+  icon: string;
+  selected: boolean;
+  onSelected: React.MouseEventHandler<HTMLDivElement>;
+}) {
+  return (
+    <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
+      <div className={styles.itemName}>{title}</div>
+      <div className={styles.details}>
+        <div className={styles.itemImage}>
+          <img src={icon} className="item-img" />
+        </div>
+        <div className={styles.perkOrModInfo}>
+          <div className={styles.perkDescription}>{description}</div>
+        </div>
+      </div>
     </div>
   );
 }
