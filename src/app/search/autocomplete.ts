@@ -278,26 +278,27 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
       .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
+
     suggestions = suggestions.sort(
       chainComparator(
-        // above all else, push "not" and "<=" and ">=" to the bottom if they are present
-        // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
-        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
-        // bring "is" filters to the front above multiple-ending stuff like "season"
-        compareBy((word) => !word.startsWith('is:')),
-        // sort incomplete terms (ending with ':') to the front
-        compareBy((word) => !word.endsWith(':')),
-        // tags are UGC and therefore important
-        compareBy((word) => !word.startsWith('tag:')),
-        // sort more-basic incomplete terms (fewer colons) to the front
-        // i.e. suggest "stat:" before "stat:magazine:"
-        compareBy((word) => word.split(':').length),
+        // ---------------
+        // assumptions based on user behavior. beyond the "contains" filter above, considerations like
+        // "the user is probably typing the begining of the filter name, not the middle"
+        // ---------------
 
-        // prioritize terms we are typing the beginning of (guessing at user intention)
-        compareBy((word) => !word.startsWith(typedToLower)),
-        // and terms where we are typing the beginning of, ignoring the stem.
-        // "is:armor" over "is:sidearm" if you've typed "arm"
-        compareBy((word) => word.indexOf(typedToLower) !== word.indexOf(':') + 1),
+        // prioritize terms where we are typing the beginning of, ignoring the stem:
+        // 'stat' -> 'stat:' before 'basestat:'
+        // 'arm' -> 'is:armor' before 'is:sidearm'
+        // but only for top level stuff (we want examples like 'basestat:' before 'stat:rpm:')
+        compareBy(
+          (word) =>
+            colonCount(word) > 1
+              ? 1 // last if it's a big one like 'stat:rpm:'
+              : word.startsWith(typedToLower) ||
+                word.indexOf(typedToLower) === word.indexOf(':') + 1
+              ? -1 // first if it's a term start or segment start
+              : 0 // mid otherwise
+        ),
 
         // for is/not, prioritize words with less left to type,
         // so "is:armor" comes before "is:armormod".
@@ -311,6 +312,25 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
             return 0;
           }
         }),
+
+        // ---------------
+        // once we have accounted for high level assumptions about user input,
+        // make some opinionated choices about which filters are a priority
+        // ---------------
+
+        // tags are UGC and therefore important
+        compareBy((word) => !word.startsWith('tag:')),
+
+        // sort incomplete terms (ending with ':') to the front
+        compareBy((word) => !word.endsWith(':')),
+
+        // push "not" and "<=" and ">=" to the bottom if they are present
+        // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
+        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
+
+        // sort more-basic incomplete terms (fewer colons) to the front
+        // i.e. suggest "stat:" before "stat:magazine:"
+        compareBy((word) => (word.startsWith('is:') ? 0 : colonCount(word))),
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
@@ -329,4 +349,14 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     }
     return [];
   };
+}
+
+function colonCount(s: string) {
+  let count = 0;
+  for (const c of s) {
+    if (c === ':') {
+      count++;
+    }
+  }
+  return count;
 }
