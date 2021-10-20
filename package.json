@@ -8,7 +8,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "test": "jest --verbose",
+    "test": "cross-env NODE_ENV=test jest --verbose",
     "lint": "jsonsort src/locale && eslint --fix src --ext .js,.ts,.tsx && stylelint --fix \"src/**/*.scss\"",
     "lint-check": "eslint src --ext .js,.ts,.tsx --cache --cache-location .eslintcache",
     "bundle": "webpack --config ./config/webpack.js",
