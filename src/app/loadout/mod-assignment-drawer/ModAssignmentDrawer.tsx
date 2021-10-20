@@ -1,6 +1,7 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
@@ -41,7 +42,7 @@ function Header({
 
   return (
     <div>
-      <h1>Mod Assignments</h1>
+      <h1>{t('Loadouts.ModAssignments')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>
@@ -114,7 +115,7 @@ function ModAssignmentDrawer({
               </div>
             ))}
           </div>
-          <h3>Unassigned Mods</h3>
+          <h3>{t('Loadouts.UnassignedMods')}</h3>
           <div className={styles.unassigned}>
             {unassignedMods.map((mod) => (
               <Mod key={mod.hash} plugDef={mod} />
