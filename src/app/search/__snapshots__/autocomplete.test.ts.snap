@@ -251,6 +251,8 @@ Array [
 
 exports[`filterComplete autocomplete terms for |stat| 1`] = `
 Array [
+  "is:statlower",
+  "is:customstatlower",
   "stat:",
   "basestat:",
   "maxstatloadout:",
