@@ -22,7 +22,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     makeRoomForItems: settingsSelector(state).farmingMakeRoomForItems,
     store: storeSelector(state),
-    inventoryClearSpaces: settingsSelector(state).inventoryClearSpaces,
+    inventoryClearSpaces: Number(settingsSelector(state).inventoryClearSpaces),
   });
 }
 
