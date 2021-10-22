@@ -19,6 +19,7 @@
 * Loadout Optimizer will warn you if you try to load a build that's for a character class you don't have.
 * If your D1 account had disappeared from DIM, it's back now.
 * Aeon exotic armor pieces now show mod slots again.
+* In Loadout Optimizer, the Select Exotic menu now lets you select "No Exotic" and "Any Exotic". "No Exotic" is the same as searching "not:exotic" before, and "Any Exotic" makes sure each set has an exotic, but doesn't care which one.
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
@@ -50,6 +51,7 @@
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
 * The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
+* Farming mode can now be configured in settings to clear a preferred number of slots (1-9)
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 

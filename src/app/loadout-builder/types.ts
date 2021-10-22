@@ -67,3 +67,12 @@ export type ArmorStats = { [statHash in ArmorStatHashes]: number };
  * TODO: Find a way to generate this in d2ai.
  */
 export const generalSocketReusablePlugSetHash = 3559124992;
+
+/**
+ * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.
+ */
+export const LOCKED_EXOTIC_NO_EXOTIC = -1;
+/**
+ * Special value for lockedExoticHash indicating the user would like an exotic, but doesn't care which one.
+ */
+export const LOCKED_EXOTIC_ANY_EXOTIC = -2;

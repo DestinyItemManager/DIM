@@ -200,6 +200,10 @@ function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
+  const numberOfSpacesOptions = _.range(1, 10).map((count) => ({
+    value: count,
+    name: t('Settings.SpacesSize', { count }),
+  }));
   const vaultColOptions = _.range(5, 21).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
@@ -434,6 +438,13 @@ function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
               />
               <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
             </div>
+            <Select
+              label={t('Settings.InventoryNumberOfSpacesToClear')}
+              name="inventoryClearSpaces"
+              value={settings.inventoryClearSpaces}
+              options={numberOfSpacesOptions}
+              onChange={onChange}
+            />
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}

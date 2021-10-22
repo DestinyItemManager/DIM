@@ -45,7 +45,7 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
+import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOTIC } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -253,7 +253,8 @@ function LoadoutBuilder({
     upgradeSpendTier,
     lockItemEnergyType,
     statOrder,
-    statFilters
+    statFilters,
+    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC
   );
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts

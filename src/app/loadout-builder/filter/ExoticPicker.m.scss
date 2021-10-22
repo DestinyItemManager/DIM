@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  padding: 0 10px 16px 10px;
 }
 
 .header {
@@ -14,5 +14,4 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 10px;
-  margin: 0 4px 16px 4px;
 }
