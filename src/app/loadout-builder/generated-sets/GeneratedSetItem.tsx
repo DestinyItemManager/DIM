@@ -152,7 +152,7 @@ export default function GeneratedSetItem({
             item={item}
             lockedMods={assignedMods}
             onSocketClick={onSocketClick}
-            size={'small'}
+            size="small"
           />
         </div>
       </div>

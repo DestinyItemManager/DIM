@@ -222,7 +222,7 @@ export default function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} size={'small'} />
+                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} size="small" />
               </div>
             ))}
           </div>
