@@ -62,9 +62,7 @@ export default function ModAssignmentDrawer({
   onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
-  const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[] | undefined>(
-    undefined
-  );
+  const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions();
   const armor = useEquippedLoadoutArmor(loadout);
@@ -131,7 +129,7 @@ export default function ModAssignmentDrawer({
             onAccept={onUpdateMods}
             onClose={() => {
               setModPickerOpen(false);
-              setPlugCategoryHashWhitelist(undefined);
+              setPlugCategoryHashWhitelist();
             }}
           />,
           document.body
