@@ -1,7 +1,5 @@
 import { allItemsSelector } from 'app/inventory/selectors';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
@@ -38,22 +36,4 @@ export function useEquippedLoadoutArmor(loadout: Loadout) {
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);
-}
-
-export function useLoadoutMods(loadout: Loadout) {
-  const loadoutModsSelector = useCallback(
-    (state: RootState) => {
-      const defs = d2ManifestSelector(state);
-      const loadoutMods = loadout.parameters?.mods;
-
-      if (!defs || !loadoutMods?.length) {
-        return [];
-      }
-
-      return loadoutMods.map((hash) => defs.InventoryItem.get(hash)).filter(isPluggableItem);
-    },
-    [loadout]
-  );
-
-  return useSelector(loadoutModsSelector, shallowEqual);
 }

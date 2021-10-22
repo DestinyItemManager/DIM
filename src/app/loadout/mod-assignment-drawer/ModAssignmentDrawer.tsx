@@ -4,6 +4,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
@@ -17,7 +18,7 @@ import Sockets from '../loadout-ui/Sockets';
 import ModPicker from '../mod-picker/ModPicker';
 import { getCheapestModAssignments } from '../mod-utils';
 import styles from './ModAssignmentDrawer.m.scss';
-import { useEquippedLoadoutArmor, useLoadoutMods } from './selectors';
+import { useEquippedLoadoutArmor } from './selectors';
 
 function Header({
   defs,
@@ -66,16 +67,21 @@ export default function ModAssignmentDrawer({
 
   const defs = useD2Definitions();
   const armor = useEquippedLoadoutArmor(loadout);
-  const mods = useLoadoutMods(loadout);
 
-  const { itemModAssignments, unassignedMods } = useMemo(
-    () => getCheapestModAssignments(armor, mods, defs, UpgradeSpendTier.Nothing, true),
-    [defs, armor, mods]
-  );
+  const [{ itemModAssignments, unassignedMods }, mods] = useMemo(() => {
+    let mods: PluggableInventoryItemDefinition[] = [];
+    if (defs && loadout.parameters?.mods?.length) {
+      mods = loadout.parameters?.mods
+        .map((hash) => defs.InventoryItem.get(hash))
+        .filter(isPluggableItem);
+    }
+
+    return [getCheapestModAssignments(armor, mods, defs, UpgradeSpendTier.Nothing, true), mods];
+  }, [defs, armor, loadout.parameters?.mods]);
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist?: number[]
+    plugCategoryHashWhitelist: number[]
   ) => {
     const { plugCategoryHash } = plugDef.plug;
 
@@ -83,7 +89,6 @@ export default function ModAssignmentDrawer({
       // Do nothing, it's an exotic plug
     } else {
       setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
-      setModPickerOpen(true);
     }
   };
 
@@ -128,8 +133,7 @@ export default function ModAssignmentDrawer({
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}
             onClose={() => {
-              setModPickerOpen(false);
-              setPlugCategoryHashWhitelist();
+              setPlugCategoryHashWhitelist(undefined);
             }}
           />,
           document.body
