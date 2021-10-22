@@ -100,6 +100,7 @@
     "react/no-unsafe": "error",
     "react/jsx-no-constructed-context-values": "error",
     "react/jsx-pascal-case": "error",
+    "react/jsx-curly-brace-presence": ["error", "never"],
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",
