@@ -63,9 +63,7 @@ function ModAssignmentDrawer({
   onClose(): void;
 }) {
   const [modPickerOpen, setModPickerOpen] = useState(false);
-  const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[] | undefined>(
-    undefined
-  );
+  const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions();
   const armor = useEquippedLoadoutArmor(loadout);
