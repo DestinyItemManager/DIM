@@ -43,7 +43,7 @@ function Header({
 
   return (
     <div>
-      <h1>{t('Loadouts.ShowModPlacement')}</h1>
+      <h1>{t('Loadouts.ModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>

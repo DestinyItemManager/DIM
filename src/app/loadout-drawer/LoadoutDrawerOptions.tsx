@@ -146,7 +146,7 @@ export default function LoadoutDrawerOptions({
               title="Assign Mods"
               onClick={() => setShowModAssignmentDrawer(true)}
             >
-              {t('Loadouts.AssignMods')}
+              {t('Loadouts.ShowModPlacement')}
             </button>
           </div>
         )}
