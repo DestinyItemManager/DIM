@@ -51,8 +51,8 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       // the shortest of base or resulting value, but not below 0
       Math.max(Math.min(stat.base, stat.value), 0)
     : // otherwise, for weapons, we just subtract masterwork and
-      // consider the "base" to include selected plugs
-      stat.value - masterworkValue;
+      // consider the "base" to include selected perks but not mods
+      stat.value - masterworkValue - modEffectsTotal;
 
   const segments: [amount: number, classname?: string, modName?: string][] = [[baseBar]];
 
