@@ -47,10 +47,10 @@ export default function SearchHistory() {
       <table>
         <thead>
           <tr>
-            <th></th>
+            <th />
             <th>{t('SearchHistory.Date')}</th>
             <th>{t('SearchHistory.UsageCount')}</th>
-            <th></th>
+            <th />
             <th>{t('SearchHistory.Query')}</th>
           </tr>
         </thead>

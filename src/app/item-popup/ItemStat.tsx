@@ -149,9 +149,7 @@ function StatBar({ segments, stat }: { segments: [number, string?, string?][]; s
             tooltip={[description, val].filter(Boolean).join(': ') || undefined}
             className={clsx(styles.barInner, className)}
             style={{ width: percent(val / stat.maximumValue) }}
-          >
-            <React.Fragment />
-          </PressTip>
+          />
         ))}
       </div>
     </div>

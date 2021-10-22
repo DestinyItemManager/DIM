@@ -86,32 +86,30 @@ export default function Dropdown({
       </button>
       <div {...getMenuProps({ ref: menuRef })} className={styles.menu}>
         {isOpen &&
-          items.map((item, index) => (
-            <>
-              {!isDropdownOption(item) ? (
-                <div key={item.key} className={styles.separator} />
-              ) : (
-                <div
-                  className={clsx(styles.menuItem, {
-                    [styles.highlighted]: highlightedIndex === index,
-                    [styles.disabled]: item.disabled,
-                  })}
-                  key={item.key}
-                  {...getItemProps({
-                    item,
-                    index,
-                    onClick: !item.disabled
-                      ? item.onSelected
-                      : (e: any) => {
-                          e.nativeEvent.preventDownshiftDefault = true;
-                        },
-                  })}
-                >
-                  {item.content}
-                </div>
-              )}
-            </>
-          ))}
+          items.map((item, index) =>
+            !isDropdownOption(item) ? (
+              <div key={item.key} className={styles.separator} />
+            ) : (
+              <div
+                className={clsx(styles.menuItem, {
+                  [styles.highlighted]: highlightedIndex === index,
+                  [styles.disabled]: item.disabled,
+                })}
+                key={item.key}
+                {...getItemProps({
+                  item,
+                  index,
+                  onClick: !item.disabled
+                    ? item.onSelected
+                    : (e: any) => {
+                        e.nativeEvent.preventDownshiftDefault = true;
+                      },
+                })}
+              >
+                {item.content}
+              </div>
+            )
+          )}
       </div>
     </div>
   );

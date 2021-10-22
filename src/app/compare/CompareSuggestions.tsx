@@ -60,7 +60,7 @@ export default memo(function CompareSuggestions({
         <button
           key={query}
           type="button"
-          className={'dim-button'}
+          className="dim-button"
           title={query}
           onClick={() => onQueryChanged(query)}
         >
