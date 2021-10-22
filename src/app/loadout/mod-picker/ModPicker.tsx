@@ -121,7 +121,7 @@ function mapStateToProps() {
           const isWhitelisted =
             def.plug &&
             (!plugCategoryHashWhitelist ||
-              plugCategoryHashWhitelist?.includes(def.plug.plugCategoryHash));
+              plugCategoryHashWhitelist.includes(def.plug.plugCategoryHash));
           if (isWhitelisted && isInsertableArmor2Mod(def)) {
             finalMods.push(def);
           }

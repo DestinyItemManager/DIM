@@ -265,7 +265,7 @@ export default function CompareDrawer({
                     <Sockets
                       item={item}
                       lockedMods={itemModAssignments.get(item.id)}
-                      size={'small'}
+                      size="small"
                     />
                   </div>
                 ))}

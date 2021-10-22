@@ -5,7 +5,8 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
-import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 
 const bucketOrder = [
   armorBuckets.helmet,
@@ -16,33 +17,43 @@ const bucketOrder = [
 ];
 
 export function useEquippedLoadoutArmor(loadout: Loadout) {
-  return useSelector((state: RootState) => {
-    const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
-    const allItems = allItemsSelector(state);
-    const loadoutDimItems = [];
+  const loadoutItemSelector = useCallback(
+    (state: RootState) => {
+      const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
+      const allItems = allItemsSelector(state);
+      const loadoutDimItems = [];
 
-    for (const item of allItems) {
-      if (
-        item.bucket.inArmor &&
-        equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
-      ) {
-        loadoutDimItems.push(item);
+      for (const item of allItems) {
+        if (
+          item.bucket.inArmor &&
+          equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
+        ) {
+          loadoutDimItems.push(item);
+        }
       }
-    }
 
-    return loadoutDimItems.sort(compareBy((item) => bucketOrder.indexOf(item.bucket.hash)));
-  });
+      return loadoutDimItems.sort(compareBy((item) => bucketOrder.indexOf(item.bucket.hash)));
+    },
+    [loadout]
+  );
+
+  return useSelector(loadoutItemSelector, shallowEqual);
 }
 
 export function useLoadoutMods(loadout: Loadout) {
-  return useSelector((state: RootState) => {
-    const defs = d2ManifestSelector(state);
-    const loadoutMods = loadout.parameters?.mods;
+  const loadoutModsSelector = useCallback(
+    (state: RootState) => {
+      const defs = d2ManifestSelector(state);
+      const loadoutMods = loadout.parameters?.mods;
 
-    if (!defs || !loadoutMods?.length) {
-      return [];
-    }
+      if (!defs || !loadoutMods?.length) {
+        return [];
+      }
 
-    return loadoutMods.map((hash) => defs.InventoryItem.get(hash)).filter(isPluggableItem);
-  });
+      return loadoutMods.map((hash) => defs.InventoryItem.get(hash)).filter(isPluggableItem);
+    },
+    [loadout]
+  );
+
+  return useSelector(loadoutModsSelector, shallowEqual);
 }

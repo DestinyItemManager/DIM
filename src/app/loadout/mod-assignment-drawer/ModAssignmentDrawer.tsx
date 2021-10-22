@@ -42,7 +42,7 @@ function Header({
 
   return (
     <div>
-      <h1>{t('Loadouts.ModAssignments')}</h1>
+      <h1>{t('Loadouts.ShowModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>
@@ -53,7 +53,7 @@ function Header({
   );
 }
 
-function ModAssignmentDrawer({
+export default function ModAssignmentDrawer({
   loadout,
   onUpdateMods,
   onClose,
@@ -62,7 +62,6 @@ function ModAssignmentDrawer({
   onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
-  const [modPickerOpen, setModPickerOpen] = useState(false);
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[] | undefined>(
     undefined
   );
@@ -123,7 +122,7 @@ function ModAssignmentDrawer({
           </div>
         </div>
       </Sheet>
-      {modPickerOpen &&
+      {plugCategoryHashWhitelist &&
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
@@ -140,5 +139,3 @@ function ModAssignmentDrawer({
     </>
   );
 }
-
-export default ModAssignmentDrawer;
