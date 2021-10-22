@@ -16,7 +16,7 @@ import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
 import ModPicker from '../mod-picker/ModPicker';
-import { getCheapestModAssignments } from '../mod-utils';
+import { getCheapestModAssignments, getModRenderKey } from '../mod-utils';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor } from './selectors';
 
@@ -98,6 +98,8 @@ export default function ModAssignmentDrawer({
     return null;
   }
 
+  const modCounts = {};
+
   return (
     <>
       <Sheet
@@ -120,7 +122,7 @@ export default function ModAssignmentDrawer({
           <h3>{t('Loadouts.UnassignedMods')}</h3>
           <div className={styles.unassigned}>
             {unassignedMods.map((mod) => (
-              <Mod key={mod.hash} plugDef={mod} />
+              <Mod key={getModRenderKey(mod, modCounts)} plugDef={mod} />
             ))}
           </div>
         </div>
