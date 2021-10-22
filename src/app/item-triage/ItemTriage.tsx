@@ -320,21 +320,17 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => getWeaponArchetype(item),
     render: (item) => {
       const archetypeSocket = getWeaponArchetypeSocket(item);
-      return (
-        <>
-          {archetypeSocket?.plugged && (
-            <PressTip
-              elementType="span"
-              tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
-            >
-              <BungieImage
-                className={styles.inlineIcon}
-                src={archetypeSocket.plugged.plugDef.displayProperties.icon}
-              />
-            </PressTip>
-          )}
-        </>
-      );
+      return archetypeSocket?.plugged ? (
+        <PressTip
+          elementType="span"
+          tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
+        >
+          <BungieImage
+            className={styles.inlineIcon}
+            src={archetypeSocket.plugged.plugDef.displayProperties.icon}
+          />
+        </PressTip>
+      ) : null;
     },
     filter: (item) =>
       `perkname:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,

@@ -11,8 +11,8 @@ export default React.memo(({ children, ...divProps }: React.HTMLAttributes<HTMLD
       <div {...divProps} ref={ref}>
         {children}
       </div>
-      <div className={styles.shadow}></div>
-      <div className={styles.cover}></div>
+      <div className={styles.shadow} />
+      <div className={styles.cover} />
     </>
   );
 });
