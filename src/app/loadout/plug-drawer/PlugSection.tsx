@@ -22,7 +22,7 @@ export default function PlugSection({
     return null;
   }
 
-  const title = plugs[0].itemTypeDisplayName;
+  const title = plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName;
 
   return (
     <div className={styles.bucket}>

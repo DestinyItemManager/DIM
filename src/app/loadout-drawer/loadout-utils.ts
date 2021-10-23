@@ -10,6 +10,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes.json';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
@@ -277,19 +278,25 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
 
 /** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */
 export function getModsFromLoadout(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  loadout: Loadout
+  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
+  loadoutMods: number[] | undefined
 ) {
-  const mods: PluggableInventoryItemDefinition[] = [];
+  const armorMods: PluggableInventoryItemDefinition[] = [];
+  const subclassMods: PluggableInventoryItemDefinition[] = [];
 
-  if (defs.isDestiny2() && loadout.parameters?.mods) {
-    for (const modHash of loadout.parameters.mods) {
+  if (defs?.isDestiny2() && loadoutMods) {
+    for (const modHash of loadoutMods) {
       const item = defs.InventoryItem.get(modHash);
-      if (isPluggableItem(item)) {
-        mods.push(item);
+
+      if (!isPluggableItem(item)) {
+        continue;
+      } else if (subclassPlugCategoryHashes.includes(item.plug.plugCategoryHash)) {
+        subclassMods.push(item);
+      } else {
+        armorMods.push(item);
       }
     }
   }
 
-  return mods.sort(sortMods);
+  return { armorMods: armorMods.sort(sortMods), subclassMods: subclassMods.sort(sortMods) };
 }

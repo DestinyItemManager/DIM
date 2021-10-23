@@ -4,7 +4,8 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import type {
   DimBucketType,
   InventoryBucket,
@@ -17,9 +18,10 @@ import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
+import SavedSubclass from './SavedSubclass';
+import SubclassDrawer from './subclass-drawer/SubclassDrawer';
 
 const loadoutTypes: DimBucketType[] = [
-  'Class',
   'Primary',
   'Special',
   'Heavy',
@@ -65,11 +67,16 @@ export const fromEquippedTypes: DimBucketType[] = [
   'Ghost',
 ];
 
+if (!$featureFlags.loadoutSubclasses) {
+  loadoutTypes.unshift('Class');
+}
+
 export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
-    savedMods,
+    armorMods,
+    subclassMods,
     buckets,
     items,
     stores,
@@ -77,21 +84,25 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
+    onUpdateMods,
     removeModByHash,
   }: {
     loadout: Loadout;
-    savedMods: PluggableInventoryItemDefinition[];
+    armorMods: PluggableInventoryItemDefinition[];
+    subclassMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
     stores: DimStore[];
     items: DimItem[];
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+    onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const [openSubclassDrawer, setOpenSubclassDrawer] = useState(false);
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -102,6 +113,18 @@ export default function LoadoutDrawerContents(
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
 
+  const onSubclassUpdated = (
+    subclass: DimItem | undefined,
+    plugs: PluggableInventoryItemDefinition[]
+  ) => {
+    if (!subclass) {
+      return;
+    }
+
+    onUpdateMods([...armorMods, ...plugs]);
+    add(subclass);
+  };
+
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
   const [typesWithItems, typesWithoutItems] = _.partition(
@@ -110,21 +133,29 @@ export default function LoadoutDrawerContents(
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
+  const subclassBucket = buckets.byType.Class;
+  const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
+  const savedSubclass = subclassItems.length > 0 ? subclassItems[0] : undefined;
 
   return (
     <>
-      {typesWithoutItems.length > 0 && (
-        <div className="loadout-add-types">
-          {showFillFromEquipped && (
-            <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
-              <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
-            </a>
-          )}
-          <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+      <div className="loadout-add-types">
+        {$featureFlags.loadoutSubclasses && (
+          <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {subclassBucket.name}
           </a>
+        )}
+        {showFillFromEquipped && (
+          <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
+          </a>
+        )}
+        <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
+          <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+        </a>
 
-          {typesWithoutItems.map((bucket) => (
+        {typesWithoutItems.length > 0 &&
+          typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
               onClick={() => pickLoadoutItem(loadout, bucket, add)}
@@ -133,11 +164,10 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
-          <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
-          </a>
-        </div>
-      )}
+        <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
+          <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
+        </a>
+      </div>
       <div className="loadout-added-items">
         {typesWithItems.map((bucket) => (
           <LoadoutDrawerBucket
@@ -151,11 +181,37 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
+      {savedSubclass && (
+        <SavedSubclass
+          bucket={subclassBucket}
+          subclass={savedSubclass}
+          plugs={subclassMods}
+          equip={equip}
+          remove={remove}
+          onPlugClicked={(plug) =>
+            onUpdateMods([
+              ...armorMods,
+              ...subclassMods.filter((subclassMod) => plug.hash !== subclassMod.hash),
+            ])
+          }
+        />
+      )}
       <SavedMods
-        savedMods={savedMods}
+        savedMods={armorMods}
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
+      {openSubclassDrawer &&
+        ReactDOM.createPortal(
+          <SubclassDrawer
+            classType={loadout.classType}
+            initialSubclass={savedSubclass}
+            initialPlugs={subclassMods}
+            onAccept={onSubclassUpdated}
+            onClose={() => setOpenSubclassDrawer(false)}
+          />,
+          document.body
+        )}
     </>
   );
 }

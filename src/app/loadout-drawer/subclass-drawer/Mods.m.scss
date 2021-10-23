@@ -1,0 +1,28 @@
+$title-color: #979797;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.title {
+  border-bottom: 1px solid $title-color;
+  font-weight: bold;
+  color: $title-color;
+  margin-bottom: 4px;
+}
+
+.selectedMods {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+
+  > * {
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

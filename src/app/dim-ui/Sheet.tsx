@@ -18,6 +18,7 @@ interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  fillScreen?: boolean;
   zIndex?: number;
   minHeight?: number;
   sheetClassName?: string;
@@ -52,6 +53,7 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
     footer,
     children,
     sheetClassName,
+    fillScreen,
     zIndex,
     minHeight,
     freezeInitialHeight,
@@ -182,7 +184,7 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
       <div
         ref={ref}
         style={{ minHeight }}
-        className="sheet-container"
+        className={clsx('sheet-container', { ['fill-screen']: fillScreen })}
         onMouseDown={dragHandleDown}
         onMouseUp={dragHandleUp}
         onTouchStart={dragHandleDown}

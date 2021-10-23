@@ -1,0 +1,47 @@
+@import '../../variables';
+
+$title-color: #979797;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.title {
+  border-bottom: 1px solid $title-color;
+  font-weight: bold;
+  color: $title-color;
+  margin-bottom: 4px;
+}
+
+.abilities {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 16px;
+
+  @include phone-portrait {
+    margin-bottom: 0;
+  }
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  margin-right: 16px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.ability {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 4px;
+}
+
+.selected {
+  cursor: default;
+  outline: 2px solid $orange !important;
+}

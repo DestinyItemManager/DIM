@@ -93,3 +93,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     }
   }
 }
+
+.fill-screen {
+  height: calc(var(--viewport-height) - var(--header-height) - 8px);
+}

@@ -55,6 +55,9 @@
 * Fixed an issue where clicking a mod icon in the Loadout Optimizer would select more than one of the mod.
 
 ## 6.89.0 <span class="changelog-date">(2021-10-31)</span>
+### Beta Only
+
+* Loadouts can now save stasis subclass abilities, aspects, and fragments.
 
 ## 6.88.1 <span class="changelog-date">(2021-10-28)</span>
 

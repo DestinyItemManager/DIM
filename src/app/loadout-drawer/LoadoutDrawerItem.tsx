@@ -20,7 +20,7 @@ export default function LoadoutDrawerItem({
 
   return (
     <div onClick={(e) => equip(item, e)} className="loadout-item">
-      <ClosableContainer onClose={onClose}>
+      <ClosableContainer enabled={Boolean(onClose)} onClose={onClose}>
         <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
         {item.type === 'Class' && (
           <ClassIcon classType={item.classType} className="loadout-item-class-icon" />
