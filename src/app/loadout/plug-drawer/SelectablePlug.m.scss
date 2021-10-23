@@ -1,6 +1,6 @@
 @import '../../variables';
 
-.perk {
+.plug {
   > img,
   > * > img {
     height: var(--item-size);
@@ -22,13 +22,13 @@
   }
 }
 
-.perkInfo {
+.plugInfo {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.perkTitle {
+.plugTitle {
   font-weight: bold;
   font-size: 13px;
   margin-bottom: 4px;

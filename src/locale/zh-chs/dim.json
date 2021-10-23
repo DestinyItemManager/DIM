@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的许可权。",
-    "ConfirmTitle": "确认操作"
+    "ConfirmTitle": "确认操作",
+    "Error": "更换物品时出错",
+    "FailedToken": "无权限更换物品"
   },
   "Accounts": {
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "公测版",
-    "ButtonOn": "主动模式",
-    "ChangeFilter": "更改过滤器",
-    "Farming": "最近项目",
-    "FarmingStart": "开始收集",
-    "FarmingStop": "停止收集",
-    "Loading": "当前活动",
-    "NoQuests": "您没有跟踪任何任务",
-    "NoSearches": "创建保存的搜索并在这里过滤它们。",
-    "Offline": "离线",
-    "Pursuits": "任务",
-    "SuggestedBounties": "建议的悬赏"
   },
   "Activities": {
     "Activities": "活动",
@@ -128,12 +116,18 @@
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
-    "D2Desc": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
-    "D2Desc_female": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
-    "D2Desc_male": "为防止有物品被寄送到邮政官处，DIM将在您的 {{store}} 上的所有物品种类之间预留一个空位。已开始转移物品到保险库以腾出足够的空间。",
-    "Desc": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
-    "Desc_female": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
-    "Desc_male": "DIM将从{{store}} 处 移动记忆水晶与微光币物品到保险库，并且为各类物品预留一个空格以防止有物品被寄送到邮政官处。",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "收集模式（腾出空间）",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "你的空间不足，无法再为{{character}}腾出空间了。该清理垃圾装备了！",
     "OutOfRoomTitle": "空间不足",
-    "Stop": "停止"
+    "Stop": "停止",
+    "Vault": "It will move items to the vault to make room."
   },
   "FileUpload": {
     "Instructions": "选择或拖拽档案"
@@ -168,11 +163,12 @@
     "Cosmetic": "显示饰品或装饰物品。",
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
+    "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
-    "DupeLower": "光等非最高的重复物品及其不同赛季版本。",
+    "DupeLower": "非最高光等的重复和再版物品。重复物品中只有一件会被视为最高光等，其余均视为较低光等。",
     "Energy": "显示拥有能量容量的物品（护甲2.0）。",
     "Engrams": "显示记忆水晶.",
     "Equipment": "可以装备的物品.",
@@ -204,7 +200,7 @@
     "Masterwork": "按大师杰作属性或等级显示物品。",
     "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
     "MaxPower": "显示每个槽位最高光等的物品。",
-    "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
+    "MaxPowerLoadout": "显示每个职业中能最大化光等的配装物品。",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
       "Y2": "显示带有年2模组的物品",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
     "StackLevel": "根据堆叠数量来显示物品.",
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
+    "StatLower": "显示相比其他同类别护甲而言属性全面更低的护甲。",
     "Stats": "按特定属性的数值显示物品。用加号衔接多个属性名称便可组合过滤。",
     "StatsBase": "按基础属性数值过滤护甲，并排除模组或大师杰作的影响。用加号衔接多个属性名称便可组合过滤。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模组",
+    "AnyExotic": "Any Exotic",
+    "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AscendantShardDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "对于传奇物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n对于在 {{energyLevel}} 或以下的异域物品，优化器将假定 {{energyLevel}} 的能量，并将根据分配模组的需要交换元素。异域物品将使用其当前属性。\n\n目前大师杰作的传奇物品和超过 {{energyLevel}} 能量的异域物品将使用其现有的元素。",
     "AscendantShardNotMasterworkedDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n目前大师杰作的物品将使用其现有的元素。",
@@ -443,17 +442,20 @@
     "EquipItems": "装备",
     "ExcludeItem": "排除项目",
     "ExistingLoadout": "已有配装",
+    "ExoticSpecialCategory": "Special",
     "Filter": "过滤",
     "LegendaryShardsAndEnhancementPrismDetails": "将使用所有物品的当前属性。 对于能量为 {{energyLevel}} 或更低的物品，优化器将假定 {{energyLevel}} 能量。{{elementLockDescription}}\n\n超过 {{energyLevel}} 能量的物品将使用其现有能量等级和元素。",
     "LockElement": "锁定元素",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
-    "MaxTier": "Max {{tier}}",
-    "MissingClass": "Build is for: {{className}}",
-    "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
+    "MaxTier": "最大 {{tier}}",
+    "MissingClass": "配装适用于：{{className}}",
+    "MissingClassDescription": "你正试图查看的配装适用于一个你未拥有的角色职业。",
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
+    "NoExotic": "No Exotic",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "没有要对比的配装",
     "NoUpgrades": "无升级",
     "NoUpgradesDetails": "为了计算总属性与分配模组，会用到当前的属性、能量等级，以及你物品的元素。",
@@ -465,7 +467,7 @@
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
     "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级或更换元素来装下你想要的模组。",
     "OptimizerSet": "优化器组合",
-    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
     "SaveAs": "保存为",
     "SelectArmorUpgrade": "选择护甲升级",
     "SelectAssumedArmorUpgrade": "选择假定的护甲升级",
@@ -590,7 +592,7 @@
     "AddNote": "添加备注",
     "AddToLoadout": "配装",
     "All": "全部",
-    "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
+    "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
@@ -763,10 +765,11 @@
     "InventoryColumns": "物品栏显示宽度",
     "InventoryColumnsMobile": "移动端物品栏显示宽度",
     "InventoryColumnsMobileLine2": "将自动调整物品大小以适配当前设置",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
-    "Masterworked": "Masterworked",
+    "Masterworked": "已为大师杰作",
     "Ratings": "评分",
     "ReloadDIM": "刷新页面 [F5] 以完成语言切换",
     "ResetToDefault": "重置",
@@ -788,12 +791,18 @@
     "SortByTag": "标签{{taglist}}",
     "SortByType": "类型",
     "SortCustom": "自订排序",
-    "SortName": "名称"
+    "SortName": "名称",
+    "SpacesSize": "{{count}} space",
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
+    "ApplyPerks": "应用特性",
+    "GridStyle": "按网格显示特性",
     "InsertModButton": "插入模组",
     "InsertPlugError": "无法插入模组",
-    "SelectModButton": "Select Mod"
+    "ListStyle": "按列表显示特性",
+    "SelectModButton": "选择模组",
+    "SelectWishlistPerks": "预览愿望单特性"
   },
   "Stats": {
     "BarricadeCooldown": "屏障冷却",

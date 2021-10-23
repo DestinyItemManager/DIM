@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Veuillez utiliser l'application Compagnon de Destiny 2 pour donner à DIM l'autorisation de modifier vos objets.",
-    "ConfirmTitle": "Confirmer L'Action"
+    "ConfirmTitle": "Confirmer L'Action",
+    "Error": "Error changing item",
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Mode Actif",
-    "ChangeFilter": "Changer Filtre",
-    "Farming": "Objets récents",
-    "FarmingStart": "Commencer Farming",
-    "FarmingStop": "Arrêter Farming",
-    "Loading": "Activité en cours",
-    "NoQuests": "Vous ne suivez aucune quête",
-    "NoSearches": "Enregistrer des recherches et les filtrer ici.",
-    "Offline": "Hors ligne",
-    "Pursuits": "Poursuites",
-    "SuggestedBounties": "Contrats suggérés"
   },
   "Activities": {
     "Activities": "Activités",
@@ -128,12 +116,18 @@
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
-    "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
-    "D2Desc_female": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
-    "D2Desc_male": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
-    "Desc": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-    "Desc_female": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
-    "Desc_male": "DIM est en train de transférer des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "Mode Farming (libère de la place)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "Vous n'avez plus d'espace libre pour déplacer des objets en dehors de {{character}}. Il serait temps de se débarrasser des indésirables !",
     "OutOfRoomTitle": "Plus de Place",
-    "Stop": "Stop"
+    "Stop": "Stop",
+    "Vault": "It will move items to the vault to make room."
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -168,11 +163,12 @@
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
     "Curated": "Affiche les objets qui ont des statistiques et attributs présélectionnés.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Description": "Description",
     "Dupe": "Affiche les doublons, y compris les rééditions",
     "DupeCount": "Objets qui ont le nombre spécifié de doublons.",
-    "DupeLower": "Doublons, rééditions inclues, qui ne sont pas le doublon de plus haut niveau.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Affiche les objets qui ont de l'énergie (Armure 2.0).",
     "Engrams": "Affiche les engrammes.",
     "Equipment": "Objets qui peuvent être équipés.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
+    "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
     "Stats": "Affiche les objets en fonction d'une valeur de stat spécifique. Supporte l'ajout de stats en connectant plusieurs noms de stats avec le symbole +.",
     "StatsBase": "Filtre l'armure en fonction de sa valeur de stat de base, sans inclure les mods attachés ou les pièces maîtresses. Supporte l'ajout de stat en connectant plusieurs noms de stats avec le symbole +.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Ajouter les mods +5",
+    "AnyExotic": "Any Exotic",
+    "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AscendantShardDetails": "Pour tous les objets, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Pour les objets légendaires, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}\n\nPour les objets exotiques à {{energyLevel}} d'énergie ou moins, l'optimiseur considéra que la pièce d'équipement a {{energyLevel}} d'énergie et changera l'élément si nécessaire pour équiper des mods.\n\nLes équipement légendaire et exotique au dessus de {{energyLevel}} d'énergie conserveront leur élément actuel.",
     "AscendantShardNotMasterworkedDetails": "Pour tous les objets, l'optimiseur considéra que l'équipement est en pièce maîtresse. {{elementLockDescription}}\n\nLes équipement déjà en pièce maîtresse conserveront leur élément actuel.",
@@ -443,6 +442,7 @@
     "EquipItems": "Équiper",
     "ExcludeItem": "Exclure L'Objet",
     "ExistingLoadout": "Arsenal Existant",
+    "ExoticSpecialCategory": "Special",
     "Filter": "Filtres",
     "LegendaryShardsAndEnhancementPrismDetails": "Les stats actuels de tous les objets seront utilisés. Pour les objets à {{energyLevel}} d'énergie ou moins, l'optimiseur considéra qu'ils ont {{energyLevel}} d'énergie. {{elementLockDescription}}\n\nLes équipement au dessus de {{energyLevel}} d'énergie conserveront leur élément actuel.",
     "LockElement": "Verrouiller l'élément",
@@ -454,6 +454,8 @@
     "NewEmptyLoadout": "Créer un Arsenal Vide",
     "NoBuildsFoundWithReasons": "Aucun arsenal trouvé. Cela arrive généralement lorsque DIM ne trouve pas d'arsenal pouvant équiper tous les mods sélectionnés.",
     "NoComparableItems": "Cet arsenal n'a aucun objet comparable.. Sauvegarder l'ensemble de l'optimiseur ajoutera ces objets à votre arsenal.",
+    "NoExotic": "No Exotic",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "Aucun arsenal à comparer",
     "NoUpgrades": "Aucune amélioration",
     "NoUpgradesDetails": "Les stats, le niveau d'énergie et l'élément actuels de vos objets seront utilisés lors du calcul du total et lors de l'assignation des mods.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",
     "InventoryColumnsMobileLine2": "Les objets vont être redimensionnés pour s'adapter au nouveau paramètre",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LogOut": "Se déconnecter",
@@ -788,12 +791,18 @@
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
-    "SortName": "Nom"
+    "SortName": "Nom",
+    "SpacesSize": "{{count}} space",
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
+    "ApplyPerks": "Apply Perks",
+    "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insérer Mod",
     "InsertPlugError": "Impossible d'insérer le mod",
-    "SelectModButton": "Select Mod"
+    "ListStyle": "Display perks as a list",
+    "SelectModButton": "Select Mod",
+    "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Délai de Barricade",

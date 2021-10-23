@@ -19,7 +19,7 @@ export function ArtifactXP(characterProgress: DestinyCharacterProgressionCompone
   };
   return (
     <div className="objective-progress">
-      {<div className="objective-progress-bar" style={progressBarStyle} />}
+      <div className="objective-progress-bar" style={progressBarStyle} />
       <div className="objective-description">
         <img src={xpIcon} className={styles.xpIcon} /> {level + 1}
       </div>

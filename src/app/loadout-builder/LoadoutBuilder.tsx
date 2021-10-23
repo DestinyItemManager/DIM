@@ -34,7 +34,7 @@ import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import ModPicker from '../loadout/mod-picker/ModPicker';
+import ModPicker from '../loadout/ModPicker';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';

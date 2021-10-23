@@ -30,8 +30,6 @@ export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: numb
   return {
     id: uuidv4(),
     classType: DestinyClass.Unknown,
-    // This gets overwritten in any path that'd save a real loadout, and apply doesn't care
-    destinyVersion: 2,
     name,
     items,
     parameters: {

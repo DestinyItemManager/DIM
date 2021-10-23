@@ -1,6 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
-import ModPicker from 'app/loadout/mod-picker/ModPicker';
+import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { RootState, ThunkDispatchProp } from 'app/store/types';

@@ -88,8 +88,8 @@ export function ItemTriage({ item }: { item: DimItem }) {
     <div className={styles.itemTriagePane}>
       {item.bucket.inWeapons && (
         <CollapsibleTitle
-          title={'Wishlists'}
-          sectionId={'triage-wishlist'}
+          title="Wishlists"
+          sectionId="triage-wishlist"
           defaultCollapsed={false}
           extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
           disabled={!wishlistItem}
@@ -105,8 +105,8 @@ export function ItemTriage({ item }: { item: DimItem }) {
         </CollapsibleTitle>
       )}
       <CollapsibleTitle
-        title={'In Loadouts'}
-        sectionId={'triage-loadout'}
+        title="In Loadouts"
+        sectionId="triage-loadout"
         defaultCollapsed={true}
         extra={inLoadouts.length}
         extraOnlyCollapsed
@@ -128,8 +128,8 @@ export function ItemTriage({ item }: { item: DimItem }) {
         </ul>
       </CollapsibleTitle>
       <CollapsibleTitle
-        title={'Item Count'}
-        sectionId={'triage-itemcount'}
+        title="Item Count"
+        sectionId="triage-itemcount"
         defaultCollapsed={false}
         extra={itemFactors?.length ? Math.min(...itemFactors.map((f) => f.count)) : undefined}
         extraOnlyCollapsed
@@ -164,8 +164,8 @@ export function ItemTriage({ item }: { item: DimItem }) {
       </CollapsibleTitle>
       {item.bucket.inArmor && (
         <CollapsibleTitle
-          title={'High Stats'}
-          sectionId={'triage-highstat'}
+          title="High Stats"
+          sectionId="triage-highstat"
           defaultCollapsed={false}
           extraOnlyCollapsed
         >
@@ -320,21 +320,17 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => getWeaponArchetype(item),
     render: (item) => {
       const archetypeSocket = getWeaponArchetypeSocket(item);
-      return (
-        <>
-          {archetypeSocket?.plugged && (
-            <PressTip
-              elementType="span"
-              tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
-            >
-              <BungieImage
-                className={styles.inlineIcon}
-                src={archetypeSocket.plugged.plugDef.displayProperties.icon}
-              />
-            </PressTip>
-          )}
-        </>
-      );
+      return archetypeSocket?.plugged ? (
+        <PressTip
+          elementType="span"
+          tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
+        >
+          <BungieImage
+            className={styles.inlineIcon}
+            src={archetypeSocket.plugged.plugDef.displayProperties.icon}
+          />
+        </PressTip>
+      ) : null;
     },
     filter: (item) =>
       `perkname:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,
