@@ -262,7 +262,7 @@ function makeItem(
       item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
     amount: item.stackSize || 1,
-    primStat: item.primaryStat || null,
+    primaryStat: item.primaryStat || null,
     typeName: itemDef.itemTypeName,
     isEngram: (itemDef.itemCategoryHashes || []).includes(34),
     // "perks" are the two or so talent grid items that are "featured" for an
@@ -324,9 +324,9 @@ function makeItem(
     createdItem.notransfer = true;
   }
 
-  if (createdItem.primStat) {
-    const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = {
+  if (createdItem.primaryStat) {
+    const statDef = defs.Stat.get(createdItem.primaryStat.statHash);
+    createdItem.primaryStat.stat = {
       ...statDef,
       // D2 is much better about display info
       displayProperties: {
@@ -337,8 +337,8 @@ function makeItem(
       },
     };
 
-    if (lightStats.includes(createdItem.primStat.statHash)) {
-      createdItem.power = createdItem.primStat.value;
+    if (lightStats.includes(createdItem.primaryStat.statHash)) {
+      createdItem.power = createdItem.primaryStat.value;
     }
   }
 
@@ -352,7 +352,7 @@ function makeItem(
 
   // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
   createdItem.infusionFuel = Boolean(
-    createdItem.equipment && createdItem.primStat?.statHash !== 1501155019
+    createdItem.equipment && createdItem.primaryStat?.statHash !== 1501155019
   );
 
   try {

@@ -30,7 +30,7 @@ interface Props {
 
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const savedNotes = useSelector(itemNoteSelector(item));
-  const isBounty = Boolean(!item.primStat && item.objectives);
+  const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
@@ -39,7 +39,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
-      (isGeneric && !item.primStat?.value && !item.classified)
+      (isGeneric && !item.primaryStat?.value && !item.classified)
   );
 
   if (hideBadge) {
@@ -49,7 +49,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
-    (isGeneric && item.primStat?.value.toString()) ||
+    (isGeneric && item.primaryStat?.value.toString()) ||
     (item.classified && (savedNotes ?? '???'));
 
   const fixContrast =

@@ -222,8 +222,8 @@ function InfusionFinder({
     result = {
       ...effectiveTarget,
       power: infused,
-      primStat: {
-        ...effectiveTarget.primStat!,
+      primaryStat: {
+        ...effectiveTarget.primaryStat!,
         value: infused,
       },
     };

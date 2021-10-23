@@ -348,12 +348,12 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
 
-  if (firstComparison.primStat) {
+  if (firstComparison.primaryStat) {
     stats.push(
       makeFakeStat(
-        firstComparison.primStat.statHash,
-        firstComparison.primStat.stat.displayProperties,
-        (item: DimItem) => item.primStat || undefined
+        firstComparison.primaryStat.statHash,
+        firstComparison.primaryStat.stat.displayProperties,
+        (item: DimItem) => item.primaryStat || undefined
       )
     );
   }

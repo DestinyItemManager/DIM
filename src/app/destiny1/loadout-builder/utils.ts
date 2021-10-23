@@ -281,7 +281,7 @@ export function loadVendorsBucket(
         .filter(
           (i) =>
             i.item.stats &&
-            i.item.primStat?.statHash === D1_StatHashes.Defense &&
+            i.item.primaryStat?.statHash === D1_StatHashes.Defense &&
             itemCanBeEquippedBy(i.item, currentStore)
         )
         .map((i) => i.item)
@@ -296,7 +296,7 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
         store.items.filter(
           (i) =>
             i.stats &&
-            i.primStat?.statHash === D1_StatHashes.Defense &&
+            i.primaryStat?.statHash === D1_StatHashes.Defense &&
             itemCanBeEquippedBy(i, currentStore)
         )
       )

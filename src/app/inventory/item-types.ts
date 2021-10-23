@@ -164,15 +164,14 @@ export interface DimItem {
   /** How many items does this represent? Only greater than one if maxStackSize is greater than one. */
   amount: number;
   /**
-   * The primary stat (Attack, Defense, Speed) of the item.
-   * @deprecated use power instead
+   * The primary stat (Attack, Defense, Speed) of the item. Useful for display and for some weirder stat types. Prefer using "power" if what you want is power.
    */
-  primStat:
+  primaryStat:
     | (DestinyStat & {
         stat: DestinyStatDefinition;
       })
     | null;
-  /** The "base power" without any power-enhancing mods. This is a synonym for (primStat?.value || 0) but only for items that actually have power. */
+  /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) but only for items that actually have power. */
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;

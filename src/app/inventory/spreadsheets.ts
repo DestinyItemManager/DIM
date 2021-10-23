@@ -71,19 +71,19 @@ export function downloadCsvFiles(
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {
-    if (!item.primStat && type !== 'Ghost') {
+    if (!item.primaryStat && type !== 'Ghost') {
       return;
     }
 
     if (type === 'Weapons') {
       if (
-        item.primStat?.statHash === D1_StatHashes.Attack ||
-        item.primStat?.statHash === StatHashes.Attack
+        item.primaryStat?.statHash === D1_StatHashes.Attack ||
+        item.primaryStat?.statHash === StatHashes.Attack
       ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat?.statHash === StatHashes.Defense) {
+      if (item.primaryStat?.statHash === StatHashes.Defense) {
         items.push(item);
       }
     } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {

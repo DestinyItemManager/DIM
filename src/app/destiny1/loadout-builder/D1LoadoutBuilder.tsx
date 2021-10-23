@@ -535,7 +535,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     function filterItems(items: readonly D1Item[]) {
       return items.filter(
         (item) =>
-          item.primStat?.statHash === D1_StatHashes.Defense &&
+          item.primaryStat?.statHash === D1_StatHashes.Defense &&
           item.talentGrid &&
           item.talentGrid.nodes &&
           item.stats

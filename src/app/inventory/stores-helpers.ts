@@ -77,7 +77,7 @@ export function getItemAcrossStores<Item extends DimItem, Store extends DimStore
 /** Get the bonus power from the Seasonal Artifact */
 export function getArtifactBonus(store: DimStore) {
   const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
-  return artifact?.primStat?.value || 0;
+  return artifact?.primaryStat?.value || 0;
 }
 
 /**

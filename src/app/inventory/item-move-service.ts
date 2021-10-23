@@ -198,8 +198,8 @@ function searchForSimilarItem(
     if (item.isExotic && i.isExotic) {
       value += 5;
     }
-    if (i.primStat) {
-      value += i.primStat.value / 1000;
+    if (i.primaryStat) {
+      value += i.primaryStat.value / 1000;
     }
     return value;
   }).reverse();
@@ -1037,7 +1037,8 @@ export function sortMoveAsideCandidatesForStore(
       compareBy((i) => (fromStore.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
       // Prefer keeping higher-stat items on characters
       compareBy(
-        (i) => (i.primStat && (fromStore.isVault ? i.primStat.value : -i.primStat.value)) || 0
+        (i) =>
+          (i.primaryStat && (fromStore.isVault ? i.primaryStat.value : -i.primaryStat.value)) || 0
       )
     )
   );

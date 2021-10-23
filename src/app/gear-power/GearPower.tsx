@@ -70,7 +70,7 @@ export default function GearPower() {
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>
                 <div className={styles.gearItemInfo}>
-                  <div className={styles.primStat}>{i.power}</div>
+                  <div className={styles.power}>{i.power}</div>
                   <div className={styles.statMeta}>
                     <BucketIcon className={styles.bucketImage} item={i} />
                     <div className={diffClass}>
