@@ -3,6 +3,7 @@ import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import {
@@ -110,12 +111,7 @@ function mapStateToProps() {
         for (const plugSetHash of sets) {
           const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
-            const isWhitelisted =
-              def.plug &&
-              (!plugCategoryHashWhitelist ||
-                plugCategoryHashWhitelist.includes(def.plug.plugCategoryHash));
-
-            if (isWhitelisted && isInsertableArmor2Mod(def)) {
+            if (plugIsInsertable(plugSetItem)) {
               unlockedPlugs.push(plugSetItem.plugItemHash);
             }
           }
@@ -125,8 +121,12 @@ function mapStateToProps() {
 
         for (const plug of unlockedPlugs) {
           const def = defs.InventoryItem.get(plug);
+          const isWhitelisted =
+            def.plug &&
+            (!plugCategoryHashWhitelist ||
+              plugCategoryHashWhitelist.includes(def.plug.plugCategoryHash));
 
-          if (isInsertableArmor2Mod(def)) {
+          if (isWhitelisted && isInsertableArmor2Mod(def)) {
             finalMods.push(def);
           }
         }
