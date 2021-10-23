@@ -70,6 +70,7 @@ export function Option({
     >
       <div
         role="button"
+        title={option.displayProperties.name}
         className={clsx('item', styles.option, { [styles.selected]: isSelected })}
         onClick={() => onSelect?.()}
       >
