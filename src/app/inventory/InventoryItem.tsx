@@ -73,8 +73,7 @@ export default function InventoryItem({
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
   });
   // Subtitle for engram powerlevel vs regular item type
-  const subtitle =
-    item.destinyVersion === 2 && item.isEngram ? item.primStat?.value : item.typeName;
+  const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
     // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.

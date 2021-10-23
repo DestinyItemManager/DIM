@@ -1,4 +1,6 @@
 import { t } from 'app/i18next-t';
+import { D1_StatHashes } from 'app/search/d1-known-values';
+import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -163,13 +165,10 @@ function makeItem(
     return null;
   }
 
+  const numStats = _.size(itemDef.stats);
+
   // fix itemDef for defense items with missing nodes
-  if (
-    item.primaryStat &&
-    item.primaryStat.statHash === 3897883278 &&
-    _.size(itemDef.stats) > 0 &&
-    _.size(itemDef.stats) !== 5
-  ) {
+  if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = _.find(itemDef.stats, (stat) =>
       [144602215, 1735777505, 4244567218].includes(stat.statHash)
     );
@@ -337,6 +336,10 @@ function makeItem(
         hasIcon: Boolean(statDef.icon),
       },
     };
+
+    if (lightStats.includes(createdItem.primStat.statHash)) {
+      createdItem.power = createdItem.primStat.value;
+    }
   }
 
   try {
@@ -640,7 +643,7 @@ function buildStats(
 
   let armorNodes: D1GridNode[] = [];
   let activeArmorNode: D1GridNode | { hash: number };
-  if (grid?.nodes && item.primaryStat?.statHash === 3897883278) {
+  if (grid?.nodes && item.primaryStat?.statHash === D1_StatHashes.Defense) {
     armorNodes = grid.nodes.filter(
       (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
     );

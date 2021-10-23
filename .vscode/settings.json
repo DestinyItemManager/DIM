@@ -8,7 +8,8 @@
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {
-    "**/data/d1/manifests": true
+    "**/data/d1/manifests": true,
+    "src/testing/data": true
   },
   "jest.jestCommandLine": "yarn test",
   "[javascript]": {

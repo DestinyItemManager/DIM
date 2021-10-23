@@ -7,8 +7,8 @@
 //
 
 export const enum D1_StatHashes {
-  Defense = 3897883278,
-  Attack = 368428387,
+  Defense = 3897883278, // Same as in D2
+  Attack = 368428387, // Not the same as in D2
 }
 
 /** hashes representing D1 PL stats */

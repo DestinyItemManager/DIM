@@ -10,7 +10,7 @@ export function ItemPowerSet(items: DimItem[], powerFloor: number) {
       {items.map((i, j) => {
         const sortChanged = Boolean(j) && lastSort !== i.bucket.sort;
         lastSort = i.bucket.sort;
-        const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
+        const powerDiff = (powerFloor - i.power) * -1;
         const diffSymbol = powerDiff > 0 ? '+' : '';
         return (
           <React.Fragment key={i.id}>
@@ -21,7 +21,7 @@ export function ItemPowerSet(items: DimItem[], powerFloor: number) {
             )}
             <span className={styles.bucketName}>{i.bucket.name}</span>
             <BucketIcon className={styles.invert} item={i} />
-            <span>{i.primStat?.value}</span>
+            <span>{i.power}</span>
             <span className={styles.powerDiff}>{powerDiff ? `${diffSymbol}${powerDiff}` : ''}</span>
           </React.Fragment>
         );

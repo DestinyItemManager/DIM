@@ -113,7 +113,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
   rarity: compareBy(rarity),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
-  basePower: reverseComparator(compareBy((item: DimItem) => item.power || item.primStat?.value)),
+  basePower: reverseComparator(compareBy((item: DimItem) => item.power)),
   // This only sorts by D1 item quality
   rating: reverseComparator(
     compareBy((item: DimItem & { quality: { min: number } }) => {

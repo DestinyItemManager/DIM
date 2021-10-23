@@ -27,7 +27,7 @@ import { showInfuse$ } from './infuse';
 import './InfusionFinder.scss';
 
 const itemComparator = chainComparator(
-  reverseComparator(compareBy((item: DimItem) => item.primStat?.value ?? 0)),
+  reverseComparator(compareBy((item: DimItem) => item.power)),
   compareBy((item: DimItem) =>
     isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
@@ -217,12 +217,13 @@ function InfusionFinder({
   const effectiveSource = source || dupes[0] || items[0];
 
   let result: DimItem | undefined;
-  if (effectiveSource?.primStat && effectiveTarget?.primStat) {
-    const infused = effectiveSource.primStat?.value || 0;
+  if (effectiveSource?.power && effectiveTarget?.power) {
+    const infused = effectiveSource.power;
     result = {
       ...effectiveTarget,
+      power: infused,
       primStat: {
-        ...effectiveTarget.primStat,
+        ...effectiveTarget.primStat!,
         value: infused,
       },
     };
@@ -322,7 +323,7 @@ function isInfusable(target: DimItem, source: DimItem) {
   }
 
   if (source.destinyVersion === 1 && target.destinyVersion === 1) {
-    return source.type === target.type && target.primStat!.value < source.primStat!.value;
+    return source.type === target.type && target.power < source.power;
   }
 
   return (

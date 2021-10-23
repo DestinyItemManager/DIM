@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import type { DimBucketType } from 'app/inventory/inventory-buckets';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -53,7 +52,7 @@ export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loado
       value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
     }
 
-    value += item.primStat ? item.primStat.value / 1000 : 0;
+    value += item.power / 1000;
 
     return value;
   };
@@ -72,12 +71,6 @@ export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
   );
 }
 
-const powerStatHashes = [
-  StatHashes.Attack, // D2 Attack
-  StatHashes.Defense, // D1 & D2 Defense
-  368428387, // D1 Attack
-];
-
 /**
  * A loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
  */
@@ -87,17 +80,13 @@ export function maxLightItemSet(
 ): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
   for (const i of allItems) {
-    if (
-      itemCanBeEquippedBy(i, store, true) &&
-      i.primStat?.value && // has a primary stat (sanity check)
-      powerStatHashes.includes(i.primStat.statHash) // one of our selected stats
-    ) {
+    if (i.power && itemCanBeEquippedBy(i, store, true)) {
       applicableItems.push(i);
     }
   }
 
   const bestItemFn = (item: DimItem) => {
-    let value = item.primStat?.value ?? 0;
+    let value = item.power;
 
     // Break ties when items have the same stats. Note that this should only
     // add less than 0.25 total, since in the exotics special case there can be
@@ -126,10 +115,9 @@ export function maxLightItemSet(
 export function maxStatLoadout(statHash: number, allItems: DimItem[], store: DimStore): Loadout {
   const applicableItems = allItems.filter(
     (i) =>
-      itemCanBeEquippedBy(i, store, true) &&
-      i.primStat?.value && // has a primary stat (sanity check)
-      i.stats &&
-      i.stats.some((stat) => stat.statHash === statHash) // contains our selected stat
+      i.power &&
+      i.stats?.some((stat) => stat.statHash === statHash) && // contains our selected stat
+      itemCanBeEquippedBy(i, store, true)
   );
 
   const bestItemFn = (item: DimItem) => {
