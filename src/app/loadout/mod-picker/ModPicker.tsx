@@ -4,25 +4,29 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
-import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
-import { SearchFilterRef } from 'app/search/SearchBar';
-import { AppIcon, searchIcon } from 'app/shell/icons';
-import { useIsPhonePortrait } from 'app/shell/selectors';
+import {
+  armor2PlugCategoryHashesByName,
+  MAX_ARMOR_ENERGY_CAPACITY,
+} from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { isiOSBrowser } from 'app/utils/browsers';
-import { DestinyClass, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyEnergyType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { isLoadoutBuilderItem } from '../item-utils';
-import { isInsertableArmor2Mod, sortModGroups, sortMods } from '../mod-utils';
-import ModPickerFooter from './ModPickerFooter';
-import ModPickerSection from './ModPickerSection';
+import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from '../known-values';
+import { isInsertableArmor2Mod, sortMods } from '../mod-utils';
+import PlugDrawer from './PlugDrawer';
+
+/** Slot specific mods can have at most 2 mods. */
+const MAX_SLOT_SPECIFIC_MODS = 2;
+/** Raid, combat and legacy mods can have up to 5 selected. */
+const MAX_SLOT_INDEPENDENT_MODS = 5;
 
 interface ProvidedProps {
   /**
@@ -136,133 +140,68 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose }: Props) {
-  const defs = useD2Definitions()!;
-  const [query, setQuery] = useState(initialQuery || '');
-  const [lockedModsInternal, setLockedModsInternal] = useState(() => [...lockedMods]);
-  const filterInput = useRef<SearchFilterRef | null>(null);
-  const isPhonePortrait = useIsPhonePortrait();
+  const isModSelectable = (
+    mod: PluggableInventoryItemDefinition,
+    selected: PluggableInventoryItemDefinition[]
+  ) => {
+    const { plugCategoryHash } = mod.plug;
+    const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
 
-  useEffect(() => {
-    if (!isPhonePortrait && filterInput.current) {
-      filterInput.current.focusFilterInput();
+    let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
+
+    if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      associatedLockedMods = selected.filter(
+        (mod) => mod.plug.plugCategoryHash === plugCategoryHash
+      );
+    } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
+      associatedLockedMods = selected.filter((mod) =>
+        raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+      );
+    } else {
+      associatedLockedMods = selected.filter(
+        (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+      );
     }
-  }, [isPhonePortrait, filterInput]);
 
-  /** Add a new mod to the internal mod picker state */
-  const onModSelected = useCallback(
-    (mod: PluggableInventoryItemDefinition) => {
-      setLockedModsInternal((oldState) => {
-        const newState = [...oldState];
-        newState.push(mod);
-        return newState.sort(sortMods);
-      });
-    },
-    [setLockedModsInternal]
-  );
+    // We only care about this for slot specific mods and it is used in isModSelectable. It is calculated here
+    // so it is only done once per render.
+    const lockedModCost = isSlotSpecificCategory
+      ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
+      : 0;
 
-  /** Remove a mod from the internal mod picker state */
-  const onModRemoved = useCallback(
-    (mod: PluggableInventoryItemDefinition) => {
-      setLockedModsInternal((oldState) => {
-        const firstIndex = oldState.findIndex((locked) => locked.hash === mod.hash);
+    if (isSlotSpecificCategory) {
+      // Traction has no energy type so its basically Any energy and 0 cost
+      const modCost = mod.plug.energyCost?.energyCost || 0;
+      const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
-        if (firstIndex >= 0) {
-          const newState = [...oldState];
-          newState.splice(firstIndex, 1);
-          return newState;
-        }
-
-        return oldState;
-      });
-    },
-    [setLockedModsInternal]
-  );
-
-  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
-    e.preventDefault();
-    onAccept(lockedModsInternal);
-    onClose();
+      return (
+        associatedLockedMods.length < MAX_SLOT_SPECIFIC_MODS &&
+        lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
+        (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
+          associatedLockedMods.some((l) => l.plug.energyCost?.energyType === modEnergyType) || // Matches some other enery
+          associatedLockedMods.every(
+            (l) =>
+              (l.plug.energyCost?.energyType || DestinyEnergyType.Any) === DestinyEnergyType.Any
+          )) // If every thing else is Any we are good
+      );
+    } else {
+      return associatedLockedMods.length < MAX_SLOT_INDEPENDENT_MODS;
+    }
   };
 
-  const queryFilteredMods = useMemo(() => {
-    const regexp = startWordRegexp(query, language);
-    return query.length
-      ? mods.filter(
-          (mod) =>
-            regexp.test(mod.displayProperties.name) ||
-            regexp.test(mod.displayProperties.description) ||
-            regexp.test(mod.itemTypeDisplayName) ||
-            (query.startsWith('plugCategoryHash:in:') &&
-              query.includes(`${mod.plug.plugCategoryHash}`)) ||
-            mod.perks.some((perk) => {
-              const perkDef = defs.SandboxPerk.get(perk.perkHash);
-              return (
-                perkDef &&
-                (regexp.test(perkDef.displayProperties.name) ||
-                  regexp.test(perkDef.displayProperties.description) ||
-                  regexp.test(perk.requirementDisplayString))
-              );
-            })
-        )
-      : mods;
-  }, [language, query, mods, defs.SandboxPerk]);
-
-  const groupedMods = Object.values(
-    _.groupBy(queryFilteredMods, (mod) => mod.plug.plugCategoryHash)
-  ).sort(sortModGroups);
-
-  const autoFocus = !isPhonePortrait && !isiOSBrowser();
-
-  const footer = lockedModsInternal.length
-    ? ({ onClose }: { onClose(): void }) => (
-        <ModPickerFooter
-          lockedModsInternal={lockedModsInternal}
-          isPhonePortrait={isPhonePortrait}
-          onSubmit={(e) => onSubmit(e, onClose)}
-          onModSelected={onModRemoved}
-        />
-      )
-    : undefined;
-
   return (
-    <Sheet
+    <PlugDrawer
+      title={t('LB.ChooseAMod')}
+      searchPlaceholder={t('LB.SearchAMod')}
+      acceptButtonTitle={t('LB.SelectMods')}
+      language={language}
+      initialQuery={initialQuery}
+      plugs={mods}
+      initiallySelected={lockedMods}
+      isPlugSelectable={isModSelectable}
+      onAccept={onAccept}
       onClose={onClose}
-      header={
-        <div>
-          <h1>{t('LB.ChooseAMod')}</h1>
-          <div className="item-picker-search">
-            <div className="search-filter" role="search">
-              <AppIcon icon={searchIcon} className="search-bar-icon" />
-              <input
-                className="filter-input"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                autoFocus={autoFocus}
-                placeholder={t('LB.SearchAMod')}
-                type="text"
-                name="filter"
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            </div>
-          </div>
-        </div>
-      }
-      footer={footer}
-      sheetClassName="item-picker"
-      freezeInitialHeight={true}
-    >
-      {groupedMods.map((mods) => (
-        <ModPickerSection
-          key={mods[0].plug.plugCategoryHash}
-          mods={mods}
-          lockedModsInternal={lockedModsInternal}
-          onModSelected={onModSelected}
-          onModRemoved={onModRemoved}
-        />
-      ))}
-    </Sheet>
+    />
   );
 }
 
