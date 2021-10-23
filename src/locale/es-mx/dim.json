@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Por favor, usa la App Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
-    "ConfirmTitle": "Confirmar Acción"
+    "ConfirmTitle": "Confirmar Acción",
+    "Error": "Error al cambiar objeto",
+    "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
   },
   "Accounts": {
     "ErrorLoadInventory": "No se pueden cargar tus personajes e inventario de Destiny {{version}}",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Modo Activo",
-    "ChangeFilter": "Cambiar filtro",
-    "Farming": "Objetos Recientes",
-    "FarmingStart": "Comenzar Farmeo",
-    "FarmingStop": "Detener Farmeo",
-    "Loading": "Actividad Actual",
-    "NoQuests": "No estás siguiendo ninguna aventura",
-    "NoSearches": "Crear búsquedas guardadas y filtrarlas aquí.",
-    "Offline": "Desconectado",
-    "Pursuits": "Seguimiento",
-    "SuggestedBounties": "Contratos Sugeridos"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -128,12 +116,18 @@
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
-    "D2Desc": "DIM está impidiendo que los objetos se vayan a la Administración para asegurar de que siempre haya un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos al depósito para hacer espacio.",
-    "D2Desc_female": "DIM está impidiendo que los objetos se vayan a la Administración para asegurar de que siempre hay un espacio por cada tipo de elemento en {{store}}. Se están moviendo elementos al depósito para hacer espacio.",
-    "D2Desc_male": "DIM está impidiendo que los elementos vayan a administración asegurándose de que siempre hay un espacio por tipo de elemento en {{store}}. Se están moviendo elementos al almacén para hacer espacio.",
-    "Desc": "DIM está moviendo Engramas y Lumen desde {{store}} al deposito y deja un espacio por tipo de objeto para prevenir que cualquier cosa se vaya al Administrador.",
-    "Desc_female": "DIM está moviendo Engramas y Lumen desde {{store}} al deposito y deja un espacio por tipo de objeto para prevenir que cualquier cosa se vaya al Administrador.",
-    "Desc_male": "DIM está moviendo Engramas y Lumen desde {{store}} al deposito y deja un espacio por tipo de objeto para prevenir que cualquier cosa se vaya al Administrador.",
+    "D2Desc": "DIM está impidiendo que los objetos se vayan a la Administración asegurándose de que siempre haya un espacio por tipo de objeto en {{store}}.",
+    "D2Desc_female": "DIM está impidiendo que los objetos se vayan a la Administración asegurándose de que siempre haya un espacio por tipo de objeto en {{store}}.",
+    "D2Desc_female_plural": "DIM está impidiendo que los objetos se vayan vayan a la Administración asegurándose de que siempre haya {{count}} espacios vacíos por tipo de objeto en {{store}}.",
+    "D2Desc_male": "DIM está impidiendo que los objetos se vayan a la Administración asegurándose de que siempre haya un espacio por tipo de objeto en {{store}}.",
+    "D2Desc_male_plural": "DIM está impidiendo que los objetos se vayan a la Administración asegurándose de que siempre haya {{count}} espacios vacíos por tipo de objeto en {{store}}.",
+    "D2Desc_plural": "DIM está impidiendo que los objetos se vayan a la Administración asegurándose de que siempre haya {{count}} espacios vacíos por tipo de objeto en {{store}}.",
+    "Desc": "DIM está moviendo Engramas y Objetos de Lumen de {{store}} al Deposito y mantiene un espacio vacío abierto por tipo de objeto para evitar que cualquier cosa se vaya al Administración.",
+    "Desc_female": "DIM está moviendo Engramas y Objetos de Lumen de {{store}} al Deposito y mantiene un espacio vacío abierto por tipo de objeto para evitar que cualquier cosa se vaya al Administración.",
+    "Desc_female_plural": "DIM está moviendo Engramas y objetos de Lumen de {{store}} al Deposito y mantiene {{count}} espacios abiertos por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
+    "Desc_male": "DIM está moviendo Engramas y objetos de Lumen de {{store}} a la bóveda y mantiene un espacio vacío abierto por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
+    "Desc_male_plural": "DIM está moviendo Engramas y objetos de Lumen de {{store}} al Deposito y mantiene {{count}} espacios abiertos por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
+    "Desc_plural": "DIM está moviendo Engramas y objetos de Lumen de {{store}} al Deposito y mantiene {{count}} espacios abiertos por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
     "FarmingMode": "Modo de Farmeo (hacer espacio)",
     "MakeRoom": {
       "Desc": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "Estás sin espacio para mover objetos fuera de {{character}}. ¡Es hora de tirar la basura!",
     "OutOfRoomTitle": "Sin espacio",
-    "Stop": "Detener"
+    "Stop": "Detener",
+    "Vault": "Moverá objetos al Depósito para hacer espacio."
   },
   "FileUpload": {
     "Instructions": "Haga click o arrastre archivos"
@@ -168,11 +163,12 @@
     "Cosmetic": "Muestra objetos que son cosméticos o estilo.",
     "Curated": "Muestra objetos que tengan una tirada de curador.",
     "CurrentClass": "Muestra objetos que sean equipables en el personaje conectado en estos momentos.",
+    "CustomStatLower": "Muestra armadura cuyas estadísticas son estrictamente más bajas que cualquier otra del mismo tipo de armadura, solo tomando en cuenta las estadísticas de la lista total de estadísticas personalizadas de esa clase.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
-    "DupeLower": "Objetos duplicados, incluyendo reincidencias, que no son el duplicado poderoso más alto.",
+    "DupeLower": "Objetos duplicados, incluyendo reincidencias, que no son el poder más alto del duplicado. Sólo un duplicado es elegido como el más alto, y el resto son considerados más bajos.",
     "Energy": "Muestra objetos que tienen capacidad de energía (Armadura 2.0).",
     "Engrams": "Muestra engramas.",
     "Equipment": "Objetos que pueden ser equipados.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Muestra objetos duplicados, sin contar reincidencias de una temporada diferente como el mismo objeto.",
     "StackLevel": "Muestra los elementos según la cantidad de elementos apilados.",
     "Stackable": "Muestra objetos que pueden ser apilados (munición sintética, monedas extrañas, etc)",
+    "StatLower": "Muestra armadura cuyas estadísticas son estrictamente más bajas que otra del mismo tipo de armadura.",
     "Stats": "Muestra objetos basados en un valor de estadística específico. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
     "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluir modificadores insertados u obras maestras. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
     "StatsLoadout": "Encuentra sets de objetos para equipar con el valor máximo total de una estadística específica.",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Añadir +5 Mods",
+    "AnyExotic": "Cualquier Exótico",
+    "AnyExoticDescription": "Los conjuntos deben contener un exótico, pero cualquier exótico sirve.",
     "AscendantShardDetails": "Para todos los objetos, el Optimizador asumirá los bonus de estadística de Obra Maestra y el nivel de energía. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Para los objetos legendarios, el Optimizador asumirá los bonus de estadística de Obra Maestra y el nivel de energía. {{elementLockDescription}}\n\nPara los objetos Exóticos en {{energyLevel}} o por debajo, el Optimizador asumirá {{energyLevel}} energía y cambiará el elemento según sea necesario para asignar modificadores. Los exóticos usarán sus estadísticas acutales.\n\nLos objetos de leyenda y exóticos que ya sean Obras Maestras Completas por encima de {{energyLevel}} de energía usarán su elemento existente.",
     "AscendantShardNotMasterworkedDetails": "Para todos los objetos, el Optimizador asumirá los bonus de estadística de Obra Maestra Completa y el nivel de energía. {{elementLockDescription}}\n\nLos objetos que ya sean Obra Maestra Completa usarán su elemento existente.",
@@ -443,6 +442,7 @@
     "EquipItems": "Equipar",
     "ExcludeItem": "Excluir objeto",
     "ExistingLoadout": "Equipación Existente",
+    "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
     "LegendaryShardsAndEnhancementPrismDetails": "Todas las estadísticas actuales de los objetos serán usadas. Para los objetos en {{energyLevel}} de energía o por debajo, el Optimizador asumirá {{energyLevel}} de energía. {{elementLockDescription}}\n\nLos objetos por encima de {{energyLevel}} de energía usarán su nivel de energía y elemento actuales.",
     "LockElement": "Bloquear Elemento",
@@ -454,6 +454,8 @@
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFoundWithReasons": "No se encontraron equipaciones. Esto normalmente es porque DIM no pudo asignar todos los mods seleccionados a ningún conjunto de armadura.",
     "NoComparableItems": "Esta equipación no tiene objetos comparables. Guardar el Set Optimizador añadirá los objetos a esta equipación.",
+    "NoExotic": "Sin Exótico",
+    "NoExoticDescription": "Equivalente a la búsqueda \"no:exotic\" en la barra de búsqueda - ninguna armadura exótica será incluida en los conjuntos.",
     "NoLoadoutsToCompare": "No hay equipaciones para comparar",
     "NoUpgrades": "Sin Mejoras",
     "NoUpgradesDetails": "Las estadísticas actuales, nivel de energía y elemento de tus objetos serán usados cuando se determinen los totales y se asignen los modificadores.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "Ancho de inventario de personaje",
     "InventoryColumnsMobile": "Ancho del Inventario del personaje en el celular modo retrato",
     "InventoryColumnsMobileLine2": "Los objetos serán redimensionados para acomodarse a la nueva configuración",
+    "InventoryNumberOfSpacesToClear": "Cantidad de espacios vacíos a hacer al usar el Modo de Farmeo (hacer espacio)",
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LogOut": "Cerrar sesión",
@@ -788,12 +791,18 @@
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Orden Personalizado",
-    "SortName": "Nombre"
+    "SortName": "Nombre",
+    "SpacesSize": "{{count}} espacio",
+    "SpacesSize_plural": "{{count}} espacios"
   },
   "Sockets": {
+    "ApplyPerks": "Aplicar Perks",
+    "GridStyle": "Mostrar perks como una cuadrícula",
     "InsertModButton": "Insertar Mod",
     "InsertPlugError": "No se pudo insertar mod",
-    "SelectModButton": "Selecciona Mods"
+    "ListStyle": "Mostrar perks en forma de lista",
+    "SelectModButton": "Selecciona Mods",
+    "SelectWishlistPerks": "Vista previa de la lista de deseos de Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Enfriamiento de Barricada",
