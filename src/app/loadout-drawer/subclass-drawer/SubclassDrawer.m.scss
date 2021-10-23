@@ -1,0 +1,34 @@
+.container {
+  padding: 16px;
+}
+
+.subclasses {
+  display: flex;
+  flex-direction: row;
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto;
+}
+
+.super {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.abilities {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.aspects {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.fragments {
+  grid-column: 2 / span 3;
+  grid-row: 2;
+}

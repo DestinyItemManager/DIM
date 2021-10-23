@@ -4,7 +4,8 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import type {
   DimBucketType,
   InventoryBucket,
@@ -17,6 +18,8 @@ import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
+import SavedSubclass from './SavedSubclass';
+import SubclassDrawer from './subclass-drawer/SubclassDrawer';
 
 const loadoutTypes: DimBucketType[] = [
   'Class',
@@ -94,6 +97,7 @@ export default function LoadoutDrawerContents(
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const [openSubclassDrawer, setOpenSubclassDrawer] = useState(false);
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -112,6 +116,8 @@ export default function LoadoutDrawerContents(
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
+  const subclassBucket = availableTypes.find((available) => available.type === 'Class');
+  const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
 
   return (
     <>
@@ -138,6 +144,9 @@ export default function LoadoutDrawerContents(
           <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
           </a>
+          <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {'Select Subclass'}
+          </a>
         </div>
       )}
       <div className="loadout-added-items">
@@ -154,11 +163,26 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
+      <SavedSubclass
+        bucket={subclassBucket}
+        loadoutItems={loadout.items}
+        items={subclassItems}
+        equip={equip}
+        remove={remove}
+      />
       <SavedMods
         savedMods={savedMods}
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
+      {openSubclassDrawer &&
+        ReactDOM.createPortal(
+          <SubclassDrawer
+            classType={loadout.classType}
+            onClose={() => setOpenSubclassDrawer(false)}
+          />,
+          document.body
+        )}
     </>
   );
 }
