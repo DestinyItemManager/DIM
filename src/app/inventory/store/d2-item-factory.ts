@@ -264,9 +264,10 @@ export function makeItem(
     }
   }
 
-  // shaders currently claim they belong in the Forbidden Bucket,
-  // but can be physically present in the Vault, taking up space.
-  // for these, we'll claim they are Consumables (so that they show up, and son't )
+  // shaders currently claim they belong in the Forbidden Bucket, but they can be physically
+  // present in the Vault, taking up space. so: we'll claim they are Consumables.
+  // (so that they show up in DIM, but don't cause a whole separate inventory section)
+
   // they aren't transferrable, and stop existing if removed from the vault, so they won't
   // interfere with the 50 consumables bucket limit.
   const needsShaderFix = itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
