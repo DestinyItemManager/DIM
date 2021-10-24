@@ -10,7 +10,7 @@ import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import produce from 'immer';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -381,6 +381,8 @@ function LoadoutDrawer({
   dispatch,
 }: Props) {
   const defs = useDefinitions()!;
+  const loadoutSheetRef = useRef<HTMLDivElement>(null);
+  const modPickerSheetRef = useRef<HTMLDivElement>(null);
 
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
@@ -441,6 +443,15 @@ function LoadoutDrawer({
   // Close the sheet on navigation
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
+
+  const calculauteMinSheetHeight = useCallback(() => {
+    if (loadoutSheetRef.current || modPickerSheetRef.current) {
+      return Math.max(
+        loadoutSheetRef.current?.clientHeight || 0,
+        modPickerSheetRef.current?.clientHeight || 0
+      );
+    }
+  }, []);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {
@@ -569,7 +580,7 @@ function LoadoutDrawer({
   );
 
   return (
-    <Sheet onClose={close} header={header}>
+    <Sheet onClose={close} ref={loadoutSheetRef} header={header}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget
@@ -621,6 +632,8 @@ function LoadoutDrawer({
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
+            sheetRef={modPickerSheetRef}
+            minHeight={calculauteMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,

@@ -14,7 +14,7 @@ import { RootState } from 'app/store/types';
 import { DestinyClass, DestinyEnergyType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { RefObject, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
@@ -39,6 +39,10 @@ interface ProvidedProps {
   classType: DestinyClass;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
+  /** A ref passed down to the sheets container. */
+  sheetRef?: RefObject<HTMLDivElement>;
+  /** The min height for the sheet. */
+  minHeight?: number;
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
@@ -138,7 +142,16 @@ function mapStateToProps() {
 /**
  * A sheet to pick mods that are required in the final loadout sets.
  */
-function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose }: Props) {
+function ModPicker({
+  mods,
+  language,
+  lockedMods,
+  initialQuery,
+  sheetRef,
+  minHeight,
+  onAccept,
+  onClose,
+}: Props) {
   const isModSelectable = useCallback(
     (mod: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
       const { plugCategoryHash } = mod.plug;
@@ -197,6 +210,8 @@ function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose
       initialQuery={initialQuery}
       plugs={mods}
       initiallySelected={lockedMods}
+      sheetRef={sheetRef}
+      minHeight={minHeight}
       isPlugSelectable={isModSelectable}
       onAccept={onAccept}
       onClose={onClose}
