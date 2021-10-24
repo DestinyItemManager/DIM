@@ -19,7 +19,10 @@ export default function Aspects({
   setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
   onOpenPlugPicker(): void;
 }) {
-  const plugCategoryHash = aspects[0].options[0].plug?.plugCategoryHash;
+  const plugCategoryHash =
+    aspects?.length && aspects[0].options.length
+      ? aspects[0].options[0].plug?.plugCategoryHash
+      : undefined;
   const emptySockets = _.compact(
     aspects.map(({ socket, options }) =>
       options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)

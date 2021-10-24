@@ -11,6 +11,7 @@ interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  fillScreen?: boolean;
   zIndex?: number;
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
@@ -43,6 +44,7 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  fillScreen,
   zIndex,
   freezeInitialHeight,
   allowClickThrough,
@@ -168,7 +170,7 @@ export default function Sheet({
       </a>
 
       <div
-        className="sheet-container"
+        className={clsx('sheet-container', { ['fill-screen']: fillScreen })}
         onMouseDown={dragHandleDown}
         onMouseUp={dragHandleUp}
         onTouchStart={dragHandleDown}

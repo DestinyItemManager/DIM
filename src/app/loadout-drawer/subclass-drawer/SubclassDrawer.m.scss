@@ -1,10 +1,22 @@
+@import '../../variables';
+
 .container {
   padding: 16px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  box-sizing: border-box;
 }
 
 .subclasses {
   display: flex;
   flex-direction: row;
+  margin-bottom: 32px;
+  > * {
+    cursor: pointer;
+    margin-right: 8px;
+  }
 }
 
 .optionsGrid {

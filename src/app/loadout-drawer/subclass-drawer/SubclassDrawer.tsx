@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -6,6 +7,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { allItemsSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -31,6 +33,7 @@ export default function SubclassDrawer({
   onClose(): void;
 }) {
   const defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
   const allItems = useSelector(allItemsSelector, shallowEqual);
   const [selectedSubclass, setSelectedSubclass] = useState<DimItem | undefined>(initialSubclass);
   const [selectedPlugs, setSelectedPlugs] = useState<SelectedPlugs>(() =>
@@ -46,9 +49,23 @@ export default function SubclassDrawer({
       .map((item) => item);
   }, [allItems, classType, defs]);
 
+  const screenshot =
+    !isPhonePortrait &&
+    selectedSubclass &&
+    defs?.InventoryItem.get(selectedSubclass.hash).screenshot;
+
   return (
-    <Sheet header="Subclass" onClose={onClose}>
-      <div className={styles.container}>
+    <Sheet header="Subclass" fillScreen={Boolean(screenshot)} onClose={onClose}>
+      <div
+        className={styles.container}
+        style={
+          screenshot && !isPhonePortrait
+            ? {
+                backgroundImage: `url("${bungieNetPath(screenshot)}")`,
+              }
+            : undefined
+        }
+      >
         <div className={styles.subclasses}>
           {subclasses.map((subclass) => (
             <div
@@ -65,7 +82,7 @@ export default function SubclassDrawer({
         </div>
         {selectedSubclass && defs && (
           <SubclassOptions
-            item={selectedSubclass}
+            selectedSubclass={selectedSubclass}
             defs={defs}
             selectedPlugs={selectedPlugs}
             setSelectedPlugs={setSelectedPlugs}
@@ -109,21 +126,38 @@ function getSocketsWithOptionsForCategory(
 }
 
 function SubclassOptions({
-  item,
+  selectedSubclass,
   defs,
   selectedPlugs,
   setSelectedPlugs,
 }: {
-  item: DimItem;
+  selectedSubclass: DimItem;
   defs: D2ManifestDefinitions;
   selectedPlugs: SelectedPlugs;
   setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
 }) {
   const [showPlugPicker, setShowPlugPicker] = useState(false);
-  const abilities = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Abilities);
-  const supers = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Super);
-  const aspects = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Aspects);
-  const fragments = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Fragments);
+
+  const abilities = getSocketsWithOptionsForCategory(
+    defs,
+    selectedSubclass,
+    SocketCategoryHashes.Abilities
+  );
+  const supers = getSocketsWithOptionsForCategory(
+    defs,
+    selectedSubclass,
+    SocketCategoryHashes.Super
+  );
+  const aspects = getSocketsWithOptionsForCategory(
+    defs,
+    selectedSubclass,
+    SocketCategoryHashes.Aspects
+  );
+  const fragments = getSocketsWithOptionsForCategory(
+    defs,
+    selectedSubclass,
+    SocketCategoryHashes.Fragments
+  );
 
   return (
     <div className={styles.optionsGrid}>
