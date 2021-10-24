@@ -65,10 +65,12 @@ export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loado
  */
 export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
   const { equippable } = maxLightItemSet(allItems, store);
-  return newLoadout(
+  const maxLightLoadout = newLoadout(
     store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
     equippable.map((i) => convertToLoadoutItem(i, true))
   );
+  maxLightLoadout.classType = store.classType;
+  return maxLightLoadout;
 }
 
 /**

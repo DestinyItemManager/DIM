@@ -349,7 +349,11 @@ function LoadoutPopup({
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={() => applySavedLoadout(loadout)}>
               {isMissingItems(allItems, loadout) && (
-                <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+                <AppIcon
+                  className="warning-icon"
+                  icon={faExclamationTriangle}
+                  title={t('Loadouts.MissingItemsWarning')}
+                />
               )}
               <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
               {loadout.name}

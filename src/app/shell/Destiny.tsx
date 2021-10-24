@@ -238,7 +238,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <D1LoadoutBuilder />
             )}
           </Route>
-          {account.destinyVersion === 2 && (
+          {$featureFlags.loadoutsPage && account.destinyVersion === 2 && (
             <Route path={`${path}/loadouts`} exact>
               <Loadouts account={account} />
             </Route>

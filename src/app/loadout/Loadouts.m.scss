@@ -1,0 +1,99 @@
+@import '../variables.scss';
+
+.loadout {
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-areas: 'title title title title title title' 'subClass weapons armor general mods actions';
+  grid-template-columns:
+    var(--item-size) calc(3 * var(--item-size) + 2 * var(--item-margin)) calc(
+      5 * var(--item-size) + 4 * var(--item-margin)
+    )
+    calc(2 * var(--item-size) + 1 * var(--item-margin)) 1fr max-content;
+  gap: 0 calc(4 * var(--item-margin));
+
+  h2 {
+    grid-area: title;
+    display: block;
+  }
+}
+
+.missingItems {
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: normal;
+  margin-left: 1em;
+  color: #ccc;
+
+  :global(.app-icon) {
+    margin-right: 0.5em;
+  }
+}
+
+.classIcon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 8px;
+}
+
+.subClass {
+  grid-area: subClass;
+  display: block;
+}
+
+.itemCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include vertical-space-children(var(--item-margin));
+}
+
+.items {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr 1fr;
+}
+
+:global(.category-Weapons) {
+  grid-area: weapons;
+}
+:global(.category-Armor) {
+  grid-area: armor;
+}
+:global(.category-General) {
+  grid-area: general;
+}
+
+.equipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+}
+
+.unequipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.mods {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  grid-area: mods;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.actions {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  grid-area: actions;
+  @include vertical-space-children(4px);
+}

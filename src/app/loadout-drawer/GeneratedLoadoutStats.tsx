@@ -1,4 +1,3 @@
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
@@ -85,9 +84,10 @@ export function GeneratedLoadoutStats({
 
   // Compute stats and power level.
   const stats = getArmorStats(defs, armorItems.itemSet);
-  const power =
+  const power = Math.floor(
     getLight(stores[0], weaponItems.itemSet.concat(armorItems.itemSet)) +
-    getArtifactBonus(stores[0]);
+      getArtifactBonus(stores[0])
+  );
 
   return (
     <div className="stat-bars destiny2">
@@ -95,7 +95,7 @@ export function GeneratedLoadoutStats({
         <PressTip tooltip={weaponItems.missingBuckets.length && t('Loadouts.AssumeMaxWeapons')}>
           <>
             <AppIcon icon={powerActionIcon} />
-            <FractionalPowerLevel power={power} />
+            <span>{power}</span>
             {weaponItems.missingBuckets.length ? '*' : null}
           </>
         </PressTip>

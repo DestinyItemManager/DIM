@@ -594,6 +594,7 @@
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
     "ModPlacement": "Mod Placement",
+    "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "Mods": "Mods",
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
