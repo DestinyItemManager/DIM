@@ -10,8 +10,10 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { shallowEqual, useSelector } from 'react-redux';
 import Abilities from './Abilities';
+import AspectAndFragmentDrawer from './AspectAndFragmentDrawer';
 import Aspects from './Aspects';
 import SocketOptions from './SocketOptions';
 import styles from './SubclassDrawer.m.scss';
@@ -47,14 +49,6 @@ export default function SubclassDrawer({
   return (
     <Sheet header="Subclass" onClose={onClose}>
       <div className={styles.container}>
-        {selectedSubclass && defs && (
-          <SubclassOptions
-            item={selectedSubclass}
-            defs={defs}
-            selectedPlugs={selectedPlugs}
-            setSelectedPlugs={setSelectedPlugs}
-          />
-        )}
         <div className={styles.subclasses}>
           {subclasses.map((subclass) => (
             <div
@@ -69,6 +63,14 @@ export default function SubclassDrawer({
             </div>
           ))}
         </div>
+        {selectedSubclass && defs && (
+          <SubclassOptions
+            item={selectedSubclass}
+            defs={defs}
+            selectedPlugs={selectedPlugs}
+            setSelectedPlugs={setSelectedPlugs}
+          />
+        )}
       </div>
     </Sheet>
   );
@@ -117,6 +119,7 @@ function SubclassOptions({
   selectedPlugs: SelectedPlugs;
   setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
 }) {
+  const [showPlugPicker, setShowPlugPicker] = useState(false);
   const abilities = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Abilities);
   const supers = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Super);
   const aspects = getSocketsWithOptionsForCategory(defs, item, SocketCategoryHashes.Aspects);
@@ -139,6 +142,7 @@ function SubclassOptions({
           aspects={aspects}
           selectedPlugs={selectedPlugs}
           setSelectedPlugs={setSelectedPlugs}
+          onOpenPlugPicker={() => setShowPlugPicker(true)}
         />
       </div>
       <div className={styles.fragments}>
@@ -146,8 +150,27 @@ function SubclassOptions({
           aspects={fragments}
           selectedPlugs={selectedPlugs}
           setSelectedPlugs={setSelectedPlugs}
+          onOpenPlugPicker={() => setShowPlugPicker(true)}
         />
       </div>
+      {showPlugPicker &&
+        ReactDOM.createPortal(
+          <AspectAndFragmentDrawer
+            aspects={aspects}
+            fragments={fragments}
+            selectedPlugs={selectedPlugs}
+            onAccept={(selected) => {
+              const groupedPlugs = _.groupBy(selected, (plug) => plug.plug.plugCategoryHash);
+              const newPlugs = { ...selectedPlugs };
+              for (const [plugCategoryHash, plugs] of Object.entries(groupedPlugs)) {
+                newPlugs[plugCategoryHash] = plugs;
+              }
+              setSelectedPlugs(newPlugs);
+            }}
+            onClose={() => setShowPlugPicker(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }

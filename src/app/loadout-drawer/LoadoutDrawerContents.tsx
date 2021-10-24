@@ -145,7 +145,7 @@ export default function LoadoutDrawerContents(
             <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
           </a>
           <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> {'Select Subclass'}
+            <AppIcon icon={addIcon} /> Select Subclass
           </a>
         </div>
       )}
