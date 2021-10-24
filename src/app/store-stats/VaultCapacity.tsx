@@ -8,7 +8,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
-import shadersIcon from 'destiny-icons/general/shaders2.svg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -18,7 +17,6 @@ import styles from './VaultCapacity.m.scss';
 
 const bucketIcons = {
   3313201758: modificationsIcon,
-  2973005342: shadersIcon,
   1469714392: consumablesIcon,
   138197802: vaultIcon,
 };
@@ -33,7 +31,6 @@ const vaultBucketOrder = [
   138197802,
   1469714392,
   3313201758,
-  2973005342,
 ];
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
