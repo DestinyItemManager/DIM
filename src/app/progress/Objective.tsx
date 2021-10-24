@@ -132,7 +132,7 @@ export function ObjectiveValue({
     case DestinyUnlockValueUIStyle.TimeDuration:
       return <>{timerDurationFromMs(progress)}</>;
     case DestinyUnlockValueUIStyle.Checkbox:
-      return <></>;
+      return null;
     default:
       break;
   }

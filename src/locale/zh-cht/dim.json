@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "請使用\"命運2同伴應用\"授予DIM修改您物品的許可權。",
-    "ConfirmTitle": "確認操作"
+    "ConfirmTitle": "確認操作",
+    "Error": "Error changing item",
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Active Mode",
-    "ChangeFilter": "Change Filter",
-    "Farming": "Recent Items",
-    "FarmingStart": "Start Farming",
-    "FarmingStop": "Stop Farming",
-    "Loading": "Current Activity",
-    "NoQuests": "You're not tracking any quests",
-    "NoSearches": "Create saved searches and filter them here.",
-    "Offline": "Offline",
-    "Pursuits": "Pursuits",
-    "SuggestedBounties": "Suggested Bounties"
   },
   "Activities": {
     "Activities": "活動",
@@ -128,12 +116,18 @@
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
-    "D2Desc": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
-    "D2Desc_female": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
-    "D2Desc_male": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
-    "Desc": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
-    "Desc_female": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
-    "Desc_male": "DIM將從{{store}} 處 移動記憶水晶與微光幣物品到保險庫，並且為各類物品預留一個空格以防止有物品被寄送到郵政官處。",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "收集模式（騰出空間）",
     "MakeRoom": {
       "Desc": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "空間不足",
-    "Stop": "停止"
+    "Stop": "停止",
+    "Vault": "It will move items to the vault to make room."
   },
   "FileUpload": {
     "Instructions": "選擇或拖拽檔案"
@@ -168,11 +163,12 @@
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "按照傷害類型顯示.",
     "Description": "描述",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
-    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "顯示記憶水晶.",
     "Equipment": "可以裝備的物品.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
+    "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
     "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Add +5 Mods",
+    "AnyExotic": "Any Exotic",
+    "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
@@ -443,6 +442,7 @@
     "EquipItems": "裝備",
     "ExcludeItem": "排除項目",
     "ExistingLoadout": "Existing Loadout",
+    "ExoticSpecialCategory": "Special",
     "Filter": "過濾",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
     "LockElement": "Lock Element",
@@ -454,6 +454,8 @@
     "NewEmptyLoadout": "創建配裝",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
+    "NoExotic": "No Exotic",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "NoUpgrades": "No Upgrades",
     "NoUpgradesDetails": "The current stats, energy level, and element of your items will be used when determining totals and assigning mods.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",
     "InventoryColumnsMobileLine2": "將自動調整物品大小以適配當前設置",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "物品顯示",
     "Language": "語言",
     "LogOut": "註銷",
@@ -788,12 +791,18 @@
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
     "SortCustom": "自訂排序",
-    "SortName": "名稱"
+    "SortName": "名稱",
+    "SpacesSize": "{{count}} space",
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
+    "ApplyPerks": "Apply Perks",
+    "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insert Mod",
     "InsertPlugError": "Couldn't insert mod",
-    "SelectModButton": "Select Mod"
+    "ListStyle": "Display perks as a list",
+    "SelectModButton": "Select Mod",
+    "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Barricade Cooldown",

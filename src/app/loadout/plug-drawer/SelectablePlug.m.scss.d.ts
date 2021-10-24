@@ -3,10 +3,10 @@
 interface CssExports {
   'iconContainer': string;
   'lockedPerk': string;
-  'perk': string;
-  'perkInfo': string;
-  'perkTitle': string;
+  'plug': string;
+  'plugInfo': string;
   'plugStats': string;
+  'plugTitle': string;
   'requirement': string;
   'unselectable': string;
 }

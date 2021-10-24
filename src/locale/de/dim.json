@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Bitte benutze die Destiny 2-Gefährten-App, um DIM das Modifizieren deiner Gegenstände zu erlauben.",
-    "ConfirmTitle": "Aktion bestätigen"
+    "ConfirmTitle": "Aktion bestätigen",
+    "Error": "Fehler beim Ändern des Gegenstands",
+    "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten"
   },
   "Accounts": {
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Aktiver Modus",
-    "ChangeFilter": "Filter ändern",
-    "Farming": "Neueste Gegenstände",
-    "FarmingStart": "Farmen starten",
-    "FarmingStop": "Farmen beenden",
-    "Loading": "Aktuelle Aktivität",
-    "NoQuests": "Du verfolgst keine Quests",
-    "NoSearches": "Erstelle gespeicherte Suchanfragen und filtere sie hier.",
-    "Offline": "Offline",
-    "Pursuits": "Verfolgte Ziele",
-    "SuggestedBounties": "Vorgeschlagene Beutezüge"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -128,12 +116,18 @@
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
-    "D2Desc": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Gegenstands-Typ bei {{store}} frei bleibt. Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen.",
-    "D2Desc_female": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Gegenstands-Typ bei der {{store}} frei bleibt. Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen.",
-    "D2Desc_male": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass immer ein freier Platz je Gegenstands-Typ beim {{store}} frei bleibt. Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen.",
-    "Desc": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_female": "DIM verschiebt Engramme und Glimmer-Gegenstände von der {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_male": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "D2Desc": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
+    "D2Desc_female": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
+    "D2Desc_female_plural": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
+    "D2Desc_male": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
+    "D2Desc_male_plural": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
+    "D2Desc_plural": "DIM verhindert, dass Gegenstände an den Postmeister gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
+    "Desc": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_female": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_female_plural": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_male": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_male_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "FarmingMode": "Farm Modus (macht Platz)",
     "MakeRoom": {
       "Desc": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "Du hast keinen Platz, um Items weg von {{character}} zu verschieben. Es ist Zeit den Müll wegzuschmeißen!",
     "OutOfRoomTitle": "Kein Platz mehr",
-    "Stop": "Halt"
+    "Stop": "Halt",
+    "Vault": "Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen."
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -168,11 +163,12 @@
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Curated": "Zeigt Gegenstände, welche empfohlene Perks besitzen.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
+    "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
     "Description": "Beschreibung",
     "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
-    "DupeLower": "Doppelte Gegenstände, einschließlich Neuerscheinungen, die nicht den höchsten Power-Wert haben.",
+    "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "Energy": "Zeigt Gegenstände mit Energiekapazität (Rüstung 2.0).",
     "Engrams": "Zeige Engramme.",
     "Equipment": "Gegenstände die ausgerüstet werden können.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Zeigt doppelte Gegenstände, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
+    "StatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs.",
     "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Gegenstands-Wert. Unterstützt das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
     "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk-Wert-Boni. Unterstützt das Hinzufügen von Werten durch das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 Mods hinzufügen",
+    "AnyExotic": "Irgendein Exotik",
+    "AnyExoticDescription": "Sets müssen ein Exotik beinhalten, es ist aber egal welches.",
     "AscendantShardDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Bei legendären Gegenständen geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nFür Exotics mit einer Energiekapazität von {{energyLevel}} oder darunter, geht der Optimierer von einer Energiekapazität von {{energyLevel}} aus und tauscht die Affinität bei Bedarf, um Mods zuzuweisen. Exotics werden mit den aktuellen Werten verwendet.\n\nMomentan gemeisterte, legendäre Gegenstände und Exotics, mit einer Energiekapazität über {{energyLevel}}, werden mit der bestehenden Affinität verwendet.",
     "AscendantShardNotMasterworkedDetails": "Für alle Gegenstände geht der Optimierer von Meisterwerk-Bonus und Energiekapazität aus. {{elementLockDescription}}\n\nMomentan gemeisterte Gegenstände verwenden ihre bestehende Affinität.",
@@ -443,6 +442,7 @@
     "EquipItems": "Equip",
     "ExcludeItem": "Gegenstand ausschließen",
     "ExistingLoadout": "Bestehende Ausrüstung",
+    "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
     "LegendaryShardsAndEnhancementPrismDetails": "Die aktuellen Werte aller Gegenstände werden verwendet. Für Gegenstände mit einer Energiekapazität von {{energyLevel}} oder darunter, geht der Optimierer von einer Energiekapazität von {{energyLevel}} aus. {{elementLockDescription}}\n\nGegenstände mit einer Energiekapazität über {{energyLevel}} werden ihre vorhandene Energiekapazität und Affinität verwenden.",
     "LockElement": "Affinität sperren",
@@ -454,6 +454,8 @@
     "NewEmptyLoadout": "Erstelle leere Ausrüstung",
     "NoBuildsFoundWithReasons": "Keine Builds gefunden. Dies liegt typischerweise daran, dass DIM nicht alle ausgewählten Mods einem Rüstungsset zuweisen konnte.",
     "NoComparableItems": "Diese Ausrüstung hat keine vergleichbaren Gegenstände. Das Speichern des Optimierer-Sets wird die Gegenstände zu dieser Ausrüstung hinzufügen.",
+    "NoExotic": "Kein Exotik",
+    "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
     "NoLoadoutsToCompare": "Keine Ausrüstungen für Vergleich",
     "NoUpgrades": "Keine Upgrades",
     "NoUpgradesDetails": "Die aktuellen Werte, Energiekapazität und die Affinität deiner Gegenstände werden verwendet, um die Gesamtsumme zu bestimmen und die Mods zuzuordnen.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "Charakter Inventar Spalten",
     "InventoryColumnsMobile": "Charakter-Inventar-Breite auf Mobilgeräten (Portrait)",
     "InventoryColumnsMobileLine2": "Die Größe der Gegenstände wird an die neue Einstellung angepasst",
+    "InventoryNumberOfSpacesToClear": "Anzahl der leeren Plätze, die beim Benutzen des Farmmodus bereitgestellt werden sollen (Platz machen)",
     "Items": "Gegenstands-Anzeige",
     "Language": "Sprache",
     "LogOut": "Abmelden",
@@ -788,12 +791,18 @@
     "SortByTag": "Markierung ({{taglist}})",
     "SortByType": "Typ",
     "SortCustom": "Benutzerdefinierte Sortierung",
-    "SortName": "Name"
+    "SortName": "Name",
+    "SpacesSize": "{{count}} Platz",
+    "SpacesSize_plural": "{{count}} Plätze"
   },
   "Sockets": {
+    "ApplyPerks": "Perks anwenden",
+    "GridStyle": "Perks als Raster anzeigen",
     "InsertModButton": "Mod Einsetzen",
     "InsertPlugError": "Konnte Mod nicht einfügen",
-    "SelectModButton": "Wähle Mod"
+    "ListStyle": "Perks als Liste anzeigen",
+    "SelectModButton": "Wähle Mod",
+    "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },
   "Stats": {
     "BarricadeCooldown": "Abklingzeit Barrikade",

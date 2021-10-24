@@ -8,30 +8,30 @@ import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import styles from './SelectableMod.m.scss';
+import styles from './SelectablePlug.m.scss';
 
-function SelectableMod({
-  mod,
+export default function SelectablePlug({
+  plug,
   selected,
   selectable,
-  onModSelected,
-  onModRemoved,
+  onPlugSelected,
+  onPlugRemoved,
 }: {
-  mod: PluggableInventoryItemDefinition;
+  plug: PluggableInventoryItemDefinition;
   selected: boolean;
   selectable: boolean;
-  onModSelected(mod: PluggableInventoryItemDefinition): void;
-  onModRemoved(mod: PluggableInventoryItemDefinition): void;
+  onPlugSelected(plug: PluggableInventoryItemDefinition): void;
+  onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
 }) {
   const defs = useD2Definitions()!;
   const handleClick = () => {
-    selectable && onModSelected(mod);
+    selectable && onPlugSelected(plug);
   };
 
   return (
-    <ClosableContainer enabled={selected} onClose={() => onModRemoved(mod)}>
+    <ClosableContainer enabled={selected} onClose={() => onPlugRemoved(plug)}>
       <div
-        className={clsx(styles.perk, {
+        className={clsx(styles.plug, {
           [styles.lockedPerk]: selected,
           [styles.unselectable]: !selectable,
         })}
@@ -39,11 +39,15 @@ function SelectableMod({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod className={styles.iconContainer} itemDef={mod} />
-        <div className={styles.perkInfo}>
-          <div className={styles.perkTitle}>{mod.displayProperties.name}</div>
+        <SocketDetailsMod
+          className={styles.iconContainer}
+          itemDef={plug}
+          onClick={() => onPlugSelected(plug)}
+        />
+        <div className={styles.plugInfo}>
+          <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
           {_.uniqBy(
-            mod.perks,
+            plug.perks,
             (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
           ).map((perk) => (
             <div key={perk.perkHash}>
@@ -55,7 +59,7 @@ function SelectableMod({
               )}
             </div>
           ))}
-          {mod.investmentStats
+          {plug.investmentStats
             .filter((stat) => armorStats.includes(stat.statTypeHash))
             .map((stat) => (
               <div className={styles.plugStats} key={stat.statTypeHash}>
@@ -67,5 +71,3 @@ function SelectableMod({
     </ClosableContainer>
   );
 }
-
-export default SelectableMod;

@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus itens.",
-    "ConfirmTitle": "Confirmar Ação"
+    "ConfirmTitle": "Confirmar Ação",
+    "Error": "Falha ao alterar o item",
+    "FailedToken": "Não foi possível obter a permissão para alterar o item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
@@ -14,20 +16,6 @@
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "XB1"
-  },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Modo Ativo",
-    "ChangeFilter": "Modificar Filtro",
-    "Farming": "Itens Recentes",
-    "FarmingStart": "Iniciar Farm",
-    "FarmingStop": "Parar Farm",
-    "Loading": "Atividade atual",
-    "NoQuests": "Você não está rastreando nenhuma jornada",
-    "NoSearches": "Crie pesquisas salvas e as filtre aqui.",
-    "Offline": "Offline",
-    "Pursuits": "Empreitadas",
-    "SuggestedBounties": "Contratos sugeridos"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -128,23 +116,30 @@
     "Troubleshooting": "Guia para Solução de Problemas"
   },
   "FarmingMode": {
-    "D2Desc": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
-    "D2Desc_female": "DIM evitará que os itens fiquem no Chefe do Correio para garantir que haja sempre um espaço por tipo de item disponível na {{store}}. Os itens serão movidos para o cofre para liberar espaço.",
-    "D2Desc_male": "DIM está prevenindo que os itens vão para o Chefe do Correio garantindo que sempre tenha um espaço vazio por tipo de item em {{store}}. Está movendo os itens para o cofre para abrir espaço.",
-    "Desc": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
-    "Desc_female": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
-    "Desc_male": "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+    "D2Desc": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá um único espaço livre por tipo de item em {{store}}.",
+    "D2Desc_female": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá um único espaço livre por tipo de item na {{store}}.",
+    "D2Desc_female_plural": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá {{count}} espaços livres por tipo de item na {{store}}.",
+    "D2Desc_male": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá um único espaço livre por tipo de item no {{store}}.",
+    "D2Desc_male_plural": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá {{count}} espaços livres por tipo de item na {{store}}.",
+    "D2Desc_plural": "DIM está evitando que itens sejam mantidos no Chefe do Correio, certificando-se que sempre haverá {{count}} espaços livres por tipo de item em {{store}}.",
+    "Desc": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo um único espaço livre por tipo de item para prevenir que algo vá para o Chefe do Correio.",
+    "Desc_female": "DIM está movendo engramas e consumíveis da {{store}} para o Cofre, mantendo um único espaço livre por tipo de item para prevenir que algo vá para o Chefe do Correio.",
+    "Desc_female_plural": "DIM está movendo engramas e consumíveis da {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
+    "Desc_male": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo um único espaço livre por tipo de item para prevenir que algo vá para o Chefe do Correio.",
+    "Desc_male_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
+    "Desc_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
     "FarmingMode": "Modo Farm (abrir espaço)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
-      "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_female": "O DIM está movendo apenas engramas e consumíveis da {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_male": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
     },
     "OutOfRoom": "Você está sem espaço para mover itens de {{character}}. Hora de limpar o lixo!",
     "OutOfRoomTitle": "Sem espaço",
-    "Stop": "Parar"
+    "Stop": "Parar",
+    "Vault": "Itens serão movidos para o Cofre para liberar espaço."
   },
   "FileUpload": {
     "Instructions": "Clique ou arraste arquivos"
@@ -168,11 +163,12 @@
     "Cosmetic": "Exibe itens que são de estilo ou cosméticos.",
     "Curated": "Exibe itens que possuem valores curados.",
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
+    "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
-    "DupeLower": "Itens duplicados, incluindo revisões, que não possuem o maior poder entre eles.",
+    "DupeLower": "Itens duplicados, incluindo similares, que não possuem o maior poder duplicado. Apenas uma das duplicatas é escolhida como a maior. Todos os demais são considerados menores.",
     "Energy": "Exibe itens que possuem capacidade de energia (Armaduras 2.0).",
     "Engrams": "Mostrar engramas.",
     "Equipment": "Itens que podem ser equipados.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Exibe itens duplicados, desconsiderando revisões de uma temporada diferente de um mesmo item.",
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
+    "StatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo.",
     "Stats": "Exibe itens baseado em um valor de atributo específico. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
     "StatsBase": "Filtra armaduras com base no valor base do atributo, sem incluir mods anexados ou obra-prima. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
@@ -355,7 +352,7 @@
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
-    "PreviewVendor": "Visualizar conteúdo de {{type}}",
+    "PreviewVendor": "Pré-visualizar conteúdo de {{type}}",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
   },
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Adicionar Mods +5",
+    "AnyExotic": "Qualquer exótico",
+    "AnyExoticDescription": "O set deverá conter um exótico, mas qualquer exótico servirá.",
     "AscendantShardDetails": "Para todos os itens, o Otimizador assumirá os bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "Para itens lendários, o Otimizador assumirá bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}\n\nPara itens exóticos com {{energyLevel}} de energia ou inferior, o Otimizador assumirá {{energyLevel}} de energia e substituirá o elemento para usar mods, caso necessário. Exóticos usarão seus atributos atuais.\n\nItens lendários que já são obras-primas e exóticos de energia superior a {{energyLevel}} terão o elemento atual mantido.",
     "AscendantShardNotMasterworkedDetails": "Para todos os itens, o Otimizador assumirá bônus de atributos obra-prima e nível de energia. {{elementLockDescription}}\n\nItens que já são obras-primas manterão o tipo de elemento atual.",
@@ -443,6 +442,7 @@
     "EquipItems": "Equipar",
     "ExcludeItem": "Ignorar item",
     "ExistingLoadout": "Set Existente",
+    "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
     "LegendaryShardsAndEnhancementPrismDetails": "Os atributos atuais dos itens serão mantidos. Para itens com {{energyLevel}} de energia ou inferior, o Otimizador assumirá {{energyLevel}} de energia. {{elementLockDescription}}\n\nItens acima de {{energyLevel}} de energia usarão a energia atual e manterão o tipo de elemento.",
     "LockElement": "Manter o elemento",
@@ -454,6 +454,8 @@
     "NewEmptyLoadout": "Criar set vazio",
     "NoBuildsFoundWithReasons": "Nenhum conjunto compatível encontrado. Isso geralmente ocorre quando o DIM não consegue atribuir todos os mods selecionados a nenhum conjunto de armadura.",
     "NoComparableItems": "Esse set não tem itens comparáveis. Salvando o Conjunto do Otimizador irá adicionar os itens para esse set.",
+    "NoExotic": "Nenhum exótico",
+    "NoExoticDescription": "Similar a pesquisar por \"not:exotic\" na barra de busca - nenhuma armadura exótica será incluída no set.",
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
     "NoUpgrades": "Sem Melhorias",
     "NoUpgradesDetails": "Os atributos, o nível de energia e o tipo de elemento atual dos seus itens serão mantidos para determinar os valores totais e mods que poderão ser atribuídos.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Tamanho do inventário do personagem em dispositivos móveis em modo retrato",
     "InventoryColumnsMobileLine2": "Os itens serão redimensionados para acomodar a nova configuração",
+    "InventoryNumberOfSpacesToClear": "Quantidade de espaços livres durante o Modo Farming (para liberação de espaço)",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LogOut": "Sair",
@@ -788,12 +791,18 @@
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
-    "SortName": "Nome"
+    "SortName": "Nome",
+    "SpacesSize": "{{count}} espaço",
+    "SpacesSize_plural": "{{count}} espaços"
   },
   "Sockets": {
+    "ApplyPerks": "Aplicar perks",
+    "GridStyle": "Exibir perks em grades",
     "InsertModButton": "Inserir mod",
     "InsertPlugError": "Mod não pôde ser inserido",
-    "SelectModButton": "Selecionar mod"
+    "ListStyle": "Exibir perks em listagem",
+    "SelectModButton": "Selecionar mod",
+    "SelectWishlistPerks": "Pré-visualizar lista de desejos de perks"
   },
   "Stats": {
     "BarricadeCooldown": "Carregamento da Barricada",
