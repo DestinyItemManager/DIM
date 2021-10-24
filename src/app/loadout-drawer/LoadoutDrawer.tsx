@@ -445,9 +445,9 @@ function LoadoutDrawer({
   useEffect(close, [pathname]);
 
   const calculauteMinSheetHeight = useCallback(() => {
-    if (loadoutSheetRef.current || modPickerSheetRef.current) {
+    if (loadoutSheetRef.current) {
       return Math.max(
-        loadoutSheetRef.current?.clientHeight || 0,
+        loadoutSheetRef.current.clientHeight,
         modPickerSheetRef.current?.clientHeight || 0
       );
     }
