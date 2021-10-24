@@ -264,10 +264,20 @@ export function makeItem(
     }
   }
 
-  // def.bucketTypeHash is where it goes normally
-  let normalBucket = buckets.byHash[itemDef.inventory!.bucketTypeHash];
+  // shaders currently claim they belong in the Forbidden Bucket,
+  // but can be physically present in the Vault, taking up space.
+  // for these, we'll claim they are Consumables (so that they show up, and son't )
+  // they aren't transferrable, and stop existing if removed from the vault, so they won't
+  // interfere with the 50 consumables bucket limit.
+  const needsShaderFix = itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
 
-  // DimItem.bucket is where it IS right now
+  // this is where the item would go normally (if not vaulted/postmastered).
+  // it is stored in DimItem.bucket
+  const normalBucketHash = needsShaderFix ? 1469714392 : itemDef.inventory!.bucketTypeHash;
+  let normalBucket = buckets.byHash[normalBucketHash];
+
+  // this is where the item IS, right now.
+  // it is stored in DimItem.location
   let currentBucket = buckets.byHash[item.bucketHash] || normalBucket;
   if (!normalBucket) {
     currentBucket = normalBucket = buckets.unknown;
