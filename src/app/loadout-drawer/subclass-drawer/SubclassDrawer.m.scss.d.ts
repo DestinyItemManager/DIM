@@ -5,6 +5,7 @@ interface CssExports {
   'selected': string;
   'subclass': string;
   'subclasses': string;
+  'title': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

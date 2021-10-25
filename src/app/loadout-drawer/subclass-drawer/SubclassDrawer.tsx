@@ -48,8 +48,15 @@ export default function SubclassDrawer({
     selectedSubclass &&
     defs?.InventoryItem.get(selectedSubclass.hash).screenshot;
 
+  const title =
+    subclasses.length && defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName;
+
   return (
-    <Sheet header="Subclass" fillScreen={Boolean(screenshot)} onClose={onClose}>
+    <Sheet
+      header={<div className={styles.title}>{title}</div>}
+      fillScreen={Boolean(screenshot)}
+      onClose={onClose}
+    >
       <div
         className={styles.container}
         style={
