@@ -1,4 +1,5 @@
 ## Next
+* `modslot:activity` now identifies Armor 2.0 items that have a modslot related to an activity (currently, a raid or a Nightmare mod slot).
 
 ## 6.88.0 <span class="changelog-date">(2021-10-24)</span>
 
@@ -37,7 +38,6 @@
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
 * DIM shouldn't bounce you to your D1 account when Bungie.net is having issues anymore.
 * `is:maxpower` search now shows all the items at maximum power, instead of just the items that are part of your maximum power loadout. The previous meaning has been moved to `is:maxpowerloadout`. Keep in mind that because of exotics, you may not be able to equip all your max power items at once.
-* `modslot:extra` now identifies Armor 2.0 items that have an "extra" modslot (currently, a raid or a Nightmare mod slot).
 
 ### Beta Only
 
