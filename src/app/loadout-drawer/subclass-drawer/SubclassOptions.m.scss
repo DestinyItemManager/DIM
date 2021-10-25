@@ -1,12 +1,14 @@
 .optionsGrid {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto;
 }
 
 .super {
   grid-column: 1;
   grid-row: 1 / span 2;
+  display: flex;
+  justify-content: center;
 }
 
 .abilities {
