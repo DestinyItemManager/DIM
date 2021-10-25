@@ -2,8 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'abilities': string;
-  'ability': string;
-  'option': string;
+  'container': string;
+  'options': string;
+  'title': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

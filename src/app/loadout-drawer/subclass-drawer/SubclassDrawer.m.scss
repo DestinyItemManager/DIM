@@ -12,35 +12,19 @@
 .subclasses {
   display: flex;
   flex-direction: row;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #979797;
   > * {
     cursor: pointer;
     margin-right: 8px;
   }
 }
 
-.optionsGrid {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto;
+.subclass {
+  opacity: 0.5;
 }
 
-.super {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
-.abilities {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.aspects {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-.fragments {
-  grid-column: 2 / span 3;
-  grid-row: 2;
+.selected {
+  opacity: 1;
 }

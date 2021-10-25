@@ -1,9 +1,8 @@
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import _ from 'lodash';
 import React from 'react';
 import styles from './Aspects.m.scss';
-import { Option } from './SocketOptions';
+import Option from './Option';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
 export default function Aspects({
@@ -32,38 +31,37 @@ export default function Aspects({
   const maxOptions = maxSelectable !== undefined ? maxSelectable : aspects.length;
 
   const selectedAspects = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
-  const selectionDisplay = Array.from({ length: maxOptions }, (_, index) =>
-    index < selectedAspects.length ? selectedAspects[index] : emptySocket
-  ).filter(isPluggableItem);
+  const selectionDisplay = _.compact(
+    Array.from({ length: maxOptions }, (_, index) =>
+      index < selectedAspects.length ? selectedAspects[index] : emptySocket
+    )
+  );
 
-  if (maxOptions === 0) {
-    return null;
-  }
-
-  const removeAspect = (aspect: DestinyInventoryItemDefinition) => {
-    if (isPluggableItem(aspect)) {
-      const { plugCategoryHash } = aspect.plug;
-      const currentlySelectedAspects = selectedPlugs[plugCategoryHash] || [];
-      setSelectedPlugs({
-        ...selectedPlugs,
-        [plugCategoryHash]: currentlySelectedAspects.filter(
-          (selected) => selected.hash !== aspect.hash
-        ),
-      });
-    }
+  const removeAspect = (aspect: PluggableInventoryItemDefinition) => {
+    const { plugCategoryHash } = aspect.plug;
+    const currentlySelectedAspects = selectedPlugs[plugCategoryHash] || [];
+    setSelectedPlugs({
+      ...selectedPlugs,
+      [plugCategoryHash]: currentlySelectedAspects.filter(
+        (selected) => selected.hash !== aspect.hash
+      ),
+    });
   };
 
   return (
-    <div className={styles.selectedAspects}>
-      {selectionDisplay.map((aspect, index) => (
-        <Option
-          key={`${aspect.hash}-${index}`}
-          option={aspect}
-          isSelected={false}
-          onRemove={() => removeAspect(aspect)}
-          onSelect={onOpenPlugPicker}
-        />
-      ))}
+    <div className={styles.container}>
+      {Boolean(aspects.length) && <div className={styles.title}>{aspects[0].title}</div>}
+      <div className={styles.selectedAspects}>
+        {selectionDisplay.map((aspect, index) => (
+          <Option
+            key={`${aspect.hash}-${index}`}
+            option={aspect}
+            isSelected={false}
+            onRemove={() => removeAspect(aspect)}
+            onSelect={onOpenPlugPicker}
+          />
+        ))}
+      </div>
     </div>
   );
 }

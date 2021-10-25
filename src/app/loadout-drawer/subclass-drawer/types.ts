@@ -1,9 +1,10 @@
 import { DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 
 export interface SocketWithOptions {
+  title: string;
+  plugCategoryHash?: number;
   socket: DimSocket;
-  options: DestinyInventoryItemDefinition[];
+  options: PluggableInventoryItemDefinition[];
 }
 
 export type SelectedPlugs = Record<number, PluggableInventoryItemDefinition[] | undefined>;

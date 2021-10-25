@@ -129,17 +129,15 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const footer = selected.length
-    ? ({ onClose }: { onClose(): void }) => (
-        <Footer
-          selected={selected}
-          isPhonePortrait={isPhonePortrait}
-          acceptButtonTitle={acceptButtonTitle}
-          onSubmit={(e) => onSubmit(e, onClose)}
-          onPlugSelected={onPlugRemoved}
-        />
-      )
-    : undefined;
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <Footer
+      selected={selected}
+      isPhonePortrait={isPhonePortrait}
+      acceptButtonTitle={acceptButtonTitle}
+      onSubmit={(e) => onSubmit(e, onClose)}
+      onPlugSelected={onPlugRemoved}
+    />
+  );
 
   return (
     <Sheet
