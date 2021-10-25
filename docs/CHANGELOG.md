@@ -1,5 +1,6 @@
 ## Next
 
+* DIM will now display Shaders if they were leftover in your Vault after the transmog conversion.
 * The item popup has a toggle to choose between list-style perks (easier to read!) and grid-style perks (matches in game). No, we will not add an option to change the order of the list-style perks.
 * List-style perks in the item popup have a hover tooltip on desktop so you don't have to click them if you don't want to.
 * The item popup has a button to select all the wishlisted perks if they aren't already the active perks, so you can preview the wishlisted version of the item quickly.
