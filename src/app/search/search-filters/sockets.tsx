@@ -20,13 +20,13 @@ export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['any', 'none', 'extra']),
+  suggestions: modSlotTags.concat(['any', 'none', 'activity']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
     (item: DimItem) => {
       const metadatas =
-        filterValue === 'extra'
+        filterValue === 'activity'
           ? getInterestingSocketMetadatas(item)
           : getSpecialtySocketMetadatas(item);
 
@@ -35,7 +35,9 @@ export const modslotFilter: FilterDefinition = {
       return (
         (filterValue === 'none' && !modSocketTags) ||
         (modSocketTags &&
-          (filterValue === 'any' || filterValue === 'extra' || modSocketTags.includes(filterValue)))
+          (filterValue === 'any' ||
+            filterValue === 'activity' ||
+            modSocketTags.includes(filterValue)))
       );
     },
   fromItem: (item) => {
