@@ -57,7 +57,7 @@ export default function SubclassOptions({
     <div className={styles.optionsGrid}>
       {superPlug && (
         <div className={styles.super}>
-          <BungieImage src={superPlug.displayProperties.icon} height={150} width={150} />
+          <BungieImage src={superPlug.displayProperties.icon} height={188} width={188} />
         </div>
       )}
       <div className={styles.abilities}>

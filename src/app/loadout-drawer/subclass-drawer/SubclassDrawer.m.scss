@@ -1,12 +1,24 @@
 @import '../../variables';
 
 .container {
-  padding: 16px;
-  height: 100%;
-  background-repeat: no-repeat;
   background-position: center center;
+  background-repeat: no-repeat;
   background-size: cover;
   box-sizing: border-box;
+  height: 100%;
+  padding: 16px;
+}
+
+.background {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  height: 100%;
+  opacity: 0.8;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
 }
 
 .title {

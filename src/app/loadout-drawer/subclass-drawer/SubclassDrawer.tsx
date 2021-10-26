@@ -52,21 +52,14 @@ export default function SubclassDrawer({
     subclasses.length && defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName;
 
   return (
-    <Sheet
-      header={<div className={styles.title}>{title}</div>}
-      fillScreen={Boolean(screenshot)}
-      onClose={onClose}
-    >
-      <div
-        className={styles.container}
-        style={
-          screenshot && !isPhonePortrait
-            ? {
-                backgroundImage: `url("${bungieNetPath(screenshot)}")`,
-              }
-            : undefined
-        }
-      >
+    <Sheet header={<div className={styles.title}>{title}</div>} fillScreen={true} onClose={onClose}>
+      <div className={styles.container}>
+        {screenshot && (
+          <div
+            className={styles.background}
+            style={{ backgroundImage: `url("${bungieNetPath(screenshot)}")` }}
+          />
+        )}
         <div className={styles.subclasses}>
           {subclasses.map((subclass) => (
             <div
