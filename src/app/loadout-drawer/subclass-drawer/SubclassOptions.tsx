@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -24,6 +25,7 @@ export default function SubclassOptions({
   setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
 }) {
   const [showPlugPicker, setShowPlugPicker] = useState(false);
+  const isPhonePortrait = useIsPhonePortrait();
 
   const abilities = getSocketsWithOptionsForCategory(
     defs,
@@ -55,7 +57,7 @@ export default function SubclassOptions({
 
   return (
     <div className={styles.optionsGrid}>
-      {superPlug && (
+      {!isPhonePortrait && superPlug && (
         <div className={styles.super}>
           <div className={styles.superImage}>
             <svg viewBox="0 0 94 94">

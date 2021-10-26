@@ -1,7 +1,15 @@
+@import '../../variables';
+
 .optionsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto;
+
+  @include phone-portrait {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 .super {
@@ -20,16 +28,28 @@
   margin-top: 48px;
   grid-column: 2;
   grid-row: 1;
+
+  @include phone-portrait {
+    margin-top: 16px;
+  }
 }
 
 .aspects {
   margin-top: 48px;
   grid-column: 3;
   grid-row: 1;
+
+  @include phone-portrait {
+    margin-top: 16px;
+  }
 }
 
 .fragments {
   margin-top: 24px;
   grid-column: 2 / span 3;
   grid-row: 2;
+
+  @include phone-portrait {
+    margin-top: 16px;
+  }
 }
