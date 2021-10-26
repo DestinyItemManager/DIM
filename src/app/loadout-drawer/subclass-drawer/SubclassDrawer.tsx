@@ -19,11 +19,13 @@ export default function SubclassDrawer({
   classType,
   initialSubclass,
   initialPlugs = [],
+  onAccept,
   onClose,
 }: {
   classType: DestinyClass;
   initialSubclass?: DimItem;
   initialPlugs?: PluggableInventoryItemDefinition[];
+  onAccept?(plugs: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const defs = useD2Definitions();
@@ -51,8 +53,27 @@ export default function SubclassDrawer({
   const title =
     subclasses.length && defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName;
 
+  const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
+    e.preventDefault();
+    onAccept?.(_.compact(Object.values(selectedPlugs).flat()));
+    onClose();
+  };
+
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <div>
+      <button className={styles.submitButton} type="button" onClick={(e) => onSubmit(e, onClose)}>
+        Accept
+      </button>
+    </div>
+  );
+
   return (
-    <Sheet header={<div className={styles.title}>{title}</div>} fillScreen={true} onClose={onClose}>
+    <Sheet
+      header={<div className={styles.title}>{title}</div>}
+      fillScreen={true}
+      onClose={onClose}
+      footer={footer}
+    >
       <div className={styles.container}>
         {screenshot && (
           <div

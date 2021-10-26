@@ -44,3 +44,10 @@
 .selected {
   opacity: 1;
 }
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
