@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage from 'app/dim-ui/BungieImage';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -57,7 +57,25 @@ export default function SubclassOptions({
     <div className={styles.optionsGrid}>
       {superPlug && (
         <div className={styles.super}>
-          <BungieImage src={superPlug.displayProperties.icon} height={188} width={188} />
+          <div className={styles.superImage}>
+            <svg viewBox="0 0 94 94">
+              <image
+                xlinkHref={bungieNetPath(superPlug.displayProperties.icon)}
+                width="94"
+                height="94"
+              />
+
+              <polygon
+                strokeDasharray="265.87216"
+                style={{ strokeDashoffset: 0 }}
+                fillOpacity="0"
+                stroke="#979797"
+                strokeWidth="1"
+                points="47,0 94,47 47,94 0,47"
+                strokeLinecap="butt"
+              />
+            </svg>
+          </div>
         </div>
       )}
       <div className={styles.abilities}>

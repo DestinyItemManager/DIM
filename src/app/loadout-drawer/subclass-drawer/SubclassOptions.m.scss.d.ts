@@ -6,6 +6,7 @@ interface CssExports {
   'fragments': string;
   'optionsGrid': string;
   'super': string;
+  'superImage': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
