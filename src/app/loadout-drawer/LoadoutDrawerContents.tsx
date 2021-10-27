@@ -3,7 +3,6 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -73,7 +72,8 @@ export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
-    savedMods,
+    armorMods,
+    subclassMods,
     buckets,
     items,
     stores,
@@ -86,7 +86,8 @@ export default function LoadoutDrawerContents(
     removeModByHash,
   }: {
     loadout: Loadout;
-    savedMods: PluggableInventoryItemDefinition[];
+    armorMods: PluggableInventoryItemDefinition[];
+    subclassMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
     stores: DimStore[];
     items: DimItem[];
@@ -94,7 +95,7 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
-    onUpdateMods(newModHashes: number[]): void;
+    onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
@@ -110,13 +111,17 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
-  const onSubclassUpdated = (newPlugs: PluggableInventoryItemDefinition[]) => {
-    const currentMods = loadout.parameters?.mods || [];
-    // Remove all current subclass mods
-    const cleanedMods = currentMods.filter((modHash) =>
-      subclassPlugCategoryHashes.includes(modHash)
-    );
-    onUpdateMods([...cleanedMods, ...newPlugs.map((mod) => mod.hash)]);
+
+  const onSubclassUpdated = (
+    subclass: DimItem | undefined,
+    plugs: PluggableInventoryItemDefinition[]
+  ) => {
+    if (!subclass) {
+      return;
+    }
+
+    onUpdateMods([...armorMods, ...plugs]);
+    add(subclass);
   };
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
@@ -129,6 +134,7 @@ export default function LoadoutDrawerContents(
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
   const subclassBucket = availableTypes.find((available) => available.type === 'Class');
   const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
+  const savedSubclass = subclassItems.length > 0 ? subclassItems[0] : undefined;
 
   return (
     <>
@@ -174,15 +180,23 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      <SavedSubclass
-        bucket={subclassBucket}
-        loadoutItems={loadout.items}
-        items={subclassItems}
-        equip={equip}
-        remove={remove}
-      />
+      {savedSubclass && (
+        <SavedSubclass
+          bucket={subclassBucket}
+          subclass={savedSubclass}
+          plugs={subclassMods}
+          equip={equip}
+          remove={remove}
+          onPlugClicked={(plug) =>
+            onUpdateMods([
+              ...armorMods,
+              ...subclassMods.filter((subclassMod) => plug.hash !== subclassMod.hash),
+            ])
+          }
+        />
+      )}
       <SavedMods
-        savedMods={savedMods}
+        savedMods={armorMods}
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
@@ -190,6 +204,8 @@ export default function LoadoutDrawerContents(
         ReactDOM.createPortal(
           <SubclassDrawer
             classType={loadout.classType}
+            initialSubclass={savedSubclass}
+            initialPlugs={subclassMods}
             onAccept={onSubclassUpdated}
             onClose={() => setOpenSubclassDrawer(false)}
           />,

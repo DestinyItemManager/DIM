@@ -8,7 +8,6 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes.json';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
@@ -416,6 +415,11 @@ function LoadoutDrawer({
     [defs, loadoutItems, allItems]
   );
 
+  const { armorMods, subclassMods } = useMemo(
+    () => getModsFromLoadout(defs, loadout?.parameters?.mods),
+    [loadout?.parameters?.mods, defs]
+  );
+
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
       stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
@@ -505,25 +509,19 @@ function LoadoutDrawer({
     close();
   };
 
-  const savedMods = getModsFromLoadout(defs, loadout);
-
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newModHashes: number[]) => {
+  const onUpdateMods = (newModHashes: PluggableInventoryItemDefinition[]) => {
     const newLoadout = { ...loadout };
 
     newLoadout.parameters = {
       ...newLoadout.parameters,
-      mods: newModHashes,
+      mods: newModHashes.map((mod) => mod.hash),
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
   };
 
   const onUpdateArmorMods = (newMods: PluggableInventoryItemDefinition[]) => {
-    const currentMods = loadout.parameters?.mods || [];
-    const cleanedMods = currentMods.filter(
-      (modHash) => !subclassPlugCategoryHashes.includes(modHash)
-    );
-    onUpdateMods([...cleanedMods, ...newMods.map((mod) => mod.hash)]);
+    onUpdateMods([...newMods, ...subclassMods]);
   };
 
   /** Removes a single mod from the loadout with the supplied itemHash. */
@@ -607,7 +605,8 @@ function LoadoutDrawer({
             <div className="loadout-contents">
               <LoadoutDrawerContents
                 loadout={loadout}
-                savedMods={savedMods}
+                armorMods={armorMods}
+                subclassMods={subclassMods}
                 items={items}
                 buckets={buckets}
                 stores={stores}
@@ -630,7 +629,7 @@ function LoadoutDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
-            lockedMods={savedMods}
+            lockedMods={armorMods}
             initialQuery={modPicker.query}
             onAccept={onUpdateArmorMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}

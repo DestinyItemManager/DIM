@@ -1,31 +1,27 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
+import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import _ from 'lodash';
 import React from 'react';
-import { LoadoutItem } from './loadout-types';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function SavedSubclass({
   bucket,
-  loadoutItems,
-  items,
+  subclass,
+  plugs,
   equip,
   remove,
+  onPlugClicked,
 }: {
   bucket: InventoryBucket | undefined;
-  loadoutItems: LoadoutItem[];
-  items: DimItem[];
+  subclass: DimItem;
+  plugs: PluggableInventoryItemDefinition[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
+  onPlugClicked(plug: PluggableInventoryItemDefinition): void;
 }) {
   const defs = useD2Definitions();
-  const possibleSubclasses = _.compact(
-    loadoutItems.map((loadoutItem) =>
-      items.find((item) => item.id === loadoutItem.id && item.hash === loadoutItem.hash)
-    )
-  );
-  const subclass = possibleSubclasses.length && possibleSubclasses[0];
   const subclassDef = subclass && defs?.InventoryItem.get(subclass.hash);
 
   if (!subclass || !bucket || !subclassDef) {
@@ -33,11 +29,20 @@ export default function SavedSubclass({
   }
 
   //todo do abilities, fragments and aspects
-
+  const plugKeys = {};
   return (
     <div>
       <div>{bucket.name}</div>
-      <LoadoutDrawerItem item={subclass} equip={equip} remove={remove} />
+      <div style={{ display: 'flex' }}>
+        <LoadoutDrawerItem item={subclass} equip={equip} remove={remove} />
+        {plugs.map((plug) => (
+          <LockedModIcon
+            key={getModRenderKey(plug, plugKeys)}
+            mod={plug}
+            onModClicked={() => onPlugClicked(plug)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function SubclassDrawer({
   classType: DestinyClass;
   initialSubclass?: DimItem;
   initialPlugs?: PluggableInventoryItemDefinition[];
-  onAccept(plugs: PluggableInventoryItemDefinition[]): void;
+  onAccept(subclass?: DimItem, plugs?: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const defs = useD2Definitions();
@@ -55,7 +55,7 @@ export default function SubclassDrawer({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept?.(_.compact(Object.values(selectedPlugs).flat()));
+    onAccept(selectedSubclass, _.compact(Object.values(selectedPlugs).flat()));
     onClose();
   };
 
