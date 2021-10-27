@@ -8,7 +8,7 @@ import styles from './Footer.m.scss';
 interface Props {
   isPhonePortrait: boolean;
   selected: PluggableInventoryItemDefinition[];
-  acceptButtonTitle: string;
+  acceptButtonText: string;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   onPlugSelected(plug: PluggableInventoryItemDefinition): void;
 }
@@ -16,11 +16,11 @@ interface Props {
 export default function Footer({
   isPhonePortrait,
   selected,
-  acceptButtonTitle,
+  acceptButtonText,
   onSubmit,
   onPlugSelected,
 }: Props) {
-  useHotkey('enter', acceptButtonTitle, onSubmit);
+  useHotkey('enter', acceptButtonText, onSubmit);
 
   // used for creating unique keys for the mods
   const plugCounts = {};
@@ -30,7 +30,7 @@ export default function Footer({
       <div>
         <button type="button" className={styles.submitButton} onClick={onSubmit}>
           {!isPhonePortrait && '⏎ '}
-          {acceptButtonTitle}
+          {acceptButtonText}
         </button>
       </div>
       <div className={styles.selectedMods}>

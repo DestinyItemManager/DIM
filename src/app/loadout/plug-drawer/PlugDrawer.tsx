@@ -29,7 +29,7 @@ interface Props {
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** Displayed on the accept button in the footer. */
-  acceptButtonTitle: string;
+  acceptButtonText: string;
   /** A ref passed down to the sheets container. */
   sheetRef?: RefObject<HTMLDivElement>;
   /** The min height for the sheet. */
@@ -55,7 +55,7 @@ export default function PlugDrawer({
   searchPlaceholder,
   language,
   initialQuery,
-  acceptButtonTitle,
+  acceptButtonText,
   sheetRef,
   minHeight,
   isPlugSelectable,
@@ -135,17 +135,15 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const footer = selected.length
-    ? ({ onClose }: { onClose(): void }) => (
-        <Footer
-          selected={selected}
-          isPhonePortrait={isPhonePortrait}
-          acceptButtonTitle={acceptButtonTitle}
-          onSubmit={(e) => onSubmit(e, onClose)}
-          onPlugSelected={onPlugRemoved}
-        />
-      )
-    : undefined;
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <Footer
+      selected={selected}
+      isPhonePortrait={isPhonePortrait}
+      acceptButtonText={acceptButtonText}
+      onSubmit={(e) => onSubmit(e, onClose)}
+      onPlugSelected={onPlugRemoved}
+    />
+  );
 
   return (
     <Sheet

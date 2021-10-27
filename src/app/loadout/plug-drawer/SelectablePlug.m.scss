@@ -11,6 +11,7 @@
   }
 
   border: 1px solid #666;
+  cursor: pointer;
   padding: 8px;
   display: flex;
   flex-direction: row;
@@ -36,6 +37,7 @@
 
 .unselectable {
   opacity: 0.5;
+  cursor: default;
 }
 
 .lockedPerk {

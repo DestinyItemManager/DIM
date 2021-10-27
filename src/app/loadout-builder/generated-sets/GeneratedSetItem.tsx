@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -12,7 +13,6 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import styles from './GeneratedSetItem.m.scss';
-import Sockets from './Sockets';
 
 /**
  * Shows how we recommend the energy of this armor be changed in order to fit its mods.
@@ -148,7 +148,12 @@ export default function GeneratedSetItem({
           )}
         </div>
         <div className={styles.lockedSockets}>
-          <Sockets item={item} lockedMods={assignedMods} onSocketClick={onSocketClick} />
+          <Sockets
+            item={item}
+            lockedMods={assignedMods}
+            onSocketClick={onSocketClick}
+            size="small"
+          />
         </div>
       </div>
     </div>

@@ -564,6 +564,7 @@ function LoadoutDrawer({
         isNew={isNew}
         classTypeOptions={classTypeOptions}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+        onUpdateMods={onUpdateMods}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}

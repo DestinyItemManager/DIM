@@ -64,7 +64,6 @@ export const lightStats = [...D2LightStats, ...D1LightStats];
 /** compare against DimItem.type in EN */
 export const cosmeticTypes = [
   'Shader',
-  'Shaders',
   'Ornaments',
   'Modifications',
   'Emote',
