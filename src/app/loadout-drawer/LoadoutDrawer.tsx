@@ -382,6 +382,7 @@ function LoadoutDrawer({
 }: Props) {
   const defs = useDefinitions()!;
   const loadoutSheetRef = useRef<HTMLDivElement>(null);
+  const modAssignmentDrawerRef = useRef<HTMLDivElement>(null);
 
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
@@ -443,7 +444,14 @@ function LoadoutDrawer({
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
-  const getMinSheetHeight = useCallback(() => loadoutSheetRef.current?.clientHeight, []);
+  const getMinSheetHeight = useCallback(() => {
+    if (loadoutSheetRef.current) {
+      return Math.max(
+        loadoutSheetRef.current.clientHeight,
+        modAssignmentDrawerRef.current?.clientHeight || 0
+      );
+    }
+  }, []);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {
@@ -555,6 +563,7 @@ function LoadoutDrawer({
         showClass={showClass}
         isNew={isNew}
         classTypeOptions={classTypeOptions}
+        modAssignmentDrawerRef={modAssignmentDrawerRef}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
         onUpdateMods={onUpdateMods}
         saveLoadout={onSaveLoadout}
