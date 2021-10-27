@@ -528,6 +528,7 @@
     "MaximizeLight": "Maximize Light",
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
+    "ModPlacement": "Mod Placement",
     "Mods": "Mods",
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save New",
+    "ShowModPlacement": "Show Mod Placement",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
+    "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons"
   },

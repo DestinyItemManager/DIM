@@ -74,7 +74,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
   }
 }
 
-/** Returns a map of armor hashes to stats. There should be just one of each item */
+/** Returns a map of armor stat hashes to stats. There should be just one of each item */
 export function getArmorStats(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   items: DimItem[]
