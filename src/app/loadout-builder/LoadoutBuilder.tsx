@@ -416,7 +416,7 @@ function LoadoutBuilder({
             <ModPicker
               classType={classType}
               lockedMods={lockedMods}
-              initialQuery={modPicker.initialQuery}
+              plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
               onAccept={(newLockedMods: PluggableInventoryItemDefinition[]) =>
                 lbDispatch({
                   type: 'lockedModsChanged',

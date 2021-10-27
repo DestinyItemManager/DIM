@@ -34,7 +34,7 @@ export interface LoadoutBuilderState {
   statFilters: Readonly<StatFilters>;
   modPicker: {
     open: boolean;
-    initialQuery?: string;
+    plugCategoryHashWhitelist?: number[];
   };
   compareSet?: ArmorSet;
 }
@@ -150,7 +150,7 @@ export type LoadoutBuilderAction =
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
-  | { type: 'openModPicker'; initialQuery?: string }
+  | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
   | { type: 'closeModPicker' }
   | { type: 'openCompareDrawer'; set: ArmorSet }
   | { type: 'closeCompareDrawer' };
@@ -310,7 +310,7 @@ function lbStateReducer(
         ...state,
         modPicker: {
           open: true,
-          initialQuery: action.initialQuery,
+          plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
         },
       };
     case 'closeModPicker':

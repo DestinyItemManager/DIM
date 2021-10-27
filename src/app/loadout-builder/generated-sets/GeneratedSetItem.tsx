@@ -112,9 +112,7 @@ export default function GeneratedSetItem({
     } else {
       lbDispatch({
         type: 'openModPicker',
-        initialQuery:
-          plugCategoryHashWhitelist &&
-          `plugCategoryHash:in:${JSON.stringify(plugCategoryHashWhitelist)}`,
+        plugCategoryHashWhitelist,
       });
     }
   };
