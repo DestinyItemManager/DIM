@@ -8,7 +8,7 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes';
+import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes.json';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';

@@ -3,7 +3,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes';
+import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
