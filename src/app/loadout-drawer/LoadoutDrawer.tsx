@@ -444,7 +444,7 @@ function LoadoutDrawer({
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
-  const getMinSheetHeight = useCallback(() => {
+  const calculauteMinSheetHeight = useCallback(() => {
     if (loadoutSheetRef.current) {
       return Math.max(
         loadoutSheetRef.current.clientHeight,
@@ -570,7 +570,7 @@ function LoadoutDrawer({
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
         deleteLoadout={onDeleteLoadout}
-        getMinSheetHeight={getMinSheetHeight}
+        calculauteMinSheetHeight={calculauteMinSheetHeight}
       />
       <GeneratedLoadoutStats
         stores={stores}
@@ -635,7 +635,7 @@ function LoadoutDrawer({
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
-            minHeight={getMinSheetHeight()}
+            minHeight={calculauteMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,
