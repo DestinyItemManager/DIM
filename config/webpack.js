@@ -405,6 +405,8 @@ module.exports = (env) => {
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
         // Show achievable stat ranges in LO
         '$featureFlags.loStatRanges': JSON.stringify(!env.release),
+        // Show mod assignment button in loadout drawer
+        '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

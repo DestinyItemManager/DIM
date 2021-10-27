@@ -8,6 +8,8 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import Mod from 'app/loadout/loadout-ui/Mod';
+import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -24,9 +26,7 @@ import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
-import Mod from './Mod';
 import SetStats from './SetStats';
-import Sockets from './Sockets';
 
 function getItemStats(
   defs: D2ManifestDefinitions,
@@ -222,7 +222,7 @@ export default function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} />
+                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} size="small" />
               </div>
             ))}
           </div>
@@ -262,7 +262,11 @@ export default function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets item={item} lockedMods={itemModAssignments.get(item.id)} />
+                    <Sockets
+                      item={item}
+                      lockedMods={itemModAssignments.get(item.id)}
+                      size="small"
+                    />
                   </div>
                 ))}
               </div>
