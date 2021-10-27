@@ -2,6 +2,10 @@
 
 * `modslot:activity` now identifies Armor 2.0 items that have a modslot related to an activity (currently, a raid or a Nightmare mod slot).
 
+### Beta Only
+
+* Loadouts can now show you an assignment strategy for mods. It optimizes for the least number of unassigned mods.
+
 ## 6.88.0 <span class="changelog-date">(2021-10-24)</span>
 
 * DIM will now display Shaders if they were leftover in your Vault after the transmog conversion.
@@ -10,10 +14,6 @@
 * The item popup has a button to select all the wishlisted perks if they aren't already the active perks, so you can preview the wishlisted version of the item quickly.
 * Added a "is:statlower" search that shows armor that has strictly worse stats than another piece of armor of the same type. This does not take into account special mod slots, element, or masterworked-ness. "is:customstatlower" is the same thing but only pays attention to the stats in each class' custom total stat.
 * Stat bars now correctly subtract the value of mods from the base segment.
-
-### Beta Only
-
-* Loadouts can now show you an assignment strategy for mods. It optimizes for the least number of unassigned mods.
 
 ## 6.87.0 <span class="changelog-date">(2021-10-17)</span>
 

@@ -116,18 +116,18 @@
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_female_plural": "",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
-    "D2Desc_male_plural": "",
-    "D2Desc_plural": "",
-    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_female_plural": "",
-    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_male_plural": "",
-    "Desc_plural": "",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "Farming Mode (make space)",
     "MakeRoom": {
       "Desc": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
@@ -139,7 +139,7 @@
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Stop": "Stop",
-    "Vault": ""
+    "Vault": "It will move items to the vault to make room."
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
@@ -427,8 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Add +5 Mods",
-    "AnyExotic": "",
-    "AnyExoticDescription": "",
+    "AnyExotic": "Any Exotic",
+    "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
@@ -442,7 +442,7 @@
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
     "ExistingLoadout": "Existing Loadout",
-    "ExoticSpecialCategory": "",
+    "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
     "LockElement": "Lock Element",
@@ -454,8 +454,8 @@
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
-    "NoExotic": "",
-    "NoExoticDescription": "",
+    "NoExotic": "No Exotic",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "NoUpgrades": "No Upgrades",
     "NoUpgradesDetails": "The current stats, energy level, and element of your items will be used when determining totals and assigning mods.",
@@ -768,7 +768,7 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
-    "InventoryNumberOfSpacesToClear": "",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -795,8 +795,8 @@
     "SortByType": "Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
-    "SpacesSize": "",
-    "SpacesSize_plural": ""
+    "SpacesSize": "{{count}} space",
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
