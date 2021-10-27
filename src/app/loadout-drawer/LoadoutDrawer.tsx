@@ -382,7 +382,6 @@ function LoadoutDrawer({
 }: Props) {
   const defs = useDefinitions()!;
   const loadoutSheetRef = useRef<HTMLDivElement>(null);
-  const modPickerSheetRef = useRef<HTMLDivElement>(null);
 
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
@@ -444,14 +443,7 @@ function LoadoutDrawer({
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
-  const calculauteMinSheetHeight = useCallback(() => {
-    if (loadoutSheetRef.current) {
-      return Math.max(
-        loadoutSheetRef.current.clientHeight,
-        modPickerSheetRef.current?.clientHeight || 0
-      );
-    }
-  }, []);
+  const getMinSheetHeight = useCallback(() => loadoutSheetRef.current?.clientHeight, []);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {
@@ -569,6 +561,7 @@ function LoadoutDrawer({
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
         deleteLoadout={onDeleteLoadout}
+        getMinSheetHeight={getMinSheetHeight}
       />
       <GeneratedLoadoutStats
         stores={stores}
@@ -633,8 +626,7 @@ function LoadoutDrawer({
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
-            sheetRef={modPickerSheetRef}
-            minHeight={calculauteMinSheetHeight()}
+            minHeight={getMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,

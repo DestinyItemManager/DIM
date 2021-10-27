@@ -14,7 +14,7 @@ import { RootState } from 'app/store/types';
 import { DestinyClass, DestinyEnergyType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { RefObject, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
@@ -39,8 +39,6 @@ interface ProvidedProps {
   classType: DestinyClass;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
-  /** A ref passed down to the sheets container. */
-  sheetRef?: RefObject<HTMLDivElement>;
   /** The min height for the sheet. */
   minHeight?: number;
   /** A list of plugs we are restricting the available mods to. */
@@ -155,7 +153,6 @@ function ModPicker({
   language,
   lockedMods,
   initialQuery,
-  sheetRef,
   minHeight,
   onAccept,
   onClose,
@@ -218,7 +215,6 @@ function ModPicker({
       initialQuery={initialQuery}
       plugs={mods}
       initiallySelected={lockedMods}
-      sheetRef={sheetRef}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
       onAccept={onAccept}

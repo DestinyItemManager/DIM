@@ -56,10 +56,12 @@ function Header({
 
 export default function ModAssignmentDrawer({
   loadout,
+  minHeight,
   onUpdateMods,
   onClose,
 }: {
   loadout: Loadout;
+  minHeight?: number;
   onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
@@ -104,6 +106,7 @@ export default function ModAssignmentDrawer({
     <>
       <Sheet
         header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
+        minHeight={minHeight}
         onClose={onClose}
       >
         <div className={styles.container}>
