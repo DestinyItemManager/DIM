@@ -25,7 +25,7 @@ export default function SubclassDrawer({
   classType: DestinyClass;
   initialSubclass?: DimItem;
   initialPlugs?: PluggableInventoryItemDefinition[];
-  onAccept?(plugs: PluggableInventoryItemDefinition[]): void;
+  onAccept(plugs: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const defs = useD2Definitions();

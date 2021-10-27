@@ -16,7 +16,7 @@ export default function LoadoutDrawerOptions({
   isNew,
   classTypeOptions,
   updateLoadout,
-  onUpdateMods,
+  onUpdateArmorMods,
   clashingLoadout,
   saveLoadout,
   saveAsNew,
@@ -31,7 +31,7 @@ export default function LoadoutDrawerOptions({
     value: DestinyClass;
   }[];
   updateLoadout(loadout: Loadout): void;
-  onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
+  onUpdateArmorMods(mods: PluggableInventoryItemDefinition[]): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
@@ -175,7 +175,7 @@ export default function LoadoutDrawerOptions({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
-            onUpdateMods={onUpdateMods}
+            onUpdateMods={onUpdateArmorMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body

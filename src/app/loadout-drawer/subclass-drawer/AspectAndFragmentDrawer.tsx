@@ -60,7 +60,7 @@ export default function AspectAndFragmentDrawer({
     <PlugDrawer
       title="Aspects and Fragments"
       searchPlaceholder="Search"
-      acceptButtonTitle="Confirm"
+      acceptButtonText="Confirm"
       language={language}
       plugs={[...aspectPlugs, ...fragmentPlugs]}
       onAccept={onAccept}

@@ -8,6 +8,7 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { EventBus } from 'app/utils/observable';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
@@ -507,14 +508,22 @@ function LoadoutDrawer({
   const savedMods = getModsFromLoadout(defs, loadout);
 
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
+  const onUpdateMods = (newModHashes: number[]) => {
     const newLoadout = { ...loadout };
 
     newLoadout.parameters = {
       ...newLoadout.parameters,
-      mods: newMods.map((mod) => mod.hash),
+      mods: newModHashes,
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
+  };
+
+  const onUpdateArmorMods = (newMods: PluggableInventoryItemDefinition[]) => {
+    const currentMods = loadout.parameters?.mods || [];
+    const cleanedMods = currentMods.filter(
+      (modHash) => !subclassPlugCategoryHashes.includes(modHash)
+    );
+    onUpdateMods([...cleanedMods, ...newMods.map((mod) => mod.hash)]);
   };
 
   /** Removes a single mod from the loadout with the supplied itemHash. */
@@ -553,7 +562,7 @@ function LoadoutDrawer({
         isNew={isNew}
         classTypeOptions={classTypeOptions}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        onUpdateMods={onUpdateMods}
+        onUpdateArmorMods={onUpdateArmorMods}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
@@ -603,6 +612,7 @@ function LoadoutDrawer({
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}
+                onUpdateMods={onUpdateMods}
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
@@ -622,7 +632,7 @@ function LoadoutDrawer({
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
-            onAccept={onUpdateMods}
+            onAccept={onUpdateArmorMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,
           document.body

@@ -3,6 +3,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import subclassPlugCategoryHashes from 'data/d2/subclass-plug-category-hashes';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -81,6 +82,7 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
+    onUpdateMods,
     removeModByHash,
   }: {
     loadout: Loadout;
@@ -92,6 +94,7 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+    onUpdateMods(newModHashes: number[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
@@ -107,6 +110,14 @@ export default function LoadoutDrawerContents(
     e.preventDefault();
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
+  const onSubclassUpdated = (newPlugs: PluggableInventoryItemDefinition[]) => {
+    const currentMods = loadout.parameters?.mods || [];
+    // Remove all current subclass mods
+    const cleanedMods = currentMods.filter((modHash) =>
+      subclassPlugCategoryHashes.includes(modHash)
+    );
+    onUpdateMods([...cleanedMods, ...newPlugs.map((mod) => mod.hash)]);
+  };
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
@@ -179,6 +190,7 @@ export default function LoadoutDrawerContents(
         ReactDOM.createPortal(
           <SubclassDrawer
             classType={loadout.classType}
+            onAccept={onSubclassUpdated}
             onClose={() => setOpenSubclassDrawer(false)}
           />,
           document.body
