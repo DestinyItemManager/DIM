@@ -49,11 +49,12 @@ export default function updateCSSVariables() {
   if (window.visualViewport) {
     const defineVH = () => {
       const viewport = window.visualViewport;
-      setCSSVariable('--viewport-height', `${viewport.height}px`);
+      const viewportHeight = Math.round(window.visualViewport.height);
+      setCSSVariable('--viewport-height', `${viewportHeight}px`);
       // The amount the bottom of the visual viewport is offset from the layout viewport
       setCSSVariable(
         '--viewport-bottom-offset',
-        `${window.innerHeight - (viewport.height + viewport.offsetTop)}px`
+        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`
       );
     };
     defineVH();
