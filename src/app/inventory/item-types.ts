@@ -171,7 +171,7 @@ export interface DimItem {
         stat: DestinyStatDefinition;
       })
     | null;
-  /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) but only for items that actually have power. */
+  /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) for items with power, and 0 otherwise. */
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
