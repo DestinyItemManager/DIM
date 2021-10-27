@@ -14,6 +14,7 @@ import { farmingStoreSelector } from './selectors';
 interface StoreProps {
   makeRoomForItems: boolean;
   store?: DimStore;
+  inventoryClearSpaces: number;
 }
 
 function mapStateToProps() {
@@ -21,12 +22,13 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     makeRoomForItems: settingsSelector(state).farmingMakeRoomForItems,
     store: storeSelector(state),
+    inventoryClearSpaces: Number(settingsSelector(state).inventoryClearSpaces),
   });
 }
 
 type Props = StoreProps & ThunkDispatchProp;
 
-function Farming({ store, makeRoomForItems, dispatch }: Props) {
+function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Props) {
   const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked;
     dispatch(setSettingAction('farmingMakeRoomForItems', value));
@@ -53,7 +55,9 @@ function Farming({ store, makeRoomForItems, dispatch }: Props) {
                   {t('FarmingMode.D2Desc', {
                     store: store.name,
                     context: store.genderName,
-                  })}
+                    count: inventoryClearSpaces,
+                  })}{' '}
+                  {t('FarmingMode.Vault')}
                 </p>
               </div>
             ) : (
@@ -63,6 +67,7 @@ function Farming({ store, makeRoomForItems, dispatch }: Props) {
                     ? t('FarmingMode.Desc', {
                         store: store.name,
                         context: store.genderName,
+                        count: inventoryClearSpaces,
                       })
                     : t('FarmingMode.MakeRoom.Desc', {
                         store: store.name,

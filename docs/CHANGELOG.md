@@ -1,5 +1,18 @@
 ## Next
 
+* If a loadout has items for multiple character classes in it, applying it to a character behaves as if only the items that can be equipped on that character are in the loadout.
+
+## 6.88.0 <span class="changelog-date">(2021-10-24)</span>
+
+* DIM will now display Shaders if they were leftover in your Vault after the transmog conversion.
+* The item popup has a toggle to choose between list-style perks (easier to read!) and grid-style perks (matches in game). No, we will not add an option to change the order of the list-style perks.
+* List-style perks in the item popup have a hover tooltip on desktop so you don't have to click them if you don't want to.
+* The item popup has a button to select all the wishlisted perks if they aren't already the active perks, so you can preview the wishlisted version of the item quickly.
+* Added a "is:statlower" search that shows armor that has strictly worse stats than another piece of armor of the same type. This does not take into account special mod slots, element, or masterworked-ness. "is:customstatlower" is the same thing but only pays attention to the stats in each class' custom total stat.
+* Stat bars now correctly subtract the value of mods from the base segment.
+
+## 6.87.0 <span class="changelog-date">(2021-10-17)</span>
+
 * Moved "Tracked Triumphs" section to the top of the Progress page.
 * You can now track and untrack Seasonal Challenges from the Progress page.
 * Loadout Optimizer now correctly handles nightmare mods.
@@ -8,7 +21,7 @@
 * Loadout Optimizer will warn you if you try to load a build that's for a character class you don't have.
 * If your D1 account had disappeared from DIM, it's back now.
 * Aeon exotic armor pieces now show mod slots again.
-* If a loadout has items for multiple character classes in it, applying it to a character behaves as if only the items that can be equipped on that character are in the loadout.
+* In Loadout Optimizer, the Select Exotic menu now lets you select "No Exotic" and "Any Exotic". "No Exotic" is the same as searching "not:exotic" before, and "Any Exotic" makes sure each set has an exotic, but doesn't care which one.
 
 ## 6.86.0 <span class="changelog-date">(2021-10-10)</span>
 
@@ -40,6 +53,7 @@
 * We won't automatically refresh your inventory when you're on the Loadout Optimizer screen anymore - click the refresh button or hit R to recalculate sets with your latest items.
 * The "Perks, Mods & Shaders" column in Organizer no longer shows the Kill Tracker socket.
 * The Recoil Direction stat now sorts and highlights differently in both Compare and Organizer - the best recoil is now straight up, and recoil that goes side to side is worse.
+* Farming mode can now be configured in settings to clear a preferred number of slots (1-9)
 
 ## 6.84.0 <span class="changelog-date">(2021-09-26)</span>
 

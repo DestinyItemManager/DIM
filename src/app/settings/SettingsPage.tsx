@@ -8,7 +8,7 @@ import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import { sortedStoresSelector, storesLoadedSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
@@ -40,14 +40,12 @@ import Spreadsheets from './Spreadsheets';
 interface StoreProps {
   currentAccount?: DestinyAccount;
   settings: Settings;
-  storesLoaded: boolean;
   stores: DimStore[];
 }
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
     settings: settingsSelector(state),
-    storesLoaded: storesLoadedSelector(state),
     stores: sortedStoresSelector(state),
     currentAccount: currentAccountSelector(state),
   };
@@ -116,9 +114,9 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
-function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch }: Props) {
+function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
-  useLoadStores(currentAccount, storesLoaded);
+  useLoadStores(currentAccount);
   const setSetting = useSetSetting();
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -201,6 +199,10 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
   const charColOptions = _.range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
+  }));
+  const numberOfSpacesOptions = _.range(1, 10).map((count) => ({
+    value: count,
+    name: t('Settings.SpacesSize', { count }),
   }));
   const vaultColOptions = _.range(5, 21).map((num) => ({
     value: num,
@@ -436,6 +438,13 @@ function SettingsPage({ settings, storesLoaded, stores, currentAccount, dispatch
               />
               <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
             </div>
+            <Select
+              label={t('Settings.InventoryNumberOfSpacesToClear')}
+              name="inventoryClearSpaces"
+              value={settings.inventoryClearSpaces}
+              options={numberOfSpacesOptions}
+              onChange={onChange}
+            />
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}

@@ -154,7 +154,7 @@ function WishListSettings({
               </button>
             </div>
             <div className="fineprint">{t('WishListRoll.VoltronDescription')}</div>
-            {choosyVoltronNotSelected && <p className="fineprint"></p>}
+            {choosyVoltronNotSelected && <p className="fineprint" />}
           </>
         )}
         {choosyVoltronNotSelected && (

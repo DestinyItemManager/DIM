@@ -30,7 +30,7 @@ const components = [
 
 export default function Inventory({ account }: Props) {
   const storesLoaded = useSelector(storesLoadedSelector);
-  useLoadStores(account, storesLoaded, components);
+  useLoadStores(account, components);
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;

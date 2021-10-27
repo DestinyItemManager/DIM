@@ -55,7 +55,7 @@ function EnergySwap({
         </div>
         <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
-      <div className={styles.arrow}>{'➜'}</div>
+      <div className={styles.arrow}>➜</div>
       <div className={styles.energyValue}>
         <div className={clsx({ [styles.masterworked]: resultingEnergyCapacity === 10 })}>
           {resultingEnergyCapacity}

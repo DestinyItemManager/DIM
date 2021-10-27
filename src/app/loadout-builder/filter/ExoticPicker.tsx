@@ -14,12 +14,14 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import anyExoticIcon from 'images/anyExotic.svg';
+import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LockableBucketHashes } from '../types';
 import styles from './ExoticPicker.m.scss';
-import ExoticTile, { LockedExoticWithPlugs } from './ExoticTile';
+import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
 interface Props {
   lockedExoticHash?: number;
@@ -192,6 +194,31 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
     >
       {({ onClose }) => (
         <div className={styles.container}>
+          <div>
+            <div className={styles.header}>{t('LoadoutBuilder.ExoticSpecialCategory')}</div>
+            <div className={styles.items}>
+              <FakeExoticTile
+                selected={lockedExoticHash === -1}
+                title={t('LoadoutBuilder.NoExotic')}
+                description={t('LoadoutBuilder.NoExoticDescription')}
+                icon={noExoticIcon}
+                onSelected={() => {
+                  onSelected(-1);
+                  onClose();
+                }}
+              />
+              <FakeExoticTile
+                selected={lockedExoticHash === -2}
+                title={t('LoadoutBuilder.AnyExotic')}
+                description={t('LoadoutBuilder.AnyExoticDescription')}
+                icon={anyExoticIcon}
+                onSelected={() => {
+                  onSelected(-2);
+                  onClose();
+                }}
+              />
+            </div>
+          </div>
           {filteredOrderedAndGroupedExotics.map((exotics) => (
             <div key={exotics[0].def.inventory!.bucketTypeHash}>
               <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>

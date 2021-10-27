@@ -1,7 +1,9 @@
 {
   "AWA": {
     "ConfirmDescription": "Proszę użyć aplikacji Destiny 2 Companion aby zezwolić DIM na modyfikację Twoich przedmiotów.",
-    "ConfirmTitle": "Potwierdź działanie"
+    "ConfirmTitle": "Potwierdź działanie",
+    "Error": "Błąd podczas zmiany przedmiotu",
+    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu"
   },
   "Accounts": {
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
@@ -15,20 +17,6 @@
     "Steam": "Steam",
     "Xbox": "XB1"
   },
-  "ActiveMode": {
-    "Beta": "BETA",
-    "ButtonOn": "Tryb aktywny",
-    "ChangeFilter": "Zmień Filtr",
-    "Farming": "Ostatnie przedmioty",
-    "FarmingStart": "Rozpocznij farmienie",
-    "FarmingStop": "Zatrzymaj farmienie",
-    "Loading": "Bieżąca aktywność",
-    "NoQuests": "Nie śledzisz żadnych zadań",
-    "NoSearches": "Utwórz zapisane wyszukiwania i filtruj je tutaj.",
-    "Offline": "Offline",
-    "Pursuits": "Zadania",
-    "SuggestedBounties": "Sugerowane Zlecenia"
-  },
   "Activities": {
     "Activities": "Aktywności",
     "Hard": "Trudne",
@@ -41,8 +29,8 @@
     "Season": "Season {{season}}, Year {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
     "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
-    "Unknown": "Unknown Item",
-    "WishlistedRolls": "Wishlisted Roll",
+    "Unknown": "Nieznany przedmiot",
+    "WishlistedRolls": "Roll z listy życzeń",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
     "YourItems": "Your Items"
   },
@@ -128,12 +116,18 @@
     "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
   "FarmingMode": {
-    "D2Desc": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
-    "D2Desc_female": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
-    "D2Desc_male": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
-    "Desc": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia jedno miejsce wolne na dany typ przedmiotu aby nic nie poszło do Kuriera.",
-    "Desc_female": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia jedno miejsce wolne na dany typ przedmiotu aby nic nie poszło do Kuriera.",
-    "Desc_male": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia jedno miejsce wolne na dany typ przedmiotu aby nic nie poszło do Kuriera.",
+    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
+    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
+    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
+    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "FarmingMode": "Tryb farmienia (rób miejsce)",
     "MakeRoom": {
       "Desc": "DIM przenosi tylko Engramowe i Migotowe przedmioty z {{store}} do schowka albo do innych postaci aby nic nie poszło do Kuriera.",
@@ -144,7 +138,8 @@
     },
     "OutOfRoom": "Brakuje Ci miejsca na przeniesienie przedmiotów z {{character}}. Czas usunąć śmieci!",
     "OutOfRoomTitle": "Brak wolnego miejsca",
-    "Stop": "Zatrzymaj"
+    "Stop": "Zatrzymaj",
+    "Vault": "It will move items to the vault to make room."
   },
   "FileUpload": {
     "Instructions": "Kliknij lub przeciągnij pliki"
@@ -168,11 +163,12 @@
     "Cosmetic": "Pokazuje przedmioty, które są znaczkami lub kosmetykami.",
     "Curated": "Pokazuje przedmioty, które są kurowanym rollem.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty, włącznie z powtórzeniami",
     "DupeCount": "Przedmioty, które mają określoną liczbę duplikatów.",
-    "DupeLower": "Duplikuj przedmioty, w tym powtórzenia, które nie są duplikatem najwyższej mocy.",
+    "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Pokazuje przedmioty, które mają pojemność energetyczną (Pancerz 2.0).",
     "Engrams": "Pokazuje engramy.",
     "Equipment": "Przedmioty, które można założyć.",
@@ -235,6 +231,7 @@
     "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
+    "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
     "Stats": "Pokazuje przedmioty na podstawie określonej wartości statystyki. Wspiera dodawanie wielu statystyk poprzez połączenie wielu nazw symbolem +.",
     "StatsBase": "Filtruje pancerz w oparciu o jego podstawowe statystyki, bez założonych modyfikacji lub mistrzostwa. Wspiera dodawanie statystyk przez połączenie wielu nazw symbolem +.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
@@ -430,6 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Dodaj modyfikacje +5",
+    "AnyExotic": "Dowolny Egzotyk",
+    "AnyExoticDescription": "Zestawy muszą zawierać egzotyk, ale każda egzotyk będzie działać.",
     "AscendantShardDetails": "For all items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
@@ -443,6 +442,7 @@
     "EquipItems": "Załóż",
     "ExcludeItem": "Wyklucz Przedmiot",
     "ExistingLoadout": "Istniejące uzbrojenie",
+    "ExoticSpecialCategory": "Specjalne",
     "Filter": "Filtry",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
     "LockElement": "Lock Element",
@@ -452,8 +452,10 @@
     "MissingClass": "Zestaw jest dla: {{className}}",
     "MissingClassDescription": "Zestaw który chcesz zobaczyć dotyczy klasy której nie posiadasz.",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
-    "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
+    "NoBuildsFoundWithReasons": "Nie znaleziono kompilacji. Zazwyczaj jest tak dlatego, że DIM nie mógł przypisać wszystkich wybranych modyfikacji do żadnego zestawu zbroi.",
     "NoComparableItems": "Te uzbrojenie nie ma porównywalnych przedmiotów. Zapisanie zestawu optymalizatora doda przedmioty do tego uzbrojenia.",
+    "NoExotic": "Nie Egzotyczny",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "Brak uzbrojeń do porównania",
     "NoUpgrades": "Brak ulepszeń",
     "NoUpgradesDetails": "Bieżące statystyki, poziom energii i element Twoich przedmiotów będą używane do określania sumy i przypisywania modyfikacji.",
@@ -472,7 +474,7 @@
     "SelectAssumedArmorUpgradeDescription": "Wybierz strategie ulepszenia pancerza na podstawie materiałów, które chcesz wydać. Optymalizator uzbrojenia planuje ulepszenia pancerza, które mogą zwiększyć statystyki lub energię modyfikacji lub zmienić element przedmiotu.",
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
-    "ShareBuild": "Share Build Settings",
+    "ShareBuild": "Udostępnij ustawienia buildu",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",
@@ -763,6 +765,7 @@
     "InventoryColumns": "Szerokość ekwipunku postaci",
     "InventoryColumnsMobile": "Szerokość ekwipunku postaci na mobilnym trybie portretowym",
     "InventoryColumnsMobileLine2": "Elementy zostaną przeskalowane, aby uwzględnić nowe ustawienie",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
     "Items": "Wyświetlanie przedmiotu",
     "Language": "Język",
     "LogOut": "Wyloguj się",
@@ -788,12 +791,18 @@
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Rodzaj",
     "SortCustom": "Sortowanie niestandardowe",
-    "SortName": "Nazwa"
+    "SortName": "Nazwa",
+    "SpacesSize": "{{count}} space",
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
+    "ApplyPerks": "Zastosuj perki",
+    "GridStyle": "Wyświetl perki w siatce",
     "InsertModButton": "Wstaw modyfikację",
     "InsertPlugError": "Nie można wstawić modyfikacji",
-    "SelectModButton": "Select Mod"
+    "ListStyle": "Wyświetlaj perki jako listę",
+    "SelectModButton": "Wybierz modyfikacje",
+    "SelectWishlistPerks": "Podgląd listy życzeń perków"
   },
   "Stats": {
     "BarricadeCooldown": "Odnowienie barykady",

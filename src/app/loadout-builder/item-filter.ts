@@ -11,6 +11,7 @@ import {
   ItemsByBucket,
   LockableBucketHash,
   LockableBucketHashes,
+  LOCKED_EXOTIC_NO_EXOTIC,
   PinnedItems,
 } from './types';
 
@@ -62,6 +63,8 @@ export function filterItems(
         firstPassFilteredItems = [pinnedItem];
       } else if (exotics.length) {
         firstPassFilteredItems = exotics;
+      } else if (lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC) {
+        firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
       }
 
       // No matter the results we need to filter by mod energy otherwise mod assignment

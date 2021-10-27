@@ -41,7 +41,7 @@ function D1Vendors({ account, stores, currencies, ownedItemHashes, dispatch }: P
     [vendorHash: number]: Vendor;
   }>();
 
-  useLoadStores(account, stores.length > 0);
+  useLoadStores(account);
 
   useEffect(() => {
     (async () => {

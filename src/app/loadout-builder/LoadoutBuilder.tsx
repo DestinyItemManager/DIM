@@ -34,7 +34,7 @@ import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import ModPicker from '../loadout/mod-picker/ModPicker';
+import ModPicker from '../loadout/ModPicker';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
@@ -45,7 +45,7 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { generalSocketReusablePlugSetHash, ItemsByBucket } from './types';
+import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOTIC } from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -253,7 +253,8 @@ function LoadoutBuilder({
     upgradeSpendTier,
     lockItemEnergyType,
     statOrder,
-    statFilters
+    statFilters,
+    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC
   );
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts

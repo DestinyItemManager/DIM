@@ -2,54 +2,80 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
+import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
   AwaType,
   AwaUserSelection,
+  DestinyItemChangeResponse,
   DestinySocketArrayType,
   insertSocketPlug,
 } from 'bungie-api-ts/destiny2';
 import { get, set } from 'idb-keyval';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
-import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
+import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
-import { bucketsSelector } from './selectors';
+import { bucketsSelector, currentStoreSelector } from './selectors';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
 };
 
-// TODO: owner can't be "vault" I bet
 export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
-    const actionToken = await getAwaToken(account, AwaType.InsertPlugs, item);
 
-    // TODO: Catch errors and show a notification?
+    // The API requires either the ID of the character that owns the item, or
+    // the current character ID if the item is in the vault.
+    const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
+    try {
+      const actionToken = await getAwaToken(account, AwaType.InsertPlugs, storeId, item);
+      // TODO: if the plug costs resources to insert, add a confirmation. This'd
+      // be a great place for a dialog component?
 
-    // TODO: if the plug costs resources to insert, add a confirmation. This'd
-    // be a great place for a dialog component?
+      const response = await insertSocketPlug(authenticatedHttpClient, {
+        actionToken,
+        itemInstanceId: item.id,
+        plug: {
+          socketIndex: socket.socketIndex,
+          socketArrayType: DestinySocketArrayType.Default,
+          plugItemHash,
+        },
+        characterId: storeId,
+        membershipType: account.originalPlatformType,
+      });
 
-    const response = await insertSocketPlug(authenticatedHttpClient, {
-      actionToken,
-      itemInstanceId: item.id,
-      plug: {
-        socketIndex: socket.socketIndex,
-        socketArrayType: DestinySocketArrayType.Default,
-        plugItemHash,
-      },
-      characterId: item.owner,
-      membershipType: account.originalPlatformType,
-    });
+      // Update items that changed
+      await dispatch(refreshItemAfterAWA(item, response.Response));
+    } catch (e) {
+      errorLog('AWA', "Couldn't insert plug", item, e);
+      showNotification({ type: 'error', title: t('AWA.Error'), body: e.message });
+    }
+  };
+}
 
+/**
+ * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
+ */
+function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse): ThunkResult {
+  return async (dispatch, getState) => {
     // Update items that changed
     // TODO: reload item instead
+    const account = currentAccountSelector(getState())!;
+    try {
+      const itemInfo = await getSingleItem(item.id, account);
+      changes = { ...changes, item: itemInfo };
+    } catch (e) {
+      errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
+    }
+
     dispatch(
       awaItemChanged({
-        changes: response.Response,
+        changes,
         defs: d2ManifestSelector(getState())!,
         buckets: bucketsSelector(getState())!,
       })
@@ -68,6 +94,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
 export async function getAwaToken(
   account: DestinyAccount,
   action: AwaType,
+  storeId: string,
   item?: DimItem
 ): Promise<string> {
   if (!awaCache) {
@@ -88,7 +115,7 @@ export async function getAwaToken(
 
       // TODO: Do we need to cache a token per item?
       info = awaCache[action] = {
-        ...(await requestAdvancedWriteActionToken(account, action, item)),
+        ...(await requestAdvancedWriteActionToken(account, action, storeId, item)),
         used: 0,
       };
 
@@ -100,13 +127,13 @@ export async function getAwaToken(
       }
       */
     } catch (e) {
-      throw new Error('Unable to get a token: ' + e.message);
+      throw new DimError('AWA.FailedToken').withError(e);
 
       // TODO: handle userSelection, responseReason (TimedOut, Replaced)
     }
 
     if (!info || !tokenValid(info)) {
-      throw new Error('Unable to get a token: ' + (info ? info.developerNote : 'no response'));
+      throw new DimError('AWA.FailedToken', info ? info.developerNote : 'no response');
     }
   }
 
