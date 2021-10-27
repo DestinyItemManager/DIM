@@ -200,7 +200,7 @@ function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose
     <PlugDrawer
       title={t('LB.ChooseAMod')}
       searchPlaceholder={t('LB.SearchAMod')}
-      acceptButtonTitle={t('LB.SelectMods')}
+      acceptButtonText={t('LB.SelectMods')}
       language={language}
       initialQuery={initialQuery}
       plugs={mods}
