@@ -9,11 +9,11 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useReducer } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { sdInit, sdReducer } from './reducer';
 import styles from './SubclassDrawer.m.scss';
 import SubclassOptions from './SubclassOptions';
-import { SelectedPlugs } from './types';
 
 export default function SubclassDrawer({
   classType,
@@ -31,7 +31,6 @@ export default function SubclassDrawer({
   const defs = useD2Definitions();
   const isPhonePortrait = useIsPhonePortrait();
   const allItems = useSelector(allItemsSelector, shallowEqual);
-  const [selectedSubclass, setSelectedSubclass] = useState<DimItem | undefined>(initialSubclass);
 
   const subclasses = useMemo(() => {
     if (!defs) {
@@ -42,24 +41,24 @@ export default function SubclassDrawer({
       .map((item) => item);
   }, [allItems, classType, defs]);
 
-  const [selectedPlugsBySubclass, setSelectedPlugsBySubclass] = useState(() =>
-    createSelectedPlugsInitialState(subclasses, initialSubclass, initialPlugs)
+  const [state, dispatch] = useReducer(
+    sdReducer,
+    { subclasses, initialSubclass, initialPlugs },
+    sdInit
   );
 
   const screenshot =
-    !isPhonePortrait &&
-    selectedSubclass &&
-    defs?.InventoryItem.get(selectedSubclass.hash).screenshot;
+    !isPhonePortrait && state.subclass && defs?.InventoryItem.get(state.subclass.hash).screenshot;
 
   const title =
     subclasses.length && defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName;
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    const plugs = selectedSubclass
-      ? _.compact(Object.values(selectedPlugsBySubclass[selectedSubclass.hash]).flat())
+    const plugs = state.subclass
+      ? _.compact(Object.values(state.plugsBySubclassHash[state.subclass.hash]).flat())
       : [];
-    onAccept(selectedSubclass, plugs);
+    onAccept(state.subclass, plugs);
     onClose();
   };
 
@@ -89,9 +88,9 @@ export default function SubclassDrawer({
           {subclasses.map((subclass) => (
             <div
               key={subclass.id}
-              onClick={() => setSelectedSubclass(subclass)}
+              onClick={() => dispatch({ type: 'update-subclass', subclass })}
               className={clsx('loadout-item', styles.subclass, {
-                [styles.selected]: subclass.id === selectedSubclass?.id,
+                [styles.selected]: subclass.id === state.subclass?.id,
               })}
             >
               <ConnectedInventoryItem item={subclass} ignoreSelectedPerks={true} />
@@ -101,42 +100,15 @@ export default function SubclassDrawer({
             </div>
           ))}
         </div>
-        {selectedSubclass && defs && (
+        {state.subclass && defs && (
           <SubclassOptions
-            selectedSubclass={selectedSubclass}
+            selectedSubclass={state.subclass}
             defs={defs}
-            selectedPlugs={selectedPlugsBySubclass[selectedSubclass.hash]}
-            setSelectedPlugs={(selectedPlugs) => {
-              if (selectedSubclass) {
-                setSelectedPlugsBySubclass((oldState) => {
-                  const newState = { ...oldState };
-                  newState[selectedSubclass.hash] = selectedPlugs;
-                  return newState;
-                });
-              }
-            }}
+            selectedPlugs={state.plugsBySubclassHash[state.subclass.hash]}
+            dispatch={dispatch}
           />
         )}
       </div>
     </Sheet>
   );
-}
-
-function createSelectedPlugsInitialState(
-  subclasses: DimItem[],
-  initialSubclass: DimItem | undefined,
-  initialPlugs: PluggableInventoryItemDefinition[]
-): { [subclassHash: number]: SelectedPlugs } {
-  const initialState = {};
-  for (const subclass of subclasses) {
-    initialState[subclass.hash] = {};
-  }
-  if (initialSubclass) {
-    initialState[initialSubclass.hash] = _.groupBy(
-      initialPlugs,
-      (item) => item.plug.plugCategoryHash
-    );
-  }
-
-  return initialState;
 }

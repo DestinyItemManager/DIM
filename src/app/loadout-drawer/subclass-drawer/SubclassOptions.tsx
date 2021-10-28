@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 import Abilities from './Abilities';
 import AspectAndFragmentDrawer from './AspectAndFragmentDrawer';
 import Aspects from './Aspects';
+import { SDDispatch } from './reducer';
 import styles from './SubclassOptions.m.scss';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
@@ -17,12 +18,12 @@ export default function SubclassOptions({
   selectedSubclass,
   defs,
   selectedPlugs,
-  setSelectedPlugs,
+  dispatch,
 }: {
   selectedSubclass: DimItem;
   defs: D2ManifestDefinitions;
   selectedPlugs: SelectedPlugs;
-  setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
+  dispatch: SDDispatch;
 }) {
   const [showPlugPicker, setShowPlugPicker] = useState(false);
   const isPhonePortrait = useIsPhonePortrait();
@@ -81,17 +82,13 @@ export default function SubclassOptions({
         </div>
       )}
       <div className={styles.abilities}>
-        <Abilities
-          abilities={abilities}
-          selectedPlugs={selectedPlugs}
-          setSelectedPlugs={setSelectedPlugs}
-        />
+        <Abilities abilities={abilities} selectedPlugs={selectedPlugs} dispatch={dispatch} />
       </div>
       <div className={styles.aspects}>
         <Aspects
           aspects={aspects}
           selectedPlugs={selectedPlugs}
-          setSelectedPlugs={setSelectedPlugs}
+          dispatch={dispatch}
           onOpenPlugPicker={() => setShowPlugPicker(true)}
         />
       </div>
@@ -100,7 +97,7 @@ export default function SubclassOptions({
           aspects={fragments}
           selectedPlugs={selectedPlugs}
           maxSelectable={maxFragments}
-          setSelectedPlugs={setSelectedPlugs}
+          dispatch={dispatch}
           onOpenPlugPicker={() => setShowPlugPicker(true)}
         />
       </div>
@@ -118,7 +115,7 @@ export default function SubclassOptions({
                   newPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
                 }
               }
-              setSelectedPlugs(newPlugs);
+              dispatch({ type: 'update-plugs', selectedPlugs: newPlugs });
             }}
             onClose={() => setShowPlugPicker(false)}
           />,

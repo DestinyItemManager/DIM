@@ -3,19 +3,20 @@ import _ from 'lodash';
 import React from 'react';
 import styles from './Aspects.m.scss';
 import Option from './Option';
+import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
 export default function Aspects({
   aspects,
   maxSelectable,
   selectedPlugs,
-  setSelectedPlugs,
+  dispatch,
   onOpenPlugPicker,
 }: {
   aspects: SocketWithOptions[];
   maxSelectable?: number;
   selectedPlugs: SelectedPlugs;
-  setSelectedPlugs(selectedPlugs: SelectedPlugs): void;
+  dispatch: SDDispatch;
   onOpenPlugPicker(): void;
 }) {
   const plugCategoryHash =
@@ -39,13 +40,9 @@ export default function Aspects({
 
   const removeAspect = (aspect: PluggableInventoryItemDefinition) => {
     const { plugCategoryHash } = aspect.plug;
-    const currentlySelectedAspects = selectedPlugs[plugCategoryHash] || [];
-    setSelectedPlugs({
-      ...selectedPlugs,
-      [plugCategoryHash]: currentlySelectedAspects.filter(
-        (selected) => selected.hash !== aspect.hash
-      ),
-    });
+    const newAspects =
+      selectedPlugs[plugCategoryHash]?.filter((selected) => selected.hash !== aspect.hash) || [];
+    dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
   };
 
   return (
