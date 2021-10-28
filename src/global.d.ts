@@ -28,6 +28,8 @@ declare const $featureFlags: {
   loStatRanges: boolean;
   /** Show mod assignment button in loadout drawer */
   loadoutModAssignments: boolean;
+  /** Enable the subclass drawer in loadouts */
+  loadoutSubclasses: boolean;
 };
 
 declare function ga(...params: string[]);

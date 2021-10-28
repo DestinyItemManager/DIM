@@ -22,7 +22,6 @@ import SavedSubclass from './SavedSubclass';
 import SubclassDrawer from './subclass-drawer/SubclassDrawer';
 
 const loadoutTypes: DimBucketType[] = [
-  'Class',
   'Primary',
   'Special',
   'Heavy',
@@ -52,7 +51,6 @@ const loadoutTypes: DimBucketType[] = [
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
 // like emblems and ships and horns.
 export const fromEquippedTypes: DimBucketType[] = [
-  'Class',
   'KineticSlot',
   'Energy',
   'Power',
@@ -67,6 +65,11 @@ export const fromEquippedTypes: DimBucketType[] = [
   'Artifact',
   'Ghost',
 ];
+
+if (!$featureFlags.loadoutSubclasses) {
+  loadoutTypes.splice(0, 0, 'Class');
+  fromEquippedTypes.splice(0, 0, 'Class');
+}
 
 export default function LoadoutDrawerContents(
   this: void,
@@ -132,7 +135,7 @@ export default function LoadoutDrawerContents(
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
-  const subclassBucket = availableTypes.find((available) => available.type === 'Class');
+  const subclassBucket = buckets.byType['Class'];
   const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
   const savedSubclass = subclassItems.length > 0 ? subclassItems[0] : undefined;
 
@@ -140,6 +143,11 @@ export default function LoadoutDrawerContents(
     <>
       {typesWithoutItems.length > 0 && (
         <div className="loadout-add-types">
+          {$featureFlags.loadoutSubclasses && subclassItems.length > 0 && (
+            <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
+              <AppIcon icon={addIcon} /> {subclassBucket.name}
+            </a>
+          )}
           {showFillFromEquipped && (
             <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
               <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
@@ -160,9 +168,6 @@ export default function LoadoutDrawerContents(
           ))}
           <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
-          </a>
-          <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> Select Subclass
           </a>
         </div>
       )}

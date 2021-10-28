@@ -1,0 +1,30 @@
+.title {
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.subclassAndPlugs {
+  display: flex;
+  flex-direction: row;
+  margin-top: 4px;
+}
+
+.subclass {
+  margin-right: 16px;
+
+  &::after {
+    content: '';
+    vertical-align: middle;
+    display: inline-block;
+    border-right: 1px solid white;
+  }
+}
+
+.plugs {
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    margin-right: 8px;
+  }
+}
