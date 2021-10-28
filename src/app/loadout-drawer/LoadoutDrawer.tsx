@@ -444,6 +444,9 @@ function LoadoutDrawer({
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
+  // This calculates the largest height of the currently open sheets.This is so we can open new
+  // sheets with a minHeight that will match the open sheets. A bunch of sheets that are almost
+  // the same height.
   const calculauteMinSheetHeight = useCallback(() => {
     if (loadoutSheetRef.current) {
       return Math.max(
