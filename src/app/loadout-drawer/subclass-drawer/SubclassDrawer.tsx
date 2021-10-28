@@ -32,9 +32,6 @@ export default function SubclassDrawer({
   const isPhonePortrait = useIsPhonePortrait();
   const allItems = useSelector(allItemsSelector, shallowEqual);
   const [selectedSubclass, setSelectedSubclass] = useState<DimItem | undefined>(initialSubclass);
-  const [selectedPlugs, setSelectedPlugs] = useState<SelectedPlugs>(() =>
-    _.groupBy(initialPlugs, (item) => item.plug.plugCategoryHash)
-  );
 
   const subclasses = useMemo(() => {
     if (!defs) {
@@ -44,6 +41,10 @@ export default function SubclassDrawer({
       .filter((item) => item.bucket.type === 'Class' && item.classType === classType)
       .map((item) => item);
   }, [allItems, classType, defs]);
+
+  const [selectedPlugsBySubclass, setSelectedPlugsBySubclass] = useState(() =>
+    createSelectedPlugsInitialState(subclasses, initialSubclass, initialPlugs)
+  );
 
   const screenshot =
     !isPhonePortrait &&
@@ -55,7 +56,10 @@ export default function SubclassDrawer({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(selectedSubclass, _.compact(Object.values(selectedPlugs).flat()));
+    const plugs = selectedSubclass
+      ? _.compact(Object.values(selectedPlugsBySubclass[selectedSubclass.hash]).flat())
+      : [];
+    onAccept(selectedSubclass, plugs);
     onClose();
   };
 
@@ -101,11 +105,38 @@ export default function SubclassDrawer({
           <SubclassOptions
             selectedSubclass={selectedSubclass}
             defs={defs}
-            selectedPlugs={selectedPlugs}
-            setSelectedPlugs={setSelectedPlugs}
+            selectedPlugs={selectedPlugsBySubclass[selectedSubclass.hash]}
+            setSelectedPlugs={(selectedPlugs) => {
+              if (selectedSubclass) {
+                setSelectedPlugsBySubclass((oldState) => {
+                  const newState = { ...oldState };
+                  newState[selectedSubclass.hash] = selectedPlugs;
+                  return newState;
+                });
+              }
+            }}
           />
         )}
       </div>
     </Sheet>
   );
+}
+
+function createSelectedPlugsInitialState(
+  subclasses: DimItem[],
+  initialSubclass: DimItem | undefined,
+  initialPlugs: PluggableInventoryItemDefinition[]
+): { [subclassHash: number]: SelectedPlugs } {
+  const initialState = {};
+  for (const subclass of subclasses) {
+    initialState[subclass.hash] = {};
+  }
+  if (initialSubclass) {
+    initialState[initialSubclass.hash] = _.groupBy(
+      initialPlugs,
+      (item) => item.plug.plugCategoryHash
+    );
+  }
+
+  return initialState;
 }
