@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* Loadouts can now save stasis subclass abilities, aspects, and fragments.
+
 ## 6.88.1 <span class="changelog-date">(2021-10-28)</span>
 
 * `modslot:activity` now identifies Armor 2.0 items that have a modslot related to an activity (currently, a raid or a Nightmare mod slot).
