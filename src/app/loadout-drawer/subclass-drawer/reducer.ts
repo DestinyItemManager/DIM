@@ -1,7 +1,7 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React from 'react';
+import { Dispatch } from 'react';
 import { SelectedPlugs } from './types';
 
 interface SDState {
@@ -18,7 +18,7 @@ type SDAction =
       plugCategoryHash: number;
     };
 
-export type SDDispatch = React.Dispatch<SDAction>;
+export type SDDispatch = Dispatch<SDAction>;
 
 export function sdReducer(state: SDState, action: SDAction): SDState {
   switch (action.type) {
