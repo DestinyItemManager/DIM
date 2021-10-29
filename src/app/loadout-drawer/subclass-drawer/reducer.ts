@@ -11,7 +11,7 @@ interface SDState {
 
 type SDAction =
   | { type: 'update-subclass'; subclass: DimItem }
-  | { type: 'update-plugs'; selectedPlugs: SelectedPlugs }
+  | { type: 'update-plugs'; plugs: PluggableInventoryItemDefinition[] }
   | {
       type: 'update-plugs-by-plug-category-hash';
       plugs: PluggableInventoryItemDefinition[];
@@ -29,10 +29,17 @@ export function sdReducer(state: SDState, action: SDAction): SDState {
       });
     }
     case 'update-plugs': {
-      const { selectedPlugs } = action;
+      const { plugs } = action;
       return produce(state, (draft) => {
-        if (draft.subclass) {
-          draft.plugsBySubclassHash[draft.subclass.hash] = selectedPlugs;
+        if (!draft.subclass) {
+          return;
+        }
+        const selectedPlugs = draft.plugsBySubclassHash[draft.subclass.hash];
+        const groupedPlugs = _.groupBy(plugs, (plug) => plug.plug.plugCategoryHash);
+        for (const plugCategoryHash of Object.keys(groupedPlugs)) {
+          if (plugCategoryHash) {
+            selectedPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
+          }
         }
       });
     }

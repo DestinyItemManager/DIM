@@ -46,17 +46,9 @@ export default function AspectAndFragmentDrawer({
 
   const onAccept = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
-      const groupedPlugs = _.groupBy(selected, (plug) => plug.plug.plugCategoryHash);
-      const newPlugs = { ...selectedPlugs };
-
-      for (const plugCategoryHash of Object.keys(groupedPlugs)) {
-        if (plugCategoryHash) {
-          newPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
-        }
-      }
-      dispatch({ type: 'update-plugs', selectedPlugs: newPlugs });
+      dispatch({ type: 'update-plugs', plugs: selected });
     },
-    [dispatch, selectedPlugs]
+    [dispatch]
   );
 
   // Determines whether an aspect of fragment is currently selectable
