@@ -59,7 +59,6 @@ export default function Options({
   }, [defs, profileResponse, selectedSubclass]);
 
   const aspectsPlugCategoryHash = aspects.length && aspects[0].plugCategoryHash;
-  const fragmentPlugCategoryHash = fragments.length && fragments[0].plugCategoryHash;
 
   // The maximum number of fragments is determined by the energy capacity of the selected aspects.
   const maxFragments =
@@ -121,16 +120,7 @@ export default function Options({
             aspects={aspects}
             fragments={fragments}
             selectedPlugs={selectedPlugs}
-            onAccept={(selected) => {
-              const groupedPlugs = _.groupBy(selected, (plug) => plug.plug.plugCategoryHash);
-              const newPlugs = { ...selectedPlugs };
-              for (const plugCategoryHash of [aspectsPlugCategoryHash, fragmentPlugCategoryHash]) {
-                if (plugCategoryHash) {
-                  newPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
-                }
-              }
-              dispatch({ type: 'update-plugs', selectedPlugs: newPlugs });
-            }}
+            dispatch={dispatch}
             onClose={() => setShowPlugPicker(false)}
           />,
           document.body

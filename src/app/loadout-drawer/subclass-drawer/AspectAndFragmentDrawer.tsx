@@ -6,6 +6,7 @@ import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
 const MAX_ASPECTS = 2;
@@ -14,13 +15,13 @@ export default function AspectAndFragmentDrawer({
   aspects,
   fragments,
   selectedPlugs,
-  onAccept,
+  dispatch,
   onClose,
 }: {
   aspects: SocketWithOptions[];
   fragments: SocketWithOptions[];
   selectedPlugs: SelectedPlugs;
-  onAccept(selected: PluggableInventoryItemDefinition[]): void;
+  dispatch: SDDispatch;
   onClose(): void;
 }) {
   const language = useSelector(languageSelector);
@@ -42,6 +43,21 @@ export default function AspectAndFragmentDrawer({
       aspectPlugs,
     };
   }, [aspects, fragments, selectedPlugs]);
+
+  const onAccept = useCallback(
+    (selected: PluggableInventoryItemDefinition[]) => {
+      const groupedPlugs = _.groupBy(selected, (plug) => plug.plug.plugCategoryHash);
+      const newPlugs = { ...selectedPlugs };
+
+      for (const plugCategoryHash of Object.keys(groupedPlugs)) {
+        if (plugCategoryHash) {
+          newPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
+        }
+      }
+      dispatch({ type: 'update-plugs', selectedPlugs: newPlugs });
+    },
+    [dispatch, selectedPlugs]
+  );
 
   // Determines whether an aspect of fragment is currently selectable
   // - Both: only a single instace can be selected at a time
