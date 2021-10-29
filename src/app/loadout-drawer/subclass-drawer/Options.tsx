@@ -9,12 +9,12 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Abilities from './Abilities';
 import AspectAndFragmentDrawer from './AspectAndFragmentDrawer';
-import Aspects from './Aspects';
+import Mods from './Mods';
+import styles from './Options.m.scss';
 import { SDDispatch } from './reducer';
-import styles from './SubclassOptions.m.scss';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
-export default function SubclassOptions({
+export default function Options({
   selectedSubclass,
   defs,
   selectedPlugs,
@@ -85,16 +85,16 @@ export default function SubclassOptions({
         <Abilities abilities={abilities} selectedPlugs={selectedPlugs} dispatch={dispatch} />
       </div>
       <div className={styles.aspects}>
-        <Aspects
-          aspects={aspects}
+        <Mods
+          mods={aspects}
           selectedPlugs={selectedPlugs}
           dispatch={dispatch}
           onOpenPlugPicker={() => setShowPlugPicker(true)}
         />
       </div>
       <div className={styles.fragments}>
-        <Aspects
-          aspects={fragments}
+        <Mods
+          mods={fragments}
           selectedPlugs={selectedPlugs}
           maxSelectable={maxFragments}
           dispatch={dispatch}

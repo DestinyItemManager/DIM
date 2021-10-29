@@ -6,7 +6,6 @@
   background-size: cover;
   box-sizing: border-box;
   height: 100%;
-  padding: 16px;
 }
 
 .background {
@@ -19,6 +18,10 @@
   position: absolute;
   width: 100%;
   z-index: -1;
+}
+
+.contents {
+  padding: 8px 10px;
 }
 
 .title {

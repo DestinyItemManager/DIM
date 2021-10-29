@@ -3,6 +3,7 @@
 interface CssExports {
   'background': string;
   'container': string;
+  'contents': string;
   'selected': string;
   'subclass': string;
   'subclasses': string;

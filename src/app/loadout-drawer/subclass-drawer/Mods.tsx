@@ -2,40 +2,38 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
-import styles from './Aspects.m.scss';
-import Option from './Option';
+import styles from './Mods.m.scss';
+import Plug from './Plug';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
-export default function Aspects({
-  aspects,
+export default function Mods({
+  mods,
   maxSelectable,
   selectedPlugs,
   dispatch,
   onOpenPlugPicker,
 }: {
-  aspects: SocketWithOptions[];
+  mods: SocketWithOptions[];
   maxSelectable?: number;
   selectedPlugs: SelectedPlugs;
   dispatch: SDDispatch;
   onOpenPlugPicker(): void;
 }) {
   const plugCategoryHash =
-    aspects?.length && aspects[0].options.length
-      ? aspects[0].options[0].plug?.plugCategoryHash
-      : undefined;
+    mods?.length && mods[0].options.length ? mods[0].options[0].plug?.plugCategoryHash : undefined;
   const emptySockets = _.compact(
-    aspects.map(({ socket, options }) =>
+    mods.map(({ socket, options }) =>
       options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)
     )
   );
   const emptySocket = emptySockets.length ? emptySockets[0] : undefined;
-  const maxOptions = maxSelectable !== undefined ? maxSelectable : aspects.length;
+  const maxOptions = maxSelectable !== undefined ? maxSelectable : mods.length;
 
-  const selectedAspects = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
+  const selectedMods = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
   const selectionDisplay = _.compact(
     Array.from({ length: maxOptions }, (_, index) =>
-      index < selectedAspects.length ? selectedAspects[index] : emptySocket
+      index < selectedMods.length ? selectedMods[index] : emptySocket
     )
   );
 
@@ -43,12 +41,12 @@ export default function Aspects({
 
   return (
     <div className={styles.container}>
-      {Boolean(aspects.length) && <div className={styles.title}>{aspects[0].title}</div>}
-      <div className={styles.selectedAspects}>
-        {selectionDisplay.map((aspect) => (
-          <Aspect
-            key={getModRenderKey(aspect, plugCounts)}
-            aspect={aspect}
+      {Boolean(mods.length) && <div className={styles.title}>{mods[0].title}</div>}
+      <div className={styles.selectedMods}>
+        {selectionDisplay.map((mod) => (
+          <Mod
+            key={getModRenderKey(mod, plugCounts)}
+            mod={mod}
             selectedPlugs={selectedPlugs}
             dispatch={dispatch}
             onOpenPlugPicker={onOpenPlugPicker}
@@ -59,25 +57,23 @@ export default function Aspects({
   );
 }
 
-function Aspect({
-  aspect,
+function Mod({
+  mod,
   selectedPlugs,
   dispatch,
   onOpenPlugPicker,
 }: {
-  aspect: PluggableInventoryItemDefinition;
+  mod: PluggableInventoryItemDefinition;
   selectedPlugs: SelectedPlugs;
   dispatch: SDDispatch;
   onOpenPlugPicker(): void;
 }) {
   const onRemove = useCallback(() => {
-    const { plugCategoryHash } = aspect.plug;
+    const { plugCategoryHash } = mod.plug;
     const newAspects =
-      selectedPlugs[plugCategoryHash]?.filter((selected) => selected.hash !== aspect.hash) || [];
+      selectedPlugs[plugCategoryHash]?.filter((selected) => selected.hash !== mod.hash) || [];
     dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
-  }, [aspect.hash, aspect.plug, dispatch, selectedPlugs]);
+  }, [mod.hash, mod.plug, dispatch, selectedPlugs]);
 
-  return (
-    <Option option={aspect} isSelected={false} onRemove={onRemove} onSelect={onOpenPlugPicker} />
-  );
+  return <Plug plug={mod} isSelected={false} onRemove={onRemove} onSelect={onOpenPlugPicker} />;
 }

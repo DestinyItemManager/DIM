@@ -2,7 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'container': string;
-  'selectedAspects': string;
+  'selectedMods': string;
   'title': string;
 }
 export const cssExports: CssExports;

@@ -11,9 +11,9 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useMemo, useReducer } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import Options from './Options';
 import { sdInit, sdReducer } from './reducer';
 import styles from './SubclassDrawer.m.scss';
-import SubclassOptions from './SubclassOptions';
 
 export default function SubclassDrawer({
   classType,
@@ -84,30 +84,32 @@ export default function SubclassDrawer({
             style={{ backgroundImage: `url("${bungieNetPath(screenshot)}")` }}
           />
         )}
-        <div className={styles.subclasses}>
-          {subclasses.map((subclass) => (
-            <div
-              key={subclass.id}
-              onClick={() => dispatch({ type: 'update-subclass', subclass })}
-              className={clsx('loadout-item', styles.subclass, {
-                [styles.selected]: subclass.id === state.subclass?.id,
-              })}
-            >
-              <ConnectedInventoryItem item={subclass} ignoreSelectedPerks={true} />
-              {subclass.type === 'Class' && (
-                <ClassIcon classType={subclass.classType} className="loadout-item-class-icon" />
-              )}
-            </div>
-          ))}
+        <div className={styles.contents}>
+          <div className={styles.subclasses}>
+            {subclasses.map((subclass) => (
+              <div
+                key={subclass.id}
+                onClick={() => dispatch({ type: 'update-subclass', subclass })}
+                className={clsx('loadout-item', styles.subclass, {
+                  [styles.selected]: subclass.id === state.subclass?.id,
+                })}
+              >
+                <ConnectedInventoryItem item={subclass} ignoreSelectedPerks={true} />
+                {subclass.type === 'Class' && (
+                  <ClassIcon classType={subclass.classType} className="loadout-item-class-icon" />
+                )}
+              </div>
+            ))}
+          </div>
+          {state.subclass && defs && (
+            <Options
+              selectedSubclass={state.subclass}
+              defs={defs}
+              selectedPlugs={state.plugsBySubclassHash[state.subclass.hash]}
+              dispatch={dispatch}
+            />
+          )}
         </div>
-        {state.subclass && defs && (
-          <SubclassOptions
-            selectedSubclass={state.subclass}
-            defs={defs}
-            selectedPlugs={state.plugsBySubclassHash[state.subclass.hash]}
-            dispatch={dispatch}
-          />
-        )}
       </div>
     </Sheet>
   );

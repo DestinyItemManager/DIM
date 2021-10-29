@@ -3,33 +3,33 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import styles from './Option.m.scss';
+import styles from './Plug.m.scss';
 
-export default function Option({
-  option,
+export default function Plug({
+  plug,
   isSelected,
   onSelect,
   onRemove,
 }: {
-  option: DestinyInventoryItemDefinition;
+  plug: DestinyInventoryItemDefinition;
   isSelected: boolean;
   onSelect?(): void;
   onRemove?(): void;
 }) {
   return (
     <ClosableContainer
-      key={option.hash}
+      key={plug.hash}
       showCloseIconOnHover={true}
       enabled={Boolean(onRemove)}
       onClose={() => onRemove?.()}
     >
       <div
         role="button"
-        title={option.displayProperties.name}
-        className={clsx('item', styles.option, { [styles.selected]: isSelected })}
+        title={plug.displayProperties.name}
+        className={clsx('item', styles.plug, { [styles.selected]: isSelected })}
         onClick={() => onSelect?.()}
       >
-        <DefItemIcon itemDef={option} />
+        <DefItemIcon itemDef={plug} />
       </div>
     </ClosableContainer>
   );

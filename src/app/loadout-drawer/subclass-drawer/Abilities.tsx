@@ -1,7 +1,7 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React, { useCallback } from 'react';
 import styles from './Abilities.m.scss';
-import Option from './Option';
+import Plug from './Plug';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
@@ -49,7 +49,7 @@ function Ability({
     dispatch({ type: 'update-plugs-by-plug-category-hash', plugCategoryHash, plugs: [ability] });
   }, [ability, dispatch]);
 
-  return <Option option={ability} isSelected={isSelected} onSelect={onSelect} />;
+  return <Plug plug={ability} isSelected={isSelected} onSelect={onSelect} />;
 }
 
 function plugIsSelected(selectedPlugs: SelectedPlugs, option: PluggableInventoryItemDefinition) {
