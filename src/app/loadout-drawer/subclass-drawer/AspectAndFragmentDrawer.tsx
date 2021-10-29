@@ -1,4 +1,5 @@
 import { languageSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
@@ -73,9 +74,9 @@ export default function AspectAndFragmentDrawer({
 
   return (
     <PlugDrawer
-      title="Aspects and Fragments"
-      searchPlaceholder="Search"
-      acceptButtonText="Confirm"
+      title={t('Loadouts.AspectsAndFragments')}
+      searchPlaceholder={t('Loadouts.SearchAspectsAndFragments')}
+      acceptButtonText={t('Loadouts.Apply')}
       language={language}
       plugs={plugs}
       onAccept={onAccept}

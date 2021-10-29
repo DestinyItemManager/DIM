@@ -1,6 +1,7 @@
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
@@ -65,7 +66,7 @@ export default function SubclassDrawer({
   const footer = ({ onClose }: { onClose(): void }) => (
     <div>
       <button className={styles.submitButton} type="button" onClick={(e) => onSubmit(e, onClose)}>
-        Accept
+        {t('Loadouts.Apply')}
       </button>
     </div>
   );
