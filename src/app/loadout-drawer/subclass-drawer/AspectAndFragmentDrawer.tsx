@@ -3,7 +3,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import _ from 'lodash';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
@@ -22,40 +22,48 @@ export default function AspectAndFragmentDrawer({
 }) {
   const language = useSelector(languageSelector);
 
-  const { selected: initiallySelectedAspects, plugs: aspectPlugs } = getPlugsAndSelected(
-    aspects,
-    selectedPlugs
-  );
-
-  const { selected: initiallySelectedFragments, plugs: fragmentPlugs } = getPlugsAndSelected(
-    fragments,
-    selectedPlugs
-  );
-
-  const isPlugSelectable = (
-    plug: PluggableInventoryItemDefinition,
-    selected: PluggableInventoryItemDefinition[]
-  ) => {
-    const selectedAspects = selected.filter(
-      (s) => s.plug.plugCategoryHash !== plug.plug.plugCategoryHash
+  const { initiallySelected, plugs, aspectPlugs } = useMemo(() => {
+    const { selected: initiallySelectedAspects, plugs: aspectPlugs } = getPlugsAndSelected(
+      aspects,
+      selectedPlugs
     );
 
-    if (aspectPlugs.some((aspect) => aspect.hash === plug.hash)) {
-      const isSelected = selectedAspects.some((s) => s.hash === plug.hash);
-      return !isSelected && selectedAspects.length < 2;
-    } else {
-      const selectedFragments = selected.filter(
-        (s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash
-      );
-      const maximumFragments = _.sumBy(
-        selectedAspects,
-        (aspect) => aspect.plug.energyCapacity?.capacityValue || 0
-      );
-      const isSelected = selectedFragments.some((s) => s.hash === plug.hash);
+    const { selected: initiallySelectedFragments, plugs: fragmentPlugs } = getPlugsAndSelected(
+      fragments,
+      selectedPlugs
+    );
 
-      return !isSelected && selectedFragments.length < maximumFragments;
-    }
-  };
+    return {
+      initiallySelected: [...initiallySelectedAspects, ...initiallySelectedFragments],
+      plugs: [...aspectPlugs, ...fragmentPlugs],
+      aspectPlugs,
+    };
+  }, [aspects, fragments, selectedPlugs]);
+
+  const isPlugSelectable = useCallback(
+    (plug: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
+      const selectedAspects = selected.filter(
+        (s) => s.plug.plugCategoryHash !== plug.plug.plugCategoryHash
+      );
+
+      if (aspectPlugs.some((aspect) => aspect.hash === plug.hash)) {
+        const isSelected = selectedAspects.some((s) => s.hash === plug.hash);
+        return !isSelected && selectedAspects.length < 2;
+      } else {
+        const selectedFragments = selected.filter(
+          (s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash
+        );
+        const maximumFragments = _.sumBy(
+          selectedAspects,
+          (aspect) => aspect.plug.energyCapacity?.capacityValue || 0
+        );
+        const isSelected = selectedFragments.some((s) => s.hash === plug.hash);
+
+        return !isSelected && selectedFragments.length < maximumFragments;
+      }
+    },
+    [aspectPlugs]
+  );
 
   return (
     <PlugDrawer
@@ -63,11 +71,11 @@ export default function AspectAndFragmentDrawer({
       searchPlaceholder="Search"
       acceptButtonText="Confirm"
       language={language}
-      plugs={[...aspectPlugs, ...fragmentPlugs]}
+      plugs={plugs}
       onAccept={onAccept}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
-      initiallySelected={[...initiallySelectedAspects, ...initiallySelectedFragments]}
+      initiallySelected={initiallySelected}
     />
   );
 }

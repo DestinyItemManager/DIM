@@ -16,21 +16,24 @@ export default function Plug({
   onSelect?(): void;
   onRemove?(): void;
 }) {
-  return (
-    <ClosableContainer
-      key={plug.hash}
-      showCloseIconOnHover={true}
-      enabled={Boolean(onRemove)}
-      onClose={() => onRemove?.()}
+  const icon = (
+    <div
+      role="button"
+      title={plug.displayProperties.name}
+      className={clsx('item', styles.plug, { [styles.selected]: isSelected })}
+      onClick={onSelect}
     >
-      <div
-        role="button"
-        title={plug.displayProperties.name}
-        className={clsx('item', styles.plug, { [styles.selected]: isSelected })}
-        onClick={() => onSelect?.()}
-      >
-        <DefItemIcon itemDef={plug} />
-      </div>
+      <DefItemIcon itemDef={plug} />
+    </div>
+  );
+
+  if (!onRemove) {
+    return icon;
+  }
+
+  return (
+    <ClosableContainer key={plug.hash} showCloseIconOnHover={true} onClose={onRemove}>
+      {icon}
     </ClosableContainer>
   );
 }

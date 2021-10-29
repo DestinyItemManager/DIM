@@ -9,10 +9,10 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useMemo, useReducer } from 'react';
+import React, { useCallback, useMemo, useReducer } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import Options from './Options';
-import { sdInit, sdReducer } from './reducer';
+import { SDDispatch, sdInit, sdReducer } from './reducer';
 import styles from './SubclassDrawer.m.scss';
 
 export default function SubclassDrawer({
@@ -20,7 +20,7 @@ export default function SubclassDrawer({
   initialSubclass,
   initialPlugs = [],
   onAccept,
-  onClose,
+  onClose: onCloseProp,
 }: {
   classType: DestinyClass;
   initialSubclass?: DimItem;
@@ -74,7 +74,7 @@ export default function SubclassDrawer({
     <Sheet
       header={<div className={styles.title}>{title}</div>}
       fillScreen={true}
-      onClose={onClose}
+      onClose={onCloseProp}
       footer={footer}
     >
       <div className={styles.container}>
@@ -87,18 +87,12 @@ export default function SubclassDrawer({
         <div className={styles.contents}>
           <div className={styles.subclasses}>
             {subclasses.map((subclass) => (
-              <div
+              <Subclass
                 key={subclass.id}
-                onClick={() => dispatch({ type: 'update-subclass', subclass })}
-                className={clsx('loadout-item', styles.subclass, {
-                  [styles.selected]: subclass.id === state.subclass?.id,
-                })}
-              >
-                <ConnectedInventoryItem item={subclass} ignoreSelectedPerks={true} />
-                {subclass.type === 'Class' && (
-                  <ClassIcon classType={subclass.classType} className="loadout-item-class-icon" />
-                )}
-              </div>
+                subclass={subclass}
+                isSelected={subclass.id === state.subclass?.id}
+                dispatch={dispatch}
+              />
             ))}
           </div>
           {state.subclass && defs && (
@@ -112,5 +106,33 @@ export default function SubclassDrawer({
         </div>
       </div>
     </Sheet>
+  );
+}
+
+function Subclass({
+  subclass,
+  isSelected,
+  dispatch,
+}: {
+  subclass: DimItem;
+  isSelected: boolean;
+  dispatch: SDDispatch;
+}) {
+  const onClick = useCallback(() => {
+    dispatch({ type: 'update-subclass', subclass });
+  }, [subclass, dispatch]);
+
+  return (
+    <div
+      onClick={onClick}
+      className={clsx('loadout-item', styles.subclass, {
+        [styles.selected]: isSelected,
+      })}
+    >
+      <ConnectedInventoryItem item={subclass} ignoreSelectedPerks={true} />
+      {subclass.type === 'Class' && (
+        <ClassIcon classType={subclass.classType} className="loadout-item-class-icon" />
+      )}
+    </div>
   );
 }
