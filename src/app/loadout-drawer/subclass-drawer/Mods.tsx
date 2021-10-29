@@ -22,18 +22,20 @@ export default function Mods({
 }) {
   const plugCategoryHash =
     mods?.length && mods[0].options.length ? mods[0].options[0].plug?.plugCategoryHash : undefined;
-  const emptySockets = _.compact(
+  const emptyPlugs = _.compact(
     mods.map(({ socket, options }) =>
       options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)
     )
   );
-  const emptySocket = emptySockets.length ? emptySockets[0] : undefined;
+  const emptyPlug = emptyPlugs.length ? emptyPlugs[0] : undefined;
   const maxOptions = maxSelectable !== undefined ? maxSelectable : mods.length;
 
   const selectedMods = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
+
+  // We add out the total number of selectable mods with empty plug icons
   const selectionDisplay = _.compact(
     Array.from({ length: maxOptions }, (_, index) =>
-      index < selectedMods.length ? selectedMods[index] : emptySocket
+      index < selectedMods.length ? selectedMods[index] : emptyPlug
     )
   );
 
@@ -48,6 +50,7 @@ export default function Mods({
             key={getModRenderKey(mod, plugCounts)}
             mod={mod}
             selectedPlugs={selectedPlugs}
+            isRemoveable={mod.hash !== emptyPlug?.hash}
             dispatch={dispatch}
             onOpenPlugPicker={onOpenPlugPicker}
           />
@@ -60,11 +63,13 @@ export default function Mods({
 function Mod({
   mod,
   selectedPlugs,
+  isRemoveable,
   dispatch,
   onOpenPlugPicker,
 }: {
   mod: PluggableInventoryItemDefinition;
   selectedPlugs: SelectedPlugs;
+  isRemoveable: boolean;
   dispatch: SDDispatch;
   onOpenPlugPicker(): void;
 }) {
@@ -75,5 +80,12 @@ function Mod({
     dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
   }, [mod.hash, mod.plug, dispatch, selectedPlugs]);
 
-  return <Plug plug={mod} isSelected={false} onRemove={onRemove} onSelect={onOpenPlugPicker} />;
+  return (
+    <Plug
+      plug={mod}
+      isSelected={false}
+      onRemove={isRemoveable ? onRemove : undefined}
+      onSelect={onOpenPlugPicker}
+    />
+  );
 }
