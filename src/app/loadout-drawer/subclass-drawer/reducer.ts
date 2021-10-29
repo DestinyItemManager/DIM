@@ -34,12 +34,12 @@ export function sdReducer(state: SDState, action: SDAction): SDState {
         if (!draft.subclass) {
           return;
         }
+
         const selectedPlugs = draft.plugsBySubclassHash[draft.subclass.hash];
         const groupedPlugs = _.groupBy(plugs, (plug) => plug.plug.plugCategoryHash);
+
         for (const plugCategoryHash of Object.keys(groupedPlugs)) {
-          if (plugCategoryHash) {
-            selectedPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
-          }
+          selectedPlugs[plugCategoryHash] = groupedPlugs[plugCategoryHash];
         }
       });
     }
