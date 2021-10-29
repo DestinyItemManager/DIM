@@ -1,7 +1,7 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import _ from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './Aspects.m.scss';
 import Option from './Option';
 import { SDDispatch } from './reducer';
@@ -39,13 +39,6 @@ export default function Aspects({
     )
   );
 
-  const removeAspect = (aspect: PluggableInventoryItemDefinition) => {
-    const { plugCategoryHash } = aspect.plug;
-    const newAspects =
-      selectedPlugs[plugCategoryHash]?.filter((selected) => selected.hash !== aspect.hash) || [];
-    dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
-  };
-
   const plugCounts = {};
 
   return (
@@ -53,15 +46,38 @@ export default function Aspects({
       {Boolean(aspects.length) && <div className={styles.title}>{aspects[0].title}</div>}
       <div className={styles.selectedAspects}>
         {selectionDisplay.map((aspect) => (
-          <Option
+          <Aspect
             key={getModRenderKey(aspect, plugCounts)}
-            option={aspect}
-            isSelected={false}
-            onRemove={() => removeAspect(aspect)}
-            onSelect={onOpenPlugPicker}
+            aspect={aspect}
+            selectedPlugs={selectedPlugs}
+            dispatch={dispatch}
+            onOpenPlugPicker={onOpenPlugPicker}
           />
         ))}
       </div>
     </div>
+  );
+}
+
+function Aspect({
+  aspect,
+  selectedPlugs,
+  dispatch,
+  onOpenPlugPicker,
+}: {
+  aspect: PluggableInventoryItemDefinition;
+  selectedPlugs: SelectedPlugs;
+  dispatch: SDDispatch;
+  onOpenPlugPicker(): void;
+}) {
+  const onRemove = useCallback(() => {
+    const { plugCategoryHash } = aspect.plug;
+    const newAspects =
+      selectedPlugs[plugCategoryHash]?.filter((selected) => selected.hash !== aspect.hash) || [];
+    dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
+  }, [aspect.hash, aspect.plug, dispatch, selectedPlugs]);
+
+  return (
+    <Option option={aspect} isSelected={false} onRemove={onRemove} onSelect={onOpenPlugPicker} />
   );
 }
