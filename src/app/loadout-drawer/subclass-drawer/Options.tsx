@@ -1,12 +1,17 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
+import { profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useSelector } from 'react-redux';
 import Abilities from './Abilities';
 import AspectAndFragmentDrawer from './AspectAndFragmentDrawer';
 import Mods from './Mods';
@@ -27,20 +32,24 @@ export default function Options({
 }) {
   const [showPlugPicker, setShowPlugPicker] = useState(false);
   const isPhonePortrait = useIsPhonePortrait();
+  const profileResponse = useSelector(profileResponseSelector);
 
   const abilities = getSocketsWithOptionsForCategory(
     defs,
+    profileResponse,
     selectedSubclass,
     SocketCategoryHashes.Abilities
   );
   const superPlug = getSuperPlug(defs, selectedSubclass, SocketCategoryHashes.Super);
   const aspects = getSocketsWithOptionsForCategory(
     defs,
+    profileResponse,
     selectedSubclass,
     SocketCategoryHashes.Aspects
   );
   const fragments = getSocketsWithOptionsForCategory(
     defs,
+    profileResponse,
     selectedSubclass,
     SocketCategoryHashes.Fragments
   );
@@ -128,6 +137,7 @@ export default function Options({
 
 function getSocketsWithOptionsForCategory(
   defs: D2ManifestDefinitions,
+  profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem,
   categoryHash: SocketCategoryHashes
 ) {
@@ -140,12 +150,19 @@ function getSocketsWithOptionsForCategory(
     const socket = subclass.sockets?.allSockets[index];
     const plugSetHash = socket?.socketDefinition.reusablePlugSetHash;
 
-    if (plugSetHash) {
-      const plugSet = plugSetHash !== undefined ? defs.PlugSet.get(plugSetHash) : undefined;
-      socket.plugOptions;
-      const options = plugSet?.reusablePlugItems
-        ?.map((plugItem) => defs.InventoryItem.get(plugItem.plugItemHash))
-        .filter(isPluggableItem);
+    if (plugSetHash && profileResponse) {
+      const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+
+      const options = _.uniqBy(
+        plugSetItems
+          ?.map((plugItem) => {
+            if (plugIsInsertable(plugItem)) {
+              return defs.InventoryItem.get(plugItem.plugItemHash);
+            }
+          })
+          .filter(isPluggableItem),
+        (option) => option.hash
+      );
 
       if (socket && options?.length) {
         const { plugCategoryHash } = options[0].plug;
