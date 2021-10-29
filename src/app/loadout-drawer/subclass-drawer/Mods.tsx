@@ -22,12 +22,12 @@ export default function Mods({
 }) {
   const plugCategoryHash =
     mods?.length && mods[0].options.length ? mods[0].options[0].plug?.plugCategoryHash : undefined;
-  const emptyPlugs = _.compact(
+  const emptySocketPlugs = _.compact(
     mods.map(({ socket, options }) =>
       options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)
     )
   );
-  const emptyPlug = emptyPlugs.length ? emptyPlugs[0] : undefined;
+  const emptySocketPlug = emptySocketPlugs.length ? emptySocketPlugs[0] : undefined;
   const maxOptions = maxSelectable !== undefined ? maxSelectable : mods.length;
 
   const selectedMods = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
@@ -35,7 +35,7 @@ export default function Mods({
   // We add out the total number of selectable mods with empty plug icons
   const selectionDisplay = _.compact(
     Array.from({ length: maxOptions }, (_, index) =>
-      index < selectedMods.length ? selectedMods[index] : emptyPlug
+      index < selectedMods.length ? selectedMods[index] : emptySocketPlug
     )
   );
 
@@ -50,7 +50,7 @@ export default function Mods({
             key={getModRenderKey(mod, plugCounts)}
             mod={mod}
             selectedPlugs={selectedPlugs}
-            isRemoveable={mod.hash !== emptyPlug?.hash}
+            isRemoveable={mod.hash !== emptySocketPlug?.hash}
             dispatch={dispatch}
             onOpenPlugPicker={onOpenPlugPicker}
           />
