@@ -141,23 +141,23 @@ export default function LoadoutDrawerContents(
 
   return (
     <>
-      {typesWithoutItems.length > 0 && (
-        <div className="loadout-add-types">
-          {$featureFlags.loadoutSubclasses && subclassItems.length > 0 && (
-            <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
-              <AppIcon icon={addIcon} /> {subclassBucket.name}
-            </a>
-          )}
-          {showFillFromEquipped && (
-            <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
-              <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
-            </a>
-          )}
-          <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+      <div className="loadout-add-types">
+        {$featureFlags.loadoutSubclasses && (
+          <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {subclassBucket.name}
           </a>
+        )}
+        {showFillFromEquipped && (
+          <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
+          </a>
+        )}
+        <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
+          <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+        </a>
 
-          {typesWithoutItems.map((bucket) => (
+        {typesWithoutItems.length > 0 &&
+          typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
               onClick={() => pickLoadoutItem(loadout, bucket, add)}
@@ -166,11 +166,10 @@ export default function LoadoutDrawerContents(
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
-          <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
-          </a>
-        </div>
-      )}
+        <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
+          <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
+        </a>
+      </div>
       <div className="loadout-added-items">
         {typesWithItems.map((bucket) => (
           <LoadoutDrawerBucket

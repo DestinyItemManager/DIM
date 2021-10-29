@@ -1,4 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { getModRenderKey } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import React from 'react';
 import styles from './Aspects.m.scss';
@@ -45,13 +46,15 @@ export default function Aspects({
     dispatch({ type: 'update-plugs-by-plug-category-hash', plugs: newAspects, plugCategoryHash });
   };
 
+  const plugCounts = {};
+
   return (
     <div className={styles.container}>
       {Boolean(aspects.length) && <div className={styles.title}>{aspects[0].title}</div>}
       <div className={styles.selectedAspects}>
-        {selectionDisplay.map((aspect, index) => (
+        {selectionDisplay.map((aspect) => (
           <Option
-            key={`${aspect.hash}-${index}`}
+            key={getModRenderKey(aspect, plugCounts)}
             option={aspect}
             isSelected={false}
             onRemove={() => removeAspect(aspect)}

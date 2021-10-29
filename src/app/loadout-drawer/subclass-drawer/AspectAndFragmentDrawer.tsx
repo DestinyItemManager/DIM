@@ -36,15 +36,14 @@ export default function AspectAndFragmentDrawer({
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ) => {
-    if (aspectPlugs.includes(plug)) {
-      const selectedAspects = selected.filter(
-        (s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash
-      );
-      return selectedAspects.length < 2;
+    const selectedAspects = selected.filter(
+      (s) => s.plug.plugCategoryHash !== plug.plug.plugCategoryHash
+    );
+
+    if (aspectPlugs.some((aspect) => aspect.hash === plug.hash)) {
+      const isSelected = selectedAspects.some((s) => s.hash === plug.hash);
+      return !isSelected && selectedAspects.length < 2;
     } else {
-      const selectedAspects = selected.filter(
-        (s) => s.plug.plugCategoryHash !== plug.plug.plugCategoryHash
-      );
       const selectedFragments = selected.filter(
         (s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash
       );
@@ -52,7 +51,9 @@ export default function AspectAndFragmentDrawer({
         selectedAspects,
         (aspect) => aspect.plug.energyCapacity?.capacityValue || 0
       );
-      return selectedFragments.length < maximumFragments;
+      const isSelected = selectedFragments.some((s) => s.hash === plug.hash);
+
+      return !isSelected && selectedFragments.length < maximumFragments;
     }
   };
 
