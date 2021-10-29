@@ -9,7 +9,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import Abilities from './Abilities';
@@ -34,25 +34,29 @@ export default function Options({
   const isPhonePortrait = useIsPhonePortrait();
   const profileResponse = useSelector(profileResponseSelector);
 
-  const abilities = getSocketsWithOptionsForCategory(
-    defs,
-    profileResponse,
-    selectedSubclass,
-    SocketCategoryHashes.Abilities
-  );
-  const superPlug = getSuperPlug(defs, selectedSubclass, SocketCategoryHashes.Super);
-  const aspects = getSocketsWithOptionsForCategory(
-    defs,
-    profileResponse,
-    selectedSubclass,
-    SocketCategoryHashes.Aspects
-  );
-  const fragments = getSocketsWithOptionsForCategory(
-    defs,
-    profileResponse,
-    selectedSubclass,
-    SocketCategoryHashes.Fragments
-  );
+  const { abilities, superPlug, aspects, fragments } = useMemo(() => {
+    const abilities = getSocketsWithOptionsForCategory(
+      defs,
+      profileResponse,
+      selectedSubclass,
+      SocketCategoryHashes.Abilities
+    );
+    const superPlug = getSuperPlug(defs, selectedSubclass, SocketCategoryHashes.Super);
+    const aspects = getSocketsWithOptionsForCategory(
+      defs,
+      profileResponse,
+      selectedSubclass,
+      SocketCategoryHashes.Aspects
+    );
+    const fragments = getSocketsWithOptionsForCategory(
+      defs,
+      profileResponse,
+      selectedSubclass,
+      SocketCategoryHashes.Fragments
+    );
+
+    return { abilities, superPlug, aspects, fragments };
+  }, [defs, profileResponse, selectedSubclass]);
 
   const aspectsPlugCategoryHash = aspects.length && aspects[0].plugCategoryHash;
   const fragmentPlugCategoryHash = fragments.length && fragments[0].plugCategoryHash;
