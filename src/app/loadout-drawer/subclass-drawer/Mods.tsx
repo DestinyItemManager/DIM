@@ -32,7 +32,7 @@ export default function Mods({
 
   const selectedMods = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
 
-  // We add out the total number of selectable mods with empty plug icons
+  // We pad out the total number of selectable mods with empty plug icons
   const selectionDisplay = _.compact(
     Array.from({ length: maxOptions }, (_, index) =>
       index < selectedMods.length ? selectedMods[index] : emptySocketPlug

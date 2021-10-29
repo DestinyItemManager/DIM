@@ -48,6 +48,7 @@ export default function Options({
   const aspectsPlugCategoryHash = aspects.length && aspects[0].plugCategoryHash;
   const fragmentPlugCategoryHash = fragments.length && fragments[0].plugCategoryHash;
 
+  // The maximum number of fragments is determined by the energy capacity of the selected aspects.
   const maxFragments =
     (aspectsPlugCategoryHash &&
       _.sumBy(
@@ -141,6 +142,7 @@ function getSocketsWithOptionsForCategory(
 
     if (plugSetHash) {
       const plugSet = plugSetHash !== undefined ? defs.PlugSet.get(plugSetHash) : undefined;
+      socket.plugOptions;
       const options = plugSet?.reusablePlugItems
         ?.map((plugItem) => defs.InventoryItem.get(plugItem.plugItemHash))
         .filter(isPluggableItem);

@@ -7,6 +7,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
+const MAX_ASPECTS = 2;
+
 export default function AspectAndFragmentDrawer({
   aspects,
   fragments,
@@ -40,6 +42,10 @@ export default function AspectAndFragmentDrawer({
     };
   }, [aspects, fragments, selectedPlugs]);
 
+  // Determines whether an aspect of fragment is currently selectable
+  // - Both: only a single instace can be selected at a time
+  // - Fragments: the energy level of the aspects determines the number that can be selected
+  // - Aspects: A maximum of 2 can be selected.
   const isPlugSelectable = useCallback(
     (plug: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
       const selectedAspects = selected.filter(
@@ -48,7 +54,7 @@ export default function AspectAndFragmentDrawer({
 
       if (aspectPlugs.some((aspect) => aspect.hash === plug.hash)) {
         const isSelected = selectedAspects.some((s) => s.hash === plug.hash);
-        return !isSelected && selectedAspects.length < 2;
+        return !isSelected && selectedAspects.length < MAX_ASPECTS;
       } else {
         const selectedFragments = selected.filter(
           (s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash
@@ -80,6 +86,12 @@ export default function AspectAndFragmentDrawer({
   );
 }
 
+/**
+ * This gets the usable and selected aspects or fragments for the PlugDrawer.
+ *
+ * It removes the empty socket plug from results and figures out the selected plugs for the passed
+ * in socket.
+ */
 function getPlugsAndSelected(
   socketWithOptionsList: SocketWithOptions[],
   selectedPlugs: SelectedPlugs
