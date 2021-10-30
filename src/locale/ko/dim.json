@@ -528,6 +528,7 @@
     "MaximizeLight": "전투력 최대화",
     "MaximizePower": "전투력 최대화",
     "MaximizeStat": "능력치 최대화",
+    "ModPlacement": "개조 부품 배치",
     "Mods": "개조 부품",
     "ModsInfo": "DIM에서 개조 부품을 장착할 수 없으며, 반드시 게임 내에서 해야 됩니다.",
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
     "SaveAsNew": "새로 저장",
+    "ShowModPlacement": "개조 부품 배치 표시",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
+    "UnassignedMods": "할당되지 않은 개조 부품",
     "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 삭제합니다:",
     "WeaponsOnly": "무기"
   },

@@ -528,6 +528,7 @@
     "MaximizeLight": "光レベルを最大化",
     "MaximizePower": "パワーを最大化する",
     "MaximizeStat": "統計を最大化する",
+    "ModPlacement": "Mod の配置",
     "Mods": "Mod",
     "ModsInfo": "DIMはMODを装備できません。ゲーム内で行う必要があります。",
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
     "SaveAsNew": "新規保存",
+    "ShowModPlacement": "Mod の配置を表示",
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
+    "UnassignedMods": "割り当てられていない Mod",
     "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
     "WeaponsOnly": "武器"
   },

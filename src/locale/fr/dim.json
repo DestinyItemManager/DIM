@@ -528,6 +528,7 @@
     "MaximizeLight": "Maximiser la Lumière",
     "MaximizePower": "Maximiser la puissance",
     "MaximizeStat": "Maximiser la Stat",
+    "ModPlacement": "Mod Placement",
     "Mods": "Mods",
     "ModsInfo": "DIM ne peut pas équiper de mods, cela doit être fait en jeu.",
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
+    "ShowModPlacement": "Show Mod Placement",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre arsenal demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
+    "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
     "WeaponsOnly": "Armes"
   },

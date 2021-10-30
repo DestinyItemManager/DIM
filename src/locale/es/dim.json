@@ -528,6 +528,7 @@
     "MaximizeLight": "Maximizar Luz",
     "MaximizePower": "Maximizar Poder",
     "MaximizeStat": "Maximizar Estadística",
+    "ModPlacement": "Colocación de Modificadores",
     "Mods": "Modificadores",
     "ModsInfo": "DIM no puede equipar modificadores, debe ser hecho dentro del juego.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
     "SaveAsNew": "Guardar Nuevo",
+    "ShowModPlacement": "Mostrar Colocación de Modificadores",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
+    "UnassignedMods": "Mods sin Asignar",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:",
     "WeaponsOnly": "Armas"
   },
