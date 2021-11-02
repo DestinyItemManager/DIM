@@ -57,9 +57,7 @@ export default function AspectAndFragmentDrawer({
   // - Aspects: A maximum of 2 can be selected.
   const isPlugSelectable = useCallback(
     (plug: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
-      const selectedAspects = selected.filter(
-        (s) => s.plug.plugCategoryHash !== plug.plug.plugCategoryHash
-      );
+      const selectedAspects = selected.filter((s) => aspectPlugs.some((a) => a.hash === s.hash));
 
       if (aspectPlugs.some((aspect) => aspect.hash === plug.hash)) {
         const isSelected = selectedAspects.some((s) => s.hash === plug.hash);
