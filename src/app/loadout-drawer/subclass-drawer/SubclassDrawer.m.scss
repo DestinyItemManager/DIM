@@ -31,6 +31,7 @@
 .subclasses {
   display: flex;
   flex-direction: row;
+  overflow: auto;
   margin-bottom: 24px;
   padding-bottom: 24px;
   border-bottom: 1px solid #979797;
