@@ -528,6 +528,7 @@
     "MaximizeLight": "最高光等",
     "MaximizePower": "最高光等配裝",
     "MaximizeStat": "最高屬性",
+    "ModPlacement": "Mod Placement",
     "Mods": "Mods",
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "全部專案",
     "Save": "保存",
     "SaveAsNew": "保存新增",
+    "ShowModPlacement": "Show Mod Placement",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
+    "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
     "WeaponsOnly": "武器"
   },

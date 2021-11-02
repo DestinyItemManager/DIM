@@ -528,6 +528,7 @@
     "MaximizeLight": "Maximizar Luz",
     "MaximizePower": "Maximizar Poder",
     "MaximizeStat": "Maximizar atributos",
+    "ModPlacement": "Localização do Mod",
     "Mods": "Mods",
     "ModsInfo": "Mods devem ser equipados diretamente no jogo, uma vez que o DIM não pode de fazer isso.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar Novo",
+    "ShowModPlacement": "Exibir Localização do Mod",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
+    "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
     "WeaponsOnly": "Armas"
   },

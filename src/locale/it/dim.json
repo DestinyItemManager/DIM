@@ -528,6 +528,7 @@
     "MaximizeLight": "Massimizzare la Luce",
     "MaximizePower": "Massimizza Potere",
     "MaximizeStat": "Massimizza Statistica",
+    "ModPlacement": "Posizionamento Modifiche",
     "Mods": "Modifiche",
     "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
     "SaveAsNew": "Salva Nuovo",
+    "ShowModPlacement": "Mostra Posizionamento Modifiche",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
+    "UnassignedMods": "Modifiche non assegnate",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",
     "WeaponsOnly": "Armi"
   },

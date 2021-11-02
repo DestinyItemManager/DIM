@@ -528,6 +528,7 @@
     "MaximizeLight": "Maksymalizuj poziom Światła",
     "MaximizePower": "Maksymalizuj poziom Mocy",
     "MaximizeStat": "Maksymalizuj statysktykę",
+    "ModPlacement": "Mod Placement",
     "Mods": "Modyfikacje",
     "ModsInfo": "DIM nie może zakładać modyfikacji, musi to być zrobione w grze.",
     "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Wszystkie Przedmioty",
     "Save": "Zapisz",
     "SaveAsNew": "Zapisz Nowy",
+    "ShowModPlacement": "Show Mod Placement",
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
+    "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:",
     "WeaponsOnly": "Broń"
   },

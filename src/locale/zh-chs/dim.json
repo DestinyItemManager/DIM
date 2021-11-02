@@ -116,18 +116,18 @@
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
-    "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_female": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_female_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "D2Desc_male": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_male_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "D2Desc_plural": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "Desc": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_female": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_female_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
-    "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
-    "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "D2Desc": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有空位。",
+    "D2Desc_female": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有空位。",
+    "D2Desc_female_plural": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有 {{count}} 个空位。",
+    "D2Desc_male": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有空位。",
+    "D2Desc_male_plural": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有 {{count}} 个空位。",
+    "D2Desc_plural": "为防止有物品被寄送到邮政官处，DIM 正确保 {{store}} 上的每个物品种类都留有 {{count}} 个空位。",
+    "Desc": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有空位。",
+    "Desc_female": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有空位。",
+    "Desc_female_plural": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有 {{count}} 个空位。",
+    "Desc_male": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有空位。",
+    "Desc_male_plural": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有 {{count}} 个空位。",
+    "Desc_plural": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有 {{count}} 个空位。",
     "FarmingMode": "收集模式（腾出空间）",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
@@ -139,7 +139,7 @@
     "OutOfRoom": "你的空间不足，无法再为{{character}}腾出空间了。该清理垃圾装备了！",
     "OutOfRoomTitle": "空间不足",
     "Stop": "停止",
-    "Vault": "It will move items to the vault to make room."
+    "Vault": "会将物品移到保险库来腾出空间。"
   },
   "FileUpload": {
     "Instructions": "选择或拖拽档案"
@@ -427,8 +427,8 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模组",
-    "AnyExotic": "Any Exotic",
-    "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
+    "AnyExotic": "任何异域奖励",
+    "AnyExoticDescription": "组合里必须有任意异域装备。",
     "AscendantShardDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}",
     "AscendantShardNotExoticDetails": "对于传奇物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n对于在 {{energyLevel}} 或以下的异域物品，优化器将假定 {{energyLevel}} 的能量，并将根据分配模组的需要交换元素。异域物品将使用其当前属性。\n\n目前大师杰作的传奇物品和超过 {{energyLevel}} 能量的异域物品将使用其现有的元素。",
     "AscendantShardNotMasterworkedDetails": "对于所有物品，优化器将假定大师杰作的属性加成和能量等级。{{elementLockDescription}}\n\n目前大师杰作的物品将使用其现有的元素。",
@@ -442,7 +442,7 @@
     "EquipItems": "装备",
     "ExcludeItem": "排除项目",
     "ExistingLoadout": "已有配装",
-    "ExoticSpecialCategory": "Special",
+    "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
     "LegendaryShardsAndEnhancementPrismDetails": "将使用所有物品的当前属性。 对于能量为 {{energyLevel}} 或更低的物品，优化器将假定 {{energyLevel}} 能量。{{elementLockDescription}}\n\n超过 {{energyLevel}} 能量的物品将使用其现有能量等级和元素。",
     "LockElement": "锁定元素",
@@ -454,8 +454,8 @@
     "NewEmptyLoadout": "创建配装",
     "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
     "NoComparableItems": "此配装不包含可对比的物品。保存优化器组合就会将物品加入此配装。",
-    "NoExotic": "No Exotic",
-    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
+    "NoExotic": "非异域",
+    "NoExoticDescription": "等同于搜索“not:exotic” - 组合不会包含异域护甲。",
     "NoLoadoutsToCompare": "没有要对比的配装",
     "NoUpgrades": "无升级",
     "NoUpgradesDetails": "为了计算总属性与分配模组，会用到当前的属性、能量等级，以及你物品的元素。",
@@ -528,6 +528,7 @@
     "MaximizeLight": "最高光等",
     "MaximizePower": "最高光等配装",
     "MaximizeStat": "最高属性",
+    "ModPlacement": "模组位置",
     "Mods": "模组",
     "ModsInfo": "DIM 无法装备模组，必须在游戏中完成。",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "所有物品",
     "Save": "保存",
     "SaveAsNew": "保存新增",
+    "ShowModPlacement": "显示模组位置",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
+    "UnassignedMods": "未分配的模组",
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
     "WeaponsOnly": "武器"
   },
@@ -765,7 +768,7 @@
     "InventoryColumns": "物品栏显示宽度",
     "InventoryColumnsMobile": "移动端物品栏显示宽度",
     "InventoryColumnsMobileLine2": "将自动调整物品大小以适配当前设置",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
+    "InventoryNumberOfSpacesToClear": "启用收集模式（腾出空间）时要腾出的空位数量",
     "Items": "物品显示",
     "Language": "语言",
     "LogOut": "注销",
@@ -792,8 +795,8 @@
     "SortByType": "类型",
     "SortCustom": "自订排序",
     "SortName": "名称",
-    "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces"
+    "SpacesSize": "{{count}} 个空位",
+    "SpacesSize_plural": "{{count}} 个空位"
   },
   "Sockets": {
     "ApplyPerks": "应用特性",

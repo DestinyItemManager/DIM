@@ -175,21 +175,23 @@ export function makeRoomForItemsInBuckets(
     const inventoryClearSpaces = settingsSelector(getState()).inventoryClearSpaces;
     makeRoomBuckets.forEach((bucket) => {
       const items = findItemsByBucket(store, bucket.hash);
-      const capacityIncludingClearSpacesSetting =
-        capacityForItem(store, items[0]) - inventoryClearSpaces + 1;
-      if (items.length > 0 && items.length >= capacityIncludingClearSpacesSetting) {
-        const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
-        const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
-          moveAsideCandidates,
-          store,
-          getVault(stores)!,
-          itemInfos,
-          itemHashTags
-        );
-        // We'll move the first one to the vault
-        const itemToMove = prioritizedMoveAsideCandidates[0];
-        if (itemToMove) {
-          itemsToMove.push(itemToMove);
+      if (items.length > 0) {
+        const capacityIncludingClearSpacesSetting =
+          capacityForItem(store, items[0]) - inventoryClearSpaces + 1;
+        if (items.length >= capacityIncludingClearSpacesSetting) {
+          const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+          const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+            moveAsideCandidates,
+            store,
+            getVault(stores)!,
+            itemInfos,
+            itemHashTags
+          );
+          // We'll move the first one to the vault
+          const itemToMove = prioritizedMoveAsideCandidates[0];
+          if (itemToMove) {
+            itemsToMove.push(itemToMove);
+          }
         }
       }
     });
