@@ -42,7 +42,7 @@ export default function SelectablePlug({
         <SocketDetailsMod
           className={styles.iconContainer}
           itemDef={plug}
-          onClick={() => onPlugSelected(plug)}
+          onClick={onPlugSelected}
         />
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
