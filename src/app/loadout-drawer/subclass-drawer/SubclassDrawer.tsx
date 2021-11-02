@@ -38,7 +38,11 @@ export default function SubclassDrawer({
       return [];
     }
     return allItems
-      .filter((item) => item.bucket.type === 'Class' && item.classType === classType)
+      .filter(
+        (item) =>
+          item.bucket.type === 'Class' &&
+          (classType === DestinyClass.Unknown || item.classType === classType)
+      )
       .map((item) => item);
   }, [allItems, classType, defs]);
 
@@ -52,7 +56,9 @@ export default function SubclassDrawer({
     !isPhonePortrait && state.subclass && defs?.InventoryItem.get(state.subclass.hash).screenshot;
 
   const title =
-    subclasses.length && defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName;
+    subclasses.length > 0
+      ? defs?.InventoryItem.get(subclasses[0].hash).itemTypeDisplayName
+      : undefined;
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
