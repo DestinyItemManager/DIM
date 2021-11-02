@@ -17,7 +17,7 @@ import {
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import '../inventory/StoreBucket.scss';
@@ -115,12 +115,7 @@ export const SocketDetailsMod = React.memo(
     className?: string;
     onClick?(mod: PluggableInventoryItemDefinition): void;
   }) => {
-    const onClickFn =
-      onClick &&
-      ((e: MouseEvent) => {
-        e.stopPropagation();
-        onClick(itemDef);
-      });
+    const onClickFn = onClick && (() => onClick(itemDef));
 
     return (
       <div

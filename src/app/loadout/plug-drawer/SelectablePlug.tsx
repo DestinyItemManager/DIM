@@ -1,8 +1,8 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
@@ -39,11 +39,9 @@ export default function SelectablePlug({
         role="button"
         tabIndex={0}
       >
-        <SocketDetailsMod
-          className={styles.iconContainer}
-          itemDef={plug}
-          onClick={onPlugSelected}
-        />
+        <div className={clsx('item', styles.iconContainer)} title={plug.displayProperties.name}>
+          <DefItemIcon itemDef={plug} />
+        </div>
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
           {_.uniqBy(
