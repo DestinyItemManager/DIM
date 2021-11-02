@@ -510,12 +510,12 @@ function LoadoutDrawer({
   };
 
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newModHashes: PluggableInventoryItemDefinition[]) => {
+  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
     const newLoadout = { ...loadout };
 
     newLoadout.parameters = {
       ...newLoadout.parameters,
-      mods: newModHashes.map((mod) => mod.hash),
+      mods: newMods.map((mod) => mod.hash),
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
   };
