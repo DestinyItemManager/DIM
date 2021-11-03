@@ -123,7 +123,6 @@ export const SocketDetailsMod = React.memo(
         className={clsx('item', className)}
         title={itemDef.displayProperties.name}
         onClick={onClickFn}
-        onFocus={onClickFn}
         tabIndex={0}
       >
         <DefItemIcon itemDef={itemDef} />

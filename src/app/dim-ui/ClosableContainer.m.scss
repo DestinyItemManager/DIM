@@ -18,6 +18,9 @@
   &:hover {
     background-color: $orange;
   }
+  &:focus {
+    outline: 1px solid $blue;
+  }
 }
 
 .showCloseOnHover {
