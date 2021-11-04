@@ -62,7 +62,7 @@ export default function ItemPopupHeader({
             !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
               <ElementIcon element={item.element} className={styles.elementIcon} />
             )}
-          <div className={styles.power}>{item.primStat?.value}</div>
+          <div className={styles.power}>{item.primaryStat?.value}</div>
           {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
           {item.pursuit?.questStepNum && (
             <div className={styles.itemType}>

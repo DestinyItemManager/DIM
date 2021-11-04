@@ -12,7 +12,7 @@ import {
 import { download } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
@@ -71,22 +71,22 @@ export function downloadCsvFiles(
   });
   const items: DimItem[] = [];
   allItems.forEach((item) => {
-    if (!item.primStat && type !== 'Ghost') {
+    if (!item.primaryStat && type !== 'Ghost') {
       return;
     }
 
     if (type === 'Weapons') {
       if (
-        item.primStat?.statHash === D1_StatHashes.Attack ||
-        item.primStat?.statHash === StatHashes.Attack
+        item.primaryStat?.statHash === D1_StatHashes.Attack ||
+        item.primaryStat?.statHash === StatHashes.Attack
       ) {
         items.push(item);
       }
     } else if (type === 'Armor') {
-      if (item.primStat?.statHash === StatHashes.Defense) {
+      if (item.primaryStat?.statHash === StatHashes.Defense) {
         items.push(item);
       }
-    } else if (type === 'Ghost' && item.bucket.hash === 4023194814) {
+    } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
       items.push(item);
     }
   });
@@ -306,7 +306,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Type: item.typeName,
       Source: source(item),
       Equippable: equippable(item),
-      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
     if (item.destinyVersion === 2) {
       row['Power Limit'] = item.powerCap;
@@ -415,7 +415,7 @@ function downloadWeapons(
       Source: source(item),
       Category: item.bucket.type,
       Element: item.element?.displayProperties.name,
-      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.primStat?.value,
+      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
     if (item.destinyVersion === 2) {
       row['Power Limit'] = item.powerCap;

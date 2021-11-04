@@ -112,7 +112,7 @@ export default function CompareDrawer({
     return null;
   }
 
-  const loadoutMaxPower = _.sumBy(loadoutItems, (i) => i.basePower) / loadoutItems.length;
+  const loadoutMaxPower = _.sumBy(loadoutItems, (i) => i.power) / loadoutItems.length;
   const loadoutStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = 0;
     return memo;

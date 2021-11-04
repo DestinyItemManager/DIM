@@ -5,6 +5,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { d1ManifestSelector } from 'app/manifest/selectors';
+import { D1_StatHashes } from 'app/search/d1-known-values';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
@@ -268,7 +269,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               </label>
               <div className="loadout-builder-section">
                 {_.sortBy(
-                  bucket[type].filter((i) => i.primStat && i.primStat.value >= 280),
+                  bucket[type].filter((i) => i.power >= 280),
                   (i) => (i.quality ? -i.quality.min : 0)
                 ).map((item) => (
                   <div key={item.index} className="item-container">
@@ -534,8 +535,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     function filterItems(items: readonly D1Item[]) {
       return items.filter(
         (item) =>
-          item.primStat &&
-          item.primStat.statHash === 3897883278 && // has defense hash
+          item.primaryStat?.statHash === D1_StatHashes.Defense &&
           item.talentGrid &&
           item.talentGrid.nodes &&
           item.stats

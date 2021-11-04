@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
+import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
   BucketCategory,
@@ -301,7 +302,7 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
 
-  const primaryStat: DimItem['primStat'] =
+  const primaryStat: DimItem['primaryStat'] =
     !instanceDef?.primaryStat || itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class'
       ? null
       : {
@@ -414,7 +415,7 @@ export function makeItem(
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,
-    primStat: primaryStat,
+    primaryStat: primaryStat,
     typeName,
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
@@ -459,7 +460,7 @@ export function makeItem(
     pursuit: null,
     taggable: false,
     comparable: false,
-    basePower: 0,
+    power: 0,
     index: '',
     infusable: false,
     infusionFuel: false,
@@ -482,9 +483,9 @@ export function makeItem(
       createdItem.bucket.hash !== BucketHashes.Emblems
   );
 
-  if (createdItem.primStat) {
-    const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = statDef;
+  if (createdItem.primaryStat) {
+    const statDef = defs.Stat.get(createdItem.primaryStat.statHash);
+    createdItem.primaryStat.stat = statDef;
   }
 
   if (extendedICH[createdItem.hash]) {
@@ -630,8 +631,8 @@ export function makeItem(
     reportException('Quest', e, { itemHash: item.itemHash });
   }
 
-  if (createdItem.primStat) {
-    createdItem.basePower = createdItem.primStat.value;
+  if (createdItem.primaryStat && lightStats.includes(createdItem.primaryStat.statHash)) {
+    createdItem.power = createdItem.primaryStat.value;
   }
 
   createdItem.index = createItemIndex(createdItem);

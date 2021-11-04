@@ -1,4 +1,6 @@
 import { t } from 'app/i18next-t';
+import { D1_StatHashes } from 'app/search/d1-known-values';
+import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -163,13 +165,10 @@ function makeItem(
     return null;
   }
 
+  const numStats = _.size(itemDef.stats);
+
   // fix itemDef for defense items with missing nodes
-  if (
-    item.primaryStat &&
-    item.primaryStat.statHash === 3897883278 &&
-    _.size(itemDef.stats) > 0 &&
-    _.size(itemDef.stats) !== 5
-  ) {
+  if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = _.find(itemDef.stats, (stat) =>
       [144602215, 1735777505, 4244567218].includes(stat.statHash)
     );
@@ -263,7 +262,7 @@ function makeItem(
       item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
     amount: item.stackSize || 1,
-    primStat: item.primaryStat || null,
+    primaryStat: item.primaryStat || null,
     typeName: itemDef.itemTypeName,
     isEngram: (itemDef.itemCategoryHashes || []).includes(34),
     // "perks" are the two or so talent grid items that are "featured" for an
@@ -300,7 +299,7 @@ function makeItem(
     hidePercentage: false,
     taggable: false,
     comparable: false,
-    basePower: 0,
+    power: item.primaryStat?.value ?? 0,
     index: '',
     infusable: false,
     infusionFuel: false,
@@ -325,9 +324,9 @@ function makeItem(
     createdItem.notransfer = true;
   }
 
-  if (createdItem.primStat) {
-    const statDef = defs.Stat.get(createdItem.primStat.statHash);
-    createdItem.primStat.stat = {
+  if (createdItem.primaryStat) {
+    const statDef = defs.Stat.get(createdItem.primaryStat.statHash);
+    createdItem.primaryStat.stat = {
       ...statDef,
       // D2 is much better about display info
       displayProperties: {
@@ -337,6 +336,10 @@ function makeItem(
         hasIcon: Boolean(statDef.icon),
       },
     };
+
+    if (lightStats.includes(createdItem.primaryStat.statHash)) {
+      createdItem.power = createdItem.primaryStat.value;
+    }
   }
 
   try {
@@ -349,7 +352,7 @@ function makeItem(
 
   // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
   createdItem.infusionFuel = Boolean(
-    createdItem.equipment && createdItem.primStat?.statHash !== 1501155019
+    createdItem.equipment && createdItem.primaryStat?.statHash !== 1501155019
   );
 
   try {
@@ -640,7 +643,7 @@ function buildStats(
 
   let armorNodes: D1GridNode[] = [];
   let activeArmorNode: D1GridNode | { hash: number };
-  if (grid?.nodes && item.primaryStat?.statHash === 3897883278) {
+  if (grid?.nodes && item.primaryStat?.statHash === D1_StatHashes.Defense) {
     armorNodes = grid.nodes.filter(
       (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
     );
