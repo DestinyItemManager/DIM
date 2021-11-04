@@ -1,5 +1,6 @@
 ## Next
 
+* If a loadout has items for multiple character classes in it, applying it to a character behaves as if only the items that can be equipped on that character are in the loadout.
 * Fixed an issue where clicking a mod icon in the Loadout Optimizer would select more than one of the mod.
 
 ## 6.89.0 <span class="changelog-date">(2021-10-31)</span>
