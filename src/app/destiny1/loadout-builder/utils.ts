@@ -1,3 +1,4 @@
+import { D1_StatHashes } from 'app/search/d1-known-values';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
@@ -280,7 +281,7 @@ export function loadVendorsBucket(
         .filter(
           (i) =>
             i.item.stats &&
-            i.item.primStat?.statHash === 3897883278 &&
+            i.item.primaryStat?.statHash === D1_StatHashes.Defense &&
             itemCanBeEquippedBy(i.item, currentStore)
         )
         .map((i) => i.item)
@@ -294,7 +295,9 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
       getBuckets(
         store.items.filter(
           (i) =>
-            i.stats && i.primStat?.statHash === 3897883278 && itemCanBeEquippedBy(i, currentStore)
+            i.stats &&
+            i.primaryStat?.statHash === D1_StatHashes.Defense &&
+            itemCanBeEquippedBy(i, currentStore)
         )
       )
     )

@@ -11,12 +11,14 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
+import { supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
@@ -26,28 +28,20 @@ import { clearItemsOffCharacter } from '../loadout-drawer/loadout-apply';
 import * as actions from './basic-actions';
 import { farmingInterruptedSelector, farmingStoreSelector } from './selectors';
 
-// D1 Glimmer items
-const glimmerHashes = new Set([
-  269776572, // -house-banners
-  3632619276, // -silken-codex
-  2904517731, // -axiomatic-beads
-  1932910919, // -network-keys
-]);
-
 // These are things you may pick up frequently out in the wild
 const makeRoomTypes = [
-  1498876634, // Primary
-  2465295065, // Special
-  953998645, // Heavy
-  3448274439, // Helmet
-  3551918588, // Gauntlets
-  14239492, // Chest
-  20886954, // Legs
-  1585787867, // ClassItem
+  BucketHashes.KineticWeapons, // Primary
+  BucketHashes.EnergyWeapons, // Special
+  BucketHashes.PowerWeapons, // Heavy
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
   434908299, // Artifact
-  4023194814, // Ghost
-  1469714392, // Consumable
-  3865314626, // Material
+  BucketHashes.Ghost,
+  BucketHashes.Consumables,
+  BucketHashes.Materials,
 ];
 
 const FARMING_REFRESH_RATE = 30_000; // Bungie.net caches results for 30 seconds - this may be too fast
@@ -137,7 +131,7 @@ function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   const toMove = store.items.filter(
     (i) =>
       !i.notransfer &&
-      (i.isEngram || (i.equipment && i.tier === 'Uncommon') || glimmerHashes.has(i.hash))
+      (i.isEngram || (i.equipment && i.tier === 'Uncommon') || supplies.includes(i.hash))
   );
 
   if (toMove.length === 0) {
@@ -175,21 +169,23 @@ export function makeRoomForItemsInBuckets(
     const inventoryClearSpaces = settingsSelector(getState()).inventoryClearSpaces;
     makeRoomBuckets.forEach((bucket) => {
       const items = findItemsByBucket(store, bucket.hash);
-      const capacityIncludingClearSpacesSetting =
-        capacityForItem(store, items[0]) - inventoryClearSpaces + 1;
-      if (items.length > 0 && items.length >= capacityIncludingClearSpacesSetting) {
-        const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
-        const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
-          moveAsideCandidates,
-          store,
-          getVault(stores)!,
-          itemInfos,
-          itemHashTags
-        );
-        // We'll move the first one to the vault
-        const itemToMove = prioritizedMoveAsideCandidates[0];
-        if (itemToMove) {
-          itemsToMove.push(itemToMove);
+      if (items.length > 0) {
+        const capacityIncludingClearSpacesSetting =
+          capacityForItem(store, items[0]) - inventoryClearSpaces + 1;
+        if (items.length >= capacityIncludingClearSpacesSetting) {
+          const moveAsideCandidates = items.filter((i) => !i.equipped && !i.notransfer);
+          const prioritizedMoveAsideCandidates = sortMoveAsideCandidatesForStore(
+            moveAsideCandidates,
+            store,
+            getVault(stores)!,
+            itemInfos,
+            itemHashTags
+          );
+          // We'll move the first one to the vault
+          const itemToMove = prioritizedMoveAsideCandidates[0];
+          if (itemToMove) {
+            itemsToMove.push(itemToMove);
+          }
         }
       }
     });

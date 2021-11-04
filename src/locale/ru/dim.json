@@ -528,6 +528,7 @@
     "MaximizeLight": "Одеться на максимум",
     "MaximizePower": "Надеть макс. Силы",
     "MaximizeStat": "Максимизировать Характеристику",
+    "ModPlacement": "Mod Placement",
     "Mods": "Модификаторы",
     "ModsInfo": "DIM не может устанавливать модификаторы, сделайте это в игре.",
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
@@ -562,7 +563,9 @@
     "RestoreAllItems": "Все предметы",
     "Save": "Сохранить",
     "SaveAsNew": "Сохранить как...",
+    "ShowModPlacement": "Show Mod Placement",
     "TooManyRequested": "В наличии {{total}} {{itemname}}; Набор запрашивает {{requested}}. Передали все замеченные.",
+    "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:",
     "WeaponsOnly": "Оружие"
   },

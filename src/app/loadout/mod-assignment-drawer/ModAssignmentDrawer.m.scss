@@ -1,0 +1,66 @@
+@import '../../variables.scss';
+
+.container {
+  padding: 16px;
+}
+
+.assigned {
+  display: flex;
+  flex-direction: row;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+.itemAndMods {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-right: 32px;
+
+  & > :first-child {
+    margin-right: 8px;
+  }
+
+  @include phone-portrait {
+    margin-bottom: 16px;
+  }
+}
+
+.unassigned {
+  display: flex;
+  flex-direction: row;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.headerName {
+  font-weight: bold;
+  font-size: large;
+  margin-right: 16px;
+}
+
+.headerStats {
+  :global(.stat-row) {
+    display: flex;
+    flex-direction: row;
+  }
+
+  :global(.stat) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 8px;
+    font-size: 1.2em;
+
+    img {
+      height: 20px;
+      width: 20px;
+    }
+  }
+}

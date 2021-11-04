@@ -44,7 +44,7 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
   return processMod;
 }
 
-function isModStatActive(
+export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
   stat: DestinyItemInvestmentStatDefinition,
@@ -119,7 +119,7 @@ export function mapDimItemToProcessItem(
   lockItemEnergyType: boolean,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
-  const { bucket, id, hash, type, name, equippingLabel, basePower, stats, energy } = dimItem;
+  const { bucket, id, hash, type, name, equippingLabel, power, stats, energy } = dimItem;
 
   const baseStatMap: { [statHash: number]: number } = {};
 
@@ -153,7 +153,7 @@ export function mapDimItemToProcessItem(
     type,
     name,
     equippingLabel,
-    basePower,
+    power,
     baseStats: baseStatMap,
     energy: energy
       ? {

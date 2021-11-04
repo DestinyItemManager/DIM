@@ -75,7 +75,7 @@ export const TOTAL_STAT_HASH = -1000;
 export const CUSTOM_TOTAL_STAT_HASH = -1100;
 
 /** hashes representing D2 PL stats */
-export const D2LightStats = [StatHashes.Attack, StatHashes.Defense];
+export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.Power];
 
 /** these stats canonically exist on D2 armor */
 export const D2ArmorStatHashByName = {

@@ -11,6 +11,7 @@
   }
 
   border: 1px solid #666;
+  cursor: pointer;
   padding: 8px;
   display: flex;
   flex-direction: row;
@@ -19,6 +20,9 @@
   box-sizing: border-box;
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  &:focus {
+    outline: 1px solid $blue;
   }
 }
 
@@ -36,6 +40,7 @@
 
 .unselectable {
   opacity: 0.5;
+  cursor: default;
 }
 
 .lockedPerk {

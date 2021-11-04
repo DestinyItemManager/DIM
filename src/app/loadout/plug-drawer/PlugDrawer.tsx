@@ -28,9 +28,9 @@ interface Props {
   language: string;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
-  /** A function to determine if a given plug is currently selectable. */
   /** Displayed on the accept button in the footer. */
-  acceptButtonTitle: string;
+  acceptButtonText: string;
+  /** A function to determine if a given plug is currently selectable. */
   isPlugSelectable(
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
@@ -51,7 +51,7 @@ export default function PlugDrawer({
   searchPlaceholder,
   language,
   initialQuery,
-  acceptButtonTitle,
+  acceptButtonText,
   isPlugSelectable,
   onAccept,
   onClose,
@@ -129,17 +129,15 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const footer = selected.length
-    ? ({ onClose }: { onClose(): void }) => (
-        <Footer
-          selected={selected}
-          isPhonePortrait={isPhonePortrait}
-          acceptButtonTitle={acceptButtonTitle}
-          onSubmit={(e) => onSubmit(e, onClose)}
-          onPlugSelected={onPlugRemoved}
-        />
-      )
-    : undefined;
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <Footer
+      selected={selected}
+      isPhonePortrait={isPhonePortrait}
+      acceptButtonText={acceptButtonText}
+      onSubmit={(e) => onSubmit(e, onClose)}
+      onPlugSelected={onPlugRemoved}
+    />
+  );
 
   return (
     <Sheet

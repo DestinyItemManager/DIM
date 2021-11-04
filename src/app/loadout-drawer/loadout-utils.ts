@@ -46,7 +46,7 @@ export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: numb
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   if (store.destinyVersion === 2) {
-    const exactLight = _.sumBy(items, (i) => i.primStat?.value ?? 0) / items.length;
+    const exactLight = _.sumBy(items, (i) => i.power) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
     const itemWeight = {
@@ -65,8 +65,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
       items.reduce(
         (memo, item) =>
           memo +
-          (item.primStat?.value ?? 0) *
-            (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+          item.power * (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
         0
       ) / itemWeightDenominator;
 
@@ -74,7 +73,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
   }
 }
 
-/** Returns a map of armor hashes to stats. There should be just one of each item */
+/** Returns a map of armor stat hashes to stats. There should be just one of each item */
 export function getArmorStats(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   items: DimItem[]

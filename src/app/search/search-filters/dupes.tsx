@@ -40,7 +40,7 @@ const sortDupes = (
   const dupeComparator = reverseComparator(
     chainComparator<DimItem>(
       // primary stat
-      compareBy((item) => item.primStat?.value),
+      compareBy((item) => item.power),
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
       compareBy((item) => {
@@ -151,7 +151,7 @@ const dupeFilters: FilterDefinition[] = [
           return false;
         }
 
-        return duplicates[item.hash.toString()]?.some((i) => i.basePower < item.basePower);
+        return duplicates[item.hash.toString()]?.some((i) => i.power < item.power);
       };
     },
   },
@@ -218,7 +218,7 @@ function computeStatDupeLower(
   const dupes = new Set<string>();
 
   for (const item of armor) {
-    if (item.stats && item.basePower && item.bucket.hash !== BucketHashes.ClassArmor) {
+    if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
       const statsToConsider = customStats[item.classType] ?? armorStats;
       statsCache.set(
         item,

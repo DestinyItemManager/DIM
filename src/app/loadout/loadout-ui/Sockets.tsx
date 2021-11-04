@@ -2,12 +2,13 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
-const undesireablePlugs = [
+const undesirablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
   PlugCategoryHashes.Shader,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance1,
@@ -19,10 +20,11 @@ const undesireablePlugs = [
 interface Props {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
+  size?: 'small';
   onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
 }
 
-function Sockets({ item, lockedMods, onSocketClick }: Props) {
+function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
@@ -52,7 +54,7 @@ function Sockets({ item, lockedMods, onSocketClick }: Props) {
     if (
       toSave &&
       isPluggableItem(toSave) &&
-      !undesireablePlugs.includes(toSave.plug.plugCategoryHash) &&
+      !undesirablePlugs.includes(toSave.plug.plugCategoryHash) &&
       toSave.itemTypeDisplayName // account for plugs that look exotic-ish but are nothings
     ) {
       modsAndWhitelist.push({
@@ -63,7 +65,7 @@ function Sockets({ item, lockedMods, onSocketClick }: Props) {
   }
 
   return (
-    <div className={styles.lockedItems}>
+    <div className={clsx(styles.lockedItems, { [styles.small]: size === 'small' })}>
       {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
         <Mod
           key={index}

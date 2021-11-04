@@ -8,7 +8,6 @@ import {
   allStatNames,
   armorAnyStatHashes,
   armorStatHashes,
-  lightStats,
   searchableArmorStatNames,
   statHashByName,
 } from '../search-filter-values';
@@ -90,10 +89,7 @@ const statFilters: FilterDefinition[] = [
         Boolean(
           // items can be 0pl but king of their own little kingdom,
           // like halloween masks, so let's exclude 0pl
-          item.basePower &&
-            maxPowerPerBucket[maxPowerKey(item)] <= item.basePower &&
-            // is:haspower condition. excludes sparrows
-            lightStats.includes(item.primStat!.statHash)
+          item.power && maxPowerPerBucket[maxPowerKey(item)] <= item.power
         );
     },
   },
@@ -257,6 +253,6 @@ function maxPowerKey(item: DimItem) {
 function calculateMaxPowerPerBucket(allItems: DimItem[]) {
   return _.mapValues(
     _.groupBy(allItems, (i) => maxPowerKey(i)),
-    (items) => _.maxBy(items, (i) => i.basePower)?.basePower ?? 0
+    (items) => _.maxBy(items, (i) => i.power)?.power ?? 0
   );
 }

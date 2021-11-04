@@ -21,7 +21,6 @@ interface CssExports {
   'neutral': string;
   'positive': string;
   'power': string;
-  'primStat': string;
   'statMeta': string;
 }
 export const cssExports: CssExports;

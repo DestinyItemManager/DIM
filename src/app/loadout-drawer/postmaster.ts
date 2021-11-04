@@ -51,9 +51,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
                 Unknown: 6,
               }[i.tier];
               // And low-stat
-              if (i.primStat) {
-                value += i.primStat.value / 1000;
-              }
+              value += i.power / 1000;
               return value;
             }
           );
