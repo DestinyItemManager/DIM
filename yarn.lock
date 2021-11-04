@@ -3000,10 +3000,10 @@ builtin-modules@^3.1.0:
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.2.0.tgz#45d5db99e7ee5e6bc4f362e008bf917ab5049887"
   integrity sha512-lGzLKcioL90C7wMczpkY0n/oART3MbBa8R9OFGE1rJxoVI86u4WAGfEk8Wjv10eKSyTHVGkSo3bvBylCEtk7LA==
 
-bungie-api-ts@^4.5.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.11.0.tgz#7cb2a1f68b8302f1189459287871ab3b00c6a6e9"
-  integrity sha512-d3GpvuVPVFOSsqjmRFl5UxZHvbTMSaI7bvvvZfUe8qYp44BoqrHG+w4CIYKNkh8CHJ9HfMInhfoa3H7hsuDUtw==
+bungie-api-ts@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.12.0.tgz#5fd1f331b52448d5b4ec22cf3cc1f7baf22f0054"
+  integrity sha512-xMPhSZh3kdIYuRV75xM18RtUvcHTddrIqY7CRfPS3wu4MYra/mJCSAK0N4w2TtcJe+UiAbooy+4nQoJsLzq/Og==
 
 bytes@3.0.0:
   version "3.0.0"

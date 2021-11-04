@@ -177,7 +177,7 @@
     "@textcomplete/core": "^0.1.9",
     "@textcomplete/textarea": "^0.1.9",
     "body-scroll-lock": "^3.1.5",
-    "bungie-api-ts": "^4.5.0",
+    "bungie-api-ts": "^4.12.0",
     "caniuse-lite": ">=1.0.30000843",
     "ceaser-easing": "^1.0.1",
     "clsx": "^1.0.4",

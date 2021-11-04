@@ -138,7 +138,7 @@ function doApplyLoadout(
       }
 
       // ignore items that can't be equipped by this character (e.g. armor for another character)
-      if (item.equipment && !itemCanBeEquippedBy(item, store)) {
+      if (!store.isVault && item.equipment && !itemCanBeEquippedBy(item, store)) {
         totalItems--;
         return false;
       }
