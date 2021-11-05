@@ -398,7 +398,7 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
-            lockedMods={lockedMods}
+            lockedMods={processing ? [] : lockedMods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
