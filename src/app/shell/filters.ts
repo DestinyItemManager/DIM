@@ -238,3 +238,21 @@ export function getColor(value: number, property = 'background-color') {
     [property]: `hsla(${color},65%,50%, 1)`,
   };
 }
+
+/**
+ * A filter that will heatmap-color a background according to a percentage.
+ */
+export function getColorRamp(value: number, property = 'background-color') {
+  let color = 0;
+  if (value < 0) {
+    return { [property]: 'white' };
+  }
+  if (value <= 99) {
+    color = 120 * (value / 100);
+  } else if (value >= 100) {
+    color = 190;
+  }
+  return {
+    [property]: `hsla(${Math.round(color)},65%,50%, 1)`,
+  };
+}

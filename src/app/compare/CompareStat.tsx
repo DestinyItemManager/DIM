@@ -5,7 +5,7 @@ import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
-import { getColor } from '../shell/filters';
+import { getColorRamp } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 
@@ -22,7 +22,7 @@ export default function CompareStat({
 }) {
   const itemStat = stat.getStat(item);
 
-  const color = getColor(statRange(itemStat, stat, compareBaseStats), 'color');
+  const color = getColorRamp(statRange(itemStat, stat, compareBaseStats), 'color');
 
   const statValue = itemStat
     ? (compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value
