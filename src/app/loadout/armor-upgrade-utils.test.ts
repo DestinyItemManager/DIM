@@ -46,7 +46,7 @@ describe('Spend tier tests', () => {
   test.each([
     ['AscendantShards', true],
     ['AscendantShardsNotMasterworked', false],
-    ['AscendantShardsNotExotic', true],
+    ['AscendantShardsNotExotic', false],
     ['EnhancementPrisms', false],
     ['LegendaryShards', false],
     ['Nothing', false],
