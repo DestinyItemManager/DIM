@@ -238,8 +238,19 @@ function doApplyLoadout(
       dispatch(updateCharacters());
     }
 
-    if (loadout.clearSpace) {
-      const allItems = _.compact(loadoutItems.map((i) => getLoadoutItem(i, store, getStores())));
+    // If this is marked to clear space (and we're not applying it to the vault), move items not
+    // in the loadout off the character
+    if (loadout.clearSpace && !store.isVault) {
+      const allItems = _.compact(
+        loadout.items.map((i) => {
+          const item = getLoadoutItem(i, store, getStores());
+          // Clear off items that are in the loadout but can't be used by the class
+          // we're applying to.
+          if (item && (!item.equipment || itemCanBeEquippedBy(item, store))) {
+            return item;
+          }
+        })
+      );
       await dispatch(
         clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems, cancelToken)
       );
