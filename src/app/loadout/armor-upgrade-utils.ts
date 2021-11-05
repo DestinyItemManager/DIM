@@ -25,6 +25,10 @@ function getEnergySpendTierBoundaryHash(item: DimItem, tier: UpgradeSpendTier) {
       break;
     case UpgradeSpendTier.AscendantShardsNotExotic: {
       if (!item.isExotic) {
+        // already masterworked items will have full energy by default, by dropping the boundary
+        // we will stop energy swaps
+        boundaryHash =
+          item.energy?.energyCapacity === 10 ? UpgradeMaterialHashes.ascendantShard : 'none';
         break;
       }
       // for exotics we allow energy upgrades/swaps using enhancement prisms.
