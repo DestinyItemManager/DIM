@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useReducer } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import '../../item-picker/ItemPicker.scss';
 import Options from './Options';
 import { SDDispatch, sdInit, sdReducer } from './reducer';
 import styles from './SubclassDrawer.m.scss';
@@ -81,6 +82,7 @@ export default function SubclassDrawer({
     <Sheet
       header={<div className={styles.title}>{title}</div>}
       fillScreen={true}
+      sheetClassName="item-picker"
       onClose={onCloseProp}
       footer={footer}
     >
