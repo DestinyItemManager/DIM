@@ -1,4 +1,4 @@
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -86,10 +86,7 @@ export default function SubclassDrawer({
     >
       <div className={styles.container}>
         {screenshot && (
-          <div
-            className={styles.background}
-            style={bungieBackgroundStyle(screenshot)}
-          />
+          <div className={styles.background} style={bungieBackgroundStyle(screenshot)} />
         )}
         <div className={styles.contents}>
           <div className={styles.subclasses}>

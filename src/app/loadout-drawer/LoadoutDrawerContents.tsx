@@ -51,6 +51,7 @@ const loadoutTypes: DimBucketType[] = [
 // We don't want to prepopulate the loadout with a bunch of cosmetic junk
 // like emblems and ships and horns.
 export const fromEquippedTypes: DimBucketType[] = [
+  'Class',
   'KineticSlot',
   'Energy',
   'Power',
@@ -68,7 +69,6 @@ export const fromEquippedTypes: DimBucketType[] = [
 
 if (!$featureFlags.loadoutSubclasses) {
   loadoutTypes.unshift('Class');
-  fromEquippedTypes.unshift('Class');
 }
 
 export default function LoadoutDrawerContents(
