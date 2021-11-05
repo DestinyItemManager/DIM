@@ -249,7 +249,7 @@ function makeFakePursuitItem(
     equipment: false, // TODO: this has a ton of good info for the item move logic
     complete: false,
     amount: 1,
-    primStat: null,
+    primaryStat: null,
     typeName,
     equipRequiredLevel: 0,
     maxStackSize: 1,
@@ -274,7 +274,7 @@ function makeFakePursuitItem(
     pursuit: null,
     taggable: false,
     comparable: false,
-    basePower: 0,
+    power: 0,
     index: hash.toString(),
     infusable: false,
     infusionFuel: false,

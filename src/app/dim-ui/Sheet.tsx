@@ -1,7 +1,14 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
@@ -13,6 +20,7 @@ interface Props {
   children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
   fillScreen?: boolean;
   zIndex?: number;
+  minHeight?: number;
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
@@ -39,17 +47,21 @@ const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
  * A Sheet is a UI element that comes up from the bottom of the screen,
  * and can be dragged downward to dismiss
  */
-export default function Sheet({
-  header,
-  footer,
-  children,
-  sheetClassName,
-  fillScreen,
-  zIndex,
-  freezeInitialHeight,
-  allowClickThrough,
-  onClose: onCloseCallback,
-}: Props) {
+export default forwardRef<HTMLDivElement, Props>(function Sheet(
+  {
+    header,
+    footer,
+    children,
+    sheetClassName,
+    fillScreen,
+    zIndex,
+    minHeight,
+    freezeInitialHeight,
+    allowClickThrough,
+    onClose: onCloseCallback,
+  },
+  ref
+) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
   // As a result, our "state" is in refs.
   // Is this currently closing?
@@ -170,6 +182,8 @@ export default function Sheet({
       </a>
 
       <div
+        ref={ref}
+        style={{ minHeight }}
         className={clsx('sheet-container', { ['fill-screen']: fillScreen })}
         onMouseDown={dragHandleDown}
         onMouseUp={dragHandleUp}
@@ -198,7 +212,7 @@ export default function Sheet({
       </div>
     </animated.div>
   );
-}
+});
 
 /**
  * Fire a callback if the escape key is pressed.

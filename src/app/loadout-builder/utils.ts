@@ -22,8 +22,8 @@ export function getPower(items: DimItem[] | ProcessItem[]) {
   let power = 0;
   let numPoweredItems = 0;
   for (const item of items) {
-    if (item.basePower) {
-      power += item.basePower;
+    if (item.power) {
+      power += item.power;
       numPoweredItems++;
     }
   }

@@ -60,7 +60,7 @@ export default function GearPower() {
       <div className={styles.gearPowerSheetContent}>
         <div className={styles.gearGrid}>
           {unrestricted.map((i) => {
-            const powerDiff = (powerFloor - (i.primStat?.value ?? 0)) * -1;
+            const powerDiff = (powerFloor - i.power) * -1;
             const diffSymbol = powerDiff >= 0 ? '+' : '';
             const diffClass =
               powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
@@ -70,7 +70,7 @@ export default function GearPower() {
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>
                 <div className={styles.gearItemInfo}>
-                  <div className={styles.primStat}>{i.primStat?.value}</div>
+                  <div className={styles.power}>{i.power}</div>
                   <div className={styles.statMeta}>
                     <BucketIcon className={styles.bucketImage} item={i} />
                     <div className={diffClass}>

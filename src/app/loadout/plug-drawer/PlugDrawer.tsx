@@ -6,7 +6,7 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import { sortModGroups, sortMods } from '../mod-utils';
@@ -30,6 +30,10 @@ interface Props {
   initialQuery?: string;
   /** Displayed on the accept button in the footer. */
   acceptButtonText: string;
+  /** A ref passed down to the sheets container. */
+  sheetRef?: RefObject<HTMLDivElement>;
+  /** The min height for the sheet. */
+  minHeight?: number;
   /** A function to determine if a given plug is currently selectable. */
   isPlugSelectable(
     plug: PluggableInventoryItemDefinition,
@@ -52,6 +56,8 @@ export default function PlugDrawer({
   language,
   initialQuery,
   acceptButtonText,
+  sheetRef,
+  minHeight,
   isPlugSelectable,
   onAccept,
   onClose,
@@ -141,6 +147,8 @@ export default function PlugDrawer({
 
   return (
     <Sheet
+      ref={sheetRef}
+      minHeight={minHeight}
       onClose={onClose}
       header={
         <div>

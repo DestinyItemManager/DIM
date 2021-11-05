@@ -120,27 +120,25 @@ function doApplyLoadout(
     }
 
     // Shallow copy all items so we can mutate equipped
-    let items: LoadoutItem[] = Array.from(loadout.items, (i) => ({ ...i }));
+    let loadoutItems: LoadoutItem[] = Array.from(loadout.items, (i) => ({ ...i }));
 
-    const loadoutItemIds = items.map((i) => ({
+    const loadoutItemIds = loadoutItems.map((i) => ({
       id: i.id,
       hash: i.hash,
     }));
 
     // Only select stuff that needs to change state
-    let totalItems = items.length;
-    items = items.filter((pseudoItem) => {
-      const item = getLoadoutItem(pseudoItem, store, getStores());
+    let totalItems = loadoutItems.length;
+    loadoutItems = loadoutItems.filter((loadoutItem) => {
+      const item = getLoadoutItem(loadoutItem, store, getStores());
       // provide a more accurate count of total items
       if (!item) {
         totalItems--;
         return false;
       }
 
-      // only try to equip items that are equippable - otherwise ignore them
-      const applicableSubclass =
-        item.type !== 'Class' || (pseudoItem.equipped && itemCanBeEquippedBy(item, store));
-      if (!applicableSubclass) {
+      // ignore items that can't be equipped by this character (e.g. armor for another character)
+      if (!store.isVault && item.equipment && !itemCanBeEquippedBy(item, store)) {
         totalItems--;
         return false;
       }
@@ -150,20 +148,21 @@ function doApplyLoadout(
         item.location.inPostmaster ||
         // Needs to be equipped. Stuff not marked "equip" doesn't
         // necessarily mean to de-equip it.
-        (pseudoItem.equipped && !item.equipped) ||
-        pseudoItem.amount > 1;
+        (loadoutItem.equipped && !item.equipped) ||
+        // We always try to move consumable stacks because their logic is complicated
+        (loadoutItem.amount && loadoutItem.amount > 1);
       return notAlreadyThere;
     });
 
     // vault can't equip
     if (store.isVault) {
-      items.forEach((i) => {
+      loadoutItems.forEach((i) => {
         i.equipped = false;
       });
     }
 
     // We'll equip these all in one go!
-    let itemsToEquip = items.filter((i) => i.equipped);
+    let itemsToEquip = loadoutItems.filter((i) => i.equipped);
     if (itemsToEquip.length > 1) {
       // we'll use the equipItems function
       itemsToEquip.forEach((i) => {
@@ -172,7 +171,7 @@ function doApplyLoadout(
     }
 
     // Stuff that's equipped on another character. We can bulk-dequip these
-    const itemsToDequip = items.filter((pseudoItem) => {
+    const itemsToDequip = loadoutItems.filter((pseudoItem) => {
       const item = getItemAcrossStores(getStores(), pseudoItem);
       return item?.equipped && item.owner !== store.id;
     });
@@ -203,7 +202,7 @@ function doApplyLoadout(
       await Promise.all(dequips);
     }
 
-    await dispatch(applyLoadoutItems(store, items, loadoutItemIds, cancelToken, scope));
+    await dispatch(applyLoadoutItems(store, loadoutItems, loadoutItemIds, cancelToken, scope));
 
     let equippedItems: LoadoutItem[];
     if (itemsToEquip.length > 1) {
@@ -240,11 +239,7 @@ function doApplyLoadout(
     }
 
     if (loadout.clearSpace) {
-      const allItems = _.compact(
-        Object.values(loadout.items)
-          .flat()
-          .map((i) => getLoadoutItem(i, store, getStores()))
-      );
+      const allItems = _.compact(loadoutItems.map((i) => getLoadoutItem(i, store, getStores())));
       await dispatch(
         clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems, cancelToken)
       );

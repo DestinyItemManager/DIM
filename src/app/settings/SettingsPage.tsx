@@ -68,7 +68,7 @@ const fakeWeapon = {
     type: 'energy',
   },
   visible: true,
-  primStat: {
+  primaryStat: {
     value: 300,
   },
   itemCategoryHashes: [],

@@ -39,6 +39,8 @@ interface ProvidedProps {
   classType: DestinyClass;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
+  /** The min height for the sheet. */
+  minHeight?: number;
   /** A list of plugs we are restricting the available mods to. */
   plugCategoryHashWhitelist?: number[];
   /** Called with the new lockedMods when the user accepts the new modset. */
@@ -146,7 +148,15 @@ function mapStateToProps() {
 /**
  * A sheet to pick mods that are required in the final loadout sets.
  */
-function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose }: Props) {
+function ModPicker({
+  mods,
+  language,
+  lockedMods,
+  initialQuery,
+  minHeight,
+  onAccept,
+  onClose,
+}: Props) {
   const isModSelectable = useCallback(
     (mod: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
       const { plugCategoryHash } = mod.plug;
@@ -205,6 +215,7 @@ function ModPicker({ mods, language, lockedMods, initialQuery, onAccept, onClose
       initialQuery={initialQuery}
       plugs={mods}
       initiallySelected={lockedMods}
+      minHeight={minHeight}
       isPlugSelectable={isModSelectable}
       onAccept={onAccept}
       onClose={onClose}
