@@ -437,6 +437,7 @@
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
     "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Save Loadout",
+    "DisabledDueToMaintenance": "The Loadout Optimizer is currently disabled due to Bungie API maintenance.",
     "ElementLockedDescription": "Items will use their existing element.",
     "ElementNotLockedDescription": "Items will change element as needed to assign mods.",
     "EquipItems": "Equip",

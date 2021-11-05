@@ -9,6 +9,11 @@
   }
 }
 
+.disabled {
+  margin: 16px;
+  font-size: 1.2em;
+}
+
 .menuContent {
   @include phone-portrait {
     padding: 0 12px;
