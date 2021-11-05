@@ -88,7 +88,7 @@ export default function SubclassDrawer({
         {screenshot && (
           <div
             className={styles.background}
-            style={{ backgroundImage: `url("${bungieNetPath(screenshot)}")` }}
+            style={bungieBackgroundStyle(screenshot)}
           />
         )}
         <div className={styles.contents}>
