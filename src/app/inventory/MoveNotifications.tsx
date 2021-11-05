@@ -41,14 +41,12 @@ export function moveItemNotification(
  */
 export function loadoutNotification(
   loadout: Loadout,
+  numApplicableItems: number,
   store: DimStore,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
 ): NotifyInput {
-  const count = loadout.items.length;
-
   // TODO: pass in a state updater that can communicate application state
-
   // TODO: body! show all items, check 'em off
 
   return {
@@ -57,7 +55,7 @@ export function loadoutNotification(
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
     body: t('Loadouts.NotificationMessage', {
-      count,
+      count: numApplicableItems,
       store: store.name,
       context: store.genderName,
     }),
