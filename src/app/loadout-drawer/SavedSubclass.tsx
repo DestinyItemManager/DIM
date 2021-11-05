@@ -44,7 +44,7 @@ export default function SavedSubclass({
         <div onClick={(e) => equip(subclass, e)} className={styles.subclass}>
           <ClosableContainer
             showCloseIconOnHover={true}
-            onClose={(e: React.MouseEvent) => {
+            onClose={(e) => {
               e.stopPropagation();
               remove(subclass, e);
             }}
