@@ -6,9 +6,10 @@
 }
 
 .selectedMods {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../dim-ui/common.m.scss';
   flex: 1;
   align-items: center;
+  overflow: auto;
   height: var(--item-size);
 
   > * {
