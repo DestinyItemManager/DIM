@@ -67,8 +67,8 @@ export const fromEquippedTypes: DimBucketType[] = [
 ];
 
 if (!$featureFlags.loadoutSubclasses) {
-  loadoutTypes.splice(0, 0, 'Class');
-  fromEquippedTypes.splice(0, 0, 'Class');
+  loadoutTypes.unshift('Class');
+  fromEquippedTypes.unshift('Class');
 }
 
 export default function LoadoutDrawerContents(
