@@ -168,7 +168,7 @@ Options -MultiViews
   # Data interchange
 
     AddType application/atom+xml                        atom
-    AddType application/json                            json topojson
+    AddType application/json                            json topojson map
     AddType application/ld+json                         jsonld
     AddType application/rss+xml                         rss
     AddType application/vnd.geo+json                    geojson
@@ -778,6 +778,12 @@ AddEncoding br .br
 
 <FilesMatch \.wasm\.gz$>
     ForceType application/wasm
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+
+<FilesMatch \.map\.gz$>
+    ForceType application/json
     Header set Content-Encoding gzip
 </FilesMatch>
 
