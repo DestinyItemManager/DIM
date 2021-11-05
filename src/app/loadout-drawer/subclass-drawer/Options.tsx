@@ -6,6 +6,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { getFirstSocketByCategoryHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -19,6 +20,11 @@ import styles from './Options.m.scss';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
+/**
+ * This is the actual display of the subclass abilitie, aspects and fragments.
+ * It figures out all the possible options for search ability, aspect and fragment
+ * and then determined if any of those are selected from the SelectedPlugs map.
+ */
 export default function Options({
   selectedSubclass,
   defs,
@@ -136,12 +142,15 @@ function getSocketsWithOptionsForCategory(
   categoryHash: SocketCategoryHashes
 ) {
   const rtn: SocketWithOptions[] = [];
+
+  if (!subclass.sockets) {
+    return rtn;
+  }
+
   const title = defs.SocketCategory.get(categoryHash).displayProperties.name;
-  const indexes =
-    subclass.sockets?.categories.find((category) => category.category.hash === categoryHash)
-      ?.socketIndexes || [];
-  for (const index of indexes) {
-    const socket = subclass.sockets?.allSockets[index];
+  const sockets = subclass.sockets && getSocketsByCategoryHash(subclass.sockets, categoryHash);
+
+  for (const socket of sockets) {
     const plugSetHash = socket?.socketDefinition.reusablePlugSetHash;
 
     if (plugSetHash && profileResponse) {
@@ -172,12 +181,7 @@ function getSuperPlug(
   subclass: DimItem,
   categoryHash: SocketCategoryHashes
 ) {
-  const indexes =
-    subclass.sockets?.categories.find((category) => category.category.hash === categoryHash)
-      ?.socketIndexes || [];
-  for (const index of indexes) {
-    const socket = subclass.sockets?.allSockets[index];
-    const initialItemHash = socket?.socketDefinition.singleInitialItemHash;
-    return initialItemHash && defs.InventoryItem.get(initialItemHash);
-  }
+  const socket = subclass.sockets && getFirstSocketByCategoryHash(subclass.sockets, categoryHash);
+  const initialItemHash = socket?.socketDefinition.singleInitialItemHash;
+  return initialItemHash && defs.InventoryItem.get(initialItemHash);
 }

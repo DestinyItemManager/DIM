@@ -60,7 +60,7 @@ export default function SavedSubclass({
             <LockedModIcon
               key={getModRenderKey(plug, plugKeys)}
               mod={plug}
-              onModClicked={() => onPlugClicked(plug)}
+              onClosed={() => onPlugClicked(plug)}
             />
           ))}
         </div>

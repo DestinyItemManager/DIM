@@ -2,8 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'abilities': string;
+  'ability': string;
   'container': string;
   'options': string;
+  'selected': string;
   'title': string;
 }
 export const cssExports: CssExports;

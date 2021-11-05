@@ -1,12 +1,16 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import styles from './Mods.m.scss';
-import Plug from './Plug';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
+import { findFirstEmptySocketMod } from './utils';
 
+/**
+ * This is used to display the subclass mods, i.e. the aspects or fragments.
+ */
 export default function Mods({
   mods,
   maxSelectable,
@@ -22,12 +26,7 @@ export default function Mods({
 }) {
   const plugCategoryHash =
     mods?.length && mods[0].options.length ? mods[0].options[0].plug?.plugCategoryHash : undefined;
-  const emptySocketPlugs = _.compact(
-    mods.map(({ socket, options }) =>
-      options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)
-    )
-  );
-  const emptySocketPlug = emptySocketPlugs.length ? emptySocketPlugs[0] : undefined;
+  const emptySocketPlug = findFirstEmptySocketMod(mods);
   const maxOptions = maxSelectable !== undefined ? maxSelectable : mods.length;
 
   const selectedMods = (plugCategoryHash && selectedPlugs[plugCategoryHash]) || [];
@@ -81,11 +80,10 @@ function Mod({
   }, [mod.hash, mod.plug, dispatch, selectedPlugs]);
 
   return (
-    <Plug
-      plug={mod}
-      isSelected={false}
-      onRemove={isRemoveable ? onRemove : undefined}
-      onSelect={onOpenPlugPicker}
+    <LockedModIcon
+      mod={mod}
+      onClicked={onOpenPlugPicker}
+      onClosed={isRemoveable ? onRemove : undefined}
     />
   );
 }

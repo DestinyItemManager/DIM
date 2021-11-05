@@ -1,10 +1,14 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
+import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import styles from './Abilities.m.scss';
-import Plug from './Plug';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
 
+/**
+ * Displays the subclass abilities, i.e. jump, melee, and grenade.
+ */
 export default function Abilities({
   abilities,
   selectedPlugs,
@@ -49,7 +53,16 @@ function Ability({
     dispatch({ type: 'update-plugs-by-plug-category-hash', plugCategoryHash, plugs: [ability] });
   }, [ability, dispatch]);
 
-  return <Plug plug={ability} isSelected={isSelected} onSelect={onSelect} />;
+  return (
+    <div
+      role="button"
+      title={ability.displayProperties.name}
+      className={clsx('item', styles.ability, { [styles.selected]: isSelected })}
+      onClick={onSelect}
+    >
+      <DefItemIcon itemDef={ability} />
+    </div>
+  );
 }
 
 function plugIsSelected(selectedPlugs: SelectedPlugs, option: PluggableInventoryItemDefinition) {

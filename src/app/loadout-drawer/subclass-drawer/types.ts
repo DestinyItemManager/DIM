@@ -6,6 +6,7 @@ export interface SocketWithOptions {
   title: string;
   plugCategoryHash?: number;
   socket: DimSocket;
+  /** The plugs available from the profile response which can fit into the socket. */
   options: PluggableInventoryItemDefinition[];
 }
 

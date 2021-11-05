@@ -46,7 +46,7 @@ function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
           <LockedModIcon
             key={`${mod.hash}-${modCounts[mod.hash]--}`}
             mod={mod}
-            onModClicked={() => onRemove(mod.hash)}
+            onClosed={() => onRemove(mod.hash)}
           />
         ))}
         <AddButton onClick={() => onOpenModPicker(firstMod.itemTypeDisplayName)} />

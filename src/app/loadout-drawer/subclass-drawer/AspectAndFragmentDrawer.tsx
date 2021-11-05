@@ -8,6 +8,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { SDDispatch } from './reducer';
 import { SelectedPlugs, SocketWithOptions } from './types';
+import { findFirstEmptySocketMod } from './utils';
 
 const MAX_ASPECTS = 2;
 
@@ -104,12 +105,7 @@ function getPlugsAndSelected(
   selectedPlugs: SelectedPlugs
 ) {
   const first = (socketWithOptionsList.length && socketWithOptionsList[0]) || undefined;
-  const emptySockets = _.compact(
-    socketWithOptionsList.map(({ socket, options }) =>
-      options.find((option) => option.hash === socket.socketDefinition.singleInitialItemHash)
-    )
-  );
-  const empty = emptySockets.length ? emptySockets[0] : undefined;
+  const empty = findFirstEmptySocketMod(socketWithOptionsList);
 
   const plugs =
     first?.options.filter(
