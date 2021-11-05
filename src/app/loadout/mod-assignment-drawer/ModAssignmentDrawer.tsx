@@ -11,7 +11,7 @@ import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { useMemo, useState } from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
@@ -56,10 +56,15 @@ function Header({
 
 export default function ModAssignmentDrawer({
   loadout,
+  minHeight,
+  sheetRef,
   onUpdateMods,
   onClose,
 }: {
   loadout: Loadout;
+  minHeight?: number;
+  /** A ref passed down to the sheets container. */
+  sheetRef?: RefObject<HTMLDivElement>;
   onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
@@ -104,6 +109,8 @@ export default function ModAssignmentDrawer({
     <>
       <Sheet
         header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
+        ref={sheetRef}
+        minHeight={minHeight}
         onClose={onClose}
       >
         <div className={styles.container}>
