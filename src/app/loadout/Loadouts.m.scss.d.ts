@@ -4,11 +4,15 @@ interface CssExports {
   'actions': string;
   'classIcon': string;
   'equipped': string;
+  'itemBucket': string;
   'itemCategory': string;
   'items': string;
+  'itemsInCategory': string;
   'loadout': string;
   'missingItems': string;
   'mods': string;
+  'modsPlaceholder': string;
+  'placeholder': string;
   'subClass': string;
   'unequipped': string;
 }

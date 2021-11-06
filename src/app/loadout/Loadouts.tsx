@@ -1,17 +1,12 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import {
-  allItemsSelector,
-  bucketsSelector,
-  sortedStoresSelector,
-  storesSelector,
-} from 'app/inventory/selectors';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
@@ -80,7 +75,7 @@ function Loadouts() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === classType
         ),
-        (l) => l.name
+        (l) => -(l.lastUpdatedAt ?? 0)
       ),
     [allLoadouts, classType]
   );
@@ -126,7 +121,10 @@ function Loadouts() {
           selectedStore={selectedStore}
           onCharacterChanged={setSelectedStoreId}
         />
-        <Link to="./optimizer">{t('LB.LB')}</Link>
+        <Link className="dim-button" to="./optimizer">
+          {t('LB.LB')}
+        </Link>
+        <div className="dim-button">Sort by last updated</div>
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
@@ -154,8 +152,6 @@ function LoadoutRow({
 }) {
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
-  const stores = useSelector(storesSelector);
-  const buckets = useSelector(bucketsSelector)!;
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subClass, warnitems] = useMemo(() => {
@@ -173,9 +169,6 @@ function LoadoutRow({
 
   // TODO: group and sort items
   const categories = _.groupBy(items, (i) => i.bucket.sort);
-  const sortedCategories = _.sortBy(Object.keys(categories), (c) =>
-    Object.keys(D2Categories).indexOf(c)
-  );
 
   return (
     <div className={styles.loadout} onClick={(e) => console.log(loadout, e)}>
@@ -189,70 +182,122 @@ function LoadoutRow({
           </span>
         )}
       </h2>
-      <div className={styles.subClass}>
-        {subClass && <ConnectedInventoryItem item={subClass} ignoreSelectedPerks />}
-      </div>
-      {sortedCategories.map((category) => (
-        <div key={category} className={clsx(styles.itemCategory, `category-${category}`)}>
-          {_.partition(categories[category], (i) => equippedItemIds.has(i.id)).map(
-            (items, index) =>
-              items && (
-                <div
-                  className={clsx(index === 0 ? styles.equipped : styles.unequipped)}
-                  key={index}
-                >
-                  {_.map(
-                    _.groupBy(items, (i) => i.bucket.hash),
-                    (items, bucketHash) => (
-                      <div key={bucketHash} className={styles.items}>
-                        {items.map((item) => (
-                          <ConnectedInventoryItem key={item.id} item={item} />
-                        ))}
-                      </div>
-                    )
-                  )}
-                </div>
-              )
-          )}
-          {category === 'Armor' && (
-            <>
-              <GeneratedLoadoutStats
-                stores={stores}
-                buckets={buckets}
-                items={items}
-                loadout={loadout}
-                allItems={allItems}
-              />
-              <Link className="dim-button" to="./optimizer">
-                {t('LB.LB')}
-              </Link>
-            </>
-          )}
-        </div>
-      ))}
-      <div className={styles.mods}>
-        {savedMods.map((mod, index) => (
-          <div key={index}>
-            <SocketDetailsMod itemDef={mod} />
+      {items.length > 0 && (
+        <>
+          <div className={styles.subClass}>
+            {subClass ? (
+              <ConnectedInventoryItem item={subClass} ignoreSelectedPerks />
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                <rect
+                  transform="rotate(-45)"
+                  y="17.470564"
+                  x="-16.470564"
+                  height="32.941124"
+                  width="32.941124"
+                  stroke="rgba(255, 255, 255, 0.2)"
+                  fill="rgba(255, 255, 255, 0.05)"
+                  strokeWidth="1"
+                  strokeMiterlimit="4"
+                />
+              </svg>
+            )}
           </div>
-        ))}
-      </div>
+          {['Weapons', 'Armor', 'General'].map((category) => (
+            <ItemCategory
+              key={category}
+              category={category}
+              items={categories[category]}
+              equippedItemIds={equippedItemIds}
+              loadout={loadout}
+            />
+          ))}
+          {savedMods.length > 0 ? (
+            <div className={styles.mods}>
+              {savedMods.map((mod, index) => (
+                <div key={index}>
+                  <SocketDetailsMod itemDef={mod} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
+          )}
+        </>
+      )}
       <div className={styles.actions}>
-        {items.length > 0 && (
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
-            {t('Loadouts.Edit')}
-          </button>
-        )}
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => editLoadout(loadout, { isNew: !saved })}
+        >
+          {t('Loadouts.Edit')}
+        </button>
         {saved && (
           <button type="button" className="dim-button" onClick={() => console.log('Delete!')}>
             {t('Loadouts.Delete')}
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function ItemCategory({
+  category,
+  items,
+  equippedItemIds,
+  loadout,
+}: {
+  category: string;
+  items?: DimItem[];
+  equippedItemIds: Set<string>;
+  loadout: Loadout;
+}) {
+  const buckets = useSelector(bucketsSelector)!;
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.type);
+  const bucketOrder = _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
+    buckets.byCategory[category].findIndex((b) => b.type === bucketType)
+  );
+
+  return (
+    <div key={category} className={clsx(styles.itemCategory, `category-${category}`)}>
+      {items ? (
+        <div className={styles.itemsInCategory}>
+          {bucketOrder.map((bucketType) => (
+            <div key={bucketType} className={styles.itemBucket}>
+              {_.partition(itemsByBucket[bucketType], (i) => equippedItemIds.has(i.id)).map(
+                (items, index) =>
+                  items && (
+                    <div
+                      className={clsx(
+                        styles.items,
+                        index === 0 ? styles.equipped : styles.unequipped
+                      )}
+                      key={index}
+                    >
+                      {items.map((item) => (
+                        <ConnectedInventoryItem key={item.id} item={item} />
+                      ))}
+                    </div>
+                  )
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={clsx(styles.placeholder, `category-${category}`)}>
+          {t(`Bucket.${category}`)}
+        </div>
+      )}
+      {category === 'Armor' && items && (
+        <>
+          <GeneratedLoadoutStats items={items} loadout={loadout} />
+          <Link className="dim-button" to="./optimizer">
+            {t('LB.LB')}
+          </Link>
+        </>
+      )}
     </div>
   );
 }

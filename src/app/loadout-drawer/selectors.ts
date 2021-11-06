@@ -37,6 +37,7 @@ function convertDimApiLoadoutToLoadout(loadout: DimApiLoadout): Loadout {
       ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
     ],
     parameters: loadout.parameters,
+    lastUpdatedAt: loadout.lastUpdatedAt,
   };
 }
 

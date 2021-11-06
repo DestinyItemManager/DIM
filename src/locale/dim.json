@@ -35,6 +35,7 @@
     "YourItems": "Your Items"
   },
   "Bucket": {
+    "": "",
     "Armor": "Armor",
     "General": "General",
     "Ghost": "Ghost",
@@ -488,6 +489,7 @@
     "Abandon": "Are you sure you want to abandon this loadout?",
     "AddEquippedItems": "Add Equipped",
     "AddUnequippedItems": "Add Unequipped",
+    "AllMissingItemsWarning": "All of the items in this loadout are no longer in your inventory.",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
@@ -529,8 +531,8 @@
     "MaximizeLight": "Maximize Light",
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
-    "ModPlacement": "Mod Placement",
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
+    "ModPlacement": "Mod Placement",
     "Mods": "Mods",
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",

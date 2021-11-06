@@ -39,6 +39,7 @@
   },
   "Bucket": {
     "Armor": "Armor",
+    "Class": "Subclass",
     "General": "General",
     "Ghost": "Ghost",
     "Inventory": "Inventory",

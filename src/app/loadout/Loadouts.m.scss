@@ -17,6 +17,17 @@
   }
 }
 
+.placeholder {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: var(--item-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .missingItems {
   text-transform: none;
   font-size: 12px;
@@ -44,6 +55,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  @include vertical-space-children(var(--item-margin));
+}
+
+.itemsInCategory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  gap: var(--item-margin);
+  width: 100%;
+}
+
+.itemBucket {
+  width: var(--item-size);
   @include vertical-space-children(var(--item-margin));
 }
 
@@ -90,6 +113,10 @@
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
+}
+.modsPlaceholder {
+  composes: placeholder;
+  grid-area: mods;
 }
 
 .actions {
