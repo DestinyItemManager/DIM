@@ -47,7 +47,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
     });
   };
   const equipItems = (set: ArmorSet) =>
-    dispatch(applyLoadout(store, makeLoadoutFromSet(set), true));
+    dispatch(applyLoadout(store, makeLoadoutFromSet(set), { allowUndo: true }));
 
   return (
     <div key={setType.set.setHash} className="section loadout">

@@ -57,7 +57,16 @@ interface Scope {
  * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
  * @return a promise for the completion of the whole loadout operation.
  */
-export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): ThunkResult {
+export function applyLoadout(
+  store: DimStore,
+  loadout: Loadout,
+  {
+    /** Add this to the stack of loadouts that you can undo */
+    allowUndo = false,
+    /** Only apply items matching the class of the store we're applying to */
+    onlyMatchingClass = false,
+  } = {}
+): ThunkResult {
   return async (dispatch, getState) => {
     if (!store) {
       throw new Error('You need a store!');
@@ -74,7 +83,10 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
     const applicableLoadoutItems: LoadoutItem[] = loadout.items.filter((loadoutItem) => {
       const item = getLoadoutItem(loadoutItem, store, stores);
       // Don't filter if they're going to the vault
-      return item && (store.isVault || !item.equipment || itemCanBeEquippedBy(item, store));
+      return (
+        item &&
+        (!onlyMatchingClass || store.isVault || !item.equipment || itemCanBeEquippedBy(item, store))
+      );
     });
 
     const [cancelToken, cancel] = withCancel();

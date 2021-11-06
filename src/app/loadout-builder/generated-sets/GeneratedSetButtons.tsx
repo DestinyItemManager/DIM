@@ -41,7 +41,7 @@ export default function GeneratedSetButtons({
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
     const loadout = createLoadout(store.classType, set);
-    return dispatch(applyLoadout(store, loadout, true));
+    return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
   const statsWithPlus5: number[] = [];
