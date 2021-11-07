@@ -191,7 +191,7 @@ function LoadoutRow({
           </span>
         )}
       </h2>
-      {items.length > 0 && (
+      {(items.length > 0 || subClass) && (
         <>
           <div className={styles.subClass}>
             {subClass ? (
@@ -204,7 +204,6 @@ function LoadoutRow({
                   x="-16.470564"
                   height="32.941124"
                   width="32.941124"
-                  stroke="rgba(255, 255, 255, 0.2)"
                   fill="rgba(255, 255, 255, 0.05)"
                   strokeWidth="1"
                   strokeMiterlimit="4"
