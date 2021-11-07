@@ -3,10 +3,16 @@
 interface CssExports {
   'abilities': string;
   'aspects': string;
+  'flexColumn': string;
+  'flexRow': string;
+  'flexWrap': string;
   'fragments': string;
   'optionsGrid': string;
+  'resetButton': string;
+  'socket': string;
+  'sockets': string;
   'super': string;
-  'superImage': string;
+  'title': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

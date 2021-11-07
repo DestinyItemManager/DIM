@@ -37,13 +37,8 @@ export default function Footer({
         {selected.map((plug) => (
           <PlugDef
             key={getModRenderKey(plug, plugCounts)}
-<<<<<<< HEAD
             plug={plug}
             onClose={() => onPlugSelected(plug)}
-=======
-            mod={plug}
-            onClosed={() => onPlugSelected(plug)}
->>>>>>> f046858ba (Use socket utils, use LockedModIcon, make a reusable helper.)
           />
         ))}
       </div>

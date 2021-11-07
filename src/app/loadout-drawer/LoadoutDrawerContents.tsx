@@ -1,10 +1,11 @@
 import { t } from 'app/i18next-t';
+import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import type {
   DimBucketType,
@@ -67,16 +68,11 @@ export const fromEquippedTypes: DimBucketType[] = [
   'Ghost',
 ];
 
-if (!$featureFlags.loadoutSubclasses) {
-  loadoutTypes.unshift('Class');
-}
-
 export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
-    armorMods,
-    subclassMods,
+    savedMods,
     buckets,
     items,
     stores,
@@ -84,23 +80,26 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
-    onUpdateMods,
     removeModByHash,
   }: {
     loadout: Loadout;
-    armorMods: PluggableInventoryItemDefinition[];
-    subclassMods: PluggableInventoryItemDefinition[];
+    savedMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
     stores: DimStore[];
     items: DimItem[];
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
-    onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
 ) {
+  const enableSubclassDrawer =
+    stores.some((store) => store.destinyVersion === 2) && $featureFlags.loadoutSubclasses;
+  if (!enableSubclassDrawer) {
+    loadoutTypes.unshift('Class');
+  }
+
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
   const [openSubclassDrawer, setOpenSubclassDrawer] = useState(false);
 
@@ -113,16 +112,11 @@ export default function LoadoutDrawerContents(
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
 
-  const onSubclassUpdated = (
-    subclass: DimItem | undefined,
-    plugs: PluggableInventoryItemDefinition[]
-  ) => {
-    if (!subclass) {
-      return;
+  const onSubclassesUpdated = (updated: { item: DimItem; socketOverrides: SocketOverrides }[]) => {
+    for (const { item } of updated) {
+      // TODO (ryan) update socketOverrides for items
+      add(item);
     }
-
-    onUpdateMods([...armorMods, ...plugs]);
-    add(subclass);
   };
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
@@ -133,14 +127,25 @@ export default function LoadoutDrawerContents(
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
-  const subclassBucket = buckets.byType.Class;
-  const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
-  const savedSubclass = subclassItems.length > 0 ? subclassItems[0] : undefined;
+
+  const { subclassSocketOverrides, subclassBucket, subclassItems } = useMemo(() => {
+    const subclassSocketOverrides: SocketOverridesForItems = {};
+    const subclassBucket = buckets.byType.Class;
+    const subclassItems: DimItem[] =
+      (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
+
+    for (const item of loadout.items) {
+      if (subclassItems.some((subclass) => subclass.id === item.id)) {
+        subclassSocketOverrides[item.id] = item.socketOverrides || {};
+      }
+    }
+    return { subclassSocketOverrides, subclassBucket, subclassItems };
+  }, [buckets.byType.Class, itemsByBucket, loadout.items]);
 
   return (
     <>
       <div className="loadout-add-types">
-        {$featureFlags.loadoutSubclasses && (
+        {enableSubclassDrawer && (
           <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {subclassBucket.name}
           </a>
@@ -181,23 +186,16 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      {savedSubclass && (
-        <SavedSubclass
-          bucket={subclassBucket}
-          subclass={savedSubclass}
-          plugs={subclassMods}
-          equip={equip}
-          remove={remove}
-          onPlugClicked={(plug) =>
-            onUpdateMods([
-              ...armorMods,
-              ...subclassMods.filter((subclassMod) => plug.hash !== subclassMod.hash),
-            ])
-          }
-        />
-      )}
+      {subclassItems.length > 0 &&
+        subclassItems.map((subclass) => (
+          <SavedSubclass
+            key={subclass.id}
+            subclass={subclass}
+            openSubclassDrawer={() => setOpenSubclassDrawer(true)}
+          />
+        ))}
       <SavedMods
-        savedMods={armorMods}
+        savedMods={savedMods}
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
@@ -205,9 +203,9 @@ export default function LoadoutDrawerContents(
         ReactDOM.createPortal(
           <SubclassDrawer
             classType={loadout.classType}
-            initialSubclass={savedSubclass}
-            initialPlugs={subclassMods}
-            onAccept={onSubclassUpdated}
+            loadoutSubclasses={subclassItems}
+            initialSocketOverrides={subclassSocketOverrides}
+            onAccept={onSubclassesUpdated}
             onClose={() => setOpenSubclassDrawer(false)}
           />,
           document.body

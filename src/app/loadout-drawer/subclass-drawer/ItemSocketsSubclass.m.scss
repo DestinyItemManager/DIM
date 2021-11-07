@@ -1,0 +1,82 @@
+@import '../../variables';
+@import '../../dim-ui/common.m.scss';
+
+$title-color: #979797;
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+
+  @include phone-portrait {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.super {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  display: flex;
+  justify-content: center;
+
+  > * {
+    width: 188px;
+    height: 188px;
+  }
+}
+
+.title {
+  border-bottom: 1px solid $title-color;
+  font-weight: bold;
+  color: $title-color;
+  margin-bottom: 4px;
+}
+
+.socket {
+  border: 1px solid $title-color;
+  background-color: rgba(0, 0, 0, 0.7);
+
+  &:not(:last-child) {
+    margin-right: 4px;
+  }
+
+  img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
+}
+
+.sockets {
+  width: fit-content;
+
+  @include phone-portrait {
+    margin-top: 16px;
+  }
+}
+
+.abilities {
+  composes: sockets;
+  margin-top: 48px;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.aspects {
+  composes: sockets;
+  margin-top: 48px;
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.fragments {
+  composes: sockets;
+  margin-top: 24px;
+  grid-column: 2 / span 3;
+  grid-row: 2;
+}
+
+.sockets {
+  composes: flexRow;
+}
