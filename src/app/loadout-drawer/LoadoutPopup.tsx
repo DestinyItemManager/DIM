@@ -165,7 +165,7 @@ function LoadoutPopup({
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    dispatch(applyLoadout(dimStore, loadout, true));
+    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true, onlyMatchingClass: true }));
   };
 
   // A dynamic loadout set up to level weapons and armor

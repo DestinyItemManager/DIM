@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -74,7 +75,9 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             <ArchetypeSocket archetypeSocket={exoticArmorPerkSocket} item={item}>
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  {exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                  <RichDestinyText
+                    text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                  />
                 </div>
               )}
             </ArchetypeSocket>

@@ -82,7 +82,7 @@ export default React.memo(function ItemActionsDropdown({
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = async (store: DimStore) => {
     const loadout = itemMoveLoadout(filteredItems, store);
-    dispatch(applyLoadout(store, loadout, true));
+    dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
   const bulkItemTags = itemTagSelectorList

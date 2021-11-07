@@ -29,7 +29,7 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified, hide
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   const makeMaxLightLoadout = () => {
     const loadout = maxLightLoadout(allItems, dimStore);
-    dispatch(applyLoadout(dimStore, loadout, true));
+    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
   };
 
   return (

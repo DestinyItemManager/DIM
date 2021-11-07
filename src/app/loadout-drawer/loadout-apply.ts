@@ -57,8 +57,17 @@ interface Scope {
  * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
  * @return a promise for the completion of the whole loadout operation.
  */
-export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = false): ThunkResult {
-  return async (dispatch) => {
+export function applyLoadout(
+  store: DimStore,
+  loadout: Loadout,
+  {
+    /** Add this to the stack of loadouts that you can undo */
+    allowUndo = false,
+    /** Only apply items matching the class of the store we're applying to */
+    onlyMatchingClass = false,
+  } = {}
+): ThunkResult {
+  return async (dispatch, getState) => {
     if (!store) {
       throw new Error('You need a store!');
     }
@@ -67,19 +76,34 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
       infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
     }
 
+    const stores = storesSelector(getState());
+
+    // Trim down the list of items to only those that could be equipped by the store we're sending to.
+    // Shallow copy all items so we can mutate equipped
+    const applicableLoadoutItems: LoadoutItem[] = loadout.items.filter((loadoutItem) => {
+      const item = getLoadoutItem(loadoutItem, store, stores);
+      // Don't filter if they're going to the vault
+      return (
+        item &&
+        (!onlyMatchingClass || store.isVault || !item.equipment || itemCanBeEquippedBy(item, store))
+      );
+    });
+
     const [cancelToken, cancel] = withCancel();
 
     const loadoutPromise = queueAction(() =>
-      dispatch(doApplyLoadout(store, loadout, cancelToken, allowUndo))
+      dispatch(doApplyLoadout(store, loadout, applicableLoadoutItems, cancelToken, allowUndo))
     );
     loadingTracker.addPromise(loadoutPromise);
 
+    // Start a notification that will show as long as the loadout is equipping
+    // TODO: show the items in the notification and tick them down! Will require piping through some sort of event source?
     showNotification(
       loadoutNotification(
         loadout,
+        applicableLoadoutItems.length,
         store,
         // TODO: allow for an error view function to be passed in
-        // TODO: cancel button!
         loadoutPromise.then((scope) => {
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
@@ -103,6 +127,7 @@ export function applyLoadout(store: DimStore, loadout: Loadout, allowUndo = fals
 function doApplyLoadout(
   store: DimStore,
   loadout: Loadout,
+  applicableLoadoutItems: LoadoutItem[],
   cancelToken: CancelToken,
   allowUndo = false
 ): ThunkResult<Scope> {
@@ -119,50 +144,40 @@ function doApplyLoadout(
       );
     }
 
-    // Shallow copy all items so we can mutate equipped
-    let loadoutItems: LoadoutItem[] = Array.from(loadout.items, (i) => ({ ...i }));
-
-    const loadoutItemIds = loadoutItems.map((i) => ({
+    // These will be passed to the move item excludes list to prevent them from
+    // being moved when moving other items.
+    const excludes = applicableLoadoutItems.map((i) => ({
       id: i.id,
       hash: i.hash,
     }));
 
-    // Only select stuff that needs to change state
-    let totalItems = loadoutItems.length;
-    loadoutItems = loadoutItems.filter((loadoutItem) => {
+    // Shallow copy all items so we can mutate equipped, and filter out items
+    // that don't need to move
+    const loadoutItemsToMove: LoadoutItem[] = Array.from(applicableLoadoutItems, (i) => ({
+      ...i,
+    })).filter((loadoutItem) => {
       const item = getLoadoutItem(loadoutItem, store, getStores());
-      // provide a more accurate count of total items
-      if (!item) {
-        totalItems--;
-        return false;
-      }
-
-      // ignore items that can't be equipped by this character (e.g. armor for another character)
-      if (!store.isVault && item.equipment && !itemCanBeEquippedBy(item, store)) {
-        totalItems--;
-        return false;
-      }
-
       const notAlreadyThere =
-        item.owner !== store.id ||
-        item.location.inPostmaster ||
-        // Needs to be equipped. Stuff not marked "equip" doesn't
-        // necessarily mean to de-equip it.
-        (loadoutItem.equipped && !item.equipped) ||
-        // We always try to move consumable stacks because their logic is complicated
-        (loadoutItem.amount && loadoutItem.amount > 1);
+        item &&
+        (item.owner !== store.id ||
+          item.location.inPostmaster ||
+          // Needs to be equipped. Stuff not marked "equip" doesn't
+          // necessarily mean to de-equip it.
+          (loadoutItem.equipped && !item.equipped) ||
+          // We always try to move consumable stacks because their logic is complicated
+          (loadoutItem.amount && loadoutItem.amount > 1));
       return notAlreadyThere;
     });
 
     // vault can't equip
     if (store.isVault) {
-      loadoutItems.forEach((i) => {
+      loadoutItemsToMove.forEach((i) => {
         i.equipped = false;
       });
     }
 
     // We'll equip these all in one go!
-    let itemsToEquip = loadoutItems.filter((i) => i.equipped);
+    let itemsToEquip = loadoutItemsToMove.filter((i) => i.equipped);
     if (itemsToEquip.length > 1) {
       // we'll use the equipItems function
       itemsToEquip.forEach((i) => {
@@ -171,14 +186,14 @@ function doApplyLoadout(
     }
 
     // Stuff that's equipped on another character. We can bulk-dequip these
-    const itemsToDequip = loadoutItems.filter((pseudoItem) => {
+    const itemsToDequip = loadoutItemsToMove.filter((pseudoItem) => {
       const item = getItemAcrossStores(getStores(), pseudoItem);
       return item?.equipped && item.owner !== store.id;
     });
 
     const scope: Scope = {
       failed: 0,
-      total: totalItems,
+      total: applicableLoadoutItems.length,
       successfulItems: [] as DimItem[],
       errors: [] as {
         item: DimItem | null;
@@ -194,7 +209,7 @@ function doApplyLoadout(
         _.groupBy(realItemsToDequip, (i) => i.owner),
         (dequipItems, owner) => {
           const itemsToEquip = _.compact(
-            dequipItems.map((i) => getSimilarItem(getStores(), i, loadoutItemIds))
+            dequipItems.map((i) => getSimilarItem(getStores(), i, excludes))
           );
           return dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
         }
@@ -202,7 +217,7 @@ function doApplyLoadout(
       await Promise.all(dequips);
     }
 
-    await dispatch(applyLoadoutItems(store, loadoutItems, loadoutItemIds, cancelToken, scope));
+    await dispatch(applyLoadoutItems(store, loadoutItemsToMove, excludes, cancelToken, scope));
 
     let equippedItems: LoadoutItem[];
     if (itemsToEquip.length > 1) {
@@ -238,10 +253,15 @@ function doApplyLoadout(
       dispatch(updateCharacters());
     }
 
-    if (loadout.clearSpace) {
-      const allItems = _.compact(loadoutItems.map((i) => getLoadoutItem(i, store, getStores())));
+    // If this is marked to clear space (and we're not applying it to the vault), move items not
+    // in the loadout off the character
+    if (loadout.clearSpace && !store.isVault) {
       await dispatch(
-        clearSpaceAfterLoadout(getStore(getStores(), store.id)!, allItems, cancelToken)
+        clearSpaceAfterLoadout(
+          getStore(getStores(), store.id)!,
+          applicableLoadoutItems.map((i) => getLoadoutItem(i, store, getStores())!),
+          cancelToken
+        )
       );
     }
 
@@ -254,7 +274,7 @@ function doApplyLoadout(
 function applyLoadoutItems(
   store: DimStore,
   items: LoadoutItem[],
-  loadoutItemIds: { id: string; hash: number }[],
+  excludes: { id: string; hash: number }[],
   cancelToken: CancelToken,
   scope: {
     failed: number;
@@ -324,7 +344,7 @@ function applyLoadoutItems(
                 executeMoveItem(sourceItem, store, {
                   equip: false,
                   amount: amountToMove,
-                  excludes: loadoutItemIds,
+                  excludes,
                   cancelToken,
                 })
               );
@@ -336,7 +356,7 @@ function applyLoadoutItems(
             executeMoveItem(item, store, {
               equip: pseudoItem.equipped,
               amount: item.amount,
-              excludes: loadoutItemIds,
+              excludes,
               cancelToken,
             })
           );
@@ -361,7 +381,7 @@ function applyLoadoutItems(
     }
 
     // Keep going
-    return dispatch(applyLoadoutItems(store, items, loadoutItemIds, cancelToken, scope));
+    return dispatch(applyLoadoutItems(store, items, excludes, cancelToken, scope));
   };
 }
 
