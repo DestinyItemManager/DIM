@@ -408,7 +408,7 @@ module.exports = (env) => {
         // Show mod assignment button in loadout drawer
         '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
         // Enable the subclass drawer in loadouts
-        '$featureFlags.loadoutSubclasses': JSON.stringify(!env.release),
+        '$featureFlags.loadoutSubclasses': JSON.stringify(env.dev),
       }),
 
       new LodashModuleReplacementPlugin({
