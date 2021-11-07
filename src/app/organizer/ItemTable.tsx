@@ -344,7 +344,7 @@ function ItemTable({
         selectedItems.map((i) => convertToLoadoutItem(i, false))
       );
 
-      dispatch(applyLoadout(store, loadout, true));
+      dispatch(applyLoadout(store, loadout, { allowUndo: true }));
     }
   };
 
