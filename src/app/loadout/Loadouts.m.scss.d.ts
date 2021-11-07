@@ -13,6 +13,7 @@ interface CssExports {
   'mods': string;
   'modsPlaceholder': string;
   'placeholder': string;
+  'power': string;
   'subClass': string;
   'unequipped': string;
 }

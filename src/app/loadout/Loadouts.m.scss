@@ -48,7 +48,10 @@
 
 .subClass {
   grid-area: subClass;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include vertical-space-children(18px);
 }
 
 .itemCategory {
@@ -56,6 +59,14 @@
   flex-direction: column;
   align-items: center;
   @include vertical-space-children(var(--item-margin));
+
+  :global(.stat-row) {
+    justify-content: space-between;
+  }
+
+  :global(.stat-bars) {
+    margin-top: 0;
+  }
 }
 
 .itemsInCategory {
@@ -74,6 +85,7 @@
   display: grid;
   gap: 2px;
   grid-template-columns: 1fr 1fr;
+  min-height: unset !important;
 }
 
 :global(.category-Weapons) {
@@ -99,6 +111,18 @@
   --item-icon-size: calc(0.5 * var(--item-size) - 2px);
   :global(.item) {
     --item-size: var(--item-icon-size);
+  }
+}
+
+.power {
+  display: inline;
+  color: $gold;
+  flex: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+  svg {
+    margin-right: 2px;
+    font-size: 10px;
   }
 }
 

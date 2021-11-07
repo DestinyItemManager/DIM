@@ -12,12 +12,13 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { maxLightLoadout, searchLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { GeneratedLoadoutStats } from 'app/loadout-drawer/GeneratedLoadoutStats';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
   extractArmorModHashes,
+  getArmorStats,
   getItemsFromLoadoutItems,
+  getLight,
   getModsFromLoadout,
   newLoadout,
 } from 'app/loadout-drawer/loadout-utils';
@@ -26,8 +27,9 @@ import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
+import { AppIcon, faExclamationTriangle, powerActionIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
+import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -170,6 +172,13 @@ function LoadoutRow({
   // TODO: group and sort items
   const categories = _.groupBy(items, (i) => i.bucket.sort);
 
+  const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
+  const power = showPower
+    ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
+    : 0;
+
+  // TODO: show the loadout builder params
+
   return (
     <div className={styles.loadout} onClick={(e) => console.log(loadout, e)}>
       <h2>
@@ -201,6 +210,12 @@ function LoadoutRow({
                   strokeMiterlimit="4"
                 />
               </svg>
+            )}
+            {power !== 0 && (
+              <div className={styles.power}>
+                <AppIcon icon={powerActionIcon} />
+                <span>{power}</span>
+              </div>
             )}
           </div>
           {['Weapons', 'Armor', 'General'].map((category) => (
@@ -254,11 +269,15 @@ function ItemCategory({
   equippedItemIds: Set<string>;
   loadout: Loadout;
 }) {
+  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.type);
-  const bucketOrder = _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
-    buckets.byCategory[category].findIndex((b) => b.type === bucketType)
-  );
+  const bucketOrder =
+    category === 'Weapons' || category === 'Armor'
+      ? buckets.byCategory[category].map((b) => b.type!)
+      : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
+          buckets.byCategory[category].findIndex((b) => b.type === bucketType)
+        );
 
   return (
     <div key={category} className={clsx(styles.itemCategory, `category-${category}`)}>
@@ -266,21 +285,25 @@ function ItemCategory({
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucketType) => (
             <div key={bucketType} className={styles.itemBucket}>
-              {_.partition(itemsByBucket[bucketType], (i) => equippedItemIds.has(i.id)).map(
-                (items, index) =>
-                  items && (
-                    <div
-                      className={clsx(
-                        styles.items,
-                        index === 0 ? styles.equipped : styles.unequipped
-                      )}
-                      key={index}
-                    >
-                      {items.map((item) => (
-                        <ConnectedInventoryItem key={item.id} item={item} />
-                      ))}
-                    </div>
-                  )
+              {itemsByBucket[bucketType] ? (
+                _.partition(itemsByBucket[bucketType], (i) => equippedItemIds.has(i.id)).map(
+                  (items, index) =>
+                    items.length > 0 && (
+                      <div
+                        className={clsx(
+                          styles.items,
+                          index === 0 ? styles.equipped : styles.unequipped
+                        )}
+                        key={index}
+                      >
+                        {items.map((item) => (
+                          <ConnectedInventoryItem key={item.id} item={item} />
+                        ))}
+                      </div>
+                    )
+                )
+              ) : (
+                <div className={styles.items} />
               )}
             </div>
           ))}
@@ -292,7 +315,11 @@ function ItemCategory({
       )}
       {category === 'Armor' && items && (
         <>
-          <GeneratedLoadoutStats items={items} loadout={loadout} />
+          {items.length === 5 && (
+            <div className="stat-bars destiny2">
+              <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
+            </div>
+          )}
           <Link className="dim-button" to="./optimizer">
             {t('LB.LB')}
           </Link>
