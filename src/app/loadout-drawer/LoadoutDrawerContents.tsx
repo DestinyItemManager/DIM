@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
@@ -75,8 +76,7 @@ export default function LoadoutDrawerContents(
   this: void,
   {
     loadout,
-    armorMods,
-    subclassMods,
+    savedMods,
     buckets,
     items,
     stores,
@@ -85,12 +85,10 @@ export default function LoadoutDrawerContents(
     remove,
     add,
     onOpenModPicker,
-    onUpdateMods,
     removeModByHash,
   }: {
     loadout: Loadout;
-    armorMods: PluggableInventoryItemDefinition[];
-    subclassMods: PluggableInventoryItemDefinition[];
+    savedMods: PluggableInventoryItemDefinition[];
     buckets: InventoryBuckets;
     stores: DimStore[];
     items: DimItem[];
@@ -98,7 +96,6 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
-    onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
   }
@@ -115,16 +112,10 @@ export default function LoadoutDrawerContents(
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
 
-  const onSubclassUpdated = (
-    subclass: DimItem | undefined,
-    plugs: PluggableInventoryItemDefinition[]
-  ) => {
-    if (!subclass) {
-      return;
+  const onSubclassesUpdated = (updated: { item: DimItem; socketOverrides: SocketOverrides }[]) => {
+    for (const { item } of updated) {
+      add(item);
     }
-
-    onUpdateMods([...armorMods, ...plugs]);
-    add(subclass);
   };
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
@@ -137,7 +128,13 @@ export default function LoadoutDrawerContents(
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
   const subclassBucket = buckets.byType.Class;
   const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
-  const savedSubclass = subclassItems.length > 0 ? subclassItems[0] : undefined;
+  const subclassSocketOverrides = {};
+
+  for (const item of loadout.items) {
+    if (subclassItems.some((subclass) => subclass.id === item.id)) {
+      subclassSocketOverrides[item.id] = item.socketOverrides || [];
+    }
+  }
 
   return (
     <>
@@ -184,23 +181,16 @@ export default function LoadoutDrawerContents(
           />
         ))}
       </div>
-      {savedSubclass && (
-        <SavedSubclass
-          bucket={subclassBucket}
-          subclass={savedSubclass}
-          plugs={subclassMods}
-          equip={equip}
-          remove={remove}
-          onPlugClicked={(plug) =>
-            onUpdateMods([
-              ...armorMods,
-              ...subclassMods.filter((subclassMod) => plug.hash !== subclassMod.hash),
-            ])
-          }
-        />
-      )}
+      {subclassItems.length > 0 &&
+        subclassItems.map((subclass) => (
+          <SavedSubclass
+            key={subclass.id}
+            subclass={subclass}
+            openSubclassDrawer={() => setOpenSubclassDrawer(true)}
+          />
+        ))}
       <SavedMods
-        savedMods={armorMods}
+        savedMods={savedMods}
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
@@ -208,9 +198,9 @@ export default function LoadoutDrawerContents(
         ReactDOM.createPortal(
           <SubclassDrawer
             classType={loadout.classType}
-            initialSubclass={savedSubclass}
-            initialPlugs={subclassMods}
-            onAccept={onSubclassUpdated}
+            loadoutSubclasses={subclassItems}
+            socketOverridesForSubclasses={subclassSocketOverrides}
+            onAccept={onSubclassesUpdated}
             onClose={() => setOpenSubclassDrawer(false)}
           />,
           document.body

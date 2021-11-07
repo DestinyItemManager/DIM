@@ -6,6 +6,7 @@ export interface LoadoutItem {
   hash: number;
   amount: number;
   equipped: boolean;
+  socketOverrides?: number[];
 }
 
 /** In memory loadout structure. */

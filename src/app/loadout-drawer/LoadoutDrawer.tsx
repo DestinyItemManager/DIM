@@ -417,11 +417,6 @@ function LoadoutDrawer({
     [defs, loadoutItems, allItems]
   );
 
-  const { armorMods, subclassMods } = useMemo(
-    () => getModsFromLoadout(defs, loadout?.parameters?.mods),
-    [loadout?.parameters?.mods, defs]
-  );
-
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
       stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
@@ -523,6 +518,8 @@ function LoadoutDrawer({
     close();
   };
 
+  const savedMods = getModsFromLoadout(defs, loadout);
+
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
   const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
     const newLoadout = { ...loadout };
@@ -532,10 +529,6 @@ function LoadoutDrawer({
       mods: newMods.map((mod) => mod.hash),
     };
     stateDispatch({ type: 'update', loadout: newLoadout });
-  };
-
-  const onUpdateArmorMods = (newMods: PluggableInventoryItemDefinition[]) => {
-    onUpdateMods([...newMods, ...subclassMods]);
   };
 
   /** Removes a single mod from the loadout with the supplied itemHash. */
@@ -575,7 +568,7 @@ function LoadoutDrawer({
         classTypeOptions={classTypeOptions}
         modAssignmentDrawerRef={modAssignmentDrawerRef}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        onUpdateArmorMods={onUpdateArmorMods}
+        onUpdateMods={onUpdateMods}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         clashingLoadout={clashingLoadout}
@@ -621,13 +614,11 @@ function LoadoutDrawer({
             <div className="loadout-contents">
               <LoadoutDrawerContents
                 loadout={loadout}
-                armorMods={armorMods}
-                subclassMods={subclassMods}
+                savedMods={savedMods}
                 items={items}
                 buckets={buckets}
                 stores={stores}
                 itemSortOrder={itemSortOrder}
-                onUpdateMods={onUpdateMods}
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
@@ -645,10 +636,10 @@ function LoadoutDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
-            lockedMods={armorMods}
+            lockedMods={savedMods}
             initialQuery={modPicker.query}
             minHeight={calculauteMinSheetHeight()}
-            onAccept={onUpdateArmorMods}
+            onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,
           document.body

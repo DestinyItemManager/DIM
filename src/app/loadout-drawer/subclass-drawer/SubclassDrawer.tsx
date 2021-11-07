@@ -3,37 +3,51 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
+import {
+  applySocketOverrides,
+  SocketOverrides,
+  SocketOverridesForItems,
+  useSocketOverridesForItems,
+} from 'app/inventory/store/override-sockets';
+import ItemSocketsGeneral from 'app/item-popup/ItemSocketsGeneral';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
-import React, { useCallback, useMemo, useReducer } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import '../../item-picker/ItemPicker.scss';
-import Options from './Options';
-import { SDDispatch, sdInit, sdReducer } from './reducer';
 import styles from './SubclassDrawer.m.scss';
 
 export default function SubclassDrawer({
   classType,
-  initialSubclass,
-  initialPlugs = [],
+  loadoutSubclasses = [],
+  socketOverridesForSubclasses,
   onAccept,
   onClose: onCloseProp,
 }: {
   classType: DestinyClass;
-  initialSubclass?: DimItem;
-  initialPlugs?: PluggableInventoryItemDefinition[];
-  onAccept(subclass?: DimItem, plugs?: PluggableInventoryItemDefinition[]): void;
+  loadoutSubclasses?: DimItem[];
+  socketOverridesForSubclasses?: SocketOverridesForItems;
+  onAccept(selected: { item: DimItem; socketOverrides: SocketOverrides }[]): void;
   onClose(): void;
 }) {
   const defs = useD2Definitions();
   const isPhonePortrait = useIsPhonePortrait();
-  const allItems = useSelector(allItemsSelector, shallowEqual);
+  const [selectedSubclasses, setSelectedSubclasses] = useState<DimItem[]>(loadoutSubclasses);
+  const [activeSubclass, setActiveSubclass] = useState(
+    selectedSubclasses.length ? selectedSubclasses[0] : undefined
+  );
 
+  const [socketOverrides, onPlugClicked] = useSocketOverridesForItems(socketOverridesForSubclasses);
+  const overriddenSubclass =
+    activeSubclass &&
+    defs &&
+    applySocketOverrides(defs, activeSubclass, socketOverrides[activeSubclass.id]);
+
+  const allItems = useSelector(allItemsSelector, shallowEqual);
   const subclasses = useMemo(() => {
     if (!defs) {
       return [];
@@ -47,14 +61,8 @@ export default function SubclassDrawer({
       .map((item) => item);
   }, [allItems, classType, defs]);
 
-  const [state, dispatch] = useReducer(
-    sdReducer,
-    { subclasses, initialSubclass, initialPlugs },
-    sdInit
-  );
-
   const screenshot =
-    !isPhonePortrait && state.subclass && defs?.InventoryItem.get(state.subclass.hash).screenshot;
+    !isPhonePortrait && activeSubclass && defs?.InventoryItem.get(activeSubclass.hash).screenshot;
 
   const title =
     subclasses.length > 0
@@ -63,12 +71,26 @@ export default function SubclassDrawer({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    const plugs = state.subclass
-      ? _.compact(Object.values(state.plugsBySubclassHash[state.subclass.hash]).flat())
-      : [];
-    onAccept(state.subclass, plugs);
+    onAccept(
+      selectedSubclasses.map((subclass) => ({
+        item: subclass,
+        socketOverrides: socketOverrides[subclass.id],
+      }))
+    );
     onClose();
   };
+
+  const onSubclassClick = useCallback((subclass: DimItem) => {
+    setSelectedSubclasses((current) => {
+      if (current.includes(subclass)) {
+        return current;
+      }
+
+      const toSave = current.filter((c) => c.classType !== subclass.classType);
+      return [...toSave, subclass];
+    });
+    setActiveSubclass(subclass);
+  }, []);
 
   const footer = ({ onClose }: { onClose(): void }) => (
     <div>
@@ -96,18 +118,13 @@ export default function SubclassDrawer({
               <Subclass
                 key={subclass.id}
                 subclass={subclass}
-                isSelected={subclass.id === state.subclass?.id}
-                dispatch={dispatch}
+                isSelected={selectedSubclasses.some((s) => s.id === subclass.id)}
+                onSubclassClick={onSubclassClick}
               />
             ))}
           </div>
-          {state.subclass && defs && (
-            <Options
-              selectedSubclass={state.subclass}
-              defs={defs}
-              selectedPlugs={state.plugsBySubclassHash[state.subclass.hash]}
-              dispatch={dispatch}
-            />
+          {overriddenSubclass && (
+            <ItemSocketsGeneral item={overriddenSubclass} onPlugClicked={onPlugClicked} />
           )}
         </div>
       </div>
@@ -115,18 +132,18 @@ export default function SubclassDrawer({
   );
 }
 
-function Subclass({
+export function Subclass({
   subclass,
   isSelected,
-  dispatch,
+  onSubclassClick,
 }: {
   subclass: DimItem;
   isSelected: boolean;
-  dispatch: SDDispatch;
+  onSubclassClick(subclass: DimItem): void;
 }) {
   const onClick = useCallback(() => {
-    dispatch({ type: 'update-subclass', subclass });
-  }, [subclass, dispatch]);
+    onSubclassClick(subclass);
+  }, [subclass, onSubclassClick]);
 
   return (
     <div

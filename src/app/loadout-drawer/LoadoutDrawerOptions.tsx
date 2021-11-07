@@ -17,7 +17,7 @@ export default function LoadoutDrawerOptions({
   classTypeOptions,
   modAssignmentDrawerRef,
   updateLoadout,
-  onUpdateArmorMods,
+  onUpdateMods,
   clashingLoadout,
   saveLoadout,
   saveAsNew,
@@ -34,7 +34,7 @@ export default function LoadoutDrawerOptions({
   }[];
   modAssignmentDrawerRef: RefObject<HTMLDivElement>;
   updateLoadout(loadout: Loadout): void;
-  onUpdateArmorMods(mods: PluggableInventoryItemDefinition[]): void;
+  onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
@@ -180,7 +180,7 @@ export default function LoadoutDrawerOptions({
           <ModAssignmentDrawer
             loadout={loadout}
             sheetRef={modAssignmentDrawerRef}
-            onUpdateMods={onUpdateArmorMods}
+            onUpdateMods={onUpdateMods}
             minHeight={calculauteMinSheetHeight()}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
