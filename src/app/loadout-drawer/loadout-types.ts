@@ -6,7 +6,6 @@ export interface LoadoutItem {
   hash: number;
   amount: number;
   equipped: boolean;
-  socketOverrides?: number[];
 }
 
 /** In memory loadout structure. */
@@ -18,5 +17,7 @@ export interface Loadout {
   /** Whether to move other items not in the loadout off the character when applying the loadout. */
   clearSpace?: boolean;
   /** Information about the desired properties of this loadout - used to drive the Loadout Optimizer or apply Mod Loadouts */
-  parameters?: LoadoutParameters;
+  parameters?: LoadoutParameters & {
+    itemSocketOverrides?: { [itemId: number]: { [socketIndex: number]: number } };
+  };
 }

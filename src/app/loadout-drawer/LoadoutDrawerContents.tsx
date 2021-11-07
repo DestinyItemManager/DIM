@@ -132,7 +132,7 @@ export default function LoadoutDrawerContents(
 
   for (const item of loadout.items) {
     if (subclassItems.some((subclass) => subclass.id === item.id)) {
-      subclassSocketOverrides[item.id] = item.socketOverrides || [];
+      subclassSocketOverrides[item.id] = loadout.parameters?.itemSocketOverrides?.[item.id];
     }
   }
 
