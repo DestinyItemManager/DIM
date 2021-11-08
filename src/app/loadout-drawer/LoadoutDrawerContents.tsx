@@ -127,7 +127,7 @@ export default function LoadoutDrawerContents(
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
   const subclassBucket = buckets.byType.Class;
-  const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
+  const subclassItems = subclassBucket?.hash ? itemsByBucket[subclassBucket.hash] : [];
   const subclassSocketOverrides = {};
 
   for (const item of loadout.items) {

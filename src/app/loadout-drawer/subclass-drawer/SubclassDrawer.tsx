@@ -11,7 +11,6 @@ import {
   SocketOverridesForItems,
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
-import ItemSocketsGeneral from 'app/item-popup/ItemSocketsGeneral';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -19,6 +18,7 @@ import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import '../../item-picker/ItemPicker.scss';
+import ItemSocketsSubclass from './ItemSocketsSubclass';
 import styles from './SubclassDrawer.m.scss';
 
 export default function SubclassDrawer({
@@ -124,7 +124,7 @@ export default function SubclassDrawer({
             ))}
           </div>
           {overriddenSubclass && (
-            <ItemSocketsGeneral item={overriddenSubclass} onPlugClicked={onPlugClicked} />
+            <ItemSocketsSubclass item={overriddenSubclass} onPlugClicked={onPlugClicked} />
           )}
         </div>
       </div>
