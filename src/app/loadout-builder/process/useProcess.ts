@@ -51,7 +51,8 @@ export function useProcess(
   lockItemEnergyType: boolean,
   statOrder: number[],
   statFilters: StatFilters,
-  anyExotic: boolean
+  anyExotic: boolean,
+  disabledDueToMaintenance: boolean
 ) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -74,6 +75,10 @@ export function useProcess(
   );
 
   useEffect(() => {
+    if (disabledDueToMaintenance) {
+      return;
+    }
+
     const processStart = performance.now();
 
     // Stop any previous worker
@@ -191,6 +196,7 @@ export function useProcess(
     statOrder,
     upgradeSpendTier,
     anyExotic,
+    disabledDueToMaintenance,
   ]);
 
   return { result, processing, remainingTime };

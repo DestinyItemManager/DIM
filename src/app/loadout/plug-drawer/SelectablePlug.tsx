@@ -7,7 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './SelectablePlug.m.scss';
 
 export default function SelectablePlug({
@@ -24,12 +24,17 @@ export default function SelectablePlug({
   onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
 }) {
   const defs = useD2Definitions()!;
-  const handleClick = () => {
+
+  const handleClick = useCallback(() => {
     selectable && onPlugSelected(plug);
-  };
+  }, [onPlugSelected, plug, selectable]);
+
+  const onClose = useCallback(() => {
+    () => onPlugRemoved(plug);
+  }, [onPlugRemoved, plug]);
 
   return (
-    <ClosableContainer enabled={selected} onClose={() => onPlugRemoved(plug)}>
+    <ClosableContainer onClose={selected ? onClose : undefined}>
       <div
         className={clsx(styles.plug, {
           [styles.lockedPerk]: selected,

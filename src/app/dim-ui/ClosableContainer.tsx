@@ -4,19 +4,19 @@ import styles from './ClosableContainer.m.scss';
 
 /**
  * A generic wrapper that adds a "close" button in the top right corner.
+ * If the onClose function isn't passed in the close button won't appear
+ * allowing dynamic enable/disable functionality.
  */
 export default function ClosableContainer({
   children,
   className,
-  enabled = true,
   showCloseIconOnHover = false,
   onClose,
 }: {
   children: React.ReactNode;
   className?: string;
-  enabled?: boolean;
   showCloseIconOnHover?: boolean;
-  onClose(e: React.MouseEvent): void;
+  onClose?(e: React.MouseEvent): void;
 }) {
   return (
     <div
@@ -25,7 +25,7 @@ export default function ClosableContainer({
       })}
     >
       {children}
-      {enabled && (
+      {Boolean(onClose) && (
         <div className={clsx(styles.close)} onClick={onClose} role="button" tabIndex={0} />
       )}
     </div>
