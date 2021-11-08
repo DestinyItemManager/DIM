@@ -1,7 +1,6 @@
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import 'app/item-popup/ItemSockets.scss';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
 import Socket from 'app/item-popup/Socket';
 import SocketDetails from 'app/item-popup/SocketDetails';
@@ -15,7 +14,7 @@ import styles from './ItemSocketsSubclass.m.scss';
 
 interface Props {
   item: DimItem;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
 
 export default function ItemSocketsSubclass({ item, onPlugClicked }: Props) {
@@ -27,7 +26,7 @@ export default function ItemSocketsSubclass({ item, onPlugClicked }: Props) {
     if (hasMenu) {
       setSocketInMenu(socket);
     } else {
-      onPlugClicked?.({
+      onPlugClicked({
         item,
         socket,
         plugHash: plug.plugDef.hash,
