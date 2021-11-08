@@ -38,7 +38,7 @@ export default function Footer({
           <LockedModIcon
             key={getModRenderKey(plug, plugCounts)}
             mod={plug}
-            onClosed={() => onPlugSelected(plug)}
+            onModClicked={() => onPlugSelected(plug)}
           />
         ))}
       </div>

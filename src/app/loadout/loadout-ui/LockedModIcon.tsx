@@ -6,25 +6,15 @@ import styles from './LockedModIcon.m.scss';
 
 interface Props {
   mod: PluggableInventoryItemDefinition;
-  onClicked?(): void;
-  onClosed?(): void;
+  onModClicked(): void;
 }
 
-function LockedModIcon({ mod, onClicked, onClosed }: Props) {
-  const content = (
-    <div className={styles.emptyItem}>
-      <SocketDetailsMod itemDef={mod} onClick={onClicked} />
-    </div>
-  );
-
-  // TODO (ryan) temporary until I make onClosed optional in ClosableContainer
-  if (!onClosed) {
-    return content;
-  }
-
+function LockedModIcon({ mod, onModClicked }: Props) {
   return (
-    <ClosableContainer onClose={onClosed} showCloseIconOnHover={true}>
-      {content}
+    <ClosableContainer onClose={onModClicked} showCloseIconOnHover={true}>
+      <div className={styles.emptyItem}>
+        <SocketDetailsMod itemDef={mod} />
+      </div>
     </ClosableContainer>
   );
 }
