@@ -62,27 +62,7 @@ export default function ItemSocketsSubclass({ item, onPlugClicked }: Props) {
           getSocketsByIndexes(item.sockets, superCategory.socketIndexes).map(
             (socketInfo) =>
               socketInfo.plugged && (
-                <PressTip
-                  key={socketInfo.socketIndex}
-                  tooltip={<PlugTooltip item={item} plug={socketInfo.plugged} />}
-                >
-                  <svg viewBox="0 0 94 94">
-                    <image
-                      xlinkHref={bungieNetPath(socketInfo.plugged?.plugDef.displayProperties.icon)}
-                      width="94"
-                      height="94"
-                    />
-                    <polygon
-                      strokeDasharray="265.87216"
-                      style={{ strokeDashoffset: 0 }}
-                      fillOpacity="0"
-                      stroke="#979797"
-                      strokeWidth="1"
-                      points="47,0 94,47 47,94 0,47"
-                      strokeLinecap="butt"
-                    />
-                  </svg>
-                </PressTip>
+                <SuperSocket key={socketInfo.socketIndex} item={item} plug={socketInfo.plugged} />
               )
           )}
       </div>
@@ -115,6 +95,29 @@ export default function ItemSocketsSubclass({ item, onPlugClicked }: Props) {
           document.body
         )}
     </div>
+  );
+}
+
+function SuperSocket({ item, plug }: { item: DimItem; plug: DimPlug }) {
+  return (
+    <PressTip tooltip={<PlugTooltip item={item} plug={plug} />}>
+      <svg viewBox="0 0 94 94">
+        <image
+          xlinkHref={bungieNetPath(plug.plugDef.displayProperties.icon)}
+          width="94"
+          height="94"
+        />
+        <polygon
+          strokeDasharray="265.87216"
+          style={{ strokeDashoffset: 0 }}
+          fillOpacity="0"
+          stroke="#979797"
+          strokeWidth="1"
+          points="47,0 94,47 47,94 0,47"
+          strokeLinecap="butt"
+        />
+      </svg>
+    </PressTip>
   );
 }
 

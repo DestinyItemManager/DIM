@@ -23,7 +23,7 @@ function LockedModIcon({ mod, onClicked, onClosed }: Props) {
   }
 
   return (
-    <ClosableContainer onClose={onClosed} enabled={Boolean(onClosed)} showCloseIconOnHover={true}>
+    <ClosableContainer onClose={onClosed} showCloseIconOnHover={true}>
       {content}
     </ClosableContainer>
   );
