@@ -184,6 +184,8 @@ export function gatherEngramsLoadout(
  * Move a list of items to a store
  */
 export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
+  // Don't move things from the postmaster or that can't move
+  items = items.filter((i) => !i.location.inPostmaster && !i.notransfer);
   items = addUpStackables(items);
 
   const itemsByType = _.mapValues(
@@ -197,21 +199,6 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
     .map((i) => convertToLoadoutItem(i, false));
 
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
-}
-
-/**
- * Move items matching the current search.
- */
-export function searchLoadout(
-  allItems: DimItem[],
-  store: DimStore,
-  searchFilter: ItemFilter
-): Loadout {
-  const items = allItems.filter(
-    (i) => !i.location.inPostmaster && !i.notransfer && searchFilter(i)
-  );
-
-  return itemMoveLoadout(items, store);
 }
 
 function limitToBucketSize(items: DimItem[], isVault: boolean) {
