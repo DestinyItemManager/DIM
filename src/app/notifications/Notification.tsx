@@ -2,9 +2,17 @@ import { CanceledError } from 'app/utils/cancel';
 import clsx from 'clsx';
 import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import './Notification.scss';
+import styles from './Notification.m.scss';
 import NotificationButton from './NotificationButton';
-import { NotificationError, Notify } from './notifications';
+import { NotificationError, NotificationType, Notify } from './notifications';
+
+const typeStyles: { [type in NotificationType]: string } = {
+  success: styles.success,
+  error: styles.error,
+  progress: styles.progress,
+  warning: styles.warning,
+  info: styles.info,
+};
 
 const showErrorDuration = 5000;
 
@@ -94,7 +102,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
 
   return (
     <motion.div
-      className="notification"
+      className={styles.notification}
       role="alert"
       onClick={onClick}
       {...animation}
@@ -104,20 +112,20 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     >
       <div
         className={clsx(
-          'notification-inner',
-          `notification-${error ? 'error' : success ? 'success' : notification.type}`
+          styles.inner,
+          error ? styles.error : success ? styles.success : typeStyles[notification.type]
         )}
       >
-        <div className="notification-contents">
-          {icon && <div className="notification-icon">{icon}</div>}
-          <div className="notification-details">
-            <div className="notification-title">{title}</div>
-            {body && <div className="notification-body">{body}</div>}
+        <div className={styles.contents}>
+          {icon && <div className={styles.icon}>{icon}</div>}
+          <div className={styles.details}>
+            <div className={styles.title}>{title}</div>
+            {body && <div>{body}</div>}
             {!error && notification.onCancel && (
               <NotificationButton onClick={notification.onCancel}>Cancel</NotificationButton>
             )}
           </div>
-          {trailer && <div className="notification-trailer">{trailer}</div>}
+          {trailer && <div className={styles.trailer}>{trailer}</div>}
         </div>
         {(success || error || !notification.promise) &&
           typeof notification.duration === 'number' && (
@@ -125,7 +133,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
               transition={transition}
               initial={{ width: '0%' }}
               animate={{ width: progressTarget }}
-              className="notification-timer"
+              className={styles.timer}
             />
           )}
       </div>
