@@ -12,7 +12,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { maxLightLoadout, searchLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { itemMoveLoadout, maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
@@ -27,7 +27,7 @@ import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { filteredItemsSelector } from 'app/search/search-filter';
 import { AppIcon, faExclamationTriangle, powerActionIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -66,7 +66,7 @@ function Loadouts() {
   const classType = selectedStore.classType;
   const allItems = useSelector(allItemsSelector);
   const query = useSelector(querySelector);
-  const searchFilter = useSelector(searchFilterSelector);
+  const filteredItems = useSelector(filteredItemsSelector);
 
   const allLoadouts = useSelector(loadoutsSelector);
 
@@ -87,8 +87,7 @@ function Loadouts() {
   // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
 
   const maxLoadout = maxLightLoadout(allItems, selectedStore);
-  const queryLoadout =
-    query.length > 0 ? searchLoadout(allItems, selectedStore, searchFilter) : undefined;
+  const queryLoadout = query.length > 0 ? itemMoveLoadout(filteredItems, selectedStore) : undefined;
 
   const previousLoadout = useSelector((state: RootState) =>
     previousLoadoutSelector(state, selectedStore.id)
