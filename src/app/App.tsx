@@ -138,9 +138,9 @@ function App({
               )}
               {needsLogin &&
                 ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Redirect to="/developer" />
+                  <Route render={() => <Redirect to="/developer" />} />
                 ) : (
-                  <Redirect to="/login" />
+                  <Route render={() => <Redirect to="/login" />} />
                 ))}
               <Route path="/search-history" exact>
                 <SearchHistory />

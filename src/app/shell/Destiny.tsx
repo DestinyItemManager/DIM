@@ -269,9 +269,7 @@ export default function Destiny() {
               <Activities account={account} />
             </Route>
           )}
-          <Route>
-            <Redirect to={`${url}/inventory`} />
-          </Route>
+          <Route render={() => <Redirect to={`${url}/inventory`} />} />
         </Switch>
       </div>
       <LoadoutDrawer />
