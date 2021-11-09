@@ -133,7 +133,7 @@ export default function LoadoutDrawerContents(
   const { subclassSocketOverrides, subclassBucket, subclassItems } = useMemo(() => {
     const subclassSocketOverrides: SocketOverridesForItems = {};
     const subclassBucket = buckets.byType.Class;
-    const subclassItems = subclassBucket?.hash ? itemsByBucket[subclassBucket.hash] : [];
+    const subclassItems = (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
 
     for (const item of loadout.items) {
       if (subclassItems.some((subclass) => subclass.id === item.id)) {
