@@ -1,5 +1,8 @@
 ## Next
 
+* Mod costs now show in Firefox.
+* Fixed search transfer not moving items that aren't equippable on the selected character.
+
 ## 6.90.0 <span class="changelog-date">(2021-11-07)</span>
 
 * If a loadout has items for multiple character classes in it, applying it to a character behaves as if only the items that can be equipped on that character are in the loadout.
