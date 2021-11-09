@@ -178,6 +178,7 @@ function LoadoutRow({
     : 0;
 
   // TODO: show the loadout builder params
+  // TODO: change loadout builder link to inlcude LO params?
 
   return (
     <div className={styles.loadout} onClick={(e) => console.log(loadout, e)}>
@@ -277,6 +278,8 @@ function ItemCategory({
       : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
           buckets.byCategory[category].findIndex((b) => b.type === bucketType)
         );
+
+  // TODO: switch the organizer link to actually load correctly
 
   return (
     <div key={category} className={clsx(styles.itemCategory, `category-${category}`)}>
