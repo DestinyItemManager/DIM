@@ -1,152 +1,148 @@
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
+import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import _ from 'lodash';
-import React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { useEventBusListener } from 'app/utils/hooks';
+import { EventBus } from 'app/utils/observable';
+import { useCallback, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import { isDragging } from '../inventory/DraggableInventoryItem';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
 
-interface StoreProps {
-  /** Don't allow refresh more often than this many seconds. */
-  destinyProfileMinimumRefreshInterval: number;
-  /** Time in seconds to refresh the profile when autoRefresh is true. */
-  destinyProfileRefreshInterval: number;
-  /** Whether to refresh profile automatically. */
-  autoRefresh: boolean;
-  /** Whether to refresh profile when the page becomes visible after being in the background. */
-  refreshProfileOnVisible: boolean;
-  hasSearchQuery: boolean;
+const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
+
+// An intermediate trigger that means we should think about refreshing. This gets us
+// out of some circular dependencies and decouples the triggering of "we might want to refresh"
+// from the decision of whether to actually refresh.
+const tryRefresh$ = new EventBus<undefined>();
+function triggerTryRefresh() {
+  tryRefresh$.next(undefined);
 }
 
-function mapStateToProps(state: RootState): StoreProps {
+/**
+ * Watch the state of the page and fire refresh signals when appropriate. This pauses the auto
+ * refresh when the page isn't visible or when it's on the wrong page, throttles refreshes, and
+ * does other things to be nice to the API.
+ */
+export function useAutoRefresh() {
   const {
     destinyProfileMinimumRefreshInterval,
     destinyProfileRefreshInterval,
     autoRefresh,
     refreshProfileOnVisible,
-  } = state.dimApi.globalSettings;
+  } = useSelector(globalSettingsSelector);
+  const hasSearchQuery = useSelector(hasSearchQuerySelector);
 
-  return {
-    destinyProfileRefreshInterval,
-    destinyProfileMinimumRefreshInterval,
-    autoRefresh,
-    refreshProfileOnVisible,
-    hasSearchQuery: Boolean(state.shell.searchQuery),
-  };
-}
+  const { pathname } = useLocation();
+  // Don't auto reload on the optimizer page, it makes it recompute all the time
+  const onOptimizer = pathname.endsWith('/optimizer');
 
-type Props = StoreProps & RouteComponentProps;
-
-/**
- * The activity tracker watches for user activity on the page, and periodically fires
- * refresh events if the page is visible and has been interacted with.
- */
-class ActivityTracker extends React.Component<Props> {
-  private lastRefreshTimestamp = 0;
-  private refreshAccountDataInterval?: number;
-  private refreshSubscription: () => void = _.noop;
-
-  componentDidMount() {
-    document.addEventListener('visibilitychange', this.visibilityHandler);
-    document.addEventListener('online', this.refreshAccountData);
-
-    this.startTimer();
-
-    // Every time we refresh for any reason, reset the timer
-    this.refreshSubscription = refresh$.subscribe(() => this.resetTimer());
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (
-      prevProps.autoRefresh !== this.props.autoRefresh ||
-      prevProps.destinyProfileRefreshInterval !== this.props.destinyProfileRefreshInterval
-    ) {
-      this.resetTimer();
-    }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('visibilitychange', this.visibilityHandler);
-    document.removeEventListener('online', this.refreshAccountData);
-    this.clearTimer();
-    this.refreshSubscription();
-  }
-
-  render() {
-    return null;
-  }
-
-  private refresh() {
-    if (
-      Date.now() - this.lastRefreshTimestamp <
-      this.props.destinyProfileMinimumRefreshInterval * 1000
-    ) {
+  // Throttle calls to refresh to no more often than destinyProfileMinimumRefreshInterval
+  const lastRefreshTimestamp = useRef(0);
+  const refresh = useCallback(() => {
+    if (Date.now() - lastRefreshTimestamp.current < destinyProfileMinimumRefreshInterval * 1000) {
       return;
     }
-
-    // Individual pages should listen to this event and decide what to refresh,
-    // and their services should decide how to cache/dedup refreshes.
-    // This event should *NOT* be listened to by services!
-    // TODO: replace this with an observable?
+    // Ping the refresh$ event bus, which pages can listen to to actually perform data refreshing
     triggerRefresh();
-    this.lastRefreshTimestamp = Date.now();
-  }
+    lastRefreshTimestamp.current = Date.now();
+  }, [destinyProfileMinimumRefreshInterval]);
 
-  private resetTimer() {
-    this.clearTimer();
-    this.startTimer();
-  }
-
-  private startTimer() {
-    if (this.props.autoRefresh) {
-      this.refreshAccountDataInterval = window.setTimeout(
-        this.refreshAccountData,
-        this.props.destinyProfileRefreshInterval * 1000
+  // A timer for auto refreshing on a schedule, if that's enabled.
+  const refreshAccountDataInterval = useRef<number>();
+  const clearTimer = () => window.clearTimeout(refreshAccountDataInterval.current);
+  const startTimer = useCallback(() => {
+    // Cancel any ongoing timer before restarting
+    clearTimer();
+    if (autoRefresh) {
+      refreshAccountDataInterval.current = window.setTimeout(
+        triggerTryRefresh,
+        destinyProfileRefreshInterval * 1000
       );
     }
-  }
+  }, [autoRefresh, destinyProfileRefreshInterval]);
 
-  private clearTimer() {
-    window.clearTimeout(this.refreshAccountDataInterval);
-  }
+  // Every time we refresh for any reason, reset the timer
+  useEventBusListener(refresh$, startTimer);
 
-  private visibilityHandler = () => {
-    if (!document.hidden) {
-      if (this.props.refreshProfileOnVisible) {
-        this.refreshAccountData();
+  // Start the refresh timer immediately, and clear it on unmount
+  useEffect(() => {
+    startTimer();
+    return () => clearTimer();
+  }, [startTimer]);
+
+  // Listen to the signal to try to refresh, and decide whether to actually refresh.
+  // If the page isn't visible or the user isn't online, or the page has been forgotten, don't fire.
+  useEventBusListener(
+    tryRefresh$,
+    useCallback(() => {
+      const hasActivePromises = loadingTracker.active();
+      const isVisible = !document.hidden;
+      const isOnline = navigator.onLine;
+
+      if (!hasActivePromises && isVisible && isOnline && !isDragging && !onOptimizer) {
+        refresh();
+      } else if (hasActivePromises) {
+        // Try again once the loading tracker goes back to inactive
+        const unsubscribe = loadingTracker.active$.subscribe((active) => {
+          if (!active) {
+            unsubscribe();
+            triggerTryRefresh();
+          }
+        });
+      } else {
+        // If we didn't refresh because things were disabled, restart the timer
+        startTimer();
       }
-    } else if (dimNeedsUpdate$.getCurrentValue() && !this.props.hasSearchQuery) {
-      // Sneaky updates - if DIM is hidden and needs an update, do the update.
-      reloadDIM();
-    }
-  };
+    }, [onOptimizer, refresh, startTimer])
+  );
 
-  // Decide whether to refresh. If the page isn't visible or the user isn't online, or the page has been forgotten, don't fire.
-  private refreshAccountData = () => {
-    const dimHasNoActivePromises = !loadingTracker.active();
-    const isDimVisible = !document.hidden;
-    const isOnline = navigator.onLine;
-    const notDragging = !isDragging;
-    // Don't auto reload on the optimizer page, it makes it recompute all the time
-    const onOptimizer = this.props.location.pathname.endsWith('/optimizer');
+  // When we go online, refresh
+  useEffect(() => {
+    document.addEventListener('online', triggerTryRefresh);
+    return () => {
+      document.removeEventListener('online', triggerTryRefresh);
+    };
+  }, []);
 
-    if (dimHasNoActivePromises && isDimVisible && isOnline && notDragging && !onOptimizer) {
-      this.refresh();
-    } else if (!dimHasNoActivePromises) {
-      // Try again once the loading tracker goes back to inactive
-      const unsubscribe = loadingTracker.active$.subscribe((active) => {
-        if (!active) {
-          unsubscribe();
-          this.refreshAccountData();
+  // When the page changes visibility, maybe refresh
+  useEffect(() => {
+    const visibilityHandler = () => {
+      if (!document.hidden) {
+        if (refreshProfileOnVisible) {
+          triggerTryRefresh();
         }
-      });
-    } else {
-      // If we didn't refresh because things were disabled, keep the timer going
-      this.resetTimer();
-    }
-  };
+      } else if (dimNeedsUpdate$.getCurrentValue() && !hasSearchQuery) {
+        // Sneaky updates - if DIM is hidden and needs an update, do the update.
+        reloadDIM();
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityHandler);
+    return () => {
+      document.removeEventListener('visibilitychange', visibilityHandler);
+    };
+  }, [hasSearchQuery, refreshProfileOnVisible]);
 }
 
-export default withRouter(connect<StoreProps>(mapStateToProps)(ActivityTracker));
+function useScheduledAutoRefresh() {
+  const { destinyProfileRefreshInterval, autoRefresh } = useSelector(globalSettingsSelector);
+  // A timer for auto refreshing on a schedule, if that's enabled.
+  const refreshAccountDataInterval = useRef<number>();
+  const clearTimer = () => window.clearTimeout(refreshAccountDataInterval.current);
+  const startTimer = useCallback(() => {
+    // Cancel any ongoing timer before restarting
+    clearTimer();
+    if (autoRefresh) {
+      refreshAccountDataInterval.current = window.setTimeout(
+        triggerTryRefresh,
+        destinyProfileRefreshInterval * 1000
+      );
+    }
+  }, [autoRefresh, destinyProfileRefreshInterval]);
+
+  // Every time we refresh for any reason, reset the timer
+  useEventBusListener(refresh$, startTimer);
+
+  return startTimer;
+}
