@@ -1,5 +1,7 @@
 ## Next
 
+## 6.90.1 <span class="changelog-date">(2021-11-08)</span>
+
 * Mod costs now show in Firefox.
 * Fixed search transfer not moving items that aren't equippable on the selected character.
 
