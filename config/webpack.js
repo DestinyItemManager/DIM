@@ -287,7 +287,9 @@ module.exports = (env) => {
         },
       ],
 
-      noParse: /manifests/,
+      noParse: function (path) {
+        return false;
+      },
     },
 
     resolve: {

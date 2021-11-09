@@ -18,7 +18,7 @@
     "viz": "npm run bundle -s -- --env.name=dev --env.WEBPACK_VISUALIZE",
     "i18n": "i18next-scanner",
     "watch": "npm run build-dev -s",
-    "start": "NODE_OPTIONS=\"--max-old-space-size=1024 --heapsnapshot-near-heap-limit=3\" webpack serve --config ./config/webpack.js --env dev",
+    "start": "webpack serve --config ./config/webpack.js --env dev",
     "publish-beta": "npm run build-beta -s && grunt publish_beta",
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
