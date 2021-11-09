@@ -24,13 +24,13 @@ import styles from './SubclassDrawer.m.scss';
 export default function SubclassDrawer({
   classType,
   loadoutSubclasses = [],
-  socketOverridesForSubclasses,
+  initialSocketOverrides,
   onAccept,
   onClose: onCloseProp,
 }: {
   classType: DestinyClass;
   loadoutSubclasses?: DimItem[];
-  socketOverridesForSubclasses?: SocketOverridesForItems;
+  initialSocketOverrides?: SocketOverridesForItems;
   onAccept(selected: { item: DimItem; socketOverrides: SocketOverrides }[]): void;
   onClose(): void;
 }) {
@@ -41,7 +41,7 @@ export default function SubclassDrawer({
     selectedSubclasses.length ? selectedSubclasses[0] : undefined
   );
 
-  const [socketOverrides, onPlugClicked] = useSocketOverridesForItems(socketOverridesForSubclasses);
+  const [socketOverrides, onPlugClicked] = useSocketOverridesForItems(initialSocketOverrides);
   const overriddenSubclass =
     activeSubclass &&
     defs &&
