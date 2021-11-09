@@ -11,6 +11,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { maxLightLoadout, searchLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
@@ -30,6 +31,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, faExclamationTriangle, powerActionIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -152,6 +154,7 @@ function LoadoutRow({
   store: DimStore;
   saved: boolean;
 }) {
+  const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
 
@@ -169,7 +172,6 @@ function LoadoutRow({
   const savedMods = getModsFromLoadout(defs, loadout);
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
-  // TODO: group and sort items
   const categories = _.groupBy(items, (i) => i.bucket.sort);
 
   const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
@@ -178,10 +180,15 @@ function LoadoutRow({
     : 0;
 
   // TODO: show the loadout builder params
-  // TODO: change loadout builder link to inlcude LO params?
+
+  const handleDeleteClick = (loadout: Loadout) => {
+    if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
+      dispatch(deleteLoadout(loadout.id));
+    }
+  };
 
   return (
-    <div className={styles.loadout} onClick={(e) => console.log(loadout, e)}>
+    <div className={styles.loadout}>
       <h2>
         <ClassIcon className={styles.classIcon} classType={loadout.classType} />
         {loadout.name}
@@ -198,18 +205,7 @@ function LoadoutRow({
             {subClass ? (
               <ConnectedInventoryItem item={subClass} ignoreSelectedPerks />
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                <rect
-                  transform="rotate(-45)"
-                  y="17.470564"
-                  x="-16.470564"
-                  height="32.941124"
-                  width="32.941124"
-                  fill="rgba(255, 255, 255, 0.05)"
-                  strokeWidth="1"
-                  strokeMiterlimit="4"
-                />
-              </svg>
+              <EmptyClassItem />
             )}
             {power !== 0 && (
               <div className={styles.power}>
@@ -249,7 +245,7 @@ function LoadoutRow({
           {t('Loadouts.Edit')}
         </button>
         {saved && (
-          <button type="button" className="dim-button" onClick={() => console.log('Delete!')}>
+          <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
             {t('Loadouts.Delete')}
           </button>
         )}
@@ -322,11 +318,28 @@ function ItemCategory({
               <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
             </div>
           )}
-          <Link className="dim-button" to="./optimizer">
-            {t('LB.LB')}
+          <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+            {t('Loadouts.OpenInOptimizer')}
           </Link>
         </>
       )}
     </div>
+  );
+}
+
+function EmptyClassItem() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <rect
+        transform="rotate(-45)"
+        y="17.470564"
+        x="-16.470564"
+        height="32.941124"
+        width="32.941124"
+        fill="rgba(255, 255, 255, 0.05)"
+        strokeWidth="1"
+        strokeMiterlimit="4"
+      />
+    </svg>
   );
 }
