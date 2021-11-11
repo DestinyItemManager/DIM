@@ -186,7 +186,7 @@
     "downshift": "^6.0.2",
     "fast-copy": "^2.0.1",
     "fast-equals": "^2.0.0",
-    "framer-motion": "^4.0.0",
+    "framer-motion": "^5.2.1",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.0.21",
     "idb-keyval": "^3.1.0",
