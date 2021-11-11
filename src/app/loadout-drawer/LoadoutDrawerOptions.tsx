@@ -1,24 +1,38 @@
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
 import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import React, { RefObject, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useSelector } from 'react-redux';
 import { Prompt } from 'react-router';
 import { Link } from 'react-router-dom';
+import { createSelector } from 'reselect';
 import { Loadout } from './loadout-types';
+import { loadoutsSelector } from './selectors';
+
+const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
+  const classTypeValues: {
+    label: string;
+    value: DestinyClass;
+  }[] = _.uniqBy(
+    stores.filter((s) => !s.isVault),
+    (store) => store.classType
+  ).map((store) => ({ label: store.className, value: store.classType }));
+  return [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }, ...classTypeValues];
+});
 
 export default function LoadoutDrawerOptions({
   loadout,
   showClass,
   isNew,
-  classTypeOptions,
   modAssignmentDrawerRef,
   updateLoadout,
   onUpdateMods,
-  clashingLoadout,
   saveLoadout,
   saveAsNew,
   deleteLoadout,
@@ -27,11 +41,6 @@ export default function LoadoutDrawerOptions({
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
-  clashingLoadout?: Loadout;
-  classTypeOptions: {
-    label: string;
-    value: DestinyClass;
-  }[];
   modAssignmentDrawerRef: RefObject<HTMLDivElement>;
   updateLoadout(loadout: Loadout): void;
   onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
@@ -41,10 +50,23 @@ export default function LoadoutDrawerOptions({
   calculauteMinSheetHeight(): number | undefined;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+  const classTypeOptions = useSelector(classTypeOptionsSelector);
+
+  const loadouts = useSelector(loadoutsSelector);
 
   if (!loadout) {
     return null;
   }
+
+  // Find a loadout with the same name that could overlap with this one
+  // Note that this might be the saved version of this very same loadout!
+  const clashingLoadout = loadouts.find(
+    (l) =>
+      loadout.name === l.name &&
+      (loadout.classType === l.classType ||
+        l.classType === DestinyClass.Unknown ||
+        loadout.classType === DestinyClass.Unknown)
+  );
 
   const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateLoadout({

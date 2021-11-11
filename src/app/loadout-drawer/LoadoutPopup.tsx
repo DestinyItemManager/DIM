@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';

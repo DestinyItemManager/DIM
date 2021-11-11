@@ -15,7 +15,7 @@ import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemC
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import PlugTooltip from 'app/item-popup/PlugTooltip';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterFactorySelector } from 'app/search/search-filter';
