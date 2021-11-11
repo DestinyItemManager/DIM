@@ -1,5 +1,9 @@
 ## Next
 
+## 6.91.0 <span class="changelog-date">(2021-11-10)</span>
+
+* Progress page sections can now be filtered by reward type
+
 ## 6.90.1 <span class="changelog-date">(2021-11-08)</span>
 
 * Mod costs now show in Firefox.

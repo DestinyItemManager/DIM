@@ -6,12 +6,10 @@ import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2
 import _ from 'lodash';
 import React from 'react';
 import { milestoneToItems } from './milestone-items';
-import Pursuit from './Pursuit';
-import { sortPursuits } from './Pursuits';
+import { PursuitsGroup, sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
 import { getCharacterProgressions } from './selectors';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
-
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
  * represent challenges, story prompts, and other stuff you can do not represented by Pursuits.
@@ -42,27 +40,27 @@ export default function Milestones({
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
   return (
-    <div className="progress-for-character">
-      {characterProgressions && (
-        <SeasonalRank
-          store={store}
-          characterProgressions={characterProgressions}
-          season={season}
-          seasonPass={seasonPass}
-          profileInfo={profileInfo}
-        />
-      )}
-      {characterProgressions && (
-        <WellRestedPerkIcon
-          progressions={characterProgressions}
-          season={season}
-          seasonPass={seasonPass}
-        />
-      )}
-      {milestoneItems.sort(sortPursuits).map((item) => (
-        <Pursuit key={item.hash} item={item} />
-      ))}
-    </div>
+    <>
+      <div className="progress-for-character">
+        {characterProgressions && (
+          <SeasonalRank
+            store={store}
+            characterProgressions={characterProgressions}
+            season={season}
+            seasonPass={seasonPass}
+            profileInfo={profileInfo}
+          />
+        )}
+        {characterProgressions && (
+          <WellRestedPerkIcon
+            progressions={characterProgressions}
+            season={season}
+            seasonPass={seasonPass}
+          />
+        )}
+      </div>
+      <PursuitsGroup store={store} pursuits={milestoneItems.sort(sortPursuits)} />
+    </>
   );
 }
 
