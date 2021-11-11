@@ -98,8 +98,10 @@ export const materialsSelector = (state: RootState) =>
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
 /** A set containing all the hashes of owned items. */
-export const ownedItemsSelector = () =>
-  createSelector(profileResponseSelector, allItemsSelector, (profileResponse, allItems) => {
+export const ownedItemsSelector = createSelector(
+  profileResponseSelector,
+  allItemsSelector,
+  (profileResponse, allItems) => {
     const ownedItemHashes = new Set<number>();
     for (const item of allItems) {
       ownedItemHashes.add(item.hash);
@@ -114,7 +116,8 @@ export const ownedItemsSelector = () =>
       }
     }
     return ownedItemHashes;
-  });
+  }
+);
 
 /** gets all the dynamic strings from a profile response */
 export const dynamicStringsSelector = (state: RootState) => {

@@ -26,11 +26,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import {
-  ownedItemsSelector,
-  profileResponseSelector,
-  sortedStoresSelector,
-} from '../inventory/selectors';
+import { profileResponseSelector, sortedStoresSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh';
@@ -58,11 +54,9 @@ interface StoreProps {
 }
 
 function mapStateToProps() {
-  const ownedItemSelectorInstance = ownedItemsSelector();
-
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    ownedItemHashes: ownedItemSelectorInstance(state),
+    ownedItemHashes: ownedItemSelector(state),
     searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
