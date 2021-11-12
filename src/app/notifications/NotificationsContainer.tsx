@@ -3,7 +3,7 @@ import { AnimatePresence, Spring } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 import Notification from './Notification';
 import { notifications$, Notify } from './notifications';
-import './NotificationsContainer.scss';
+import styles from './NotificationsContainer.m.scss';
 
 const spring: Spring = { type: 'spring', bounce: 0, duration: 0.3 };
 
@@ -22,7 +22,7 @@ export default function NotificationsContainer() {
     setNotifications((notifications) => notifications.filter((n) => n !== notification));
 
   return (
-    <div className="notifications-container">
+    <div className={styles.container}>
       <AnimatePresence>
         {notifications.map((item) => (
           <Notification
