@@ -1,5 +1,4 @@
-import { settingsSelector } from 'app/dim-api/selectors';
-import { RootState } from 'app/store/types';
+import { settingSelector } from 'app/dim-api/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -18,12 +17,8 @@ export default function PresentationNodeSearchResults({
   profileResponse: DestinyProfileResponse;
 }) {
   // TODO: make each node in path linkable
-  const completedRecordsHidden = useSelector<RootState, boolean>(
-    (state) => settingsSelector(state).completedRecordsHidden
-  );
-  const redactedRecordsRevealed = useSelector<RootState, boolean>(
-    (state) => settingsSelector(state).redactedRecordsRevealed
-  );
+  const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
+  const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
 
   return (
     <div>

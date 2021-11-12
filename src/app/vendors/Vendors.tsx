@@ -58,11 +58,9 @@ interface StoreProps {
 }
 
 function mapStateToProps() {
-  const ownedItemSelectorInstance = ownedItemsSelector();
-
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    ownedItemHashes: ownedItemSelectorInstance(state),
+    ownedItemHashes: ownedItemsSelector(state),
     searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),

@@ -1,10 +1,9 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetSetting } from 'app/settings/hooks';
-import { RootState } from 'app/store/types';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -58,9 +57,7 @@ interface RecordBookPage {
 export default function RecordBooks({ account }: Props) {
   const defs = useD1Definitions();
   const stores = useSelector(storesSelector) as D1Store[];
-  const hideCompletedRecords = useSelector(
-    (state: RootState) => settingsSelector(state).hideCompletedRecords
-  );
+  const hideCompletedRecords = useSelector(settingSelector('hideCompletedRecords'));
 
   useLoadStores(account);
   const setSetting = useSetSetting();

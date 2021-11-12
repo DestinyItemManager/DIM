@@ -1,16 +1,16 @@
-import { DestinyVersion, InfuseDirection } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { DimThunkDispatch, RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { DimThunkDispatch } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useReducer } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -34,28 +34,6 @@ const itemComparator = chainComparator(
       : 0
   )
 );
-
-interface ProvidedProps {
-  destinyVersion: DestinyVersion;
-}
-
-interface StoreProps {
-  allItems: DimItem[];
-  currentStore?: DimStore;
-  lastInfusionDirection: InfuseDirection;
-  filters(query: string): ItemFilter;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    allItems: allItemsSelector(state),
-    currentStore: currentStoreSelector(state)!,
-    filters: filterFactorySelector(state),
-    lastInfusionDirection: settingsSelector(state).infusionDirection,
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 interface State {
   direction: InfuseDirection;
@@ -145,13 +123,13 @@ function stateReducer(state: State, action: Action): State {
   }
 }
 
-function InfusionFinder({
-  allItems,
-  currentStore,
-  filters,
-  lastInfusionDirection,
-  dispatch,
-}: Props) {
+export default function InfusionFinder() {
+  const dispatch = useThunkDispatch();
+  const allItems = useSelector(allItemsSelector);
+  const currentStore = useSelector(currentStoreSelector);
+  const filters = useSelector(filterFactorySelector);
+  const lastInfusionDirection = useSelector(settingSelector('infusionDirection'));
+
   const [{ direction, query, source, target, filter }, stateDispatch] = useReducer(stateReducer, {
     direction: lastInfusionDirection,
     filter: '',
@@ -311,8 +289,6 @@ function InfusionFinder({
     </Sheet>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(InfusionFinder);
 
 /**
  * Can source be infused into target?

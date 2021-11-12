@@ -1,15 +1,14 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './CollapsibleTitle.scss';
 
-interface ProvidedProps {
+interface Props {
   sectionId: string;
   defaultCollapsed?: boolean;
   title: React.ReactNode;
@@ -24,22 +23,9 @@ interface ProvidedProps {
   className?: string;
 }
 
-interface StoreProps {
-  collapsed: boolean;
-}
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const collapsed = collapsedSelector(props.sectionId)(state);
-  return {
-    collapsed: Boolean(props.disabled) || (collapsed ?? Boolean(props.defaultCollapsed)),
-  };
-}
-
-type Props = StoreProps & ProvidedProps;
-
-function CollapsibleTitle({
+export default function CollapsibleTitle({
   title,
-  collapsed,
+  defaultCollapsed,
   children,
   extra,
   extraOnlyCollapsed,
@@ -49,6 +35,8 @@ function CollapsibleTitle({
   style,
 }: Props) {
   const dispatch = useThunkDispatch();
+  const collapsedSetting = useSelector(collapsedSelector(sectionId));
+  const collapsed = Boolean(disabled) || (collapsedSetting ?? Boolean(defaultCollapsed));
   const initialMount = useRef(true);
 
   useEffect(() => {
@@ -90,5 +78,3 @@ function CollapsibleTitle({
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(CollapsibleTitle);

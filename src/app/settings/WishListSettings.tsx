@@ -1,12 +1,12 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { isUri } from 'valid-url';
 import FileUpload from '../dim-ui/FileUpload';
 import HelpLink from '../dim-ui/HelpLink';
@@ -27,42 +27,15 @@ const voltronLocation =
 const choosyVoltronLocation =
   'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/choosy_voltron.txt';
 
-interface StoreProps {
-  numWishListRolls: number;
-  title?: string;
-  description?: string;
-  wishListSource: string;
-  wishListLastUpdated?: Date;
-  voltronNotSelected: boolean;
-  choosyVoltronNotSelected: boolean;
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  const wishLists = wishListsSelector(state);
-  const wishList = wishLists.wishListAndInfo;
-  return {
-    numWishListRolls: wishList.wishListRolls.length,
-    title: wishList.title,
-    description: wishList.description,
-    wishListSource: settingsSelector(state).wishListSource,
-    wishListLastUpdated: wishListsLastFetchedSelector(state),
-    voltronNotSelected: settingsSelector(state).wishListSource !== voltronLocation,
-    choosyVoltronNotSelected: settingsSelector(state).wishListSource !== choosyVoltronLocation,
-  };
-}
-
-function WishListSettings({
-  wishListSource,
-  numWishListRolls,
-  title,
-  description,
-  wishListLastUpdated,
-  voltronNotSelected,
-  choosyVoltronNotSelected,
-  dispatch,
-}: Props) {
+export default function WishListSettings() {
+  const dispatch = useThunkDispatch();
+  const wishListSource = useSelector(settingSelector('wishListSource'));
+  const voltronNotSelected = wishListSource !== voltronLocation;
+  const choosyVoltronNotSelected = wishListSource !== choosyVoltronLocation;
+  const wishListLastUpdated = useSelector(wishListsLastFetchedSelector);
+  const wishList = useSelector(wishListsSelector).wishListAndInfo;
+  const { title, description } = wishList;
+  const numWishListRolls = wishList.wishListRolls.length;
   const [liveWishListSource, setLiveWishListSource] = useState(wishListSource);
   useEffect(() => {
     dispatch(fetchWishList());
@@ -226,5 +199,3 @@ function WishListSettings({
     </section>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(WishListSettings);

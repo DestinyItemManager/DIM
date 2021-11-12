@@ -1,12 +1,11 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
@@ -14,12 +13,7 @@ import { DimPresentationNode } from './presentation-nodes';
 import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 
-interface StoreProps {
-  completedRecordsHidden: boolean;
-  redactedRecordsRevealed: boolean;
-}
-
-interface ProvidedProps {
+interface Props {
   node: DimPresentationNode;
   ownedItemHashes?: Set<number>;
   path: number[];
@@ -30,29 +24,19 @@ interface ProvidedProps {
   onNodePathSelected(nodePath: number[]): void;
 }
 
-function mapStateToProps(state: RootState): StoreProps {
-  const settings = settingsSelector(state);
-  return {
-    completedRecordsHidden: settings.completedRecordsHidden,
-    redactedRecordsRevealed: settings.redactedRecordsRevealed,
-  };
-}
-
-type Props = StoreProps & ProvidedProps;
-
-function PresentationNode({
+export default function PresentationNode({
   node,
   ownedItemHashes,
   path,
   parents,
-  completedRecordsHidden,
-  redactedRecordsRevealed,
   onNodePathSelected,
   isInTriumphs,
   isRootNode,
   overrideName,
 }: Props) {
   const defs = useD2Definitions()!;
+  const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
+  const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
   const presentationNodeHash = node.nodeDef.hash;
@@ -166,8 +150,7 @@ function PresentationNode({
       )}
       {childrenExpanded &&
         node.childPresentationNodes?.map((subNode) => (
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          <ConnectedPresentationNode
+          <PresentationNode
             key={subNode.nodeDef.hash}
             node={subNode}
             ownedItemHashes={ownedItemHashes}
@@ -188,8 +171,3 @@ function PresentationNode({
     </div>
   );
 }
-
-// This will be set to the connected (via redux) version of the component
-const ConnectedPresentationNode = connect<StoreProps>(mapStateToProps)(PresentationNode);
-
-export default ConnectedPresentationNode;

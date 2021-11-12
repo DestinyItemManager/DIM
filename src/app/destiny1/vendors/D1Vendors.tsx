@@ -1,42 +1,25 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { currenciesSelector, ownedItemsSelector, storesSelector } from 'app/inventory/selectors';
+import { currenciesSelector, storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import { AccountCurrency, D1Store } from '../../inventory/store-types';
+import { D1Store } from '../../inventory/store-types';
 import D1Vendor from './D1Vendor';
 import styles from './D1Vendors.m.scss';
 import { countCurrencies, loadVendors, Vendor } from './vendor.service';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
-
-interface StoreProps {
-  stores: D1Store[];
-  currencies: AccountCurrency[];
-  ownedItemHashes: Set<number>;
-}
-
-function mapStateToProps() {
-  const ownedItemsSelectorInstance = ownedItemsSelector();
-  return (state: RootState): StoreProps => ({
-    stores: storesSelector(state) as D1Store[],
-    currencies: currenciesSelector(state),
-    ownedItemHashes: ownedItemsSelectorInstance(state),
-  });
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 /**
  * The "All Vendors" page for D1 that shows all the rotating vendors.
  */
-function D1Vendors({ account, stores, currencies, ownedItemHashes, dispatch }: Props) {
+export default function D1Vendors({ account }: { account: DestinyAccount }) {
+  const dispatch = useThunkDispatch();
+  const stores = useSelector(storesSelector) as D1Store[];
+  const currencies = useSelector(currenciesSelector);
+
   const [vendors, setVendors] = useState<{
     [vendorHash: number]: Vendor;
   }>();
@@ -60,15 +43,8 @@ function D1Vendors({ account, stores, currencies, ownedItemHashes, dispatch }: P
   return (
     <div className={styles.vendors}>
       {sortedVendors.map((vendor) => (
-        <D1Vendor
-          key={vendor.hash}
-          vendor={vendor}
-          totalCoins={totalCoins}
-          ownedItemHashes={ownedItemHashes}
-        />
+        <D1Vendor key={vendor.hash} vendor={vendor} totalCoins={totalCoins} />
       ))}
     </div>
   );
 }
-
-export default connect(mapStateToProps)(D1Vendors);

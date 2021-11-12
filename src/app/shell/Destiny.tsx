@@ -3,7 +3,7 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
@@ -73,7 +73,6 @@ export default function Destiny() {
   const dispatch = useThunkDispatch();
   const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } =
     useParams<{ destinyVersion: string; membershipId: string }>();
-  console.log(destinyVersionString, platformMembershipId);
   const destinyVersion = parseInt(destinyVersionString, 10) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const account = useSelector((state: RootState) =>
@@ -284,7 +283,7 @@ export default function Destiny() {
       <LoadoutDrawer />
       <Compare />
       <Farming />
-      <InfusionFinder destinyVersion={account.destinyVersion} />
+      <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <GlobalEffects />
@@ -307,9 +306,7 @@ function GlobalEffects() {
     }
   }, [stores.length]);
 
-  const badgePostmaster = useSelector(
-    (state: RootState) => settingsSelector(state).badgePostmaster
-  );
+  const badgePostmaster = useSelector(settingSelector('badgePostmaster'));
 
   // Badge the app icon with the number of postmaster items
   useEffect(() => {

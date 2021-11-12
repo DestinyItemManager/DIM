@@ -55,9 +55,7 @@ let intervalId = 0;
 export function startFarming(storeId: string): ThunkResult {
   return async (dispatch, getState) => {
     dispatch(actions.start(storeId));
-
-    const storeSelector = farmingStoreSelector();
-    const farmingStore = storeSelector(getState());
+    const farmingStore = farmingStoreSelector(getState());
 
     if (!farmingStore || farmingStore.id !== storeId) {
       return;
@@ -67,7 +65,7 @@ export function startFarming(storeId: string): ThunkResult {
 
     let unsubscribe = _.noop;
 
-    unsubscribe = observeStore(storeSelector, (_prev, farmingStore) => {
+    unsubscribe = observeStore(farmingStoreSelector, (_prev, farmingStore) => {
       const [cancelToken, cancel] = withCancel();
 
       if (!farmingStore || farmingStore.id !== storeId) {
