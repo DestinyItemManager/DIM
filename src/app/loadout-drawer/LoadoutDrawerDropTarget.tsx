@@ -1,4 +1,3 @@
-import { DragObject } from 'app/inventory/DraggableInventoryItem';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -30,11 +29,11 @@ export default function LoadoutDrawerDropTarget({
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
 
-  const [{ isOver }, dropRef] = useDrop<DragObject, void, { isOver: boolean }>(
+  const [{ isOver }, dropRef] = useDrop<DimItem, unknown, { isOver: boolean }>(
     () => ({
       accept: bucketTypes,
-      drop: ({ item }) => onDroppedItem(item),
-      canDrop: ({ item }) => itemCanBeInLoadout(item),
+      drop: onDroppedItem,
+      canDrop: itemCanBeInLoadout,
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
     [bucketTypes]

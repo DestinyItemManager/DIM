@@ -10,17 +10,13 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export interface DragObject {
-  item: DimItem;
-}
-
 export const isDragging$ = new Observable<boolean>(false);
 export let isDragging = false;
 
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
-  const [_collected, dragRef] = useDrag<DragObject, unknown, unknown>(
+  const [_collected, dragRef] = useDrag<DimItem, unknown, unknown>(
     () => ({
       type: item.location.inPostmaster
         ? 'postmaster'
@@ -37,7 +33,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
 
         isDragging = true;
         isDragging$.next(true);
-        return { item };
+        return item;
       },
       end: () => {
         if (dragTimeout !== null) {

@@ -1,4 +1,3 @@
-import { DragObject } from 'app/inventory/DraggableInventoryItem';
 import { bucketTypesSelector } from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import clsx from 'clsx';
 import React from 'react';
@@ -20,14 +19,14 @@ export default function LoadoutBucketDropTarget({ onItemLocked, children, classN
   const bucketTypes = useSelector(bucketTypesSelector);
 
   const [{ isOver, canDrop }, dropRef] = useDrop<
-    DragObject,
+    DimItem,
     unknown,
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucketTypes,
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
-      drop: ({ item }) => onItemLocked(item),
+      drop: onItemLocked,
     }),
     [bucketTypes, onItemLocked]
   );

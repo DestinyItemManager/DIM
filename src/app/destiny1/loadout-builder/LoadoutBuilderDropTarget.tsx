@@ -1,4 +1,3 @@
-import { DragObject } from 'app/inventory/DraggableInventoryItem';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
@@ -12,15 +11,15 @@ interface Props {
 
 export default function LoadoutBucketDropTarget({ bucketType, children, onItemLocked }: Props) {
   const [{ isOver, canDrop }, dropRef] = useDrop<
-    DragObject,
+    DimItem,
     unknown,
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucketType,
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
-      drop: ({ item }) => onItemLocked(item),
-      canDrop: ({ item }) => item.bucket.type === bucketType,
+      drop: onItemLocked,
+      canDrop: (item) => item.bucket.type === bucketType,
     }),
     [bucketType, onItemLocked]
   );

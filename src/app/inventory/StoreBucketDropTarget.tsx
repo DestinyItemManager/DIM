@@ -4,8 +4,8 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { DragObject } from './DraggableInventoryItem';
 import { InventoryBucket } from './inventory-buckets';
+import { DimItem } from './item-types';
 import { dropItem } from './move-item';
 import styles from './StoreBucketDropTarget.m.scss';
 
@@ -32,15 +32,15 @@ export default function StoreBucketDropTarget({
 }: Props) {
   const dispatch = useThunkDispatch();
   const [{ isOver, canDrop }, dropRef] = useDrop<
-    DragObject,
+    DimItem,
     unknown,
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucket.inPostmaster ? [] : [bucket.type!, `${storeId}-${bucket.type!}`, 'postmaster'],
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
-      drop: ({ item }) => dispatch(dropItem(item, storeId, Boolean(equip))),
-      canDrop: ({ item }) => {
+      drop: (item) => dispatch(dropItem(item, storeId, Boolean(equip))),
+      canDrop: (item) => {
         // You can drop anything that can be transferred into a non-equipped bucket
         if (!equip) {
           return true;
