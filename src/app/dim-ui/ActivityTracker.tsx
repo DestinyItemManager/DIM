@@ -4,9 +4,9 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { isDragging } from '../inventory/DraggableInventoryItem';
+import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
-import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
+import { refresh as triggerRefresh, refresh$ } from '../shell/refresh-events';
 
 interface StoreProps {
   /** Don't allow refresh more often than this many seconds. */
@@ -128,7 +128,7 @@ class ActivityTracker extends React.Component<Props> {
     const dimHasNoActivePromises = !loadingTracker.active();
     const isDimVisible = !document.hidden;
     const isOnline = navigator.onLine;
-    const notDragging = !isDragging;
+    const notDragging = !isDragging$.getCurrentValue();
     // Don't auto reload on the optimizer page, it makes it recompute all the time
     const onOptimizer = this.props.location.pathname.endsWith('/optimizer');
 

@@ -1,5 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { refresh$ } from 'app/shell/refresh';
+import { refresh$ } from 'app/shell/refresh-events';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';

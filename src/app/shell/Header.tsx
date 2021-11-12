@@ -32,7 +32,7 @@ import styles from './Header.m.scss';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
-import Refresh from './refresh';
+import RefreshButton from './RefreshButton';
 import { useIsPhonePortrait } from './selectors';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -329,7 +329,7 @@ export default function Header() {
               <SearchFilter onClear={hideSearch} ref={searchFilter} />
             </span>
           )}
-          <Refresh className={clsx(styles.menuItem)} />
+          <RefreshButton className={clsx(styles.menuItem)} />
           {!isPhonePortrait && (
             <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
               <AppIcon icon={settingsIcon} />
