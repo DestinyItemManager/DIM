@@ -18,7 +18,7 @@ import { RootState } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
+import { Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -62,17 +62,18 @@ const Activities = React.lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
 const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
-
-interface Props {
-  destinyVersion: DestinyVersion;
-  platformMembershipId: string;
-}
+const Loadouts = React.lazy(
+  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
+);
 
 /**
  * Base view for pages that show Destiny content.
  */
-export default function Destiny({ platformMembershipId, destinyVersion }: Props) {
+export default function Destiny() {
   const dispatch = useThunkDispatch();
+  const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } =
+    useParams<{ destinyVersion: string; membershipId: string }>();
+  const destinyVersion = parseInt(destinyVersionString, 10) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const account = useSelector((state: RootState) =>
     accountsSelector(state).find(
@@ -225,6 +226,11 @@ export default function Destiny({ platformMembershipId, destinyVersion }: Props)
               <D1LoadoutBuilder />
             )}
           </Route>
+          {$featureFlags.loadoutsPage && account.destinyVersion === 2 && (
+            <Route path={`${path}/loadouts`} exact>
+              <Loadouts account={account} />
+            </Route>
+          )}
           <Route path={`${path}/organizer`} exact>
             <Organizer account={account} />
           </Route>
@@ -271,9 +277,7 @@ export default function Destiny({ platformMembershipId, destinyVersion }: Props)
               <Activities account={account} />
             </Route>
           )}
-          <Route>
-            <Redirect to={`${url}/inventory`} />
-          </Route>
+          <Route render={() => <Redirect to={`${url}/inventory`} />} />
         </Switch>
       </div>
       <LoadoutDrawer />

@@ -28,6 +28,8 @@ declare const $featureFlags: {
   loStatRanges: boolean;
   /** Show mod assignment button in loadout drawer */
   loadoutModAssignments: boolean;
+  // Top level loadouts page
+  loadoutsPage: boolean;
 };
 
 declare function ga(...params: string[]);

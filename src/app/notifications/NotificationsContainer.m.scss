@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-.notifications-container {
+.container {
   position: fixed;
   @include below-header;
   right: 0;

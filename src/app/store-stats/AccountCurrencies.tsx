@@ -13,11 +13,14 @@ export default React.memo(function AccountCurrency() {
       {currencies.map((currency) => (
         <React.Fragment key={currency.itemHash}>
           <BungieImage
-            className={styles.currency}
+            className={styles.icon}
             src={currency.displayProperties.icon}
             title={currency.displayProperties.name}
           />
-          <div className={styles.currency} title={currency.displayProperties.name}>
+          <div
+            className={styles.text}
+            title={`${currency.quantity.toLocaleString()} ${currency.displayProperties.name}`}
+          >
             {currency.quantity.toLocaleString()}
           </div>
         </React.Fragment>

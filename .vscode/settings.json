@@ -9,7 +9,8 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {
     "**/data/d1/manifests": true,
-    "src/testing/data": true
+    "src/testing/data": true,
+    "destiny-icons": true
   },
   "jest.jestCommandLine": "yarn test",
   "[javascript]": {

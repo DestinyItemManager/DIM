@@ -10,7 +10,7 @@ import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
-import { addItemToLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React from 'react';

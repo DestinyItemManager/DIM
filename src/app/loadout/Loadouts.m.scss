@@ -1,0 +1,170 @@
+@import '../variables.scss';
+
+.page {
+  margin-top: 10px;
+}
+
+.loadout {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  margin-bottom: 48px;
+}
+
+.title {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  margin-bottom: 10px;
+
+  h2 {
+    flex: 1;
+    display: block;
+    margin: 0;
+  }
+}
+
+.menuButtons {
+  margin: 8px 0;
+  @include vertical-space-children(8px);
+}
+
+.menuButton {
+  composes: dim-button from global;
+  width: 100%;
+  text-align: left;
+}
+
+.placeholder {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: var(--item-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.missingItems {
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: normal;
+  margin-left: 1em;
+  color: #ccc;
+
+  :global(.app-icon) {
+    margin-right: 0.5em;
+  }
+}
+
+.contents {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: calc(4 * var(--item-margin));
+  flex-wrap: wrap;
+}
+
+.classIcon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 8px;
+}
+
+.subClass {
+  width: var(--item-size);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include vertical-space-children(18px);
+}
+
+.itemCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include vertical-space-children(var(--item-margin));
+
+  :global(.stat-row) {
+    justify-content: space-between;
+  }
+
+  :global(.stat-bars) {
+    margin-top: 0;
+  }
+}
+
+.itemsInCategory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  gap: var(--item-margin);
+  width: 100%;
+}
+
+.itemBucket {
+  width: var(--item-size);
+  @include vertical-space-children(var(--item-margin));
+}
+
+.items {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr 1fr;
+  min-height: unset !important;
+}
+
+.categoryWeapons {
+  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
+}
+.categoryArmor {
+  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+}
+.categoryGeneral {
+  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
+}
+
+.equipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+}
+
+.unequipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.power {
+  display: inline;
+  color: $gold;
+  flex: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+  svg {
+    margin-right: 2px;
+    font-size: 10px;
+  }
+}
+
+.mods {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  flex: 1;
+  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+.modsPlaceholder {
+  composes: placeholder;
+  flex: 1;
+}
+
+.actions {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  @include horizontal-space-children(4px);
+}

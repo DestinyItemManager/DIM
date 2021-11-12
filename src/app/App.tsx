@@ -1,4 +1,3 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -79,28 +78,38 @@ export default function App() {
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             <Switch>
-              <Route path="/about" component={About} exact />
-              <Route path="/privacy" component={Privacy} exact />
-              <Route path="/whats-new" component={WhatsNew} exact />
-              <Route path="/login" component={Login} exact />
-              <Route path="/settings" component={SettingsPage} exact />
-              {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
+              <Route path="/about" exact>
+                <About />
+              </Route>
+              <Route path="/privacy" exact>
+                <Privacy />
+              </Route>
+              <Route path="/whats-new" exact>
+                <WhatsNew />
+              </Route>
+              <Route path="/login" exact>
+                <Login />
+              </Route>
+              <Route path="/settings" exact>
+                <SettingsPage />
+              </Route>
+              {$DIM_FLAVOR === 'dev' && (
+                <Route path="/developer" exact>
+                  <Developer />
+                </Route>
+              )}
               {needsLogin &&
                 ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Redirect to="/developer" />
+                  <Route render={() => <Redirect to="/developer" />} />
                 ) : (
-                  <Redirect to="/login" />
+                  <Route render={() => <Redirect to="/login" />} />
                 ))}
-              <Route path="/search-history" component={SearchHistory} exact />
-              <Route
-                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                render={({ match }) => (
-                  <Destiny
-                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                    platformMembershipId={match.params.membershipId}
-                  />
-                )}
-              />
+              <Route path="/search-history" exact>
+                <SearchHistory />
+              </Route>
+              <Route path="/:membershipId(\d+)/d:destinyVersion(1|2)">
+                <Destiny />
+              </Route>
               <Route
                 path={[
                   '/inventory',
@@ -118,7 +127,9 @@ export default function App() {
               >
                 <AccountRedirectRoute />
               </Route>
-              <Route component={DefaultAccount} />
+              <Route>
+                <DefaultAccount />
+              </Route>
             </Switch>
           </Suspense>
         </ErrorBoundary>

@@ -1,6 +1,7 @@
 ## Next
 
 * The link to D2Gunsmith from the Armory view is now shown on mobile.
+* Currency counts won't get squished anymore
 
 ## 6.90.1 <span class="changelog-date">(2021-11-08)</span>
 

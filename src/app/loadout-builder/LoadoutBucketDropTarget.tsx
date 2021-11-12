@@ -1,78 +1,44 @@
+import { bucketTypesSelector } from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import clsx from 'clsx';
 import React from 'react';
-import {
-  ConnectDropTarget,
-  DropTarget,
-  DropTargetConnector,
-  DropTargetMonitor,
-  DropTargetSpec,
-} from 'react-dnd';
+import { useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
+import styles from './LoadoutBucketDropTarget.m.scss';
 
-interface ExternalProps {
+interface Props {
   className?: string;
   children?: React.ReactNode;
-  bucketTypes: string[];
-  storeIds: string[];
   onItemLocked(lockedItem: DimItem): void;
-}
-
-// These are all provided by the DropTarget HOC function
-interface InternalProps {
-  connectDropTarget: ConnectDropTarget;
-  isOver: boolean;
-  canDrop: boolean;
-}
-
-type Props = InternalProps & ExternalProps;
-
-// This determines what types can be dropped on this target
-function dragType(props: ExternalProps) {
-  return props.bucketTypes.flatMap((bucketType) =>
-    props.storeIds.flatMap((storeId) => [bucketType, `${storeId}-${bucketType}`])
-  );
-}
-
-// This determines the behavior of dropping on this target
-const dropSpec: DropTargetSpec<Props> = {
-  drop(props, monitor) {
-    const item = monitor.getItem().item as DimItem;
-    props.onItemLocked(item);
-  },
-};
-
-// This forwards drag and drop state into props on the component
-function collect(connect: DropTargetConnector, monitor: DropTargetMonitor): InternalProps {
-  return {
-    // Call this function inside render()
-    // to let React DnD handle the drag events:
-    connectDropTarget: connect.dropTarget(),
-    // You can ask the monitor about the current drag state:
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop(),
-  };
 }
 
 /**
  * This allows us to drop loadout builder items.
  */
-function LoadoutBucketDropTarget({
-  connectDropTarget,
-  children,
-  isOver,
-  canDrop,
-  className,
-}: Props) {
-  return connectDropTarget(
+export default function LoadoutBucketDropTarget({ onItemLocked, children, className }: Props) {
+  const bucketTypes = useSelector(bucketTypesSelector);
+
+  const [{ isOver, canDrop }, dropRef] = useDrop<
+    DimItem,
+    unknown,
+    { isOver: Boolean; canDrop: boolean }
+  >(
+    () => ({
+      accept: bucketTypes,
+      collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
+      drop: onItemLocked,
+    }),
+    [bucketTypes, onItemLocked]
+  );
+  return (
     <div
+      ref={dropRef}
       className={clsx(className, {
-        'on-drag-hover': canDrop && isOver,
-        'on-drag-enter': canDrop,
+        [styles.over]: canDrop && isOver,
+        [styles.canDrop]: canDrop,
       })}
     >
       {children}
     </div>
   );
 }
-
-export default DropTarget(dragType, dropSpec, collect)(LoadoutBucketDropTarget);
