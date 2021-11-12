@@ -14,6 +14,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { itemMoveLoadout, maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
@@ -24,7 +25,6 @@ import {
   getModsFromLoadout,
   newLoadout,
 } from 'app/loadout-drawer/loadout-utils';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';

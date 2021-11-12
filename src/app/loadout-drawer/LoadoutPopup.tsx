@@ -9,7 +9,7 @@ import {
   hasClassifiedSelector,
   storesSelector,
 } from 'app/inventory/selectors';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
 import { RootState, ThunkDispatchProp } from 'app/store/types';

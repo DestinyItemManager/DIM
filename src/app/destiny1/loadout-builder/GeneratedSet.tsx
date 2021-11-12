@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { editLoadout } from 'app/loadout-drawer/LoadoutDrawer';
 import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import _ from 'lodash';
 import React, { useState } from 'react';
