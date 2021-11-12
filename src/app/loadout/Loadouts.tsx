@@ -6,6 +6,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -28,7 +29,13 @@ import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
-import { AppIcon, faExclamationTriangle, powerActionIcon } from 'app/shell/icons';
+import {
+  addIcon,
+  AppIcon,
+  faCalculator,
+  faExclamationTriangle,
+  powerActionIcon,
+} from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -42,6 +49,12 @@ import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
+
+const categoryStyles = {
+  Weapons: styles.categoryWeapons,
+  Armor: styles.categoryArmor,
+  General: styles.categoryGeneral,
+};
 
 /**
  * The Loadouts page is a toplevel page for loadout management. It also provides access to the Loadout Optimizer.
@@ -116,6 +129,8 @@ function Loadouts() {
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
+  const handleNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
+
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
@@ -124,13 +139,22 @@ function Loadouts() {
           selectedStore={selectedStore}
           onCharacterChanged={setSelectedStoreId}
         />
-        <Link className="dim-button" to="./optimizer">
-          {t('LB.LB')}
-        </Link>
-        <div className="dim-button">Sort by last updated</div>
+        <div className={styles.menuButtons}>
+          <button type="button" className={styles.menuButton} onClick={handleNewLoadout}>
+            <AppIcon icon={addIcon} /> <span>{t('Loadouts.Create')}</span>
+          </button>
+          <Link className={styles.menuButton} to={`./optimizer?class=${selectedStore.classType}`}>
+            <AppIcon icon={faCalculator} /> {t('LB.LB')}
+          </Link>
+        </div>
+        {loadouts.map((loadout) => (
+          <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
+            <span>{loadout.name}</span>
+          </PageWithMenu.MenuButton>
+        ))}
       </PageWithMenu.Menu>
 
-      <PageWithMenu.Contents>
+      <PageWithMenu.Contents className={styles.page}>
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
@@ -187,66 +211,79 @@ function LoadoutRow({
   };
 
   return (
-    <div className={styles.loadout}>
-      <h2>
-        <ClassIcon className={styles.classIcon} classType={loadout.classType} />
-        {loadout.name}
-        {warnitems.length > 0 && (
-          <span className={styles.missingItems}>
-            <AppIcon className="warning-icon" icon={faExclamationTriangle} />
-            {t('Loadouts.MissingItemsWarning')}
-          </span>
-        )}
-      </h2>
-      {(items.length > 0 || subClass) && (
-        <>
-          <div className={styles.subClass}>
-            {subClass ? (
-              <ConnectedInventoryItem item={subClass} ignoreSelectedPerks />
-            ) : (
-              <EmptyClassItem />
-            )}
-            {power !== 0 && (
-              <div className={styles.power}>
-                <AppIcon icon={powerActionIcon} />
-                <span>{power}</span>
-              </div>
-            )}
-          </div>
-          {['Weapons', 'Armor', 'General'].map((category) => (
-            <ItemCategory
-              key={category}
-              category={category}
-              items={categories[category]}
-              equippedItemIds={equippedItemIds}
-              loadout={loadout}
-            />
-          ))}
-          {savedMods.length > 0 ? (
-            <div className={styles.mods}>
-              {savedMods.map((mod, index) => (
-                <div key={index}>
-                  <SocketDetailsMod itemDef={mod} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
+    <div className={styles.loadout} id={loadout.id}>
+      <div className={styles.title}>
+        <h2>
+          <ClassIcon className={styles.classIcon} classType={loadout.classType} />
+          {loadout.name}
+          {warnitems.length > 0 && (
+            <span className={styles.missingItems}>
+              <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+              {t('Loadouts.MissingItemsWarning')}
+            </span>
           )}
-        </>
-      )}
-      <div className={styles.actions}>
-        <button
-          type="button"
-          className="dim-button"
-          onClick={() => editLoadout(loadout, { isNew: !saved })}
-        >
-          {t('Loadouts.Edit')}
-        </button>
-        {saved && (
-          <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
-            {t('Loadouts.Delete')}
+        </h2>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => editLoadout(loadout, { isNew: !saved })}
+          >
+            {saved ? t('Loadouts.Edit') : t('Loadouts.Create')}
           </button>
+          {saved && (
+            <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
+              {t('Loadouts.Delete')}
+            </button>
+          )}
+        </div>
+      </div>
+      <div className={styles.contents}>
+        {(items.length > 0 || subClass) && (
+          <>
+            <div className={styles.subClass}>
+              {subClass ? (
+                <ItemPopupTrigger item={subClass}>
+                  {(ref, onClick) => (
+                    <ConnectedInventoryItem
+                      innerRef={ref}
+                      onClick={onClick}
+                      item={subClass}
+                      ignoreSelectedPerks
+                    />
+                  )}
+                </ItemPopupTrigger>
+              ) : (
+                <EmptyClassItem />
+              )}
+              {power !== 0 && (
+                <div className={styles.power}>
+                  <AppIcon icon={powerActionIcon} />
+                  <span>{power}</span>
+                </div>
+              )}
+            </div>
+            {['Weapons', 'Armor', 'General'].map((category) => (
+              <ItemCategory
+                key={category}
+                category={category}
+                items={categories[category]}
+                equippedItemIds={equippedItemIds}
+                loadout={loadout}
+              />
+            ))}
+            {savedMods.length > 0 ? (
+              <div className={styles.mods}>
+                {savedMods.map((mod, index) => (
+                  <div key={index}>
+                    <SocketDetailsMod itemDef={mod} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -277,7 +314,7 @@ function ItemCategory({
   // TODO: switch the organizer link to actually load correctly
 
   return (
-    <div key={category} className={clsx(styles.itemCategory, `category-${category}`)}>
+    <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
       {items ? (
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucketType) => (
@@ -294,7 +331,15 @@ function ItemCategory({
                         key={index}
                       >
                         {items.map((item) => (
-                          <ConnectedInventoryItem key={item.id} item={item} />
+                          <ItemPopupTrigger item={item} key={item.id}>
+                            {(ref, onClick) => (
+                              <ConnectedInventoryItem
+                                item={item}
+                                innerRef={ref}
+                                onClick={onClick}
+                              />
+                            )}
+                          </ItemPopupTrigger>
                         ))}
                       </div>
                     )
@@ -308,6 +353,11 @@ function ItemCategory({
       ) : (
         <div className={clsx(styles.placeholder, `category-${category}`)}>
           {t(`Bucket.${category}`)}
+          {category === 'Armor' && loadout.parameters && (
+            <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+              <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
+            </Link>
+          )}
         </div>
       )}
       {category === 'Armor' && items && (
@@ -318,7 +368,7 @@ function ItemCategory({
             </div>
           )}
           <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
-            {t('Loadouts.OpenInOptimizer')}
+            <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
           </Link>
         </>
       )}
