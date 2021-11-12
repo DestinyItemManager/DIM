@@ -1,17 +1,14 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
 
 interface Props {
   item: DimItem;
   children?: React.ReactNode;
 }
-
-export const isDragging$ = new Observable<boolean>(false);
-export let isDragging = false;
 
 let dragTimeout: number | null = null;
 
@@ -30,8 +27,6 @@ export default function DraggableInventoryItem({ children, item }: Props) {
           dragTimeout = null;
           document.body.classList.add('drag-perf-show');
         });
-
-        isDragging = true;
         isDragging$.next(true);
         return item;
       },
@@ -39,10 +34,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
         if (dragTimeout !== null) {
           cancelAnimationFrame(dragTimeout);
         }
-
         document.body.classList.remove('drag-perf-show');
-
-        isDragging = false;
         isDragging$.next(false);
       },
       canDrag: () =>
