@@ -147,7 +147,6 @@ function StoreBucket({
         bucket={bucket}
         storeId={storeId}
         storeClassType={storeClassType}
-        dispatch={dispatch}
       >
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
@@ -177,7 +176,6 @@ function StoreBucket({
           bucket={bucket}
           storeId={storeId}
           storeClassType={storeClassType}
-          dispatch={dispatch}
         >
           <div className="equipped-item">
             <StoreInventoryItem
@@ -206,7 +204,6 @@ function StoreBucket({
         storeId={storeId}
         storeClassType={storeClassType}
         className={clsx({ 'not-equippable': !isVault && !equippedItem })}
-        dispatch={dispatch}
       >
         {unequippedItems.map((item) => (
           <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
