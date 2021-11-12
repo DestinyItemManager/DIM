@@ -177,10 +177,12 @@ export default function Header() {
         to: `${path}/records`,
         text: t('Records.Title'),
       },
-      {
-        to: `${path}/optimizer`,
-        text: t('LB.LB'),
-      },
+      account.destinyVersion === 2 && $featureFlags.loadoutsPage
+        ? { to: `${path}/loadouts`, text: t('Loadouts.Loadouts') }
+        : {
+            to: `${path}/optimizer`,
+            text: t('LB.LB'),
+          },
       {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),

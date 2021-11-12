@@ -574,13 +574,7 @@ function LoadoutDrawer({
         deleteLoadout={onDeleteLoadout}
         calculauteMinSheetHeight={calculauteMinSheetHeight}
       />
-      <GeneratedLoadoutStats
-        stores={stores}
-        buckets={buckets}
-        items={items}
-        loadout={loadout}
-        allItems={allItems}
-      />
+      <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>
   );
 
