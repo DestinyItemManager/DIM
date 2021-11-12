@@ -1,10 +1,9 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
 import styles from './App.m.scss';
 import Developer from './developer/Developer';
@@ -41,52 +40,14 @@ const SearchHistory = React.lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );
 
-interface StoreProps {
-  language: string;
-  itemQuality: boolean;
-  showNewItems: boolean;
-  charColMobile: number;
-  needsLogin: boolean;
-  needsDeveloper: boolean;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  const settings = settingsSelector(state);
-  return {
-    language: settings.language,
-    itemQuality: settings.itemQuality,
-    showNewItems: settings.showNewItems,
-    charColMobile: settings.charColMobile,
-    needsLogin: state.accounts.needsLogin,
-    needsDeveloper: state.accounts.needsDeveloper,
-  };
-}
-
-type Props = StoreProps;
-
-function App({
-  language,
-  charColMobile,
-  itemQuality,
-  showNewItems,
-  needsLogin,
-  needsDeveloper,
-}: Props) {
-  const [storageWorks, setStorageWorks] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        localStorage.setItem('test', 'true');
-        if (!window.indexedDB) {
-          throw new Error('IndexedDB not available');
-        }
-        await set('idb-test', true);
-      } catch (e) {
-        errorLog('storage', 'Failed Storage Test', e);
-        setStorageWorks(false);
-      }
-    })();
-  }, []);
+export default function App() {
+  const language = useSelector(settingSelector('language'));
+  const itemQuality = useSelector(settingSelector('itemQuality'));
+  const showNewItems = useSelector(settingSelector('showNewItems'));
+  const charColMobile = useSelector(settingSelector('charColMobile'));
+  const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
+  const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
+  const storageWorks = useStorageTest();
 
   if (!storageWorks) {
     return (
@@ -117,28 +78,38 @@ function App({
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             <Switch>
-              <Route path="/about" component={About} exact />
-              <Route path="/privacy" component={Privacy} exact />
-              <Route path="/whats-new" component={WhatsNew} exact />
-              <Route path="/login" component={Login} exact />
-              <Route path="/settings" component={SettingsPage} exact />
-              {$DIM_FLAVOR === 'dev' && <Route path="/developer" component={Developer} exact />}
+              <Route path="/about" exact>
+                <About />
+              </Route>
+              <Route path="/privacy" exact>
+                <Privacy />
+              </Route>
+              <Route path="/whats-new" exact>
+                <WhatsNew />
+              </Route>
+              <Route path="/login" exact>
+                <Login />
+              </Route>
+              <Route path="/settings" exact>
+                <SettingsPage />
+              </Route>
+              {$DIM_FLAVOR === 'dev' && (
+                <Route path="/developer" exact>
+                  <Developer />
+                </Route>
+              )}
               {needsLogin &&
                 ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Redirect to="/developer" />
+                  <Route render={() => <Redirect to="/developer" />} />
                 ) : (
-                  <Redirect to="/login" />
+                  <Route render={() => <Redirect to="/login" />} />
                 ))}
-              <Route path="/search-history" component={SearchHistory} exact />
-              <Route
-                path="/:membershipId(\d+)/d:destinyVersion(1|2)"
-                render={({ match }) => (
-                  <Destiny
-                    destinyVersion={parseInt(match.params.destinyVersion, 10) as DestinyVersion}
-                    platformMembershipId={match.params.membershipId}
-                  />
-                )}
-              />
+              <Route path="/search-history" exact>
+                <SearchHistory />
+              </Route>
+              <Route path="/:membershipId(\d+)/d:destinyVersion(1|2)">
+                <Destiny />
+              </Route>
               <Route
                 path={[
                   '/inventory',
@@ -156,7 +127,9 @@ function App({
               >
                 <AccountRedirectRoute />
               </Route>
-              <Route component={DefaultAccount} />
+              <Route>
+                <DefaultAccount />
+              </Route>
             </Switch>
           </Suspense>
         </ErrorBoundary>
@@ -168,4 +141,23 @@ function App({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(App);
+/** Test that localStorage and IndexedDB work */
+function useStorageTest() {
+  const [storageWorks, setStorageWorks] = useState(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        localStorage.setItem('test', 'true');
+        if (!window.indexedDB) {
+          throw new Error('IndexedDB not available');
+        }
+        await set('idb-test', true);
+      } catch (e) {
+        errorLog('storage', 'Failed Storage Test', e);
+        setStorageWorks(false);
+      }
+    })();
+  }, []);
+
+  return storageWorks;
+}

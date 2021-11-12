@@ -786,7 +786,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   };
 }
 
-export default connect(mapStateToProps)(D1LoadoutBuilder);
+export default connect<StoreProps>(mapStateToProps)(D1LoadoutBuilder);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

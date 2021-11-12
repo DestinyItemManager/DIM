@@ -1,4 +1,3 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
@@ -9,7 +8,7 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector, newItemsSelector } from './selectors';
+import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -35,7 +34,6 @@ interface StoreProps {
 
 function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const { item, dimArchived } = props;
-  const settings = settingsSelector(state);
   const itemInfos = itemInfosSelector(state);
   const itemHashTags = itemHashTagsSelector(state);
   const tag = getTag(item, itemInfos, itemHashTags);
@@ -43,7 +41,7 @@ function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   return {
-    isNew: settings.showNewItems ? newItemsSelector(state).has(item.id) : false,
+    isNew: isNewSelector(item)(state),
     tag,
     notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
     wishlistRoll: wishListSelector(item)(state),

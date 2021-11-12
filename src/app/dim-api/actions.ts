@@ -8,7 +8,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
-import { refresh$ } from 'app/shell/refresh';
+import { refresh$ } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/util';

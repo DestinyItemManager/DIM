@@ -1,5 +1,4 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
@@ -8,22 +7,22 @@ import {
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
 import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
 import { Settings } from 'app/settings/initial-settings';
 import { acquisitionRecencyComparator } from 'app/shell/filters';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
@@ -34,35 +33,11 @@ import styles from './Compare.m.scss';
 import './compare.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
-import { CompareSession } from './reducer';
 import {
   compareItemsSelector,
   compareOrganizerLinkSelector,
   compareSessionSelector,
 } from './selectors';
-
-interface StoreProps {
-  defs?: D2ManifestDefinitions;
-  /** All items matching the current compare session query and itemCategoryHash */
-  compareItems: DimItem[];
-  session?: CompareSession;
-  compareBaseStats: boolean;
-  organizerLink?: string;
-  isPhonePortrait: boolean;
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    defs: d2ManifestSelector(state),
-    compareBaseStats: settingsSelector(state).compareBaseStats,
-    compareItems: compareItemsSelector(state),
-    session: compareSessionSelector(state),
-    organizerLink: compareOrganizerLinkSelector(state),
-    isPhonePortrait: isPhonePortraitSelector(state),
-  };
-}
 
 export interface StatInfo {
   id: number | 'EnergyCapacity';
@@ -78,24 +53,21 @@ export interface StatInfo {
 export type MinimalStat = { statHash: number; value: number; base?: number };
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
-// TODO: link to optimizer
-// TODO: highlight initial item, default sort it front
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
-// TODO: item popup
 // TODO: dropdowns for query buttons
 // TODO: freeform query
 // TODO: Allow minimizing the sheet (to make selection easier)
 // TODO: memoize
-function Compare({
-  compareBaseStats,
-  compareItems: rawCompareItems,
-  session,
-  organizerLink,
-  isPhonePortrait,
-  defs,
-  dispatch,
-}: Props) {
+export default function Compare() {
+  const dispatch = useThunkDispatch();
+  const defs = useD2Definitions()!;
+  const compareBaseStats = useSelector(settingSelector('compareBaseStats'));
+  const rawCompareItems = useSelector(compareItemsSelector);
+  const session = useSelector(compareSessionSelector);
+  const organizerLink = useSelector(compareOrganizerLinkSelector);
+  const isPhonePortrait = useIsPhonePortrait();
+
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
   /** The stat row to sort by */
@@ -441,5 +413,3 @@ function makeFakeStat(
     getStat,
   };
 }
-
-export default connect<StoreProps>(mapStateToProps)(Compare);

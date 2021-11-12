@@ -6,9 +6,9 @@ import { EventBus } from 'app/utils/observable';
 import { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { isDragging } from '../inventory/DraggableInventoryItem';
+import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
-import { refresh as triggerRefresh, refresh$ } from '../shell/refresh';
+import { refresh as triggerRefresh, refresh$ } from '../shell/refresh-events';
 
 const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
 
@@ -64,7 +64,7 @@ function useAutoRefresh() {
         !hasActivePromises &&
         isVisible &&
         isOnline &&
-        !isDragging &&
+        !isDragging$.getCurrentValue() &&
         // Don't auto reload on the optimizer page, it makes it recompute all the time
         !onOptimizerPage
       ) {

@@ -1,4 +1,6 @@
+import { itemSortOrderSelector } from 'app/settings/item-sort';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
 import { sortItems } from '../shell/filters';
@@ -12,7 +14,6 @@ export default function LoadoutDrawerBucket({
   bucket,
   loadoutItems,
   items,
-  itemSortOrder,
   pickLoadoutItem,
   equip,
   remove,
@@ -20,11 +21,11 @@ export default function LoadoutDrawerBucket({
   bucket: InventoryBucket;
   loadoutItems: LoadoutItem[];
   items: DimItem[];
-  itemSortOrder: string[];
   pickLoadoutItem(bucket: InventoryBucket): void;
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
 }) {
+  const itemSortOrder = useSelector(itemSortOrderSelector);
   if (!bucket.type) {
     return null;
   }

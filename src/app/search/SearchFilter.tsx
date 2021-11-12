@@ -1,9 +1,8 @@
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
 import React, { useCallback, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
@@ -11,31 +10,19 @@ import MainSearchBarMenu from './MainSearchBarMenu';
 import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
 
-interface ProvidedProps {
-  onClear?(): void;
-}
-
-interface StoreProps {
-  searchQueryVersion: number;
-  searchQuery: string;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    searchQuery: querySelector(state),
-    searchQueryVersion: searchQueryVersionSelector(state),
-  };
-}
-
 /**
  * The main search filter that's in the header.
  */
 export function SearchFilter(
-  { searchQuery, searchQueryVersion, onClear }: Props,
+  {
+    onClear,
+  }: {
+    onClear?(): void;
+  },
   ref: React.Ref<SearchFilterRef>
 ) {
+  const searchQuery = useSelector(querySelector);
+  const searchQueryVersion = useSelector(searchQueryVersionSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const onClearFilter = useCallback(() => {
     onClear?.();
@@ -85,6 +72,4 @@ export function SearchFilter(
   );
 }
 
-export default connect<StoreProps>(mapStateToProps, null, null, {
-  forwardRef: true,
-})(React.forwardRef(SearchFilter));
+export default React.forwardRef(SearchFilter);

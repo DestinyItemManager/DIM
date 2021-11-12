@@ -1,8 +1,7 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { newItemsSelector } from 'app/inventory/selectors';
+import { isNewSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -11,46 +10,31 @@ import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ObjectiveValue } from './Objective';
 import PursuitItem from './PursuitItem';
 
 // Props provided from parents
-interface ProvidedProps {
+interface Props {
   item: DimItem;
   hideDescription?: boolean;
   searchHidden?: boolean;
 }
 
-// Props from Redux via mapStateToProps
-interface StoreProps {
-  isNew: boolean;
-}
-
-function mapStateToProps(
-  state: RootState,
-  props: ProvidedProps
-): StoreProps & {
-  searchHidden?: boolean;
-} {
-  const { item, searchHidden } = props;
-
-  const settings = settingsSelector(state);
-
-  return {
-    isNew: settings.showNewItems ? newItemsSelector(state).has(item.id) : false,
-    searchHidden: searchHidden || !searchFilterSelector(state)(item),
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
-
 /**
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
-function Pursuit({ item, hideDescription, isNew, searchHidden }: Props) {
+export default function Pursuit({
+  item,
+  hideDescription,
+  searchHidden: alreadySearchHidden,
+}: Props) {
   const defs = useD2Definitions()!;
+  const isNew = useSelector(isNewSelector(item));
+  const searchHidden = useSelector(
+    (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item)
+  );
   const expired = showPursuitAsExpired(item);
 
   const objectives = item.objectives || [];
@@ -105,8 +89,6 @@ function Pursuit({ item, hideDescription, isNew, searchHidden }: Props) {
     </ItemPopupTrigger>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Pursuit);
 
 /**
  * Should this item be displayed as expired (no longer completable)?

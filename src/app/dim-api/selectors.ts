@@ -1,6 +1,7 @@
 import { defaultLoadoutParameters, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
+import { Settings } from 'app/settings/initial-settings';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 
@@ -12,6 +13,12 @@ export function makeProfileKey(platformMembershipId: string, destinyVersion: Des
 }
 
 export const settingsSelector = (state: RootState) => state.dimApi.settings;
+
+/** A selector for a particular setting by property name */
+export const settingSelector =
+  <K extends keyof Settings>(key: K) =>
+  (state: RootState) =>
+    state.dimApi.settings[key];
 
 /**
  * The last used Loadout Optimizer settings, with defaults filled in

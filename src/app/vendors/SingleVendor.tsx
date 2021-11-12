@@ -24,7 +24,7 @@ import {
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh';
+import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
 import type { VendorsState } from './reducer';
@@ -51,10 +51,9 @@ interface StoreProps {
 }
 
 function mapStateToProps() {
-  const ownedItemSelectorInstance = ownedItemsSelector();
   return (state: RootState): StoreProps => ({
     stores: storesSelector(state),
-    ownedItemHashes: ownedItemSelectorInstance(state),
+    ownedItemHashes: ownedItemsSelector(state),
     buckets: bucketsSelector(state),
     profileResponse: profileResponseSelector(state),
     vendors: vendorsByCharacterSelector(state),

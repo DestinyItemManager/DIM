@@ -1,6 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { currentProfileSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
@@ -71,6 +71,9 @@ export const vaultSelector = (state: RootState) => getVault(storesSelector(state
 /** The inventoryItemIds of all items that are "new". */
 export const newItemsSelector = (state: RootState) => state.inventory.newItems;
 
+export const isNewSelector = (item: DimItem) => (state: RootState) =>
+  settingsSelector(state).showNewItems ? newItemsSelector(state).has(item.id) : false;
+
 const visibleCurrencies = [
   3159615086, // Glimmer
   1022552290, // Legendary Shards
@@ -98,8 +101,10 @@ export const materialsSelector = (state: RootState) =>
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
 /** A set containing all the hashes of owned items. */
-export const ownedItemsSelector = () =>
-  createSelector(profileResponseSelector, allItemsSelector, (profileResponse, allItems) => {
+export const ownedItemsSelector = createSelector(
+  profileResponseSelector,
+  allItemsSelector,
+  (profileResponse, allItems) => {
     const ownedItemHashes = new Set<number>();
     for (const item of allItems) {
       ownedItemHashes.add(item.hash);
@@ -114,7 +119,8 @@ export const ownedItemsSelector = () =>
       }
     }
     return ownedItemHashes;
-  });
+  }
+);
 
 /** gets all the dynamic strings from a profile response */
 export const dynamicStringsSelector = (state: RootState) => {
@@ -140,6 +146,15 @@ export const dynamicStringsSelector = (state: RootState) => {
     };
   }
 };
+
+/** Does the user have an classified items? */
+export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
+  allItems.some(
+    (i) =>
+      i.classified &&
+      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+  )
+);
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>

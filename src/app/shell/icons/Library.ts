@@ -15,6 +15,7 @@ const faArrowRight = 'fas fa-arrow-right';
 const faBan = 'fas fa-ban';
 const faBars = 'fas fa-bars';
 const faBolt = 'fas fa-bolt';
+const faCalculator = 'fas fa-calculator';
 const faCheck = 'fas fa-check';
 const faCheckCircle = 'fas fa-check-circle';
 const faCheckCircleRegular = 'far fa-check-circle';
@@ -178,6 +179,7 @@ export {
   faEquals,
   faArrowCircleDown,
   faExclamationCircle,
+  faCalculator,
   faCheckCircle,
   faCaretDown,
   faCaretUp,

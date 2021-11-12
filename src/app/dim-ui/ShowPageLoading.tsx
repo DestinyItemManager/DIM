@@ -1,18 +1,12 @@
 import { loadingEnd, loadingStart } from 'app/shell/actions';
-import { ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
-
-interface ProvidedProps {
-  message: string;
-}
-
-type Props = ProvidedProps & ThunkDispatchProp;
 
 /**
  * This component can be used to show a page-level loading screen with an optional message.
  */
-function ShowPageLoading({ dispatch, message }: Props) {
+export default function ShowPageLoading({ message }: { message: string }) {
+  const dispatch = useThunkDispatch();
   useEffect(() => {
     dispatch(loadingStart(message));
     return () => {
@@ -22,5 +16,3 @@ function ShowPageLoading({ dispatch, message }: Props) {
 
   return null;
 }
-
-export default connect()(ShowPageLoading);

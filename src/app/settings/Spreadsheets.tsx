@@ -1,32 +1,17 @@
 import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
-import { ItemInfos } from 'app/inventory/dim-item-info';
-import { itemInfosSelector, storesLoadedSelector, storesSelector } from 'app/inventory/selectors';
+import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import { DimStore } from 'app/inventory/store-types';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
 
-interface StoreProps {
-  disabled?: boolean;
-  stores: DimStore[];
-  itemInfos: ItemInfos;
-}
+export default function Spreadsheets() {
+  const dispatch = useThunkDispatch();
+  const disabled = !useSelector(storesLoadedSelector);
 
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    disabled: !storesLoadedSelector(state),
-    stores: storesSelector(state),
-    itemInfos: itemInfosSelector(state),
-  };
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
       alert(t('Csv.ImportWrongFileType'));
@@ -44,28 +29,7 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
     }
   };
 
-  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-    downloadCsvFiles(stores, itemInfos, type);
-    ga('send', 'event', 'Download CSV', type);
-  };
-
-  const downloadWeaponCsv = (e: React.MouseEvent) => {
-    e.preventDefault();
-    downloadCsv('Weapons');
-    return false;
-  };
-
-  const downloadArmorCsv = (e: React.MouseEvent) => {
-    e.preventDefault();
-    downloadCsv('Armor');
-    return false;
-  };
-
-  const downloadGhostCsv = (e: React.MouseEvent) => {
-    e.preventDefault();
-    downloadCsv('Ghost');
-    return false;
-  };
+  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => dispatch(downloadCsvFiles(type));
 
   return (
     <section id="spreadsheets">
@@ -78,7 +42,7 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
           <button
             type="button"
             className="dim-button"
-            onClick={downloadWeaponCsv}
+            onClick={() => downloadCsv('Weapons')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
@@ -86,7 +50,7 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
           <button
             type="button"
             className="dim-button"
-            onClick={downloadArmorCsv}
+            onClick={() => downloadCsv('Armor')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
@@ -94,7 +58,7 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
           <button
             type="button"
             className="dim-button"
-            onClick={downloadGhostCsv}
+            onClick={() => downloadCsv('Ghost')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
@@ -107,5 +71,3 @@ function Spreadsheets({ stores, itemInfos, disabled, dispatch }: Props) {
     </section>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Spreadsheets);

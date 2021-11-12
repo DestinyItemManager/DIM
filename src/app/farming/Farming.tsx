@@ -1,34 +1,21 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { DimStore } from '../inventory/store-types';
 import { setSettingAction } from '../settings/actions';
 import { stopFarming } from './actions';
 import './farming.scss';
 import { farmingStoreSelector } from './selectors';
 
-interface StoreProps {
-  makeRoomForItems: boolean;
-  store?: DimStore;
-  inventoryClearSpaces: number;
-}
+export default function Farming() {
+  const dispatch = useThunkDispatch();
+  const store = useSelector(farmingStoreSelector);
+  const makeRoomForItems = useSelector(settingSelector('farmingMakeRoomForItems'));
+  const inventoryClearSpaces = useSelector(settingSelector('inventoryClearSpaces'));
 
-function mapStateToProps() {
-  const storeSelector = farmingStoreSelector();
-  return (state: RootState): StoreProps => ({
-    makeRoomForItems: settingsSelector(state).farmingMakeRoomForItems,
-    store: storeSelector(state),
-    inventoryClearSpaces: Number(settingsSelector(state).inventoryClearSpaces),
-  });
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Props) {
   const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked;
     dispatch(setSettingAction('farmingMakeRoomForItems', value));
@@ -99,5 +86,3 @@ function Farming({ store, makeRoomForItems, inventoryClearSpaces, dispatch }: Pr
     </TransitionGroup>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Farming);

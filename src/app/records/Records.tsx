@@ -47,12 +47,11 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
-  const ownedItemsSelectorInstance = ownedItemsSelector();
   return (state: RootState): StoreProps => {
     const settings = settingsSelector(state);
     return {
       buckets: bucketsSelector(state),
-      ownedItemHashes: ownedItemsSelectorInstance(state),
+      ownedItemHashes: ownedItemsSelector(state),
       profileResponse: profileResponseSelector(state),
       searchQuery: querySelector(state),
       searchFilter: searchFilterSelector(state),

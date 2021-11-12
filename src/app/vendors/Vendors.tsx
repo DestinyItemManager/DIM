@@ -33,7 +33,7 @@ import {
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh';
+import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import {
   D2VendorGroup,
@@ -58,11 +58,9 @@ interface StoreProps {
 }
 
 function mapStateToProps() {
-  const ownedItemSelectorInstance = ownedItemsSelector();
-
   return (state: RootState): StoreProps => ({
     stores: sortedStoresSelector(state),
-    ownedItemHashes: ownedItemSelectorInstance(state),
+    ownedItemHashes: ownedItemsSelector(state),
     searchQuery: querySelector(state),
     filterItems: searchFilterSelector(state),
     profileResponse: profileResponseSelector(state),
