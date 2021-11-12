@@ -210,8 +210,6 @@ export default function LoadoutDrawer() {
     }
   };
 
-  const bucketTypes = Object.keys(buckets.byType);
-
   const header = (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
@@ -227,13 +225,7 @@ export default function LoadoutDrawer() {
         deleteLoadout={onDeleteLoadout}
         calculauteMinSheetHeight={calculauteMinSheetHeight}
       />
-      <GeneratedLoadoutStats
-        stores={stores}
-        buckets={buckets}
-        items={items}
-        loadout={loadout}
-        allItems={allItems}
-      />
+      <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>
   );
 
@@ -241,11 +233,7 @@ export default function LoadoutDrawer() {
     <Sheet onClose={close} ref={loadoutSheetRef} header={header}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget
-            bucketTypes={bucketTypes}
-            storeIds={stores.map((s) => s.id)}
-            onDroppedItem={onAddItem}
-          >
+          <LoadoutDrawerDropTarget onDroppedItem={onAddItem}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>

@@ -18,4 +18,6 @@ export interface Loadout {
   clearSpace?: boolean;
   /** Information about the desired properties of this loadout - used to drive the Loadout Optimizer or apply Mod Loadouts */
   parameters?: LoadoutParameters;
+  /** When was this Loadout last changed? Tracked automatically by the API - when saving a loadout this field is ignored. */
+  lastUpdatedAt?: number;
 }

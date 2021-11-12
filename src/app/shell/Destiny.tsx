@@ -62,6 +62,9 @@ const Activities = React.lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
 const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
+const Loadouts = React.lazy(
+  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
+);
 
 interface ProvidedProps {
   destinyVersion: DestinyVersion;
@@ -235,6 +238,11 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <D1LoadoutBuilder />
             )}
           </Route>
+          {$featureFlags.loadoutsPage && account.destinyVersion === 2 && (
+            <Route path={`${path}/loadouts`} exact>
+              <Loadouts account={account} />
+            </Route>
+          )}
           <Route path={`${path}/organizer`} exact>
             <Organizer account={account} />
           </Route>

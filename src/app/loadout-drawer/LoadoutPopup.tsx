@@ -3,7 +3,12 @@ import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  hasClassifiedSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
@@ -78,15 +83,6 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
-  /** Does the user have an classified items? */
-  const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
-    allItems.some(
-      (i) =>
-        i.classified &&
-        (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
-    )
-  );
-
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
     (_state: RootState, { dimStore }: ProvidedProps) => dimStore,
@@ -353,7 +349,11 @@ function LoadoutPopup({
           <li key={loadout.id} className="loadout-set">
             <span title={loadout.name} onClick={() => applySavedLoadout(loadout)}>
               {isMissingItems(allItems, loadout) && (
-                <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+                <AppIcon
+                  className="warning-icon"
+                  icon={faExclamationTriangle}
+                  title={t('Loadouts.MissingItemsWarning')}
+                />
               )}
               <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
               {loadout.name}

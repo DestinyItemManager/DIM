@@ -1,31 +1,19 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { isDragging, isDragging$ } from 'app/inventory/DraggableInventoryItem';
+import { isDragging$ } from 'app/inventory/drag-events';
 import { useEventBusListener } from 'app/utils/hooks';
-import { EventBus } from 'app/utils/observable';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSubscription } from 'use-subscription';
 import { AppIcon, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
+import { refresh } from './refresh-events';
 
-export const refresh$ = new EventBus<undefined>();
-
-export function refresh(e?: React.MouseEvent | KeyboardEvent) {
-  // Individual pages should listen to this event and decide what to refresh,
-  // and their services should decide how to cache/dedup refreshes.
-  // This event should *NOT* be listened to by services!
-  if (e) {
-    e.preventDefault();
-  }
-  refresh$.next(undefined);
-}
-
-export default function Refresh({ className }: { className?: string }) {
+export default function RefreshButton({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
 
   const handleChanges = useCallback(
-    () => setDisabled(!navigator.onLine || document.hidden || isDragging),
+    () => setDisabled(!navigator.onLine || document.hidden || isDragging$.getCurrentValue()),
     []
   );
   const active = useSubscription(loadingTracker.active$);

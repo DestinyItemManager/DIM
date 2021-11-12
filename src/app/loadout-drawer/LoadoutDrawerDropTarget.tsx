@@ -1,72 +1,52 @@
-import { DragObject } from 'app/inventory/DraggableInventoryItem';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
-import {
-  ConnectDropTarget,
-  DropTarget,
-  DropTargetConnector,
-  DropTargetMonitor,
-  DropTargetSpec,
-} from 'react-dnd';
+import { useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
+import styles from './LoadoutDrawerDropTarget.m.scss';
 
-interface ExternalProps {
-  bucketTypes: string[];
-  storeIds: string[];
+export const bucketTypesSelector = createSelector(
+  bucketsSelector,
+  storesSelector,
+  (buckets, stores) =>
+    buckets
+      ? Object.keys(buckets.byType).flatMap((bucketType) =>
+          stores.flatMap((store) => [bucketType, `${store.id}-${bucketType}`])
+        )
+      : emptyArray<string>()
+);
+
+export default function LoadoutDrawerDropTarget({
+  children,
+  onDroppedItem,
+}: {
   children?: React.ReactNode;
   onDroppedItem(item: DimItem): void;
-}
+}) {
+  const bucketTypes = useSelector(bucketTypesSelector);
 
-// These are all provided by the DropTarget HOC function
-interface InternalProps {
-  connectDropTarget: ConnectDropTarget;
-  isOver: boolean;
-}
-
-type Props = InternalProps & ExternalProps;
-
-// This determines what types can be dropped on this target
-function dragType(props: ExternalProps) {
-  return props.bucketTypes.flatMap((bucketType) =>
-    props.storeIds.flatMap((storeId) => [bucketType, `${storeId}-${bucketType}`])
+  const [{ isOver }, dropRef] = useDrop<DimItem, unknown, { isOver: boolean }>(
+    () => ({
+      accept: bucketTypes,
+      drop: onDroppedItem,
+      canDrop: itemCanBeInLoadout,
+      collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
+    }),
+    [bucketTypes]
   );
-}
 
-// This determines the behavior of dropping on this target
-const dropSpec: DropTargetSpec<Props, DragObject> = {
-  drop(props, monitor) {
-    const item = monitor.getItem().item;
-    props.onDroppedItem(item);
-  },
-  canDrop(_props, monitor) {
-    // But equipping has requirements
-    const item = monitor.getItem().item;
-    return itemCanBeInLoadout(item);
-  },
-};
-
-// This forwards drag and drop state into props on the component
-function collect(
-  connect: DropTargetConnector,
-  monitor: DropTargetMonitor<DragObject>
-): InternalProps {
-  return {
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver() && monitor.canDrop(),
-  };
-}
-
-function LoadoutDrawerDropTarget({ connectDropTarget, children, isOver }: Props) {
-  return connectDropTarget(
+  return (
     <div
-      className={clsx('loadout-drop', {
-        'on-drag-hover': isOver,
+      className={clsx({
+        [styles.over]: isOver,
       })}
+      ref={dropRef}
     >
       {children}
     </div>
   );
 }
-
-export default DropTarget(dragType, dropSpec, collect)(LoadoutDrawerDropTarget);

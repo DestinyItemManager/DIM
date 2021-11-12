@@ -35,6 +35,7 @@
     "YourItems": "Your Items"
   },
   "Bucket": {
+    "": "",
     "Armor": "Armor",
     "General": "General",
     "Ghost": "Ghost",
@@ -529,6 +530,7 @@
     "MaximizeLight": "Maximize Light",
     "MaximizePower": "Maximize Power",
     "MaximizeStat": "Maximize Stat",
+    "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModPlacement": "Mod Placement",
     "Mods": "Mods",
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
@@ -543,7 +545,7 @@
     "NotificationMessage_plural": "Applying loadout with {{count}} items to {{store}}",
     "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
-    "OpenInOptimizer": "Open in Loadout Optimizer",
+    "OpenInOptimizer": "Optimize Armor",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
     "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",

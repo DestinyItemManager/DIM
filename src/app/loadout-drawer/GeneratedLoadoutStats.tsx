@@ -1,6 +1,6 @@
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { powerActionIcon } from 'app/shell/icons';
@@ -9,9 +9,9 @@ import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import type { InventoryBuckets } from '../inventory/inventory-buckets';
 import type { DimItem } from '../inventory/item-types';
-import type { DimStore } from '../inventory/store-types';
 import { maxLightItemSet } from './auto-loadouts';
 import type { Loadout } from './loadout-types';
 import { getArmorStats, getLight } from './loadout-utils';
@@ -45,19 +45,11 @@ function getItemsInListByCategory({
   return { itemSet, missingBuckets };
 }
 
-export function GeneratedLoadoutStats({
-  stores,
-  allItems,
-  buckets,
-  items,
-  loadout,
-}: {
-  stores: DimStore[];
-  allItems: DimItem[];
-  buckets: InventoryBuckets;
-  items: DimItem[];
-  loadout: Loadout;
-}) {
+export function GeneratedLoadoutStats({ items, loadout }: { items: DimItem[]; loadout: Loadout }) {
+  const allItems = useSelector(allItemsSelector);
+  const stores = useSelector(storesSelector);
+  const buckets = useSelector(bucketsSelector)!;
+
   // just D2, for now
   const defs = useD2Definitions();
   if (!defs) {
@@ -85,9 +77,10 @@ export function GeneratedLoadoutStats({
 
   // Compute stats and power level.
   const stats = getArmorStats(defs, armorItems.itemSet);
-  const power =
+  const power = Math.floor(
     getLight(stores[0], weaponItems.itemSet.concat(armorItems.itemSet)) +
-    getArtifactBonus(stores[0]);
+      getArtifactBonus(stores[0])
+  );
 
   return (
     <div className="stat-bars destiny2">
@@ -95,7 +88,7 @@ export function GeneratedLoadoutStats({
         <PressTip tooltip={weaponItems.missingBuckets.length && t('Loadouts.AssumeMaxWeapons')}>
           <>
             <AppIcon icon={powerActionIcon} />
-            <FractionalPowerLevel power={power} />
+            <span>{power}</span>
             {weaponItems.missingBuckets.length ? '*' : null}
           </>
         </PressTip>
