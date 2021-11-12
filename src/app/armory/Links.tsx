@@ -34,7 +34,6 @@ const links = [
     icon: gunsmith,
     link: (item: DimItem) =>
       `https://d2gunsmith.com/w/${item.hash}?s=${buildGunsmithSockets(item)}`,
-    hideOnPhone: true,
   },
   {
     name: 'data.destinysets.com',

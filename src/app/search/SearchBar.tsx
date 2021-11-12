@@ -12,7 +12,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
-import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
@@ -406,7 +406,7 @@ function SearchBar(
           name: 'filter',
         })}
       />
-      <AnimateSharedLayout>
+      <LayoutGroup>
         <AnimatePresence>
           {children}
 
@@ -455,7 +455,7 @@ function SearchBar(
             <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
           </motion.button>
         </AnimatePresence>
-      </AnimateSharedLayout>
+      </LayoutGroup>
 
       {filterHelpOpen &&
         ReactDOM.createPortal(

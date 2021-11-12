@@ -228,6 +228,7 @@ function addItem(
       if (typeInventory.length < maxSlots) {
         loadoutItem.equipped =
           equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
+
         if (loadoutItem.equipped) {
           for (const otherItem of typeInventory) {
             findItem(otherItem).equipped = false;
@@ -546,8 +547,6 @@ function LoadoutDrawer({
     }
   };
 
-  const bucketTypes = Object.keys(buckets.byType);
-
   // Find a loadout with the same name that could overlap with this one
   // Note that this might be the saved version of this very same loadout!
   const clashingLoadout = loadouts.find(
@@ -583,11 +582,7 @@ function LoadoutDrawer({
     <Sheet onClose={close} ref={loadoutSheetRef} header={header}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget
-            bucketTypes={bucketTypes}
-            storeIds={stores.map((s) => s.id)}
-            onDroppedItem={onAddItem}
-          >
+          <LoadoutDrawerDropTarget onDroppedItem={onAddItem}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>

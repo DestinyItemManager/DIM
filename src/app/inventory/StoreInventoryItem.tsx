@@ -8,20 +8,19 @@ import { moveItemToCurrentStore } from './move-item';
 
 interface Props {
   item: DimItem;
-  isPhonePortrait?: boolean;
 }
 
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default function StoreInventoryItem({ item, isPhonePortrait }: Props) {
+export default function StoreInventoryItem({ item }: Props) {
   const dispatch = useThunkDispatch();
   const doubleClicked = (e: React.MouseEvent) => {
     dispatch(moveItemToCurrentStore(item, e));
   };
 
   return (
-    <DraggableInventoryItem item={item} isPhonePortrait={isPhonePortrait}>
+    <DraggableInventoryItem item={item}>
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
           <ConnectedInventoryItem

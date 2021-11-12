@@ -3,7 +3,6 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
@@ -14,9 +13,8 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
-import React, { Dispatch, memo, useState } from 'react';
+import React, { Dispatch, memo, useCallback, useState } from 'react';
 import ReactDom from 'react-dom';
-import { useSelector } from 'react-redux';
 import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
@@ -59,8 +57,6 @@ export default memo(function LockArmorAndPerks({
   const [showExoticPicker, setShowExoticPicker] = useState(false);
   const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
-  const stores = useSelector(storesSelector);
 
   /**
    * Lock currently equipped items on a character
@@ -96,9 +92,15 @@ export default memo(function LockArmorAndPerks({
       mod,
     });
 
-  const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
+  const pinItem = useCallback(
+    (item: DimItem) => lbDispatch({ type: 'pinItem', item }),
+    [lbDispatch]
+  );
   const unpinItem = (item: DimItem) => lbDispatch({ type: 'unpinItem', item });
-  const excludeItem = (item: DimItem) => lbDispatch({ type: 'excludeItem', item });
+  const excludeItem = useCallback(
+    (item: DimItem) => lbDispatch({ type: 'excludeItem', item }),
+    [lbDispatch]
+  );
   const unExcludeItem = (item: DimItem) => lbDispatch({ type: 'unexcludeItem', item });
 
   const chooseLockItem = chooseItem(
@@ -114,10 +116,6 @@ export default memo(function LockArmorAndPerks({
   const allExcludedItems = _.sortBy(_.compact(Object.values(excludedItems)).flat(), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
-
-  const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
-  const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
-
   const modCounts: Record<number, number> = {};
 
   return (
@@ -183,12 +181,7 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
-      <LoadoutBucketDropTarget
-        className={styles.area}
-        storeIds={storeIds}
-        bucketTypes={bucketTypes}
-        onItemLocked={pinItem}
-      >
+      <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         {Boolean(allPinnedItems.length) && (
           <div className={styles.itemGrid}>
             {allPinnedItems.map((lockedItem) => (
@@ -205,12 +198,7 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </LoadoutBucketDropTarget>
-      <LoadoutBucketDropTarget
-        className={styles.area}
-        storeIds={storeIds}
-        bucketTypes={bucketTypes}
-        onItemLocked={excludeItem}
-      >
+      <LoadoutBucketDropTarget className={styles.area} onItemLocked={excludeItem}>
         {Boolean(allExcludedItems.length) && (
           <div className={styles.itemGrid}>
             {allExcludedItems.map((lockedItem) => (
