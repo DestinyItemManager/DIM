@@ -1,4 +1,4 @@
-import { currentAccountSelector } from 'app/accounts/selectors';
+import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
@@ -15,7 +15,6 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
-import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
@@ -57,26 +56,6 @@ const fakeWeapon = {
   destinyVersion: 2,
 };
 
-const fakeArmor = {
-  icon: `~${exampleArmorImage}`,
-  quality: {
-    min: 96,
-  },
-  isNew: true,
-  location: {
-    type: 'energy',
-  },
-  bucket: {
-    type: 'energy',
-  },
-  visible: true,
-  primStat: {
-    value: 300,
-  },
-  itemCategoryHashes: [],
-  destinyVersion: 1,
-};
-
 const languageOptions = mapToOptions({
   de: 'Deutsch',
   en: 'English',
@@ -101,6 +80,7 @@ export default function SettingsPage() {
   const settings = useSelector(settingsSelector);
   const stores = useSelector(sortedStoresSelector);
   const currentAccount = useSelector(currentAccountSelector);
+  const hasD1Account = useSelector(hasD1AccountSelector);
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
@@ -121,6 +101,10 @@ export default function SettingsPage() {
     } else {
       setSetting(e.target.name as keyof Settings, e.target.value);
     }
+  };
+
+  const onChangePerkList: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSetting('perkList', e.target.value === 'true');
   };
 
   const onBadgePostmasterChanged = (checked: boolean, name: keyof Settings) => {
@@ -214,11 +198,10 @@ export default function SettingsPage() {
   );
 
   const menuItems = _.compact([
-    { id: 'general', title: t('Settings.General') },
+    { id: 'general', title: t('Settings.Language') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
-    { id: 'ratings', title: t('Settings.Ratings') },
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
   ]);
@@ -244,7 +227,7 @@ export default function SettingsPage() {
         <h1>{t('Settings.Settings')}</h1>
         <form>
           <section id="general">
-            <h2>{t('Settings.General')}</h2>
+            <h2>{t('Settings.Language')}</h2>
             <div className="setting">
               <Select
                 label={t('Settings.Language')}
@@ -331,6 +314,39 @@ export default function SettingsPage() {
                 )}
               </div>
             </div>
+            <div className="setting">
+              <label>{t('Settings.PerkDisplay')}</label>
+              <div className="radioOptions">
+                <label>
+                  <input
+                    type="radio"
+                    name="perkDisplay"
+                    checked={settings.perkList}
+                    value="true"
+                    onChange={onChangePerkList}
+                  />
+                  <span>{t('Settings.PerkList')}</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="perkDisplay"
+                    checked={!settings.perkList}
+                    value="false"
+                    onChange={onChangePerkList}
+                  />
+                  <span>{t('Settings.PerkGrid')}</span>
+                </label>
+              </div>
+            </div>
+            {hasD1Account && (
+              <Checkbox
+                label={t('Settings.EnableAdvancedStats')}
+                name="itemQuality"
+                value={settings.itemQuality}
+                onChange={onCheckChange}
+              />
+            )}
           </section>
 
           <section id="inventory">
@@ -434,21 +450,6 @@ export default function SettingsPage() {
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}
-
-          <section id="ratings">
-            <h2>{t('Settings.Ratings')}</h2>
-            <div className="examples sub-bucket">
-              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} />
-              <InventoryItem item={fakeArmor as unknown as DimItem} isNew={true} />
-            </div>
-
-            <Checkbox
-              label={t('Settings.EnableAdvancedStats')}
-              name="itemQuality"
-              value={settings.itemQuality}
-              onChange={onCheckChange}
-            />
-          </section>
 
           <ErrorBoundary name="StorageSettings">
             <DimApiSettings />

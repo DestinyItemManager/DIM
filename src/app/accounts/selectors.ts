@@ -15,3 +15,6 @@ export const destinyVersionSelector = (state: RootState) => {
 /** Are the accounts loaded enough to use? */
 export const accountsLoadedSelector = (state: RootState) =>
   state.accounts.loaded || (state.accounts.loadedFromIDB && accountsSelector(state).length > 0);
+
+export const hasD1AccountSelector = (state: RootState) =>
+  accountsSelector(state).some((a) => a.destinyVersion === 1);
