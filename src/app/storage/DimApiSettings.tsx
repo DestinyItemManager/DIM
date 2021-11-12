@@ -10,33 +10,23 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './DimApiSettings.m.scss';
 import { exportBackupData, exportLocalData } from './export-data';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
 
-interface StoreProps {
-  apiPermissionGranted: boolean;
-  profileLoadedError?: Error;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    apiPermissionGranted: apiPermissionGrantedSelector(state),
-    profileLoadedError: state.dimApi.profileLoadedError,
-  };
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
 const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
-function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
+export default function DimApiSettings() {
+  const dispatch = useThunkDispatch();
+  const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const profileLoadedError = useSelector((state: RootState) => state.dimApi.profileLoadedError);
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
   const onApiPermissionChange = async (checked: boolean) => {
@@ -120,8 +110,6 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
     </section>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(DimApiSettings);
 
 // TODO: gotta change all these strings
 function showBackupDownloadedNotification() {

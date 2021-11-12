@@ -444,13 +444,9 @@ function ItemTable({
     setting.categoryId.includes(categories[1]?.id)
   );
   if (downloadButtonSetting) {
-    const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => {
-      downloadCsvFiles(stores, itemInfos, type);
-      ga('send', 'event', 'Download CSV', type);
-    };
     const downloadHandler = (e: React.MouseEvent) => {
       e.preventDefault();
-      downloadCsv(downloadButtonSetting.csvType);
+      dispatch(downloadCsvFiles(downloadButtonSetting.csvType));
       return false;
     };
 

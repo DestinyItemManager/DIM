@@ -1,10 +1,10 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
 import styles from './App.m.scss';
 import Developer from './developer/Developer';
@@ -41,52 +41,14 @@ const SearchHistory = React.lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );
 
-interface StoreProps {
-  language: string;
-  itemQuality: boolean;
-  showNewItems: boolean;
-  charColMobile: number;
-  needsLogin: boolean;
-  needsDeveloper: boolean;
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  const settings = settingsSelector(state);
-  return {
-    language: settings.language,
-    itemQuality: settings.itemQuality,
-    showNewItems: settings.showNewItems,
-    charColMobile: settings.charColMobile,
-    needsLogin: state.accounts.needsLogin,
-    needsDeveloper: state.accounts.needsDeveloper,
-  };
-}
-
-type Props = StoreProps;
-
-function App({
-  language,
-  charColMobile,
-  itemQuality,
-  showNewItems,
-  needsLogin,
-  needsDeveloper,
-}: Props) {
-  const [storageWorks, setStorageWorks] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        localStorage.setItem('test', 'true');
-        if (!window.indexedDB) {
-          throw new Error('IndexedDB not available');
-        }
-        await set('idb-test', true);
-      } catch (e) {
-        errorLog('storage', 'Failed Storage Test', e);
-        setStorageWorks(false);
-      }
-    })();
-  }, []);
+export default function App() {
+  const language = useSelector(settingSelector('language'));
+  const itemQuality = useSelector(settingSelector('itemQuality'));
+  const showNewItems = useSelector(settingSelector('showNewItems'));
+  const charColMobile = useSelector(settingSelector('charColMobile'));
+  const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
+  const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
+  const storageWorks = useStorageTest();
 
   if (!storageWorks) {
     return (
@@ -168,4 +130,23 @@ function App({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(App);
+/** Test that localStorage and IndexedDB work */
+function useStorageTest() {
+  const [storageWorks, setStorageWorks] = useState(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        localStorage.setItem('test', 'true');
+        if (!window.indexedDB) {
+          throw new Error('IndexedDB not available');
+        }
+        await set('idb-test', true);
+      } catch (e) {
+        errorLog('storage', 'Failed Storage Test', e);
+        setStorageWorks(false);
+      }
+    })();
+  }, []);
+
+  return storageWorks;
+}

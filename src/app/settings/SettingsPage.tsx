@@ -1,4 +1,3 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -9,19 +8,18 @@ import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
 import exampleArmorImage from 'images/example-armor.jpg';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -36,22 +34,6 @@ import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
-
-interface StoreProps {
-  currentAccount?: DestinyAccount;
-  settings: Settings;
-  stores: DimStore[];
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    settings: settingsSelector(state),
-    stores: sortedStoresSelector(state),
-    currentAccount: currentAccountSelector(state),
-  };
-}
-
-type Props = StoreProps & ThunkDispatchProp;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -114,7 +96,11 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
-function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
+export default function SettingsPage() {
+  const dispatch = useThunkDispatch();
+  const settings = useSelector(settingsSelector);
+  const stores = useSelector(sortedStoresSelector);
+  const currentAccount = useSelector(currentAccountSelector);
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
@@ -474,8 +460,6 @@ function SettingsPage({ settings, stores, currentAccount, dispatch }: Props) {
     </PageWithMenu>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(SettingsPage);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

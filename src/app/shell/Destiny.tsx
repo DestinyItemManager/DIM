@@ -1,10 +1,9 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
@@ -14,10 +13,11 @@ import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
@@ -63,35 +63,25 @@ const Activities = React.lazy(
 );
 const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 
-interface ProvidedProps {
+interface Props {
   destinyVersion: DestinyVersion;
   platformMembershipId: string;
 }
 
-interface StoreProps {
-  accountsLoaded: boolean;
-  account?: DestinyAccount;
-  profileError?: Error;
-}
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return {
-    accountsLoaded: accountsLoadedSelector(state),
-    account: accountsSelector(state).find(
-      (account) =>
-        account.membershipId === props.platformMembershipId &&
-        account.destinyVersion === props.destinyVersion
-    ),
-    profileError: state.inventory.profileError,
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
+export default function Destiny({ platformMembershipId, destinyVersion }: Props) {
+  const dispatch = useThunkDispatch();
+  const accountsLoaded = useSelector(accountsLoadedSelector);
+  const account = useSelector((state: RootState) =>
+    accountsSelector(state).find(
+      (account) =>
+        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
+    )
+  );
+  const profileError = useSelector((state: RootState) => state.inventory.profileError);
+
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -289,15 +279,13 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
       <LoadoutDrawer />
       <Compare />
       <Farming />
-      <InfusionFinder destinyVersion={account.destinyVersion} />
+      <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <GlobalEffects />
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Destiny);
 
 /**
  * Set some global CSS properties and such in reaction to the store.
@@ -314,9 +302,7 @@ function GlobalEffects() {
     }
   }, [stores.length]);
 
-  const badgePostmaster = useSelector(
-    (state: RootState) => settingsSelector(state).badgePostmaster
-  );
+  const badgePostmaster = useSelector(settingSelector('badgePostmaster'));
 
   // Badge the app icon with the number of postmaster items
   useEffect(() => {

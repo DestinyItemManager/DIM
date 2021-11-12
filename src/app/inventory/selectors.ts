@@ -1,6 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { currentProfileSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
@@ -70,6 +70,9 @@ export const vaultSelector = (state: RootState) => getVault(storesSelector(state
 
 /** The inventoryItemIds of all items that are "new". */
 export const newItemsSelector = (state: RootState) => state.inventory.newItems;
+
+export const isNewSelector = (item: DimItem) => (state: RootState) =>
+  settingsSelector(state).showNewItems ? newItemsSelector(state).has(item.id) : false;
 
 const visibleCurrencies = [
   3159615086, // Glimmer

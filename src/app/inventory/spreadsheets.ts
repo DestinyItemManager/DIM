@@ -20,7 +20,7 @@ import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
 import { DimGridNode, DimItem, DimSockets } from './item-types';
-import { DimStore } from './store-types';
+import { itemInfosSelector, storesSelector } from './selectors';
 import { getClass } from './store/character-utils';
 import { getEvent, getSeason } from './store/season';
 
@@ -50,57 +50,60 @@ const FILTER_NODE_NAMES = [
 // ignore raid & calus sources in favor of more detailed sources
 const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
-export function downloadCsvFiles(
-  stores: DimStore[],
-  itemInfos: ItemInfos,
-  type: 'Weapons' | 'Armor' | 'Ghost'
-) {
-  // perhaps we're loading
-  if (stores.length === 0) {
-    alert(t('Settings.ExportSSNoStores'));
-    return;
-  }
-  const nameMap = {};
-  let allItems: DimItem[] = [];
-  stores.forEach((store) => {
-    allItems = allItems.concat(store.items);
-    nameMap[store.id] =
-      store.id === 'vault'
-        ? 'Vault'
-        : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
-  });
-  const items: DimItem[] = [];
-  allItems.forEach((item) => {
-    if (!item.primaryStat && type !== 'Ghost') {
+export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResult {
+  return async (_dispatch, getState) => {
+    const stores = storesSelector(getState());
+    const itemInfos = itemInfosSelector(getState());
+
+    // perhaps we're loading
+    if (stores.length === 0) {
+      alert(t('Settings.ExportSSNoStores'));
       return;
     }
+    const nameMap = {};
+    let allItems: DimItem[] = [];
+    stores.forEach((store) => {
+      allItems = allItems.concat(store.items);
+      nameMap[store.id] =
+        store.id === 'vault'
+          ? 'Vault'
+          : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
+    });
+    const items: DimItem[] = [];
+    allItems.forEach((item) => {
+      if (!item.primaryStat && type !== 'Ghost') {
+        return;
+      }
 
-    if (type === 'Weapons') {
-      if (
-        item.primaryStat?.statHash === D1_StatHashes.Attack ||
-        item.primaryStat?.statHash === StatHashes.Attack
-      ) {
+      if (type === 'Weapons') {
+        if (
+          item.primaryStat?.statHash === D1_StatHashes.Attack ||
+          item.primaryStat?.statHash === StatHashes.Attack
+        ) {
+          items.push(item);
+        }
+      } else if (type === 'Armor') {
+        if (item.primaryStat?.statHash === StatHashes.Defense) {
+          items.push(item);
+        }
+      } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
         items.push(item);
       }
-    } else if (type === 'Armor') {
-      if (item.primaryStat?.statHash === StatHashes.Defense) {
-        items.push(item);
-      }
-    } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
-      items.push(item);
+    });
+    switch (type) {
+      case 'Weapons':
+        downloadWeapons(items, nameMap, itemInfos);
+        break;
+      case 'Armor':
+        downloadArmor(items, nameMap, itemInfos);
+        break;
+      case 'Ghost':
+        downloadGhost(items, nameMap, itemInfos);
+        break;
     }
-  });
-  switch (type) {
-    case 'Weapons':
-      downloadWeapons(items, nameMap, itemInfos);
-      break;
-    case 'Armor':
-      downloadArmor(items, nameMap, itemInfos);
-      break;
-    case 'Ghost':
-      downloadGhost(items, nameMap, itemInfos);
-      break;
-  }
+
+    ga('send', 'event', 'Download CSV', type);
+  };
 }
 
 interface CSVRow {
