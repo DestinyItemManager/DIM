@@ -71,8 +71,9 @@ const Loadouts = React.lazy(
  */
 export default function Destiny() {
   const dispatch = useThunkDispatch();
-  const { destinyVersion: destinyVersionString, platformMembershipId } =
-    useParams<{ destinyVersion: string; platformMembershipId: string }>();
+  const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } =
+    useParams<{ destinyVersion: string; membershipId: string }>();
+  console.log(destinyVersionString, platformMembershipId);
   const destinyVersion = parseInt(destinyVersionString, 10) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const account = useSelector((state: RootState) =>
