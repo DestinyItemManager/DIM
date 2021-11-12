@@ -13,15 +13,6 @@
 .area {
   padding: 4px;
   background-color: rgba(0, 0, 0, 0.4);
-
-  &:global(.on-drag-enter),
-  &:global(.on-drag-hover) {
-    background-color: black;
-  }
-
-  &:global(.on-drag-hover) {
-    background-color: rgba(128, 128, 128, 0.2);
-  }
 }
 
 .buttons {

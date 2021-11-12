@@ -10,12 +10,15 @@ import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import styles from './LoadoutDrawerDropTarget.m.scss';
 
-const bucketTypesSelector = createSelector(bucketsSelector, storesSelector, (buckets, stores) =>
-  buckets
-    ? Object.keys(buckets.byType).flatMap((bucketType) =>
-        stores.flatMap((store) => [bucketType, `${store.id}-${bucketType}`])
-      )
-    : emptyArray<string>()
+export const bucketTypesSelector = createSelector(
+  bucketsSelector,
+  storesSelector,
+  (buckets, stores) =>
+    buckets
+      ? Object.keys(buckets.byType).flatMap((bucketType) =>
+          stores.flatMap((store) => [bucketType, `${store.id}-${bucketType}`])
+        )
+      : emptyArray<string>()
 );
 
 export default function LoadoutDrawerDropTarget({
