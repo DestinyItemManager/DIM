@@ -1,5 +1,4 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
@@ -14,11 +13,12 @@ import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -66,35 +66,23 @@ const Loadouts = React.lazy(
   () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
 );
 
-interface ProvidedProps {
-  destinyVersion: DestinyVersion;
-  platformMembershipId: string;
-}
-
-interface StoreProps {
-  accountsLoaded: boolean;
-  account?: DestinyAccount;
-  profileError?: Error;
-}
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  return {
-    accountsLoaded: accountsLoadedSelector(state),
-    account: accountsSelector(state).find(
-      (account) =>
-        account.membershipId === props.platformMembershipId &&
-        account.destinyVersion === props.destinyVersion
-    ),
-    profileError: state.inventory.profileError,
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 /**
  * Base view for pages that show Destiny content.
  */
-function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
+export default function Destiny() {
+  const dispatch = useThunkDispatch();
+  const { destinyVersion: destinyVersionString, platformMembershipId } =
+    useParams<{ destinyVersion: string; platformMembershipId: string }>();
+  const destinyVersion = parseInt(destinyVersionString, 10) as DestinyVersion;
+  const accountsLoaded = useSelector(accountsLoadedSelector);
+  const account = useSelector((state: RootState) =>
+    accountsSelector(state).find(
+      (account) =>
+        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
+    )
+  );
+  const profileError = useSelector((state: RootState) => state.inventory.profileError);
+
   useEffect(() => {
     if (!accountsLoaded) {
       dispatch(getPlatforms());
@@ -289,9 +277,7 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
               <Activities account={account} />
             </Route>
           )}
-          <Route>
-            <Redirect to={`${url}/inventory`} />
-          </Route>
+          <Route render={() => <Redirect to={`${url}/inventory`} />} />
         </Switch>
       </div>
       <LoadoutDrawer />
@@ -304,8 +290,6 @@ function Destiny({ accountsLoaded, account, dispatch, profileError }: Props) {
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Destiny);
 
 /**
  * Set some global CSS properties and such in reaction to the store.
