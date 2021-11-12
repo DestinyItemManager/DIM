@@ -1,4 +1,9 @@
-.currency {
+.icon {
   height: 16px;
   width: 16px;
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
