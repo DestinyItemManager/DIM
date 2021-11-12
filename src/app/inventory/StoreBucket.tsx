@@ -2,7 +2,6 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { characterOrderSelector } from 'app/settings/character-sort';
-import { isPhonePortraitSelector } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -46,7 +45,6 @@ interface StoreProps {
   itemSortOrder: string[];
   storeClassList: DestinyClass[];
   characterOrder: string;
-  isPhonePortrait: boolean;
 }
 
 /**
@@ -102,7 +100,6 @@ function mapStateToProps() {
           ? internClassList(sortedStoresSelector(state).map((s) => s.classType))
           : emptyArray(),
       characterOrder: characterOrderSelector(state),
-      isPhonePortrait: isPhonePortraitSelector(state),
     };
   };
 }
@@ -123,7 +120,6 @@ function StoreBucket({
   isVault,
   storeClassList,
   characterOrder,
-  isPhonePortrait,
   singleCharacter,
 }: Props) {
   const dispatch = useThunkDispatch();
@@ -152,7 +148,7 @@ function StoreBucket({
           <React.Fragment key={classType}>
             <ClassIcon classType={classType} className="armor-class-icon" />
             {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
-              <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
+              <StoreInventoryItem key={item.index} item={item} />
             ))}
           </React.Fragment>
         ))}
@@ -178,11 +174,7 @@ function StoreBucket({
           storeClassType={storeClassType}
         >
           <div className="equipped-item">
-            <StoreInventoryItem
-              key={equippedItem.index}
-              item={equippedItem}
-              isPhonePortrait={isPhonePortrait}
-            />
+            <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
           </div>
           {bucket.hasTransferDestination && (
             <a
@@ -206,7 +198,7 @@ function StoreBucket({
         className={clsx({ 'not-equippable': !isVault && !equippedItem })}
       >
         {unequippedItems.map((item) => (
-          <StoreInventoryItem key={item.index} item={item} isPhonePortrait={isPhonePortrait} />
+          <StoreInventoryItem key={item.index} item={item} />
         ))}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
