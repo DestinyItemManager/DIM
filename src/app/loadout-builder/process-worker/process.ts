@@ -215,14 +215,6 @@ export function process(
 
   let combos = combosWithoutCaps;
 
-  console.log({
-    helms: helms.length,
-    gaunts: gaunts.length,
-    chests: chests.length,
-    legs: legs.length,
-    classItems: classItems.length,
-  });
-
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
   let numDiscarded = 0;
@@ -297,8 +289,6 @@ export function process(
   let numNoExotic = 0;
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
-  // TODO: can we fan these out to multiple workers and re-join them?
-  // TODO: can we prune early based on stat combos or mods?
 
   let numProcessed = 0;
   let elapsedSeconds = 0;
