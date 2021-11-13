@@ -53,10 +53,16 @@ function GeneratedSet({
   upgradeSpendTier,
   lockItemEnergyType,
 }: Props) {
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
+
+  const statMods = set.statMods.map(
+    (d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition
+  );
+  const allMods = [...lockedMods, ...statMods];
+
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    loadout.parameters = params;
+    loadout.parameters = { ...params, mods: [...(params.mods || []), ...set.statMods] };
     editLoadout(loadout, {
       showClass: false,
     });
@@ -87,7 +93,7 @@ function GeneratedSet({
 
   const modAssignments = getModAssignments(
     displayedItems,
-    lockedMods,
+    allMods,
     defs,
     upgradeSpendTier,
     lockItemEnergyType
@@ -105,7 +111,6 @@ function GeneratedSet({
             existingLoadoutName={existingLoadout?.name}
             characterClass={selectedStore.classType}
           />
-          <div>{set.totalStatModsUsed} mods used</div>
         </div>
         <div className={styles.items}>
           {displayedItems.map((item, i) => (

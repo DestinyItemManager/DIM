@@ -180,6 +180,7 @@ function LoadoutBuilder({
       excludedItems,
       lockedMods,
       lockedExoticHash,
+      maxStatMods,
       selectedStoreId,
       statFilters,
       modPicker,
@@ -204,10 +205,11 @@ function LoadoutBuilder({
         max: 10,
       })),
       statOrder,
+      maxStatMods,
       undefined // same with locked exotic
     );
     setSetting('loParameters', newSavedLoadoutParams);
-  }, [setSetting, statFilters, statOrder, upgradeSpendTier, lockItemEnergyType]);
+  }, [setSetting, statFilters, statOrder, upgradeSpendTier, lockItemEnergyType, maxStatMods]);
 
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
@@ -262,6 +264,7 @@ function LoadoutBuilder({
     statOrder,
     statFilters,
     lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    maxStatMods,
     disabledDueToMaintenance
   );
 
@@ -276,6 +279,7 @@ function LoadoutBuilder({
         searchQuery,
         statFilters,
         statOrder,
+        maxStatMods,
         lockedExoticHash
       ),
     [
@@ -286,6 +290,7 @@ function LoadoutBuilder({
       statFilters,
       statOrder,
       lockedExoticHash,
+      maxStatMods,
     ]
   );
 
@@ -338,6 +343,7 @@ function LoadoutBuilder({
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
         lockedExoticHash={lockedExoticHash}
+        maxStatMods={maxStatMods}
         lbDispatch={lbDispatch}
       />
     </>

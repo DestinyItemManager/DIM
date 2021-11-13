@@ -76,16 +76,15 @@ export class SetTracker {
               ) {
                 // Uses fewer mods, place ahead
                 if (
-                  armorSet.totalStatModsUsed <
-                  currentStatMix.armorSets[armorSetIndex].totalStatModsUsed
+                  armorSet.statMods.length < currentStatMix.armorSets[armorSetIndex].statMods.length
                 ) {
                   currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
                   break outer;
                 }
                 // Same mix, same number of stat mods, place ahead if it has higher power
                 if (
-                  armorSet.totalStatModsUsed ===
-                    currentStatMix.armorSets[armorSetIndex].totalStatModsUsed &&
+                  armorSet.statMods.length ===
+                    currentStatMix.armorSets[armorSetIndex].statMods.length &&
                   armorSetPower > getPower(currentStatMix.armorSets[armorSetIndex].armor)
                 ) {
                   currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);

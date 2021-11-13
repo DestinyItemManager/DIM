@@ -37,7 +37,8 @@ interface Props {
   lockedMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
-  lockedExoticHash?: number;
+  lockedExoticHash: number | undefined;
+  maxStatMods: number;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -52,6 +53,7 @@ export default memo(function LockArmorAndPerks({
   upgradeSpendTier,
   lockItemEnergyType,
   lockedExoticHash,
+  maxStatMods,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -118,8 +120,23 @@ export default memo(function LockArmorAndPerks({
   );
   const modCounts: Record<number, number> = {};
 
+  const onMaxStatModsChanged = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    lbDispatch({ type: 'maxStatModsChanged', maxStatMods: parseInt(e.target.value, 10) });
+
   return (
     <>
+      <div className={styles.area}>
+        <select value={maxStatMods} onChange={onMaxStatModsChanged}>
+          <option value={0}>{t('LoadoutBuilder.MaxStatModsOptionNone')}</option>
+          {_.times(5, (n) => (
+            <option key={n + 1} value={n + 1}>
+              {t('LoadoutBuilder.MaxStatModsOption', {
+                count: n + 1,
+              })}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className={styles.area}>
         <SelectedArmorUpgrade
           defs={defs}

@@ -52,6 +52,7 @@ export function useProcess(
   statOrder: number[],
   statFilters: StatFilters,
   anyExotic: boolean,
+  maxStatMods: number,
   disabledDueToMaintenance: boolean
 ) {
   const [remainingTime, setRemainingTime] = useState(0);
@@ -157,6 +158,7 @@ export function useProcess(
         statOrder,
         statFilters,
         anyExotic,
+        maxStatMods,
         proxy(setRemainingTime)
       )
       .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
@@ -196,6 +198,7 @@ export function useProcess(
     statOrder,
     upgradeSpendTier,
     anyExotic,
+    maxStatMods,
     disabledDueToMaintenance,
   ]);
 

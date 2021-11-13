@@ -13,6 +13,10 @@
 .area {
   padding: 4px;
   background-color: rgba(0, 0, 0, 0.4);
+
+  select {
+    width: 100%;
+  }
 }
 
 .buttons {

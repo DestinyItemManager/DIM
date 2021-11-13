@@ -1,3 +1,4 @@
+import { StatHashes } from 'app/../data/d2/generated-enums';
 import { activityModPlugCategoryHashes } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
@@ -120,6 +121,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
+  /** The maximum number of stat mods to automatically add in to reach our desired stat max. */
+  maxStatMods: number,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -130,13 +133,12 @@ export function process(
 } {
   const pstart = performance.now();
 
-  // How many stat mods may we add in order to reach the desired max stat?
-  const maxStatMods = 5;
-
   // How many "general" mod slots do we have open to apply generic stat mods?
-  const generalModsAvailable =
+  const generalModsAvailable = Math.min(
+    maxStatMods,
     LockableBucketHashes.length -
-    (lockedModMap[armor2PlugCategoryHashesByName.general]?.length || 0);
+      (lockedModMap[armor2PlugCategoryHashesByName.general]?.length || 0)
+  );
 
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
@@ -378,8 +380,7 @@ export function process(
             // Check stat tiers
             let totalTier = 0;
             let statRangeExceeded = false;
-            let statModSlotsAvailable = Math.min(maxStatMods, generalModsAvailable);
-            let totalStatModsUsed = 0;
+            const statMods: number[] = [];
             for (const statHash of statOrder) {
               let value = stats[statHash];
               let tier = statTier(value);
@@ -390,15 +391,15 @@ export function process(
                   statRangeExceeded = true;
                 } else {
                   // Automatically add stat mods to taste
-                  if (statModSlotsAvailable > 0) {
-                    const [statModsUsed, newValue] = boostStats(
-                      statModSlotsAvailable,
+                  if (generalModsAvailable - statMods.length > 0) {
+                    const newValue = addStatMods(
+                      statHash,
+                      generalModsAvailable,
                       value,
                       filter.max,
-                      energyRemaining
+                      energyRemaining,
+                      statMods
                     );
-                    statModSlotsAvailable -= statModsUsed;
-                    totalStatModsUsed += statModsUsed;
                     value = newValue;
                     stats[statHash] = value;
                   }
@@ -450,7 +451,7 @@ export function process(
             const newArmorSet: IntermediateProcessArmorSet = {
               armor,
               stats,
-              totalStatModsUsed,
+              statMods,
             };
 
             // Calculate the "tiers string" here, since most sets don't make it this far
@@ -555,17 +556,42 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
   }));
 }
 
+// TODO: it'd be nice to make this dynamic but it's a pain to pump definitions in here.
+
+// Regular stat mods add 10
+const largeStatMods: { [statHash: number]: { hash: number; cost: number } } = {
+  [StatHashes.Mobility]: { hash: 3961599962, cost: 3 },
+  [StatHashes.Resilience]: { hash: 2850583378, cost: 3 },
+  [StatHashes.Recovery]: { hash: 2645858828, cost: 4 },
+  [StatHashes.Discipline]: { hash: 4048838440, cost: 3 },
+  [StatHashes.Intellect]: { hash: 3355995799, cost: 5 },
+  [StatHashes.Strength]: { hash: 3253038666, cost: 3 },
+};
+
+// Minor stat mods add 5
+const minorStatMods: { [statHash: number]: { hash: number; cost: number } } = {
+  [StatHashes.Mobility]: { hash: 204137529, cost: 1 },
+  [StatHashes.Resilience]: { hash: 3682186345, cost: 1 },
+  [StatHashes.Recovery]: { hash: 555005975, cost: 2 },
+  [StatHashes.Discipline]: { hash: 2623485440, cost: 1 },
+  [StatHashes.Intellect]: { hash: 1227870362, cost: 2 },
+  [StatHashes.Strength]: { hash: 3699676109, cost: 1 },
+};
+
 /**
  * Assign general stat mods in order to bring the stat value up to the desired max tier.
  */
 // TODO: maybe post-processing add in the actual stat mods??
-function boostStats(
-  statModSlotsAvailable: number,
+// TODO: maybe nice to use an integer constraint solver here instead of greedily filling mods?
+function addStatMods(
+  statHash: number,
+  // The maximum total number of mods we could use
+  generalModsAvailable: number,
   value: number,
   maxTier: number,
-  energyRemaining: number[] // indexed by armor slot, modified in this function
-): [statModsUsed: number, newValue: number] {
-  let statModsUsed = 0;
+  energyRemaining: number[], // indexed by armor slot, modified in this function
+  statMods: number[] // modified in this function
+): number {
   const maxStat = maxTier * 10;
   let maxRemainingEnergyIndex = 0;
   let maxRemaining = 0;
@@ -577,19 +603,22 @@ function boostStats(
     }
   }
 
+  const largeMod = largeStatMods[statHash];
+  const minorMod = minorStatMods[statHash];
+
   while (
     value < maxStat &&
     energyRemaining[maxRemainingEnergyIndex] > 0 &&
-    statModSlotsAvailable - statModsUsed > 0
+    generalModsAvailable - statMods.length > 0
   ) {
-    if (maxStat - value <= 5 || energyRemaining[maxRemainingEnergyIndex] < 3) {
-      statModsUsed++;
+    if (maxStat - value <= 5 || energyRemaining[maxRemainingEnergyIndex] < largeMod.cost) {
       value += 5;
-      energyRemaining[maxRemainingEnergyIndex] -= 1;
+      energyRemaining[maxRemainingEnergyIndex] -= minorMod.cost;
+      statMods.push(minorMod.hash);
     } else {
-      statModsUsed++;
       value += 10;
-      energyRemaining[maxRemainingEnergyIndex] -= 3;
+      energyRemaining[maxRemainingEnergyIndex] -= largeMod.cost;
+      statMods.push(largeMod.hash);
     }
 
     let maxRemaining = 0;
@@ -601,5 +630,5 @@ function boostStats(
       }
     }
   }
-  return [statModsUsed, value];
+  return value;
 }

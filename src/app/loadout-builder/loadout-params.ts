@@ -19,6 +19,7 @@ export function buildLoadoutParams(
   searchQuery: string,
   statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
   statOrder: number[],
+  maxStatMods: number,
   exoticArmorHash?: number
 ): LoadoutParameters {
   const params: LoadoutParameters = {
@@ -42,6 +43,7 @@ export function buildLoadoutParams(
     ),
     lockItemEnergyType,
     upgradeSpendTier,
+    maxStatMods,
   };
 
   if (lockedMods) {

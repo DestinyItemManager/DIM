@@ -32,8 +32,8 @@ export interface ProcessArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
-  /** How many stat mods were added? */
-  readonly totalStatModsUsed: number;
+  /** Which stat mods were added? */
+  readonly statMods: number[];
 }
 
 export interface IntermediateProcessArmorSet {
@@ -41,8 +41,8 @@ export interface IntermediateProcessArmorSet {
   stats: ArmorStats;
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** How many stat mods were added? */
-  totalStatModsUsed: number;
+  /** Which stat mods were added? */
+  statMods: number[];
 }
 
 interface ProcessStat {

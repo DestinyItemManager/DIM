@@ -31,8 +31,8 @@ export interface ArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
-  /** How many stat mods were added? */
-  readonly totalStatModsUsed: number;
+  /** Which stat mods were added? */
+  readonly statMods: number[];
 }
 
 export type ItemsByBucket = Readonly<{
