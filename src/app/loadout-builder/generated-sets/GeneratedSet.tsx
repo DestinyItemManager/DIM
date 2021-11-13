@@ -105,6 +105,7 @@ function GeneratedSet({
             existingLoadoutName={existingLoadout?.name}
             characterClass={selectedStore.classType}
           />
+          <div>{set.totalStatModsUsed} mods used</div>
         </div>
         <div className={styles.items}>
           {displayedItems.map((item, i) => (

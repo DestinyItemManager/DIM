@@ -36,6 +36,7 @@ export class SetTracker {
   /**
    * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
    */
+  // TODO: rewrite this to just use comparators!
   insert(tier: number, statMix: string, armorSet: IntermediateProcessArmorSet) {
     if (this.tiers.length === 0) {
       this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
@@ -43,6 +44,7 @@ export class SetTracker {
       outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
         const currentTier = this.tiers[tierIndex];
 
+        // This set has better overall tier, insert
         if (tier > currentTier.tier) {
           this.tiers.splice(tierIndex, 0, {
             tier,
@@ -51,17 +53,20 @@ export class SetTracker {
           break outer;
         }
 
+        // Same tier, insert this armor mix into the list at the right order
         if (tier === currentTier.tier) {
           const currentStatMixes = currentTier.statMixes;
 
           for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
             const currentStatMix = currentStatMixes[statMixIndex];
 
+            // Better mix, insert here
             if (statMix > currentStatMix.statMix) {
               currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
               break outer;
             }
 
+            // Same mix, pick the one that uses fewest stat mods
             if (currentStatMix.statMix === statMix) {
               const armorSetPower = getPower(armorSet.armor);
               for (
@@ -69,7 +74,20 @@ export class SetTracker {
                 armorSetIndex < currentStatMix.armorSets.length;
                 armorSetIndex++
               ) {
-                if (armorSetPower > getPower(currentStatMix.armorSets[armorSetIndex].armor)) {
+                // Uses fewer mods, place ahead
+                if (
+                  armorSet.totalStatModsUsed <
+                  currentStatMix.armorSets[armorSetIndex].totalStatModsUsed
+                ) {
+                  currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
+                  break outer;
+                }
+                // Same mix, same number of stat mods, place ahead if it has higher power
+                if (
+                  armorSet.totalStatModsUsed ===
+                    currentStatMix.armorSets[armorSetIndex].totalStatModsUsed &&
+                  armorSetPower > getPower(currentStatMix.armorSets[armorSetIndex].armor)
+                ) {
                   currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
                   break outer;
                 }

@@ -4,7 +4,14 @@ import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
+import {
+  ArmorStatHashes,
+  ArmorStats,
+  LockableBucketHashes,
+  LockableBuckets,
+  StatFilters,
+  StatRanges,
+} from '../types';
 import { statTier } from '../utils';
 import {
   canTakeSlotIndependentMods,
@@ -109,6 +116,7 @@ export function process(
   lockedModMap: LockedProcessMods,
   /** The user's chosen stat order, including disabled stats */
   statOrder: ArmorStatHashes[],
+  // TODO: express stat filter min/max in absolute values!
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
@@ -121,6 +129,14 @@ export function process(
   statRangesFiltered?: StatRanges;
 } {
   const pstart = performance.now();
+
+  // How many stat mods may we add in order to reach the desired max stat?
+  const maxStatMods = 5;
+
+  // How many "general" mod slots do we have open to apply generic stat mods?
+  const generalModsAvailable =
+    LockableBucketHashes.length -
+    (lockedModMap[armor2PlugCategoryHashesByName.general]?.length || 0);
 
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
@@ -140,6 +156,8 @@ export function process(
 
   const statsCache: Map<ProcessItem, number[]> = new Map();
 
+  // TODO: favor already masterworked, more modslots, etc
+  // TODO: incorporate mod choices
   const comparatorsByBucket: { [bucketHash: number]: Comparator<ProcessItem> } = {};
 
   // Precompute the stats of each item in the order the user asked for
@@ -153,13 +171,7 @@ export function process(
     statsCache.set(item, getStatValuesWithMW(item, statOrder));
   }
 
-  for (const bucket of [
-    LockableBuckets.helmet,
-    LockableBuckets.gauntlets,
-    LockableBuckets.chest,
-    LockableBuckets.leg,
-    LockableBuckets.classitem,
-  ]) {
+  for (const bucket of LockableBucketHashes) {
     const items = filteredItems[bucket];
     comparatorsByBucket[bucket] = compareByStatOrder(
       items,
@@ -200,6 +212,14 @@ export function process(
     helms.length + gaunts.length + chests.length + legs.length + classItems.length;
 
   let combos = combosWithoutCaps;
+
+  console.log({
+    helms: helms.length,
+    gaunts: gaunts.length,
+    chests: chests.length,
+    legs: legs.length,
+    classItems: classItems.length,
+  });
 
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
@@ -275,6 +295,8 @@ export function process(
   let numNoExotic = 0;
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
+  // TODO: can we fan these out to multiple workers and re-join them?
+  // TODO: can we prune early based on stat combos or mods?
 
   let numProcessed = 0;
   let elapsedSeconds = 0;
@@ -331,6 +353,8 @@ export function process(
               144602215: modStatTotals[144602215], // Stat "Intellect"
               4244567218: modStatTotals[4244567218], // Stat "Strength"
             };
+            const energyRemaining = [0, 0, 0, 0, 0];
+            let armorIndex = 0;
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
               let index = 0;
@@ -345,27 +369,54 @@ export function process(
                 }
                 index++;
               }
+              energyRemaining[armorIndex] = item.energy
+                ? item.energy.capacity - item.energy.val
+                : 0;
+              armorIndex++;
             }
 
+            // Check stat tiers
             let totalTier = 0;
             let statRangeExceeded = false;
+            let statModSlotsAvailable = Math.min(maxStatMods, generalModsAvailable);
+            let totalStatModsUsed = 0;
             for (const statHash of statOrder) {
-              const value = stats[statHash];
-              const tier = statTier(value);
-
-              // Update our global min/max for this stat
-              const range = statRanges[statHash];
-              if (value > range.max) {
-                range.max = value;
-              }
-              if (value < range.min) {
-                range.min = value;
-              }
+              let value = stats[statHash];
+              let tier = statTier(value);
 
               const filter = statFilters[statHash];
               if (!filter.ignored) {
-                if (tier > filter.max || tier < filter.min) {
+                if (tier > filter.max) {
                   statRangeExceeded = true;
+                } else {
+                  // Automatically add stat mods to taste
+                  if (statModSlotsAvailable > 0) {
+                    const [statModsUsed, newValue] = boostStats(
+                      statModSlotsAvailable,
+                      value,
+                      filter.max,
+                      energyRemaining
+                    );
+                    statModSlotsAvailable -= statModsUsed;
+                    totalStatModsUsed += statModsUsed;
+                    value = newValue;
+                    stats[statHash] = value;
+                  }
+
+                  tier = statTier(value);
+
+                  if (tier < filter.min) {
+                    statRangeExceeded = true;
+                  }
+                }
+
+                // Update our global min/max for this stat
+                const range = statRanges[statHash];
+                if (value > range.max) {
+                  range.max = value;
+                }
+                if (value < range.min) {
+                  range.min = value;
                 }
                 totalTier += tier;
               }
@@ -399,6 +450,7 @@ export function process(
             const newArmorSet: IntermediateProcessArmorSet = {
               armor,
               stats,
+              totalStatModsUsed,
             };
 
             // Calculate the "tiers string" here, since most sets don't make it this far
@@ -501,4 +553,53 @@ function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
     ...set,
     armor: set.armor.map((item) => item.id),
   }));
+}
+
+/**
+ * Assign general stat mods in order to bring the stat value up to the desired max tier.
+ */
+// TODO: maybe post-processing add in the actual stat mods??
+function boostStats(
+  statModSlotsAvailable: number,
+  value: number,
+  maxTier: number,
+  energyRemaining: number[] // indexed by armor slot, modified in this function
+): [statModsUsed: number, newValue: number] {
+  let statModsUsed = 0;
+  const maxStat = maxTier * 10;
+  let maxRemainingEnergyIndex = 0;
+  let maxRemaining = 0;
+  for (let i = 0; i < 5; i++) {
+    const remaining = energyRemaining[i];
+    if (remaining > maxRemaining) {
+      maxRemainingEnergyIndex = i;
+      maxRemaining = remaining;
+    }
+  }
+
+  while (
+    value < maxStat &&
+    energyRemaining[maxRemainingEnergyIndex] > 0 &&
+    statModSlotsAvailable - statModsUsed > 0
+  ) {
+    if (maxStat - value <= 5 || energyRemaining[maxRemainingEnergyIndex] < 3) {
+      statModsUsed++;
+      value += 5;
+      energyRemaining[maxRemainingEnergyIndex] -= 1;
+    } else {
+      statModsUsed++;
+      value += 10;
+      energyRemaining[maxRemainingEnergyIndex] -= 3;
+    }
+
+    let maxRemaining = 0;
+    for (let i = 0; i < 5; i++) {
+      const remaining = energyRemaining[i];
+      if (remaining > maxRemaining) {
+        maxRemainingEnergyIndex = i;
+        maxRemaining = remaining;
+      }
+    }
+  }
+  return [statModsUsed, value];
 }

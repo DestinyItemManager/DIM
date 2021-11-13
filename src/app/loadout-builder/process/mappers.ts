@@ -179,5 +179,7 @@ export function hydrateArmorSet(
   return {
     armor,
     stats: processed.stats,
+
+    totalStatModsUsed: processed.totalStatModsUsed,
   };
 }

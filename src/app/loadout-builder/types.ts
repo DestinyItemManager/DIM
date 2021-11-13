@@ -31,6 +31,8 @@ export interface ArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
+  /** How many stat mods were added? */
+  readonly totalStatModsUsed: number;
 }
 
 export type ItemsByBucket = Readonly<{
@@ -40,7 +42,14 @@ export type ItemsByBucket = Readonly<{
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = armorBuckets;
+export const LockableBuckets = armorBuckets as {
+  helmet: LockableBucketHash;
+  gauntlets: LockableBucketHash;
+  chest: LockableBucketHash;
+  leg: LockableBucketHash;
+  classitem: LockableBucketHash;
+};
+
 export type LockableBucketHash =
   | BucketHashes.Helmet
   | BucketHashes.Gauntlets
@@ -48,7 +57,7 @@ export type LockableBucketHash =
   | BucketHashes.LegArmor
   | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets) as LockableBucketHash[];
+export const LockableBucketHashes = Object.values(LockableBuckets);
 
 export type ArmorStatHashes =
   | StatHashes.Mobility
