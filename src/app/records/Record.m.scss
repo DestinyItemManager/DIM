@@ -114,16 +114,6 @@
   }
 }
 
-.legacyRecord {
-  cursor: help;
-  position: absolute;
-  display: block;
-  width: calc((var(--item-size) + 1px) / 2) !important;
-  height: calc((var(--item-size) + 1px) / 2) !important;
-  top: 0;
-  left: 0;
-}
-
 .trackedIcon {
   position: absolute;
   display: block;

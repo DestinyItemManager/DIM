@@ -10,7 +10,6 @@ interface CssExports {
   'intervalContainer': string;
   'intervalRedeemed': string;
   'intervalUnlocked': string;
-  'legacyRecord': string;
   'multistep': string;
   'objectives': string;
   'obscured': string;
