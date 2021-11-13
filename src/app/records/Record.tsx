@@ -1,6 +1,5 @@
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
-import PressTip from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -17,9 +16,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
-import legacyTriumphHashes from 'data/d2/legacy-triumphs.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
-import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import _ from 'lodash';
 import React from 'react';
@@ -170,8 +167,6 @@ export default function Record({
     dispatch(trackTriumph({ recordHash, tracked: !trackedInDim }));
   };
 
-  const legacy = legacyTriumphHashes.includes(recordHash);
-
   return (
     <div
       className={clsx(styles.triumphRecord, {
@@ -219,11 +214,6 @@ export default function Record({
         )}
       </div>
       {intervalProgressBar}
-      {legacy && (
-        <PressTip tooltip={t('Progress.LegacyRecord')} className={styles.legacyRecord}>
-          <img src={pursuitExpired} />
-        </PressTip>
-      )}
     </div>
   );
 }
