@@ -1,12 +1,11 @@
 import { t } from 'app/i18next-t';
-import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
+import { SocketOverridesForItems } from 'app/inventory/store/override-sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useMemo } from 'react';
 import type {
   DimBucketType,
   InventoryBucket,
@@ -19,8 +18,7 @@ import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
-import SavedSubclass from './SavedSubclass';
-import SubclassDrawer from './subclass-drawer/SubclassDrawer';
+import ItemSocketsSubclass from './subclass-drawer/ItemSocketsSubclass';
 
 const loadoutTypes: DimBucketType[] = [
   'Primary',
@@ -94,14 +92,7 @@ export default function LoadoutDrawerContents(
     removeModByHash(itemHash: number): void;
   }
 ) {
-  const enableSubclassDrawer =
-    stores.some((store) => store.destinyVersion === 2) && $featureFlags.loadoutSubclasses;
-  if (!enableSubclassDrawer) {
-    loadoutTypes.unshift('Class');
-  }
-
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
-  const [openSubclassDrawer, setOpenSubclassDrawer] = useState(false);
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -112,13 +103,6 @@ export default function LoadoutDrawerContents(
     fillLoadoutFromUnequipped(loadout, stores, add);
   }
 
-  const onSubclassesUpdated = (updated: { item: DimItem; socketOverrides: SocketOverrides }[]) => {
-    for (const { item } of updated) {
-      // TODO (ryan) update socketOverrides for items
-      add(item);
-    }
-  };
-
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
 
   const [typesWithItems, typesWithoutItems] = _.partition(
@@ -128,7 +112,7 @@ export default function LoadoutDrawerContents(
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
 
-  const { subclassSocketOverrides, subclassBucket, subclassItems } = useMemo(() => {
+  const { subclassItems, subclassSocketOverrides } = useMemo(() => {
     const subclassSocketOverrides: SocketOverridesForItems = {};
     const subclassBucket = buckets.byType.Class;
     const subclassItems: DimItem[] =
@@ -145,11 +129,6 @@ export default function LoadoutDrawerContents(
   return (
     <>
       <div className="loadout-add-types">
-        {enableSubclassDrawer && (
-          <a onClick={() => setOpenSubclassDrawer(true)} className="dim-button loadout-add">
-            <AppIcon icon={addIcon} /> {subclassBucket.name}
-          </a>
-        )}
         {showFillFromEquipped && (
           <a className="dim-button loadout-add" onClick={doFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
@@ -188,10 +167,13 @@ export default function LoadoutDrawerContents(
       </div>
       {subclassItems.length > 0 &&
         subclassItems.map((subclass) => (
-          <SavedSubclass
-            key={subclass.id}
+          <ItemSocketsSubclass
+            key={subclass.hash}
             subclass={subclass}
-            openSubclassDrawer={() => setOpenSubclassDrawer(true)}
+            socketOverrides={subclassSocketOverrides[subclass.id]}
+            updateSocketOverrides={() => {
+              //TODO implement this
+            }}
           />
         ))}
       <SavedMods
@@ -199,17 +181,6 @@ export default function LoadoutDrawerContents(
         onOpenModPicker={onOpenModPicker}
         removeModByHash={removeModByHash}
       />
-      {openSubclassDrawer &&
-        ReactDOM.createPortal(
-          <SubclassDrawer
-            classType={loadout.classType}
-            loadoutSubclasses={subclassItems}
-            initialSocketOverrides={subclassSocketOverrides}
-            onAccept={onSubclassesUpdated}
-            onClose={() => setOpenSubclassDrawer(false)}
-          />,
-          document.body
-        )}
     </>
   );
 }

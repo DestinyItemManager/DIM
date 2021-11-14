@@ -45,19 +45,25 @@ export default function SelectablePlug({
         </div>
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-          {_.uniqBy(
-            plug.perks,
-            (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
-          ).map((perk) => (
-            <div key={perk.perkHash}>
-              <RichDestinyText
-                text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
-              />
-              {perk.requirementDisplayString && (
-                <div className={styles.requirement}>{perk.requirementDisplayString}</div>
-              )}
+          {plug.displayProperties.description ? (
+            <div>
+              <RichDestinyText text={plug.displayProperties.description} />
             </div>
-          ))}
+          ) : (
+            _.uniqBy(
+              plug.perks,
+              (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
+            ).map((perk) => (
+              <div key={perk.perkHash}>
+                <RichDestinyText
+                  text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
+                />
+                {perk.requirementDisplayString && (
+                  <div className={styles.requirement}>{perk.requirementDisplayString}</div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </ClosableContainer>
