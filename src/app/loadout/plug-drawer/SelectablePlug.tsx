@@ -29,9 +29,7 @@ export default function SelectablePlug({
     selectable && onPlugSelected(plug);
   }, [onPlugSelected, plug, selectable]);
 
-  const onClose = useCallback(() => {
-    () => onPlugRemoved(plug);
-  }, [onPlugRemoved, plug]);
+  const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
 
   return (
     <ClosableContainer onClose={selected ? onClose : undefined}>
