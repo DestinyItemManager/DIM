@@ -16,7 +16,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 // Hacky way to get the subclass abilities and fragments in roughly the right order.
-// Works because aspects and fragments have the most plugs
+// Works because aspects and fragments have the most plugs.
+// TODO (ryan) sort by socket index
 const sortPlugGroups = compareBy((group: PluggableInventoryItemDefinition[]) => group.length);
 
 export default function AspectAndFragmentDrawer({

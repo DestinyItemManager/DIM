@@ -1,0 +1,12 @@
+@import '../../dim-ui/common.m.scss';
+
+.container {
+  composes: flexRow;
+  align-items: flex-end;
+
+  > * {
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
+}

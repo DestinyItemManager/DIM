@@ -18,9 +18,10 @@ import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
-import ItemSocketsSubclass from './subclass-drawer/ItemSocketsSubclass';
+import { Subclass } from './subclass-drawer/Subclass';
 
 const loadoutTypes: DimBucketType[] = [
+  'Class',
   'Primary',
   'Special',
   'Heavy',
@@ -153,24 +154,28 @@ export default function LoadoutDrawerContents(
         </a>
       </div>
       <div className="loadout-added-items">
-        {typesWithItems.map((bucket) => (
-          <LoadoutDrawerBucket
-            key={bucket.type}
-            bucket={bucket}
-            loadoutItems={loadout.items}
-            items={itemsByBucket[bucket.hash] || []}
-            pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add)}
-            equip={equip}
-            remove={remove}
-          />
-        ))}
+        {typesWithItems.map((bucket) =>
+          $featureFlags.loadoutSubclasses && bucket.type === 'Class' ? null : (
+            <LoadoutDrawerBucket
+              key={bucket.type}
+              bucket={bucket}
+              loadoutItems={loadout.items}
+              items={itemsByBucket[bucket.hash] || []}
+              pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add)}
+              equip={equip}
+              remove={remove}
+            />
+          )
+        )}
       </div>
       {subclassItems.length > 0 &&
         subclassItems.map((subclass) => (
-          <ItemSocketsSubclass
+          <Subclass
             key={subclass.hash}
             subclass={subclass}
             socketOverrides={subclassSocketOverrides[subclass.id]}
+            equip={equip}
+            remove={remove}
             updateSocketOverrides={() => {
               //TODO implement this
             }}
