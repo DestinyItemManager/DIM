@@ -230,6 +230,7 @@ const groupComparator = chainComparator(
 /**
  * This groups items for process so we can take the first item of the group for processing.
  * It can do any number of the following, note that armour upgrades will effect these
+ * - It will create groups split by stat distribution
  * - It will create groups split by masterwork status
  * - If there are energy requirements for slot independant mods it create groups split by energy type
  * - If there are activity mods it will create groups split by specialty socket tag
