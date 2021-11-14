@@ -247,12 +247,14 @@ export function getColorRamp(value: number, property = 'background-color') {
   if (value < 0) {
     return { [property]: 'white' };
   }
-  if (value <= 99) {
-    color = 120 * (value / 100);
+  if (value <= 50) {
+    color = 0;
+  } else if (value <= 99) {
+    color = 120 * ((value - 50) / 50);
   } else if (value >= 100) {
     color = 190;
   }
   return {
-    [property]: `hsla(${Math.round(color)},65%,50%, 1)`,
+    [property]: `hsla(${Math.round(color)},85%,50%, 1)`,
   };
 }
