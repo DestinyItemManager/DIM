@@ -35,6 +35,7 @@ export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: numb
     parameters: {
       mods: modsHashes?.length ? modsHashes : undefined,
     },
+    clearSpace: false,
   };
 }
 
