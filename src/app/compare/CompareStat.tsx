@@ -31,10 +31,9 @@ export default function CompareStat({
   return (
     <div onMouseOver={() => setHighlight?.(stat.id)} className={styles.stat} style={color}>
       {statValue && stat.bar && item.bucket.sort === 'Armor' && (
-        <span
-          className={styles.bar}
-          style={{ width: percent(statValue / stat.statMaximumValue) }}
-        />
+        <span className={styles.bar}>
+          <span style={{ width: percent(statValue / stat.statMaximumValue) }} />
+        </span>
       )}
       <span className={styles.value}>
         {stat.id === 'EnergyCapacity' && itemStat && item.energy && (

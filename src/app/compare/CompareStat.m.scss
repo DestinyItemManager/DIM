@@ -14,11 +14,17 @@
 }
 
 .bar {
-  background-color: rgba(255, 255, 255, 0.15);
   position: absolute;
   top: 10%;
   height: 80%;
+  width: calc(100% - 3ch);
   z-index: -1;
+  left: 3ch;
+  > span {
+    display: block;
+    background-color: rgba(255, 255, 255, 0.25);
+    height: 100%;
+  }
 }
 
 .value {
