@@ -1,4 +1,5 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import CheckButton from 'app/dim-ui/CheckButton';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -38,7 +39,7 @@ interface Props {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   lockedExoticHash: number | undefined;
-  maxStatMods: number;
+  autoStatMods: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -53,7 +54,7 @@ export default memo(function LockArmorAndPerks({
   upgradeSpendTier,
   lockItemEnergyType,
   lockedExoticHash,
-  maxStatMods,
+  autoStatMods,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -120,22 +121,15 @@ export default memo(function LockArmorAndPerks({
   );
   const modCounts: Record<number, number> = {};
 
-  const onMaxStatModsChanged = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    lbDispatch({ type: 'maxStatModsChanged', maxStatMods: parseInt(e.target.value, 10) });
+  const onMaxStatModsChanged = (autoStatMods: boolean) =>
+    lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
 
   return (
     <>
       <div className={styles.area}>
-        <select value={maxStatMods} onChange={onMaxStatModsChanged}>
-          <option value={0}>{t('LoadoutBuilder.MaxStatModsOptionNone')}</option>
-          {_.times(5, (n) => (
-            <option key={n + 1} value={n + 1}>
-              {t('LoadoutBuilder.MaxStatModsOption', {
-                count: n + 1,
-              })}
-            </option>
-          ))}
-        </select>
+        <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
+          {t('LoadoutBuilder.AutoStatMods')}
+        </CheckButton>
       </div>
       <div className={styles.area}>
         <SelectedArmorUpgrade

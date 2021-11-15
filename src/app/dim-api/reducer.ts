@@ -1210,6 +1210,7 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
     equipped,
     unequipped,
     parameters: dimLoadout.parameters,
+    autoStatMods: dimLoadout.autoStatMods,
   };
 }
 

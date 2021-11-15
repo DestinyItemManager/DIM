@@ -121,8 +121,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
-  /** The maximum number of stat mods to automatically add in to reach our desired stat max. */
-  maxStatMods: number,
+  /** Should we add stat mods to hit our stat targets. */
+  autoStatMods: boolean,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -135,7 +135,7 @@ export function process(
 
   // How many "general" mod slots do we have open to apply generic stat mods?
   const generalModsAvailable = Math.min(
-    maxStatMods,
+    autoStatMods ? 5 : 0,
     LockableBucketHashes.length -
       (lockedModMap[armor2PlugCategoryHashesByName.general]?.length || 0)
   );

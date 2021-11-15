@@ -32,7 +32,7 @@ export interface LoadoutBuilderState {
   lockedExoticHash?: number;
   selectedStoreId?: string;
   statFilters: Readonly<StatFilters>;
-  maxStatMods: number;
+  autoStatMods: boolean;
   modPicker: {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
@@ -111,8 +111,8 @@ const lbStateInit = ({
     loadoutParams.upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType
       ? UpgradeSpendTier.Nothing
       : loadoutParams.upgradeSpendTier!;
-  const lockedExoticHash = undefined; //loadoutParams.exoticArmorHash;
-  const maxStatMods = 5; //loadoutParams.maxStatMods;
+  const lockedExoticHash = loadoutParams.exoticArmorHash;
+  const autoStatMods = loadoutParams.autoStatMods!;
 
   return {
     lockItemEnergyType,
@@ -124,7 +124,7 @@ const lbStateInit = ({
     lockedMods,
     lockedExoticHash,
     selectedStoreId,
-    maxStatMods,
+    autoStatMods,
     modPicker: {
       open: false,
     },
@@ -140,7 +140,7 @@ export type LoadoutBuilderAction =
       lockItemEnergyType: LoadoutBuilderState['lockItemEnergyType'];
     }
   | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: LoadoutBuilderState['upgradeSpendTier'] }
-  | { type: 'maxStatModsChanged'; maxStatMods: number }
+  | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
@@ -262,10 +262,10 @@ function lbStateReducer(
         upgradeSpendTier: action.upgradeSpendTier,
       };
     }
-    case 'maxStatModsChanged': {
+    case 'autoStatModsChanged': {
       return {
         ...state,
-        maxStatMods: action.maxStatMods,
+        autoStatMods: action.autoStatMods,
       };
     }
     case 'addGeneralMods': {
