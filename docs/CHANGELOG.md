@@ -4,6 +4,7 @@
 
 * The link to D2Gunsmith from the Armory view is now shown on mobile.
 * Currency counts won't get squished anymore
+* Simplified item tiles in the Compare view since a lot of the tile info was redundant.
 
 ## 6.90.1 <span class="changelog-date">(2021-11-08)</span>
 
