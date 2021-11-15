@@ -228,8 +228,13 @@ const groupComparator = chainComparator(
 );
 
 /**
- * This groups items for process so we can take the first item of the group for processing.
- * It can do any number of the following, note that armour upgrades will effect these
+ * To reduce the number of items sent to the web worker we group items by a number of varying
+ * parameters, depending on what mods and armour upgrades are selected.
+ *
+ * After items have been grouped we only send a single item (the first one) as a representitive of
+ * said group. All other grouped items will be available by the swap icon in the UI.
+ *
+ * It can group by any number of the following concepts depending on locked mods and armor upgrades,
  * - It will create groups split by stat distribution
  * - It will create groups split by masterwork status
  * - If there are energy requirements for slot independant mods it create groups split by energy type
