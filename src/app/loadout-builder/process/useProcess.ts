@@ -235,9 +235,9 @@ const groupComparator = chainComparator(
  * said group. All other grouped items will be available by the swap icon in the UI.
  *
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
- * - It will create groups split by stat distribution
- * - It will create groups split by masterwork status
- * - If there are energy requirements for slot independant mods it create groups split by energy type
+ * - Stat distribution
+ * - Masterwork status
+ * - If there are energy requirements for slot independant mods it creates groups split by energy type
  * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
