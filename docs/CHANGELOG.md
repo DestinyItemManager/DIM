@@ -1,5 +1,7 @@
 ## Next
 
+* Fix issue in Loadout Optimizer where only one set would show when using Safari or iOS apps.
+
 ## 6.91.0 <span class="changelog-date">(2021-11-14)</span>
 
 * The link to D2Gunsmith from the Armory view is now shown on mobile.
