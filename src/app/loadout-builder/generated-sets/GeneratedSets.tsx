@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { Dispatch, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, useEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -39,9 +39,8 @@ function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
  * as well. Landscape ipad has two rows, desktop can be 1, 2, or 3 rows depending on browser
  * width.
  */
-function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number] {
+function getMeasureSet(sets: readonly ArmorSet[]) {
   // In phone portrait we have 2 columns and 3 rows of items.
-  let recalcTrigger = 0;
   const measureSet = _.maxBy(sets, (set) => {
     let countWithExoticPerkOrSwapIcon = 0;
     // So we look on those rows for items with the swap icon or an exotic perk.
@@ -51,14 +50,10 @@ function getMeasureSet(sets: readonly ArmorSet[]): [ArmorSet | undefined, number
       }
     }
 
-    if (countWithExoticPerkOrSwapIcon > recalcTrigger) {
-      recalcTrigger = countWithExoticPerkOrSwapIcon;
-    }
-
     return countWithExoticPerkOrSwapIcon;
   });
 
-  return [measureSet, recalcTrigger];
+  return measureSet;
 }
 
 interface Props {
@@ -94,17 +89,27 @@ export default function GeneratedSets({
   lockItemEnergyType,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
+  const measureSetRef = useRef<HTMLDivElement>(null);
   const [{ rowHeight, rowWidth }, setRowSize] = useState<{
     rowHeight: number;
     rowWidth: number;
   }>({ rowHeight: 0, rowWidth: 0 });
 
   // eslint-disable-next-line prefer-const
-  let [measureSet, recalcTrigger] = useMemo(() => getMeasureSet(sets), [sets]);
+  let measureSet = useMemo(() => getMeasureSet(sets), [sets]);
 
   useEffect(() => {
     setRowSize({ rowHeight: 0, rowWidth: 0 });
-  }, [recalcTrigger]);
+  }, [sets]);
+
+  useEffect(() => {
+    if (measureSetRef.current && !rowHeight) {
+      setRowSize({
+        rowHeight: measureSetRef.current.clientHeight,
+        rowWidth: measureSetRef.current.clientWidth,
+      });
+    }
+  }, [rowHeight]);
 
   useEffect(() => {
     const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
@@ -120,32 +125,11 @@ export default function GeneratedSets({
     windowScroller.current?.updatePosition();
   });
 
-  const setRowHeight = useCallback(
-    (element: HTMLDivElement | null) => {
-      if (element && !rowHeight) {
-        setTimeout(
-          () =>
-            setRowSize({
-              rowHeight: element.clientHeight,
-              rowWidth: element.clientWidth,
-            }),
-          0
-        );
-      }
-    },
-    [rowHeight]
-  );
-
-  // If we already have row height we dont want to render the measure set.
-  if (rowHeight !== 0) {
-    measureSet = undefined;
-  }
-
   return (
     <div className={styles.sets}>
-      {measureSet ? (
+      {measureSet && rowHeight === 0 ? (
         <GeneratedSet
-          ref={setRowHeight}
+          ref={measureSetRef}
           style={{}}
           set={measureSet}
           selectedStore={selectedStore}
