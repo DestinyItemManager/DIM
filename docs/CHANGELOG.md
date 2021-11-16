@@ -1,5 +1,7 @@
 ## Next
 
+## 6.91.2 <span class="changelog-date">(2021-11-16)</span>
+
 * Put back the full item tile in Compare.
 
 ## 6.91.1 <span class="changelog-date">(2021-11-16)</span>
