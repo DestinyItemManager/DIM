@@ -36,10 +36,11 @@ Here are some tips to make sure your pull request can be merged smoothly:
 
 ### Get your own API key:
 
-1. Goto [Bungie](https://www.bungie.net/en/Application)
+1. Go to [Bungie](https://www.bungie.net/en/Application)
 1. Click `Create New App`
-1. Enter any application name, and `https://github.com/YourGithubUsername/DIM`
-1. For `Oauth Client type` select `Confidential`
+1. Enter any application name
+1. Enter `https://github.com/YourGithubUsername/DIM` under website
+1. For `Oauth Client type`, select `Confidential`
 1. Set your redirect url to `https://localhost:8080/return.html` (or whatever the IP or hostname is of your dev server)
 1. Select all scopes _except_ the Administrate Groups/Clans
 1. Enter `https://localhost:8080` as the `Origin Header`
@@ -49,7 +50,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 * Run `yarn install`
 * Run `yarn start`
 
-*Note:* on Windows, when running `yarn install` the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
+*Note:* on Windows, when running `yarn install`, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 
 ### Enter API Credentials
 
@@ -64,8 +65,8 @@ if the app can't load them from local storage when it starts.
 **Overview**
 
 The `yarn start` step will create a hot-loading webserver, and a TLS cert/key pair. You will access your local development site by visiting https://localhost:8080.
-You will likely get a security warning about the certificate not being trusted. This is because it's a self-signed cert generated dynamically for your environment,
-and is not signed by a recognized authority. Dismass/advance past these warning to view your local DIM application.
+You will likely get a security warning about the certificate not being trusted. This is because it's a self-signed cert generated dynamically for your environment
+and is not signed by a recognized authority. Dismiss/advance past this warning to view your local DIM application.
 
 **Check code Style**
 
@@ -76,4 +77,4 @@ Check out the [docs]() folder for more tips.
 
 * We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the `config\i18n.json` file.
 
-* `yarn i18n` will add, sort, and prune `src/locale/dim.json`. You should never manually edit `src/locale/dim.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1') t('LoadoutBuilder.ObfuscatedKey1'). If you have any questions ping @delphiactual via GitHub, Slack, or Discord.
+* `yarn i18n` will add, sort, and prune `src/locale/dim.json`. You should never manually edit `src/locale/dim.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1')`. If you have any questions ping @delphiactual via GitHub, Slack, or Discord.
