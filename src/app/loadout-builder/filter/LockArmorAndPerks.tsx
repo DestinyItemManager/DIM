@@ -5,7 +5,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
+import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
@@ -140,10 +140,10 @@ export default memo(function LockArmorAndPerks({
         {Boolean(lockedMods.length) && (
           <div className={styles.itemGrid}>
             {lockedMods.map((mod) => (
-              <LockedModIcon
+              <PlugDef
                 key={getModRenderKey(mod, modCounts)}
-                mod={mod}
-                onModClicked={() => onModClicked(mod)}
+                plug={mod}
+                onClose={() => onModClicked(mod)}
               />
             ))}
           </div>

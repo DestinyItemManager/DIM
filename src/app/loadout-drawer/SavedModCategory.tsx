@@ -1,5 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
+import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import React from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedModCategory.m.scss';
@@ -43,10 +43,10 @@ function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
       </div>
       <div className={styles.mods}>
         {mods.map((mod) => (
-          <LockedModIcon
+          <PlugDef
             key={`${mod.hash}-${modCounts[mod.hash]--}`}
-            mod={mod}
-            onModClicked={() => onRemove(mod.hash)}
+            plug={mod}
+            onClose={() => onRemove(mod.hash)}
           />
         ))}
         <AddButton onClick={() => onOpenModPicker(firstMod.itemTypeDisplayName)} />
