@@ -3,7 +3,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import PressTip from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import _ from 'lodash';
@@ -19,17 +19,26 @@ interface Props {
 export default function PlugDef({ plug, onClick, onClose }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions();
+  const showTooltip = defs && !isPhonePortrait;
 
   const contents = (
     <div className={styles.emptyItem}>
-      <SocketDetailsMod itemDef={plug} onClick={onClick} />
+      <div
+        role="button"
+        className="item"
+        title={showTooltip ? undefined : plug.displayProperties.name}
+        onClick={onClick}
+        tabIndex={0}
+      >
+        <DefItemIcon itemDef={plug} />
+      </div>
     </div>
   );
 
   return (
     <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
       <div className={styles.emptyItem}>
-        {defs && !isPhonePortrait ? (
+        {showTooltip ? (
           <PressTip tooltip={<ToolTip plug={plug} defs={defs} />}>{contents}</PressTip>
         ) : (
           contents
@@ -60,7 +69,6 @@ function ToolTip({
           <RichDestinyText
             text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
           />
-          {perk.requirementDisplayString && <div>{perk.requirementDisplayString}</div>}
         </div>
       ))}
     </>
