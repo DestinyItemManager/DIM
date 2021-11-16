@@ -1,7 +1,6 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
-import ItemIcon from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector } from 'app/inventory/selectors';
@@ -12,6 +11,7 @@ import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
@@ -70,7 +70,7 @@ export default function CompareItem({
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
               <PressTip className={styles.itemAside} tooltip={itemNotes} allowClickThrough={true}>
-                <ItemIcon item={item} />
+                <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>
           )}
