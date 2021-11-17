@@ -231,7 +231,7 @@ const groupComparator = chainComparator(
  * To reduce the number of items sent to the web worker we group items by a number of varying
  * parameters, depending on what mods and armour upgrades are selected.
  *
- * After items have been grouped we only send a single item (the first one) as a representitive of
+ * After items have been grouped we only send a single item (the first one) as a representative of
  * said group. All other grouped items will be available by the swap icon in the UI.
  *
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
