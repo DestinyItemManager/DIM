@@ -8,7 +8,7 @@ import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
-import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
+import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
@@ -42,7 +42,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
-import { bucketsSelector, storesSelector } from './selectors';
+import { d2BucketsSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
@@ -135,7 +135,7 @@ export function loadStores(
       // TODO: throw here?
       await dispatch(getPlatforms());
       account = currentAccountSelector(getState());
-      if (!account) {
+      if (!account || account.destinyVersion !== 2) {
         return;
       }
     }
@@ -160,6 +160,11 @@ function loadStoresData(
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
+      // If we switched account since starting this, give up
+      if (account !== currentAccountSelector(getState())) {
+        return;
+      }
+
       const transaction = startTransaction({ name: 'loadStoresD2' });
       // set the transaction on the scope so it picks up any errors
       getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
@@ -174,13 +179,20 @@ function loadStoresData(
           dispatch(loadNewItems(account)),
           getStores(account, components),
         ]);
+
+        // If we switched account since starting this, give up
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
+
         const stopTimer = timer('Process inventory');
 
         if (!defs || !profileInfo) {
           return;
         }
 
-        const stores = await buildStores(dispatch, getState, defs, profileInfo, transaction);
+        const buckets = d2BucketsSelector(getState())!;
+        const stores = buildStores(defs, buckets, profileInfo, transaction);
 
         const currencies = processCurrencies(profileInfo, defs);
 
@@ -190,7 +202,15 @@ function loadStoresData(
           op: 'updateInventoryState',
         });
         const stopStateTimer = timer('Inventory state update');
+
+        // If we switched account since starting this, give up before saving
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
+
+        dispatch(cleanInfos(stores));
         dispatch(update({ stores, profileResponse: profileInfo, currencies }));
+
         stopStateTimer();
         stateSpan?.finish();
 
@@ -198,6 +218,11 @@ function loadStoresData(
       } catch (e) {
         errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);
+
+        // If we switched account since starting this, give up
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
 
         dispatch(handleAuthErrors(e));
 
@@ -221,15 +246,12 @@ function loadStoresData(
   };
 }
 
-export async function buildStores(
-  dispatch: DimThunkDispatch,
-  getState: () => RootState,
+export function buildStores(
   defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   profileInfo: DestinyProfileResponse,
   transaction?: Transaction
-): Promise<DimStore[]> {
-  const buckets = bucketsSelector(getState())!;
-
+): DimStore[] {
   // TODO: components may be hidden (privacy)
 
   if (
@@ -262,8 +284,6 @@ export async function buildStores(
   processSpan?.finish();
 
   const stores = [...characters, vault];
-
-  dispatch(cleanInfos(stores));
 
   const allItems = stores.flatMap((s) => s.items);
 

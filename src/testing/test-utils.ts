@@ -1,7 +1,7 @@
+import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
 import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
-import { RootState } from 'app/store/types';
 import { delay } from 'app/utils/util';
 import { DestinyManifest, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
@@ -75,18 +75,8 @@ export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
 
   const stores = buildStores(
-    _.noop,
-    () =>
-      ({
-        accounts: {
-          currentAccount: 0,
-          accounts: [testAccount],
-        },
-        manifest: {
-          d2Manifest: manifest,
-        },
-      } as unknown as RootState),
     manifest,
+    getBuckets(manifest),
     (profile as any).Response as DestinyProfileResponse
   );
   return stores;
