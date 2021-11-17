@@ -237,7 +237,7 @@ const groupComparator = chainComparator(
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
  * - Stat distribution
  * - Masterwork status
- * - If there are energy requirements for slot independant mods it creates groups split by energy type
+ * - If there are energy requirements for slot independent mods it creates groups split by energy type
  * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
