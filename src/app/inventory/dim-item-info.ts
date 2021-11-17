@@ -2,7 +2,6 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tl } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
-import { reportException } from 'app/utils/exceptions';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -135,7 +134,6 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
     // existing tags and notes and remove the ones that are still here, and the rest
     // should be cleaned up because they refer to deleted items.
     const cleanupIds = new Set(Object.keys(infos));
-    const initialSize = cleanupIds.size;
     for (const store of stores) {
       for (const item of store.items) {
         const info = infos[item.id];
@@ -145,20 +143,8 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
       }
     }
 
-    if (cleanupIds.size === initialSize) {
-      // We would be deleting all the notes here. While this could be legit, it's likely a bug.
-      reportException('tag-cleanup-wipe', new Error('Would have deleted all tags'), {
-        destinyVersion: stores[0].destinyVersion,
-      });
-      return;
-    }
-
     if (cleanupIds.size > 0) {
-      // In the past, bugs and race conditions have caused us to accidentally clean up too many
-      // IDs. While we strive to eliminate those bugs, one way to prevent total data loss is to
-      // rate limit how many we'll clean up at once, which helps if this edge case is only hit
-      // in certain circumstances. Of course, this also hides any bugs...
-      dispatch(tagCleanup(_.take(Array.from(cleanupIds), 10)));
+      dispatch(tagCleanup(Array.from(cleanupIds)));
     }
   };
 }

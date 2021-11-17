@@ -26,7 +26,6 @@ import { resetItemIndexGenerator } from './store/item-index';
 export function loadStores(): ThunkResult<D1Store[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
-      // TODO: check account here
       try {
         let account = currentAccountSelector(getState());
         if (!account) {

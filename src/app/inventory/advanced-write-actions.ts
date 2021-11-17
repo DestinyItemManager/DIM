@@ -19,7 +19,7 @@ import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/de
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
-import { bucketsSelector, currentStoreSelector } from './selectors';
+import { currentStoreSelector, d2BucketsSelector } from './selectors';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -77,7 +77,7 @@ function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse):
       awaItemChanged({
         changes,
         defs: d2ManifestSelector(getState())!,
-        buckets: bucketsSelector(getState())!,
+        buckets: d2BucketsSelector(getState())!,
       })
     );
   };
