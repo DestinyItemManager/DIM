@@ -103,6 +103,11 @@ export function updateCharacters(): ThunkResult {
       }));
     }
 
+    // If we switched account since starting this, give up
+    if (account !== currentAccountSelector(getState())) {
+      return;
+    }
+
     dispatch(charactersUpdated(characters));
   };
 }

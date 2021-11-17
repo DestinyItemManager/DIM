@@ -26,16 +26,16 @@ import { resetItemIndexGenerator } from './store/item-index';
 export function loadStores(): ThunkResult<D1Store[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
-      try {
-        let account = currentAccountSelector(getState());
-        if (!account) {
-          await dispatch(getPlatforms());
-          account = currentAccountSelector(getState());
-          if (!account || account.destinyVersion !== 1) {
-            return;
-          }
+      let account = currentAccountSelector(getState());
+      if (!account) {
+        await dispatch(getPlatforms());
+        account = currentAccountSelector(getState());
+        if (!account || account.destinyVersion !== 1) {
+          return;
         }
+      }
 
+      try {
         resetItemIndexGenerator();
 
         const [defs, , rawStores] = await Promise.all([
@@ -64,6 +64,11 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       } catch (e) {
         errorLog('d1-stores', 'Error loading stores', e);
         reportException('D1StoresService', e);
+
+        // If we switched account since starting this, give up
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
 
         dispatch(handleAuthErrors(e));
 

@@ -1,4 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
 import {
@@ -93,6 +94,10 @@ export function loadNewItems(account: DestinyAccount): ThunkResult {
     const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;
     const newItems = await get<Set<string> | undefined>(key);
     if (newItems) {
+      // If we switched account since starting this, give up
+      if (account !== currentAccountSelector(getState())) {
+        return;
+      }
       dispatch(setNewItems(newItems));
     }
   };
