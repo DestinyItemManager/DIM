@@ -30,18 +30,22 @@ function EnergySwap({
   const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
 
   const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const modEnergyHash = assignedMods?.find(
+  const modEnergyHashNotAny = assignedMods?.find(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyTypeHash;
-  const modEnergy = (modEnergyHash && defs.EnergyType.get(modEnergyHash)) || null;
+  const modEnergy = (modEnergyHashNotAny && defs.EnergyType.get(modEnergyHashNotAny)) || null;
 
+  // The armor energy type and capacity needed for the mods
   const resultingEnergy = modEnergy ?? armorEnergy;
   let resultingEnergyCapacity = armorEnergyCapacity;
 
-  if (modEnergyHash === armorEnergy.hash) {
-    resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
-  } else if (modEnergy) {
+  // If there is a mod energy type and it's different to the armor energy type
+  // we always use the mod cost as we are swapping energy types on the armor
+  if (modEnergyHashNotAny && modEnergyHashNotAny !== armorEnergy.hash) {
     resultingEnergyCapacity = modCost;
+  } else {
+    // Otherwise we just take the max of armor capacity and mod cost
+    resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
   }
 
   const noEnergyChange =
