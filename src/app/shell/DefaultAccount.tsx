@@ -7,7 +7,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import ErrorPanel from './ErrorPanel';
 
 /**
@@ -30,7 +30,7 @@ export default function DefaultAccount() {
     <div className="dim-page">
       {accountsLoaded ? (
         activeAccount ? (
-          <Redirect to={accountRoute(activeAccount)} />
+          <Navigate to={accountRoute(activeAccount)} />
         ) : (
           <ErrorPanel
             error={accountsError}

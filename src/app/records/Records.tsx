@@ -17,7 +17,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -79,9 +79,10 @@ function Records({
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
   const setSetting = useSetSetting();
-  const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
-  const presentationNodeHash = presentationNodeHashStr
-    ? parseInt(presentationNodeHashStr, 10)
+  const [searchParams] = useSearchParams();
+
+  const presentationNodeHash = searchParams.has('presentationNodeHash')
+    ? parseInt(searchParams.get('presentationNodeHash')!, 10)
     : undefined;
 
   const defs = useD2Definitions();

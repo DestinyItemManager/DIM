@@ -62,9 +62,7 @@ export const compareOrganizerLinkSelector = createSelector(
     if (!session || !account || !organizerTypes.includes(session.itemCategoryHashes[0])) {
       return undefined;
     }
-    return `/${account.membershipId}/d${
-      account.destinyVersion
-    }/organizer?category=${session.itemCategoryHashes.join('~')}&search=${encodeURIComponent(
+    return `organizer?category=${session.itemCategoryHashes.join('~')}&search=${encodeURIComponent(
       session.query
     )}`;
   }

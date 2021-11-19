@@ -9,7 +9,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import ItemTable from './ItemTable';
 import ItemTypeSelector, { getSelectionTree, ItemCategoryTreeNode } from './ItemTypeSelector';
 import styles from './Organizer.m.scss';
@@ -55,7 +55,7 @@ export default function Organizer({ account }: Props) {
   const searchQuery = useSelector(querySelector);
   useLoadStores(account);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedItemCategoryHashes = [
@@ -65,16 +65,20 @@ export default function Organizer({ account }: Props) {
   const types = getSelectionTree(account.destinyVersion);
   const selection = drillToSelection(types, selectedItemCategoryHashes);
 
+  // TODO: useSearchParams?
   // On the first render, apply the search from the query params if possible. Otherwise,
   // update the query params with the current search.
   const firstRender = useRef(true);
   useEffect(() => {
     if (!firstRender.current) {
       searchQuery ? params.set('search', searchQuery) : params.delete('search');
-      history.replace({
-        ...location,
-        search: params.toString(),
-      });
+      navigate(
+        {
+          ...location,
+          search: params.toString(),
+        },
+        { replace: true }
+      );
     } else if (params.has('search') && searchQuery !== params.get('search')) {
       dispatch(setSearchQuery(params.get('search')!));
     }
@@ -92,10 +96,13 @@ export default function Organizer({ account }: Props) {
         .map((s) => s.itemCategoryHash)
         .join('~')
     );
-    history.replace({
-      ...location,
-      search: params.toString(),
-    });
+    navigate(
+      {
+        ...location,
+        search: params.toString(),
+      },
+      { replace: true }
+    );
   };
 
   if (isPhonePortrait) {

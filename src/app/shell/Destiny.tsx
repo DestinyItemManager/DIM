@@ -18,7 +18,7 @@ import { RootState } from 'app/store/types';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -71,9 +71,8 @@ const Loadouts = React.lazy(
  */
 export default function Destiny() {
   const dispatch = useThunkDispatch();
-  const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } =
-    useParams<{ destinyVersion: string; membershipId: string }>();
-  const destinyVersion = parseInt(destinyVersionString, 10) as DestinyVersion;
+  const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } = useParams();
+  const destinyVersion = parseInt(destinyVersionString || '2', 10) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const account = useSelector((state: RootState) =>
     accountsSelector(state).find(
@@ -103,7 +102,6 @@ export default function Destiny() {
   }, [dispatch, isD2]);
 
   const { pathname, search } = useLocation();
-  const { path, url } = useRouteMatch();
 
   // Define some hotkeys without implementation, so they show up in the help
   const hotkeys: Hotkey[] = [
@@ -168,7 +166,7 @@ export default function Destiny() {
 
   if (!account) {
     if (pathname.includes('/armory/')) {
-      return <Redirect to={pathname.replace(/\/\d+\/d2/, '') + search} />;
+      return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} />;
     } else {
       return accountsLoaded ? (
         <div className="dim-page">
@@ -205,80 +203,52 @@ export default function Destiny() {
   return (
     <>
       <div className={styles.content}>
-        <Switch>
-          <Route path={`${path}/inventory`} exact>
-            <Inventory account={account} />
-          </Route>
+        <Routes>
+          <Route path="inventory" element={<Inventory account={account} />} />
           {account.destinyVersion === 2 && (
-            <Route path={`${path}/progress`} exact>
-              <Progress account={account} />
-            </Route>
+            <Route path="progress" element={<Progress account={account} />} />
           )}
           {account.destinyVersion === 2 && (
-            <Route path={`${path}/records`} exact>
-              <Records account={account} />
-            </Route>
+            <Route path="records" element={<Records account={account} />} />
           )}
-          <Route path={`${path}/optimizer`} exact>
-            {account.destinyVersion === 2 ? (
-              <LoadoutBuilderContainer account={account} />
-            ) : (
-              <D1LoadoutBuilder />
-            )}
-          </Route>
+          <Route
+            path="optimizer"
+            element={
+              account.destinyVersion === 2 ? (
+                <LoadoutBuilderContainer account={account} />
+              ) : (
+                <D1LoadoutBuilder />
+              )
+            }
+          />
           {$featureFlags.loadoutsPage && account.destinyVersion === 2 && (
-            <Route path={`${path}/loadouts`} exact>
-              <Loadouts account={account} />
-            </Route>
+            <Route path="loadouts" element={<Loadouts account={account} />} />
           )}
-          <Route path={`${path}/organizer`} exact>
-            <Organizer account={account} />
-          </Route>
+          <Route path="organizer" element={<Organizer account={account} />} />
           {account.destinyVersion === 2 && (
-            <Route
-              path={`${path}/vendors/:vendorId`}
-              exact
-              render={({ match }) => (
-                <SingleVendor
-                  key={match.params.vendorId}
-                  account={account}
-                  vendorHash={parseInt(match.params.vendorId!, 10)}
-                />
-              )}
-            />
+            <Route path="vendors/:vendorId" element={<SingleVendor account={account} />} />
           )}
-          <Route path={`${path}/vendors`} exact>
-            {account.destinyVersion === 2 ? (
-              <Vendors account={account} />
-            ) : (
-              <D1Vendors account={account} />
-            )}
-          </Route>
+          <Route
+            path="vendors"
+            element={
+              account.destinyVersion === 2 ? (
+                <Vendors account={account} />
+              ) : (
+                <D1Vendors account={account} />
+              )
+            }
+          />
           {account.destinyVersion === 2 && (
-            <Route
-              path={`${path}/armory/:itemHash`}
-              exact
-              render={({ match }) => (
-                <ArmoryPage
-                  key={match.params.itemHash}
-                  account={account}
-                  itemHash={parseInt(match.params.itemHash!, 10)}
-                />
-              )}
-            />
+            <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
           )}
           {account.destinyVersion === 1 && (
-            <Route path={`${path}/record-books`} exact>
-              <RecordBooks account={account} />
-            </Route>
+            <Route path="record-books" element={<RecordBooks account={account} />} />
           )}
           {account.destinyVersion === 1 && (
-            <Route path={`${path}/activities`} exact>
-              <Activities account={account} />
-            </Route>
+            <Route path="activities" element={<Activities account={account} />} />
           )}
-          <Route render={() => <Redirect to={`${url}/inventory`} />} />
-        </Switch>
+          <Route path="*" element={<Navigate to="inventory" />} />
+        </Routes>
       </div>
       <LoadoutDrawer />
       <Compare />
