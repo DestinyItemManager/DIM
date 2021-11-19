@@ -13,7 +13,7 @@ import { reportException } from '../utils/exceptions';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
-import { bucketsSelector, storesSelector } from './selectors';
+import { d1BucketsSelector, storesSelector } from './selectors';
 import { D1Store } from './store-types';
 import { processItems } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
@@ -26,15 +26,16 @@ import { resetItemIndexGenerator } from './store/item-index';
 export function loadStores(): ThunkResult<D1Store[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
-      try {
-        let account = currentAccountSelector(getState());
-        if (!account) {
-          await dispatch(getPlatforms());
-          account = currentAccountSelector(getState());
-          if (!account) {
-            return;
-          }
+      let account = currentAccountSelector(getState());
+      if (!account) {
+        await dispatch(getPlatforms());
+        account = currentAccountSelector(getState());
+        if (!account || account.destinyVersion !== 1) {
+          return;
         }
+      }
+
+      try {
         resetItemIndexGenerator();
 
         const [defs, , rawStores] = await Promise.all([
@@ -42,23 +43,32 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
           dispatch(loadNewItems(account)),
           getStores(account),
         ]);
+
         const lastPlayedDate = findLastPlayedDate(rawStores);
-        const buckets = bucketsSelector(getState())!;
+        const buckets = d1BucketsSelector(getState())!;
 
-        const stores = await Promise.all(
-          _.compact(rawStores.map((raw) => processStore(raw, defs, buckets, lastPlayedDate)))
+        const stores = _.compact(
+          rawStores.map((raw) => processStore(raw, defs, buckets, lastPlayedDate))
         );
-
-        dispatch(cleanInfos(stores));
-
         const currencies = processCurrencies(rawStores, defs);
 
+        // If we switched account since starting this, give up
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
+
+        dispatch(cleanInfos(stores));
         dispatch(update({ stores, currencies }));
 
         return stores;
       } catch (e) {
         errorLog('d1-stores', 'Error loading stores', e);
         reportException('D1StoresService', e);
+
+        // If we switched account since starting this, give up
+        if (account !== currentAccountSelector(getState())) {
+          return;
+        }
 
         dispatch(handleAuthErrors(e));
 
@@ -136,11 +146,10 @@ function processStore(
     rawItems = result.items;
   }
 
-  return processItems(store, rawItems, defs, buckets).then((items) => {
-    store.items = items;
-    store.hadErrors = rawItems.length !== items.length;
-    return store;
-  });
+  const items = processItems(store, rawItems, defs, buckets);
+  store.items = items;
+  store.hadErrors = rawItems.length !== items.length;
+  return store;
 }
 
 /**

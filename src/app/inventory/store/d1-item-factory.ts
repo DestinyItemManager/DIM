@@ -30,12 +30,12 @@ const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 
  * @param items a list of "raw" items from the Destiny API
  * @return a promise for the list of items
  */
-export async function processItems(
+export function processItems(
   owner: D1Store,
   items: any[],
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets
-): Promise<D1Item[]> {
+): D1Item[] {
   const result: D1Item[] = [];
   for (const item of items) {
     let createdItem: D1Item | null = null;

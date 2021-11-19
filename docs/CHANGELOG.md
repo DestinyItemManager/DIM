@@ -1,6 +1,7 @@
 ## Next
 
 * Show bars next to armor stats in Compare.
+* At long last, found and fixed a bug that could lead to tags and notes getting wiped if you switched accounts while another account's data was loading. Many apologies to anyone who lost their tags and notes from this bug, and we hope it's gone for good.
 
 ### Beta Only
 
