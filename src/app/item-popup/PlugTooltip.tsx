@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -7,6 +8,11 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import {
+  DestinyInventoryItemDefinition,
+  DestinyObjectiveProgress,
+  DestinySandboxPerkDefinition,
+} from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
@@ -25,14 +31,10 @@ export default function PlugTooltip({
 }) {
   // TODO: show insertion costs
   const defs = useD2Definitions();
-  const sourceString =
-    defs &&
-    plug.plugDef.collectibleHash &&
-    defs.Collectible.get(plug.plugDef.collectibleHash).sourceString;
 
-  const wishListTip =
-    wishlistRoll?.wishListPerks.has(plug.plugDef.hash) &&
-    t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size });
+  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash)
+    ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
+    : undefined;
 
   const visibleStats = plug.stats
     ? _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10))).filter(
@@ -49,21 +51,64 @@ export default function PlugTooltip({
       )
     : [];
 
+  const stats: { [statHash: string]: number } = {};
+
+  for (const statHash of visibleStats) {
+    const value = plug.stats?.[parseInt(statHash, 10)];
+    if (typeof value === 'number') {
+      stats[statHash] = value;
+    }
+  }
+
+  return (
+    <PlugTooltipContent
+      defs={defs}
+      def={plug.plugDef}
+      perks={plug.perks}
+      stats={stats}
+      plugObjectives={plug.plugObjectives}
+      enableFailReasons={plug.enableFailReasons}
+      cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
+      wishListTip={wishListTip}
+    />
+  );
+}
+
+export function PlugTooltipContent({
+  defs,
+  def,
+  perks,
+  stats,
+  plugObjectives,
+  enableFailReasons,
+  cannotCurrentlyRoll,
+  wishListTip,
+}: {
+  defs: D2ManifestDefinitions | undefined;
+  def: DestinyInventoryItemDefinition;
+  perks: DestinySandboxPerkDefinition[];
+  stats?: { [statHash: string]: number };
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  wishListTip?: string;
+}) {
+  const sourceString =
+    defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
+
   return (
     <>
-      <h2>{plug.plugDef.displayProperties.name}</h2>
-      {emptySpecialtySocketHashes.includes(plug.plugDef.hash) && (
-        <h3>{plug.plugDef.itemTypeDisplayName}</h3>
-      )}
+      <h2>{def.displayProperties.name}</h2>
+      {emptySpecialtySocketHashes.includes(def.hash) && <h3>{def.itemTypeDisplayName}</h3>}
 
-      {plug.plugDef.displayProperties.description ? (
+      {def.displayProperties.description ? (
         <div>
-          <RichDestinyText text={plug.plugDef.displayProperties.description} />
+          <RichDestinyText text={def.displayProperties.description} />
         </div>
       ) : (
-        plug.perks.map((perk) => (
+        perks.map((perk) => (
           <div key={perk.hash}>
-            {plug.plugDef.displayProperties.name !== perk.displayProperties.name && (
+            {def.displayProperties.name !== perk.displayProperties.name && (
               <div>{perk.displayProperties.name}</div>
             )}
             <div>
@@ -73,26 +118,22 @@ export default function PlugTooltip({
         ))
       )}
       {sourceString && <div className="plug-source">{sourceString}</div>}
-      {defs && visibleStats.length > 0 && (
+      {stats && Object.entries(stats).length > 0 && (
         <div className="plug-stats">
-          {visibleStats.map((statHash) => (
-            <StatValue
-              key={statHash}
-              statHash={parseInt(statHash, 10)}
-              value={plug.stats![statHash]}
-            />
+          {Object.entries(stats).map(([statHash, value]) => (
+            <StatValue key={statHash} statHash={parseInt(statHash, 10)} value={value} />
           ))}
         </div>
       )}
-      {defs && plug.plugObjectives.length > 0 && (
+      {defs && plugObjectives && plugObjectives.length > 0 && (
         <div className="plug-objectives">
-          {plug.plugObjectives.map((objective) => (
+          {plugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />
           ))}
         </div>
       )}
-      {plug.enableFailReasons && <p>{plug.enableFailReasons}</p>}
-      {plug.cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
+      {enableFailReasons && <p>{enableFailReasons}</p>}
+      {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
       {wishListTip && (
         <p>
           <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
