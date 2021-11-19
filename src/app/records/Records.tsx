@@ -1,4 +1,3 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -7,20 +6,15 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
-import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { useSetSetting } from 'app/settings/hooks';
+import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { Destiny2CoreSettings } from 'bungie-api-ts/core';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
   ownedItemsSelector,
@@ -29,60 +23,29 @@ import {
 import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
 
-interface ProvidedProps {
+interface Props {
   account: DestinyAccount;
-}
-
-interface StoreProps {
-  buckets?: InventoryBuckets;
-  ownedItemHashes: Set<number>;
-  profileResponse?: DestinyProfileResponse;
-  searchQuery?: string;
-  completedRecordsHidden: boolean;
-  redactedRecordsRevealed: boolean;
-  searchFilter?: ItemFilter;
-  destiny2CoreSettings?: Destiny2CoreSettings;
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function mapStateToProps() {
-  return (state: RootState): StoreProps => {
-    const settings = settingsSelector(state);
-    return {
-      buckets: bucketsSelector(state),
-      ownedItemHashes: ownedItemsSelector(state),
-      profileResponse: profileResponseSelector(state),
-      searchQuery: querySelector(state),
-      searchFilter: searchFilterSelector(state),
-      completedRecordsHidden: settings.completedRecordsHidden,
-      redactedRecordsRevealed: settings.redactedRecordsRevealed,
-      destiny2CoreSettings: destiny2CoreSettingsSelector(state),
-    };
-  };
 }
 
 /**
  * The records screen shows account-wide things like Triumphs and Collections.
  */
-function Records({
-  account,
-  buckets,
-  ownedItemHashes,
-  profileResponse,
-  searchQuery,
-  searchFilter,
-  completedRecordsHidden,
-  redactedRecordsRevealed,
-  destiny2CoreSettings,
-}: Props) {
+export default function Records({ account }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
-  const setSetting = useSetSetting();
   const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
   const presentationNodeHash = presentationNodeHashStr
     ? parseInt(presentationNodeHashStr, 10)
     : undefined;
+  const buckets = useSelector(bucketsSelector);
+  const ownedItemHashes = useSelector(ownedItemsSelector);
+  const profileResponse = useSelector(profileResponseSelector);
+  const searchQuery = useSelector(querySelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector);
+  const [completedRecordsHidden, setCompletedRecordsHidden] = useSetting('completedRecordsHidden');
+  const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
+    useSetting('redactedRecordsRevealed');
 
   const defs = useD2Definitions();
 
@@ -140,10 +103,8 @@ function Records({
       })),
   ];
 
-  const onToggleCompletedRecordsHidden = (checked: boolean) =>
-    setSetting('completedRecordsHidden', checked);
-  const onToggleRedactedRecordsRevealed = (checked: boolean) =>
-    setSetting('redactedRecordsRevealed', checked);
+  const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
+  const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
 
   return (
     <PageWithMenu className="d2-vendors">
@@ -212,5 +173,3 @@ function Records({
     </PageWithMenu>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Records);
