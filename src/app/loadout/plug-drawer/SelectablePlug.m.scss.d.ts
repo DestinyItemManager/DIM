@@ -5,7 +5,6 @@ interface CssExports {
   'lockedPerk': string;
   'plug': string;
   'plugInfo': string;
-  'plugStats': string;
   'plugTitle': string;
   'requirement': string;
   'unselectable': string;

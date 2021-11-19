@@ -2,9 +2,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStats } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
@@ -29,9 +27,7 @@ export default function SelectablePlug({
     selectable && onPlugSelected(plug);
   }, [onPlugSelected, plug, selectable]);
 
-  const onClose = useCallback(() => {
-    () => onPlugRemoved(plug);
-  }, [onPlugRemoved, plug]);
+  const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
 
   return (
     <ClosableContainer onClose={selected ? onClose : undefined}>
@@ -62,13 +58,6 @@ export default function SelectablePlug({
               )}
             </div>
           ))}
-          {plug.investmentStats
-            .filter((stat) => armorStats.includes(stat.statTypeHash))
-            .map((stat) => (
-              <div className={styles.plugStats} key={stat.statTypeHash}>
-                <StatValue value={stat.value} statHash={stat.statTypeHash} />
-              </div>
-            ))}
         </div>
       </div>
     </ClosableContainer>
