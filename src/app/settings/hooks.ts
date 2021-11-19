@@ -13,7 +13,7 @@ export function useSetSetting() {
 }
 
 /**
- * Used like setState, but loads and saves a value from DIM's Settings.
+ * Used like useState, but loads and saves a value from DIM's Settings.
  *
  * Example:
  *
