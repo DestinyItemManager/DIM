@@ -637,6 +637,8 @@ function buildStatInfo(items: DimItem[]): {
             max: stat.value,
             enabled: true,
             lowerBetter: stat.smallerIsBetter,
+            statMaximumValue: stat.maximumValue,
+            bar: stat.bar,
             getStat(item) {
               return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
             },
