@@ -44,6 +44,8 @@ export interface StatInfo {
   displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
+  statMaximumValue: number;
+  bar: boolean;
   enabled: boolean;
   lowerBetter: boolean;
   getStat: StatGetter;
@@ -340,7 +342,9 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
             statHash: item.energy.energyType,
             value: item.energy.energyCapacity,
           }) ||
-          undefined
+          undefined,
+        10,
+        false
       )
     );
   }
@@ -360,6 +364,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
             max: 0,
             enabled: false,
             lowerBetter: stat.smallerIsBetter,
+            statMaximumValue: stat.maximumValue,
+            bar: stat.bar,
             getStat(item: DimItem) {
               const itemStat = item.stats
                 ? item.stats.find((s) => s.statHash === stat.statHash)
@@ -398,6 +404,8 @@ function makeFakeStat(
   id: StatInfo['id'],
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
+  statMaximumValue = 0,
+  bar = false,
   lowerBetter = false
 ): StatInfo {
   if (typeof displayProperties === 'string') {
@@ -410,6 +418,8 @@ function makeFakeStat(
     max: 0,
     enabled: false,
     lowerBetter,
+    statMaximumValue,
     getStat,
+    bar,
   };
 }

@@ -1,5 +1,7 @@
 ## Next
 
+* Show bars next to armor stats in Compare.
+
 ### Beta Only
 
 * We're testing out a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now sorted by when they were created, rather than their name. Let us know what you think, and how it can be made more useful!
