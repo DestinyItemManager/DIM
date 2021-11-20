@@ -12,7 +12,7 @@ import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
-import DimPlugTooltip from './PlugTooltip';
+import { DimPlugTooltip } from './PlugTooltip';
 
 export default function Plug({
   plug,

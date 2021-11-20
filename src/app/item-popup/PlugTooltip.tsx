@@ -22,7 +22,7 @@ import './ItemSockets.scss';
 /**
  * This renders the tootip content for a DimPlug.
  */
-export default function DimPlugTooltip({
+export function DimPlugTooltip({
   item,
   plug,
   wishlistRoll,

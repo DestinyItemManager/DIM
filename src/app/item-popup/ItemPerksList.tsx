@@ -15,7 +15,7 @@ import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/ite
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
-import DimPlugTooltip from './PlugTooltip';
+import { DimPlugTooltip } from './PlugTooltip';
 
 interface Props {
   item: DimItem;
