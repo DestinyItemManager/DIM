@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -20,7 +19,10 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 
 // TODO: Connect this to redux
-export default function PlugTooltip({
+/**
+ * This renders the tootip content for a DimPlug.
+ */
+export default function DimPlugTooltip({
   item,
   plug,
   wishlistRoll,
@@ -30,7 +32,6 @@ export default function PlugTooltip({
   wishlistRoll?: InventoryWishListRoll;
 }) {
   // TODO: show insertion costs
-  const defs = useD2Definitions();
 
   const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash)
     ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
@@ -55,14 +56,14 @@ export default function PlugTooltip({
 
   for (const statHash of visibleStats) {
     const value = plug.stats?.[parseInt(statHash, 10)];
-    if (typeof value === 'number') {
+    if (value) {
       stats[statHash] = value;
     }
   }
 
+  // The PlugTooltip does all the rendering and layout, we just process information here.
   return (
-    <PlugTooltipContent
-      defs={defs}
+    <PlugTooltip
       def={plug.plugDef}
       perks={plug.perks}
       stats={stats}
@@ -74,8 +75,16 @@ export default function PlugTooltip({
   );
 }
 
-export function PlugTooltipContent({
-  defs,
+/**
+ * This creates a tooltip for a plug with various levels of content.
+ *
+ * It only relies on Bungie API entities, objects or primitives. This is so we can use it to render a
+ * tooltip from either a DimPlug or a DestinyInventoryItemDefinition.
+ *
+ * Use this directly if you want to render a tooltip for a DestinyInventoryItemDefinition, only the def
+ * prop is required.
+ */
+export function PlugTooltip({
   def,
   perks,
   stats,
@@ -84,17 +93,29 @@ export function PlugTooltipContent({
   cannotCurrentlyRoll,
   wishListTip,
 }: {
-  defs: D2ManifestDefinitions | undefined;
   def: DestinyInventoryItemDefinition;
-  perks: DestinySandboxPerkDefinition[];
+  perks?: DestinySandboxPerkDefinition[];
   stats?: { [statHash: string]: number };
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
 }) {
+  const defs = useD2Definitions();
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
+
+  let displayedPerks = perks;
+
+  // If perks aren't available from a prop, see if re can get them.
+  if (!displayedPerks) {
+    displayedPerks = _.compact(
+      _.uniqBy(
+        def.perks,
+        (p) => defs?.SandboxPerk.get(p.perkHash).displayProperties.description
+      ).map((perk) => defs?.SandboxPerk.get(perk.perkHash))
+    );
+  }
 
   return (
     <>
@@ -106,7 +127,7 @@ export function PlugTooltipContent({
           <RichDestinyText text={def.displayProperties.description} />
         </div>
       ) : (
-        perks.map((perk) => (
+        displayedPerks.map((perk) => (
           <div key={perk.hash}>
             {def.displayProperties.name !== perk.displayProperties.name && (
               <div>{perk.displayProperties.name}</div>

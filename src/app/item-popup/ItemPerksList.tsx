@@ -15,7 +15,7 @@ import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/ite
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
-import PlugTooltip from './PlugTooltip';
+import DimPlugTooltip from './PlugTooltip';
 
 interface Props {
   item: DimItem;
@@ -138,7 +138,9 @@ function PerkPlug({
         {isPhonePortrait ? (
           <DefItemIcon itemDef={plug.plugDef} borderless={true} />
         ) : (
-          <PressTip tooltip={<PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+          <PressTip
+            tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}
+          >
             <DefItemIcon itemDef={plug.plugDef} borderless={true} />
           </PressTip>
         )}
@@ -152,7 +154,7 @@ function PerkPlug({
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>
-          <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
+          <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
         </div>
       ) : (
         selected &&

@@ -21,7 +21,7 @@ import { getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
+import DimPlugTooltip from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
@@ -397,7 +397,7 @@ export function getColumns(
             plugged && (
               <PressTip
                 key={plugged.plugDef.hash}
-                tooltip={<PlugTooltip item={item} plug={plugged} />}
+                tooltip={<DimPlugTooltip item={item} plug={plugged} />}
               >
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
@@ -599,7 +599,7 @@ function PerksCell({
           })}
         >
           {socket.plugOptions.map((p) => (
-            <PressTip key={p.plugDef.hash} tooltip={<PlugTooltip item={item} plug={p} />}>
+            <PressTip key={p.plugDef.hash} tooltip={<DimPlugTooltip item={item} plug={p} />}>
               <div
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:

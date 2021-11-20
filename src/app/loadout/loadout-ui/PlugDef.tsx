@@ -2,10 +2,9 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import PressTip from 'app/dim-ui/PressTip';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { PlugTooltipContent } from 'app/item-popup/PlugTooltip';
+import { PlugTooltip } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import _ from 'lodash';
 import React from 'react';
 import styles from './PlugDef.m.scss';
 
@@ -19,13 +18,6 @@ export default function PlugDef({ plug, onClick, onClose }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions();
   const showTooltip = defs && !isPhonePortrait;
-
-  const perks = _.compact(
-    _.uniqBy(
-      plug.perks,
-      (p) => defs?.SandboxPerk.get(p.perkHash).displayProperties.description
-    ).map((perk) => defs?.SandboxPerk.get(perk.perkHash))
-  );
 
   const contents = (
     <div className={styles.emptyItem}>
@@ -45,9 +37,7 @@ export default function PlugDef({ plug, onClick, onClose }: Props) {
     <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
       <div className={styles.emptyItem}>
         {showTooltip ? (
-          <PressTip tooltip={<PlugTooltipContent defs={defs} def={plug} perks={perks} />}>
-            {contents}
-          </PressTip>
+          <PressTip tooltip={<PlugTooltip def={plug} />}>{contents}</PressTip>
         ) : (
           contents
         )}
