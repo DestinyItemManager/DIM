@@ -42,6 +42,8 @@ Now lets get a little more in depth and look at the journey we take through spec
 
     Notably here we calculate the following values for items
     - The energy used from slot specific mods
-    - The energy available with the selected armor upgrades
+    - The energy capacity available with the selected armor upgrades, if we have an option that assumes items are masterworked this will always be 10
+    - The energy type available with the selected armor upgrades and locked mods, if an item is allowed to swap energy type this will be the `Any` type
     - The tags of mods which can be socketed into the item e.g. VoG raid mods or nightmare mods
-1. Next we send all the mapped items and various other values to the web worker.The web worker is created in `process/useProcess#useProcess` but the scipt is it runs lives in `process-worker/process#process` because it needs special tsconfig setup for web workers.
+1. Next we send all the mapped items and various other values to the web worker.The web worker is created in `process/useProcess#useProcess` but the scipt is it runs lives in `process-worker/process#process` because it needs a special tsconfig setup for web workers.
+1.
