@@ -35,6 +35,10 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 export function isSupported(browsersSupported, userAgent) {
+  if (userAgent.includes('Steam')) {
+    return false;
+  }
+
   var agent = parser(userAgent);
 
   // Build a map from browser version to minimum supported version
@@ -83,5 +87,9 @@ if ($BROWSERS.length) {
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
     document.getElementById('browser-warning').style.display = 'block';
+    if (navigator.userAgent.includes('Steam')) {
+      document.getElementById('browser-warning').innerText +=
+        " If DIM doesn't work in the Steam browser but does work in other browsers, contact Valve.";
+    }
   }
 }
