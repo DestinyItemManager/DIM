@@ -175,7 +175,7 @@ export default function LoadoutDrawerOptions({
           </div>
         )}
         <div className="input-group">
-          <Link className="dim-button" to="optimizer" state={{ loadout }}>
+          <Link className="dim-button" to="../optimizer" state={{ loadout }}>
             {t('Loadouts.OpenInOptimizer')}
           </Link>
         </div>

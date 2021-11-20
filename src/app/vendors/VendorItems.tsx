@@ -125,7 +125,7 @@ export default function VendorItems({
                 </PressTip>
               )}
               {rewardVendorHash && rewardItem && (
-                <Link to={`vendors/${rewardVendorHash}?characterId=${characterId}`}>
+                <Link to={`../vendors/${rewardVendorHash}?characterId=${characterId}`}>
                   <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage
                       className="item-img transparent"

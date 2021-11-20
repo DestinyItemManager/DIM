@@ -139,7 +139,7 @@ export default function ItemDetails({
 
       {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
-          <Link to={`vendors/${item.previewVendor}`}>
+          <Link to={`../vendors/${item.previewVendor}`}>
             {t('ItemService.PreviewVendor', { type: item.typeName })}
           </Link>
         </div>

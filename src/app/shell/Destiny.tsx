@@ -226,7 +226,7 @@ export default function Destiny() {
           )}
           <Route path="organizer" element={<Organizer account={account} />} />
           {account.destinyVersion === 2 && (
-            <Route path="vendors/:vendorId" element={<SingleVendor account={account} />} />
+            <Route path="vendors/:vendorHash" element={<SingleVendor account={account} />} />
           )}
           <Route
             path="vendors"

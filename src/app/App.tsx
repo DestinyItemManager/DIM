@@ -84,29 +84,51 @@ export default function App() {
               <Route path="login" element={<Login />} />
               <Route path="settings" element={<SettingsPage />} />
               {$DIM_FLAVOR === 'dev' && <Route path="developer" element={<Developer />} />}
-              {needsLogin &&
-                ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Navigate to="developer" />
-                ) : (
-                  <Navigate to="login" />
-                ))}
-              <Route path="search-history" element={<SearchHistory />} />
-              <Route path=":membershipId/d:destinyVersion/*" element={<Destiny />} />
-              {[
-                'inventory',
-                'progress',
-                'records',
-                'optimizer',
-                'organizer',
-                'vendors/:vendorId',
-                'vendors',
-                'record-books',
-                'activities',
-                'armory/:itemHash',
-              ].map((path) => (
-                <Route key={path} path={path} element={<AccountRedirectRoute />} />
-              ))}
-              <Route path="*" element={<DefaultAccount />} />
+              {needsLogin ? (
+                <Route
+                  path="*"
+                  element={
+                    $DIM_FLAVOR === 'dev' && needsDeveloper ? (
+                      <Navigate to="/developer" />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+              ) : (
+                <>
+                  <Route path="search-history" element={<SearchHistory />} />
+                  <Route path=":membershipId/d:destinyVersion/*" element={<Destiny />} />
+                  {[
+                    'inventory',
+                    'progress',
+                    'records',
+                    'optimizer',
+                    'organizer',
+                    'vendors/:vendorId',
+                    'vendors',
+                    'record-books',
+                    'activities',
+                    'armory/:itemHash',
+                  ].map((path) => (
+                    <Route key={path} path={path} element={<AccountRedirectRoute />} />
+                  ))}
+                  <Route
+                    path="*"
+                    element={
+                      needsLogin ? (
+                        $DIM_FLAVOR === 'dev' && needsDeveloper ? (
+                          <Navigate to="developer" />
+                        ) : (
+                          <Navigate to="login" />
+                        )
+                      ) : (
+                        <DefaultAccount />
+                      )
+                    }
+                  />
+                </>
+              )}
             </Routes>
           </Suspense>
         </ErrorBoundary>
