@@ -126,7 +126,7 @@ function Loadouts() {
           <button type="button" className={styles.menuButton} onClick={handleNewLoadout}>
             <AppIcon icon={addIcon} /> <span>{t('Loadouts.Create')}</span>
           </button>
-          <Link className={styles.menuButton} to={`./optimizer?class=${selectedStore.classType}`}>
+          <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>
@@ -337,7 +337,7 @@ function ItemCategory({
         <div className={clsx(styles.placeholder, `category-${category}`)}>
           {t(`Bucket.${category}`)}
           {category === 'Armor' && loadout.parameters && (
-            <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+            <Link className="dim-button" to="../optimizer" state={{ loadout }}>
               <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
             </Link>
           )}
@@ -350,7 +350,7 @@ function ItemCategory({
               <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
             </div>
           )}
-          <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+          <Link className="dim-button" to="../optimizer" state={{ loadout }}>
             <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
           </Link>
         </>

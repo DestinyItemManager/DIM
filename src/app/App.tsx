@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import styles from './App.m.scss';
 import Developer from './developer/Developer';
 import ActivityTracker from './dim-ui/ActivityTracker';
@@ -77,60 +77,59 @@ export default function App() {
         <PageLoading />
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-            <Switch>
-              <Route path="/about" exact>
-                <About />
-              </Route>
-              <Route path="/privacy" exact>
-                <Privacy />
-              </Route>
-              <Route path="/whats-new" exact>
-                <WhatsNew />
-              </Route>
-              <Route path="/login" exact>
-                <Login />
-              </Route>
-              <Route path="/settings" exact>
-                <SettingsPage />
-              </Route>
-              {$DIM_FLAVOR === 'dev' && (
-                <Route path="/developer" exact>
-                  <Developer />
-                </Route>
+            <Routes>
+              <Route path="about" element={<About />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="whats-new" element={<WhatsNew />} />
+              <Route path="login" element={<Login />} />
+              <Route path="settings" element={<SettingsPage />} />
+              {$DIM_FLAVOR === 'dev' && <Route path="developer" element={<Developer />} />}
+              {needsLogin ? (
+                <Route
+                  path="*"
+                  element={
+                    $DIM_FLAVOR === 'dev' && needsDeveloper ? (
+                      <Navigate to="/developer" />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+              ) : (
+                <>
+                  <Route path="search-history" element={<SearchHistory />} />
+                  <Route path=":membershipId/d:destinyVersion/*" element={<Destiny />} />
+                  {[
+                    'inventory',
+                    'progress',
+                    'records',
+                    'optimizer',
+                    'organizer',
+                    'vendors/:vendorId',
+                    'vendors',
+                    'record-books',
+                    'activities',
+                    'armory/:itemHash',
+                  ].map((path) => (
+                    <Route key={path} path={path} element={<AccountRedirectRoute />} />
+                  ))}
+                  <Route
+                    path="*"
+                    element={
+                      needsLogin ? (
+                        $DIM_FLAVOR === 'dev' && needsDeveloper ? (
+                          <Navigate to="developer" />
+                        ) : (
+                          <Navigate to="login" />
+                        )
+                      ) : (
+                        <DefaultAccount />
+                      )
+                    }
+                  />
+                </>
               )}
-              {needsLogin &&
-                ($DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                  <Route render={() => <Redirect to="/developer" />} />
-                ) : (
-                  <Route render={() => <Redirect to="/login" />} />
-                ))}
-              <Route path="/search-history" exact>
-                <SearchHistory />
-              </Route>
-              <Route path="/:membershipId(\d+)/d:destinyVersion(1|2)">
-                <Destiny />
-              </Route>
-              <Route
-                path={[
-                  '/inventory',
-                  '/progress',
-                  '/records',
-                  '/optimizer',
-                  '/organizer',
-                  '/vendors/:vendorId',
-                  '/vendors',
-                  '/record-books',
-                  '/activities',
-                  '/armory/:itemHash',
-                ]}
-                exact
-              >
-                <AccountRedirectRoute />
-              </Route>
-              <Route>
-                <DefaultAccount />
-              </Route>
-            </Switch>
+            </Routes>
           </Suspense>
         </ErrorBoundary>
         <NotificationsContainer />

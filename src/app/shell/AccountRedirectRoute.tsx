@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { RootState } from 'app/store/types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import ErrorPanel from './ErrorPanel';
 
 /**
@@ -62,6 +62,6 @@ export default function AccountRedirectRoute() {
   }
 
   return (
-    <Redirect to={`/${account.membershipId}/d${account.destinyVersion}${pathname}${search}`} />
+    <Navigate to={`/${account.membershipId}/d${account.destinyVersion}${pathname}${search}`} />
   );
 }

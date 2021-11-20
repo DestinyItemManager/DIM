@@ -1,6 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
+import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -62,10 +63,8 @@ export const compareOrganizerLinkSelector = createSelector(
     if (!session || !account || !organizerTypes.includes(session.itemCategoryHashes[0])) {
       return undefined;
     }
-    return `/${account.membershipId}/d${
-      account.destinyVersion
-    }/organizer?category=${session.itemCategoryHashes.join('~')}&search=${encodeURIComponent(
-      session.query
-    )}`;
+    return `${accountRoute(account)}/organizer?category=${session.itemCategoryHashes.join(
+      '~'
+    )}&search=${encodeURIComponent(session.query)}`;
   }
 );
