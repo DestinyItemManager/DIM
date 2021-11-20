@@ -1,11 +1,11 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
+import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { setSettingAction } from '../settings/actions';
 import { stopFarming } from './actions';
 import './farming.scss';
 import { farmingStoreSelector } from './selectors';
@@ -13,19 +13,15 @@ import { farmingStoreSelector } from './selectors';
 export default function Farming() {
   const dispatch = useThunkDispatch();
   const store = useSelector(farmingStoreSelector);
-  const makeRoomForItems = useSelector(settingSelector('farmingMakeRoomForItems'));
+  const [makeRoomForItems, setMakeRoomForItems] = useSetting('farmingMakeRoomForItems');
   const inventoryClearSpaces = useSelector(settingSelector('inventoryClearSpaces'));
 
-  const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.checked;
-    dispatch(setSettingAction('farmingMakeRoomForItems', value));
-  };
+  const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setMakeRoomForItems(e.currentTarget.checked);
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
-  const onStopClicked = () => {
-    dispatch(stopFarming());
-  };
+  const onStopClicked = () => dispatch(stopFarming());
 
   return (
     <TransitionGroup component={null}>

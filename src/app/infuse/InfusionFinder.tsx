@@ -1,9 +1,9 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
-import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import SearchBar from 'app/search/SearchBar';
+import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -20,7 +20,6 @@ import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { filterFactorySelector } from '../search/search-filter';
-import { setSettingAction } from '../settings/actions';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { showInfuse$ } from './infuse';
@@ -128,7 +127,7 @@ export default function InfusionFinder() {
   const allItems = useSelector(allItemsSelector);
   const currentStore = useSelector(currentStoreSelector);
   const filters = useSelector(filterFactorySelector);
-  const lastInfusionDirection = useSelector(settingSelector('infusionDirection'));
+  const [lastInfusionDirection, setLastInfusionDirection] = useSetting('infusionDirection');
 
   const [{ direction, query, source, target, filter }, stateDispatch] = useReducer(stateReducer, {
     direction: lastInfusionDirection,
@@ -169,9 +168,9 @@ export default function InfusionFinder() {
   // Save direction to settings
   useEffect(() => {
     if (direction !== lastInfusionDirection) {
-      dispatch(setSettingAction('infusionDirection', direction));
+      setLastInfusionDirection(direction);
     }
-  }, [direction, lastInfusionDirection, dispatch]);
+  }, [direction, lastInfusionDirection, dispatch, setLastInfusionDirection]);
 
   if (!query || !currentStore) {
     return null;

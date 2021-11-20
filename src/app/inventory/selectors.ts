@@ -1,7 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -17,14 +16,21 @@ import { getCurrentStore, getVault } from './stores-helpers';
 /** All stores, unsorted. */
 export const storesSelector = (state: RootState) => state.inventory.stores;
 
+export const d2BucketsSelector = createSelector(
+  (state: RootState) => state.manifest.d2Manifest,
+  (d2Manifest) => d2Manifest && getBucketsD2(d2Manifest)
+);
+
+export const d1BucketsSelector = createSelector(
+  (state: RootState) => state.manifest.d1Manifest,
+  (d1Manifest) => d1Manifest && getBucketsD1(d1Manifest)
+);
+
 export const bucketsSelector = createSelector(
   destinyVersionSelector,
-  (state: RootState) => state.manifest.d1Manifest,
-  d2ManifestSelector,
-  (destinyVersion, d1Manifest, d2Manifest) =>
-    destinyVersion === 2
-      ? d2Manifest && getBucketsD2(d2Manifest)
-      : d1Manifest && getBucketsD1(d1Manifest)
+  d1BucketsSelector,
+  d2BucketsSelector,
+  (destinyVersion, d1Buckets, d2Buckets) => (destinyVersion === 2 ? d2Buckets : d1Buckets)
 );
 
 /** Bucket hashes for buckets that we actually show on the inventory page. */

@@ -94,7 +94,7 @@ function mapStateToProps() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        (l) => l.name
+        (l) => ($featureFlags.loadoutsPage ? -(l.lastUpdatedAt ?? 0) : l.name)
       )
   );
 

@@ -1,5 +1,12 @@
 ## Next
 
+* Show bars next to armor stats in Compare.
+* At long last, found and fixed a bug that could lead to tags and notes getting wiped if you switched accounts while another account's data was loading. Many apologies to anyone who lost their tags and notes from this bug, and we hope it's gone for good.
+
+### Beta Only
+
+* We're testing out a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now sorted by when they were created, rather than their name. Let us know what you think, and how it can be made more useful!
+
 ## 6.91.2 <span class="changelog-date">(2021-11-16)</span>
 
 * Put back the full item tile in Compare.
