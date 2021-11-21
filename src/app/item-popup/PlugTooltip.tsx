@@ -19,9 +19,6 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 
 // TODO: Connect this to redux
-/**
- * This renders the tootip content for a DimPlug.
- */
 export function DimPlugTooltip({
   item,
   plug,
