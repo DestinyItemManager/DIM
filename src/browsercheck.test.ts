@@ -62,7 +62,7 @@ test.each([
   [
     'Steam Overlay',
     'Mozilla/5.0 (Windows; U; Windows NT 10.0; en-US; Valve Steam GameOverlay/1608507519; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
-    true,
+    false,
   ],
 ])('%s: User agent %s, supported: %s', (_name, userAgent, shouldBeSupported) => {
   expect(isSupported(browsersSupported, userAgent)).toStrictEqual(shouldBeSupported);
