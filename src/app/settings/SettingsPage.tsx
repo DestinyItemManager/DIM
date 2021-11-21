@@ -27,7 +27,7 @@ import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
-import { Settings } from './initial-settings';
+import { LoadoutSort, Settings } from './initial-settings';
 import { itemSortOrder } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';
@@ -101,6 +101,14 @@ export default function SettingsPage() {
     } else {
       setSetting(e.target.name as keyof Settings, e.target.value);
     }
+  };
+
+  const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
+    if (e.target.name.length === 0) {
+      errorLog('settings', new Error('You need to have a name on the form input'));
+    }
+
+    setSetting(e.target.name as keyof Settings, parseInt(e.target.value, 10));
   };
 
   const onChangePerkList: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -447,6 +455,31 @@ export default function SettingsPage() {
               options={numberOfSpacesOptions}
               onChange={onChange}
             />
+            <div className="setting">
+              <label>{t('Settings.LoadoutSort')}</label>
+              <div className="radioOptions">
+                <label>
+                  <input
+                    type="radio"
+                    name="loadoutSort"
+                    checked={settings.loadoutSort === LoadoutSort.ByEditTime}
+                    value={LoadoutSort.ByEditTime}
+                    onChange={onChangeNumeric}
+                  />
+                  <span>{t('Loadouts.SortByEditTime')}</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="loadoutSort"
+                    checked={settings.loadoutSort === LoadoutSort.ByName}
+                    value={LoadoutSort.ByName}
+                    onChange={onChangeNumeric}
+                  />
+                  <span>{t('Loadouts.SortByName')}</span>
+                </label>
+              </div>
+            </div>
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}

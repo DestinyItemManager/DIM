@@ -1,58 +1,58 @@
 @import '../variables.scss';
 
-.loadout-list {
+.list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.loadout-set {
+.menuItem {
   display: flex;
   flex-direction: row;
   padding-left: 0px;
   overflow: hidden;
   background-color: black;
+  cursor: pointer;
 
   @include phone-portrait {
     font-size: 14px;
     padding: 6px;
   }
 
-  .loadout-type-icon {
-    color: #666;
-  }
-
-  .warning-icon {
-    color: yellow;
-  }
-
   &:last-of-type {
     border: 0;
   }
 
-  &:hover {
+  a {
+    text-decoration: none;
+  }
+
+  &:hover,
+  a:hover {
     background-color: $orange;
     color: black !important;
-    > span:first-child > .app-icon {
+    > span:first-child > :global(.app-icon) {
       color: black !important;
     }
   }
 
-  > span:first-child {
-    flex: 1;
-    padding: 0 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap !important;
-    line-height: 35px;
-    .app-icon,
-    .fa {
-      width: 12px;
-      margin-right: 5px;
-      text-align: center;
-      @include phone-portrait {
-        width: 14px;
-        margin-right: 8px;
+  > span,
+  a {
+    &:first-child {
+      flex: 1;
+      padding: 0 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap !important;
+      line-height: 35px;
+      :global(.app-icon) {
+        width: 12px;
+        margin-right: 5px;
+        text-align: center;
+        @include phone-portrait {
+          width: 14px;
+          margin-right: 8px;
+        }
       }
     }
   }
@@ -69,8 +69,7 @@
     @include phone-portrait {
       margin: 4px 4px 4px 2px;
     }
-    .app-icon,
-    .fa {
+    :global(.app-icon) {
       font-size: 13px;
       @include phone-portrait {
         font-size: 15px;
@@ -79,13 +78,16 @@
     &:hover {
       background-color: $blue;
       color: #222;
-
-      &.delete {
-        background-color: $red;
-        color: white;
-      }
     }
   }
+}
+
+.loadoutTypeIcon {
+  color: #666;
+}
+
+.warningIcon {
+  color: yellow;
 }
 
 .badge {
@@ -97,12 +99,13 @@
   font-size: 9px;
 }
 
-.loadout-popup-content {
+.content {
   background-color: #3a4150;
   color: #e4e4e4;
 }
 
-.loadout-menu {
+// Used in StoreHeading.tsx
+:global(.loadout-menu) {
   position: absolute;
   /* prettier-ignore */
   width: calc(
@@ -130,7 +133,7 @@
     outline: none;
   }
 
-  .detached & {
+  :global(.detached) & {
     position: fixed;
     top: calc(54px + var(--header-height));
     z-index: 1000;
