@@ -40,7 +40,14 @@ export type ItemsByBucket = Readonly<{
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = armorBuckets;
+export const LockableBuckets = armorBuckets as {
+  helmet: LockableBucketHash;
+  gauntlets: LockableBucketHash;
+  chest: LockableBucketHash;
+  leg: LockableBucketHash;
+  classitem: LockableBucketHash;
+};
+
 export type LockableBucketHash =
   | BucketHashes.Helmet
   | BucketHashes.Gauntlets
@@ -48,7 +55,7 @@ export type LockableBucketHash =
   | BucketHashes.LegArmor
   | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets) as LockableBucketHash[];
+export const LockableBucketHashes = Object.values(LockableBuckets);
 
 export type ArmorStatHashes =
   | StatHashes.Mobility

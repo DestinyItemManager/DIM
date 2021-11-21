@@ -93,14 +93,10 @@ function calculateEnergyChange(
 export function getModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
 ): Map<string, PluggableInventoryItemDefinition[]> {
-  if (!defs) {
-    return new Map();
-  }
-
   const bucketSpecificAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
   const bucketIndependentAssignments = new Map<string, PluggableInventoryItemDefinition[]>();
   // just an arbitrarily large number

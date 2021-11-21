@@ -230,7 +230,7 @@ const groupComparator = chainComparator(
  * Note that assumedMasterwork effects this.
  */
 function groupItems(
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,
