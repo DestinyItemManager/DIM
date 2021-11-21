@@ -28,6 +28,8 @@ import {
 import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { useSetting } from 'app/settings/hooks';
+import { LoadoutSort } from 'app/settings/initial-settings';
 import {
   addIcon,
   AppIcon,
@@ -76,6 +78,7 @@ function Loadouts() {
   const classType = selectedStore.classType;
   const allItems = useSelector(allItemsSelector);
   const allLoadouts = useSelector(loadoutsSelector);
+  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
 
   const savedLoadouts = useMemo(
     () =>
@@ -86,9 +89,9 @@ function Loadouts() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === classType
         ),
-        (l) => -(l.lastUpdatedAt ?? 0)
+        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
       ),
-    [allLoadouts, classType]
+    [allLoadouts, classType, loadoutSort]
   );
 
   // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
@@ -114,15 +117,38 @@ function Loadouts() {
 
   const handleNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
 
+  const sortOptions = [
+    {
+      key: 'time',
+      content: t('Loadouts.SortByEditTime'),
+      value: LoadoutSort.ByEditTime,
+    },
+    {
+      key: 'name',
+      content: t('Loadouts.SortByName'),
+      value: LoadoutSort.ByName,
+    },
+  ];
+
   return (
     <PageWithMenu>
-      <PageWithMenu.Menu>
+      <PageWithMenu.Menu className={styles.menu}>
         <CharacterSelect
           stores={stores}
           selectedStore={selectedStore}
           onCharacterChanged={setSelectedStoreId}
         />
         <div className={styles.menuButtons}>
+          <select
+            value={loadoutSort}
+            onChange={(e) => setLoadoutSort(parseInt(e.target.value, 10))}
+          >
+            {sortOptions.map((option) => (
+              <option key={option.key} value={option.value}>
+                {option.content}
+              </option>
+            ))}
+          </select>
           <button type="button" className={styles.menuButton} onClick={handleNewLoadout}>
             <AppIcon icon={addIcon} /> <span>{t('Loadouts.Create')}</span>
           </button>
@@ -212,7 +238,14 @@ function LoadoutRow({
             className="dim-button"
             onClick={() => editLoadout(loadout, { isNew: !saved })}
           >
-            {saved ? t('Loadouts.Edit') : t('Loadouts.Create')}
+            {t('Loadouts.Apply')}
+          </button>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => editLoadout(loadout, { isNew: !saved })}
+          >
+            {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
           {saved && (
             <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>

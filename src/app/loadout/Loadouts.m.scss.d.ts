@@ -13,6 +13,7 @@ interface CssExports {
   'items': string;
   'itemsInCategory': string;
   'loadout': string;
+  'menu': string;
   'menuButton': string;
   'menuButtons': string;
   'missingItems': string;
