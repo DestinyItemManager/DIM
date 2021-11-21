@@ -130,7 +130,7 @@ export default function Select<T>({
           className={styles.button}
           disabled={disabled}
         >
-          <div className={styles.optionContent}>{selectedItem.content}</div>
+          {selectedItem.content}{' '}
           <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
         </button>
       )}

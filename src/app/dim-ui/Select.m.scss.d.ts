@@ -8,7 +8,6 @@ interface CssExports {
   'menu': string;
   'menuItem': string;
   'open': string;
-  'optionContent': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
