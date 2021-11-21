@@ -164,7 +164,6 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "@d2api/d2api-types": "^1.0.2",
-    "@d2api/date": "^3.0.0",
     "@destinyitemmanager/dim-api-types": "^1.0.0",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
