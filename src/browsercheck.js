@@ -89,7 +89,7 @@ if ($BROWSERS.length) {
     document.getElementById('browser-warning').style.display = 'block';
     if (navigator.userAgent.includes('Steam')) {
       document.getElementById('browser-warning').innerText +=
-        " If DIM doesn't work in the Steam browser but does work in other browsers, contact Valve.";
+        " It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.";
     }
   }
 }
