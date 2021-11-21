@@ -497,7 +497,7 @@ function buildTalentGrid(
     }
 
     // Only one node in this column can be selected (scopes, etc)
-    const exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes?.length);
+    const exclusiveInColumn = Boolean(talentNodeGroup.exclusiveWithNodes?.length);
 
     // Unlocked is whether or not the material cost has been paid
     // for the node
@@ -508,7 +508,7 @@ function buildTalentGrid(
       // paid once per row.
       (exclusiveInColumn &&
         _.some(
-          talentNodeGroup.exlusiveWithNodes,
+          talentNodeGroup.exclusiveWithNodes,
           (nodeIndex: number) => item.nodes[nodeIndex].isActivated
         ));
 

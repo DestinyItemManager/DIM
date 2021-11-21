@@ -573,7 +573,7 @@
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
-    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops/powerfuls/pinnacle rewards.",
+    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
@@ -815,7 +815,7 @@
   },
   "SearchHistory": {
     "Description": "These are all your past and saved searches. You can delete them from here.",
-    "DeleteAll": "Delete all unstarred searches",
+    "DeleteAll": "Delete all non-starred searches",
     "Date": "Last Used",
     "UsageCount": "# Used",
     "Query": "Search",

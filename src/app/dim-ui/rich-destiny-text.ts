@@ -55,7 +55,7 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   // Supers - these are unused right now
   // ['[Titan: Sentinel Super]', FontGlyphs.void_titan_super], // 
   // ['[Titan: Striker Super]', FontGlyphs.fist_of_havoc], // 
-  // ['[Titan: Sunbreaker Super]', FontGlyphs.solar_tian_super], // 
+  // ['[Titan: Sunbreaker Super]', FontGlyphs.solar_titan_super], // 
   // ['[Hunter: Nightstalker Super]', FontGlyphs.void_hunter_super], // 
   // ['[Hunter: Arcstrider Super]', FontGlyphs.hunter_staff], // 
   // ['[Hunter: Gunslinger Super]', FontGlyphs.golden_gun], // 
