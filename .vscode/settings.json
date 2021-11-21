@@ -34,7 +34,6 @@
   "cSpell.ignorePaths": [
     ".vscode",
     "node_modules",
-    "src/app",
     "**/de",
     "**/es",
     "**/es-mx",
