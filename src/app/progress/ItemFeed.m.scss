@@ -1,0 +1,46 @@
+@import '../variables.scss';
+
+.sideTray {
+  position: sticky;
+  @include below-header;
+  height: calc(var(--viewport-height) - var(--header-height));
+  background-color: black;
+  width: 300px;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.item {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  margin: 8px 0px;
+}
+
+.info {
+  margin-left: 8px;
+
+  img {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: 'Helvetica', Arial, sans-serif;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.type {
+  > * {
+    display: inline;
+  }
+}
+
+.classIcon {
+  margin-left: 4px;
+}

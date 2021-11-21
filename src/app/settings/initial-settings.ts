@@ -15,6 +15,7 @@ export interface Settings extends DimApiSettings {
   /** Display perks as a list instead of a grid. */
   perkList: boolean;
   loadoutSort: LoadoutSort;
+  itemFeedHideTagged: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -23,4 +24,5 @@ export const initialSettingsState: Settings = {
   inventoryClearSpaces: 1,
   perkList: true,
   loadoutSort: LoadoutSort.ByEditTime,
+  itemFeedHideTagged: false,
 };
