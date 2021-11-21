@@ -487,6 +487,7 @@
   },
   "Loadouts": {
     "AddEquippedItems": "Add Equipped",
+    "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",

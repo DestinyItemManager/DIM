@@ -50,6 +50,7 @@ import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOT
 interface ProvidedProps {
   stores: DimStore[];
   initialClassType: DestinyClass | undefined;
+  notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
 }
@@ -165,6 +166,7 @@ function LoadoutBuilder({
   searchFilter,
   preloadedLoadout,
   initialClassType,
+  notes,
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
@@ -297,10 +299,14 @@ function LoadoutBuilder({
   );
 
   const shareBuild = () => {
-    const urlParams = new URLSearchParams({
+    const p: Record<string, string> = {
       class: classType.toString(),
       p: JSON.stringify(params),
-    });
+    };
+    if (notes) {
+      p.notes = notes;
+    }
+    const urlParams = new URLSearchParams(p);
     const url = `${location.origin}/optimizer?${urlParams}`;
     copyString(url);
     showNotification({
@@ -407,6 +413,13 @@ function LoadoutBuilder({
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
+        {notes && (
+          <div className={styles.guide}>
+            <p>
+              <b>{t('MovePopup.Notes')}</b> {notes}
+            </p>
+          </div>
+        )}
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}

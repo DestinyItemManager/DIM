@@ -35,6 +35,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const searchParams = new URLSearchParams(location.search);
   const urlClassTypeString = searchParams.get('class');
   const urlLoadoutParametersJSON = searchParams.get('p');
+  const urlNotes = searchParams.get('n');
 
   const urlClassType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
 
@@ -58,6 +59,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
       stores={stores}
       preloadedLoadout={preloadedLoadout}
       initialClassType={urlClassType}
+      notes={urlNotes ?? preloadedLoadout?.notes}
       initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );
