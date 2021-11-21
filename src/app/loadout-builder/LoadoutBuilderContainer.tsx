@@ -24,9 +24,7 @@ interface Props {
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 export default function LoadoutBuilderContainer({ account }: Props) {
-  const location = useLocation<{
-    loadout?: Loadout | undefined;
-  }>();
+  const location = useLocation();
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions();
   const stores = useSelector(sortedStoresSelector);
@@ -52,7 +50,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  const preloadedLoadout = location.state?.loadout;
+  const preloadedLoadout = location.state?.loadout as Loadout | undefined;
 
   // TODO: key off the URL params?
   return (

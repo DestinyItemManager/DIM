@@ -125,10 +125,14 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
     }
 
     const infos = itemInfosSelector(getState());
+
     if (_.isEmpty(infos)) {
       return;
     }
 
+    // Tags/notes are stored keyed by instance ID. Start with all the keys of the
+    // existing tags and notes and remove the ones that are still here, and the rest
+    // should be cleaned up because they refer to deleted items.
     const cleanupIds = new Set(Object.keys(infos));
     for (const store of stores) {
       for (const item of store.items) {

@@ -402,7 +402,7 @@ async function processVendor(
     saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
   });
 
-  const items = await processItems(
+  const items = processItems(
     { id: null } as any,
     saleItems.map((i) => i.item),
     defs,

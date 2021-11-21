@@ -1,10 +1,8 @@
-import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { useSetSetting } from 'app/settings/hooks';
+import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
-import { RootState } from 'app/store/types';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import {
   getSocketByIndex,
@@ -39,8 +37,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
-  const listPerks = useSelector((state: RootState) => settingsSelector(state).perkList);
-  const setSetting = useSetSetting();
+  const [listPerks, setListPerks] = useSetting('perkList');
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -133,7 +130,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
                 className={styles.displayStyleButton}
                 type="button"
                 title={t('Sockets.GridStyle')}
-                onClick={() => setSetting('perkList', false)}
+                onClick={() => setListPerks(false)}
               >
                 <AppIcon icon={faGrid} />
               </button>
@@ -147,7 +144,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
                 className={styles.displayStyleButton}
                 type="button"
                 title={t('Sockets.ListStyle')}
-                onClick={() => setSetting('perkList', true)}
+                onClick={() => setListPerks(true)}
               >
                 <AppIcon icon={faList} />
               </button>

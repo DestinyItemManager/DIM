@@ -1,4 +1,3 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
@@ -9,9 +8,8 @@ import {
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
-import { setSettingAction } from 'app/settings/actions';
 import Checkbox from 'app/settings/Checkbox';
-import { Settings } from 'app/settings/initial-settings';
+import { useSetting } from 'app/settings/hooks';
 import { acquisitionRecencyComparator } from 'app/shell/filters';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -44,6 +42,8 @@ export interface StatInfo {
   displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
+  statMaximumValue: number;
+  bar: boolean;
   enabled: boolean;
   lowerBetter: boolean;
   getStat: StatGetter;
@@ -62,7 +62,7 @@ type StatGetter = (item: DimItem) => undefined | MinimalStat;
 export default function Compare() {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
-  const compareBaseStats = useSelector(settingSelector('compareBaseStats'));
+  const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
   const rawCompareItems = useSelector(compareItemsSelector);
   const session = useSelector(compareSessionSelector);
   const organizerLink = useSelector(compareOrganizerLinkSelector);
@@ -160,10 +160,6 @@ export default function Compare() {
     setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
   };
 
-  const onChangeSetting = (checked: boolean, name: keyof Settings) => {
-    dispatch(setSettingAction(name, checked));
-  };
-
   // If the session was started with a specific item, this is it
   const initialItem = session?.initialItemId
     ? compareItems.find((i) => i.id === session.initialItemId)
@@ -219,7 +215,7 @@ export default function Compare() {
           label={t('Compare.CompareBaseStats')}
           name="compareBaseStats"
           value={compareBaseStats}
-          onChange={onChangeSetting}
+          onChange={setCompareBaseStats}
         />
       )}
       {exampleItem && <CompareSuggestions exampleItem={exampleItem} onQueryChanged={updateQuery} />}
@@ -340,7 +336,9 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
             statHash: item.energy.energyType,
             value: item.energy.energyCapacity,
           }) ||
-          undefined
+          undefined,
+        10,
+        false
       )
     );
   }
@@ -360,6 +358,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
             max: 0,
             enabled: false,
             lowerBetter: stat.smallerIsBetter,
+            statMaximumValue: stat.maximumValue,
+            bar: stat.bar,
             getStat(item: DimItem) {
               const itemStat = item.stats
                 ? item.stats.find((s) => s.statHash === stat.statHash)
@@ -398,6 +398,8 @@ function makeFakeStat(
   id: StatInfo['id'],
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
+  statMaximumValue = 0,
+  bar = false,
   lowerBetter = false
 ): StatInfo {
   if (typeof displayProperties === 'string') {
@@ -410,6 +412,8 @@ function makeFakeStat(
     max: 0,
     enabled: false,
     lowerBetter,
+    statMaximumValue,
     getStat,
+    bar,
   };
 }

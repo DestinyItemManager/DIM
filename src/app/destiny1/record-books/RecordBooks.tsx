@@ -1,9 +1,8 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
-import { useSetSetting } from 'app/settings/hooks';
+import { useSetting } from 'app/settings/hooks';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -57,16 +56,14 @@ interface RecordBookPage {
 export default function RecordBooks({ account }: Props) {
   const defs = useD1Definitions();
   const stores = useSelector(storesSelector) as D1Store[];
-  const hideCompletedRecords = useSelector(settingSelector('hideCompletedRecords'));
+  const [hideCompletedRecords, setHideCompletedRecords] = useSetting('hideCompletedRecords');
 
   useLoadStores(account);
-  const setSetting = useSetSetting();
   if (!defs || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
-  const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSetting('hideCompletedRecords', e.currentTarget.checked);
-  };
+  const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setHideCompletedRecords(e.currentTarget.checked);
 
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info

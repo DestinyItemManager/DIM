@@ -16,7 +16,7 @@ import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, faCheck, faClock } from '../shell/icons';
@@ -48,7 +48,6 @@ export default function ItemDetails({
     ? helmetIcon
     : handCannonIcon;
 
-  const urlParams = useParams<{ membershipId?: string; destinyVersion?: string }>();
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
@@ -140,9 +139,7 @@ export default function ItemDetails({
 
       {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
-          <Link
-            to={`/${urlParams.membershipId}/d${urlParams.destinyVersion}/vendors/${item.previewVendor}`}
-          >
+          <Link to={`../vendors/${item.previewVendor}`}>
             {t('ItemService.PreviewVendor', { type: item.typeName })}
           </Link>
         </div>

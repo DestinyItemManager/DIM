@@ -13,7 +13,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { itemMoveLoadout, maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
@@ -26,9 +26,10 @@ import {
   newLoadout,
 } from 'app/loadout-drawer/loadout-utils';
 import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
-import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { filteredItemsSelector } from 'app/search/search-filter';
+import { useSetting } from 'app/settings/hooks';
+import { LoadoutSort } from 'app/settings/initial-settings';
 import {
   addIcon,
   AppIcon,
@@ -36,10 +37,8 @@ import {
   faExclamationTriangle,
   powerActionIcon,
 } from 'app/shell/icons';
-import { querySelector } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -78,10 +77,8 @@ function Loadouts() {
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
   const allItems = useSelector(allItemsSelector);
-  const query = useSelector(querySelector);
-  const filteredItems = useSelector(filteredItemsSelector);
-
   const allLoadouts = useSelector(loadoutsSelector);
+  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
 
   const savedLoadouts = useMemo(
     () =>
@@ -92,19 +89,14 @@ function Loadouts() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === classType
         ),
-        (l) => -(l.lastUpdatedAt ?? 0)
+        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
       ),
-    [allLoadouts, classType]
+    [allLoadouts, classType, loadoutSort]
   );
 
   // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
 
   const maxLoadout = maxLightLoadout(allItems, selectedStore);
-  const queryLoadout = query.length > 0 ? itemMoveLoadout(filteredItems, selectedStore) : undefined;
-
-  const previousLoadout = useSelector((state: RootState) =>
-    previousLoadoutSelector(state, selectedStore.id)
-  );
 
   const currentLoadout = useMemo(() => {
     const items = selectedStore.items.filter(
@@ -119,31 +111,48 @@ function Loadouts() {
     return loadout;
   }, [selectedStore]);
 
-  const loadouts = _.compact([
-    queryLoadout,
-    previousLoadout,
-    currentLoadout,
-    maxLoadout,
-    ...savedLoadouts,
-  ]);
+  const loadouts = _.compact([currentLoadout, maxLoadout, ...savedLoadouts]);
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const handleNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
 
+  const sortOptions = [
+    {
+      key: 'time',
+      content: t('Loadouts.SortByEditTime'),
+      value: LoadoutSort.ByEditTime,
+    },
+    {
+      key: 'name',
+      content: t('Loadouts.SortByName'),
+      value: LoadoutSort.ByName,
+    },
+  ];
+
   return (
     <PageWithMenu>
-      <PageWithMenu.Menu>
+      <PageWithMenu.Menu className={styles.menu}>
         <CharacterSelect
           stores={stores}
           selectedStore={selectedStore}
           onCharacterChanged={setSelectedStoreId}
         />
         <div className={styles.menuButtons}>
+          <select
+            value={loadoutSort}
+            onChange={(e) => setLoadoutSort(parseInt(e.target.value, 10))}
+          >
+            {sortOptions.map((option) => (
+              <option key={option.key} value={option.value}>
+                {option.content}
+              </option>
+            ))}
+          </select>
           <button type="button" className={styles.menuButton} onClick={handleNewLoadout}>
             <AppIcon icon={addIcon} /> <span>{t('Loadouts.Create')}</span>
           </button>
-          <Link className={styles.menuButton} to={`./optimizer?class=${selectedStore.classType}`}>
+          <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>
@@ -229,7 +238,14 @@ function LoadoutRow({
             className="dim-button"
             onClick={() => editLoadout(loadout, { isNew: !saved })}
           >
-            {saved ? t('Loadouts.Edit') : t('Loadouts.Create')}
+            {t('Loadouts.Apply')}
+          </button>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => editLoadout(loadout, { isNew: !saved })}
+          >
+            {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
           {saved && (
             <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
@@ -354,7 +370,7 @@ function ItemCategory({
         <div className={clsx(styles.placeholder, `category-${category}`)}>
           {t(`Bucket.${category}`)}
           {category === 'Armor' && loadout.parameters && (
-            <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+            <Link className="dim-button" to="../optimizer" state={{ loadout }}>
               <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
             </Link>
           )}
@@ -367,7 +383,7 @@ function ItemCategory({
               <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
             </div>
           )}
-          <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+          <Link className="dim-button" to="../optimizer" state={{ loadout }}>
             <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
           </Link>
         </>

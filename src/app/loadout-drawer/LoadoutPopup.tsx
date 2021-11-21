@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
@@ -12,12 +13,14 @@ import {
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
+import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -29,6 +32,7 @@ import {
   editIcon,
   engramIcon,
   faExclamationTriangle,
+  faList,
   faRandom,
   levellingIcon,
   searchIcon,
@@ -44,7 +48,6 @@ import {
   randomLoadout,
 } from './auto-loadouts';
 import { applyLoadout } from './loadout-apply';
-import './loadout-popup.scss';
 import { Loadout } from './loadout-types';
 import {
   convertToLoadoutItem,
@@ -53,6 +56,7 @@ import {
   newLoadout,
 } from './loadout-utils';
 import { fromEquippedTypes } from './LoadoutDrawerContents';
+import styles from './LoadoutPopup.m.scss';
 import {
   makeRoomForPostmaster,
   pullablePostmasterItems,
@@ -83,10 +87,12 @@ interface StoreProps {
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
 function mapStateToProps() {
+  const loadoutSortSelector = settingSelector('loadoutSort');
   const loadoutsForPlatform = createSelector(
     loadoutsSelector,
+    loadoutSortSelector,
     (_state: RootState, { dimStore }: ProvidedProps) => dimStore,
-    (loadouts, dimStore) =>
+    (loadouts, loadoutSort, dimStore) =>
       _.sortBy(
         loadouts.filter(
           (loadout) =>
@@ -94,7 +100,9 @@ function mapStateToProps() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        (l) => l.name
+        $featureFlags.loadoutsPage && loadoutSort === LoadoutSort.ByEditTime
+          ? (l) => -(l.lastUpdatedAt ?? 0)
+          : (l) => l.name
       )
   );
 
@@ -225,9 +233,9 @@ function LoadoutPopup({
   };
 
   return (
-    <div className="loadout-popup-content" onClick={onClick} role="menu">
-      <ul className="loadout-list">
-        <li className="loadout-set">
+    <div className={styles.content} onClick={onClick} role="menu">
+      <ul className={styles.list}>
+        <li className={styles.menuItem}>
           <span onClick={makeNewLoadout}>
             <AppIcon icon={addIcon} />
             <span>{t('Loadouts.Create')}</span>
@@ -238,7 +246,7 @@ function LoadoutPopup({
         </li>
 
         {query.length > 0 && (
-          <li className="loadout-set">
+          <li className={styles.menuItem}>
             <span onClick={applySearchLoadout}>
               <AppIcon icon={searchIcon} />
               <span>{t('Loadouts.ApplySearch', { query })}</span>
@@ -248,7 +256,7 @@ function LoadoutPopup({
 
         {!dimStore.isVault && !hideFarming && (
           <>
-            <li className="loadout-set">
+            <li className={styles.menuItem}>
               <MaxlightButton
                 allItems={allItems}
                 dimStore={dimStore}
@@ -258,7 +266,7 @@ function LoadoutPopup({
 
             {dimStore.destinyVersion === 1 && (
               <>
-                <li className="loadout-set">
+                <li className={styles.menuItem}>
                   <span onClick={makeItemLevelingLoadout}>
                     <AppIcon icon={levellingIcon} />
                     <span>{t('Loadouts.ItemLeveling')}</span>
@@ -266,7 +274,7 @@ function LoadoutPopup({
                 </li>
 
                 {numPostmasterItemsTotal > 0 && (
-                  <li className="loadout-set">
+                  <li className={styles.menuItem}>
                     <span onClick={doMakeRoomForPostmaster}>
                       <AppIcon icon={sendIcon} />
                       <span>{t('Loadouts.MakeRoom')}</span>
@@ -277,10 +285,10 @@ function LoadoutPopup({
             )}
 
             {dimStore.destinyVersion === 2 && numPostmasterItems > 0 && (
-              <li className="loadout-set">
+              <li className={styles.menuItem}>
                 <span onClick={doPullFromPostmaster}>
                   <AppIcon icon={sendIcon} />
-                  <span className="badge">{numPostmasterItems}</span>{' '}
+                  <span className={styles.badge}>{numPostmasterItems}</span>{' '}
                   <span>{t('Loadouts.PullFromPostmaster')}</span>
                 </span>
                 <span onClick={doMakeRoomForPostmaster}>{t('Loadouts.PullMakeSpace')}</span>
@@ -289,14 +297,14 @@ function LoadoutPopup({
             {dimStore.destinyVersion === 2 &&
               numPostmasterItems === 0 &&
               numPostmasterItemsTotal > 0 && (
-                <li className="loadout-set">
+                <li className={styles.menuItem}>
                   <span onClick={doMakeRoomForPostmaster}>
                     <AppIcon icon={sendIcon} />
                     <span>{t('Loadouts.MakeRoom')}</span>
                   </span>
                 </li>
               )}
-            <li className="loadout-set">
+            <li className={styles.menuItem}>
               <span onClick={applyRandomLoadout}>
                 <AppIcon icon={faRandom} />
                 <span>
@@ -309,7 +317,7 @@ function LoadoutPopup({
                 </span>
               )}
             </li>
-            <li className="loadout-set">
+            <li className={styles.menuItem}>
               <span onClick={onStartFarming}>
                 <AppIcon icon={engramIcon} />
                 <span>{t('FarmingMode.FarmingMode')}</span>
@@ -319,7 +327,7 @@ function LoadoutPopup({
         )}
 
         {dimStore.destinyVersion === 1 && (
-          <li className="loadout-set">
+          <li className={styles.menuItem}>
             <span onClick={() => applyGatherEngramsLoadout({ exotics: true })}>
               <AppIcon icon={engramIcon} />
               <span>{t('Loadouts.GatherEngrams')}</span>
@@ -331,7 +339,7 @@ function LoadoutPopup({
         )}
 
         {previousLoadout && (
-          <li className="loadout-set">
+          <li className={styles.menuItem}>
             <span
               title={previousLoadout.name}
               onClick={() => applySavedLoadout(previousLoadout, { filterToEquipped: true })}
@@ -345,17 +353,26 @@ function LoadoutPopup({
           </li>
         )}
 
+        {$featureFlags.loadoutsPage && (
+          <li className={styles.menuItem}>
+            <Link to="../loadouts">
+              <AppIcon icon={faList} />
+              <span>{t('Loadouts.ManageLoadouts')}</span>
+            </Link>
+          </li>
+        )}
+
         {loadouts.map((loadout) => (
-          <li key={loadout.id} className="loadout-set">
+          <li key={loadout.id} className={styles.menuItem}>
             <span title={loadout.name} onClick={() => applySavedLoadout(loadout)}>
               {isMissingItems(allItems, loadout) && (
                 <AppIcon
-                  className="warning-icon"
+                  className={styles.warningIcon}
                   icon={faExclamationTriangle}
                   title={t('Loadouts.MissingItemsWarning')}
                 />
               )}
-              <ClassIcon className="loadout-type-icon" classType={loadout.classType} />
+              <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               {loadout.name}
             </span>
             <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>

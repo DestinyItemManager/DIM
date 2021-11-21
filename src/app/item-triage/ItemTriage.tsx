@@ -1,6 +1,6 @@
 // THIS FILE IS A MESS in order to effectively exclude its content from the bundle
 
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { StatHashListsKeyedByDestinyClass, StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
@@ -62,7 +62,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   const wishlistItem = useSelector(wishListSelector(item));
   const loadouts = useSelector(loadoutsSelector);
   const customTotalStatsByClass = useSelector<RootState, StatHashListsKeyedByDestinyClass>(
-    (state) => settingsSelector(state).customTotalStatsByClass
+    settingSelector('customTotalStatsByClass')
   );
   // because of the ability to swipe between item popup tabs,
   // all tabs in a popup are rendered when the item popup is up.

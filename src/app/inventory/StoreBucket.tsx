@@ -79,9 +79,14 @@ function mapStateToProps() {
           items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
         }
       }
-      const currentStore = currentStoreSelector(state)!;
+      const currentStore = currentStoreSelector(state);
+      // TODO: When we switch accounts this suffers from the "zombie child" problem where the redux store has already
+      // updated (so currentStore is cleared) but the store from props is still around because its redux subscription
+      // hasn't fired yet.
       items = items.filter(
-        (i) => i.classType === DestinyClass.Unknown || i.classType === currentStore.classType
+        (i) =>
+          i.classType === DestinyClass.Unknown ||
+          (currentStore && i.classType === currentStore.classType)
       );
     }
 

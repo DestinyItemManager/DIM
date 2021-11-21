@@ -142,7 +142,7 @@ function mapStateToProps() {
   );
 
   const disabledDueToMaintenanceSelector = createSelector(allItemsSelector, (items) =>
-    items.some((item) => item.missingSockets)
+    items.every((item) => item.missingSockets)
   );
 
   return (state: RootState): StoreProps => ({

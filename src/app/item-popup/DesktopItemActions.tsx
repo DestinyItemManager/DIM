@@ -1,5 +1,4 @@
 import { addCompareItem } from 'app/compare/actions';
-import { settingsSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -9,17 +8,14 @@ import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { setSettingAction } from 'app/settings/actions';
+import { useSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
-import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
-
-const sidecarCollapsedSelector = (state: RootState) => settingsSelector(state).sidecarCollapsed;
 
 const sharedButtonProps = { role: 'button', tabIndex: -1 };
 
@@ -32,11 +28,9 @@ export default function DesktopItemActions({
 }) {
   const stores = useSelector(sortedStoresSelector);
   const dispatch = useDispatch();
-  const sidecarCollapsed = useSelector(sidecarCollapsedSelector);
+  const [sidecarCollapsed, setSidecarCollapsed] = useSetting('sidecarCollapsed');
 
-  const toggleSidecar = () => {
-    dispatch(setSettingAction('sidecarCollapsed', !sidecarCollapsed));
-  };
+  const toggleSidecar = () => setSidecarCollapsed(!sidecarCollapsed);
 
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {

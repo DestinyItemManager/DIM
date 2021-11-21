@@ -1,7 +1,26 @@
 ## Next
 
+* Show bars next to armor stats in Compare.
+* At long last, found and fixed a bug that could lead to tags and notes getting wiped if you switched accounts while another account's data was loading. Many apologies to anyone who lost their tags and notes from this bug, and we hope it's gone for good.
+* Remove bright engram rewards from prestige season pass rewards as these were guesses and not quite right.
+
+### Beta Only
+
+* We're testing out a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now by default sorted by when they were last edited, rather than their name. You can change this on the Loadouts page or in settings. Let us know what you think, and how it can be made more useful!
+
+## 6.91.2 <span class="changelog-date">(2021-11-16)</span>
+
+* Put back the full item tile in Compare.
+
+## 6.91.1 <span class="changelog-date">(2021-11-16)</span>
+
+* Fix issue in Loadout Optimizer where only one set would show when using Safari or iOS apps.
+
+## 6.91.0 <span class="changelog-date">(2021-11-14)</span>
+
 * The link to D2Gunsmith from the Armory view is now shown on mobile.
 * Currency counts won't get squished anymore
+* Simplified item tiles in the Compare view since a lot of the tile info was redundant.
 
 ## 6.90.1 <span class="changelog-date">(2021-11-08)</span>
 

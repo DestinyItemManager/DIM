@@ -21,6 +21,13 @@
   }
 }
 
+.menu {
+  :global(.dim-button),
+  select {
+    width: 100%;
+  }
+}
+
 .menuButtons {
   margin: 8px 0;
   @include vertical-space-children(8px);
@@ -28,7 +35,6 @@
 
 .menuButton {
   composes: dim-button from global;
-  width: 100%;
   text-align: left;
 }
 
