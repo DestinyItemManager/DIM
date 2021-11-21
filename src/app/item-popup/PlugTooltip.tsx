@@ -107,7 +107,7 @@ export function PlugTooltip({
 
   let displayedPerks = perks;
 
-  // If perks aren't available from a prop, see if re can get them.
+  // If perks aren't available from a prop, see if we can get them.
   if (!displayedPerks) {
     displayedPerks = _.compact(
       _.uniqBy(
