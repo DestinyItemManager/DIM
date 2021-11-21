@@ -256,13 +256,15 @@ function groupItems(
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statHash of statOrder) {
-        statValues.push(statsByHash[statHash]!.base);
+        let value = statsByHash[statHash]!.base;
+        if (defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10) {
+          value += 2;
+        }
+        statValues.push(value);
       }
     }
 
-    let groupId = `${statValues}${
-      defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10
-    }`;
+    let groupId = `${statValues}`;
 
     if (activityMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)
