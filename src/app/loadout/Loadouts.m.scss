@@ -2,6 +2,10 @@
 
 .page {
   margin-top: 10px;
+  @include phone-portrait {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 .loadout {
@@ -19,6 +23,20 @@
     display: block;
     margin: 0;
   }
+
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.actions {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  @include horizontal-space-children(4px);
+  @include phone-portrait {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
 }
 
 .menu {
@@ -31,6 +49,10 @@
 .menuButtons {
   margin: 8px 0;
   @include vertical-space-children(8px);
+  @include phone-portrait {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 .menuButton {
