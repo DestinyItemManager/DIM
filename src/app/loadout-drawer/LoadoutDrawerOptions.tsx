@@ -35,7 +35,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout,
   saveAsNew,
   deleteLoadout,
-  calculateMinSheetHeight: calculateMinSheetHeight,
+  calculateMinSheetHeight,
 }: {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
