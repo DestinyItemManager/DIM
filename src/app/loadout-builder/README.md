@@ -46,4 +46,13 @@ Now lets get a little more in depth and look at the journey we take through spec
     - The energy type available with the selected armor upgrades and locked mods, if an item is allowed to swap energy type this will be the `Any` type
     - The tags of mods which can be socketed into the item e.g. VoG raid mods or nightmare mods
 1. Next we send all the mapped items and various other values to the web worker.The web worker is created in `process/useProcess#useProcess` but the scipt is it runs lives in `process-worker/process#process` because it needs a special tsconfig setup for web workers.
-1.
+1. The first major task in `process` is to cut down the number of armor combinations to at most 2 million. We have had issues with browsers running out of memory in the past. To do this items are sorted by `process#compareByStatOrder` so that the items with the least attractive stats are last in the list. Then we keep removing a single item from th largest bucket of items (helms, arms, ect) until we come under the limit.
+1. Now we loop over all the items looking for the best combinations of stats. This is nothing fancy. Just 5 levels of `for` loops and for each set we
+
+    1. Calculate the stats for the set
+    1. If the stats don't fall in the filter ranges we continue onto the next set
+    1. If the stats are worse then the lowest set in our `SetTracker` we exit and continue on to the next set
+    1. Check to see if the locked mods can fit in the set, if not we continue on to the next set
+1. Assuming a set has made it past the last step we now add it to the `SetTracker` which is defined in `process-worker/set-tracket#SetTracket`. This is a class that uses an insertion sort algorithm to keep a given number of armor sets. When we add a set to this we remove the worst tracked set if we reach the limit.
+1. When the results are returned from the web worker we need to get back our original `DimItem`'s. This is done by `process/mappers#hydrateArmorSet`. We just replace all the `ProcessItem`'s with their original `DimItem`'s but using a object that maps `id`'s to `DimItem`'s.
+1. Finally we render the sets. During this step we also calculate the best assignment of mods for a given set. During the processing we exit as soon as we find a single match for performance reasons. Now we can look at all possible mod assignments and find the best assignment for the given mods and armor upgrade options.
