@@ -254,6 +254,7 @@ function LoadoutRow({
           )}
         </div>
       </div>
+      {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
         {(items.length > 0 || subClass) && (
           <>

@@ -101,6 +101,13 @@ export default function LoadoutDrawerOptions({
     // There's an existing loadout with the same name & class
     Boolean(clashingLoadout);
 
+  const addNotes = () => {
+    updateLoadout({
+      ...loadout,
+      notes: '',
+    });
+  };
+
   return (
     <div className="loadout-options">
       <form onSubmit={saveLoadout}>
@@ -159,6 +166,18 @@ export default function LoadoutDrawerOptions({
               title={t('Loadouts.Delete')}
             >
               <AppIcon icon={deleteIcon} /> {t('Loadouts.Delete')}
+            </button>
+          </div>
+        )}
+        {loadout.notes === undefined && (
+          <div className="input-group">
+            <button
+              className="dim-button danger"
+              onClick={addNotes}
+              type="button"
+              title={t('Loadouts.AddNotes')}
+            >
+              {t('Loadouts.AddNotes')}
             </button>
           </div>
         )}
