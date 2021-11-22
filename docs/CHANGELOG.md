@@ -1,5 +1,7 @@
 ## Next
 
+## 6.92.0 <span class="changelog-date">(2021-11-21)</span>
+
 * Show bars next to armor stats in Compare.
 * At long last, found and fixed a bug that could lead to tags and notes getting wiped if you switched accounts while another account's data was loading. Many apologies to anyone who lost their tags and notes from this bug, and we hope it's gone for good.
 * Remove bright engram rewards from prestige season pass rewards as these were guesses and not quite right.
@@ -193,8 +195,8 @@
 ## 6.75.0 <span class="changelog-date">(2021-07-25)</span>
 
 * When opening Compare for a Timelost weapon, we now also include non-Timelost versions of that weapon.
-* Display the energy swap or upgrade details for items in the Optimiser.
-* Optimiser is now better at matching a set to an existing loadout.
+* Display the energy swap or upgrade details for items in the Optimizer.
+* Optimizer is now better at matching a set to an existing loadout.
 * Compare will properly close (and not just become invisible) if all the items you're comparing are deleted.
 * Fixed the search actions (three dots) menu not appearing in Safari.
 
@@ -202,7 +204,7 @@
 
 * Added the option to lock item element in the Optimizer's armor upgrade menu.
 * Not be broken
-* Fix issue with Optimiser crashing when socket data is not available.
+* Fix issue with Optimizer crashing when socket data is not available.
 * Invalid search queries are greyed out, and the save search star is hidden.
 * Favour higher energy and equipped items for grouped items in the Optimizer. This will mainly be noticed by the shown class item.
 * Adding unequipped items to a loadout no longer also adds items from the Postmaster.
@@ -588,7 +590,7 @@
 ## 6.39.1 <span class="changelog-date">(2020-11-16)</span>
 
 * Farming mode will no longer immediately kick out items you manually move onto your character.
-* The Records page now includes all the Triumps and Collections info that are in the game.
+* The Records page now includes all the Triumphs and Collections info that are in the game.
 * Mods in the Loadout Optimizer can be searched by their description.
 * Fixed Active Mode showing up in release version if you'd enabled it in Beta.
 * Fixed a crash when viewing Stasis subclasses.
@@ -836,9 +838,9 @@
 
 * The new armor 2.0 mod workflow is available in the Loadout Optimizer, this includes:
   * A new Mod Picker component to let you choose armor 2.0 mods to lock.
-  * The mod sockets shown in the optimiser are now the locked mods, rather than the mods currently equipped on the item.
+  * The mod sockets shown in the optimizer are now the locked mods, rather than the mods currently equipped on the item.
   * Clicking on a mod socket will open the picker to show available mods for that slot. Note that locking a mod from this won't guarantee it gets locked to the item specifically.
-  * Items have different levels of grouping depending on the requirements of the locked mods. Locking no mods keeps the previous grouping behaviour.
+  * Items have different levels of grouping depending on the requirements of the locked mods. Locking no mods keeps the previous grouping behavior.
   * The mods stat contributions are now shown in the picker.
   * The Mod Picker can now filter for items from a specific season, just filter by the season number directly e.g. "11" for arrivals.
 * The search bar now remembers your past searches and allows you to save your favorite searches. These saved and recent searches are synced between devices using DIM Sync.
@@ -982,7 +984,7 @@
 * Save column selection for Ghosts in the Organizer separate from Armor.
 * Display how many tags were cleaned up in the DIM Sync audit log.
 * Fix a bug where canceling setting a note in the Organizer would wipe notes from selected items.
-* Add a pointer cursor on item icons in the Organzier to indicate they're clickable.
+* Add a pointer cursor on item icons in the Organizer to indicate they're clickable.
 * Fix minimum page width when there are fewer than three characters.
 * Fix Arrival mods not appearing in the Loadout Optimizer.
 * Fix a bug when DIM Sync is off that could repeatedly show a notification that an import had failed. Please consider enabling DIM Sync though, your data WILL get lost if it's disabled.

@@ -53,7 +53,7 @@ function GeneratedSet({
   upgradeSpendTier,
   lockItemEnergyType,
 }: Props) {
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;

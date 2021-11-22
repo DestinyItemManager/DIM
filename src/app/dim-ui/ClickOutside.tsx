@@ -15,7 +15,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * Component that fires an event if you click or tap outside of it.
  *
  * This uses a parent element that's connected through context so we can continue to work within the
- * React DOM heirarchy rather than the real one. This is important for things like sheets
+ * React DOM hierarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
 export default React.forwardRef(function ClickOutside(

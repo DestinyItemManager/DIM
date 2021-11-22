@@ -14,7 +14,7 @@ import {
 import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
@@ -68,7 +68,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // all tabs in a popup are rendered when the item popup is up.
   // this actually processes items really fast, and the item popup appearance animation probably
   // takes longer than the calculation, but every millisecond counts, so,
-  // to keep the UI snappy, expecially since this tab may not even be viewed,
+  // to keep the UI snappy, especially since this tab may not even be viewed,
   // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {
@@ -323,7 +323,7 @@ const itemFactors: Record<string, Factor> = {
       return archetypeSocket?.plugged ? (
         <PressTip
           elementType="span"
-          tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
+          tooltip={<DimPlugTooltip item={item} plug={archetypeSocket.plugged} />}
         >
           <BungieImage
             className={styles.inlineIcon}

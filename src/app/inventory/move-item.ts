@@ -229,7 +229,7 @@ interface Move {
 }
 
 /**
- * Distribute a stackable item evently across characters.
+ * Distribute a stackable item evenly across characters.
  */
 export function distribute(actionableItem: DimItem): ThunkResult {
   return (dispatch, getState) =>

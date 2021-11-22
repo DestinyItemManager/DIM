@@ -661,7 +661,7 @@ function chooseMoveAsideItem(
 }
 
 /**
- * Is there anough space to move the given item into store? This will refresh
+ * Is there enough space to move the given item into store? This will refresh
  * data and/or move items aside in an attempt to make a move possible.
  * @param item The item we're trying to move.
  * @param store The destination store.
