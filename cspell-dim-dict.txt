@@ -152,5 +152,4 @@ xpincomplete
 Xur
 Zavala
 Русский
-*nt
-should+
+shouldnt
