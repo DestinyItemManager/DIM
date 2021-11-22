@@ -118,6 +118,7 @@ showxp
 stackable
 SVGs
 swappable
+swipable
 teespring
 tehdaw
 tshirt

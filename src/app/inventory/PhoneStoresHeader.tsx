@@ -16,7 +16,7 @@ const spring: Spring = {
 };
 
 /**
- * The swipeable header for the mobile (phone portrait) Inventory view.
+ * The swipable header for the mobile (phone portrait) Inventory view.
  */
 export default function PhoneStoresHeader({
   selectedStore,

@@ -124,7 +124,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
 
       <div className="detached" ref={detachedLoadoutMenu} />
 
-      <motion.div className="horizontal-swipeable" onPanEnd={handleSwipe}>
+      <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
         <StoresInventory
           stores={[selectedStore]}
           selectedCategoryId={selectedCategoryId}

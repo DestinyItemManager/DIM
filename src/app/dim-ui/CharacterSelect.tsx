@@ -19,7 +19,7 @@ const spring: Spring = {
 };
 
 /**
- * The swipeable header for selecting from a list of characters.
+ * The swipable header for selecting from a list of characters.
  *
  * This is currently a copy/paste of PhoneStoresHeader once both are done, if they are still similar, recombine them.
  */
@@ -46,7 +46,7 @@ export default function CharacterSelect({
   }
 
   return (
-    <SwipeableCharacterSelect
+    <SwipableCharacterSelect
       stores={stores}
       selectedStore={selectedStore}
       onCharacterChanged={onCharacterChanged}
@@ -79,7 +79,7 @@ function ListCharacterSelect({
   );
 }
 
-function SwipeableCharacterSelect({
+function SwipableCharacterSelect({
   stores,
   selectedStore,
   onCharacterChanged,

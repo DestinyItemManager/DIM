@@ -188,7 +188,7 @@ function Vendors({
         {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents>
-        <motion.div className="horizontal-swipeable" onPanEnd={handleSwipe}>
+        <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
           {vendorGroups && currencyLookups && defs ? (
             vendorGroups.map((group) => (
               <VendorGroup
