@@ -24,7 +24,7 @@
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
     "install": "git submodule update --init --recursive",
     "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'",
-    "spell-check": "cspell **"
+    "spell-check": "cspell **/*.{json,js,ts,tsx,md,yml,scss} --no-progress"
   },
   "husky": {
     "hooks": {
