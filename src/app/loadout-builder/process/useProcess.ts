@@ -3,15 +3,17 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { keyByStatHash } from 'app/inventory/store/stats';
-import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
-import { bucketsToCategories } from 'app/loadout/mod-utils';
 import {
-  armor2PlugCategoryHashes,
-  armor2PlugCategoryHashesByName,
-} from 'app/search/d2-known-values';
+  canSwapEnergyFromUpgradeSpendTier,
+  upgradeSpendTierToMaxEnergy,
+} from 'app/loadout/armor-upgrade-utils';
+import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout/mod-utils';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -99,9 +101,11 @@ export function useProcess(
 
     const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
-    const raidCombatAndLegacyMods = Object.entries(lockedModMap).flatMap(
-      ([plugCategoryHash, mods]) =>
-        mods && !armor2PlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+    const combatMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
+      mods && combatCompatiblePlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+    );
+    const activityMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
+      mods && activityModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
     );
 
     const processItems: ProcessItemsByBucket = {
@@ -121,8 +125,10 @@ export function useProcess(
         items,
         statOrder,
         upgradeSpendTier,
+        lockItemEnergyType,
         generalMods,
-        raidCombatAndLegacyMods
+        combatMods,
+        activityMods
       );
 
       for (const group of Object.values(groupedItems)) {
@@ -222,20 +228,27 @@ const groupComparator = chainComparator(
 );
 
 /**
- * This groups items for process depending on whether any general, other or raid mods are locked as follows
- * - If there are general, other or raid mods locked it groups items by (stats, masterworked, modSlot, energyType).
- * - If there are only general mods locked it groups items by (stats, masterwork, energyType)
- * - If no general, other or raid mods are locked it groups by (stats, masterworked).
+ * To reduce the number of items sent to the web worker we group items by a number of varying
+ * parameters, depending on what mods and armour upgrades are selected.
  *
- * Note that assumedMasterwork effects this.
+ * After items have been grouped we only send a single item (the first one) as a representative of
+ * said group. All other grouped items will be available by the swap icon in the UI.
+ *
+ * It can group by any number of the following concepts depending on locked mods and armor upgrades,
+ * - Stat distribution
+ * - Masterwork status
+ * - If there are energy requirements for slot independent mods it creates groups split by energy type
+ * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
   defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,
+  lockItemEnergyType: boolean,
   generalMods: PluggableInventoryItemDefinition[],
-  raidCombatAndLegacyMods: PluggableInventoryItemDefinition[]
+  combatMods: PluggableInventoryItemDefinition[],
+  activityMods: PluggableInventoryItemDefinition[]
 ) {
   const groupingFn = (item: DimItem) => {
     const statValues: number[] = [];
@@ -243,15 +256,17 @@ function groupItems(
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statHash of statOrder) {
-        statValues.push(statsByHash[statHash]!.base);
+        let value = statsByHash[statHash]!.base;
+        if (defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10) {
+          value += 2;
+        }
+        statValues.push(value);
       }
     }
 
-    let groupId = `${statValues}${
-      defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10
-    }`;
+    let groupId = `${statValues}`;
 
-    if (raidCombatAndLegacyMods.length) {
+    if (activityMods.length) {
       groupId += `${getSpecialtySocketMetadatas(item)
         ?.map((metadata) => metadata.slotTag)
         .join(',')}`;
@@ -259,10 +274,14 @@ function groupItems(
 
     // We don't need to worry about slot specific energy as items are already filtered for that.
     if (
-      someModHasEnergyRequirement(raidCombatAndLegacyMods) ||
-      someModHasEnergyRequirement(generalMods)
+      someModHasEnergyRequirement(combatMods) ||
+      someModHasEnergyRequirement(generalMods) ||
+      someModHasEnergyRequirement(activityMods)
     ) {
-      groupId += `${item.energy?.energyType}`;
+      groupId +=
+        defs && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
+          ? DestinyEnergyType.Any
+          : `${item.energy?.energyType}`;
     }
     return groupId;
   };
