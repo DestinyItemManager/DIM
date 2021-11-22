@@ -114,11 +114,13 @@ rsync
 ryanr
 Scroller
 Shaxx
+shouldnt
 showxp
 stackable
 SVGs
 swappable
 swipable
+tappable
 teespring
 tehdaw
 tshirt
@@ -152,4 +154,3 @@ xpincomplete
 Xur
 Zavala
 Русский
-shouldnt
