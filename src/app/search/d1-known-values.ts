@@ -115,7 +115,7 @@ export const D1ActivityHashes = {
     wotm: [4160622434], // SOURCE_WRATH_OF_THE_MACHINE / Wrath of the Machine
     poe: [2784812137], // SOURCE_PRISON_ELDERS / Prison of Elders
     coe: [1537575125], // SOURCE_POE_ELDER_CHALLENGE / Challenge of Elders
-    af: [3667653533], // SOURCE_ARCHON_FORGE / Archon Forge
+    af: [3667653533], // SOURCE_ARCHONS_FORGE / Archons Forge
     dawning: [3131490494], // SOURCE_DAWNING /
     aot: [3068521220, 4161861381, 440710167], // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
   },

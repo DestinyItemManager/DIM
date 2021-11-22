@@ -169,7 +169,7 @@ export function process(
   const helms = filteredItems[LockableBuckets.helmet].sort(
     comparatorsByBucket[LockableBuckets.helmet]
   );
-  const gaunts = filteredItems[LockableBuckets.gauntlets].sort(
+  const gauntlets = filteredItems[LockableBuckets.gauntlets].sort(
     comparatorsByBucket[LockableBuckets.gauntlets]
   );
   const chests = filteredItems[LockableBuckets.chest].sort(
@@ -190,9 +190,9 @@ export function process(
 
   // The maximum possible combos we could have
   const combosWithoutCaps =
-    helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+    helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   const initialNumItems =
-    helms.length + gaunts.length + chests.length + legs.length + classItems.length;
+    helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
   let combos = combosWithoutCaps;
 
@@ -200,7 +200,7 @@ export function process(
   // Since we're already sorted by total stats descending this should toss the worst items.
   let numDiscarded = 0;
   while (combos > combosLimit) {
-    const sortedTypes = [helms, gaunts, chests, legs]
+    const sortedTypes = [helms, gauntlets, chests, legs]
       // Don't ever remove the last item in a category
       .filter((items) => items.length > 1)
       // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
@@ -211,7 +211,7 @@ export function process(
     sortedTypes[sortedTypes.length - 1].pop();
     numDiscarded++;
     // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
-    combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+    combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   }
 
   if (combos < combosWithoutCaps) {
@@ -274,7 +274,7 @@ export function process(
   let numProcessed = 0;
   let elapsedSeconds = 0;
   for (const helm of helms) {
-    for (const gaunt of gaunts) {
+    for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (gaunt.equippingLabel && gaunt.equippingLabel === helm.equippingLabel) {
         numDoubleExotic += chests.length * legs.length * classItems.length;

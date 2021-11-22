@@ -165,7 +165,7 @@ function Progress({
         </PageWithMenu.Menu>
 
         <PageWithMenu.Contents className="progress-panel">
-          <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
+          <motion.div className="horizontal-swipeable" onPanEnd={handleSwipe}>
             <section id="ranks">
               <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
                 <div className="progress-row">

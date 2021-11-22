@@ -18,7 +18,7 @@ const superIconNodeHashes = {
   novaBomb: 3082407249,
   novaWarp: 194702279,
 
-  fistsofHavoc: 1757742244,
+  fistsOfHavoc: 1757742244,
   thundercrash: 2795355746,
   sentinelShield: 368405360,
   bannerShield: 3504292102,
@@ -59,9 +59,9 @@ const nodeHashToSubclassPath: {
   194702279:  { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.novaWarp       },
   1389184794: { base: subclassVoid,  position: 'bottom', superHash: superIconNodeHashes.novaBomb       },
   // Striker
-  4099943028: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.fistsofHavoc   },
+  4099943028: { base: subclassArc,   position: 'top',    superHash: superIconNodeHashes.fistsOfHavoc   },
   2795355746: { base: subclassArc,   position: 'middle', superHash: superIconNodeHashes.thundercrash   },
-  4293830764: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.fistsofHavoc   },
+  4293830764: { base: subclassArc,   position: 'bottom', superHash: superIconNodeHashes.fistsOfHavoc   },
   // Sentinel
   3806272138: { base: subclassVoid,  position: 'top',    superHash: superIconNodeHashes.sentinelShield },
   3504292102: { base: subclassVoid,  position: 'middle', superHash: superIconNodeHashes.bannerShield   },

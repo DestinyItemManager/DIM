@@ -1,6 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { battleNetIcon, faPlaystation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
+import { battleNetIcon, faPlayStation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
@@ -38,7 +38,7 @@ const PLATFORM_LABELS = {
 
 export const PLATFORM_ICONS = {
   [BungieMembershipType.TigerXbox]: faXbox,
-  [BungieMembershipType.TigerPsn]: faPlaystation,
+  [BungieMembershipType.TigerPsn]: faPlayStation,
   [BungieMembershipType.TigerBlizzard]: battleNetIcon,
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,

@@ -59,7 +59,7 @@ export function isModStatActive(
     // Powerful Friends & Radiant Light
     // True if another arc charged with light mod is found
     // Note the this is not entirely correct as another arc mod slotted into the same item would
-    // also trigger it but we dont know that until we try to socket them. Basically it is too hard
+    // also trigger it but we don't know that until we try to socket them. Basically it is too hard
     // to figure that condition out so lets leave it as a known issue for now.
     return Boolean(
       lockedMods.find(

@@ -309,7 +309,7 @@ function LoadoutBuilder({
     });
   };
 
-  // I dont think this can actually happen?
+  // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
   }
