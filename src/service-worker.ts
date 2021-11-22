@@ -30,7 +30,7 @@ registerRoute(
   'GET'
 );
 
-// Since we're a single page app, route all navigations to /index.html
+// Since we're a single page app, route all navigation to /index.html
 const handler = createHandlerBoundToURL('/index.html');
 const navigationRoute = new NavigationRoute(handler, {
   // These have their own pages (return.html)

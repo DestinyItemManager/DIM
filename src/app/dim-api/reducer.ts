@@ -1195,21 +1195,16 @@ export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
  * back and forth.
  */
 function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const equipped = dimLoadout.items
-    .filter((i) => i.equipped)
-    .map(convertDimLoadoutItemToLoadoutItem);
-  const unequipped = dimLoadout.items
-    .filter((i) => !i.equipped)
-    .map(convertDimLoadoutItemToLoadoutItem);
+  const { items, name, clearSpace, ...rest } = dimLoadout;
+  const equipped = items.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+  const unequipped = items.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
 
   return {
-    id: dimLoadout.id,
-    classType: dimLoadout.classType,
-    name: dimLoadout.name.trim(),
-    clearSpace: dimLoadout.clearSpace || false,
+    ...rest,
+    name: name.trim(),
+    clearSpace: clearSpace || false,
     equipped,
     unequipped,
-    parameters: dimLoadout.parameters,
   };
 }
 

@@ -241,7 +241,7 @@ const groupComparator = chainComparator(
  * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,

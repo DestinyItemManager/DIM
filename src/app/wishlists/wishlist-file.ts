@@ -32,7 +32,7 @@ export function toWishList(fileText: string): WishListAndInfo {
 
     let blockNotes: string | undefined = undefined;
     const seen = new Set<string>();
-    let dups = 0;
+    let dupes = 0;
 
     const lines = fileText.split('\n');
     for (const line of lines) {
@@ -59,14 +59,14 @@ export function toWishList(fileText: string): WishListAndInfo {
             seen.add(rollHash);
             wishList.wishListRolls.push(roll);
           } else {
-            dups++;
+            dupes++;
           }
         }
       }
     }
 
-    if (dups > 0) {
-      warnLog('wishlist', 'Discarded', dups, 'duplicate rolls from wish list');
+    if (dupes > 0) {
+      warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
     }
     return wishList;
   } finally {

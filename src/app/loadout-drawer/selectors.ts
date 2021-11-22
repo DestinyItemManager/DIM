@@ -27,17 +27,14 @@ export const previousLoadoutSelector = (state: RootState, storeId: string): Load
  * storage format to the old loadout format.
  */
 function convertDimApiLoadoutToLoadout(loadout: DimApiLoadout): Loadout {
+  const { equipped, unequipped, clearSpace, ...rest } = loadout;
   return {
-    id: loadout.id,
-    classType: loadout.classType,
-    name: loadout.name,
-    clearSpace: loadout.clearSpace || false,
+    ...rest,
+    clearSpace: clearSpace || false,
     items: [
-      ...loadout.equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
-      ...loadout.unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
+      ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
+      ...unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
     ],
-    parameters: loadout.parameters,
-    lastUpdatedAt: loadout.lastUpdatedAt,
   };
 }
 

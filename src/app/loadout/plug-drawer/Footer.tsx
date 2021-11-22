@@ -1,7 +1,7 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
-import LockedModIcon from '../loadout-ui/LockedModIcon';
+import PlugDef from '../loadout-ui/PlugDef';
 import { getModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
 
@@ -35,10 +35,10 @@ export default function Footer({
       </div>
       <div className={styles.selectedMods}>
         {selected.map((plug) => (
-          <LockedModIcon
+          <PlugDef
             key={getModRenderKey(plug, plugCounts)}
-            mod={plug}
-            onModClicked={() => onPlugSelected(plug)}
+            plug={plug}
+            onClose={() => onPlugSelected(plug)}
           />
         ))}
       </div>
