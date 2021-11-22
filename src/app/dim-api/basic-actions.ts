@@ -10,7 +10,7 @@ import type { DimApiState } from './reducer';
 /**
  * These are all the "basic" actions for the API - stuff that gets reacted to in the reducer.
  *
- * Thunk actions that coordinate more complext workflows are in ./actions.
+ * Thunk actions that coordinate more complex workflows are in ./actions.
  */
 
 /** Bulk update global settings after they've been loaded. */
@@ -42,7 +42,7 @@ export const trackTriumph = createAction('dim-api/TRACK_TRIUMPH')<{
 /** Record that a search was used */
 export const searchUsed = createAction('dim-api/SEARCH_USED')<string>();
 
-/** Save or unsave a search */
+/** Save or un-save a search */
 export const saveSearch = createAction('dim-api/SAVE_SEARCH')<{
   query: string;
   saved: boolean;

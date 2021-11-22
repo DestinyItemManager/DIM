@@ -410,7 +410,7 @@ export interface DimSocketCategory {
 
 export interface DimSockets {
   /**
-   * A flat list of all sockes on the item.
+   * A flat list of all sockets on the item.
    * Note that this list cannot be indexed by socketIndex - it must be *searched* by socketIndex, because some sockets have been removed.
    */
   allSockets: DimSocket[];

@@ -185,7 +185,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
 }
 
 /**
- * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
+ * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
  */
 function loadManifestRemote(
   version: string,
@@ -262,7 +262,7 @@ async function saveManifestToIndexedDB(
 ) {
   try {
     await set(idbKey, typedArray);
-    infoLog('manifest', `Sucessfully stored manifest file.`);
+    infoLog('manifest', `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
   } catch (e) {

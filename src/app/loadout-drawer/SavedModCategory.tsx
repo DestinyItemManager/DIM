@@ -1,5 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import LockedModIcon from 'app/loadout/loadout-ui/LockedModIcon';
+import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import React from 'react';
 import { AddButton } from './Buttons';
 import styles from './SavedModCategory.m.scss';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 /**
- * A component for displaying a group of mods categorised by their plugCategoryHash.
+ * A component for displaying a group of mods categorized by their plugCategoryHash.
  *
  * It allows the mods to be added to and removed from the loadout.
  */
@@ -25,7 +25,7 @@ function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
     return null;
   }
 
-  // Count the occurences of each mod so we can create unique keys for said mods.
+  // Count the occurrences of each mod so we can create unique keys for said mods.
   const modCounts = {};
 
   for (const mod of mods) {
@@ -43,10 +43,10 @@ function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
       </div>
       <div className={styles.mods}>
         {mods.map((mod) => (
-          <LockedModIcon
+          <PlugDef
             key={`${mod.hash}-${modCounts[mod.hash]--}`}
-            mod={mod}
-            onModClicked={() => onRemove(mod.hash)}
+            plug={mod}
+            onClose={() => onRemove(mod.hash)}
           />
         ))}
         <AddButton onClick={() => onOpenModPicker(firstMod.itemTypeDisplayName)} />

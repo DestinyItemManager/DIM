@@ -61,7 +61,7 @@ const sortDupes = (
 };
 
 const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) => string) => {
-  // Holds a map from item hash to count of occurrances of that hash
+  // Holds a map from item hash to count of occurrences of that hash
   const duplicates: { [dupeID: string]: DimItem[] } = {};
 
   for (const i of allItems) {

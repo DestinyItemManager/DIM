@@ -224,13 +224,13 @@ const groupComparator = chainComparator(
 /**
  * This groups items for process depending on whether any general, other or raid mods are locked as follows
  * - If there are general, other or raid mods locked it groups items by (stats, masterworked, modSlot, energyType).
- * - If there are only general mods locked it groupes items by (stats, masterwork, energyType)
+ * - If there are only general mods locked it groups items by (stats, masterwork, energyType)
  * - If no general, other or raid mods are locked it groups by (stats, masterworked).
  *
  * Note that assumedMasterwork effects this.
  */
 function groupItems(
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   upgradeSpendTier: UpgradeSpendTier,

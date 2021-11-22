@@ -1,5 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
 
 export interface LoadoutItem {
   id: string;
@@ -9,15 +8,7 @@ export interface LoadoutItem {
 }
 
 /** In memory loadout structure. */
-export interface Loadout {
-  id: string;
-  classType: DestinyClass;
-  name: string;
+export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
+  // All items are flattened out into LoadoutItems that keep track of whether they're equipped.
   items: LoadoutItem[];
-  /** Whether to move other items not in the loadout off the character when applying the loadout. */
-  clearSpace?: boolean;
-  /** Information about the desired properties of this loadout - used to drive the Loadout Optimizer or apply Mod Loadouts */
-  parameters?: LoadoutParameters;
-  /** When was this Loadout last changed? Tracked automatically by the API - when saving a loadout this field is ignored. */
-  lastUpdatedAt?: number;
-}
+};

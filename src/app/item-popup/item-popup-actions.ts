@@ -145,7 +145,7 @@ function storeButtonEnabled(
   if (item.location.inPostmaster && item.location.type !== 'Engrams') {
     return item.canPullFromPostmaster;
   } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
+    // Can store an equipped item in same itemStore
     if (item.equipped && store.id === buttonStore.id) {
       return true;
     }
@@ -178,7 +178,7 @@ function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
   if (item.location.inPostmaster && item.location.type !== 'Engrams') {
     return item.canPullFromPostmaster;
   } else if (item.notransfer) {
-    // Can store an equiped item in same itemStore
+    // Can store an equipped item in same itemStore
     if (item.equipped && store.id === buttonStore.id) {
       return true;
     }

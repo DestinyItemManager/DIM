@@ -35,7 +35,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout,
   saveAsNew,
   deleteLoadout,
-  calculauteMinSheetHeight,
+  calculateMinSheetHeight,
 }: {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
@@ -46,7 +46,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
-  calculauteMinSheetHeight(): number | undefined;
+  calculateMinSheetHeight(): number | undefined;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
@@ -201,7 +201,7 @@ export default function LoadoutDrawerOptions({
             loadout={loadout}
             sheetRef={modAssignmentDrawerRef}
             onUpdateMods={onUpdateMods}
-            minHeight={calculauteMinSheetHeight()}
+            minHeight={calculateMinSheetHeight()}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body

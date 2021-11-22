@@ -85,7 +85,7 @@ function loadManifest(): ThunkResult<any> {
 }
 
 /**
- * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
+ * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
  */
 function loadManifestRemote(version: string, path: string): ThunkResult<object> {
   return async (dispatch) => {
@@ -109,7 +109,7 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
 async function saveManifestToIndexedDB(typedArray: object, version: string) {
   try {
     await set(idbKey, typedArray);
-    infoLog('manifest', `Sucessfully stored manifest file.`);
+    infoLog('manifest', `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
   } catch (e) {
     errorLog('manifest', 'Error saving manifest file', e);

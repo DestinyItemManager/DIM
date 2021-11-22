@@ -4,7 +4,14 @@ import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
+import {
+  ArmorStatHashes,
+  ArmorStats,
+  LockableBucketHashes,
+  LockableBuckets,
+  StatFilters,
+  StatRanges,
+} from '../types';
 import { statTier } from '../utils';
 import {
   canTakeSlotIndependentMods,
@@ -143,26 +150,14 @@ export function process(
   const comparatorsByBucket: { [bucketHash: number]: Comparator<ProcessItem> } = {};
 
   // Precompute the stats of each item in the order the user asked for
-  for (const item of [
-    ...filteredItems[LockableBuckets.helmet],
-    ...filteredItems[LockableBuckets.gauntlets],
-    ...filteredItems[LockableBuckets.chest],
-    ...filteredItems[LockableBuckets.leg],
-    ...filteredItems[LockableBuckets.classitem],
-  ]) {
+  for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCache.set(
       item,
       statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
     );
   }
 
-  for (const bucket of [
-    LockableBuckets.helmet,
-    LockableBuckets.gauntlets,
-    LockableBuckets.chest,
-    LockableBuckets.leg,
-    LockableBuckets.classitem,
-  ]) {
+  for (const bucket of LockableBucketHashes) {
     const items = filteredItems[bucket];
     comparatorsByBucket[bucket] = compareByStatOrder(
       items,
