@@ -28,5 +28,15 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": false
     }
-  }
+  },
+  "cSpell.enabledLanguageIds": [
+    "jsonc",
+    "json",
+    "markdown",
+    "javascript",
+    "scss",
+    "typescript",
+    "typescriptreact",
+    "yaml"
+  ]
 }
