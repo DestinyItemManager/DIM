@@ -2,6 +2,7 @@
 ARGH
 asscended
 bhollis
+brotli
 bois
 bucketize
 Bungie
