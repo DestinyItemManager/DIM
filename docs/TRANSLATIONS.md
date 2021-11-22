@@ -57,27 +57,3 @@ If your language requires plural or gender support for a translation do not hesi
 | Variable  | Resolves to |
 |-----------|-------------|
 | {{store}} | Exo Male Warlock, etc |
-
-## Translation Team
-| Language | Code | Proofreaders | Translators |
-|----------|------|--------------|-------------|
-| Chinese Simplified | zh-chs | coralfox, Meisy | digmouse, Lance ACE, Min Chen, Obzer, Remedy-, yuebing233 |
-| Chinese Traditional | zh-cht | coralfox, Meisy | NerdBunny,  kourge |
-| German | de | Korben-85, StefanGose, itspick | dleising, Stereoide, Heslant, patriksuter |
-| French | fr | Julian, yannickguillemot, qcmethical |  ScaRdrow, cbperez90, Sospuff |
-| Italian | it | simonefranza, Theovorn | Apokalipsys-ZR7, MuurStardust |
-| Japanese | ja | omar_senpai, thatjapanesedude, winy0808 | chickenmer, Meisy, LKSFerreira, Nicacio, rsb007, ricdonabre, HowlinVixen, WagnerFCruz |
-| Korean | ko | lion0738, Mental01 | juniac, lavenza, Luthervan, tinkrain, seed1482 |
-| Polish | pl |  | |
-| Portuguese | pt-br | duckmanBR, SiLeNtWaLkEr, brunnopleffken, edson.igd | Medeiros97, LKSFerreira |
-| Russian | ru | Aibot, monechka | Anakros, safrashenkov, tatarinovm.s, bogshev |
-| Spanish | es | JaviG1105, Apokalipsys-ZR7, tsps_03 | Bec04015, Jakio, Pochev, tsps_03, Hekutoru, JIM_SLIDER, cbperez90, NeedlessCred |
-| Spanish (Latin America) | es-mx | jairjrr | random.zits, TimeBokan84 |
-
-# Translation Coordinator
-
-delphiactual
-
-# Translation Managers
-
-bhollis, eutral, Sunburned_Goose
