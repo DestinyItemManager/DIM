@@ -71,9 +71,9 @@ const simpleRangeFilters: FilterDefinition[] = [
       generateSuggestionsForFilter({ keywords: 'kills', format: 'range' }),
     filter: ({ filterValue }) => {
       const parts = filterValue.split(':');
-      const [count, ...[activityType, shouldNotExist]] = [parts.pop(), ...parts];
+      const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
-      if (shouldNotExist) {
+      if (shouldntExist) {
         throw new Error('Too many filter parameters.');
       }
 

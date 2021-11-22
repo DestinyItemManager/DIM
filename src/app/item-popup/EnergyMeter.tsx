@@ -25,7 +25,7 @@ export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Stasis]: styles.stasis,
 } as const;
 
-const swapableEnergyTypes = [
+const swappableEnergyTypes = [
   DestinyEnergyType.Arc,
   DestinyEnergyType.Thermal,
   DestinyEnergyType.Void,
@@ -116,7 +116,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
 
   const energyTypes = Object.values(defs.EnergyType.getAll());
 
-  const energyOptions: Option<DestinyEnergyType>[] = swapableEnergyTypes.map((e) => {
+  const energyOptions: Option<DestinyEnergyType>[] = swappableEnergyTypes.map((e) => {
     const energyDef = energyTypes.find((ed) => ed.enumValue === e)!;
     return {
       key: e.toString(),
@@ -141,7 +141,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
           </div>
         </div>
         <div className={clsx(styles.inner, energyStyles[previewEnergyType])}>
-          {swapableEnergyTypes.includes(item.energy.energyType) && (
+          {swappableEnergyTypes.includes(item.energy.energyType) && (
             <Select<DestinyEnergyType>
               options={energyOptions}
               value={previewEnergyType}
@@ -208,7 +208,7 @@ function EnergyUpgradePreview({
   previewEnergyType: DestinyEnergyType;
 }) {
   const defs = useD2Definitions()!;
-  if (!item.energy || !swapableEnergyTypes.includes(item.energy.energyType)) {
+  if (!item.energy || !swappableEnergyTypes.includes(item.energy.energyType)) {
     return null;
   }
 

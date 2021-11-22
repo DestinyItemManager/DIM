@@ -117,6 +117,7 @@ Shaxx
 showxp
 stackable
 SVGs
+swappable
 teespring
 tehdaw
 tshirt
@@ -150,3 +151,5 @@ xpincomplete
 Xur
 Zavala
 Русский
+*nt
+should+

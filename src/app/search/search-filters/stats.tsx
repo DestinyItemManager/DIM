@@ -114,12 +114,12 @@ function statFilterFromString(
   filterValue: string,
   byBaseValue = false
 ): (item: DimItem) => boolean {
-  const [statNames, statValue, shouldNotExist] = filterValue.split(':');
+  const [statNames, statValue, shouldntExist] = filterValue.split(':');
 
   // we are looking for, at most, 3 colon-separated sections in the overall text:
   // stat                   mobility                    >=5
   // and one was already removed ("stat"), so bail if there's more than 1 colon left
-  if (shouldNotExist) {
+  if (shouldntExist) {
     throw new Error('Too many segments');
   }
 
