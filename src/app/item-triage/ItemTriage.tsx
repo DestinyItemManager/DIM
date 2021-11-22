@@ -14,7 +14,7 @@ import {
 import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
@@ -323,7 +323,7 @@ const itemFactors: Record<string, Factor> = {
       return archetypeSocket?.plugged ? (
         <PressTip
           elementType="span"
-          tooltip={<PlugTooltip item={item} plug={archetypeSocket.plugged} />}
+          tooltip={<DimPlugTooltip item={item} plug={archetypeSocket.plugged} />}
         >
           <BungieImage
             className={styles.inlineIcon}
