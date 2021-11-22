@@ -99,7 +99,7 @@ function compareByStatOrder(
     // Then by each stat individually in order
     ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
     // Then by overall total
-    compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
+    compareBy((i) => -i.stats[TOTAL_STAT_HASH])
   );
 }
 
@@ -151,7 +151,10 @@ export function process(
 
   // Precompute the stats of each item in the order the user asked for
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
-    statsCache.set(item, getStatValuesWithMW(item, statOrder));
+    statsCache.set(
+      item,
+      statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
+    );
   }
 
   for (const bucket of LockableBucketHashes) {
@@ -474,21 +477,6 @@ export function process(
     statRanges,
     statRangesFiltered,
   };
-}
-
-/**
- * Gets the stat values of an item with masterwork.
- */
-function getStatValuesWithMW(item: ProcessItem, orderedStatValues: number[]) {
-  const baseStats = { ...item.baseStats };
-
-  if (item.energy?.capacity === 10) {
-    for (const statHash of orderedStatValues) {
-      baseStats[statHash] += 2;
-    }
-  }
-  // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
-  return orderedStatValues.map((statHash) => Math.max(baseStats[statHash], 0));
 }
 
 function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
