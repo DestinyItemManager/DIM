@@ -68,7 +68,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // all tabs in a popup are rendered when the item popup is up.
   // this actually processes items really fast, and the item popup appearance animation probably
   // takes longer than the calculation, but every millisecond counts, so,
-  // to keep the UI snappy, expecially since this tab may not even be viewed,
+  // to keep the UI snappy, especially since this tab may not even be viewed,
   // we put calculations in a useEffect and fill in the numbers later
   useEffect(() => {
     if (item.bucket.inArmor) {

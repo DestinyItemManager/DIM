@@ -14,7 +14,7 @@ interface Props {
 }
 
 /**
- * A component for displaying a group of mods categorised by their plugCategoryHash.
+ * A component for displaying a group of mods categorized by their plugCategoryHash.
  *
  * It allows the mods to be added to and removed from the loadout.
  */
@@ -25,7 +25,7 @@ function SavedModCategory({ mods, onRemove, onOpenModPicker }: Props) {
     return null;
   }
 
-  // Count the occurences of each mod so we can create unique keys for said mods.
+  // Count the occurrences of each mod so we can create unique keys for said mods.
   const modCounts = {};
 
   for (const mod of mods) {

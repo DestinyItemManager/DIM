@@ -7,7 +7,7 @@ import { ClickOutsideContext } from './ClickOutside';
  * "Outside" for any ClickOutside children.
  *
  * This uses a parent element that's connected through context so we can continue to work within the
- * React DOM heirarchy rather than the real one. This is important for things like sheets
+ * React DOM hierarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
 export default function ClickOutsideRoot({

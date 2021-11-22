@@ -202,7 +202,7 @@ export const RAID_ACTIVITY_TYPE_HASH = 2043403989;
 
 // milestones to manually mark as raid, because they don't adequately identify themselves in defs
 export const RAID_MILESTONE_HASHES = [
-  2712317338, // Milestone "Garden of Salvation" has no asociated activities to check for raid-ness
+  2712317338, // Milestone "Garden of Salvation" has no associated activities to check for raid-ness
 ];
 
 export const VENDORS = {

@@ -193,7 +193,7 @@ function ModPicker({
           associatedLockedMods.length < MAX_SLOT_SPECIFIC_MODS &&
           lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
           (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
-            associatedLockedMods.some((l) => l.plug.energyCost?.energyType === modEnergyType) || // Matches some other enery
+            associatedLockedMods.some((l) => l.plug.energyCost?.energyType === modEnergyType) || // Matches some other energy
             associatedLockedMods.every(
               (l) =>
                 (l.plug.energyCost?.energyType || DestinyEnergyType.Any) === DestinyEnergyType.Any
