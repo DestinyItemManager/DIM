@@ -1,7 +1,6 @@
 name: 'Check spelling'
 on: # rebuild any PRs and main branch changes
   pull_request:
-  push:
 
 jobs:
   spellcheck: # run the action
@@ -9,3 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: streetsidesoftware/cspell-action@v1.0.1
+        with:
+          strict: true
+          config: 'cspell.json'

@@ -31,7 +31,7 @@
   );
   // used for phone portrait mode
   --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-  // The height of the visible viewport, taking into account virutal keyboards on iOS. Set by JS. This is more accurate than 100vh!
+  // The height of the visible viewport, taking into account virtual keyboards on iOS. Set by JS. This is more accurate than 100vh!
   --viewport-height: 100vh;
   // The bottom offset of the visual viewport from the layout viewport. Set by JS. This can help attach things to virtual keyboards.
   --viewport-bottom-offset: 0px;
@@ -142,7 +142,7 @@ span:focus {
   margin: 0 auto;
 }
 
-// Use this to make images not tappable (Android Chrome will show a download menu)
+// Use this to make images not tapable (Android Chrome will show a download menu)
 .no-pointer-events {
   pointer-events: none;
 }
