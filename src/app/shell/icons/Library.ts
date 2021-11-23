@@ -93,7 +93,7 @@ const faThumbtack = 'fas fa-thumbtack';
 const faInfoCircle = 'fas fa-info-circle';
 
 const faXbox = 'fab fa-xbox';
-const faPlaystation = 'fab fa-playstation';
+const faPlayStation = 'fab fa-playstation';
 const faSteam = 'fab fa-steam';
 const faYoutube = 'fab fa-youtube';
 const faDiscord = 'fab fa-discord';
@@ -195,7 +195,7 @@ export {
   faExternalLinkAlt,
   faInfoCircle,
   faXbox,
-  faPlaystation,
+  faPlayStation,
   faSteam,
   faYoutube,
   faDiscord,

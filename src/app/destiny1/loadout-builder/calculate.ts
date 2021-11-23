@@ -54,7 +54,7 @@ export function getSetBucketsStep(
     item: D1Item;
     bonusType: string;
   }[] = bestArmor.Helmet || [];
-  const gaunts: {
+  const gauntlets: {
     item: D1Item;
     bonusType: string;
   }[] = bestArmor.Gauntlets || [];
@@ -82,7 +82,7 @@ export function getSetBucketsStep(
   const tiersSet = new Set<string>();
   const combos =
     helms.length *
-    gaunts.length *
+    gauntlets.length *
     chests.length *
     legs.length *
     classItems.length *
@@ -112,7 +112,7 @@ export function getSetBucketsStep(
       processedCount: number
     ) {
       for (; h < helms.length; ++h) {
-        for (; g < gaunts.length; ++g) {
+        for (; g < gauntlets.length; ++g) {
           for (; c < chests.length; ++c) {
             for (; l < legs.length; ++l) {
               for (; ci < classItems.length; ++ci) {
@@ -120,7 +120,7 @@ export function getSetBucketsStep(
                   for (; ar < artifacts.length; ++ar) {
                     const validSet =
                       Number(helms[h].item.isExotic) +
-                        Number(gaunts[g].item.isExotic) +
+                        Number(gauntlets[g].item.isExotic) +
                         Number(chests[c].item.isExotic) +
                         Number(legs[l].item.isExotic) <
                       2;
@@ -129,7 +129,7 @@ export function getSetBucketsStep(
                       const set: ArmorSet = {
                         armor: {
                           Helmet: helms[h],
-                          Gauntlets: gaunts[g],
+                          Gauntlets: gauntlets[g],
                           Chest: chests[c],
                           Leg: legs[l],
                           ClassItem: classItems[ci],

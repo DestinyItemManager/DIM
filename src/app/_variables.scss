@@ -94,7 +94,7 @@ $issue-banner-height: 101px;
   }
 }
 
-// Show visibile scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars
+// Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars
 @mixin visible-scrollbars {
   &::-webkit-scrollbar {
     width: 10px;
