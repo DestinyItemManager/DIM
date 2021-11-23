@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React from 'react';
 import LoadoutDrawerItem from '../LoadoutDrawerItem';
 import ItemSocketsSubclass from './ItemSocketsSubclass';
@@ -18,11 +19,27 @@ export function Subclass({
   remove(item: DimItem, e: React.MouseEvent<Element, MouseEvent>): void;
   updateSocketOverrides(socketOverrides: SocketOverrides): void;
 }) {
+  const defs = useD2Definitions();
+  const socketOverridesWithDefaultPlugs: SocketOverrides = { ...socketOverrides };
+
+  for (const socket of subclass.sockets?.allSockets || []) {
+    if (!socketOverridesWithDefaultPlugs[socket.socketIndex]) {
+      socketOverridesWithDefaultPlugs[socket.socketIndex] =
+        socket.socketDefinition.singleInitialItemHash;
+    }
+  }
+
+  const subclassWithOverrides = applySocketOverrides(
+    defs!,
+    subclass,
+    socketOverridesWithDefaultPlugs
+  );
+
   return (
     <div className={styles.container}>
-      <LoadoutDrawerItem item={subclass} equip={equip} remove={remove} />
+      <LoadoutDrawerItem item={subclassWithOverrides} equip={equip} remove={remove} />
       <ItemSocketsSubclass
-        subclass={subclass}
+        subclass={subclassWithOverrides}
         socketOverrides={socketOverrides}
         updateSocketOverrides={updateSocketOverrides}
       />
