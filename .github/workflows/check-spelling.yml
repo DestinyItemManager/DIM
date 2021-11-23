@@ -1,9 +1,9 @@
 name: 'Check spelling'
-on: # rebuild any PRs and main branch changes
+on: # rebuild on any PRs
   pull_request:
 
 jobs:
-  spellcheck: # run the action
+  spellcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
