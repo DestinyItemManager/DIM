@@ -11,7 +11,7 @@ import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout/
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
@@ -250,13 +250,50 @@ function groupItems(
   combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[]
 ) {
-  const groupingFn = (item: DimItem) => {
+  // We group in two passes - first by things like mod requirements, then by stats. In-between we drop any
+  // items which are strictly inferior in stats (all stats less than or equal to another item) from each group.
+
+  const anyModHasEnergyRequirement =
+    someModHasEnergyRequirement(combatMods) ||
+    someModHasEnergyRequirement(generalMods) ||
+    someModHasEnergyRequirement(activityMods);
+
+  // TODO: the groups need to be based on the mods requested - for example if we only request solar mods, the
+  // groups should be "solar", and "other", not "solar", "arc", "void", "stasis".
+
+  // Group by mod requirements (energy, slot)
+  const modGroupingFn = (item: DimItem) => {
+    let groupId = '';
+
+    // Group by activity mod slot (e.g. raid/nightmare) only if we have mods like that. We don't care
+    // about combat and general mod slots because all items have them.
+    if (activityMods.length) {
+      groupId += `${(getInterestingSocketMetadatas(item) ?? [])
+        .map((metadata) => metadata.slotTag)
+        .join(',')}`;
+    }
+
+    // We don't need to worry about slot specific mods' energy as items are already filtered for that,
+    // but we do group by energy requirement if we have any mods with an energy requirement.
+    if (anyModHasEnergyRequirement) {
+      // If we can swap to another energy type, there's no need to group by current energy type
+      groupId += canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
+        ? DestinyEnergyType.Any
+        : `${item.energy?.energyType}`;
+    }
+
+    return groupId;
+  };
+
+  // Group items by their exact stats
+  const statGroupingFn = (item: DimItem) => {
     const statValues: number[] = [];
     const statsByHash = item.stats && keyByStatHash(item.stats);
     // Ensure ordering of stats
     if (statsByHash) {
       for (const statHash of statOrder) {
         let value = statsByHash[statHash]!.base;
+        // Add in masterwork stat bonus if we're assuming masterwork stats
         if (defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10) {
           value += 2;
         }
@@ -264,29 +301,10 @@ function groupItems(
       }
     }
 
-    let groupId = `${statValues}`;
-
-    if (activityMods.length) {
-      groupId += `${getSpecialtySocketMetadatas(item)
-        ?.map((metadata) => metadata.slotTag)
-        .join(',')}`;
-    }
-
-    // We don't need to worry about slot specific energy as items are already filtered for that.
-    if (
-      someModHasEnergyRequirement(combatMods) ||
-      someModHasEnergyRequirement(generalMods) ||
-      someModHasEnergyRequirement(activityMods)
-    ) {
-      groupId +=
-        defs && canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
-          ? DestinyEnergyType.Any
-          : `${item.energy?.energyType}`;
-    }
-    return groupId;
+    return statValues.toString();
   };
 
-  const groups = _.groupBy(items, groupingFn);
+  const groups = _.groupBy(items, (item) => statGroupingFn(item) + modGroupingFn(item));
 
   for (const group of Object.values(groups)) {
     group.sort(groupComparator);
