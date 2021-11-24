@@ -11,14 +11,16 @@ import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout/
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import {
+  getInterestingSocketMetadatas,
+  getModTypeTagByPlugCategoryHash,
+} from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { someModHasEnergyRequirement } from '../mod-utils';
 import { ProcessItemsByBucket } from '../process-worker/types';
 import { ArmorSet, ItemsByBucket, StatFilters, StatRanges } from '../types';
 import {
@@ -253,33 +255,50 @@ function groupItems(
   // We group in two passes - first by things like mod requirements, then by stats. In-between we drop any
   // items which are strictly inferior in stats (all stats less than or equal to another item) from each group.
 
-  const anyModHasEnergyRequirement =
-    someModHasEnergyRequirement(combatMods) ||
-    someModHasEnergyRequirement(generalMods) ||
-    someModHasEnergyRequirement(activityMods);
+  // Figure out all the energy types that have been requested across all mods
+  const requiredEnergyTypes = new Set<DestinyEnergyType>();
+  for (const mod of [...combatMods, ...generalMods, ...activityMods]) {
+    if (mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any) {
+      requiredEnergyTypes.add(mod.plug.energyCost.energyType);
+    }
+  }
 
-  // TODO: the groups need to be based on the mods requested - for example if we only request solar mods, the
-  // groups should be "solar", and "other", not "solar", "arc", "void", "stasis".
+  // Figure out all the interesting mod slots required by mods are. This is just
+  // raid/nightmare, we don't care about combat and general mod slots because
+  // all items have them.
+  const requiredActivityModSlots = new Set<string>();
+  for (const mod of activityMods) {
+    const modTag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
+    if (modTag) {
+      requiredActivityModSlots.add(modTag);
+    }
+  }
 
-  // Group by mod requirements (energy, slot)
+  // Group by mod requirements (energy, slot). The groups are based on the mods
+  // requested - for example if we only request solar mods, the groups should be
+  // "solar", and "other", not "solar", "arc", "void", "stasis". If we only request
+  // a vault of glass mod, we don't make a group that includes deep stone crypt mods.
   const modGroupingFn = (item: DimItem) => {
     let groupId = '';
 
-    // Group by activity mod slot (e.g. raid/nightmare) only if we have mods like that. We don't care
-    // about combat and general mod slots because all items have them.
-    if (activityMods.length) {
-      groupId += `${(getInterestingSocketMetadatas(item) ?? [])
-        .map((metadata) => metadata.slotTag)
-        .join(',')}`;
+    if (requiredActivityModSlots.size) {
+      const socketTags = getInterestingSocketMetadatas(item) ?? [];
+      for (const socketTag of socketTags) {
+        // Only add to the grouping key if the socket matches what we need
+        if (requiredActivityModSlots.has(socketTag.slotTag)) {
+          groupId += socketTag.slotTag;
+        }
+      }
     }
 
-    // We don't need to worry about slot specific mods' energy as items are already filtered for that,
-    // but we do group by energy requirement if we have any mods with an energy requirement.
-    if (anyModHasEnergyRequirement) {
+    if (requiredEnergyTypes.size) {
       // If we can swap to another energy type, there's no need to group by current energy type
       groupId += canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
         ? DestinyEnergyType.Any
-        : `${item.energy?.energyType}`;
+        : // Only add the grouping key if the socket matches what we need, otherwise it doesn't matter
+        item.energy && requiredEnergyTypes.has(item.energy.energyType)
+        ? item.energy.energyType
+        : DestinyEnergyType.Any;
     }
 
     return groupId;

@@ -17,8 +17,8 @@ export const doEnergiesMatch = (
   lockItemEnergyType: boolean
 ) =>
   item.energy &&
-  mod.plug.energyCost &&
-  (mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+  (!mod.plug.energyCost ||
+    mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
     mod.plug.energyCost.energyType === item.energy.energyType ||
     canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType));
 

@@ -76,9 +76,11 @@ export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => 
 
 /** returns ModMetadatas if the item has one or more specialty mod slots */
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
-  getSpecialtySockets(item)
-    ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
-    .filter(Boolean);
+  _.compact(
+    getSpecialtySockets(item)?.map(
+      (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
+    )
+  );
 
 /**
  * combat and legacy slots are boring now. everything has them.
