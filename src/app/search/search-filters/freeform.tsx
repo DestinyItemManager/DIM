@@ -238,7 +238,7 @@ export function getStringsFromAllSockets(item: DimItem, includeDescription = tru
 }
 
 // we can't properly quote a search string if it contains both ' and ", so.. we use this
-// to filter them out. small caveat there for the future "WHY DOESNT THIS WORK" user
+// to filter them out. small caveat there for the future "WHY DOESN'T THIS WORK" user
 export function isQuotable(s: string) {
   return !(s.includes(`'`) && s.includes(`"`));
 }

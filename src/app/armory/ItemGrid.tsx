@@ -13,7 +13,7 @@ interface PopupState {
   element: HTMLElement;
 }
 
-function useZindex(): [number, React.RefCallback<HTMLDivElement>] {
+function useZIndex(): [number, React.RefCallback<HTMLDivElement>] {
   const zIndex = useRef<number>(0);
   const measureRef = useCallback((el: HTMLDivElement) => {
     zIndex.current = getZIndex(el);
@@ -49,7 +49,7 @@ export default function ItemGrid({
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
 }) {
-  const [zIndex, measureRef] = useZindex();
+  const [zIndex, measureRef] = useZIndex();
   const [popup, setPopup] = useState<PopupState | undefined>();
 
   return (

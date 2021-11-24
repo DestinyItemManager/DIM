@@ -9,7 +9,6 @@ import _ from 'lodash';
 import React, { RefObject, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { Prompt } from 'react-router';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { Loadout } from './loadout-types';
@@ -36,7 +35,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout,
   saveAsNew,
   deleteLoadout,
-  calculauteMinSheetHeight,
+  calculateMinSheetHeight,
 }: {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
@@ -47,7 +46,7 @@ export default function LoadoutDrawerOptions({
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
-  calculauteMinSheetHeight(): number | undefined;
+  calculateMinSheetHeight(): number | undefined;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
@@ -104,7 +103,6 @@ export default function LoadoutDrawerOptions({
 
   return (
     <div className="loadout-options">
-      <Prompt when={isNew && loadout.items.length > 0} message={t('Loadouts.Abandon')} />
       <form onSubmit={saveLoadout}>
         <div className="input-group loadout-name">
           <input
@@ -177,7 +175,7 @@ export default function LoadoutDrawerOptions({
           </div>
         )}
         <div className="input-group">
-          <Link className="dim-button" to={{ pathname: 'optimizer', state: { loadout } }}>
+          <Link className="dim-button" to="optimizer" state={{ loadout }}>
             {t('Loadouts.OpenInOptimizer')}
           </Link>
         </div>
@@ -203,7 +201,7 @@ export default function LoadoutDrawerOptions({
             loadout={loadout}
             sheetRef={modAssignmentDrawerRef}
             onUpdateMods={onUpdateMods}
-            minHeight={calculauteMinSheetHeight()}
+            minHeight={calculateMinSheetHeight()}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body

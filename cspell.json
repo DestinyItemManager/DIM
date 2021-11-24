@@ -1,0 +1,34 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "dictionaries": ["workspace"],
+  "dictionaryDefinitions": [
+    {
+      "name": "workspace",
+      "path": "./cspell-dim-dict.txt",
+      "description": "DIM Workspace Dictionary",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  ],
+  "allowCompoundWords": true,
+  "ignorePaths": [
+    ".vscode/extensions.json",
+    ".github/workflows/**",
+    "node_modules/",
+    "manifest-cache/",
+    "destiny-icons/**",
+    "icons/build_icons.js",
+    "config/content-security-policy.js",
+    "src/data/",
+    "src/locale/?*/",
+    "src/htaccess",
+    ".eslintrc",
+    "babel.config.js",
+    "cspell.json",
+    "jest.config.js",
+    "package.json",
+    "tsconfig.json",
+    "yarn.lock"
+  ]
+}

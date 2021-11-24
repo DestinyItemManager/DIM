@@ -111,7 +111,7 @@ export default function LoadoutDrawer() {
   // This calculates the largest height of the currently open sheets.This is so we can open new
   // sheets with a minHeight that will match the open sheets. A bunch of sheets that are almost
   // the same height.
-  const calculauteMinSheetHeight = useCallback(() => {
+  const calculateMinSheetHeight = useCallback(() => {
     if (loadoutSheetRef.current) {
       return Math.max(
         loadoutSheetRef.current.clientHeight,
@@ -223,7 +223,7 @@ export default function LoadoutDrawer() {
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         deleteLoadout={onDeleteLoadout}
-        calculauteMinSheetHeight={calculauteMinSheetHeight}
+        calculateMinSheetHeight={calculateMinSheetHeight}
       />
       <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>
@@ -277,7 +277,7 @@ export default function LoadoutDrawer() {
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
-            minHeight={calculauteMinSheetHeight()}
+            minHeight={calculateMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,

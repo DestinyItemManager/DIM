@@ -12,7 +12,7 @@ import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
-import PlugTooltip from './PlugTooltip';
+import { DimPlugTooltip } from './PlugTooltip';
 
 export default function Plug({
   plug,
@@ -44,7 +44,7 @@ export default function Plug({
 
   const contents = <DefItemIcon itemDef={plug.plugDef} borderless={true} />;
 
-  const tooltip = () => <PlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
+  const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
 
   // Is this the currently active plug - either because it's what's slotted in game or the user has clicked to preview it
   const plugged = plug === socketInfo.plugged;

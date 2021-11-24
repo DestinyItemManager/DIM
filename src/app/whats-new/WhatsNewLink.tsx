@@ -14,7 +14,11 @@ import styles from './WhatsNewLink.m.scss';
 /**
  * A link/button to the "What's New" page that highlights the most important action.
  */
-export default function WhatsNewLink({ className }: { className?: string }) {
+export default function WhatsNewLink({
+  className,
+}: {
+  className: (props: { isActive: boolean }) => string;
+}) {
   const showChangelog = useSubscription(DimVersions.showChangelog$);
   const alerts = useSelector(bungieAlertsSelector);
   const dimNeedsUpdate = useSubscription(dimNeedsUpdate$);
@@ -24,7 +28,7 @@ export default function WhatsNewLink({ className }: { className?: string }) {
 
   if (dimNeedsUpdate) {
     return (
-      <a className={className} onClick={reloadDIM}>
+      <a className={className({ isActive: false })} onClick={reloadDIM}>
         <AppIcon className={styles.upgrade} icon={updateIcon} />
         {t('Header.UpgradeDIM')}
       </a>

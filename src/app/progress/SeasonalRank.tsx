@@ -11,8 +11,6 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import brightEngrams from 'data/d2/bright-engrams.json';
-import _ from 'lodash';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
@@ -36,10 +34,8 @@ export default function SeasonalRank({
     return null;
   }
 
-  const prestigeRewardHash = 1620506139; // this hash does not matter as long as it exists and is not class exclusive
-  const brightEngramHash: number = brightEngrams[season.seasonNumber];
+  const prestigeRewardHash = season.artifactItemHash || 0;
   const prestigeRewardLevel = 9999; // fake reward level for fake item for prestige level
-  const brightEngramRewardLevel = 9998; // fake reward level for seasonal bright engram
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
@@ -65,29 +61,18 @@ export default function SeasonalRank({
   const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
-  const brightEngramRewardLevels = _.uniq(
-    rewardItems
-      .filter((item) => item.itemHash === brightEngramHash)
-      .map((item) => item.rewardedAtProgressionLevel % 10)
-  );
-
   if (
     // Only add the fake rewards once
     !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
   ) {
     rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
-    rewardItems.push(fakeReward(brightEngramHash, brightEngramRewardLevel));
   }
 
-  const getBrightEngram =
-    prestigeMode && brightEngramRewardLevels.includes((seasonalRank + 1) % 10);
   // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
     .filter((item) =>
       prestigeMode
-        ? getBrightEngram
-          ? item.rewardedAtProgressionLevel === brightEngramRewardLevel
-          : item.rewardedAtProgressionLevel === prestigeRewardLevel
+        ? item.rewardedAtProgressionLevel === prestigeRewardLevel
         : item.rewardedAtProgressionLevel === seasonalRank + 1
     )
     // Filter class-specific items
@@ -137,11 +122,7 @@ export default function SeasonalRank({
             }
 
             // Get the item info for UI display
-            const itemInfo = prestigeMode
-              ? getBrightEngram
-                ? defs.InventoryItem.get(brightEngramHash)
-                : defs.InventoryItem.get(season.artifactItemHash || 0) // make fake item out of season info for prestigeMode
-              : defs.InventoryItem.get(item.itemHash);
+            const itemInfo = defs.InventoryItem.get(item.itemHash);
 
             return (
               <div

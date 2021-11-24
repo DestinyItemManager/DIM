@@ -12,7 +12,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import {
@@ -33,9 +33,10 @@ interface Props {
 export default function Records({ account }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
-  const { presentationNodeHashStr } = useParams<{ presentationNodeHashStr: string }>();
-  const presentationNodeHash = presentationNodeHashStr
-    ? parseInt(presentationNodeHashStr, 10)
+  const [searchParams] = useSearchParams();
+
+  const presentationNodeHash = searchParams.has('presentationNodeHash')
+    ? parseInt(searchParams.get('presentationNodeHash')!, 10)
     : undefined;
   const buckets = useSelector(bucketsSelector);
   const ownedItemHashes = useSelector(ownedItemsSelector);

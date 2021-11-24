@@ -59,7 +59,7 @@ export function isModStatActive(
     // Powerful Friends & Radiant Light
     // True if another arc charged with light mod is found
     // Note the this is not entirely correct as another arc mod slotted into the same item would
-    // also trigger it but we dont know that until we try to socket them. Basically it is too hard
+    // also trigger it but we don't know that until we try to socket them. Basically it is too hard
     // to figure that condition out so lets leave it as a known issue for now.
     return Boolean(
       lockedMods.find(
@@ -119,13 +119,28 @@ export function mapDimItemToProcessItem(
   lockItemEnergyType: boolean,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
-  const { bucket, id, hash, type, name, equippingLabel, power, stats, energy } = dimItem;
+  const {
+    bucket,
+    id,
+    hash,
+    type,
+    name,
+    equippingLabel,
+    power,
+    stats: dimItemStats,
+    energy,
+  } = dimItem;
 
-  const baseStatMap: { [statHash: number]: number } = {};
+  const statMap: { [statHash: number]: number } = {};
+  const capacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem);
 
-  if (stats) {
-    for (const { statHash, base } of stats) {
-      baseStatMap[statHash] = base;
+  if (dimItemStats) {
+    for (const { statHash, base } of dimItemStats) {
+      let value = base;
+      if (capacity === 10) {
+        value += 2;
+      }
+      statMap[statHash] = value;
     }
   }
 
@@ -154,11 +169,11 @@ export function mapDimItemToProcessItem(
     name,
     equippingLabel,
     power,
-    baseStats: baseStatMap,
+    stats: statMap,
     energy: energy
       ? {
           type: energyType ?? energy.energyType,
-          capacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem),
+          capacity,
           val: modsCost,
         }
       : undefined,

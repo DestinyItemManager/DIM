@@ -4,7 +4,14 @@ import { knownModPlugCategoryHashes } from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { infoLog } from '../../utils/log';
-import { ArmorStatHashes, ArmorStats, LockableBuckets, StatFilters, StatRanges } from '../types';
+import {
+  ArmorStatHashes,
+  ArmorStats,
+  LockableBucketHashes,
+  LockableBuckets,
+  StatFilters,
+  StatRanges,
+} from '../types';
 import { statTier } from '../utils';
 import {
   canTakeSlotIndependentMods,
@@ -92,7 +99,7 @@ function compareByStatOrder(
     // Then by each stat individually in order
     ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
     // Then by overall total
-    compareBy((i) => -i.baseStats[TOTAL_STAT_HASH])
+    compareBy((i) => -i.stats[TOTAL_STAT_HASH])
   );
 }
 
@@ -143,23 +150,14 @@ export function process(
   const comparatorsByBucket: { [bucketHash: number]: Comparator<ProcessItem> } = {};
 
   // Precompute the stats of each item in the order the user asked for
-  for (const item of [
-    ...filteredItems[LockableBuckets.helmet],
-    ...filteredItems[LockableBuckets.gauntlets],
-    ...filteredItems[LockableBuckets.chest],
-    ...filteredItems[LockableBuckets.leg],
-    ...filteredItems[LockableBuckets.classitem],
-  ]) {
-    statsCache.set(item, getStatValuesWithMW(item, statOrder));
+  for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
+    statsCache.set(
+      item,
+      statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
+    );
   }
 
-  for (const bucket of [
-    LockableBuckets.helmet,
-    LockableBuckets.gauntlets,
-    LockableBuckets.chest,
-    LockableBuckets.leg,
-    LockableBuckets.classitem,
-  ]) {
+  for (const bucket of LockableBucketHashes) {
     const items = filteredItems[bucket];
     comparatorsByBucket[bucket] = compareByStatOrder(
       items,
@@ -174,7 +172,7 @@ export function process(
   const helms = filteredItems[LockableBuckets.helmet].sort(
     comparatorsByBucket[LockableBuckets.helmet]
   );
-  const gaunts = filteredItems[LockableBuckets.gauntlets].sort(
+  const gauntlets = filteredItems[LockableBuckets.gauntlets].sort(
     comparatorsByBucket[LockableBuckets.gauntlets]
   );
   const chests = filteredItems[LockableBuckets.chest].sort(
@@ -195,9 +193,9 @@ export function process(
 
   // The maximum possible combos we could have
   const combosWithoutCaps =
-    helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+    helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   const initialNumItems =
-    helms.length + gaunts.length + chests.length + legs.length + classItems.length;
+    helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
   let combos = combosWithoutCaps;
 
@@ -205,7 +203,7 @@ export function process(
   // Since we're already sorted by total stats descending this should toss the worst items.
   let numDiscarded = 0;
   while (combos > combosLimit) {
-    const sortedTypes = [helms, gaunts, chests, legs]
+    const sortedTypes = [helms, gauntlets, chests, legs]
       // Don't ever remove the last item in a category
       .filter((items) => items.length > 1)
       // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
@@ -216,7 +214,7 @@ export function process(
     sortedTypes[sortedTypes.length - 1].pop();
     numDiscarded++;
     // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
-    combos = helms.length * gaunts.length * chests.length * legs.length * classItems.length;
+    combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   }
 
   if (combos < combosWithoutCaps) {
@@ -279,7 +277,7 @@ export function process(
   let numProcessed = 0;
   let elapsedSeconds = 0;
   for (const helm of helms) {
-    for (const gaunt of gaunts) {
+    for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (gaunt.equippingLabel && gaunt.equippingLabel === helm.equippingLabel) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
@@ -479,21 +477,6 @@ export function process(
     statRanges,
     statRangesFiltered,
   };
-}
-
-/**
- * Gets the stat values of an item with masterwork.
- */
-function getStatValuesWithMW(item: ProcessItem, orderedStatValues: number[]) {
-  const baseStats = { ...item.baseStats };
-
-  if (item.energy?.capacity === 10) {
-    for (const statHash of orderedStatValues) {
-      baseStats[statHash] += 2;
-    }
-  }
-  // mapping out from stat values to ensure ordering and that values don't fall below 0 from locked mods
-  return orderedStatValues.map((statHash) => Math.max(baseStats[statHash], 0));
 }
 
 function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {

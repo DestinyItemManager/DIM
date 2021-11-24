@@ -11,7 +11,7 @@ import { DestinyCollectibleComponent, DestinyProfileResponse } from 'bungie-api-
 import clsx from 'clsx';
 import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -35,7 +35,6 @@ import VendorItems from './VendorItems';
 
 interface ProvidedProps {
   account: DestinyAccount;
-  vendorHash: number;
 }
 
 interface StoreProps {
@@ -50,8 +49,8 @@ interface StoreProps {
   };
 }
 
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
+function mapStateToProps(state: RootState) {
+  return {
     stores: storesSelector(state),
     ownedItemHashes: ownedItemsSelector(state),
     buckets: bucketsSelector(state),
@@ -59,7 +58,7 @@ function mapStateToProps() {
     vendors: vendorsByCharacterSelector(state),
     defs: d2ManifestSelector(state),
     mergedCollectibles: mergedCollectiblesSelector(state),
-  });
+  };
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -73,12 +72,13 @@ function SingleVendor({
   buckets,
   ownedItemHashes,
   profileResponse,
-  vendorHash,
   dispatch,
   vendors,
   defs,
   mergedCollectibles,
 }: Props) {
+  const { vendorHash: vendorHashString } = useParams();
+  const vendorHash = parseInt(vendorHashString ?? '', 10);
   const { search } = useLocation();
 
   // TODO: get for all characters, or let people select a character? This is a hack

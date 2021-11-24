@@ -3,17 +3,12 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import React from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import Armory from './Armory';
 
-// TODO: may need to be in account!
-export default function ArmoryPage({
-  account,
-  itemHash,
-}: {
-  account: DestinyAccount;
-  itemHash: number;
-}) {
+export default function ArmoryPage({ account }: { account: DestinyAccount }) {
+  const { itemHash: itemHashString } = useParams();
+  const itemHash = parseInt(itemHashString ?? '', 10);
   const { search } = useLocation();
   const storesLoaded = useLoadStores(account);
   if (!storesLoaded) {
@@ -32,7 +27,7 @@ export default function ArmoryPage({
 
   return (
     <div className="dim-page">
-      <Armory itemHash={itemHash} sockets={sockets} />
+      <Armory key={itemHash} itemHash={itemHash} sockets={sockets} />
     </div>
   );
 }

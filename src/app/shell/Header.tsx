@@ -17,7 +17,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
@@ -133,13 +133,16 @@ export default function Header() {
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
 
+  const navLinkClassName: NavLinkProps['className'] = ({ isActive }) =>
+    clsx(styles.menuItem, { [styles.active]: isActive });
+
   // Generic links about DIM
   const dimLinks = (
     <>
-      <NavLink to="/about" className={styles.menuItem} activeClassName={styles.active}>
+      <NavLink to="/about" className={navLinkClassName}>
         {t('Header.About')}
       </NavLink>
-      <WhatsNewLink className={styles.menuItem} />
+      <WhatsNewLink className={navLinkClassName} />
       {bugReportLink && (
         <ExternalLink className={styles.menuItem} href={bugReport}>
           {t('Header.ReportBug')}
@@ -199,7 +202,7 @@ export default function Header() {
   }
 
   const linkNodes = links.map((link) => (
-    <NavLink className={styles.menuItem} key={link.to} to={link.to} activeClassName={styles.active}>
+    <NavLink className={navLinkClassName} key={link.to} to={link.to}>
       {link.badge}
       {link.text}
     </NavLink>
@@ -290,7 +293,7 @@ export default function Header() {
               >
                 {destinyLinks}
                 <hr />
-                <NavLink className={styles.menuItem} to="/settings" activeClassName={styles.active}>
+                <NavLink className={navLinkClassName} to="/settings">
                   {t('Settings.Settings')}
                 </NavLink>
                 {!isPhonePortrait && (

@@ -24,7 +24,7 @@ export function bulkTagItems(
     const itemInfos = itemInfosSelector(getState());
     const itemHashTags = itemHashTagsSelector(getState());
 
-    // existing tags are later passed to buttonEffect so the notif button knows what to revert
+    // existing tags are later passed to buttonEffect so the notification button knows what to revert
     const previousState = new Map<DimItem, TagValue | undefined>();
     for (const item of itemsToBeTagged) {
       previousState.set(item, getTag(item, itemInfos, itemHashTags));

@@ -2,13 +2,13 @@ import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { getCheapestModAssignments } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { getModAssignments } from '../mod-assignments';
 import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
@@ -53,7 +53,7 @@ function GeneratedSet({
   upgradeSpendTier,
   lockItemEnergyType,
 }: Props) {
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
@@ -85,7 +85,7 @@ function GeneratedSet({
     }
   }
 
-  const modAssignments = getModAssignments(
+  const { itemModAssignments } = getCheapestModAssignments(
     displayedItems,
     lockedMods,
     defs,
@@ -114,7 +114,7 @@ function GeneratedSet({
               itemOptions={set.armor[i]}
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
-              assignedMods={modAssignments.get(item.id)}
+              assignedMods={itemModAssignments.get(item.id)}
               showEnergyChanges={Boolean(lockedMods.length)}
             />
           ))}

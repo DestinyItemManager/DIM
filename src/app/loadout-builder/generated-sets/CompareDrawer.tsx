@@ -21,7 +21,6 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
-import { getModAssignments } from '../mod-assignments';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower } from '../utils';
@@ -132,7 +131,7 @@ export default function CompareDrawer({
     loadoutStats[statHash] += lockedModStats[statHash];
   }
 
-  const loSetAssignedMods = getModAssignments(
+  const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
     setItems,
     lockedMods,
     defs,
