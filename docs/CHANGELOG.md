@@ -1,5 +1,7 @@
 ## Next
 
+## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
+
 * Fixed "Optimize Armor" button (formerly "Open in Loadout Optimizer") in the loadout drawer.
 
 ## 6.92.0 <span class="changelog-date">(2021-11-21)</span>
