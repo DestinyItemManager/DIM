@@ -1,4 +1,6 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -12,6 +14,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
+import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
+import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
@@ -36,6 +40,7 @@ import {
   faCalculator,
   faExclamationTriangle,
   powerActionIcon,
+  searchIcon,
 } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -384,10 +389,76 @@ function ItemCategory({
               <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
             </div>
           )}
+          {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
           <Link className="dim-button" to="../optimizer" state={{ loadout }}>
             <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
           </Link>
         </>
+      )}
+    </div>
+  );
+}
+
+function LoadoutParametersDisplay({ params }: { params: LoadoutParameters }) {
+  const defs = useD2Definitions()!;
+  const { query, exoticArmorHash, upgradeSpendTier, statConstraints, lockItemEnergyType } = params;
+  const show =
+    params.query ||
+    params.exoticArmorHash ||
+    params.upgradeSpendTier !== undefined ||
+    params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined);
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className={styles.loParams}>
+      {query && (
+        <div className={styles.loQuery}>
+          <AppIcon icon={searchIcon} />
+          {query}
+        </div>
+      )}
+      {exoticArmorHash && (
+        <div className={styles.loExotic}>
+          <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
+        </div>
+      )}
+      {upgradeSpendTier !== undefined && (
+        <div className={styles.loSpendTier}>
+          <SelectedArmorUpgrade
+            defs={defs}
+            upgradeSpendTier={upgradeSpendTier}
+            lockItemEnergyType={lockItemEnergyType ?? false}
+          />
+        </div>
+      )}
+      {statConstraints && (
+        <div className={styles.loStats}>
+          {statConstraints.map((s) => (
+            <div key={s.statHash} className={styles.loStat}>
+              <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
+              {s.minTier !== undefined && s.minTier !== 0 ? (
+                <span>
+                  {t('LoadoutBuilder.TierNumber', {
+                    tier: s.minTier,
+                  })}
+                  {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
+                    ? '+'
+                    : s.maxTier !== undefined && s.maxTier !== s.minTier
+                    ? `-${s.maxTier}`
+                    : ''}
+                </span>
+              ) : s.maxTier !== undefined ? (
+                <span>T{s.maxTier}-</span>
+              ) : (
+                t('LoadoutBuilder.TierNumber', {
+                  tier: 10,
+                }) + '-'
+              )}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

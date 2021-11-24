@@ -52,6 +52,9 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   }
 
   const preloadedLoadout = location.state?.loadout as Loadout | undefined;
+  if (preloadedLoadout?.parameters?.query) {
+    dispatch(setSearchQuery(preloadedLoadout.parameters.query));
+  }
 
   // TODO: key off the URL params?
   return (

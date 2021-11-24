@@ -12,6 +12,12 @@ interface CssExports {
   'itemCategory': string;
   'items': string;
   'itemsInCategory': string;
+  'loExotic': string;
+  'loParams': string;
+  'loQuery': string;
+  'loSpendTier': string;
+  'loStat': string;
+  'loStats': string;
   'loadout': string;
   'loadoutNotes': string;
   'menu': string;
