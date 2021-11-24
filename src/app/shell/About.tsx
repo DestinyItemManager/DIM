@@ -1,6 +1,6 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
-import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo-light.svg';
@@ -53,7 +53,7 @@ export default function About() {
 
   const token = getToken();
   return (
-    <div className={clsx('dim-page dim-static-page', styles.about)}>
+    <StaticPage className={styles.about}>
       <div className={styles.header}>
         <img src={logo} className={styles.logo} alt="DIM Logo" height="48" width="48" />
         <h1>
@@ -219,6 +219,6 @@ export default function About() {
         {t('Views.Support.BackersDetail')}
       </p>
       <div id="opencollective" />
-    </div>
+    </StaticPage>
   );
 }

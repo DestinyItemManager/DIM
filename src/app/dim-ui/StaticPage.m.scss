@@ -1,6 +1,8 @@
 @import '../variables.scss';
 
-.dim-static-page {
+.page {
+  composes: dim-page from global;
+
   padding: 16px 1em;
   font-size: 14px;
   user-select: auto;

@@ -1,3 +1,4 @@
+import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
@@ -41,7 +42,7 @@ export default function FilterHelp() {
     : searchConfig.allFilters.filter((s) => !s.deprecated);
 
   return (
-    <div className={clsx(styles.filterView, 'dim-page dim-static-page')}>
+    <StaticPage className={styles.filterView}>
       <div>
         <p>
           {t('Filter.Combine', {
@@ -77,7 +78,7 @@ export default function FilterHelp() {
           </tbody>
         </table>
       </div>
-    </div>
+    </StaticPage>
   );
 }
 

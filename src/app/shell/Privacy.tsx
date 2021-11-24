@@ -1,11 +1,12 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import StaticPage from 'app/dim-ui/StaticPage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Privacy.m.scss';
 
 export default function Privacy() {
   return (
-    <div className={`dim-page dim-static-page ${styles.privacy}`}>
+    <StaticPage className={styles.privacy}>
       <h1>Privacy Policy</h1>
       <p>Last updated August 23, 2020</p>
 
@@ -168,6 +169,6 @@ export default function Privacy() {
           </ol>
         </li>
       </ol>
-    </div>
+    </StaticPage>
   );
 }
