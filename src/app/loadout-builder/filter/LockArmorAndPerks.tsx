@@ -1,8 +1,6 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
@@ -10,22 +8,15 @@ import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import anyExoticIcon from 'images/anyExotic.svg';
-import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useState } from 'react';
 import ReactDom from 'react-dom';
 import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import {
-  ExcludedItems,
-  LockableBucketHashes,
-  LOCKED_EXOTIC_ANY_EXOTIC,
-  LOCKED_EXOTIC_NO_EXOTIC,
-  PinnedItems,
-} from '../types';
+import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
 import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
+import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
@@ -132,7 +123,7 @@ export default memo(function LockArmorAndPerks({
             className="dim-button"
             onClick={() => setShowArmorUpgradePicker(true)}
           >
-            <AppIcon icon={addIcon} /> {t('LoadoutBuilder.SelectArmorUpgrade')}
+            {t('LoadoutBuilder.SelectArmorUpgrade')}
           </button>
         </div>
       </div>
@@ -160,24 +151,16 @@ export default memo(function LockArmorAndPerks({
       </div>
       <div className={styles.area}>
         {lockedExoticHash && (
-          <div className={styles.itemGrid}>
-            <ClosableContainer
-              showCloseIconOnHover={true}
+          <div className={styles.notItemGrid}>
+            <ExoticArmorChoice
+              lockedExoticHash={lockedExoticHash}
               onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
-            >
-              {lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC ? (
-                <img src={noExoticIcon} className="item-img" />
-              ) : lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC ? (
-                <img src={anyExoticIcon} className="item-img" />
-              ) : (
-                <DefItemIcon itemDef={defs.InventoryItem.get(lockedExoticHash)} />
-              )}
-            </ClosableContainer>
+            />
           </div>
         )}
         <div className={styles.buttons}>
           <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
-            <AppIcon icon={addIcon} /> {t('LB.SelectExotic')}
+            {t('LB.SelectExotic')}
           </button>
         </div>
       </div>
