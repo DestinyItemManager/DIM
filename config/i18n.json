@@ -37,6 +37,10 @@
     "Unknown": "Unknown Item",
     "Season": "Season {{season}}, Year {{year}}"
   },
+  "Browsercheck": {
+    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",
+    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it."
+  },
   "Bucket": {
     "Armor": "Armor",
     "Class": "Subclass",

@@ -35,6 +35,10 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 export function isSupported(browsersSupported, userAgent) {
+  if (userAgent.includes('Steam')) {
+    return false;
+  }
+
   var agent = parser(userAgent);
 
   // Build a map from browser version to minimum supported version
@@ -82,6 +86,12 @@ export function isSupported(browsersSupported, userAgent) {
 if ($BROWSERS.length) {
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
+    // t('Browsercheck.Unsupported')
     document.getElementById('browser-warning').style.display = 'block';
+    if (navigator.userAgent.includes('Steam')) {
+      // t('Browsercheck.Steam')
+      document.getElementById('browser-warning').innerText =
+        "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.";
+    }
   }
 }

@@ -6,6 +6,7 @@ brotli
 bois
 bucketize
 Bungie
+Bungie's
 Calus
 caniuse
 canonicalization
@@ -20,6 +21,7 @@ crownofsorrow
 Cruver
 cryptarchs
 curations
+dedupe
 deduping
 dequip
 dequipped
@@ -27,7 +29,9 @@ dequipping
 dequips
 destructurable
 DIM
+DIM's
 divs
+dont
 DTR
 dupelower
 equippability
@@ -133,9 +137,11 @@ unequippable
 unexclude
 UniFFFD
 uninstanced
+unmount
 unparse
 unselectable
 untrack
+untracked
 upgradeiOS
 uuidv4
 Variks
@@ -152,5 +158,7 @@ Xbox
 xpcomplete
 xpincomplete
 Xur
+Xur's
+xxhash
 Zavala
 Русский
