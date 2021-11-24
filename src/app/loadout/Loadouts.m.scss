@@ -176,6 +176,7 @@
 }
 
 .loParams {
+  max-width: 100%;
   @include vertical-space-children(4px);
 }
 
@@ -214,6 +215,15 @@
 }
 
 .loQuery {
+  overflow: hidden;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 4em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
   :global(.app-icon) {
     margin-left: 3px;
     margin-right: 6px;
