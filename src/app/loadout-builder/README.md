@@ -1,6 +1,6 @@
 # Loadout Optimizer
 
-The optimizer is hard on resources and thus we have gone to a lot of effort to make it faster at runtime. Doing this has made the logic quite hard to follow. This README aims to help contributers get around the optimizer and figure out where changes need to be made.
+The optimizer is hard on resources and thus we have gone to a lot of effort to make it faster at runtime. Doing this has made the logic quite hard to follow. This README aims to help contributors get around the optimizer and figure out where changes need to be made.
 
 ## High level overview of data flow
 
@@ -11,13 +11,13 @@ To help paint a picture of what is happening this is a high level overview of th
 1. Group similar items together, only a single item of each group will be sent to processing
 1. Map items to a more optimized form for processing, this includes minimal attributes from `DimItem` and calculated attributes such as energy used by slot specific mods
 1. Send items to a web worker for processing
-1. Cut out the items with the worst stats so we have less than 2,000,000 combinations (broswers will fall over due to memory constraints)
+1. Cut out the items with the worst stats so we have less than 2,000,000 combinations (browsers will fall over due to memory constraints)
 1. Loop over all combinations and eliminate ones with worse stats or that can't fit mods
 1. If a set looks good we add it to a tracker class, after a certain number are tracked we drop the worst one each time a new one is added
 1. The web worker returns the results, we hydrate the initial `DimItem`s and add any similar items from the previous grouping step
 1. The hydrated sets are rendered and at this time we work out the optimal mod assignment to display to the user
 
-## A more indepth explanation with a guide to functions and modules
+## A more in depth explanation with a guide to functions and modules
 
 Now lets get a little more in depth and look at the journey we take through specific modules and functions
 
@@ -35,7 +35,7 @@ Now lets get a little more in depth and look at the journey we take through spec
 
     To do this we group together items that are similar with the intent of sending a single item of the group for processing. Afterwards the other items from the group are added to the appropriate sets and can be selected via the swap icon in a given set.
 
-    The grouping is a little complicated as it aims to group as many items as it can, class items are a good example here. For example, if you have no mods locked there are essentially two types of class items, masterworked and non-masterworked as masterowked have stats.
+    The grouping is a little complicated as it aims to group as many items as it can, class items are a good example here. For example, if you have no mods locked there are essentially two types of class items, masterworked and non-masterworked as masterworked have stats.
 
     This needs to get more complicated as we start locking mods, as energy type and activity mod slot type (e.g. raid or nightmare) become important in the processing algorithm. At this point it's best to just go and read the `groupItems` function and it's comment to get a better idea at what it does.
 
@@ -49,7 +49,7 @@ Now lets get a little more in depth and look at the journey we take through spec
     - The energy type available with the selected armor upgrades and locked mods, if an item is allowed to swap energy type this will be the `Any` type
     - The tags of mods which can be socketed into the item e.g. VoG raid mods or nightmare mods
 
-1. Next we send all the mapped items and various other values to the web worker. The web worker is created in `process/useProcess#useProcess` but the scipt is it runs lives in `process-worker/process#process` because it needs a special `tsconfig` setup for web workers.
+1. Next we send all the mapped items and various other values to the web worker. The web worker is created in `process/useProcess#useProcess` but the script it runs lives in `process-worker/process#process` because it needs a special `tsconfig` setup for web workers.
 
 1. The first major task in `process` is to cut down the number of armor combinations to at most 2 million. We have had issues with browsers running out of memory in the past.
 
@@ -62,7 +62,7 @@ Now lets get a little more in depth and look at the journey we take through spec
     1. If the stats are worse then the lowest set in our `SetTracker` we exit and continue on to the next set
     1. Check to see if the locked mods can fit in the set, if not we continue on to the next set
 
-1. Assuming a set has made it past the last step, we now add it to the `SetTracker` which is defined in `process-worker/set-tracket#SetTracket`.
+1. Assuming a set has made it past the last step, we now add it to the `SetTracker` which is defined in `process-worker/set-tracker#SetTracker`.
 
     This is a class that uses an insertion sort algorithm to keep a given number of armor sets. When we add a set to this we remove the worst tracked set if we reach the limit.
 
