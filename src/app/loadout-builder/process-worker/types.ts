@@ -7,7 +7,7 @@ export interface ProcessItem {
   hash: number;
   type: string;
   name: string;
-  equippingLabel?: string;
+  isExotic: boolean;
   energy?: {
     type: DestinyEnergyType;
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */

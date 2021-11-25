@@ -12,7 +12,6 @@ import {
   StatFilters,
   StatRanges,
 } from '../types';
-import { statTier } from '../utils';
 import {
   canTakeSlotIndependentMods,
   generateProcessModPermutations,
@@ -129,6 +128,7 @@ export function process(
 } {
   const pstart = performance.now();
 
+  console.time('preprocess');
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
   // Stat types excluding ignored stats
@@ -136,16 +136,31 @@ export function process(
     (statHash) => !statFilters[statHash].ignored
   );
 
+  const fixedStatOrder: ArmorStatHashes[] = [
+    2996146975, // Stat "Mobility"
+    392767087, // Stat "Resilience"
+    1943323491, // Stat "Recovery"
+    1735777505, // Stat "Discipline"
+    144602215, // Stat "Intellect"
+    4244567218, // Stat "Strength"
+  ];
+  const statOrderToFixed = statOrder.map((h) => fixedStatOrder.indexOf(h));
+
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
   const statRanges: StatRanges = _.mapValues(statFilters, () => ({ min: 100, max: 0 }));
+  const statRangesFixedOrder = fixedStatOrder.map((h) => statRanges[h]);
+  const modStatsFixedOrder = fixedStatOrder.map((h) => modStatTotals[h]);
+  const statFiltersFixedOrder = fixedStatOrder.map((h) => statFilters[h]);
 
   const statRangesFiltered: StatRanges = _.mapValues(statFilters, () => ({
     min: 100,
     max: 0,
   }));
+  const statRangesFilteredFixedOrder = fixedStatOrder.map((h) => statRangesFiltered[h]);
 
   const statsCache: Map<ProcessItem, number[]> = new Map();
+  const statsCacheFixedOrder: Map<ProcessItem, number[]> = new Map();
 
   const comparatorsByBucket: { [bucketHash: number]: Comparator<ProcessItem> } = {};
 
@@ -154,6 +169,10 @@ export function process(
     statsCache.set(
       item,
       statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
+    );
+    statsCacheFixedOrder.set(
+      item,
+      fixedStatOrder.map((statHash) => Math.max(item.stats[statHash], 0))
     );
   }
 
@@ -292,42 +311,29 @@ export function process(
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
 
+  console.timeEnd('preprocess');
+
   let numProcessed = 0;
   let elapsedSeconds = 0;
   for (const helm of helms) {
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
-      if (gaunt.equippingLabel && gaunt.equippingLabel === helm.equippingLabel) {
+      if (gaunt.isExotic && helm.isExotic) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
-        if (
-          chest.equippingLabel &&
-          (chest.equippingLabel === gaunt.equippingLabel ||
-            chest.equippingLabel === helm.equippingLabel)
-        ) {
+        if (chest.isExotic && (gaunt.isExotic || helm.isExotic)) {
           numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
-          if (
-            leg.equippingLabel &&
-            (leg.equippingLabel === chest.equippingLabel ||
-              leg.equippingLabel === gaunt.equippingLabel ||
-              leg.equippingLabel === helm.equippingLabel)
-          ) {
+          if (leg.isExotic && (chest.isExotic || gaunt.isExotic || helm.isExotic)) {
             numDoubleExotic += classItems.length;
             continue;
           }
 
-          if (
-            anyExotic &&
-            !helm.equippingLabel &&
-            !gaunt.equippingLabel &&
-            !chest.equippingLabel &&
-            !leg.equippingLabel
-          ) {
+          if (anyExotic && !helm.isExotic && !gaunt.isExotic && !chest.isExotic && !leg.isExotic) {
             numNoExotic += classItems.length;
             continue;
           }
@@ -336,17 +342,55 @@ export function process(
             numProcessed++;
             const armor = [helm, gaunt, chest, leg, classItem];
 
+            const helmStats = statsCacheFixedOrder.get(helm)!;
+            const gauntStats = statsCacheFixedOrder.get(gaunt)!;
+            const chestStats = statsCacheFixedOrder.get(chest)!;
+            const legStats = statsCacheFixedOrder.get(leg)!;
+            const classItemStats = statsCacheFixedOrder.get(classItem)!;
+
             // TODO: why not just another ordered list?
             // Start with the contribution of mods. Spread operator is slow.
             // Also dynamic property syntax is slow which is why we use the raw hashes here.
-            const stats: ArmorStats = {
-              2996146975: modStatTotals[2996146975], // Stat "Mobility"
-              392767087: modStatTotals[392767087], // Stat "Resilience"
-              1943323491: modStatTotals[1943323491], // Stat "Recovery"
-              1735777505: modStatTotals[1735777505], // Stat "Discipline"
-              144602215: modStatTotals[144602215], // Stat "Intellect"
-              4244567218: modStatTotals[4244567218], // Stat "Strength"
-            };
+            const stats: number[] = [
+              modStatsFixedOrder[0] +
+                helmStats[0] +
+                gauntStats[0] +
+                chestStats[0] +
+                legStats[0] +
+                classItemStats[0],
+              modStatsFixedOrder[1] +
+                helmStats[1] +
+                gauntStats[1] +
+                chestStats[1] +
+                legStats[1] +
+                classItemStats[1],
+              modStatsFixedOrder[2] +
+                helmStats[2] +
+                gauntStats[2] +
+                chestStats[2] +
+                legStats[2] +
+                classItemStats[2],
+              modStatsFixedOrder[3] +
+                helmStats[3] +
+                gauntStats[3] +
+                chestStats[3] +
+                legStats[3] +
+                classItemStats[3],
+              modStatsFixedOrder[4] +
+                helmStats[4] +
+                gauntStats[4] +
+                chestStats[4] +
+                legStats[4] +
+                classItemStats[4],
+              modStatsFixedOrder[5] +
+                helmStats[5] +
+                gauntStats[5] +
+                chestStats[5] +
+                legStats[5] +
+                classItemStats[5],
+            ];
+
+            /*
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
               // itemStats are already in the user's chosen stat order
@@ -362,15 +406,22 @@ export function process(
                 stats[statHash] = value;
               }
             }
+            */
 
-            let totalTier = 0;
+            // TODO: avoid min/max?
+            const tiers = [
+              Math.min(Math.max(Math.floor(stats[0] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[1] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[2] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[3] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[4] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[5] / 10), 0), 10),
+            ];
+            const totalTier = tiers[0] + tiers[1] + tiers[2] + tiers[3] + tiers[4] + tiers[5];
             let statRangeExceeded = false;
-            for (const statHash of statOrder) {
-              const value = stats[statHash];
-              const tier = statTier(value);
-
-              // Update our global min/max for this stat
-              const range = statRanges[statHash];
+            for (let index = 0; index < 6; index++) {
+              const value = stats[index];
+              const range = statRangesFixedOrder[index];
               if (value > range.max) {
                 range.max = value;
               }
@@ -378,12 +429,10 @@ export function process(
                 range.min = value;
               }
 
-              const filter = statFilters[statHash];
-              if (!filter.ignored) {
-                if (tier > filter.max || tier < filter.min) {
-                  statRangeExceeded = true;
-                }
-                totalTier += tier;
+              const tier = tiers[index];
+              const filter = statFiltersFixedOrder[index];
+              if (!filter.ignored && (tier > filter.max || tier < filter.min)) {
+                statRangeExceeded = true;
               }
             }
 
@@ -412,25 +461,37 @@ export function process(
               continue;
             }
 
+            // TODO: making an object here is a no-no
             const newArmorSet: IntermediateProcessArmorSet = {
               armor,
-              stats,
+              stats: {
+                2996146975: stats[0], // Stat "Mobility"
+                392767087: stats[1], // Stat "Resilience"
+                1943323491: stats[2], // Stat "Recovery"
+                1735777505: stats[3], // Stat "Discipline"
+                144602215: stats[4], // Stat "Intellect"
+                4244567218: stats[5], // Stat "Strength"
+              },
             };
+
+            // TODO: somehow this code is now *slower* than it was before
 
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
-            let tiers = '';
-            for (const statHash of statOrder) {
-              const value = stats[statHash];
-              const tier = statTier(value);
+            let tiersString = '';
+            // TODO: not in order though!
+            for (let index = 0; index < 6; index++) {
+              const statIndex = statOrderToFixed[index];
+              const value = stats[statIndex];
+              const tier = tiers[statIndex];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = statFilters[statHash];
+              const filter = statFiltersFixedOrder[statIndex];
               if (!filter.ignored) {
-                tiers += tier.toString(11);
+                tiersString += tier.toString(11);
               }
 
               // Separately track the stat ranges of sets that made it through all our filters
-              const range = statRangesFiltered[statHash];
+              const range = statRangesFilteredFixedOrder[statIndex];
               if (value > range.max) {
                 range.max = value;
               }
@@ -440,7 +501,7 @@ export function process(
             }
 
             numInserted++;
-            if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
+            if (!setTracker.insert(totalTier, tiersString, newArmorSet)) {
               numRejectedAfterInsert++;
             }
           }
