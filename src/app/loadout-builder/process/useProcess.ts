@@ -37,8 +37,7 @@ interface ProcessState {
   result: {
     sets: ArmorSet[];
     combos: number;
-    combosWithoutCaps: number;
-    statRanges?: StatRanges;
+    numItems: number;
     statRangesFiltered?: StatRanges;
   } | null;
 }
@@ -168,7 +167,7 @@ export function useProcess(
         anyExotic,
         proxy(setRemainingTime)
       )
-      .then(({ sets, combos, combosWithoutCaps, statRanges, statRangesFiltered }) => {
+      .then(({ sets, combos, numItems, statRangesFiltered }) => {
         infoLog(
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
@@ -181,8 +180,7 @@ export function useProcess(
           result: {
             sets: hydratedSets,
             combos,
-            combosWithoutCaps,
-            statRanges,
+            numItems,
             statRangesFiltered,
           },
         }));

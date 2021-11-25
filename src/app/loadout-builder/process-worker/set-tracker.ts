@@ -3,10 +3,11 @@ import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 interface TierSet {
   tier: number;
-  // Stat mixes ordered by decreasing lexical order of the statMix string
+  /** Stat mixes ordered by decreasing lexical order of the statMix string */
   statMixes: {
     statMix: string;
-    // Armor sets ordered by decreasing power
+    // TODO: Maybe only keep one set with the same stat mix?
+    /** Armor sets ordered by decreasing power */
     armorSets: IntermediateProcessArmorSet[];
   }[];
 }
@@ -105,10 +106,21 @@ export class SetTracker {
   }
 
   /**
-   * Get all tracked armor sets as a flat list.
+   * Get the top N tracked armor sets in order.
    */
-  getArmorSets(): IntermediateProcessArmorSet[] {
-    return this.tiers.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  getArmorSets(max: number) {
+    const result: IntermediateProcessArmorSet[] = [];
+    for (const tier of this.tiers) {
+      for (const statMix of tier.statMixes) {
+        for (const armorSet of statMix.armorSets) {
+          result.push(armorSet);
+          if (result.length >= max) {
+            return result;
+          }
+        }
+      }
+    }
+    return result;
   }
 }
 
