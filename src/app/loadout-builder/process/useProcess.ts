@@ -295,13 +295,14 @@ function groupItems(
     }
 
     if (requiredEnergyTypes.size) {
-      // If we can swap to another energy type, there's no need to group by current energy type
-      groupId += canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
-        ? DestinyEnergyType.Any
-        : // Only add the grouping key if the socket matches what we need, otherwise it doesn't matter
-        item.energy && requiredEnergyTypes.has(item.energy.energyType)
-        ? item.energy.energyType
-        : DestinyEnergyType.Any;
+      groupId +=
+        // Only add the grouping key if the socket matches what we need, otherwise it doesn't matter
+        item.energy &&
+        requiredEnergyTypes.has(item.energy.energyType) &&
+        // If we can swap to another energy type, there's no need to group by current energy type
+        !canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
+          ? item.energy.energyType
+          : DestinyEnergyType.Any;
     }
 
     return groupId;
