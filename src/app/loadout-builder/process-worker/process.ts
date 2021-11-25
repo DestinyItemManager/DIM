@@ -19,7 +19,6 @@ import {
 } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
-  IntermediateProcessArmorSet,
   LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
@@ -128,7 +127,6 @@ export function process(
 } {
   const pstart = performance.now();
 
-  console.time('preprocess');
   // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
 
   // Stat types excluding ignored stats
@@ -311,8 +309,6 @@ export function process(
 
   // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
 
-  console.timeEnd('preprocess');
-
   let numProcessed = 0;
   let elapsedSeconds = 0;
   for (const helm of helms) {
@@ -389,24 +385,6 @@ export function process(
                 legStats[5] +
                 classItemStats[5],
             ];
-
-            /*
-            for (const item of armor) {
-              const itemStats = statsCache.get(item)!;
-              // itemStats are already in the user's chosen stat order
-              for (let index = 0; index < statOrder.length; index++) {
-                const statHash = statOrder[index];
-                let value = stats[statHash] + itemStats[index];
-                // Stats can't exceed 100 even with mods. At least, today they
-                // can't - we *could* pass the max value in from the stat def.
-                // Math.min is slow.
-                if (value > 100) {
-                  value = 100;
-                }
-                stats[statHash] = value;
-              }
-            }
-            */
 
             // TODO: avoid min/max?
             const tiers = [
@@ -537,18 +515,23 @@ export function process(
     }
   );
 
+  const topSets = _.take(finalSets, RETURNED_ARMOR_SETS);
+
   return {
-    sets: flattenSets(_.take(finalSets, RETURNED_ARMOR_SETS)),
+    sets: topSets.map(({ armor, stats }) => ({
+      armor: armor.map((item) => item.id),
+      stats: {
+        2996146975: stats[0], // Stat "Mobility"
+        392767087: stats[1], // Stat "Resilience"
+        1943323491: stats[2], // Stat "Recovery"
+        1735777505: stats[3], // Stat "Discipline"
+        144602215: stats[4], // Stat "Intellect"
+        4244567218: stats[5], // Stat "Strength"
+      },
+    })),
     combos,
     combosWithoutCaps,
     statRanges,
     statRangesFiltered,
   };
-}
-
-function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
-  return sets.map((set) => ({
-    ...set,
-    armor: set.armor.map((item) => item.id),
-  }));
 }

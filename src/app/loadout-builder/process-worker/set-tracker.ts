@@ -87,6 +87,10 @@ export class SetTracker {
 
             // This is the worst mix for this tier we've seen, but it could still be better than something at a lower tier
             if (statMixIndex === currentStatMixes.length - 1) {
+              // Check whether this is actually the worst mix we've seen so far in the lowest tier
+              if (tierIndex === this.tiers.length - 1 && this.totalSets >= this.capacity) {
+                return false;
+              }
               currentStatMixes.push({ statMix, armorSets: [{ armor, stats }] });
               break outer;
             }
