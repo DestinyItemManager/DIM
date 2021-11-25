@@ -199,6 +199,14 @@ export function process(
 
   let combos = combosWithoutCaps;
 
+  const before = {
+    helms: helms.length,
+    gauntlets: gauntlets.length,
+    chests: chests.length,
+    legs: legs.length,
+    classItems: classItems.length,
+  };
+
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
   let numDiscarded = 0;
@@ -228,7 +236,17 @@ export function process(
       numDiscarded,
       'of',
       initialNumItems,
-      'items'
+      'items',
+      {
+        before,
+        after: {
+          helms: helms.length,
+          gauntlets: gauntlets.length,
+          chests: chests.length,
+          legs: legs.length,
+          classItems: classItems.length,
+        },
+      }
     );
   }
 
