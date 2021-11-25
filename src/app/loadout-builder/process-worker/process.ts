@@ -439,13 +439,11 @@ export function process(
               continue;
             }
 
-            // TODO: somehow this code is now *slower* than it was before
-
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
-            let tiersString = '';
             // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
+            let tiersString = '';
             for (let index = 0; index < 6; index++) {
               const statIndex = statOrderToFixed[index];
               const value = stats[statIndex];
@@ -471,18 +469,18 @@ export function process(
               numRejectedAfterInsert++;
             }
           }
-
-          // Report speed
-          const totalTime = performance.now() - pstart;
-          const newElapsedSeconds = Math.floor(totalTime / 500);
-
-          if (newElapsedSeconds > elapsedSeconds) {
-            elapsedSeconds = newElapsedSeconds;
-            const speed = (numProcessed * 1000) / totalTime;
-            const remaining = Math.round((combos - numProcessed) / speed);
-            onProgress(remaining);
-          }
         }
+      }
+
+      // Report speed
+      const totalTime = performance.now() - pstart;
+      const newElapsedSeconds = Math.floor(totalTime / 500);
+
+      if (newElapsedSeconds > elapsedSeconds) {
+        elapsedSeconds = newElapsedSeconds;
+        const speed = (numProcessed * 1000) / totalTime;
+        const remaining = Math.round((combos - numProcessed) / speed);
+        onProgress(remaining);
       }
     }
   }
