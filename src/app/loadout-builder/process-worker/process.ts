@@ -461,25 +461,13 @@ export function process(
               continue;
             }
 
-            // TODO: making an object here is a no-no
-            const newArmorSet: IntermediateProcessArmorSet = {
-              armor,
-              stats: {
-                2996146975: stats[0], // Stat "Mobility"
-                392767087: stats[1], // Stat "Resilience"
-                1943323491: stats[2], // Stat "Recovery"
-                1735777505: stats[3], // Stat "Discipline"
-                144602215: stats[4], // Stat "Intellect"
-                4244567218: stats[5], // Stat "Strength"
-              },
-            };
-
             // TODO: somehow this code is now *slower* than it was before
 
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             let tiersString = '';
-            // TODO: not in order though!
+            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
+            // than comparing stat arrays element by element
             for (let index = 0; index < 6; index++) {
               const statIndex = statOrderToFixed[index];
               const value = stats[statIndex];
@@ -487,7 +475,7 @@ export function process(
               // Make each stat exactly one code unit so the string compares correctly
               const filter = statFiltersFixedOrder[statIndex];
               if (!filter.ignored) {
-                tiersString += tier.toString(11);
+                tiersString += tier.toString(16);
               }
 
               // Separately track the stat ranges of sets that made it through all our filters
@@ -501,7 +489,7 @@ export function process(
             }
 
             numInserted++;
-            if (!setTracker.insert(totalTier, tiersString, newArmorSet)) {
+            if (!setTracker.insert(totalTier, tiersString, armor, stats)) {
               numRejectedAfterInsert++;
             }
           }

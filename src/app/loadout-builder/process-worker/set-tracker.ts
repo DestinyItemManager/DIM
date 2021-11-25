@@ -1,5 +1,5 @@
 import { getPower } from '../utils';
-import { IntermediateProcessArmorSet } from './types';
+import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 interface TierSet {
   tier: number;
@@ -37,9 +37,9 @@ export class SetTracker {
    * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
    */
   // TODO: rewrite this to just use comparators!
-  insert(tier: number, statMix: string, armorSet: IntermediateProcessArmorSet) {
+  insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
-      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
     } else {
       outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
         const currentTier = this.tiers[tierIndex];
@@ -48,7 +48,7 @@ export class SetTracker {
         if (tier > currentTier.tier) {
           this.tiers.splice(tierIndex, 0, {
             tier,
-            statMixes: [{ statMix, armorSets: [armorSet] }],
+            statMixes: [{ statMix, armorSets: [{ armor, stats }] }],
           });
           break outer;
         }
@@ -62,24 +62,24 @@ export class SetTracker {
 
             // Better mix, insert here
             if (statMix > currentStatMix.statMix) {
-              currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
+              currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [{ armor, stats }] });
               break outer;
             }
 
             // Same mix, pick the one that uses fewest stat mods
             if (currentStatMix.statMix === statMix) {
-              const armorSetPower = getPower(armorSet.armor);
+              const armorSetPower = getPower(armor);
               for (
                 let armorSetIndex = 0;
                 armorSetIndex < currentStatMix.armorSets.length;
                 armorSetIndex++
               ) {
                 if (armorSetPower > getPower(currentStatMix.armorSets[armorSetIndex].armor)) {
-                  currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
+                  currentStatMix.armorSets.splice(armorSetIndex, 0, { armor, stats });
                   break outer;
                 }
                 if (armorSetIndex === currentStatMix.armorSets.length - 1) {
-                  currentStatMix.armorSets.push(armorSet);
+                  currentStatMix.armorSets.push({ armor, stats });
                   break outer;
                 }
               }
@@ -87,7 +87,7 @@ export class SetTracker {
 
             // This is the worst mix for this tier we've seen, but it could still be better than something at a lower tier
             if (statMixIndex === currentStatMixes.length - 1) {
-              currentStatMixes.push({ statMix, armorSets: [armorSet] });
+              currentStatMixes.push({ statMix, armorSets: [{ armor, stats }] });
               break outer;
             }
           }
@@ -96,7 +96,7 @@ export class SetTracker {
         // This is lower tier than our previous lowest tier
         if (tierIndex === this.tiers.length - 1) {
           if (this.totalSets < this.capacity) {
-            this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+            this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
             break outer;
           } else {
             // Don't bother inserting it at all
