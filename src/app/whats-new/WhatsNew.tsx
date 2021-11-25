@@ -1,4 +1,5 @@
 import { languageSelector } from 'app/dim-api/selectors';
+import StaticPage from 'app/dim-ui/StaticPage';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Timeline } from 'react-twitter-widgets';
@@ -12,7 +13,7 @@ import styles from './WhatsNew.m.scss';
 export default function WhatsNew() {
   const language = useSelector(languageSelector);
   return (
-    <div className="dim-page dim-static-page">
+    <StaticPage>
       <BungieAlerts />
 
       <div className={styles.twitter}>
@@ -33,6 +34,6 @@ export default function WhatsNew() {
       </div>
 
       <ChangeLog />
-    </div>
+    </StaticPage>
   );
 }
