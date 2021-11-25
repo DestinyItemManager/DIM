@@ -17,7 +17,6 @@ import {
   helpIcon,
   twitterIcon,
 } from './icons';
-import './page.scss';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
