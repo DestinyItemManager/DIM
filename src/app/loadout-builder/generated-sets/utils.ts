@@ -5,9 +5,9 @@ import { ArmorSet, ArmorStats } from '../types';
 import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statOrder: number[], enabledStats: Set<number>) {
-  const comparators: Comparator<ArmorSet>[] = [];
-
-  comparators.push(compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)));
+  const comparators: Comparator<ArmorSet>[] = [
+    compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)),
+  ];
 
   for (const statHash of statOrder) {
     if (enabledStats.has(statHash)) {

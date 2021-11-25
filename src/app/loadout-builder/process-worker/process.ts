@@ -360,7 +360,7 @@ export function process(
             const totalTier = tiers[0] + tiers[1] + tiers[2] + tiers[3] + tiers[4] + tiers[5];
             let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
-              const value = stats[index];
+              const value = Math.min(Math.max(stats[index], 0), 100);
               const range = statRangesFixedOrder[index];
               if (value > range.max) {
                 range.max = value;
@@ -408,7 +408,7 @@ export function process(
             let tiersString = '';
             for (let index = 0; index < 6; index++) {
               const statIndex = statOrderToFixed[index];
-              const value = stats[statIndex];
+              const value = Math.min(Math.max(stats[statIndex], 0), 100);
               const tier = tiers[statIndex];
               // Make each stat exactly one code unit so the string compares correctly
               const filter = statFiltersFixedOrder[statIndex];
@@ -476,19 +476,20 @@ export function process(
   );
 
   const topSets = _.take(finalSets, RETURNED_ARMOR_SETS);
+  const sets = topSets.map(({ armor, stats }) => ({
+    armor: armor.map((item) => item.id),
+    stats: {
+      2996146975: stats[0], // Stat "Mobility"
+      392767087: stats[1], // Stat "Resilience"
+      1943323491: stats[2], // Stat "Recovery"
+      1735777505: stats[3], // Stat "Discipline"
+      144602215: stats[4], // Stat "Intellect"
+      4244567218: stats[5], // Stat "Strength"
+    },
+  }));
 
   return {
-    sets: topSets.map(({ armor, stats }) => ({
-      armor: armor.map((item) => item.id),
-      stats: {
-        2996146975: stats[0], // Stat "Mobility"
-        392767087: stats[1], // Stat "Resilience"
-        1943323491: stats[2], // Stat "Recovery"
-        1735777505: stats[3], // Stat "Discipline"
-        144602215: stats[4], // Stat "Intellect"
-        4244567218: stats[5], // Stat "Strength"
-      },
-    })),
+    sets,
     combos,
     combosWithoutCaps,
     statRanges,
