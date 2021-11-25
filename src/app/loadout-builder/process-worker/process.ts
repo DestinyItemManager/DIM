@@ -204,17 +204,13 @@ export function process(
     comparatorsByBucket[LockableBuckets.classitem]
   );
 
-  // We won't search through more than this number of stat combos because it takes too long.
-  // On my machine (bhollis) it takes ~1s per 270,000 combos
-  const combosLimit = 2_000_000;
-
   // The maximum possible combos we could have
   const combosWithoutCaps =
     helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   const initialNumItems =
     helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
-  let combos = combosWithoutCaps;
+  const combos = combosWithoutCaps;
 
   const before = {
     helms: helms.length,
@@ -223,49 +219,15 @@ export function process(
     legs: legs.length,
     classItems: classItems.length,
   };
-
-  // If we're over the limit, start trimming down the armor lists starting with the worst among them.
-  // Since we're already sorted by total stats descending this should toss the worst items.
-  let numDiscarded = 0;
-  while (combos > combosLimit) {
-    const sortedTypes = [helms, gauntlets, chests, legs]
-      // Don't ever remove the last item in a category
-      .filter((items) => items.length > 1)
-      // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
-      .sort((a: ProcessItem[], b: ProcessItem[]) =>
-        comparatorsByBucket[a[0].bucketHash](a[a.length - 1], b[b.length - 1])
-      );
-    // Pop the last item off the worst-sorted list
-    sortedTypes[sortedTypes.length - 1].pop();
-    numDiscarded++;
-    // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
-    combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
-  }
-
-  if (combos < combosWithoutCaps) {
-    infoLog(
-      'loadout optimizer',
-      'Reduced armor combinations from',
-      combosWithoutCaps,
-      'to',
-      combos,
-      'by discarding',
-      numDiscarded,
-      'of',
-      initialNumItems,
-      'items',
-      {
-        before,
-        after: {
-          helms: helms.length,
-          gauntlets: gauntlets.length,
-          chests: chests.length,
-          legs: legs.length,
-          classItems: classItems.length,
-        },
-      }
-    );
-  }
+  infoLog(
+    'loadout optimizer',
+    'Processing',
+    combosWithoutCaps,
+    'combinations from',
+    initialNumItems,
+    'items',
+    before
+  );
 
   if (combos === 0) {
     return { sets: [], combos: 0, combosWithoutCaps: 0 };
