@@ -72,19 +72,18 @@ export const sortModGroups = chainComparator(
   compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
 );
 
-/** Figures out if a definition is an insertable armor 2.0 mod. To do so it does the following
- * 1. Figures out if the def is pluggable (def.plug exists)
- * 2. Checks to see if the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
- * 3. Checks to see if plug.insertionMaterialRequirementHash is non zero or plug.energyCost a thing. This rules out deprecated mods.
- * 4. Makes sure that itemTypeDisplayName is a thing, this rules out classified items.
- */
+/** Figures out if an item definition is an insertable armor 2.0 mod. */
 export function isInsertableArmor2Mod(
   def: DestinyInventoryItemDefinition
 ): def is PluggableInventoryItemDefinition {
   return Boolean(
+    // is the def pluggable (def.plug exists)
     isPluggableItem(def) &&
+      // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
       isArmor2Mod(def) &&
+      // is plug.insertionMaterialRequirementHash non zero or is plug.energyCost a thing. This rules out deprecated mods.
       (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost) &&
+      // this rules out classified items
       def.itemTypeDisplayName !== undefined
   );
 }

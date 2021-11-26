@@ -41,10 +41,7 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
     ? energyNamesByEnum[item.element?.enumValue ?? -1]
     : damageNamesByEnum[item.element?.enumValue ?? -1];
 
-// these are helpers for identifying SpecialtySockets (seasonal mods).
-// i would like this file to be the only one that interfaces with
-// data/d2/specialty-modslot-metadata.json
-// process its data here and export it to thing that needs it
+// these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 
@@ -79,9 +76,11 @@ export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => 
 
 /** returns ModMetadatas if the item has one or more specialty mod slots */
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
-  getSpecialtySockets(item)
-    ?.map((s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash || -99999999]!)
-    .filter(Boolean);
+  _.compact(
+    getSpecialtySockets(item)?.map(
+      (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
+    )
+  );
 
 /**
  * combat and legacy slots are boring now. everything has them.
