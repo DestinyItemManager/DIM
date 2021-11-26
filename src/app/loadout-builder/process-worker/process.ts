@@ -28,16 +28,6 @@ import {
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
 
-/** When we handle stats we use an array of stats in this order. */
-const fixedStatOrder: ArmorStatHashes[] = [
-  2996146975, // Stat "Mobility"
-  392767087, // Stat "Resilience"
-  1943323491, // Stat "Recovery"
-  1735777505, // Stat "Discipline"
-  144602215, // Stat "Intellect"
-  4244567218, // Stat "Strength"
-];
-
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
@@ -64,12 +54,8 @@ export function process(
 } {
   const pstart = performance.now();
 
-  // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
-
-  // TODO: could we use statOrder instead?
-  const statOrderToFixed = statOrder.map((h) => fixedStatOrder.indexOf(h));
-  const modStatsFixedOrder = fixedStatOrder.map((h) => modStatTotals[h]);
-  const statFiltersFixedOrder = fixedStatOrder.map((h) => statFilters[h]);
+  const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
+  const statFiltersInStatOrder = statOrder.map((h) => statFilters[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -77,16 +63,16 @@ export function process(
     min: 100,
     max: 0,
   }));
-  const statRangesFilteredFixedOrder = fixedStatOrder.map((h) => statRangesFiltered[h]);
+  const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
   // Store stat arrays for each items in the fixed stat order
-  const statsCacheFixedOrder: Map<ProcessItem, number[]> = new Map();
+  const statsCacheInStatOrder: Map<ProcessItem, number[]> = new Map();
 
   // Precompute the stats of each item in the fixed stat order
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
-    statsCacheFixedOrder.set(
+    statsCacheInStatOrder.set(
       item,
-      fixedStatOrder.map((statHash) => Math.max(item.stats[statHash], 0))
+      statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
     );
   }
 
@@ -141,21 +127,17 @@ export function process(
   const activityModPermutations = generateProcessModPermutations(
     activityMods.sort(sortProcessModsOrItems)
   );
-  const hasMods = combatMods.length || activityMods.length || generalMods.length;
+  const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
   let numCantSlotMods = 0;
-  let numInserted = 0;
   let numValidSets = 0;
-  let numRejectedAfterInsert = 0;
   let numDoubleExotic = 0;
   let numNoExotic = 0;
-
-  // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
-
   let numProcessed = 0;
   let elapsedSeconds = 0;
+
   for (const helm of helms) {
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
@@ -183,45 +165,45 @@ export function process(
             numProcessed++;
             const armor = [helm, gaunt, chest, leg, classItem];
 
-            const helmStats = statsCacheFixedOrder.get(helm)!;
-            const gauntStats = statsCacheFixedOrder.get(gaunt)!;
-            const chestStats = statsCacheFixedOrder.get(chest)!;
-            const legStats = statsCacheFixedOrder.get(leg)!;
-            const classItemStats = statsCacheFixedOrder.get(classItem)!;
+            const helmStats = statsCacheInStatOrder.get(helm)!;
+            const gauntStats = statsCacheInStatOrder.get(gaunt)!;
+            const chestStats = statsCacheInStatOrder.get(chest)!;
+            const legStats = statsCacheInStatOrder.get(leg)!;
+            const classItemStats = statsCacheInStatOrder.get(classItem)!;
 
             // JavaScript engines apparently don't unroll loops automatically and this makes a big difference in speed.
-            const stats: number[] = [
-              modStatsFixedOrder[0] +
+            const stats = [
+              modStatsInStatOrder[0] +
                 helmStats[0] +
                 gauntStats[0] +
                 chestStats[0] +
                 legStats[0] +
                 classItemStats[0],
-              modStatsFixedOrder[1] +
+              modStatsInStatOrder[1] +
                 helmStats[1] +
                 gauntStats[1] +
                 chestStats[1] +
                 legStats[1] +
                 classItemStats[1],
-              modStatsFixedOrder[2] +
+              modStatsInStatOrder[2] +
                 helmStats[2] +
                 gauntStats[2] +
                 chestStats[2] +
                 legStats[2] +
                 classItemStats[2],
-              modStatsFixedOrder[3] +
+              modStatsInStatOrder[3] +
                 helmStats[3] +
                 gauntStats[3] +
                 chestStats[3] +
                 legStats[3] +
                 classItemStats[3],
-              modStatsFixedOrder[4] +
+              modStatsInStatOrder[4] +
                 helmStats[4] +
                 gauntStats[4] +
                 chestStats[4] +
                 legStats[4] +
                 classItemStats[4],
-              modStatsFixedOrder[5] +
+              modStatsInStatOrder[5] +
                 helmStats[5] +
                 gauntStats[5] +
                 chestStats[5] +
@@ -244,7 +226,7 @@ export function process(
             let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
-              const filter = statFiltersFixedOrder[index];
+              const filter = statFiltersInStatOrder[index];
               if (!filter.ignored && (tier > filter.max || tier < filter.min)) {
                 statRangeExceeded = true;
               }
@@ -262,6 +244,8 @@ export function process(
             }
 
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+            // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
+            // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
             if (
               hasMods &&
               !canTakeSlotIndependentMods(
@@ -281,17 +265,16 @@ export function process(
             // than comparing stat arrays element by element
             let tiersString = '';
             for (let index = 0; index < 6; index++) {
-              const statIndex = statOrderToFixed[index];
-              const value = Math.min(Math.max(stats[statIndex], 0), 100);
-              const tier = tiers[statIndex];
+              const value = Math.min(Math.max(stats[index], 0), 100);
+              const tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = statFiltersFixedOrder[statIndex];
+              const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
                 tiersString += tier.toString(16);
               }
 
               // Track the stat ranges of sets that made it through all our filters
-              const range = statRangesFilteredFixedOrder[statIndex];
+              const range = statRangesFilteredInStatOrder[index];
               if (value > range.max) {
                 range.max = value;
               }
@@ -300,12 +283,8 @@ export function process(
               }
             }
 
-            numInserted++;
-            if (setTracker.insert(totalTier, tiersString, armor, stats)) {
-              numValidSets++;
-            } else {
-              numRejectedAfterInsert++;
-            }
+            numValidSets++;
+            setTracker.insert(totalTier, tiersString, armor, stats);
           }
         }
       }
@@ -344,8 +323,6 @@ export function process(
       numStatRangeExceeded,
     },
     {
-      numInserted,
-      numRejectedAfterInsert,
       numDoubleExotic,
       numNoExotic,
     }
