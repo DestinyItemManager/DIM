@@ -15,6 +15,7 @@ import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
+import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -280,9 +281,9 @@ function GlobalEffects() {
 
   // Badge the app icon with the number of postmaster items
   useEffect(() => {
-    if (stores.length > 0 && badgePostmaster && 'setAppBadge' in navigator) {
+    if (stores.length > 0 && badgePostmaster) {
       const activeStore = getCurrentStore(stores)!;
-      navigator.setAppBadge(totalPostmasterItems(activeStore));
+      setAppBadge(totalPostmasterItems(activeStore));
     }
   }, [badgePostmaster, stores]);
 

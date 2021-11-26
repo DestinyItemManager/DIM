@@ -1,12 +1,13 @@
 import { getPower } from '../utils';
-import { IntermediateProcessArmorSet } from './types';
+import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 interface TierSet {
   tier: number;
-  // Stat mixes ordered by decreasing lexical order of the statMix string
+  /** Stat mixes ordered by decreasing lexical order of the statMix string */
   statMixes: {
     statMix: string;
-    // Armor sets ordered by decreasing power
+    // TODO: Maybe only keep one set with the same stat mix?
+    /** Armor sets ordered by decreasing power */
     armorSets: IntermediateProcessArmorSet[];
   }[];
 }
@@ -36,11 +37,11 @@ export class SetTracker {
   /**
    * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
    */
-  // TODO: rewrite this to just use comparators!
-  insert(tier: number, statMix: string, armorSet: IntermediateProcessArmorSet) {
+  insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
-      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
     } else {
+      // We have very few tiers at one time, so insertion sort is fine
       outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
         const currentTier = this.tiers[tierIndex];
 
@@ -48,7 +49,7 @@ export class SetTracker {
         if (tier > currentTier.tier) {
           this.tiers.splice(tierIndex, 0, {
             tier,
-            statMixes: [{ statMix, armorSets: [armorSet] }],
+            statMixes: [{ statMix, armorSets: [{ armor, stats }] }],
           });
           break outer;
         }
@@ -57,46 +58,17 @@ export class SetTracker {
         if (tier === currentTier.tier) {
           const currentStatMixes = currentTier.statMixes;
 
-          for (let statMixIndex = 0; statMixIndex < currentStatMixes.length; statMixIndex++) {
-            const currentStatMix = currentStatMixes[statMixIndex];
-
-            // Better mix, insert here
-            if (statMix > currentStatMix.statMix) {
-              currentStatMixes.splice(statMixIndex, 0, { statMix, armorSets: [armorSet] });
-              break outer;
-            }
-
-            // Same mix, pick the one that uses fewest stat mods
-            if (currentStatMix.statMix === statMix) {
-              const armorSetPower = getPower(armorSet.armor);
-              for (
-                let armorSetIndex = 0;
-                armorSetIndex < currentStatMix.armorSets.length;
-                armorSetIndex++
-              ) {
-                if (armorSetPower > getPower(currentStatMix.armorSets[armorSetIndex].armor)) {
-                  currentStatMix.armorSets.splice(armorSetIndex, 0, armorSet);
-                  break outer;
-                }
-                if (armorSetIndex === currentStatMix.armorSets.length - 1) {
-                  currentStatMix.armorSets.push(armorSet);
-                  break outer;
-                }
-              }
-            }
-
-            // This is the worst mix for this tier we've seen, but it could still be better than something at a lower tier
-            if (statMixIndex === currentStatMixes.length - 1) {
-              currentStatMixes.push({ statMix, armorSets: [armorSet] });
-              break outer;
-            }
+          if (insertStatMix(currentStatMixes, statMix, armor, stats)) {
+            break outer;
+          } else {
+            return false;
           }
         }
 
         // This is lower tier than our previous lowest tier
         if (tierIndex === this.tiers.length - 1) {
           if (this.totalSets < this.capacity) {
-            this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [armorSet] }] });
+            this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
             break outer;
           } else {
             // Don't bother inserting it at all
@@ -133,9 +105,85 @@ export class SetTracker {
   }
 
   /**
-   * Get all tracked armor sets as a flat list.
+   * Get the top N tracked armor sets in order.
    */
-  getArmorSets(): IntermediateProcessArmorSet[] {
-    return this.tiers.map((set) => set.statMixes.map((mix) => mix.armorSets)).flat(2);
+  getArmorSets(max: number) {
+    const result: IntermediateProcessArmorSet[] = [];
+    for (const tier of this.tiers) {
+      for (const statMix of tier.statMixes) {
+        for (const armorSet of statMix.armorSets) {
+          result.push(armorSet);
+          if (result.length >= max) {
+            return result;
+          }
+        }
+      }
+    }
+    return result;
   }
+}
+
+/**
+ * Insert a new stat mix into the list of stat mixes (all of which sum to the
+ * same tier). They should remain in lexical order of the statmix string.
+ */
+function insertStatMix(
+  currentStatMixes: {
+    statMix: string;
+    armorSets: IntermediateProcessArmorSet[];
+  }[],
+  statMix: string,
+  armor: ProcessItem[],
+  stats: number[]
+): boolean {
+  // This is a binary search insertion strategy, since these lists may grow large
+  let start = 0;
+  let end = currentStatMixes.length - 1;
+  while (start < end) {
+    const statMixIndex = Math.floor((end - start) / 2 + start);
+    const currentStatMix = currentStatMixes[statMixIndex];
+
+    const comparison =
+      statMix > currentStatMix.statMix ? 1 : statMix < currentStatMix.statMix ? -1 : 0;
+
+    // Same mix, pick the one that uses fewest stat mods
+    if (comparison === 0) {
+      return insertArmorSet(armor, stats, currentStatMix.armorSets);
+    }
+    if (comparison > 0) {
+      end = statMixIndex - 1;
+    } else {
+      start = statMixIndex + 1;
+    }
+  }
+
+  const currentStatMix = currentStatMixes[start];
+  const comparison =
+    statMix > currentStatMix.statMix ? 1 : statMix < currentStatMix.statMix ? -1 : 0;
+
+  currentStatMixes.splice(comparison > 0 ? start : start + 1, 0, {
+    statMix,
+    armorSets: [{ armor, stats }],
+  });
+  return true;
+}
+
+function insertArmorSet(
+  armor: ProcessItem[],
+  stats: number[],
+  armorSets: IntermediateProcessArmorSet[]
+) {
+  // These lists don't tend to grow large, so it's back to insertion sort
+  const armorSetPower = getPower(armor);
+  for (let armorSetIndex = 0; armorSetIndex < armorSets.length; armorSetIndex++) {
+    if (armorSetPower > getPower(armorSets[armorSetIndex].armor)) {
+      armorSets.splice(armorSetIndex, 0, { armor, stats });
+      return true;
+    }
+    if (armorSetIndex === armorSets.length - 1) {
+      armorSets.push({ armor, stats });
+      return true;
+    }
+  }
+  return false;
 }

@@ -418,6 +418,14 @@ function LoadoutBuilder({
           >
             {t('LoadoutBuilder.ShareBuildWithNotes')}
           </button>
+          {result && (
+            <div className={styles.speedReport}>
+              {t('LoadoutBuilder.SpeedReport', {
+                combos: result.combos,
+                time: (result.processTime / 1000).toFixed(2),
+              })}
+            </div>
+          )}
         </div>
         <div className={styles.guide}>
           <ol>

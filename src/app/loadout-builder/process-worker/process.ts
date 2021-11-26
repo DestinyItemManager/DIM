@@ -1,8 +1,7 @@
 import { activityModPlugCategoryHashes } from 'app/loadout/mod-utils';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from '../../loadout/known-values';
-import { armor2PlugCategoryHashesByName, TOTAL_STAT_HASH } from '../../search/d2-known-values';
-import { chainComparator, Comparator, compareBy, reverseComparator } from '../../utils/comparators';
+import { armor2PlugCategoryHashesByName } from '../../search/d2-known-values';
 import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
@@ -12,7 +11,6 @@ import {
   StatFilters,
   StatRanges,
 } from '../types';
-import { statTier } from '../utils';
 import {
   canTakeSlotIndependentMods,
   generateProcessModPermutations,
@@ -20,7 +18,6 @@ import {
 } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
-  IntermediateProcessArmorSet,
   LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
@@ -30,78 +27,6 @@ import {
 
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
-
-/**
- * Generate a comparator that sorts first by the total of the considered stats,
- * and then by the individual stats in the order we want. This includes the effects
- * of existing masterwork mods and the upgradeSpendTier
- */
-function compareByStatOrder(
-  items: ProcessItem[],
-  // Ordered list of enabled stats
-  orderedConsideredStatHashes: number[],
-  // The user's chosen order of all stats, by hash
-  statOrder: number[],
-  // A map from item to stat values in user-selected order, with masterworks included
-  statsCache: Map<ProcessItem, number[]>
-) {
-  const statHashToOrder: { [statHash: number]: number } = {};
-  statOrder.forEach((statHash, index) => (statHashToOrder[statHash] = index));
-
-  // Calculate the min and max of both the total considered stat and the sum of squares of considered stats so we can
-  // come up with a normalized score.
-  const minMax = {
-    min: { squares: Number.MAX_VALUE, total: Number.MAX_VALUE },
-    max: { squares: Number.MIN_VALUE, total: Number.MIN_VALUE },
-  };
-
-  for (const item of items) {
-    let total = 0;
-    let squares = 0;
-    const stats = statsCache.get(item)!;
-    for (const statHash of orderedConsideredStatHashes) {
-      const value = stats[statHashToOrder[statHash]];
-      total += value;
-      squares += value * value;
-    }
-    minMax.min.squares = Math.min(minMax.min.squares, squares);
-    minMax.max.squares = Math.max(minMax.max.squares, squares);
-    minMax.min.total = Math.min(minMax.min.total, total);
-    minMax.max.total = Math.max(minMax.max.total, total);
-  }
-
-  // This is based on the idea that items that have high total in the considered stats are good, but pieces
-  // that have high individual values in some of the stats might also be really useful.
-  const totalScore = (item: ProcessItem) => {
-    let total = 0;
-    let squares = 0;
-    const stats = statsCache.get(item)!;
-    for (const statHash of orderedConsideredStatHashes) {
-      const value = stats[statHashToOrder[statHash]];
-      total += value;
-      squares += value * value;
-    }
-
-    const normalizedTotal = (total - minMax.min.total) / (minMax.max.total - minMax.min.total);
-    const normalizedSquares =
-      (squares - minMax.min.squares) / (minMax.max.squares - minMax.min.squares);
-    return (normalizedSquares + normalizedTotal) / 2; // average them
-  };
-
-  return chainComparator<ProcessItem>(
-    // First compare by sum of considered stats
-    // This isn't really coupled to showing stat ranges but I'm putting them under the same flag
-    $featureFlags.loStatRanges
-      ? reverseComparator(compareBy(totalScore))
-      : compareBy((i) =>
-          _.sumBy(orderedConsideredStatHashes, (h) => -statsCache.get(i)![statHashToOrder[h]])
-        ),
-    // Then by each stat individually in order
-    ...statOrder.map((h) => compareBy((i: ProcessItem) => -statsCache.get(i)![statHashToOrder[h]])),
-    // Then by overall total
-    compareBy((i) => -i.stats[TOTAL_STAT_HASH])
-  );
-}
 
 /**
  * This processes all permutations of armor to build sets
@@ -123,135 +48,56 @@ export function process(
 ): {
   sets: ProcessArmorSet[];
   combos: number;
-  combosWithoutCaps: number;
-  statRanges?: StatRanges;
+  /** The stat ranges of all sets that matched our filters & mod selection. */
   statRangesFiltered?: StatRanges;
 } {
   const pstart = performance.now();
 
-  // TODO: potentially could filter out items that provide more than the maximum of a stat all on their own?
-
-  // Stat types excluding ignored stats
-  const orderedConsideredStatHashes = statOrder.filter(
-    (statHash) => !statFilters[statHash].ignored
-  );
+  const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
+  const statFiltersInStatOrder = statOrder.map((h) => statFilters[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRanges: StatRanges = _.mapValues(statFilters, () => ({ min: 100, max: 0 }));
-
   const statRangesFiltered: StatRanges = _.mapValues(statFilters, () => ({
     min: 100,
     max: 0,
   }));
+  const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
-  const statsCache: Map<ProcessItem, number[]> = new Map();
+  // Store stat arrays for each items in stat order
+  const statsCacheInStatOrder: Map<ProcessItem, number[]> = new Map();
 
-  const comparatorsByBucket: { [bucketHash: number]: Comparator<ProcessItem> } = {};
-
-  // Precompute the stats of each item in the order the user asked for
+  // Precompute the stats of each item in stat order
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
-    statsCache.set(
+    statsCacheInStatOrder.set(
       item,
       statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
     );
   }
 
-  for (const bucket of LockableBucketHashes) {
-    const items = filteredItems[bucket];
-    comparatorsByBucket[bucket] = compareByStatOrder(
-      items,
-      orderedConsideredStatHashes,
-      statOrder,
-      statsCache
-    );
-  }
-
-  // Sort gear by the chosen stats so we consider the likely-best gear first
-  // TODO: make these a list/map
-  const helms = filteredItems[LockableBuckets.helmet].sort(
-    comparatorsByBucket[LockableBuckets.helmet]
-  );
-  const gauntlets = filteredItems[LockableBuckets.gauntlets].sort(
-    comparatorsByBucket[LockableBuckets.gauntlets]
-  );
-  const chests = filteredItems[LockableBuckets.chest].sort(
-    comparatorsByBucket[LockableBuckets.chest]
-  );
-  const legs = filteredItems[LockableBuckets.leg].sort(comparatorsByBucket[LockableBuckets.leg]);
-  // TODO: we used to do these in chunks, where items w/ same stats were considered together. For class items that
-  // might still be useful. In practice there are only 1/2 class items you need to care about - all of them that are
-  // masterworked and all of them that aren't. I think we may want to go back to grouping like items but we'll need to
-  // incorporate modslots and energy maybe.
-  const classItems = filteredItems[LockableBuckets.classitem].sort(
-    comparatorsByBucket[LockableBuckets.classitem]
-  );
-
-  // We won't search through more than this number of stat combos because it takes too long.
-  // On my machine (bhollis) it takes ~1s per 270,000 combos
-  const combosLimit = 2_000_000;
+  // Each of these groups has already been reduced (in useProcess.ts) to the
+  // minimum number of examples that are worth considering.
+  const helms = filteredItems[LockableBuckets.helmet];
+  const gauntlets = filteredItems[LockableBuckets.gauntlets];
+  const chests = filteredItems[LockableBuckets.chest];
+  const legs = filteredItems[LockableBuckets.leg];
+  const classItems = filteredItems[LockableBuckets.classitem];
 
   // The maximum possible combos we could have
-  const combosWithoutCaps =
-    helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
-  const initialNumItems =
+  const combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
+  const numItems =
     helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
-  let combos = combosWithoutCaps;
-
-  const before = {
+  infoLog('loadout optimizer', 'Processing', combos, 'combinations from', numItems, 'items', {
     helms: helms.length,
     gauntlets: gauntlets.length,
     chests: chests.length,
     legs: legs.length,
     classItems: classItems.length,
-  };
-
-  // If we're over the limit, start trimming down the armor lists starting with the worst among them.
-  // Since we're already sorted by total stats descending this should toss the worst items.
-  let numDiscarded = 0;
-  while (combos > combosLimit) {
-    const sortedTypes = [helms, gauntlets, chests, legs]
-      // Don't ever remove the last item in a category
-      .filter((items) => items.length > 1)
-      // Sort by our same statOrder-aware comparator, but only compare the worst-ranked item in each category
-      .sort((a: ProcessItem[], b: ProcessItem[]) =>
-        comparatorsByBucket[a[0].bucketHash](a[a.length - 1], b[b.length - 1])
-      );
-    // Pop the last item off the worst-sorted list
-    sortedTypes[sortedTypes.length - 1].pop();
-    numDiscarded++;
-    // TODO: A smarter version of this would avoid trimming out items that match mod slots we need, somehow
-    combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
-  }
-
-  if (combos < combosWithoutCaps) {
-    infoLog(
-      'loadout optimizer',
-      'Reduced armor combinations from',
-      combosWithoutCaps,
-      'to',
-      combos,
-      'by discarding',
-      numDiscarded,
-      'of',
-      initialNumItems,
-      'items',
-      {
-        before,
-        after: {
-          helms: helms.length,
-          gauntlets: gauntlets.length,
-          chests: chests.length,
-          legs: legs.length,
-          classItems: classItems.length,
-        },
-      }
-    );
-  }
+  });
 
   if (combos === 0) {
-    return { sets: [], combos: 0, combosWithoutCaps: 0 };
+    return { sets: [], combos: 0 };
   }
 
   const setTracker = new SetTracker(10_000);
@@ -280,105 +126,105 @@ export function process(
   const activityModPermutations = generateProcessModPermutations(
     activityMods.sort(sortProcessModsOrItems)
   );
-  const hasMods = combatMods.length || activityMods.length || generalMods.length;
+  const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
   let numCantSlotMods = 0;
-  let numInserted = 0;
-  let numRejectedAfterInsert = 0;
+  let numValidSets = 0;
   let numDoubleExotic = 0;
   let numNoExotic = 0;
-
-  // TODO: is there a more efficient iteration order through the sorted items that'd let us quit early? Something that could generate combinations
-
   let numProcessed = 0;
   let elapsedSeconds = 0;
+
   for (const helm of helms) {
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
-      if (gaunt.equippingLabel && gaunt.equippingLabel === helm.equippingLabel) {
+      if (gaunt.isExotic && helm.isExotic) {
         numDoubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
-        if (
-          chest.equippingLabel &&
-          (chest.equippingLabel === gaunt.equippingLabel ||
-            chest.equippingLabel === helm.equippingLabel)
-        ) {
+        if (chest.isExotic && (gaunt.isExotic || helm.isExotic)) {
           numDoubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
-          if (
-            leg.equippingLabel &&
-            (leg.equippingLabel === chest.equippingLabel ||
-              leg.equippingLabel === gaunt.equippingLabel ||
-              leg.equippingLabel === helm.equippingLabel)
-          ) {
+          if (leg.isExotic && (chest.isExotic || gaunt.isExotic || helm.isExotic)) {
             numDoubleExotic += classItems.length;
             continue;
           }
 
-          if (
-            anyExotic &&
-            !helm.equippingLabel &&
-            !gaunt.equippingLabel &&
-            !chest.equippingLabel &&
-            !leg.equippingLabel
-          ) {
+          if (anyExotic && !helm.isExotic && !gaunt.isExotic && !chest.isExotic && !leg.isExotic) {
             numNoExotic += classItems.length;
             continue;
           }
 
           for (const classItem of classItems) {
             numProcessed++;
-            const armor = [helm, gaunt, chest, leg, classItem];
 
-            // TODO: why not just another ordered list?
-            // Start with the contribution of mods. Spread operator is slow.
-            // Also dynamic property syntax is slow which is why we use the raw hashes here.
-            const stats: ArmorStats = {
-              2996146975: modStatTotals[2996146975], // Stat "Mobility"
-              392767087: modStatTotals[392767087], // Stat "Resilience"
-              1943323491: modStatTotals[1943323491], // Stat "Recovery"
-              1735777505: modStatTotals[1735777505], // Stat "Discipline"
-              144602215: modStatTotals[144602215], // Stat "Intellect"
-              4244567218: modStatTotals[4244567218], // Stat "Strength"
-            };
-            for (const item of armor) {
-              const itemStats = statsCache.get(item)!;
-              // itemStats are already in the user's chosen stat order
-              for (let index = 0; index < statOrder.length; index++) {
-                const statHash = statOrder[index];
-                let value = stats[statHash] + itemStats[index];
-                // Stats can't exceed 100 even with mods. At least, today they
-                // can't - we *could* pass the max value in from the stat def.
-                // Math.min is slow.
-                if (value > 100) {
-                  value = 100;
-                }
-                stats[statHash] = value;
-              }
-            }
+            const helmStats = statsCacheInStatOrder.get(helm)!;
+            const gauntStats = statsCacheInStatOrder.get(gaunt)!;
+            const chestStats = statsCacheInStatOrder.get(chest)!;
+            const legStats = statsCacheInStatOrder.get(leg)!;
+            const classItemStats = statsCacheInStatOrder.get(classItem)!;
 
+            // JavaScript engines apparently don't unroll loops automatically and this makes a big difference in speed.
+            const stats = [
+              modStatsInStatOrder[0] +
+                helmStats[0] +
+                gauntStats[0] +
+                chestStats[0] +
+                legStats[0] +
+                classItemStats[0],
+              modStatsInStatOrder[1] +
+                helmStats[1] +
+                gauntStats[1] +
+                chestStats[1] +
+                legStats[1] +
+                classItemStats[1],
+              modStatsInStatOrder[2] +
+                helmStats[2] +
+                gauntStats[2] +
+                chestStats[2] +
+                legStats[2] +
+                classItemStats[2],
+              modStatsInStatOrder[3] +
+                helmStats[3] +
+                gauntStats[3] +
+                chestStats[3] +
+                legStats[3] +
+                classItemStats[3],
+              modStatsInStatOrder[4] +
+                helmStats[4] +
+                gauntStats[4] +
+                chestStats[4] +
+                legStats[4] +
+                classItemStats[4],
+              modStatsInStatOrder[5] +
+                helmStats[5] +
+                gauntStats[5] +
+                chestStats[5] +
+                legStats[5] +
+                classItemStats[5],
+            ];
+
+            // TODO: avoid min/max?
+            const tiers = [
+              Math.min(Math.max(Math.floor(stats[0] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[1] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[2] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[3] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[4] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[5] / 10), 0), 10),
+            ];
+
+            // Check whether the set exceeds our stat constraints
             let totalTier = 0;
             let statRangeExceeded = false;
-            for (const statHash of statOrder) {
-              const value = stats[statHash];
-              const tier = statTier(value);
-
-              // Update our global min/max for this stat
-              const range = statRanges[statHash];
-              if (value > range.max) {
-                range.max = value;
-              }
-              if (value < range.min) {
-                range.min = value;
-              }
-
-              const filter = statFilters[statHash];
+            for (let index = 0; index < 6; index++) {
+              const tier = tiers[index];
+              const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
                 if (tier > filter.max || tier < filter.min) {
                   statRangeExceeded = true;
@@ -398,7 +244,11 @@ export function process(
               continue;
             }
 
+            const armor = [helm, gaunt, chest, leg, classItem];
+
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+            // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
+            // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
             if (
               hasMods &&
               !canTakeSlotIndependentMods(
@@ -412,25 +262,23 @@ export function process(
               continue;
             }
 
-            const newArmorSet: IntermediateProcessArmorSet = {
-              armor,
-              stats,
-            };
-
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
-            let tiers = '';
-            for (const statHash of statOrder) {
-              const value = stats[statHash];
-              const tier = statTier(value);
+            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
+            // than comparing stat arrays element by element
+            let tiersString = '';
+            for (let index = 0; index < 6; index++) {
+              const value = Math.min(Math.max(stats[index], 0), 100);
+              const tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = statFilters[statHash];
+              const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
-                tiers += tier.toString(11);
+                // using a power of 2 (16) instead of 11 is faster
+                tiersString += tier.toString(16);
               }
 
-              // Separately track the stat ranges of sets that made it through all our filters
-              const range = statRangesFiltered[statHash];
+              // Track the stat ranges of sets that made it through all our filters
+              const range = statRangesFilteredInStatOrder[index];
               if (value > range.max) {
                 range.max = value;
               }
@@ -439,34 +287,32 @@ export function process(
               }
             }
 
-            numInserted++;
-            if (!setTracker.insert(totalTier, tiers, newArmorSet)) {
-              numRejectedAfterInsert++;
-            }
-          }
-
-          // Report speed
-          const totalTime = performance.now() - pstart;
-          const newElapsedSeconds = Math.floor(totalTime / 500);
-
-          if (newElapsedSeconds > elapsedSeconds) {
-            elapsedSeconds = newElapsedSeconds;
-            const speed = (numProcessed * 1000) / totalTime;
-            const remaining = Math.round((combos - numProcessed) / speed);
-            onProgress(remaining);
+            numValidSets++;
+            setTracker.insert(totalTier, tiersString, armor, stats);
           }
         }
+      }
+
+      // Report speed every so often
+      const totalTime = performance.now() - pstart;
+      const newElapsedSeconds = Math.floor(totalTime / 500);
+
+      if (newElapsedSeconds > elapsedSeconds) {
+        elapsedSeconds = newElapsedSeconds;
+        const speed = (numProcessed * 1000) / totalTime;
+        const remaining = Math.round((combos - numProcessed) / speed);
+        onProgress(remaining);
       }
     }
   }
 
-  const finalSets = setTracker.getArmorSets();
+  const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
 
   const totalTime = performance.now() - pstart;
   infoLog(
     'loadout optimizer',
     'found',
-    finalSets.length,
+    numValidSets,
     'stat mixes after processing',
     combos,
     'stat combinations in',
@@ -481,25 +327,22 @@ export function process(
       numStatRangeExceeded,
     },
     {
-      numInserted,
-      numRejectedAfterInsert,
       numDoubleExotic,
       numNoExotic,
     }
   );
 
+  const sets = finalSets.map(({ armor, stats }) => ({
+    armor: armor.map((item) => item.id),
+    stats: statOrder.reduce((statObj, statHash, i) => {
+      statObj[statHash] = stats[i];
+      return statObj;
+    }, {}) as ArmorStats,
+  }));
+
   return {
-    sets: flattenSets(_.take(finalSets, RETURNED_ARMOR_SETS)),
+    sets,
     combos,
-    combosWithoutCaps,
-    statRanges,
     statRangesFiltered,
   };
-}
-
-function flattenSets(sets: IntermediateProcessArmorSet[]): ProcessArmorSet[] {
-  return sets.map((set) => ({
-    ...set,
-    armor: set.armor.map((item) => item.id),
-  }));
 }

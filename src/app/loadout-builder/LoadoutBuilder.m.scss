@@ -56,6 +56,7 @@
 }
 
 .guide {
+  user-select: text;
   p,
   li {
     font-size: 14px;
@@ -63,4 +64,11 @@
   ol {
     padding-left: 1.25em;
   }
+}
+
+.speedReport {
+  font-size: 11px;
+  user-select: text;
+  display: inline;
+  margin-left: 1em;
 }

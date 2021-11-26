@@ -6,6 +6,7 @@ interface CssExports {
   'menuContent': string;
   'page': string;
   'processing': string;
+  'speedReport': string;
   'toolbar': string;
 }
 export const cssExports: CssExports;
