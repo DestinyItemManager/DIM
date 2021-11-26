@@ -4,17 +4,6 @@
   --num-characters: 1;
 }
 
-.inventory-container {
-  display: flex;
-
-  .issue-banner-shown & {
-    padding-bottom: $issue-banner-height;
-    @include phone-portrait {
-      padding-bottom: 0;
-    }
-  }
-}
-
 .inventory-content {
   margin: 0 auto;
   width: 100%;
@@ -119,6 +108,14 @@
     flex-direction: column;
   }
 
+  .store-header & {
+    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+    flex-direction: column;
+    &:focus {
+      outline: none;
+    }
+  }
+
   // Engrams. D1 uses this same bucket hash for "Missions"
   .destiny2 .bucket-375726501 & {
     --engram-size: calc(var(--character-column-width) / 10);
@@ -216,13 +213,6 @@
   background-repeat: no-repeat;
   background-size: 100% 100vh;
 
-  .store-cell {
-    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
-    flex-direction: column;
-    &:focus {
-      outline: none;
-    }
-  }
   &:focus {
     outline: none;
   }

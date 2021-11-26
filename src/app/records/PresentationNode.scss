@@ -66,6 +66,7 @@
     }
   }
   /* unless they are top children of locked-open top nodes */
+  /* stylelint-disable-next-line no-descending-specificity */
   &.always-expanded > .presentation-node {
     margin-left: 0;
     > .title {
@@ -81,6 +82,7 @@
   }
 
   /* always expanded (weapon icons & some top level parents(collections)) */
+  /* stylelint-disable-next-line no-descending-specificity */
   &.always-expanded > .title {
     background-color: rgba(0, 0, 0, 0);
     cursor: default;
@@ -88,6 +90,7 @@
   }
   /* always expanded, non-top-level nodes (weapon icons) */
   & .presentation-node.always-expanded {
+    /* stylelint-disable-next-line no-descending-specificity */
     > .title {
       background-color: rgba(0, 0, 0, 0);
       opacity: 1;

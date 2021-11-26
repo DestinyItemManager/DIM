@@ -8,19 +8,6 @@
   margin-top: 8px;
   opacity: 1;
 
-  .phone-portrait & {
-    margin-left: auto;
-    margin-right: auto;
-    align-items: center;
-    .stat-row {
-      width: 100%;
-      justify-content: center;
-    }
-    &.destiny2 .stat {
-      font-size: 12px;
-    }
-  }
-
   > div {
     flex: 1;
     display: flex;
@@ -58,6 +45,16 @@
       width: 14px;
       margin-right: 2px;
       opacity: 1;
+    }
+  }
+
+  .phone-portrait & {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    .stat-row {
+      width: 100%;
+      justify-content: center;
     }
   }
 
@@ -111,6 +108,9 @@
       color: #ccc;
       &.pointerCursor {
         cursor: pointer;
+      }
+      .phone-portrait & {
+        font-size: 12px;
       }
     }
   }

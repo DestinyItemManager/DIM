@@ -51,10 +51,10 @@
     background: none;
     min-width: auto;
   }
-  button .item > *:nth-child(2) {
+  button > *:nth-child(2) {
     display: none !important;
   }
-  button > *:nth-child(2) {
+  button .item > *:nth-child(2) {
     display: none !important;
   }
 }

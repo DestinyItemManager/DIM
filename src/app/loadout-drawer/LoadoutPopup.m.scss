@@ -120,6 +120,7 @@
     @include phone-portrait {
       margin: 4px 4px 4px 2px;
     }
+    /* stylelint-disable-next-line no-descending-specificity */
     :global(.app-icon) {
       font-size: 13px;
       @include phone-portrait {

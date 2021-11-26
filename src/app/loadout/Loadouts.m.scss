@@ -192,11 +192,6 @@
   flex: 1;
 }
 
-.actions {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  @include horizontal-space-children(4px);
-}
-
 .loParams {
   max-width: 100%;
   @include vertical-space-children(4px);

@@ -58,6 +58,16 @@
   }
 }
 
+.trackedInDim {
+  position: relative;
+  border-color: #f37423;
+  outline: 1px solid #f37423;
+  background: linear-gradient(
+    scale-color($orange, $alpha: -100%) 0%,
+    scale-color($orange, $alpha: -80%) 100%
+  );
+}
+
 .dimTrackedIcon {
   position: absolute;
   display: none;
@@ -81,25 +91,14 @@
     display: block;
     opacity: 0.7;
   }
-  .triumphRecord:hover & {
-    display: block;
-    opacity: 0.7;
-  }
-}
-
-.trackedInDim {
-  position: relative;
-  border-color: #f37423;
-  outline: 1px solid #f37423;
-  background: linear-gradient(
-    scale-color($orange, $alpha: -100%) 0%,
-    scale-color($orange, $alpha: -80%) 100%
-  );
-
-  .dimTrackedIcon {
+  .trackedInDim & {
     display: block;
     opacity: 1;
     top: -10px;
+  }
+  .triumphRecord:hover & {
+    display: block;
+    opacity: 0.7;
   }
 }
 

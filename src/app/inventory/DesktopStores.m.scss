@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .buttons {
   display: grid;
   grid-template-rows: 46px 1fr;
@@ -18,5 +20,16 @@
   &:hover {
     transform: scale(1.5);
     color: white;
+  }
+}
+
+.inventoryContainer {
+  display: flex;
+
+  :global(.issue-banner-shown) & {
+    padding-bottom: $issue-banner-height;
+    @include phone-portrait {
+      padding-bottom: 0;
+    }
   }
 }

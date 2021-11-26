@@ -346,6 +346,7 @@
   left: 6px;
   top: 0;
 
+  /* stylelint-disable-next-line no-descending-specificity */
   .perk-select-box {
     user-select: none;
     display: flex;
