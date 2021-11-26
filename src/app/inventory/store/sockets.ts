@@ -6,6 +6,7 @@ import {
   DestinyItemComponentSetOfint64,
   DestinyItemPlugBase,
   DestinyItemSocketEntryDefinition,
+  DestinyItemSocketEntryPlugItemRandomizedDefinition,
   DestinyItemSocketState,
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
@@ -230,7 +231,19 @@ function buildDefinedSocket(
     } else if (socketDef.randomizedPlugSetHash) {
       const plugSet = defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem);
       if (plugSet) {
-        for (const reusablePlug of _.uniqBy(plugSet.reusablePlugItems, (p) => p.plugItemHash)) {
+        // Unique the plugs by hash, but also consider the perk rollable if there's a copy with currentlyCanRoll = true
+        // See https://github.com/DestinyItemManager/DIM/issues/7272
+        const plugs: {
+          [plugItemHash: number]: DestinyItemSocketEntryPlugItemRandomizedDefinition;
+        } = {};
+        for (const reusablePlug of plugSet.reusablePlugItems) {
+          const existing = plugs[reusablePlug.plugItemHash];
+          if (!existing || (!existing.currentlyCanRoll && reusablePlug.currentlyCanRoll)) {
+            plugs[reusablePlug.plugItemHash] = reusablePlug;
+          }
+        }
+
+        for (const reusablePlug of Object.values(plugs)) {
           const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
