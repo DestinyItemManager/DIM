@@ -39,6 +39,9 @@ jobs:
             jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
           done
 
+      - name: build browsercheck upload_translations
+        run: yarn run build-browsercheck-utils
+
       - name: Check for new files (DIM)
         id: porcelain
         run: echo ::set-output name=porcelain::"$(git status --porcelain)"
