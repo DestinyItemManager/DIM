@@ -67,11 +67,13 @@ export function isSupported(browsersSupported, userAgent) {
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
   var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase();
+
   console.info('Langauge Detected: ' + lang);
   if (!supportedLanguages.includes(lang)) {
     lang = lang.split('-', 1);
   }
   if (!supportedLanguages.includes(lang)) {
+    // fallback to 'en' if unsupported language after removing dialect
     lang = 'en';
   }
   console.info('Langauge Assigned: ' + lang);

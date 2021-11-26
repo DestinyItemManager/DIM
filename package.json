@@ -23,7 +23,8 @@
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
     "install": "git submodule update --init --recursive",
-    "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'"
+    "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'",
+    "build-browsercheck-utils": "node src/build-browsercheck-utils.js"
   },
   "husky": {
     "hooks": {
