@@ -18,6 +18,35 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
+          
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node_modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
+            ${{ runner.os }}-${{ env.cache-name }}-
+            
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache yarn
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
+            ${{ runner.os }}-${{ env.cache-name }}-
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
         uses: crowdin/github-action@1.0.4
@@ -48,7 +77,7 @@ jobs:
         run: yarn run build-browsercheck-utils
         
       - name: pretty
-        run: yarn add pretty-quick && yarn pretty-quick --staged
+        run: yarn pretty-quick --staged
 
       - name: Check for new files (DIM)
         id: porcelain
