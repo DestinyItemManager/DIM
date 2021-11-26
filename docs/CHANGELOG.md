@@ -1,6 +1,7 @@
 ## Next
 
 * Steam browser is officially unsupported, and we now show a banner explaining that.
+* However, we have managed to fix DIM so it doesn't crash loop in the Steam overlay. Until the next time Steam updates...
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 

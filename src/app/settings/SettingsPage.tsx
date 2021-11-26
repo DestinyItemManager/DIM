@@ -13,6 +13,7 @@ import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
@@ -116,8 +117,8 @@ export default function SettingsPage() {
   };
 
   const onBadgePostmasterChanged = (checked: boolean, name: keyof Settings) => {
-    if (!checked && 'setAppBadge' in navigator) {
-      navigator.clearAppBadge();
+    if (!checked) {
+      clearAppBadge();
     }
     onCheckChange(checked, name);
   };
