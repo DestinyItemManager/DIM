@@ -77,7 +77,7 @@ jobs:
         run: yarn run build-browsercheck-utils
         
       - name: pretty
-        run: yarn pretty-quick --staged
+        run: yarn prettier --write 'src/build-browsercheck-utils.js'
 
       - name: Check for new files (DIM)
         id: porcelain
