@@ -48,7 +48,6 @@ export function process(
 ): {
   sets: ProcessArmorSet[];
   combos: number;
-  numItems: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
   statRangesFiltered?: StatRanges;
 } {
@@ -65,10 +64,10 @@ export function process(
   }));
   const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
-  // Store stat arrays for each items in the fixed stat order
+  // Store stat arrays for each items in stat order
   const statsCacheInStatOrder: Map<ProcessItem, number[]> = new Map();
 
-  // Precompute the stats of each item in the fixed stat order
+  // Precompute the stats of each item in stat order
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCacheInStatOrder.set(
       item,
@@ -98,7 +97,7 @@ export function process(
   });
 
   if (combos === 0) {
-    return { sets: [], combos: 0, numItems: 0 };
+    return { sets: [], combos: 0 };
   }
 
   const setTracker = new SetTracker(10_000);
@@ -163,7 +162,6 @@ export function process(
 
           for (const classItem of classItems) {
             numProcessed++;
-            const armor = [helm, gaunt, chest, leg, classItem];
 
             const helmStats = statsCacheInStatOrder.get(helm)!;
             const gauntStats = statsCacheInStatOrder.get(gaunt)!;
@@ -242,6 +240,8 @@ export function process(
               numSkippedLowTier++;
               continue;
             }
+
+            const armor = [helm, gaunt, chest, leg, classItem];
 
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
@@ -343,7 +343,6 @@ export function process(
   return {
     sets,
     combos,
-    numItems,
     statRangesFiltered,
   };
 }

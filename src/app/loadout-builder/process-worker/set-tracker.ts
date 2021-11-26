@@ -37,7 +37,6 @@ export class SetTracker {
   /**
    * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
    */
-  // TODO: rewrite this to just use comparators!
   insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
       this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
