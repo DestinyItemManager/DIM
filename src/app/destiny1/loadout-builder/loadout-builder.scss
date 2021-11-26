@@ -53,21 +53,20 @@
     cursor: pointer;
   }
 
-  .perk-addition-text-container:hover {
-    opacity: 1;
-    transition: 1s;
-  }
-
-  .perk-select-hidden .perk-select-box {
-    display: none;
-  }
-
   .perk-addition-text-container {
     opacity: 0;
     display: table-cell;
     vertical-align: middle;
     width: var(--item-size);
     height: var(--item-size);
+    &:hover {
+      opacity: 1;
+      transition: 1s;
+    }
+  }
+
+  .perk-select-hidden .perk-select-box {
+    display: none;
   }
 
   .perk-addition-text {
@@ -118,9 +117,8 @@
   .loadout-builder-section {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     align-items: flex-start;
-    flex-wrap: wrap;
   }
 
   .loadout-builder-select-box {
@@ -328,8 +326,7 @@
   .excluded-items {
     border: 2px solid #ddd;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    flex-flow: row wrap;
     width: calc((var(--item-size) + 14px) * 7);
     min-height: var(--item-size);
     max-width: 100%;
@@ -352,8 +349,7 @@
   .perk-select-box {
     user-select: none;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    flex-flow: row wrap;
     position: absolute;
     left: 0;
     top: 0;

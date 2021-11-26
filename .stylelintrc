@@ -24,10 +24,11 @@
     "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": true,
     "media-feature-name-no-unknown": null,
+    "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["horizontal", "global"] }],
     "hue-degree-notation": "number",
     "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
     "selector-class-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[A-Za-z0-9]+)*$)",
-    "scss/dollar-variable-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/dollar-variable-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
     "value-no-vendor-prefix": [true, { "ignoreValues": "-webkit-box" }],
     "declaration-property-value-disallowed-list": [
       {

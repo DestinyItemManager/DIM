@@ -6,6 +6,16 @@
   transform: scale(0.75);
 }
 
+// The top-level item container. Global because it's referenced by other styles.
+:global(.item) {
+  position: relative;
+  contain: layout paint style;
+  box-sizing: border-box;
+  width: var(--item-size);
+  // searchHidden will adjust opacity/transform, this transitions them
+  transition: opacity 0.2s, transform 0.2s;
+}
+
 // The wrapper for draggable items. Global because it's referenced by other styles.
 :global(.item-drag-container) {
   contain: layout paint style;
@@ -16,16 +26,6 @@
   &:hover {
     @include draggable-hover-border;
   }
-}
-
-// The top-level item container. Global because it's referenced by other styles.
-:global(.item) {
-  position: relative;
-  contain: layout paint style;
-  box-sizing: border-box;
-  width: var(--item-size);
-  // searchHidden will adjust opacity/transform, this transitions them
-  transition: opacity 0.2s, transform 0.2s;
 }
 
 // Subclass items

@@ -58,6 +58,35 @@
   }
 }
 
+.dimTrackedIcon {
+  position: absolute;
+  display: none;
+  right: calc(50px + var(--item-size) / 3.1);
+  top: -9px;
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  padding: 8px;
+  transition: transform 300ms ease-in-out;
+  transform-origin: center 8px;
+  opacity: 0.7;
+  &:hover {
+    transform: scale(1.5);
+  }
+  img {
+    width: calc(var(--item-size) / 3.1) !important;
+    height: auto !important;
+  }
+  @media (hover: none) {
+    display: block;
+    opacity: 0.7;
+  }
+  .triumphRecord:hover & {
+    display: block;
+    opacity: 0.7;
+  }
+}
+
 .trackedInDim {
   position: relative;
   border-color: #f37423;
@@ -121,35 +150,6 @@
   height: auto !important;
   right: 50px;
   top: -2px;
-}
-
-.dimTrackedIcon {
-  position: absolute;
-  display: none;
-  right: calc(50px + var(--item-size) / 3.1);
-  top: -9px;
-  cursor: pointer;
-  width: fit-content;
-  height: fit-content;
-  padding: 8px;
-  transition: transform 300ms ease-in-out;
-  transform-origin: center 8px;
-  opacity: 0.7;
-  &:hover {
-    transform: scale(1.5);
-  }
-  img {
-    width: calc(var(--item-size) / 3.1) !important;
-    height: auto !important;
-  }
-  @media (hover: none) {
-    display: block;
-    opacity: 0.7;
-  }
-  .triumphRecord:hover & {
-    display: block;
-    opacity: 0.7;
-  }
 }
 
 .interval {

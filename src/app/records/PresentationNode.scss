@@ -8,6 +8,32 @@
   .collapse-icon {
     margin-right: 8px;
   }
+  .node-name {
+    img {
+      height: 24px;
+      vertical-align: middle;
+    }
+  }
+
+  .node-progress {
+    text-align: right;
+    .node-progress-count {
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .node-progress-bar {
+      background: #666;
+      height: 2px;
+      width: 8em;
+      margin-top: 2px;
+    }
+    .node-progress-bar-amount {
+      background: #ccc;
+      height: 2px;
+    }
+  }
+
   /* indent child nodes more than their parent */
   > .presentation-node {
     margin-left: 10px;
@@ -78,32 +104,6 @@
       .node-progress-count {
         font-size: 11px;
       }
-    }
-  }
-
-  .node-name {
-    img {
-      height: 24px;
-      vertical-align: middle;
-    }
-  }
-
-  .node-progress {
-    text-align: right;
-    .node-progress-count {
-      font-size: 12px;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-    .node-progress-bar {
-      background: #666;
-      height: 2px;
-      width: 8em;
-      margin-top: 2px;
-    }
-    .node-progress-bar-amount {
-      background: #ccc;
-      height: 2px;
     }
   }
 }

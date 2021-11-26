@@ -11,6 +11,24 @@
   width: 15px;
 }
 
+.increments {
+  display: block;
+  box-sizing: border-box;
+  height: 12px;
+  flex-grow: 1;
+  margin: 0 1px;
+  border: 3px solid white;
+
+  .unused {
+    background: transparent;
+  }
+
+  &.disabled {
+    height: 6px;
+    border: 3px solid #888;
+  }
+}
+
 .inner {
   display: flex;
   align-items: center;
@@ -49,23 +67,6 @@
 
   &.stasis > .unused {
     border-color: #4d88ff;
-  }
-}
-.increments {
-  display: block;
-  box-sizing: border-box;
-  height: 12px;
-  flex-grow: 1;
-  margin: 0 1px;
-  border: 3px solid white;
-
-  .unused {
-    background: transparent;
-  }
-
-  &.disabled {
-    height: 6px;
-    border: 3px solid #888;
   }
 }
 

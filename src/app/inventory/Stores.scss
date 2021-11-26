@@ -87,6 +87,12 @@
   }
 }
 
+.equipped-item {
+  border: $equipped-item-border solid #ddd;
+  height: fit-content;
+  padding: $equipped-item-padding;
+}
+
 .store-cell {
   display: flex;
   flex-direction: row;
@@ -106,6 +112,11 @@
 
   > div {
     white-space: normal;
+  }
+
+  // Postmaster - items above, collect button below
+  .bucket-215593132 & {
+    flex-direction: column;
   }
 
   // Engrams. D1 uses this same bucket hash for "Missions"
@@ -153,7 +164,7 @@
       width: var(--item-size);
       height: var(--item-size);
       box-sizing: border-box;
-      background: url(images/engram_outline.svg);
+      background: url('images/engram_outline.svg');
     }
   }
 
@@ -185,17 +196,6 @@
       }
     }
   }
-
-  // Postmaster - items above, collect button below
-  .bucket-215593132 & {
-    flex-direction: column;
-  }
-}
-
-.equipped-item {
-  border: $equipped-item-border solid #ddd;
-  height: fit-content;
-  padding: $equipped-item-padding;
 }
 
 .store-text {

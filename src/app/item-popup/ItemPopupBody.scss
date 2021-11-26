@@ -145,6 +145,14 @@
   }
 }
 
+.acquired-icon {
+  background: #3c94ff;
+}
+
+.owned-icon {
+  background: #44bd32;
+}
+
 .owned-icon,
 .acquired-icon {
   width: calc(var(--item-size) / 4) !important;
@@ -164,13 +172,6 @@
   }
 }
 
-.acquired-icon {
-  background: #3c94ff;
-}
-
-.owned-icon {
-  background: #44bd32;
-}
 .popup-tab-title {
   position: relative;
   .thumbs-up {

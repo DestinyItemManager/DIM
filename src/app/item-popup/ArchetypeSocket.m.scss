@@ -1,3 +1,27 @@
+.mod {
+  margin-top: calc(4 / 50 * var(--item-size));
+  margin-right: 2px;
+  .minimal &,
+  .isWeapons & {
+    margin-top: 0;
+    margin-right: 0;
+  }
+
+  img {
+    width: calc(24 / 50 * var(--item-size));
+    height: calc(24 / 50 * var(--item-size));
+    transform: scale(1.4);
+    margin-right: 7px;
+    margin-left: 2px;
+
+    .minimal & {
+      width: 16px !important;
+      height: 16px !important;
+      transform: scale(1.4);
+    }
+  }
+}
+
 .row {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
@@ -25,30 +49,6 @@
   :global(.item-socket-category-Consumable) img {
     width: calc(32 / 50 * var(--item-size));
     height: calc(32 / 50 * var(--item-size));
-  }
-}
-
-.mod {
-  margin-top: calc(4 / 50 * var(--item-size));
-  margin-right: 2px;
-  .minimal &,
-  .isWeapons & {
-    margin-top: 0;
-    margin-right: 0;
-  }
-
-  img {
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
-    transform: scale(1.4);
-    margin-right: 7px;
-    margin-left: 2px;
-
-    .minimal & {
-      width: 16px !important;
-      height: 16px !important;
-      transform: scale(1.4);
-    }
   }
 }
 
