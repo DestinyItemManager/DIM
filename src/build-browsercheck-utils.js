@@ -29,7 +29,7 @@ function getI18nKey(key) {
   'pt-br': "${ptBR[key1]?.[key2] ?? en[key1][key2]}",
   ru: "${ru[key1]?.[key2] ?? en[key1][key2]}",
   'zh-chs': "${zhCHS[key1]?.[key2] ?? en[key1][key2]}",
-  'zh-cht': "${zhCHT[key1]?.[key2] ?? en[key1][key2]}",\n};`;
+  'zh-cht': "${zhCHT[key1]?.[key2] ?? en[key1][key2]}",\n};\n`;
 }
 
 var browserCheckUtils = `export const supportedLanguages = [
@@ -50,13 +50,11 @@ var browserCheckUtils = `export const supportedLanguages = [
 
 export const unsupported = {
 ${getI18nKey('Browsercheck.Unsupported')}
-
 export const steamBrowser = {
-${getI18nKey('Browsercheck.Steam')}
-`;
+${getI18nKey('Browsercheck.Steam')}`;
 
-fs.writeFile('../src/browsercheck-utils.js', browserCheckUtils, (err) => {
+fs.writeFile('src/browsercheck-utils.js', browserCheckUtils, (err) => {
   if (err) {
-    //infoLog(err)
+    // console.log(err);
   }
 });
