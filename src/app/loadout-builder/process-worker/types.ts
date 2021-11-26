@@ -7,7 +7,7 @@ export interface ProcessItem {
   hash: number;
   type: string;
   name: string;
-  equippingLabel?: string;
+  isExotic: boolean;
   energy?: {
     type: DestinyEnergyType;
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
@@ -35,8 +35,8 @@ export interface ProcessArmorSet {
 }
 
 export interface IntermediateProcessArmorSet {
-  /** The overall stats for the loadout as a whole. */
-  stats: ArmorStats;
+  /** The overall stats for the loadout as a whole, in preferred order. */
+  stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
 }

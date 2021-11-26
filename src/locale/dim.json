@@ -34,6 +34,10 @@
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
     "YourItems": "Your Items"
   },
+  "Browsercheck": {
+    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
+    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+  },
   "Bucket": {
     "": "",
     "Armor": "Armor",
@@ -477,6 +481,7 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Share Build Settings",
+    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TheseModsCouldNotBeAssigned": "These mods could not be assigned to the existing loadout.",

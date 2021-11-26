@@ -1,4 +1,5 @@
 import parser from 'ua-parser-js';
+import { steamBrowser, supportedLanguages, unsupported } from './browsercheck-utils';
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
 // This is also intentionally written in es5 and not TypeScript because it should not use any new features.
@@ -65,6 +66,17 @@ export function isSupported(browsersSupported, userAgent) {
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
+  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase();
+
+  console.info('Langauge Detected: ' + lang);
+  if (!supportedLanguages.includes(lang)) {
+    lang = lang.split('-', 1);
+  }
+  if (!supportedLanguages.includes(lang)) {
+    // fallback to 'en' if unsupported language after removing dialect
+    lang = 'en';
+  }
+  console.info('Langauge Assigned: ' + lang);
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome
@@ -84,14 +96,14 @@ export function isSupported(browsersSupported, userAgent) {
 }
 
 if ($BROWSERS.length) {
+  // t('Browsercheck.Unsupported')
+  // t('Browsercheck.Steam')
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
-    // t('Browsercheck.Unsupported')
+    document.getElementById('browser-warning').innerText = unsupported[lang];
     document.getElementById('browser-warning').style.display = 'block';
     if (navigator.userAgent.includes('Steam')) {
-      // t('Browsercheck.Steam')
-      document.getElementById('browser-warning').innerText =
-        "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.";
+      document.getElementById('browser-warning').innerText = steamBrowser[lang];
     }
   }
 }

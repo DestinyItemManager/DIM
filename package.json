@@ -23,7 +23,8 @@
     "publish-release": "npm run build-release -s && grunt publish_release",
     "pretty": "prettier --write 'src/**/*.{js,ts,tsx,scss,html}'",
     "install": "git submodule update --init --recursive",
-    "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'"
+    "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'",
+    "build-browsercheck-utils": "node src/build-browsercheck-utils.js"
   },
   "husky": {
     "hooks": {
@@ -138,9 +139,9 @@
     "notify-webpack-plugin": "^2.0.0",
     "postcss": "^8.0.9",
     "postcss-loader": "^6.1.0",
-    "prettier": "^2.0.4",
+    "prettier": "^2.5.0",
     "prettier-plugin-organize-imports": "^2.0.0",
-    "pretty-quick": "^3.0.0",
+    "pretty-quick": "^3.1.2",
     "react-refresh": "^0.10.0",
     "react-test-renderer": "^17.0.2",
     "sass-loader": "^12.1.0",

@@ -540,6 +540,7 @@
     "SelectPerks": "Select Perks",
     "SelectPower": "Minimum Power",
     "SelectPowerDescription": "Sets a minimum power level for the entire loadout (not individual pieces)",
+    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatIncorrectWarning": "To get accurate results, please remove any mods with negative stat effects.\n\nDue to mods with negative stat modifiers, DIM cannot determine the base value or value of {{stats}} on some included items. This is a limitation of the information sent by Bungie.net.",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
