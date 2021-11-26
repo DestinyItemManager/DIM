@@ -199,6 +199,14 @@ export function process(
 
   let combos = combosWithoutCaps;
 
+  const before = {
+    helms: helms.length,
+    gauntlets: gauntlets.length,
+    chests: chests.length,
+    legs: legs.length,
+    classItems: classItems.length,
+  };
+
   // If we're over the limit, start trimming down the armor lists starting with the worst among them.
   // Since we're already sorted by total stats descending this should toss the worst items.
   let numDiscarded = 0;
@@ -228,7 +236,17 @@ export function process(
       numDiscarded,
       'of',
       initialNumItems,
-      'items'
+      'items',
+      {
+        before,
+        after: {
+          helms: helms.length,
+          gauntlets: gauntlets.length,
+          chests: chests.length,
+          legs: legs.length,
+          classItems: classItems.length,
+        },
+      }
     );
   }
 
@@ -331,17 +349,17 @@ export function process(
             };
             for (const item of armor) {
               const itemStats = statsCache.get(item)!;
-              let index = 0;
               // itemStats are already in the user's chosen stat order
-              for (const statHash of statOrder) {
-                stats[statHash] = stats[statHash] + itemStats[index];
+              for (let index = 0; index < statOrder.length; index++) {
+                const statHash = statOrder[index];
+                let value = stats[statHash] + itemStats[index];
                 // Stats can't exceed 100 even with mods. At least, today they
                 // can't - we *could* pass the max value in from the stat def.
                 // Math.min is slow.
-                if (stats[statHash] > 100) {
-                  stats[statHash] = 100;
+                if (value > 100) {
+                  value = 100;
                 }
-                index++;
+                stats[statHash] = value;
               }
             }
 

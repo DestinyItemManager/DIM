@@ -16,6 +16,7 @@ import Sheet from '../dim-ui/Sheet';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
+import '../inventory/Stores.scss';
 import { showItemPicker } from '../item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from './actions';
 import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';

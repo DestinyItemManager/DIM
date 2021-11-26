@@ -1,6 +1,7 @@
 ## Next
 
 * Loadouts can now have notes.
+* Steam browser is officially unsupported, and we now show a banner explaining that.
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 

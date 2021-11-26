@@ -38,5 +38,6 @@
     "typescript",
     "typescriptreact",
     "yaml"
-  ]
+  ],
+  "css.customData": ["./.vscode/custom.css-data.json"]
 }

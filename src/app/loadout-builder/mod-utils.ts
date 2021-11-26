@@ -28,6 +28,6 @@ export const doEnergiesMatch = (
  */
 export function someModHasEnergyRequirement(mods: PluggableInventoryItemDefinition[]) {
   return mods.some(
-    (mod) => !mod.plug.energyCost || mod.plug.energyCost.energyType !== DestinyEnergyType.Any
+    (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
   );
 }

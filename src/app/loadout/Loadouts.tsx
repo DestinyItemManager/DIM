@@ -42,6 +42,7 @@ import {
   powerActionIcon,
   searchIcon,
 } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -84,6 +85,7 @@ function Loadouts() {
   const allItems = useSelector(allItemsSelector);
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
+  const isPhonePortrait = useIsPhonePortrait();
 
   const savedLoadouts = useMemo(
     () =>
@@ -161,11 +163,12 @@ function Loadouts() {
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>
-        {loadouts.map((loadout) => (
-          <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
-            <span>{loadout.name}</span>
-          </PageWithMenu.MenuButton>
-        ))}
+        {!isPhonePortrait &&
+          loadouts.map((loadout) => (
+            <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
+              <span>{loadout.name}</span>
+            </PageWithMenu.MenuButton>
+          ))}
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents className={styles.page}>

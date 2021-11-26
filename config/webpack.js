@@ -76,6 +76,7 @@ module.exports = (env) => {
       filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
       chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
       assetModuleFilename: ASSET_NAME_PATTERN,
+      hashFunction: 'xxhash64',
     },
 
     // Dev server
@@ -150,14 +151,6 @@ module.exports = (env) => {
               },
             },
           ],
-        },
-        {
-          test: /\.html$/,
-          exclude: /index\.html/,
-          loader: 'html-loader',
-          options: {
-            esModule: true,
-          },
         },
         {
           // Optimize SVGs - mostly for destiny-icons.
@@ -287,9 +280,7 @@ module.exports = (env) => {
         },
       ],
 
-      noParse: function (path) {
-        return false;
-      },
+      noParse: /manifests/,
     },
 
     resolve: {
@@ -335,14 +326,14 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'return.html',
-        template: '!html-loader!src/return.html',
+        template: 'src/return.html',
         chunks: ['authReturn'],
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: '404.html',
-        template: '!html-loader!src/404.html',
+        template: 'src/404.html',
       }),
 
       // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
