@@ -89,7 +89,7 @@ if ($featureFlags.sentry) {
 
         // Do deeper surgery to overwrite the localized message with the code
         if (event.exception?.values) {
-          for (const ex of event.exception?.values) {
+          for (const ex of event.exception.values) {
             if (ex.value === e.message) {
               ex.value = e.code;
             }
