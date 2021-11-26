@@ -44,11 +44,11 @@ jobs:
             jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
           done
 
-      - name: build browsercheck upload_translations
+      - name: build browsercheck utils
         run: yarn run build-browsercheck-utils
         
       - name: pretty
-        run: yarn install prettier && yarn run pretty
+        run: yarn add prettier && yarn run pretty
 
       - name: Check for new files (DIM)
         id: porcelain
