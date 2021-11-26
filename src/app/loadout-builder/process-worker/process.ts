@@ -270,6 +270,7 @@ export function process(
               // Make each stat exactly one code unit so the string compares correctly
               const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
+                // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
               }
 
