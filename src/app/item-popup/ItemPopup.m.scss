@@ -93,7 +93,7 @@
 }
 
 .popupBackground {
-  background-color: #{'hsl(var(--backgroundColor))'};
+  background-color: #{'hsl(var(--background-color))'};
   contain: content;
   box-shadow: 0 -1px 24px 4px #161626;
   @include phone-portrait {

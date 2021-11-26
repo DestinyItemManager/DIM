@@ -29,7 +29,7 @@
     "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
     "selector-class-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[A-Za-z0-9]+)*$)",
     "scss/dollar-variable-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
-    "value-no-vendor-prefix": [true, { "ignoreValues": "-webkit-box" }],
+    "value-no-vendor-prefix": [true, { "ignoreValues": "box" }],
     "declaration-property-value-disallowed-list": [
       {
         "display": ["contents"]

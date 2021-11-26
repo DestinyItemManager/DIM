@@ -93,7 +93,7 @@
   overflow: hidden;
   max-height: 4em;
   text-overflow: ellipsis;
-  display: box;
+  display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
