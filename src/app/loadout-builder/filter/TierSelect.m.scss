@@ -41,7 +41,6 @@
     'name minimum maximum';
   gap: 4px 4px;
   margin-bottom: 2px;
-  padding-right: 4px;
   background-color: black;
   align-items: center;
   padding: 4px 4px 4px 0;
@@ -73,10 +72,7 @@
 
   > select {
     height: 18px;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding: 0 4px;
     background-position-x: calc(100% - 4px);
     width: 45px;
   }

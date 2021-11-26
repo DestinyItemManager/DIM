@@ -6,7 +6,7 @@ export const makeCustomIcon = (
   height: number,
   pathData: string
 ): IconDefinition => ({
-  iconName: `dim${name}` as IconName,
+  iconName: `dim${name}` as unknown as IconName,
   prefix: 'dim' as IconPrefix,
   icon: [width, height, [], '', pathData],
 });

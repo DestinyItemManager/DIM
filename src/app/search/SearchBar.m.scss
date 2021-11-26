@@ -56,6 +56,25 @@
   }
 }
 
+.menuItemIcon {
+  font-size: 12px !important;
+  margin-right: 6px;
+  margin-top: 5px;
+  color: #999;
+}
+
+.deleteIcon {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  font-size: 10px !important;
+  margin-top: 4px;
+  color: #999;
+  padding: 0 2px;
+  visibility: hidden;
+  @media (hover: none) {
+    visibility: visible;
+  }
+}
+
 .highlightedItem {
   background-color: $orange;
   color: black !important;
@@ -66,13 +85,6 @@
     color: #333;
     visibility: visible;
   }
-}
-
-.menuItemIcon {
-  font-size: 12px !important;
-  margin-right: 6px;
-  margin-top: 5px;
-  color: #999;
 }
 
 .menuItemQuery {
@@ -98,18 +110,6 @@
   }
   .highlightedItem & {
     color: #222;
-  }
-}
-
-.deleteIcon {
-  composes: resetButton from '../dim-ui/common.m.scss';
-  font-size: 10px !important;
-  margin-top: 4px;
-  color: #999;
-  padding: 0 2px;
-  visibility: hidden;
-  @media (hover: none) {
-    visibility: visible;
   }
 }
 

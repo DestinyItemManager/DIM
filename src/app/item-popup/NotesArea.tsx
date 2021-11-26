@@ -157,7 +157,7 @@ function NotesEditor({
         ],
         {
           dropdown: {
-            className: `dropdown-menu textcomplete-dropdown ${styles.hashtagSuggestions}`,
+            className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
           },
         }
       );

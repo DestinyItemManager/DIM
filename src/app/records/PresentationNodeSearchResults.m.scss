@@ -2,7 +2,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   list-style: none;
   padding: 0;
-  margin: 16px 0 0px 0px;
+  margin: 16px 0 0 0;
 
   > li {
     text-transform: uppercase;

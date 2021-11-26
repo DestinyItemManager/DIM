@@ -6,26 +6,42 @@
 
 @import '../variables.scss';
 
+.arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  border-color: black;
+  z-index: -1;
+}
+
+.desktopPopupRoot {
+  pointer-events: none;
+  .arrow {
+    border-color: #161626;
+  }
+}
+
 .movePopupDialog {
   // Mod drawer has z-index of 14 and needs to sit over this
   z-index: 13;
 
-  --backgroundColor: 0, 0%, 0%;
+  --background-color: 0, 0%, 0%;
 
   &.exotic {
-    --backgroundColor: 48, 71%, 5%;
+    --background-color: 48, 71%, 5%;
   }
   &.legendary {
-    --backgroundColor: 279, 36%, 5%;
+    --background-color: 279, 36%, 5%;
   }
   &.rare {
-    --backgroundColor: 213, 34%, 6%;
+    --background-color: 213, 34%, 6%;
   }
   &.uncommon {
-    --backgroundColor: 126, 35%, 5%;
+    --background-color: 126, 35%, 5%;
   }
   &.common {
-    --backgroundColor: 0, 0%, 7%;
+    --background-color: 0, 0%, 7%;
   }
 
   &[data-popper-placement^='top'] .arrow {
@@ -38,12 +54,8 @@
 
   &[data-popper-placement^='bottom'] .arrow {
     border-width: 0 5px 5px 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
     top: -5px;
-
-    border-bottom-color: white;
+    border-color: transparent transparent white transparent;
 
     &.exotic {
       border-bottom-color: $exotic;
@@ -80,28 +92,12 @@
   }
 }
 
-.arrow {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  border-color: black;
-  z-index: -1;
-}
-
 .popupBackground {
-  background-color: #{'hsl(var(--backgroundColor))'};
+  background-color: #{'hsl(var(--background-color))'};
   contain: content;
   box-shadow: 0 -1px 24px 4px #161626;
   @include phone-portrait {
     box-shadow: none;
-  }
-}
-
-.desktopPopupRoot {
-  pointer-events: none;
-  .arrow {
-    border-color: #161626;
   }
 }
 

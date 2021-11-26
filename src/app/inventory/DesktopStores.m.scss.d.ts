@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'buttons': string;
+  'inventoryContainer': string;
   'singleCharacterButton': string;
 }
 export const cssExports: CssExports;

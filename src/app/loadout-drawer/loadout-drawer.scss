@@ -78,8 +78,7 @@
 
   form {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
   }
 
   .loadout-name {
@@ -114,8 +113,7 @@
 
   .input-group {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     align-items: center;
     margin-right: 4px;
     margin-bottom: 4px;
@@ -146,8 +144,7 @@
 
 .loadout-add-types {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   .loadout-add {
     margin-right: 4px;
     margin-bottom: 4px;
@@ -156,13 +153,11 @@
 
 .loadout-added-items {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   min-height: calc(var(--item-size) + 4px);
-  flex-wrap: wrap;
   margin-top: 4px;
   @include phone-portrait {
-    flex-wrap: nowrap;
-    flex-direction: column;
+    flex-flow: column nowrap;
   }
 }
 
@@ -182,6 +177,12 @@
   .loadout-bucket-name {
     text-transform: uppercase;
     font-size: 13px;
+  }
+
+  .equipped {
+    .item {
+      margin: 0;
+    }
   }
 
   .loadout-bucket-items {
@@ -226,12 +227,6 @@
     text-decoration: none;
   }
 
-  .equipped {
-    .item {
-      margin: 0;
-    }
-  }
-
   .loadout-add {
     white-space: nowrap;
   }
@@ -239,8 +234,7 @@
   .sub-bucket {
     flex: 1;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
   }
   .sub-bucket.equipped {
     flex: 0;
