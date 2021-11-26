@@ -4,6 +4,7 @@
 * However, we have managed to fix DIM so it doesn't crash loop in the Steam overlay. Until the next time Steam updates...
 * Loadout Optimizer performance has been improved significantly - so much so that we now always look at all possible combinations of armor. Previously we trimmed some items out to get below an a number that we could process in time. This means that your LO builds are now guaranteed to be optimal, and the "Max" range shown in the stat tiles will always be accurate.
 * We no longer cap stats in the Loadout Optimizer's tooltips so you can see how far over 100 a stat goes.
+* Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 
