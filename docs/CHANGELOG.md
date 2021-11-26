@@ -1,6 +1,7 @@
 ## Next
 
 * Steam browser is officially unsupported, and we now show a banner explaining that.
+* Fixed a bug where Loadout Optimizer would only show one set.
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 

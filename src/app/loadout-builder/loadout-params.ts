@@ -9,6 +9,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isInsertableArmor2Mod } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
+import { emptyArray } from 'app/utils/empty';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
 
@@ -80,7 +81,7 @@ export function lockedModsFromLoadoutParameters(
   params: LoadoutParameters,
   defs: D2ManifestDefinitions
 ): PluggableInventoryItemDefinition[] {
-  return params.mods
+  return params.mods && params.mods.length > 0
     ? params.mods.map((modHash) => defs.InventoryItem.get(modHash)).filter(isInsertableArmor2Mod)
-    : [];
+    : emptyArray();
 }

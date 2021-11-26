@@ -4,7 +4,15 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { Dispatch, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -74,7 +82,7 @@ interface Props {
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
-export default function GeneratedSets({
+export default memo(function GeneratedSets({
   lockedMods,
   pinnedItems,
   selectedStore,
@@ -95,31 +103,26 @@ export default function GeneratedSets({
     rowWidth: number;
   }>({ rowHeight: 0, rowWidth: 0 });
 
-  // eslint-disable-next-line prefer-const
-  let measureSet = useMemo(() => getMeasureSet(sets), [sets]);
+  const measureSet = useMemo(() => getMeasureSet(sets), [sets]);
 
-  useEffect(() => {
-    setRowSize({ rowHeight: 0, rowWidth: 0 });
-  }, [sets]);
-
-  useEffect(() => {
-    if (measureSetRef.current && !rowHeight) {
+  useLayoutEffect(() => {
+    if (measureSetRef.current) {
       setRowSize({
         rowHeight: measureSetRef.current.clientHeight,
         rowWidth: measureSetRef.current.clientWidth,
       });
     }
-  }, [rowHeight]);
+    // We need to include sets in the dependencies for this hook to fire correctly
+  }, [rowHeight, sets]);
 
   useEffect(() => {
     const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
       leading: false,
       trailing: true,
     });
-
     window.addEventListener('resize', handleWindowResize);
     return () => window.removeEventListener('resize', handleWindowResize);
-  }, [setRowSize]);
+  }, []);
 
   useEffect(() => {
     windowScroller.current?.updatePosition();
@@ -183,4 +186,4 @@ export default function GeneratedSets({
       )}
     </div>
   );
-}
+});

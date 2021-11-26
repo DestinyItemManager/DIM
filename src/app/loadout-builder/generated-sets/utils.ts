@@ -1,5 +1,6 @@
 import { armorStats } from 'app/search/d2-known-values';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import _ from 'lodash';
 import { ArmorSet, ArmorStats } from '../types';
 import { statTier } from '../utils';
@@ -22,9 +23,12 @@ export function sortGeneratedSets(
   statOrder: number[],
   enabledStats: Set<number>,
   sets?: readonly ArmorSet[]
-) {
-  if (!sets) {
+): readonly ArmorSet[] | undefined {
+  if (sets === undefined) {
     return;
+  }
+  if (sets.length === 0) {
+    return emptyArray();
   }
 
   return Array.from(sets).sort(
