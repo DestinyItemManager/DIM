@@ -2,16 +2,16 @@ export const supportedLanguages = [
   'en',
   'de',
   'es',
-  'es-MX',
+  'es-mx',
   'fr',
   'it',
   'ja',
   'ko',
   'pl',
-  'pt-BR',
+  'pt-br',
   'ru',
-  'zh-CHS',
-  'zh-CHT',
+  'zh-chs',
+  'zh-cht',
 ];
 
 export const unsupported = {
