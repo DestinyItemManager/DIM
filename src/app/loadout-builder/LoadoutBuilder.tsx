@@ -397,6 +397,14 @@ function LoadoutBuilder({
           >
             {t('LoadoutBuilder.ShareBuild')}
           </button>
+          {result && (
+            <div className={styles.speedReport}>
+              {t('LoadoutBuilder.SpeedReport', {
+                combos: result.combos,
+                time: (result.processTime / 1000).toFixed(2),
+              })}
+            </div>
+          )}
         </div>
         <div className={styles.guide}>
           <ol>
@@ -407,6 +415,7 @@ function LoadoutBuilder({
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
+
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}

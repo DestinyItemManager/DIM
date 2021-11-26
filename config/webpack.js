@@ -395,7 +395,7 @@ module.exports = (env) => {
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(true),
         // Show achievable stat ranges in LO
-        '$featureFlags.loStatRanges': JSON.stringify(!env.release),
+        '$featureFlags.loStatRanges': JSON.stringify(true),
         // Show mod assignment button in loadout drawer
         '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
         // Top level loadouts page
