@@ -331,14 +331,10 @@ export function process(
 
   const sets = finalSets.map(({ armor, stats }) => ({
     armor: armor.map((item) => item.id),
-    stats: {
-      2996146975: stats[0], // Stat "Mobility"
-      392767087: stats[1], // Stat "Resilience"
-      1943323491: stats[2], // Stat "Recovery"
-      1735777505: stats[3], // Stat "Discipline"
-      144602215: stats[4], // Stat "Intellect"
-      4244567218: stats[5], // Stat "Strength"
-    },
+    stats: statOrder.reduce((statObj, statHash, i) => {
+      statObj[statHash] = stats[i];
+      return statObj;
+    }, {}) as ArmorStats,
   }));
 
   return {
