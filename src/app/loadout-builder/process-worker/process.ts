@@ -218,15 +218,18 @@ export function process(
               Math.min(Math.max(Math.floor(stats[4] / 10), 0), 10),
               Math.min(Math.max(Math.floor(stats[5] / 10), 0), 10),
             ];
-            const totalTier = tiers[0] + tiers[1] + tiers[2] + tiers[3] + tiers[4] + tiers[5];
 
             // Check whether the set exceeds our stat constraints
+            let totalTier = 0;
             let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               const filter = statFiltersInStatOrder[index];
-              if (!filter.ignored && (tier > filter.max || tier < filter.min)) {
-                statRangeExceeded = true;
+              if (!filter.ignored) {
+                if (tier > filter.max || tier < filter.min) {
+                  statRangeExceeded = true;
+                }
+                totalTier += tier;
               }
             }
 
