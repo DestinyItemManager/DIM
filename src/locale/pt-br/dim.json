@@ -34,6 +34,10 @@
     "WishlistedRolls_plural": "{{count, number}} valores desejáveis",
     "YourItems": "Seus itens"
   },
+  "Browsercheck": {
+    "Steam": "Parece que esta página foi aberta no navegador do Steam. Devido à limitações, a execução do DIM pode falhar de forma inesperada ou intermitente. Nós não podemos oferecer suporte a ele.",
+    "Unsupported": "A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar."
+  },
   "Bucket": {
     "": "",
     "Armor": "Armaduras",
@@ -486,7 +490,6 @@
     "UnlockItem": "Desfixar item"
   },
   "Loadouts": {
-    "Abandon": "Você tem certeza que gostaria de descartar esse set?",
     "AddEquippedItems": "Adicionar Equipado",
     "AddUnequippedItems": "Adicionar Não Equipados",
     "AlreadyExistsClass": "Um set com este nome já existe para o seu {{className}}.",
@@ -494,6 +497,7 @@
     "Any": "Qualquer classe",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
+    "Apply": "Aplicar",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
     "ArmorMods": "Mods de Armadura",
     "AssumeMaxWeapons": "Assumindo o nível máximo de poder das armas",
@@ -507,8 +511,9 @@
     "CurrentlyEquipped": "Atualmente Equipado",
     "Delete": "Remover",
     "Edit": "Editar set",
+    "EditBrief": "Editar",
     "EquippableDifferent1": "Múltiplos itens exóticos foram usados para calcular seu Poder Máximo. Então o número mostrado pode não ser alcançável ao equipar seus itens no jogo.",
-    "EquippableDifferent2": "O Poder Máximo não se restringe pela regra de \"Um Exótico\" ao determinar o Poder dos seus itens comuns, poderosos ou pináculo.",
+    "EquippableDifferent2": "O poder máximo não considera a regra de \"um exótico\" ao determinar o poder dos seus itens comuns, poderosos ou pináculos.",
     "FilteredItems": "Itens filtrados",
     "FindAnother": "Encontrar outro {{name}}",
     "FromEquipped": "Equipado",
@@ -526,6 +531,7 @@
     "MakeRoomDone_male_plural": "Concluído a liberação de espaço para {{count}} novos itens no Chefe do Correio depois de mover {{movedNum}} itens para seu {{store}}.",
     "MakeRoomDone_plural": "Foi aberto espaço para {{count}} itens de Correio movendo {{movedNum}} itens do {{store}}.",
     "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {{error}}.",
+    "ManageLoadouts": "Gerenciar Sets",
     "MaxSlots": "Você só pode ter {{slots}} desde tipo de item em seu set.",
     "MaximizeLight": "Maximizar Luz",
     "MaximizePower": "Maximizar Poder",
@@ -566,7 +572,10 @@
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar Novo",
+    "SaveLoadout": "Salvar Set",
     "ShowModPlacement": "Exibir Localização do Mod",
+    "SortByEditTime": "Ordenar pela última alteração",
+    "SortByName": "Ordenar por nome",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
@@ -739,7 +748,7 @@
   },
   "SearchHistory": {
     "Date": "Último uso",
-    "DeleteAll": "Descartar todas as pesquisas não favoritadas",
+    "DeleteAll": "Descartar todas as pesquisas não-favoritadas",
     "Description": "Aqui está todo seu passado e pesquisas salvas. Você pode deletá-las se precisar.",
     "Link": "Visualizar e editar o histórico de pesquisa",
     "Query": "Termo pesquisado",
@@ -772,9 +781,10 @@
     "InventoryNumberOfSpacesToClear": "Quantidade de espaços livres durante o Modo Farming (para liberação de espaço)",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
+    "LoadoutSort": "Ordenação de Sets:",
     "LogOut": "Sair",
     "Masterworked": "Obra-prima",
-    "PerkDisplay": "Exibição do Perk no Popup do Item:",
+    "PerkDisplay": "Exibição dos perks no popup do item",
     "PerkGrid": "Grade",
     "PerkList": "Lista",
     "ReloadDIM": "Recarregar o DIM para concluir a mudança de idioma",
