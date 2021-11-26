@@ -48,7 +48,7 @@ jobs:
         run: yarn run build-browsercheck-utils
         
       - name: pretty
-        run: yarn add prettier && yarn run pretty
+        run: yarn add pretty-quick && yarn pretty-quick --staged
 
       - name: Check for new files (DIM)
         id: porcelain
