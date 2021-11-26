@@ -2,7 +2,7 @@
 
 .filter-input {
   border-radius: 0;
-  -webkit-appearance: none;
+  appearance: none;
   font-size: 13px;
 }
 
@@ -115,7 +115,7 @@
 .filter-bar-button {
   margin: 0 6px;
   padding: 0;
-  -webkit-appearance: none;
+  appearance: none;
   display: inline-block;
   background: transparent;
   border: 0;
@@ -147,7 +147,7 @@
     background-color: #444;
     position: relative;
     padding: 4px;
-    -webkit-appearance: menulist;
+    appearance: menulist;
     option {
       color: white;
       background: #444;

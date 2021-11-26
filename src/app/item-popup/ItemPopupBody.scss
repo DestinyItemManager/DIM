@@ -66,7 +66,7 @@
 }
 
 .masterwork-progress {
-  margin: 4px 0px;
+  margin: 4px 0;
   padding: 4px 10px 4px;
   background: #333;
 
@@ -158,7 +158,7 @@
     height: calc(var(--item-size) / 2.5) !important;
     font-size: calc(var(--item-size) / 5) !important;
     vertical-align: -0.5em;
-    padding: 0px;
+    padding: 0;
     filter: invert(1);
     background: none !important;
   }

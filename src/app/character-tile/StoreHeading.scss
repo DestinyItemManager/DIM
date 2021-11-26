@@ -16,7 +16,7 @@
     }
   }
 
-  &.current:before {
+  &.current::before {
     content: '';
     position: absolute;
     top: 0;

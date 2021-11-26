@@ -49,7 +49,7 @@
   color: #ccc;
   margin-bottom: 4px;
   &:first-child {
-    margin-top: 0px;
+    margin-top: 0;
   }
 }
 
@@ -82,7 +82,7 @@
     margin-right: 0;
   }
   :global(.seasonalArtifact) & {
-    margin-right: 0px;
+    margin-right: 0;
     text-align: center;
   }
 }

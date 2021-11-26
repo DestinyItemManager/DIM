@@ -1,5 +1,34 @@
 {
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-css-modules",
+    "stylelint-config-prettier"
+  ],
   "rules": {
+    "alpha-value-notation": "number",
+    "shorthand-property-no-redundant-values": null,
+    "rule-empty-line-before": null,
+    "value-keyword-case": null,
+    "comment-empty-line-before": null,
+    "scss/double-slash-comment-empty-line-before": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/comment-no-empty": null,
+    "function-name-case": null,
+    "function-calc-no-unspaced-operator": null,
+    "declaration-empty-line-before": null,
+    "custom-property-empty-line-before": null,
+    "scss/no-global-function-names": null,
+    "scss/operator-no-newline-after": null,
+    "color-function-notation": "legacy",
+    "scss/at-import-partial-extension": null,
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
+    "media-feature-name-no-unknown": null,
+    "hue-degree-notation": "number",
+    "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
+    "selector-class-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[A-Za-z0-9]+)*$)",
+    "scss/dollar-variable-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "value-no-vendor-prefix": [true, { "ignoreValues": "-webkit-box" }],
     "declaration-property-value-disallowed-list": [
       {
         "display": ["contents"]

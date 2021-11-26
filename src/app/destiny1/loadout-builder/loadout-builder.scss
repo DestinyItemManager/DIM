@@ -130,7 +130,7 @@
     width: 180px;
     padding-left: 40px;
     /* background: rgba(30, 36, 43, .5); */
-    text-shadow: 1px 1px 1px #000000;
+    text-shadow: 1px 1px 1px #000;
     color: #f5f5f5;
     text-decoration: none;
     background-size: cover;
@@ -192,7 +192,7 @@
       font-size: 12px;
       color: $gold;
     }
-    .powerLevel:before {
+    .powerLevel::before {
       content: '\2726';
       display: inline-block;
       vertical-align: 25%;
@@ -231,7 +231,7 @@
   }
 
   .item-container {
-    margin: 20px 17px 0px 0;
+    margin: 20px 17px 0 0;
   }
 
   .item-stats {
