@@ -37,6 +37,7 @@ interface ProcessState {
   result: {
     sets: ArmorSet[];
     combos: number;
+    processTime: number;
     statRangesFiltered?: StatRanges;
   } | null;
 }
@@ -179,6 +180,7 @@ export function useProcess(
           result: {
             sets: hydratedSets,
             combos,
+            processTime: performance.now() - processStart,
             statRangesFiltered,
           },
         }));
