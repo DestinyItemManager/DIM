@@ -1,5 +1,6 @@
 import { universalLanguageDetect } from '@unly/universal-language-detector';
 import parser from 'ua-parser-js';
+import { steamBrowser, supportedLanguages, unsupported } from './browsercheck-utils';
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
 // This is also intentionally written in es5 and not TypeScript because it should not use any new features.
@@ -68,65 +69,9 @@ export function isSupported(browsersSupported, userAgent) {
   var supported = isBrowserSupported(browser);
 
   const lang = universalLanguageDetect({
-    supportedLanguages: [
-      'en',
-      'de',
-      'es',
-      'es-mx',
-      'fr',
-      'it',
-      'ja',
-      'ko',
-      'pl',
-      'pt-br',
-      'ru',
-      'zh-chs',
-      'zh-cht',
-    ], // Whitelist of supported languages, will be used to filter out languages that aren't supported
+    supportedLanguages: supportedLanguages, // Whitelist of supported languages, will be used to filter out languages that aren't supported
     fallbackLanguage: 'en', // Fallback language in case the user's language cannot be resolved
   });
-
-  // t('Browsercheck.Unsupported')
-  const unsupported = {
-    en: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    de: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    es: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    'es-mx':
-      'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    fr: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    it: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    ja: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    ko: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    pl: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    'pt-br':
-      'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    ru: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    'zh-chs':
-      'The DIM team does not support using this browser. Some or all DIM features may not work.',
-    'zh-cht':
-      'The DIM team does not support using this browser. Some or all DIM features may not work.',
-  };
-
-  // t('Browsercheck.Steam')
-  const steamBrowser = {
-    en: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    de: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    es: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    'es-mx':
-      "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    fr: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    it: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    ja: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    ko: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    pl: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    'pt-br':
-      "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    ru: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    'zh-chs':
-      "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    'zh-cht':
-      "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-  };
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome
@@ -146,6 +91,8 @@ export function isSupported(browsersSupported, userAgent) {
 }
 
 if ($BROWSERS.length) {
+  // t('Browsercheck.Unsupported')
+  // t('Browsercheck.Steam')
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
     document.getElementById('browser-warning').innerText = unsupported[lang];
