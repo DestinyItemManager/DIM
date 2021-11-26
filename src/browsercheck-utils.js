@@ -17,8 +17,8 @@ export const supportedLanguages = [
 export const unsupported = {
   en: "The DIM team does not support using this browser. Some or all DIM features may not work.",
   de: "The DIM team does not support using this browser. Some or all DIM features may not work.",
-  es: "The DIM team does not support using this browser. Some or all DIM features may not work.",
-  'es-mx': "The DIM team does not support using this browser. Some or all DIM features may not work.",
+  es: "El equipo de DIM no soporta usar este navegador. Algunas o todas las características de DIM podrían no funcionar.",
+  'es-mx': "El equipo de DIM no soporta usar este navegador. Algunas o todas las características de DIM podrían no funcionar.",
   fr: "The DIM team does not support using this browser. Some or all DIM features may not work.",
   it: "Il team di DIM non supporta l'utilizzo di questo browser. Alcune o tutte le funzioni di DIM potrebbero non funzionare.",
   ja: "The DIM team does not support using this browser. Some or all DIM features may not work.",
