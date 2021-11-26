@@ -1,5 +1,5 @@
 module.exports = {
-  input: ['src/app/**/*.{js,jsx,ts,tsx}'],
+  input: ['src/app/**/*.{js,jsx,ts,tsx}', 'src/browsercheck.js'],
   output: './',
   options: {
     debug: false,

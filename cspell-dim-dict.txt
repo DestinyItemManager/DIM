@@ -2,8 +2,8 @@
 ARGH
 asscended
 bhollis
-brotli
 bois
+brotli
 bucketize
 Bungie
 Bungie's
@@ -138,6 +138,7 @@ unequippable
 unexclude
 UniFFFD
 uninstanced
+unly
 unmount
 unparse
 unselectable
