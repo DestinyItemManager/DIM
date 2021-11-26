@@ -44,7 +44,7 @@ function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
  * The height they add is roughly equivalent so we treat both conditions equally.
  *
  * This algorithm is built from the portrait mobile layout but will work for any other layout
- * as well. Landscape ipad has two rows, desktop can be 1, 2, or 3 rows depending on browser
+ * as well. Landscape iPad has two rows, desktop can be 1, 2, or 3 rows depending on browser
  * width.
  */
 function getMeasureSet(sets: readonly ArmorSet[]) {
