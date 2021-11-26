@@ -41,6 +41,9 @@ jobs:
 
       - name: build browsercheck upload_translations
         run: yarn run build-browsercheck-utils
+        
+      - name: pretty
+        run: yarn run pretty
 
       - name: Check for new files (DIM)
         id: porcelain
