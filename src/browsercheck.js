@@ -1,4 +1,3 @@
-import { universalLanguageDetect } from '@unly/universal-language-detector';
 import parser from 'ua-parser-js';
 import { steamBrowser, supportedLanguages, unsupported } from './browsercheck-utils';
 
@@ -67,11 +66,15 @@ export function isSupported(browsersSupported, userAgent) {
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
-
-  const lang = universalLanguageDetect({
-    supportedLanguages: supportedLanguages, // Whitelist of supported languages, will be used to filter out languages that aren't supported
-    fallbackLanguage: 'en', // Fallback language in case the user's language cannot be resolved
-  });
+  var lang = window.navigator.userLanguage || window.navigator.language;
+  console.info('Langauge Detected: ' + lang);
+  if (!supportedLanguages.includes(lang)) {
+    lang = lang.split('-', 1);
+  }
+  if (!supportedLanguages.includes(lang)) {
+    lang = 'en';
+  }
+  console.info('Langauge Assigned: ' + lang);
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome

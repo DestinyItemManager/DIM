@@ -2,17 +2,18 @@ export const supportedLanguages = [
   'en',
   'de',
   'es',
-  'es-mx',
+  'es-MX',
   'fr',
   'it',
   'ja',
   'ko',
   'pl',
-  'pt-br',
+  'pt-BR',
   'ru',
-  'zh-chs',
-  'zh-cht',
+  'zh-CHS',
+  'zh-CHT',
 ];
+
 export const unsupported = {
   en: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
   de: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
@@ -32,6 +33,7 @@ export const unsupported = {
   'zh-cht':
     'The DIM team does not support using this browser. Some or all DIM features may not work.',
 };
+
 export const steamBrowser = {
   en: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
   de: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
