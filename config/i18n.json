@@ -472,6 +472,7 @@
   "LoadoutBuilder": {
     "CopiedBuild": "Copied build settings URL to clipboard",
     "ShareBuild": "Share Build Settings",
+    "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",

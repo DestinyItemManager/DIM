@@ -19,6 +19,7 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  notes,
   canCompareLoadouts,
   halfTierMods,
   onLoadoutSet,
@@ -26,6 +27,7 @@ export default function GeneratedSetButtons({
 }: {
   store: DimStore;
   set: ArmorSet;
+  notes?: string;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   onLoadoutSet(loadout: Loadout): void;
@@ -35,7 +37,7 @@ export default function GeneratedSetButtons({
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set));
+    onLoadoutSet(createLoadout(store.classType, set, notes));
   };
 
   // Automatically equip items for this generated set to the active store
@@ -90,7 +92,7 @@ export default function GeneratedSetButtons({
 /**
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
-function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
+function createLoadout(classType: DestinyClass, set: ArmorSet, notes?: string): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
@@ -99,5 +101,6 @@ function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
     set.armor.map((items) => convertToLoadoutItem(items[0], true))
   );
   loadout.classType = classType;
+  loadout.notes = notes;
   return loadout;
 }

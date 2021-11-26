@@ -18,6 +18,7 @@ import SetStats from './SetStats';
 
 interface Props {
   set: ArmorSet;
+  notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
@@ -39,6 +40,7 @@ interface Props {
  */
 function GeneratedSet({
   set,
+  notes,
   selectedStore,
   lockedMods,
   pinnedItems,
@@ -127,6 +129,7 @@ function GeneratedSet({
         halfTierMods={halfTierMods}
         onLoadoutSet={setCreateLoadout}
         lbDispatch={lbDispatch}
+        notes={notes}
       />
     </div>
   );

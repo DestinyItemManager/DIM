@@ -230,9 +230,7 @@ export default function LoadoutDrawer() {
         calculateMinSheetHeight={calculateMinSheetHeight}
       />
       {loadout.notes !== undefined && (
-        <textarea autoFocus onChange={handleNotesChanged}>
-          {loadout.notes}
-        </textarea>
+        <textarea onChange={handleNotesChanged} value={loadout.notes} />
       )}
       <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>

@@ -298,13 +298,13 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
-  const shareBuild = () => {
+  const shareBuild = (notes?: string) => {
     const p: Record<string, string> = {
       class: classType.toString(),
       p: JSON.stringify(params),
     };
     if (notes) {
-      p.notes = notes;
+      p.n = notes;
     }
     const urlParams = new URLSearchParams(p);
     const url = `${location.origin}/optimizer?${urlParams}`;
@@ -313,6 +313,11 @@ function LoadoutBuilder({
       type: 'success',
       title: t('LoadoutBuilder.CopiedBuild'),
     });
+  };
+
+  const shareBuildWithNotes = () => {
+    const newNotes = prompt(t('MovePopup.Notes'), notes);
+    shareBuild(newNotes || undefined);
   };
 
   // I don't think this can actually happen?
@@ -388,20 +393,30 @@ function LoadoutBuilder({
         </AnimatePresence>
         <div className={styles.toolbar}>
           <UserGuideLink topic="Loadout_Optimizer" />
+          {!$featureFlags.loadoutsPage && (
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+            >
+              {t('LoadoutBuilder.NewEmptyLoadout')}
+            </button>
+          )}
           <button
             type="button"
             className="dim-button"
-            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+            onClick={() => shareBuild(notes)}
+            disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.NewEmptyLoadout')}
+            {t('LoadoutBuilder.ShareBuild')}
           </button>
           <button
             type="button"
             className="dim-button"
-            onClick={shareBuild}
+            onClick={shareBuildWithNotes}
             disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.ShareBuild')}
+            {t('LoadoutBuilder.ShareBuildWithNotes')}
           </button>
         </div>
         <div className={styles.guide}>
@@ -434,6 +449,7 @@ function LoadoutBuilder({
             halfTierMods={halfTierMods}
             upgradeSpendTier={upgradeSpendTier}
             lockItemEnergyType={lockItemEnergyType}
+            notes={notes}
           />
         )}
         {modPicker.open &&
@@ -464,6 +480,7 @@ function LoadoutBuilder({
               upgradeSpendTier={upgradeSpendTier}
               lockItemEnergyType={lockItemEnergyType}
               params={params}
+              notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body
