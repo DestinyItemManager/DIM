@@ -7,6 +7,10 @@
 * Fixed a bug where Loadout Optimizer would only show one set.
 * Cryptolith Lure and Firewall Data Fragment have been moved from "Quests" to "Quest Items".
 
+### Beta Only
+
+* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
+
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 
 * Fixed "Optimize Armor" button (formerly "Open in Loadout Optimizer") in the loadout drawer.

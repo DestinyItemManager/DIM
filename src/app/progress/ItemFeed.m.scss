@@ -14,7 +14,7 @@
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 300px;
+  width: var(--sidebar-size);
   height: 100%;
   box-sizing: border-box;
   > :global(.dim-button) {
@@ -56,7 +56,7 @@
 .title {
   text-transform: uppercase;
   font-weight: 600;
-  font-family: 'Helvetica', Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   text-decoration: none;
   font-size: 14px;
 }
@@ -79,7 +79,6 @@
 
 .tagButton {
   composes: dim-button from global;
-  composes: resetButton from '../dim-ui/common.m.scss';
   margin-right: 4px;
 }
 

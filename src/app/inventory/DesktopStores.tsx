@@ -91,7 +91,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           hidePostmaster={false}
         />
       </div>
-      <ItemFeed />
+      {$featureFlags.itemFeed && <ItemFeed />}
     </div>
   );
 }

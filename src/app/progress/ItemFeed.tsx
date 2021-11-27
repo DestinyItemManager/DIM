@@ -69,7 +69,7 @@ export default function ItemFeed() {
   return (
     <motion.div
       className={clsx(styles.trayContainer)}
-      animate={{ x: expanded ? -300 : 0 }}
+      animate={{ x: expanded ? -260 : 0 }}
       transition={spring}
     >
       <button className={styles.trayButton} type="button" onClick={handleToggle}>

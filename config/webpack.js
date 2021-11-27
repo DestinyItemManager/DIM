@@ -400,6 +400,8 @@ module.exports = (env) => {
         '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
         // Top level loadouts page
         '$featureFlags.loadoutsPage': JSON.stringify(!env.release),
+        // Item feed sidebar
+        '$featureFlags.itemFeed': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({
