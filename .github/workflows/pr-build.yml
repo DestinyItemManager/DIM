@@ -87,4 +87,4 @@ jobs:
 
       # We set the default packtracker ENV vars
       - name: Build beta
-        run: yarn run build:beta
+        run: yarn run build-beta
