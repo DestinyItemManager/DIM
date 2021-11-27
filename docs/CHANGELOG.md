@@ -6,6 +6,7 @@
 * We no longer cap stats in the Loadout Optimizer's tooltips so you can see how far over 100 a stat goes.
 * Fixed a bug where Loadout Optimizer would only show one set.
 * Cryptolith Lure and Firewall Data Fragment have been moved from "Quests" to "Quest Items".
+* We've launched a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now by default sorted by when they were last edited, rather than their name. You can change this on the Loadouts page or in settings.
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 
