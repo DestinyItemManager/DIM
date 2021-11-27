@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -32,6 +33,8 @@ export type Action =
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
   | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
+  /** Applies socket overrides to the supplied item */
+  | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -90,22 +93,20 @@ export function stateReducer(state: State, action: Action): State {
     case 'removeItem': {
       const { loadout } = state;
       const { item, shift, items } = action;
-      return loadout
-        ? {
-            ...state,
-            loadout: removeItem(loadout, item, shift, items),
-          }
-        : state;
+      return loadout ? { ...state, loadout: removeItem(loadout, item, shift, items) } : state;
     }
 
     case 'equipItem': {
       const { loadout } = state;
       const { item, items } = action;
+      return loadout ? { ...state, loadout: equipItem(loadout, item, items) } : state;
+    }
+
+    case 'applySocketOverrides': {
+      const { loadout } = state;
+      const { item, socketOverrides } = action;
       return loadout
-        ? {
-            ...state,
-            loadout: equipItem(loadout, item, items),
-          }
+        ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
         : state;
     }
 
@@ -263,6 +264,19 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
 
         loadoutItem.equipped = true;
       }
+    }
+  });
+}
+
+function applySocketOverrides(
+  loadout: Readonly<Loadout>,
+  item: DimItem,
+  socketOverrides: SocketOverrides
+) {
+  return produce(loadout, (draftLoadout) => {
+    const loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    if (loadoutItem) {
+      loadoutItem.socketOverrides = socketOverrides;
     }
   });
 }

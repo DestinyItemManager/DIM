@@ -59,12 +59,13 @@ export default function SubclassPlugDrawer({
         return;
       }
 
-      const remainingPlugs = [...selected];
+      const remainingPlugs = Array.from(selected);
       const newOverrides: SocketOverrides = {};
 
       for (const socket of subclass.sockets.allSockets) {
+        const socketPlugsetHashes = getPlugHashesForSocket(socket, profileResponse);
         for (const [index, plug] of remainingPlugs.entries()) {
-          if (socket.plugOptions.some((option) => option.plugDef.hash === plug.hash)) {
+          if (socketPlugsetHashes.some((hash) => hash === plug.hash)) {
             newOverrides[socket.socketIndex] = plug.hash;
             remainingPlugs.splice(index, 1);
             break;
@@ -73,7 +74,7 @@ export default function SubclassPlugDrawer({
       }
       onAccept(newOverrides);
     },
-    [onAccept, subclass.sockets]
+    [onAccept, profileResponse, subclass.sockets]
   );
 
   // Determines whether an ability, aspect or fragment is currently selectable

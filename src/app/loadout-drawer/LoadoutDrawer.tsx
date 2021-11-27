@@ -1,5 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -87,6 +88,10 @@ export default function LoadoutDrawer() {
       stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
     [items]
   );
+
+  const onApplySocketOverrides = useCallback((item: DimItem, socketOverrides: SocketOverrides) => {
+    stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
+  }, []);
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
@@ -277,6 +282,7 @@ export default function LoadoutDrawer() {
                   stateDispatch({ type: 'openModPicker', query })
                 }
                 removeModByHash={removeModByHash}
+                onApplySocketOverrides={onApplySocketOverrides}
               />
             </div>
           </LoadoutDrawerDropTarget>

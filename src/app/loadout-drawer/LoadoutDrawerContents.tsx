@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { SocketOverridesForItems } from 'app/inventory/store/override-sockets';
+import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
@@ -80,6 +80,7 @@ export default function LoadoutDrawerContents(
     add,
     onOpenModPicker,
     removeModByHash,
+    onApplySocketOverrides,
   }: {
     loadout: Loadout;
     savedMods: PluggableInventoryItemDefinition[];
@@ -91,6 +92,7 @@ export default function LoadoutDrawerContents(
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
+    onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
   }
 ) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
@@ -176,9 +178,7 @@ export default function LoadoutDrawerContents(
             socketOverrides={subclassSocketOverrides[subclass.id]}
             equip={equip}
             remove={remove}
-            updateSocketOverrides={() => {
-              //TODO implement this
-            }}
+            onApplySocketOverrides={onApplySocketOverrides}
           />
         ))}
       <SavedMods
