@@ -14,17 +14,29 @@
   font-size: 10px;
 }
 
-.socket {
-  border: 1px solid #ddd;
-
+.socketCategory {
   &:not(:last-child) {
     margin-right: 4px;
   }
 
+  image,
   img {
     height: var(--item-size);
     width: var(--item-size);
   }
+}
+
+.socket {
+  border: 1px solid #ddd;
+}
+
+.super {
+  // TODO (ryan) This is here because I can't get the super icon to
+  // display how I want it to.
+  margin-top: 2px;
+
+  height: var(--item-size);
+  width: var(--item-size);
 }
 
 .sockets {

@@ -44,7 +44,9 @@ export function Subclass({
 
   return (
     <div className={styles.container}>
-      <LoadoutDrawerItem item={subclassWithOverrides} equip={equip} remove={remove} />
+      <div className={styles.subclass}>
+        <LoadoutDrawerItem item={subclassWithOverrides} equip={equip} remove={remove} />
+      </div>
       <ItemSocketsSubclass
         subclass={subclassWithOverrides}
         socketOverrides={socketOverrides}

@@ -6,6 +6,7 @@ interface CssExports {
   'flexRow': string;
   'flexWrap': string;
   'resetButton': string;
+  'subclass': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

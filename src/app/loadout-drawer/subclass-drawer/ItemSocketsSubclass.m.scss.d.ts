@@ -8,7 +8,9 @@ interface CssExports {
   'flexWrap': string;
   'resetButton': string;
   'socket': string;
+  'socketCategory': string;
   'sockets': string;
+  'super': string;
   'title': string;
 }
 export const cssExports: CssExports;
