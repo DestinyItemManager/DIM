@@ -82,7 +82,7 @@ export default function ItemFeed() {
         </CheckButton>
         {expanded && (
           <AnimatePresence initial={false}>
-            {_.take(items, 25).map((item) => (
+            {items.map((item) => (
               <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
             ))}
             <motion.div onViewportEnter={handlePaginate} />
