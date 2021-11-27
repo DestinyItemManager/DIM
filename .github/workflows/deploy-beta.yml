@@ -55,7 +55,7 @@ jobs:
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Build
-        run: yarn run build-beta
+        run: yarn build:beta
         env:
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}

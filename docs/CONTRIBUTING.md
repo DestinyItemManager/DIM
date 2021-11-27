@@ -6,7 +6,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 1. Resist the temptation to change more than one thing in your PR. Keeping PRs focused on a single change makes them much easier to review and accept. If you want to change multiple things, or clean up/refactor the code, make a new branch and submit those changes as a separate PR.
 1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components..
 1. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Lodash](https://lodash.com/) library to write compact, easy-to-understand code.
-1. Be sure to run `yarn run lint` before submitting your PR - it'll catch most style problems and make things much easier to merge.
+1. Be sure to run `yarn lint fix` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 1. Don't forget to add a description of your change to `CHANGELOG.md` so it'll be included in the release notes!
 
 ## Developer Quick start
@@ -70,7 +70,7 @@ and is not signed by a recognized authority. Dismiss/advance past this warning t
 
 **Check code Style**
 
-* `yarn lint` will tell you if you're following the DIM code style (and automatically fix what it can).
+* `yarn lint fix` will tell you if you're following the DIM code style (and automatically fix what it can).
 Check out the [docs]() folder for more tips.
 
 **Translation**
