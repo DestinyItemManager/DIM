@@ -69,6 +69,7 @@ export default function ItemFeed() {
   return (
     <motion.div
       className={clsx(styles.trayContainer)}
+      initial={false}
       animate={{ x: expanded ? -260 : 0 }}
       transition={spring}
     >
