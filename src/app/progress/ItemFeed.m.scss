@@ -1,29 +1,55 @@
 @import '../variables.scss';
 
-.sideTray {
+.trayContainer {
   position: sticky;
   @include below-header;
   height: calc(var(--viewport-height) - var(--header-height));
-  background-color: black;
-  width: 300px;
   z-index: 1000;
   box-sizing: border-box;
+  width: 0;
+}
+
+.sideTray {
+  background-color: black;
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  width: 300px;
+  height: 100%;
+  box-sizing: border-box;
+  > :global(.dim-button) {
+    margin: 0;
+  }
+}
+
+.trayButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  transform: rotate(-90deg);
+  background: black;
+  position: absolute;
+  right: 100%;
+  color: white;
+  padding: 8px;
+  top: -23px;
+  transform-origin: bottom right;
+  white-space: nowrap;
+  height: 31px;
 }
 
 .item {
   composes: flexRow from '../dim-ui/common.m.scss';
-  margin: 8px 0px;
+  margin: 8px 0 16px 0;
+  background-color: black;
+  will-change: auto;
+  transform-origin: calc(var(--item-size) / 2) calc(var(--item-size) / 2);
 }
 
 .info {
   margin-left: 8px;
 
   img {
-    height: 16px;
-    width: 16px;
+    height: 32px;
+    width: 32px;
   }
 }
 
@@ -43,4 +69,26 @@
 
 .classIcon {
   margin-left: 4px;
+}
+
+.perks {
+  display: flex;
+  flex-flow: row;
+  margin: 4px 0;
+}
+
+.tagButton {
+  composes: dim-button from global;
+  composes: resetButton from '../dim-ui/common.m.scss';
+  margin-right: 4px;
+}
+
+.stats {
+  margin: 4px 0 0 0;
+  :global(.stat-row) {
+    margin-bottom: 8px;
+  }
+  :global(.stat) {
+    line-height: 8px;
+  }
 }

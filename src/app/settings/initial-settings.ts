@@ -16,6 +16,7 @@ export interface Settings extends DimApiSettings {
   perkList: boolean;
   loadoutSort: LoadoutSort;
   itemFeedHideTagged: boolean;
+  itemFeedExpanded: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -25,4 +26,5 @@ export const initialSettingsState: Settings = {
   perkList: true,
   loadoutSort: LoadoutSort.ByEditTime,
   itemFeedHideTagged: false,
+  itemFeedExpanded: false,
 };

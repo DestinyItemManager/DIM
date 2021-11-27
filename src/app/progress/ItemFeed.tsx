@@ -5,48 +5,90 @@ import PressTip from 'app/dim-ui/PressTip';
 import { setItemTag } from 'app/inventory/actions';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { getTag, tagConfig, TagValue } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
-import PlugTooltip from 'app/item-popup/PlugTooltip';
+import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { useSetting } from 'app/settings/hooks';
 import { acquisitionRecencyComparator } from 'app/shell/filters';
-import { AppIcon } from 'app/shell/icons';
+import { AppIcon, collapseIcon, faCaretUp } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { emptyArray } from 'app/utils/empty';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { AnimatePresence, motion } from 'framer-motion';
+import clsx from 'clsx';
+import { AnimatePresence, motion, Spring } from 'framer-motion';
 import _ from 'lodash';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ItemFeed.m.scss';
+
+const spring: Spring = {
+  type: 'spring',
+  duration: 0.3,
+  bounce: 0,
+};
 
 export default function ItemFeed() {
   const allItems = useSelector(allItemsSelector);
   const itemInfos = useSelector(itemInfosSelector);
   const [hideTagged, setHideTagged] = useSetting('itemFeedHideTagged');
+  const [expanded, setExpanded] = useSetting('itemFeedExpanded');
+  const [itemsToShow, setItemsToShow] = useState(10);
 
-  const items = allItems
-    .filter(
-      (i) => i.equipment && i.power > 0 && i.taggable && (!hideTagged || !getTag(i, itemInfos))
-    )
-    .sort(acquisitionRecencyComparator);
+  const items = expanded
+    ? _.take(
+        allItems
+          .filter(
+            (i) =>
+              i.equipment && i.power > 0 && i.taggable && (!hideTagged || !getTag(i, itemInfos))
+          )
+          .sort(acquisitionRecencyComparator),
+        itemsToShow
+      )
+    : emptyArray<DimItem>();
+
+  const handleToggle = () => {
+    setExpanded(!expanded);
+    if (!expanded) {
+      setItemsToShow(10);
+    }
+  };
+
+  const handlePaginate = () => {
+    setItemsToShow((itemsToShow) => itemsToShow + 10);
+  };
+
+  useEffect(() => {
+    document.querySelector('html')!.style.setProperty('--expanded-sidebars', `${expanded ? 1 : 0}`);
+  }, [expanded]);
 
   return (
-    <div className={styles.sideTray}>
-      <h2>Item Feed</h2>
-      <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
-        Hide Tagged
-      </CheckButton>
-      <AnimatePresence>
-        {_.take(items, 25).map((item) => (
-          <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
-        ))}
-      </AnimatePresence>
-    </div>
+    <motion.div
+      className={clsx(styles.trayContainer)}
+      animate={{ x: expanded ? -300 : 0 }}
+      transition={spring}
+    >
+      <button className={styles.trayButton} type="button" onClick={handleToggle}>
+        Item Feed <AppIcon icon={expanded ? collapseIcon : faCaretUp} />
+      </button>
+      <div className={styles.sideTray}>
+        <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
+          Hide Tagged
+        </CheckButton>
+        {expanded && (
+          <AnimatePresence initial={false}>
+            {_.take(items, 25).map((item) => (
+              <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
+            ))}
+            <motion.div onViewportEnter={handlePaginate} />
+          </AnimatePresence>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
@@ -55,9 +97,10 @@ function Item({ item, tag }: { item: DimItem; tag: TagValue | undefined }) {
     <motion.div
       className={styles.item}
       layout
-      initial={{ scale: 0 }}
-      exit={{ scale: 0 }}
-      animate={{ scale: 1 }}
+      initial={{ scale: 0, opacity: 0 }}
+      exit={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={spring}
     >
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />}
@@ -84,35 +127,39 @@ function Highlights({ item }: { item: DimItem }) {
     return (
       <div>
         <span className={styles.type}>
+          {archetype && <span>{archetype} </span>}
           <ItemTypeName item={item} />
-          {archetype && <span>{archetype}</span>}
         </span>
-        {_.takeRight(perkSockets, 2)
-          .flatMap((s) => s.plugOptions)
-          .map((p) => (
-            <div key={p.plugDef.hash}>
-              <PressTip tooltip={<PlugTooltip item={item} plug={p} />}>
-                <DefItemIcon itemDef={p.plugDef} borderless={true} />
-              </PressTip>
-            </div>
-          ))}
+        <div className={styles.perks}>
+          {_.takeRight(perkSockets, 2)
+            .flatMap((s) => s.plugOptions)
+            .map((p) => (
+              <div key={p.plugDef.hash}>
+                <PressTip tooltip={<DimPlugTooltip item={item} plug={p} />}>
+                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                </PressTip>
+              </div>
+            ))}
+        </div>
       </div>
     );
   } else if (item.bucket.sort === 'Armor') {
+    const renderStat = (stat: DimStat) => (
+      <div key={stat.statHash} className="stat">
+        {stat.displayProperties.hasIcon ? (
+          <span title={stat.displayProperties.name}>
+            <BungieImage src={stat.displayProperties.icon} />
+          </span>
+        ) : (
+          stat.displayProperties.name + ': '
+        )}
+        {stat.value}
+      </div>
+    );
     return (
-      <div>
-        {item.stats?.map((stat) => (
-          <div key={stat.statHash}>
-            {stat.displayProperties.hasIcon ? (
-              <span title={stat.displayProperties.name}>
-                <BungieImage src={stat.displayProperties.icon} />
-              </span>
-            ) : (
-              stat.displayProperties.name
-            )}
-            : {stat.value}
-          </div>
-        ))}
+      <div className={clsx(styles.stats, 'stat-bars', 'destiny2')}>
+        <div className="stat-row">{item.stats?.filter((s) => s.statHash > 0).map(renderStat)}</div>
+        <div className="stat-row">{item.stats?.filter((s) => s.statHash < 0).map(renderStat)}</div>
       </div>
     );
   }
@@ -140,6 +187,7 @@ function TagButtons({ item, tag }: { item: DimItem; tag: TagValue | undefined })
       {tagOptions.map((tagOption) => (
         <button
           key={tagOption.type}
+          className={styles.tagButton}
           type="button"
           disabled={tagOption.type === tag}
           onClick={() => setTag(tagOption.type)}

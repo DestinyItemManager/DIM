@@ -4,8 +4,13 @@ interface CssExports {
   'classIcon': string;
   'info': string;
   'item': string;
+  'perks': string;
   'sideTray': string;
+  'stats': string;
+  'tagButton': string;
   'title': string;
+  'trayButton': string;
+  'trayContainer': string;
   'type': string;
 }
 export const cssExports: CssExports;

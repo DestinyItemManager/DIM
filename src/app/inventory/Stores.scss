@@ -44,6 +44,7 @@
     // Vault takes the rest
     1fr;
   box-sizing: border-box;
+  padding-right: calc(300px * var(--expanded-sidebars));
 
   // Split evenly between character and vault
   .singleCharacter &.account-wide {
