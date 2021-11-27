@@ -46,6 +46,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
   let arcCount = 0;
   let solarCount = 0;
   let voidCount = 0;
+  let stasisCount = 0;
   let anyCount = 0;
 
   for (const item of modsOrItems) {
@@ -62,12 +63,15 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
       case DestinyEnergyType.Any:
         anyCount += 1;
         break;
+      case DestinyEnergyType.Stasis:
+        stasisCount += 1;
+        break;
       default:
         break;
     }
   }
 
-  return [arcCount, solarCount, voidCount, anyCount];
+  return [arcCount, solarCount, voidCount, stasisCount, anyCount];
 }
 
 // Used for null values
@@ -90,30 +94,55 @@ export function canTakeSlotIndependentMods(
   // Sort the items like the mods are to try and get a greedy result
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
-  const [arcItems, solarItems, voidItems, anyItems] = getEnergyCounts(sortedItems);
-  const [arcSeasonalMods, solarSeasonalMods, voidSeasonalMods] = getEnergyCounts(
+  const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
+  const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = getEnergyCounts(
     combatModPermutations[0]
   );
-  const [arcGeneralMods, solarGeneralMods, voidGeneralMods] = getEnergyCounts(
+  const [arcGeneralMods, solarGeneralMods, voidGeneralMods, stasisGeneralMods] = getEnergyCounts(
     generalModPermutations[0]
   );
-  const [arcActivityMods, solarActivityMods, voidActivityMods] = getEnergyCounts(
-    activityModPermutations[0]
-  );
+  const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
+    getEnergyCounts(activityModPermutations[0]);
 
   // A quick check to see if we have enough of each energy type for the mods
   if (
     voidItems + anyItems < voidGeneralMods ||
-    voidItems + anyItems < voidSeasonalMods ||
+    voidItems + anyItems < voidCombatMods ||
     voidItems + anyItems < voidActivityMods ||
     solarItems + anyItems < solarGeneralMods ||
-    solarItems + anyItems < solarSeasonalMods ||
+    solarItems + anyItems < solarCombatMods ||
     solarItems + anyItems < solarActivityMods ||
     arcItems + anyItems < arcGeneralMods ||
-    arcItems + anyItems < arcSeasonalMods ||
-    arcItems + anyItems < arcActivityMods
+    arcItems + anyItems < arcCombatMods ||
+    arcItems + anyItems < arcActivityMods ||
+    stasisItems + anyItems < stasisGeneralMods ||
+    stasisItems + anyItems < stasisCombatMods ||
+    stasisItems + anyItems < stasisActivityMods
   ) {
     return false;
+  }
+
+  // An early check to ensure we have enough activity mod combos
+  if (activityModPermutations[0].length) {
+    const tagCounts: { [tag: string]: number } = {};
+
+    for (const mod of activityModPermutations[0]) {
+      if (mod?.tag) {
+        tagCounts[mod.tag] = (tagCounts[mod.tag] || 0) + 1;
+      }
+    }
+
+    for (const tag of Object.keys(tagCounts)) {
+      let socketsCount = 0;
+      for (const item of items) {
+        if (item.compatibleModSeasons?.includes(tag)) {
+          socketsCount++;
+        }
+      }
+      if (socketsCount < tagCounts[tag]) {
+        return false;
+      }
+    }
   }
 
   activityModLoop: for (const activityPermutation of activityModPermutations) {
