@@ -236,7 +236,7 @@ export function canTakeSlotIndependentMods(
         }
 
         // To hit this point we need to have found a valid set of activity mods
-        // if none is found the continue's will skip this.
+        // if none is found the continues will skip this.
         return true;
       }
     }
