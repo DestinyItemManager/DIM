@@ -481,6 +481,7 @@
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "ShareBuild": "分享配装设置",
+    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TheseModsCouldNotBeAssigned": "这些模组无法分配到现有的配装。",

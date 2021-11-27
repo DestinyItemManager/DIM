@@ -481,6 +481,7 @@
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "ShareBuild": "Compartilhar esta configuração",
+    "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estes mods não puderam ser atribuídos ao set existente.",
