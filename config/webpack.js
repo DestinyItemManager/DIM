@@ -23,8 +23,6 @@ const renderer = new marked.Renderer();
 const _ = require('lodash');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
@@ -410,11 +408,6 @@ module.exports = (env) => {
       }),
     ],
   };
-
-  // Enable if you want to debug the size of the chunks
-  if (env.WEBPACK_VISUALIZE) {
-    config.plugins.push(new Visualizer());
-  }
 
   if (!env.dev) {
     config.plugins.push(
