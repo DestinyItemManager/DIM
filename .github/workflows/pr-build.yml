@@ -66,7 +66,7 @@ jobs:
       - name: Lint check
         run: |
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
-          yarn run lint-check
+          yarn lintcached:eslint
 
 
       - name: Generate Packtracker ENV vars

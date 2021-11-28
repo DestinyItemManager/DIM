@@ -57,7 +57,7 @@ This will install the `nano` editor. Another option is `vim`.
 
 ## Node modules
 
-If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `yarn install NameOfTheDependency` as normal.
+If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `yarn add NameOfTheDependency` as normal.
 
 ## Container terminates unexpectedly
 
