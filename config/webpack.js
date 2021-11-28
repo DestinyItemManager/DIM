@@ -81,9 +81,12 @@ module.exports = (env) => {
     devServer: env.dev
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          https: {
-            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+          server: {
+            type: 'https',
+            options: {
+              key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+              cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+            },
           },
           devMiddleware: {
             stats: 'errors-only',
