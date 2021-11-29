@@ -3,7 +3,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import produce from 'immer';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
@@ -179,13 +178,6 @@ function addItem(
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
       dupe.amount += increment;
       // TODO: handle stack splits
-    }
-
-    if (
-      draftLoadout.classType === DestinyClass.Unknown &&
-      item.classType !== DestinyClass.Unknown
-    ) {
-      draftLoadout.classType = item.classType;
     }
   });
 }

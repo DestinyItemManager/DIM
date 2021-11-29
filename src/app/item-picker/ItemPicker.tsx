@@ -1,3 +1,4 @@
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
@@ -93,12 +94,16 @@ function ItemPicker({
       {({ onClose }) => (
         <div className="sub-bucket">
           {items.map((item) => (
-            <ConnectedInventoryItem
-              key={item.index}
-              item={item}
-              onClick={() => onItemSelectedFn(item, onClose)}
-              ignoreSelectedPerks={ignoreSelectedPerks}
-            />
+            <div key={item.index} className="item-picker-item">
+              <ConnectedInventoryItem
+                item={item}
+                onClick={() => onItemSelectedFn(item, onClose)}
+                ignoreSelectedPerks={ignoreSelectedPerks}
+              />
+              {item.type === 'Class' && (
+                <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
+              )}
+            </div>
           ))}
         </div>
       )}

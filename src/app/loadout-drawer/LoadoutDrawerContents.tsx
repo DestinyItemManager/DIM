@@ -21,7 +21,6 @@ import SavedMods from './SavedMods';
 import { Subclass } from './subclass-drawer/Subclass';
 
 const loadoutTypes: DimBucketType[] = [
-  'Class',
   'Primary',
   'Special',
   'Heavy',
@@ -112,6 +111,7 @@ export default function LoadoutDrawerContents(
     availableTypes,
     (bucket) => bucket.hash && itemsByBucket[bucket.hash] && itemsByBucket[bucket.hash].length
   );
+  const subclassBucket = buckets.byType.Class;
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
 
@@ -129,6 +129,12 @@ export default function LoadoutDrawerContents(
     return { subclassSocketOverrides, subclassBucket, subclassItems };
   }, [buckets.byType.Class, itemsByBucket, loadout.items]);
 
+  const showSubclassButton =
+    !loadout ||
+    loadout.classType === DestinyClass.Unknown ||
+    !subclassItems.length ||
+    subclassItems.every((i) => i.classType !== loadout.classType);
+
   return (
     <>
       <div className="loadout-add-types">
@@ -140,7 +146,15 @@ export default function LoadoutDrawerContents(
         <a className="dim-button loadout-add" onClick={doFillLoadOutFromUnequipped}>
           <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
         </a>
-
+        {showSubclassButton && (
+          <a
+            key={subclassBucket.type}
+            onClick={() => pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add)}
+            className="dim-button loadout-add"
+          >
+            <AppIcon icon={addIcon} /> {subclassBucket.name}
+          </a>
+        )}
         {typesWithoutItems.length > 0 &&
           typesWithoutItems.map((bucket) => (
             <a
@@ -211,6 +225,45 @@ async function pickLoadoutItem(
         itemCanBeInLoadout(item) &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+
+      // don't show information related to selected perks so we don't give the impression
+      // that we will update perk selections when applying the loadout
+      ignoreSelectedPerks: true,
+    });
+
+    add(item);
+  } catch (e) {}
+}
+
+async function pickLoadoutSubclass(
+  loadout: Loadout,
+  subclassBucket: InventoryBucket,
+  savedSubclasses: DimItem[],
+  add: (item: DimItem, e?: MouseEvent) => void
+) {
+  const loadoutClassType = loadout?.classType;
+  function loadoutHasItem(item: DimItem) {
+    return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
+  }
+  function loadoutHasSubclassForClass(item: DimItem) {
+    return savedSubclasses.some(
+      (s) => item.bucket.type === 'Class' && s.classType === item.classType
+    );
+  }
+
+  try {
+    const { item } = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        item.bucket.type === 'Class' &&
+        (!loadout ||
+          loadout.classType === DestinyClass.Unknown ||
+          item.classType === loadoutClassType) &&
+        itemCanBeInLoadout(item) &&
+        !loadoutHasSubclassForClass(item) &&
+        !loadoutHasItem(item),
+      // We can only sort so that the classes are grouped and stasis comes first
+      sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
+      prompt: t('Loadouts.ChooseItem', { name: subclassBucket.name }),
 
       // don't show information related to selected perks so we don't give the impression
       // that we will update perk selections when applying the loadout
