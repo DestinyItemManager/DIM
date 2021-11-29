@@ -6,7 +6,7 @@ import { usePopper } from './usePopper';
 
 interface Props {
   tooltip: React.ReactNode;
-  children?: React.ReactElement;
+  children?: React.ReactNode;
   allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ElementType;
