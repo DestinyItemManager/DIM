@@ -4,17 +4,6 @@
   --num-characters: 1;
 }
 
-.inventory-container {
-  display: flex;
-
-  .issue-banner-shown & {
-    padding-bottom: $issue-banner-height;
-    @include phone-portrait {
-      padding-bottom: 0;
-    }
-  }
-}
-
 .inventory-content {
   margin: 0 auto;
   width: 100%;
@@ -87,6 +76,12 @@
   }
 }
 
+.equipped-item {
+  border: $equipped-item-border solid #ddd;
+  height: fit-content;
+  padding: $equipped-item-padding;
+}
+
 .store-cell {
   display: flex;
   flex-direction: row;
@@ -106,6 +101,19 @@
 
   > div {
     white-space: normal;
+  }
+
+  // Postmaster - items above, collect button below
+  .bucket-215593132 & {
+    flex-direction: column;
+  }
+
+  .store-header & {
+    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+    flex-direction: column;
+    &:focus {
+      outline: none;
+    }
   }
 
   // Engrams. D1 uses this same bucket hash for "Missions"
@@ -153,7 +161,7 @@
       width: var(--item-size);
       height: var(--item-size);
       box-sizing: border-box;
-      background: url(images/engram_outline.svg);
+      background: url('images/engram_outline.svg');
     }
   }
 
@@ -185,17 +193,6 @@
       }
     }
   }
-
-  // Postmaster - items above, collect button below
-  .bucket-215593132 & {
-    flex-direction: column;
-  }
-}
-
-.equipped-item {
-  border: $equipped-item-border solid #ddd;
-  height: fit-content;
-  padding: $equipped-item-padding;
 }
 
 .store-text {
@@ -216,13 +213,6 @@
   background-repeat: no-repeat;
   background-size: 100% 100vh;
 
-  .store-cell {
-    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
-    flex-direction: column;
-    &:focus {
-      outline: none;
-    }
-  }
   &:focus {
     outline: none;
   }
@@ -233,7 +223,7 @@
     position: fixed;
   }
   &.sticky {
-    box-shadow: 0 1px 4px 0px black;
+    box-shadow: 0 1px 4px 0 black;
   }
   .phone-portrait & {
     padding-left: 0;

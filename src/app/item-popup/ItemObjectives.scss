@@ -28,24 +28,6 @@
   background-color: #6dcc66;
 }
 
-.objective-complete {
-  opacity: 0.5;
-  .objective-progress {
-    background-color: #222;
-  }
-  .objective-progress-bar {
-    display: none;
-  }
-  .objective-checkbox::after {
-    content: '';
-    display: block;
-    margin: 2px;
-    height: 11px;
-    width: 11px;
-    background-color: #5ea16a;
-  }
-}
-
 .objective-progress {
   flex: 1;
   background-color: #333;
@@ -77,6 +59,24 @@
   top: 0;
   left: 0;
   bottom: 0;
+}
+
+.objective-complete {
+  opacity: 0.5;
+  .objective-progress {
+    background-color: #222;
+  }
+  .objective-progress-bar {
+    display: none;
+  }
+  .objective-checkbox::after {
+    content: '';
+    display: block;
+    margin: 2px;
+    height: 11px;
+    width: 11px;
+    background-color: #5ea16a;
+  }
 }
 
 .objective-description {

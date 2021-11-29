@@ -18,7 +18,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
-          
+
       - name: Cache node_modules
         uses: actions/cache@v2
         env:
@@ -29,7 +29,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
             ${{ runner.os }}-${{ env.cache-name }}-
-            
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -74,10 +74,7 @@ jobs:
           done
 
       - name: build browsercheck utils
-        run: yarn run build-browsercheck-utils
-        
-      - name: pretty
-        run: yarn prettier --write 'src/browsercheck-utils.js'
+        run: yarn bcu
 
       - name: Check for new files (DIM)
         id: porcelain

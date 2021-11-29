@@ -188,6 +188,14 @@ $content-cells: 5;
     flex-direction: column;
   }
 }
+
+.modPerks {
+  break-inside: avoid;
+  display: grid;
+  gap: 4px;
+  padding-left: 5px;
+}
+
 .traits {
   visibility: visible;
   .modPerks {
@@ -195,13 +203,6 @@ $content-cells: 5;
     min-width: 160px;
     flex-basis: 160px;
   }
-}
-
-.modPerks {
-  break-inside: avoid;
-  display: grid;
-  gap: 4px;
-  padding-left: 5px;
 }
 
 .isPerk {
@@ -246,7 +247,7 @@ $content-cells: 5;
   }
 }
 
-.stat_2715839340 {
+.stat-2715839340 {
   svg {
     circle {
       fill: black;

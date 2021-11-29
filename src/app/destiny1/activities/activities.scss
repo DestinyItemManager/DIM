@@ -54,8 +54,15 @@
     position: relative;
   }
 
+  .small-icon {
+    height: 26px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
   .activity-skulls {
-    padding: 4px 0px;
+    padding: 4px 0;
     max-width: 350px;
     margin: 0 auto;
 
@@ -77,13 +84,6 @@
     }
   }
 
-  .small-icon {
-    height: 26px;
-    vertical-align: middle;
-    position: relative;
-    top: -1px;
-  }
-
   .tier-title {
     margin-top: 10px;
     text-transform: uppercase;
@@ -91,7 +91,7 @@
     font-size: 12px;
     color: #ccc;
     &:first-child {
-      margin-top: 0px;
+      margin-top: 0;
     }
   }
 

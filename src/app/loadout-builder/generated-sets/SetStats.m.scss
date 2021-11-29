@@ -23,6 +23,10 @@
   }
 }
 
+.nonActiveStat {
+  opacity: 0.4;
+}
+
 .tierLightContainer {
   margin-bottom: 5px;
 
@@ -70,10 +74,6 @@
   @include phone-portrait {
     min-width: 120px;
   }
-}
-
-.nonActiveStat {
-  opacity: 0.4;
 }
 
 .halfTierValue {

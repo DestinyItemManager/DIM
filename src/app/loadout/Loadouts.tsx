@@ -336,54 +336,25 @@ function ItemCategory({
           buckets.byCategory[category].findIndex((b) => b.type === bucketType)
         );
 
-  // TODO: switch the organizer link to actually load correctly
-
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
       {items ? (
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucketType) => (
-            <div key={bucketType} className={styles.itemBucket}>
-              {itemsByBucket[bucketType] ? (
-                _.partition(itemsByBucket[bucketType], (i) => equippedItemIds.has(i.id)).map(
-                  (items, index) =>
-                    items.length > 0 && (
-                      <div
-                        className={clsx(
-                          styles.items,
-                          index === 0 ? styles.equipped : styles.unequipped
-                        )}
-                        key={index}
-                      >
-                        {items.map((item) => (
-                          <ItemPopupTrigger item={item} key={item.id}>
-                            {(ref, onClick) => (
-                              <ConnectedInventoryItem
-                                item={item}
-                                innerRef={ref}
-                                onClick={onClick}
-                              />
-                            )}
-                          </ItemPopupTrigger>
-                        ))}
-                      </div>
-                    )
-                )
-              ) : (
-                <div className={styles.items} />
-              )}
-            </div>
+            <ItemBucket
+              key={bucketType}
+              items={itemsByBucket[bucketType]}
+              equippedItemIds={equippedItemIds}
+            />
           ))}
         </div>
       ) : (
-        <div className={clsx(styles.placeholder, `category-${category}`)}>
-          {t(`Bucket.${category}`)}
-          {category === 'Armor' && loadout.parameters && (
-            <Link className="dim-button" to="../optimizer" state={{ loadout }}>
-              <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
-            </Link>
-          )}
-        </div>
+        <>
+          <div className={clsx(styles.placeholder, `category-${category}`)}>
+            {t(`Bucket.${category}`)}
+          </div>
+          {category === 'Armor' && loadout.parameters && <OptimizerButton loadout={loadout} />}
+        </>
       )}
       {category === 'Armor' && items && (
         <>
@@ -393,10 +364,62 @@ function ItemCategory({
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          <Link className="dim-button" to="../optimizer" state={{ loadout }}>
-            <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
-          </Link>
+          <OptimizerButton loadout={loadout} />
         </>
+      )}
+    </div>
+  );
+}
+
+function OptimizerButton({ loadout }: { loadout: Loadout }) {
+  return (
+    <Link className="dim-button" to="../optimizer" state={{ loadout }}>
+      <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
+    </Link>
+  );
+}
+
+function ItemBucket({
+  items,
+  equippedItemIds,
+}: {
+  items: DimItem[] | undefined;
+  equippedItemIds: Set<string>;
+}) {
+  if (!items) {
+    return <div className={styles.items} />;
+  }
+
+  const [equipped, unequipped] = _.partition(items, (i) => equippedItemIds.has(i.id));
+
+  return (
+    <div className={styles.itemBucket}>
+      {[equipped, unequipped].map((items, index) =>
+        items.length > 0 ? (
+          <div
+            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
+            key={index}
+          >
+            {items.map((item) => (
+              <ItemPopupTrigger item={item} key={item.id}>
+                {(ref, onClick) => (
+                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                )}
+              </ItemPopupTrigger>
+            ))}
+          </div>
+        ) : (
+          index === 0 && (
+            <div
+              className={clsx(
+                styles.items,
+                styles.empty,
+                index === 0 ? styles.equipped : styles.unequipped
+              )}
+              key={index}
+            />
+          )
+        )
       )}
     </div>
   );

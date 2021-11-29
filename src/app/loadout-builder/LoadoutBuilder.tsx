@@ -21,6 +21,7 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -224,9 +225,13 @@ function LoadoutBuilder({
 
   const characterItems = items[classType];
 
-  const equippedLoadout: Loadout | undefined = loadoutFromEquipped(selectedStore);
-  // Huh... these aren't filtered by class...
-  loadouts = equippedLoadout ? [...loadouts, equippedLoadout] : loadouts;
+  loadouts = useMemo(() => {
+    const equippedLoadout: Loadout | undefined = loadoutFromEquipped(selectedStore);
+    const classLoadouts = loadouts.filter(
+      (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown
+    );
+    return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
+  }, [loadouts, selectedStore]);
 
   const filteredItems = useMemo(
     () =>
@@ -448,7 +453,7 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
-            lockedMods={processing ? [] : lockedMods}
+            lockedMods={processing ? emptyArray() : lockedMods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}

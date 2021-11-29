@@ -2,9 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'addNotesLabel': string;
+  'dropdownMenu': string;
   'editIcon': string;
   'error': string;
-  'hashtagSuggestions': string;
   'minimal': string;
   'noNotesYet': string;
   'notesLabel': string;

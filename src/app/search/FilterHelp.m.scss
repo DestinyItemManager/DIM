@@ -18,9 +18,6 @@
       background-color: #1b1b1b;
     }
   }
-  tr td:first-child {
-    border-left: none;
-  }
   th {
     text-align: left;
   }
@@ -44,6 +41,9 @@
     a:hover {
       text-decoration: underline;
     }
+  }
+  tr td:first-child {
+    border-left: none;
   }
 
   kbd {

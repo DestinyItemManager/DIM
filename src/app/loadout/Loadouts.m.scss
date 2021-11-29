@@ -136,6 +136,11 @@
   min-height: unset !important;
 }
 
+.empty {
+  height: calc(var(--item-size) + #{$badge-height} - #{3 * $item-border-width});
+  border: 1px solid white;
+}
+
 .categoryWeapons {
   width: calc(3 * var(--item-size) + 2 * var(--item-margin));
 }
@@ -192,11 +197,6 @@
   flex: 1;
 }
 
-.actions {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  @include horizontal-space-children(4px);
-}
-
 .loadoutNotes {
   margin: 4px 0;
 }
@@ -243,7 +243,6 @@
 .loQuery {
   overflow: hidden;
   max-width: 100%;
-  overflow: hidden;
   max-height: 4em;
   text-overflow: ellipsis;
   display: -webkit-box;
