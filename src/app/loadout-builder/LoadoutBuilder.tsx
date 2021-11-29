@@ -317,7 +317,9 @@ function LoadoutBuilder({
 
   const shareBuildWithNotes = () => {
     const newNotes = prompt(t('MovePopup.Notes'), notes);
-    shareBuild(newNotes || undefined);
+    if (newNotes) {
+      shareBuild(newNotes);
+    }
   };
 
   // I don't think this can actually happen?
