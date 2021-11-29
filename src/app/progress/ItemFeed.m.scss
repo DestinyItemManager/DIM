@@ -59,11 +59,6 @@
 
 .info {
   margin-left: 8px;
-
-  img {
-    height: 32px;
-    width: 32px;
-  }
 }
 
 .title {
@@ -86,8 +81,19 @@
 
 .perks {
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   margin: 4px 0;
+
+  > div > div {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+
+  img {
+    height: 24px;
+    width: 24px;
+  }
 }
 
 .tagButton {
