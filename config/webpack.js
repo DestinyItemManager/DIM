@@ -23,8 +23,6 @@ const renderer = new marked.Renderer();
 const _ = require('lodash');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
@@ -83,9 +81,12 @@ module.exports = (env) => {
     devServer: env.dev
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          https: {
-            key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-            cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+          server: {
+            type: 'https',
+            options: {
+              key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+              cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+            },
           },
           devMiddleware: {
             stats: 'errors-only',
@@ -399,7 +400,7 @@ module.exports = (env) => {
         // Show mod assignment button in loadout drawer
         '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
         // Top level loadouts page
-        '$featureFlags.loadoutsPage': JSON.stringify(!env.release),
+        '$featureFlags.loadoutsPage': JSON.stringify(true),
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(!env.release),
       }),
@@ -412,11 +413,6 @@ module.exports = (env) => {
       }),
     ],
   };
-
-  // Enable if you want to debug the size of the chunks
-  if (env.WEBPACK_VISUALIZE) {
-    config.plugins.push(new Visualizer());
-  }
 
   if (!env.dev) {
     config.plugins.push(

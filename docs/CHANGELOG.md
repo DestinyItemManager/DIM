@@ -6,6 +6,8 @@
 * We no longer cap stats in the Loadout Optimizer's tooltips so you can see how far over 100 a stat goes.
 * Fixed a bug where Loadout Optimizer would only show one set.
 * Cryptolith Lure and Firewall Data Fragment have been moved from "Quests" to "Quest Items".
+* We've launched a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now by default sorted by when they were last edited, rather than their name. You can change this on the Loadouts page or in settings.
+* Some perks in the Armory view that showed as not rolling on the current version of an item now correctly show that they can roll.
 
 ### Beta Only
 
