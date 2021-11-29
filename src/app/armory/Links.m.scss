@@ -19,9 +19,8 @@
     margin: 0 0 8px 0;
     float: none;
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     justify-content: space-between;
-    flex-wrap: wrap;
     > li {
       padding: 8px;
     }

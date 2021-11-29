@@ -4,6 +4,9 @@
 * However, we have managed to fix DIM so it doesn't crash loop in the Steam overlay. Until the next time Steam updates...
 * Loadout Optimizer performance has been improved significantly - so much so that we now always look at all possible combinations of armor. Previously we trimmed some items out to get below an a number that we could process in time. This means that your LO builds are now guaranteed to be optimal, and the "Max" range shown in the stat tiles will always be accurate.
 * We no longer cap stats in the Loadout Optimizer's tooltips so you can see how far over 100 a stat goes.
+* Fixed a bug where Loadout Optimizer would only show one set.
+* Cryptolith Lure and Firewall Data Fragment have been moved from "Quests" to "Quest Items".
+* We've launched a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now by default sorted by when they were last edited, rather than their name. You can change this on the Loadouts page or in settings.
 * Some perks in the Armory view that showed as not rolling on the current version of an item now correctly show that they can roll.
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>

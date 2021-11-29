@@ -1,7 +1,6 @@
 .flexWrap {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 }
 
 .flexRow {
@@ -15,7 +14,7 @@
 }
 
 .resetButton {
-  -webkit-appearance: none;
+  appearance: none;
   background: transparent;
   border: 0;
   padding: 0;

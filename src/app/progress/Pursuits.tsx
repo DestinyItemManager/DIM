@@ -37,14 +37,14 @@ export default function Pursuits({ store }: { store: DimStore }) {
   // that represent milestones.
   const pursuits = _.groupBy(findItemsByBucket(store, BucketHashes.Quests), (item) => {
     const itemDef = defs.InventoryItem.get(item.hash);
+    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
+      return 'Items';
+    }
     if (
       item.itemCategoryHashes.includes(ItemCategoryHashes.QuestStep) ||
       itemDef?.objectives?.questlineItemHash
     ) {
       return 'Quests';
-    }
-    if (!item.objectives || item.objectives.length === 0 || item.sockets) {
-      return 'Items';
     }
 
     return 'Bounties';

@@ -1,5 +1,13 @@
 @import '../variables.scss';
 
+.collapse-icon {
+  font-size: 16px;
+  color: white;
+  &:hover {
+    color: $orange;
+  }
+}
+
 .title {
   padding: 0 16px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -34,15 +42,6 @@
     margin-left: -4px;
     width: 10px;
     margin-right: 8px;
-  }
-}
-
-.collapse-icon {
-  font-size: 16px;
-  color: white;
-  &:hover,
-  .title:hover & {
-    color: $orange;
   }
 }
 

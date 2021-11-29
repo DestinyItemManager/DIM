@@ -37,11 +37,16 @@
   flex: 1;
 }
 
+.elementIcon {
+  height: 16px;
+  width: 16px;
+}
+
 .rare,
 .common,
 .exotic {
   .elementIcon {
-    filter: drop-shadow(0px 0px 1px #222) drop-shadow(0px 0px 0px #222);
+    filter: drop-shadow(0 0 1px #222) drop-shadow(0 0 0 #222);
   }
 }
 
@@ -55,11 +60,6 @@
   margin: 0 2px 0 6px;
   height: 14px;
   width: 19px;
-}
-
-.elementIcon {
-  height: 16px;
-  width: 16px;
 }
 
 .itemType {

@@ -10,10 +10,12 @@ import { createSelector } from 'reselect';
 import { Loadout, LoadoutItem } from './loadout-types';
 
 /** All loadouts relevant to the current account */
-export const loadoutsSelector = createSelector(currentProfileSelector, (profile) =>
-  profile
-    ? Object.values(profile.loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
-    : emptyArray<Loadout>()
+export const loadoutsSelector = createSelector(
+  (state: RootState) => currentProfileSelector(state)?.loadouts,
+  (loadouts) =>
+    loadouts
+      ? Object.values(loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
+      : emptyArray<Loadout>()
 );
 export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
   if (state.loadouts.previousLoadouts[storeId]) {

@@ -26,8 +26,7 @@
 
 .itemCategories {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   margin-bottom: 1.5em;
 
   @include phone-portrait {
@@ -49,7 +48,7 @@
   color: #ccc;
   margin-bottom: 4px;
   &:first-child {
-    margin-top: 0px;
+    margin-top: 0;
   }
 }
 
@@ -63,8 +62,7 @@
 
   :global(.seasonalArtifact) & {
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    flex-flow: column wrap;
   }
 }
 
@@ -82,7 +80,7 @@
     margin-right: 0;
   }
   :global(.seasonalArtifact) & {
-    margin-right: 0px;
+    margin-right: 0;
     text-align: center;
   }
 }

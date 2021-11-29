@@ -47,6 +47,12 @@
     }
   }
 
+  label {
+    flex: 1;
+    display: block;
+    margin-right: 1em;
+  }
+
   .itemSize {
     label {
       flex: 0;
@@ -64,11 +70,6 @@
     }
   }
 
-  label {
-    flex: 1;
-    display: block;
-    margin-right: 1em;
-  }
   .stylizedAnchor {
     margin-right: 0.5em;
   }

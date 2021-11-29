@@ -68,15 +68,6 @@ $touchPadding: 2px; // A bit of extra hit area
       }
     }
 
-    // Set focus styles
-    &:focus + label::after {
-      border-color: #0175ff;
-    }
-    // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
-    &:focus:not(:focus-visible) + label::after {
-      border-color: transparent;
-    }
-
     &:disabled {
       & + label {
         &::before {
@@ -89,6 +80,15 @@ $touchPadding: 2px; // A bit of extra hit area
           cursor: not-allowed;
         }
       }
+    }
+
+    // Set focus styles
+    &:focus + label::after {
+      border-color: #0175ff;
+    }
+    // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
+    &:focus:not(:focus-visible) + label::after {
+      border-color: transparent;
     }
   }
 }

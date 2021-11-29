@@ -35,7 +35,7 @@
     "YourItems": "Tus Objetos"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
+    "Steam": "Parece ser que esta página está cargada en el navegador de Steam. Debido a sus limitadas características y recursos podría fallar inesperadamente o intermitentemente al ejecutar DIM. No podemos proveer soporte para ello.",
     "Unsupported": "El equipo de DIM no soporta usar este navegador. Algunas o todas las características de DIM podrían no funcionar."
   },
   "Bucket": {
@@ -481,6 +481,7 @@
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "ShareBuild": "Compartir Configuración de la Equipación",
+    "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TheseModsCouldNotBeAssigned": "Estos modificadores podrían no ser asignados a la equipación existente.",

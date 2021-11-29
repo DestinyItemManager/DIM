@@ -49,7 +49,7 @@
   }
 
   :global(.app-icon) {
-    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.8));
   }
 }
 
@@ -76,12 +76,12 @@
   padding-right: 2px;
 }
 
-/* these are my calculations for colors that would look ok as text badges . not in use this moment.*/
+/* these are my calculations for colors that would look ok as text badges . not in use this moment. */
 .solar {
   color: #f0631e;
 }
 .arc {
-  /* real arc: #79bbe8 rgb(121, 187, 232) - badgeinfo arc icon: #2b81bb rgb(43, 129, 187)*/
+  /* real arc: #79bbe8 rgb(121, 187, 232) - badgeinfo arc icon: #2b81bb rgb(43, 129, 187) */
   /* #529ed1 rgb(82, 158, 209) */
   color: #529ed1;
 }
