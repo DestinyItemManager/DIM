@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'classIcon': string;
+  'expanded': string;
   'info': string;
   'item': string;
   'perks': string;

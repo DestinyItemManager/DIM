@@ -9,6 +9,10 @@
   width: 0;
 }
 
+.expanded {
+  transform: translate(calc(-1 * var(--sidebar-size)), 0);
+}
+
 .sideTray {
   background-color: black;
   padding: 10px;
@@ -30,10 +34,19 @@
   right: 100%;
   color: white;
   padding: 8px;
-  top: -23px;
+  top: -25px;
   transform-origin: bottom right;
   white-space: nowrap;
-  height: 31px;
+  font-size: 16px;
+
+  &:hover {
+    color: black;
+    background-color: $orange;
+  }
+
+  :global(.app-icon) {
+    margin-left: 2px;
+  }
 }
 
 .item {

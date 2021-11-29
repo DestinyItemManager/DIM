@@ -67,29 +67,24 @@ export default function ItemFeed() {
   }, [expanded]);
 
   return (
-    <motion.div
-      className={clsx(styles.trayContainer)}
-      initial={false}
-      animate={{ x: expanded ? -260 : 0 }}
-      transition={spring}
-    >
+    <div className={clsx(styles.trayContainer, { [styles.expanded]: expanded })}>
       <button className={styles.trayButton} type="button" onClick={handleToggle}>
         Item Feed <AppIcon icon={expanded ? collapseIcon : faCaretUp} />
       </button>
-      <div className={styles.sideTray}>
-        <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
-          Hide Tagged
-        </CheckButton>
-        {expanded && (
+      {expanded && (
+        <div className={styles.sideTray}>
+          <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
+            Hide Tagged
+          </CheckButton>
           <AnimatePresence initial={false}>
             {items.map((item) => (
               <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
             ))}
             <motion.div onViewportEnter={handlePaginate} />
           </AnimatePresence>
-        )}
-      </div>
-    </motion.div>
+        </div>
+      )}
+    </div>
   );
 }
 
