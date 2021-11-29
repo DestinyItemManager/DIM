@@ -231,7 +231,11 @@ export default function LoadoutDrawer() {
         calculateMinSheetHeight={calculateMinSheetHeight}
       />
       {loadout.notes !== undefined && (
-        <textarea onChange={handleNotesChanged} value={loadout.notes} />
+        <textarea
+          onChange={handleNotesChanged}
+          value={loadout.notes}
+          placeholder={t('Loadouts.NotesPlaceholder')}
+        />
       )}
       <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>

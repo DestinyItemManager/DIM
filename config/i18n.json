@@ -609,6 +609,7 @@
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
+    "NotesPlaceholder": "Write some notes about this loadout",
     "NotificationTitle": "Loadout: {{name}}",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
     "NotificationMessage_female": "Applying loadout with 1 item to {{store}}",
