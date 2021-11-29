@@ -1,5 +1,7 @@
 ## Next
 
+## 6.93.0 <span class="changelog-date">(2021-11-28)</span>
+
 * Steam browser is officially unsupported, and we now show a banner explaining that.
 * However, we have managed to fix DIM so it doesn't crash loop in the Steam overlay. Until the next time Steam updates...
 * Loadout Optimizer performance has been improved significantly - so much so that we now always look at all possible combinations of armor. Previously we trimmed some items out to get below an a number that we could process in time. This means that your LO builds are now guaranteed to be optimal, and the "Max" range shown in the stat tiles will always be accurate.
