@@ -11,10 +11,8 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import pursuitsInfoFile from 'data/d2/pursuits.json';
-import grenade from 'destiny-icons/weapons/grenade.svg';
-import headshot from 'destiny-icons/weapons/headshot.svg';
-import melee from 'destiny-icons/weapons/melee.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './BountyGuide.m.scss';
@@ -28,11 +26,11 @@ enum KillType {
   ClassAbilities,
 }
 const killTypeIcons: { [key in KillType]: string | undefined } = {
-  [KillType.Melee]: melee,
+  [KillType.Melee]: String(FontGlyphs.melee),
   [KillType.Super]: undefined,
-  [KillType.Grenade]: grenade,
+  [KillType.Grenade]: String(FontGlyphs.grenade),
   [KillType.Finisher]: undefined,
-  [KillType.Precision]: headshot,
+  [KillType.Precision]: String(FontGlyphs.headshot),
   [KillType.ClassAbilities]: undefined,
 } as const;
 

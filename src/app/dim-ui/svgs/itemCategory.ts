@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -10,47 +11,29 @@ import warlock from 'destiny-icons/general/class_warlock.svg';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
-import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
-import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
-import bow from 'destiny-icons/weapons/bow.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
-import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
-import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
-import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
-import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
-import machinegun from 'destiny-icons/weapons/machinegun.svg';
-import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg';
-import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg';
-import scoutRifle from 'destiny-icons/weapons/scout_rifle.svg';
-import shotgun from 'destiny-icons/weapons/shotgun.svg';
-import sidearm from 'destiny-icons/weapons/sidearm.svg';
-import smg from 'destiny-icons/weapons/smg.svg';
-import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
-import sword from 'destiny-icons/weapons/sword_heavy.svg';
-import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 
 export const weaponTypeSvgByCategoryHash = {
-  5: autoRifle,
-  6: handCannon,
-  7: pulseRifle,
-  8: scoutRifle,
-  9: fusionRifle,
-  10: sniperRifle,
-  11: shotgun,
-  12: machinegun,
-  13: rLauncher,
-  14: sidearm,
-  54: sword,
-  153950757: gLauncher,
-  [-153950757]: gLauncher_special,
-  2489664120: traceRifle,
-  1504945536: lFusionRifle,
-  3954685534: smg,
-  3317538576: bow,
+  5: String(FontGlyphs.auto_rifle),
+  6: String(FontGlyphs.hand_cannon),
+  7: String(FontGlyphs.pulse_rifle),
+  8: String(FontGlyphs.scout_rifle),
+  9: String(FontGlyphs.fusion_rifle),
+  10: String(FontGlyphs.sniper_rifle),
+  11: String(FontGlyphs.shotgun),
+  12: String(FontGlyphs.machinegun),
+  13: String(FontGlyphs.rocket_launcher),
+  14: String(FontGlyphs.sidearm),
+  54: String(FontGlyphs.sword_heavy),
+  153950757: String(FontGlyphs.grenade_launcher),
+  [-153950757]: String(FontGlyphs.grenade_launcher_field_forged),
+  2489664120: String(FontGlyphs.beam_weapon),
+  1504945536: String(FontGlyphs.wire_rifle),
+  3954685534: String(FontGlyphs.smg),
+  3317538576: String(FontGlyphs.bow),
 };
 
 export const weaponSlotSvgByCategoryHash = {
-  2: dmgKinetic,
+  2: String(FontGlyphs.environment_hazard),
   3: energyWeapon,
   4: powerWeapon,
 };

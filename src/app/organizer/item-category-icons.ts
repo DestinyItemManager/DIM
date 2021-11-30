@@ -1,3 +1,4 @@
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -10,24 +11,6 @@ import warlock from 'destiny-icons/general/class_warlock.svg';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
-import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
-import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
-import bow from 'destiny-icons/weapons/bow.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
-import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
-import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
-import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
-import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
-import machinegun from 'destiny-icons/weapons/machinegun.svg';
-import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg';
-import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg';
-import scoutRifle from 'destiny-icons/weapons/scout_rifle.svg';
-import shotgun from 'destiny-icons/weapons/shotgun.svg';
-import sidearm from 'destiny-icons/weapons/sidearm.svg';
-import smg from 'destiny-icons/weapons/smg.svg';
-import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
-import sword from 'destiny-icons/weapons/sword_heavy.svg';
-import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 
 /**
  * A mapping from known item category hashes to an appropriate icon
@@ -38,27 +21,27 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Chest]: chest,
   [ItemCategoryHashes.Legs]: legs,
   [ItemCategoryHashes.ClassItems]: classItem,
-  [ItemCategoryHashes.KineticWeapon]: dmgKinetic,
+  [ItemCategoryHashes.KineticWeapon]: String(FontGlyphs.environment_hazard),
   [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
   [ItemCategoryHashes.PowerWeapon]: powerWeapon,
-  [ItemCategoryHashes.Weapon]: handCannon,
-  [ItemCategoryHashes.AutoRifle]: autoRifle,
-  [ItemCategoryHashes.HandCannon]: handCannon,
-  [ItemCategoryHashes.PulseRifle]: pulseRifle,
-  [ItemCategoryHashes.ScoutRifle]: scoutRifle,
-  [ItemCategoryHashes.Sidearm]: sidearm,
-  [ItemCategoryHashes.Bows]: bow,
-  [ItemCategoryHashes.SubmachineGuns]: smg,
-  [ItemCategoryHashes.FusionRifle]: fusionRifle,
-  [ItemCategoryHashes.SniperRifle]: sniperRifle,
-  [ItemCategoryHashes.Shotgun]: shotgun,
-  [ItemCategoryHashes.TraceRifles]: traceRifle,
-  [ItemCategoryHashes.MachineGun]: machinegun,
-  [ItemCategoryHashes.Sword]: sword,
-  [ItemCategoryHashes.GrenadeLaunchers]: gLauncher,
-  [-ItemCategoryHashes.GrenadeLaunchers]: gLauncherFF,
-  [ItemCategoryHashes.RocketLauncher]: rLauncher,
-  [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
+  [ItemCategoryHashes.Weapon]: String(FontGlyphs.hand_cannon),
+  [ItemCategoryHashes.AutoRifle]: String(FontGlyphs.auto_rifle),
+  [ItemCategoryHashes.HandCannon]: String(FontGlyphs.hand_cannon),
+  [ItemCategoryHashes.PulseRifle]: String(FontGlyphs.pulse_rifle),
+  [ItemCategoryHashes.ScoutRifle]: String(FontGlyphs.scout_rifle),
+  [ItemCategoryHashes.Sidearm]: String(FontGlyphs.sidearm),
+  [ItemCategoryHashes.Bows]: String(FontGlyphs.bow),
+  [ItemCategoryHashes.SubmachineGuns]: String(FontGlyphs.smg),
+  [ItemCategoryHashes.FusionRifle]: String(FontGlyphs.fusion_rifle),
+  [ItemCategoryHashes.SniperRifle]: String(FontGlyphs.sniper_rifle),
+  [ItemCategoryHashes.Shotgun]: String(FontGlyphs.shotgun),
+  [ItemCategoryHashes.TraceRifles]: String(FontGlyphs.beam_weapon),
+  [ItemCategoryHashes.MachineGun]: String(FontGlyphs.machinegun),
+  [ItemCategoryHashes.Sword]: String(FontGlyphs.sword_heavy),
+  [ItemCategoryHashes.GrenadeLaunchers]: String(FontGlyphs.grenade_launcher),
+  [-ItemCategoryHashes.GrenadeLaunchers]: String(FontGlyphs.grenade_launcher_field_forged),
+  [ItemCategoryHashes.RocketLauncher]: String(FontGlyphs.rocket_launcher),
+  [ItemCategoryHashes.LinearFusionRifles]: String(FontGlyphs.wire_rifle),
   [ItemCategoryHashes.Hunter]: hunter,
   [ItemCategoryHashes.Titan]: titan,
   [ItemCategoryHashes.Warlock]: warlock,

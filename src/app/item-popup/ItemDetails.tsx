@@ -10,10 +10,10 @@ import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo } from 'app/utils/item-utils';
 import clsx from 'clsx';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
-import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -46,7 +46,7 @@ export default function ItemDetails({
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon
-    : handCannonIcon;
+    : String(FontGlyphs.hand_cannon);
 
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
