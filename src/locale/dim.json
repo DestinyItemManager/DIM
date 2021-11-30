@@ -237,8 +237,9 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
-    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
