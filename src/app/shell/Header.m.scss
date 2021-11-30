@@ -120,10 +120,9 @@ $header-height: 44px;
 
 .headerLinks {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   height: $header-height;
   align-items: center;
-  flex-wrap: wrap;
   overflow: hidden;
   direction: rtl;
   justify-content: flex-end;

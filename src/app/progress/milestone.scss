@@ -91,8 +91,7 @@
   .quest-modifiers {
     margin-top: 4px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     @include horizontal-space-children(8px);
   }
 }
@@ -124,7 +123,7 @@
   }
 
   .milestone-info & {
-    color: #999999;
+    color: #999;
     font-weight: bold;
     font-size: 11px;
     float: right;

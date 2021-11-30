@@ -6,6 +6,7 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { getModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { ItemFilter } from 'app/search/filter-types';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
@@ -29,6 +30,7 @@ interface Props {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   lockedExoticHash?: number;
+  searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -43,6 +45,7 @@ export default memo(function LockArmorAndPerks({
   upgradeSpendTier,
   lockItemEnergyType,
   lockedExoticHash,
+  searchFilter,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -97,9 +100,9 @@ export default memo(function LockArmorAndPerks({
   const chooseLockItem = chooseItem(
     pinItem,
     // Exclude types that already have a locked item represented
-    (item) => !pinnedItems[item.bucket.hash]
+    (item) => Boolean(!pinnedItems[item.bucket.hash] && searchFilter(item))
   );
-  const chooseExcludeItem = chooseItem(excludeItem);
+  const chooseExcludeItem = chooseItem(excludeItem, (item) => Boolean(searchFilter(item)));
 
   const allPinnedItems = _.sortBy(_.compact(Object.values(pinnedItems)), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)

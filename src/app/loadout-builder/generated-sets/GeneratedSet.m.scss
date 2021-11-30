@@ -36,8 +36,7 @@
 
 .items {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   padding: 0;
   max-width: 800px;
 

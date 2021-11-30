@@ -481,6 +481,7 @@
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "ShareBuild": "Share Build Settings",
+    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "Не учитывать",
     "StatTierIncludeOption": "Учитывать",
     "TheseModsCouldNotBeAssigned": "Модификаторы не могут быть добавлены в существующий Набор.",

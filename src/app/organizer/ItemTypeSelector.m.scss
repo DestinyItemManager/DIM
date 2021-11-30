@@ -12,10 +12,17 @@
 
 .level {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: flex-start;
-  flex-wrap: wrap;
+}
+
+.checked {
+  background-color: $orange !important;
+  color: black !important;
+  > img {
+    filter: none !important;
+  }
 }
 
 .button {
@@ -32,14 +39,6 @@
     > img {
       filter: none !important;
     }
-  }
-}
-
-.checked {
-  background-color: $orange !important;
-  color: black !important;
-  > img {
-    filter: none !important;
   }
 }
 

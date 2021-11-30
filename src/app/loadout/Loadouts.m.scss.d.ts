@@ -7,6 +7,7 @@ interface CssExports {
   'categoryWeapons': string;
   'classIcon': string;
   'contents': string;
+  'empty': string;
   'equipped': string;
   'itemBucket': string;
   'itemCategory': string;
@@ -19,6 +20,7 @@ interface CssExports {
   'loStat': string;
   'loStats': string;
   'loadout': string;
+  'loadoutNotes': string;
   'menu': string;
   'menuButton': string;
   'menuButtons': string;

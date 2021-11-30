@@ -16,12 +16,11 @@
 .title {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  margin-bottom: 10px;
 
   h2 {
     flex: 1;
     display: block;
-    margin: 0;
+    margin: 0 !important;
   }
 
   @include phone-portrait {
@@ -86,6 +85,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   gap: calc(4 * var(--item-margin));
   flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .classIcon {
@@ -134,6 +134,11 @@
   gap: 2px;
   grid-template-columns: 1fr 1fr;
   min-height: unset !important;
+}
+
+.empty {
+  height: calc(var(--item-size) + #{$badge-height} - #{3 * $item-border-width});
+  border: 1px solid white;
 }
 
 .categoryWeapons {
@@ -192,9 +197,8 @@
   flex: 1;
 }
 
-.actions {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  @include horizontal-space-children(4px);
+.loadoutNotes {
+  margin: 4px 0;
 }
 
 .loParams {
@@ -239,7 +243,6 @@
 .loQuery {
   overflow: hidden;
   max-width: 100%;
-  overflow: hidden;
   max-height: 4em;
   text-overflow: ellipsis;
   display: -webkit-box;

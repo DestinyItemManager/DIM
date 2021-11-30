@@ -25,6 +25,19 @@
   }
 }
 
+.source {
+  display: flex;
+  align-items: center;
+  &:nth-child(n + 1) {
+    border-left: 1px solid #ccc;
+    padding-left: 8px;
+    margin-left: 4px;
+  }
+  > img {
+    margin-right: 2px;
+  }
+}
+
 .header {
   --item-size: 100px;
 
@@ -82,19 +95,6 @@
 .element {
   height: 16px;
   width: 16px;
-}
-
-.source {
-  display: flex;
-  align-items: center;
-  &:nth-child(n + 1) {
-    border-left: 1px solid #ccc;
-    padding-left: 8px;
-    margin-left: 4px;
-  }
-  > img {
-    margin-right: 2px;
-  }
 }
 
 .flavor {

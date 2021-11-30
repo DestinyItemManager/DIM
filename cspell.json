@@ -20,6 +20,7 @@
     "destiny-icons/**",
     "icons/build_icons.js",
     "config/content-security-policy.js",
+    "src/browsercheck-utils.js",
     "src/data/",
     "src/locale/?*/",
     "src/htaccess",

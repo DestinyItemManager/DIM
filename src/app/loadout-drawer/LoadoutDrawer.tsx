@@ -211,6 +211,10 @@ export default function LoadoutDrawer() {
     }
   };
 
+  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
+  };
+
   const header = (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
@@ -226,6 +230,13 @@ export default function LoadoutDrawer() {
         deleteLoadout={onDeleteLoadout}
         calculateMinSheetHeight={calculateMinSheetHeight}
       />
+      {loadout.notes !== undefined && (
+        <textarea
+          onChange={handleNotesChanged}
+          value={loadout.notes}
+          placeholder={t('Loadouts.NotesPlaceholder')}
+        />
+      )}
       <GeneratedLoadoutStats items={items} loadout={loadout} />
     </div>
   );

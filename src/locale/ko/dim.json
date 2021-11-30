@@ -35,8 +35,8 @@
     "YourItems": "내 아이템"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "Steam": "이 페이지가 Steam 브라우저에서 로드된 것 같습니다. 한정된 기능과 자원으로 인해, 예기치 않게 혹은 간헐적으로 DIM을 실행에 실패할 수 있습니다. 이에 대한 지원은 제공되지 않습니다.",
+    "Unsupported": "DIM 팀은 이 브라우저를 지원하지 않습니다. DIM의 일부나 전체 기능이 동작하지 않을 수 있습니다."
   },
   "Bucket": {
     "": "",
@@ -481,6 +481,7 @@
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "ShareBuild": "빌드 설정 공유",
+    "SpeedReport": "{{time}}초 안에 {{combos, number}}개의 조합 생성",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",

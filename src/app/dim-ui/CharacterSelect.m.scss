@@ -5,6 +5,18 @@
   justify-content: space-between;
 }
 
+.tile {
+  height: 46px;
+
+  @include phone-portrait {
+    min-width: 260px;
+
+    > div {
+      margin: 0 5px;
+    }
+  }
+}
+
 .vertical {
   composes: select;
   flex-direction: column;
@@ -19,18 +31,6 @@
   }
   .unselected > div > div {
     opacity: 0.4;
-  }
-}
-
-.tile {
-  height: 46px;
-
-  @include phone-portrait {
-    min-width: 260px;
-
-    > div {
-      margin: 0 5px;
-    }
   }
 }
 

@@ -18,6 +18,7 @@ import SetStats from './SetStats';
 
 interface Props {
   set: ArmorSet;
+  notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
@@ -39,6 +40,7 @@ interface Props {
  */
 function GeneratedSet({
   set,
+  notes,
   selectedStore,
   lockedMods,
   pinnedItems,
@@ -127,13 +129,14 @@ function GeneratedSet({
         halfTierMods={halfTierMods}
         onLoadoutSet={setCreateLoadout}
         lbDispatch={lbDispatch}
+        notes={notes}
       />
     </div>
   );
 }
 
-export default React.memo(
-  React.forwardRef<HTMLDivElement, Props>((props, ref) => (
-    <GeneratedSet forwardedRef={ref} {...props} />
-  ))
-);
+const ForwardedGeneratedSet = React.forwardRef<HTMLDivElement, Props>((props, ref) => (
+  <GeneratedSet forwardedRef={ref} {...props} />
+));
+
+export default React.memo(ForwardedGeneratedSet);

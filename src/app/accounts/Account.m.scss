@@ -5,11 +5,8 @@
   cursor: pointer;
   line-height: 15px;
   text-align: left;
-  padding-left: 1rem;
-  padding-right: 2rem;
   position: relative;
-  padding-top: 6px;
-  padding-bottom: 4px;
+  padding: 6px 2rem 4px 1rem;
 
   &:focus,
   &:active {
@@ -37,7 +34,7 @@
   flex-direction: row;
   align-items: center;
   /* Match the "D2" branding */
-  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   :global(.app-icon) {
     font-size: 14px !important;
