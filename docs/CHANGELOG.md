@@ -1,5 +1,7 @@
 ## Next
 
+* The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
+
 ## 6.93.0 <span class="changelog-date">(2021-11-28)</span>
 
 * Steam browser is officially unsupported, and we now show a banner explaining that.

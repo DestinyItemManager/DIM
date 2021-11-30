@@ -343,6 +343,7 @@ function LoadoutBuilder({
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
         lockedExoticHash={lockedExoticHash}
+        searchFilter={searchFilter}
         lbDispatch={lbDispatch}
       />
     </>
