@@ -16,12 +16,11 @@
 .title {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  margin-bottom: 10px;
 
   h2 {
     flex: 1;
     display: block;
-    margin: 0;
+    margin: 0 !important;
   }
 
   @include phone-portrait {
@@ -86,6 +85,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   gap: calc(4 * var(--item-margin));
   flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .classIcon {
@@ -195,6 +195,10 @@
 .modsPlaceholder {
   composes: placeholder;
   flex: 1;
+}
+
+.loadoutNotes {
+  margin: 4px 0;
 }
 
 .loParams {

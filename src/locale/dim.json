@@ -481,6 +481,7 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Share Build Settings",
+    "ShareBuildWithNotes": "Share With Notes",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
@@ -492,6 +493,7 @@
   },
   "Loadouts": {
     "AddEquippedItems": "Add Equipped",
+    "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
@@ -544,6 +546,7 @@
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
+    "NotesPlaceholder": "Write some notes about this loadout",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
     "NotificationMessage_female": "Applying loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Applying loadout with {{count}} items to {{store}}",

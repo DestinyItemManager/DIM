@@ -20,6 +20,7 @@ interface CssExports {
   'loStat': string;
   'loStats': string;
   'loadout': string;
+  'loadoutNotes': string;
   'menu': string;
   'menuButton': string;
   'menuButtons': string;

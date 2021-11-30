@@ -51,6 +51,7 @@ import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOT
 interface ProvidedProps {
   stores: DimStore[];
   initialClassType: DestinyClass | undefined;
+  notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
 }
@@ -166,6 +167,7 @@ function LoadoutBuilder({
   searchFilter,
   preloadedLoadout,
   initialClassType,
+  notes,
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
@@ -301,17 +303,28 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
-  const shareBuild = () => {
-    const urlParams = new URLSearchParams({
+  const shareBuild = (notes?: string) => {
+    const p: Record<string, string> = {
       class: classType.toString(),
       p: JSON.stringify(params),
-    });
+    };
+    if (notes) {
+      p.n = notes;
+    }
+    const urlParams = new URLSearchParams(p);
     const url = `${location.origin}/optimizer?${urlParams}`;
     copyString(url);
     showNotification({
       type: 'success',
       title: t('LoadoutBuilder.CopiedBuild'),
     });
+  };
+
+  const shareBuildWithNotes = () => {
+    const newNotes = prompt(t('MovePopup.Notes'), notes);
+    if (newNotes) {
+      shareBuild(newNotes);
+    }
   };
 
   // I don't think this can actually happen?
@@ -388,20 +401,30 @@ function LoadoutBuilder({
         </AnimatePresence>
         <div className={styles.toolbar}>
           <UserGuideLink topic="Loadout_Optimizer" />
+          {!$featureFlags.loadoutsPage && (
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+            >
+              {t('LoadoutBuilder.NewEmptyLoadout')}
+            </button>
+          )}
           <button
             type="button"
             className="dim-button"
-            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+            onClick={() => shareBuild(notes)}
+            disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.NewEmptyLoadout')}
+            {t('LoadoutBuilder.ShareBuild')}
           </button>
           <button
             type="button"
             className="dim-button"
-            onClick={shareBuild}
+            onClick={shareBuildWithNotes}
             disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.ShareBuild')}
+            {t('LoadoutBuilder.ShareBuildWithNotes')}
           </button>
           {result && (
             <div className={styles.speedReport}>
@@ -421,7 +444,13 @@ function LoadoutBuilder({
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
-
+        {notes && (
+          <div className={styles.guide}>
+            <p>
+              <b>{t('MovePopup.Notes')}</b> {notes}
+            </p>
+          </div>
+        )}
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
@@ -436,6 +465,7 @@ function LoadoutBuilder({
             halfTierMods={halfTierMods}
             upgradeSpendTier={upgradeSpendTier}
             lockItemEnergyType={lockItemEnergyType}
+            notes={notes}
           />
         )}
         {modPicker.open &&
@@ -466,6 +496,7 @@ function LoadoutBuilder({
               upgradeSpendTier={upgradeSpendTier}
               lockItemEnergyType={lockItemEnergyType}
               params={params}
+              notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

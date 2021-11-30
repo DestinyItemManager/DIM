@@ -60,6 +60,7 @@ interface Props {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   params: LoadoutParameters;
+  notes?: string;
   onClose(): void;
 }
 
@@ -84,6 +85,7 @@ export default function CompareDrawer({
   upgradeSpendTier,
   lockItemEnergyType,
   params,
+  notes,
   onClose,
 }: Props) {
   const dispatch = useThunkDispatch();
@@ -174,6 +176,7 @@ export default function CompareDrawer({
         }
         draftLoadout.items = newItems;
         draftLoadout.parameters = params;
+        draftLoadout.notes = notes || draftLoadout.notes;
       }
     });
 

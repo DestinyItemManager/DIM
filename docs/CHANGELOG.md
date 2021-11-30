@@ -1,5 +1,6 @@
 ## Next
 
+* Loadouts can now have notes.
 * The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
 
 ## 6.93.0 <span class="changelog-date">(2021-11-28)</span>
