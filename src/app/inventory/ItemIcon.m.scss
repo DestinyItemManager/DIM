@@ -60,7 +60,7 @@ $commonBg: #366f42;
   box-sizing: border-box;
   top: $item-border-width;
   left: $item-border-width;
-  border-width: 0px;
+  border-width: 0;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
   position: absolute;

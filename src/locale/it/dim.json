@@ -481,6 +481,7 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Condividi le impostazioni della build",
+    "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TheseModsCouldNotBeAssigned": "Queste modifiche non possono essere assegnate al loadout esistente.",

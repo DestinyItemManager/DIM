@@ -481,6 +481,7 @@
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
     "ShareBuild": "Udostępnij ustawienia buildu",
+    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TheseModsCouldNotBeAssigned": "Tych modyfikacji nie można przypisać do istniejącego uzbrojenia.",

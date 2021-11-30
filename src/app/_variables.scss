@@ -8,7 +8,7 @@ $gradient: radial-gradient(
   circle at 50% 70px,
   hsl(240, 20%, 28%) 0%,
   hsl(240, 27%, 12%) 100%
-); //new background gradient
+); // new background gradient
 
 // Elemental damage types
 $arc: #85c5ec;
@@ -69,7 +69,7 @@ $issue-banner-height: 101px;
 @mixin destiny-header {
   text-transform: uppercase;
   font-weight: 600;
-  font-family: 'Helvetica', Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 @mixin draggable-hover-border {
@@ -96,14 +96,6 @@ $issue-banner-height: 101px;
 
 // Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars
 @mixin visible-scrollbars {
-  &::-webkit-scrollbar {
-    width: 10px;
-
-    &:horizontal {
-      height: 10px;
-    }
-  }
-
   &::-webkit-scrollbar-track {
     background: #555;
   }
@@ -111,5 +103,13 @@ $issue-banner-height: 101px;
   &::-webkit-scrollbar-thumb {
     background: #e4e4e4;
     border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+
+    &:horizontal {
+      height: 10px;
+    }
   }
 }

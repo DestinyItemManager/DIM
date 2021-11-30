@@ -53,7 +53,7 @@
     width: 14px;
     &:global(.objective-complete) {
       opacity: 1;
-      /* yellow for crucibles, green override for gambit*/
+      /* yellow for crucibles, green override for gambit */
       &::after {
         background-color: #dde330;
         height: 8px;

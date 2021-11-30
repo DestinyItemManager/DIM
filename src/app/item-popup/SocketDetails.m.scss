@@ -1,5 +1,11 @@
 @import '../variables.scss';
 
+.notUnlocked {
+  > * {
+    opacity: 0.3;
+  }
+}
+
 .socketDetailsSheet {
   max-width: 800px;
   margin: 0 auto;
@@ -27,12 +33,6 @@
 
 .modList {
   margin: 8px 10px;
-}
-
-.notUnlocked {
-  > * {
-    opacity: 0.3;
-  }
 }
 
 .selected,

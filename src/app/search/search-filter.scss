@@ -2,7 +2,7 @@
 
 .filter-input {
   border-radius: 0;
-  -webkit-appearance: none;
+  appearance: none;
   font-size: 13px;
 }
 
@@ -40,7 +40,6 @@
 
   &:hover,
   &:focus {
-    //background: black;
     outline: none;
   }
 
@@ -68,6 +67,13 @@
   }
 }
 
+.search-button {
+  display: none;
+  @include phone-portrait {
+    display: inline-block;
+  }
+}
+
 .mobile-search-link {
   display: block;
   width: 100%;
@@ -91,31 +97,16 @@
     box-sizing: border-box;
   }
 
-  .filter-bar-button {
-    top: 0;
-  }
-
-  .app-icon {
-    font-size: 18px !important;
-  }
-
   input,
   select:focus {
     font-size: 16px; // so iOS doesn't zoom
   }
 }
 
-.search-button {
-  display: none;
-  @include phone-portrait {
-    display: inline-block;
-  }
-}
-
 .filter-bar-button {
   margin: 0 6px;
   padding: 0;
-  -webkit-appearance: none;
+  appearance: none;
   display: inline-block;
   background: transparent;
   border: 0;
@@ -127,6 +118,10 @@
 
   @include phone-portrait {
     margin-right: 8px !important;
+  }
+
+  .mobile-search-link & {
+    top: 0;
   }
 
   .app-icon {
@@ -142,15 +137,8 @@
     &:hover {
       color: #e8a534 !important;
     }
-  }
-  &.bulk-tag-select {
-    background-color: #444;
-    position: relative;
-    padding: 4px;
-    -webkit-appearance: menulist;
-    option {
-      color: white;
-      background: #444;
+    .mobile-search-link & {
+      font-size: 18px !important;
     }
   }
 
@@ -158,49 +146,4 @@
   a {
     margin: 0 !important;
   }
-}
-
-/* Textcomplete */
-
-.dropdown-menu {
-  background-color: white;
-  transform: translate(0, -4px);
-  border-radius: 4px;
-  overflow: hidden;
-  .textcomplete-header,
-  .textcomplete-footer {
-    display: none;
-  }
-  li {
-    padding: 4px 8px;
-    &:nth-child(2) {
-      border-top: none;
-    }
-    &:hover {
-      background-color: #e8a534;
-    }
-  }
-  .active {
-    background-color: #e8a534;
-  }
-  a {
-    color: black;
-    font-size: 12px;
-    &:hover {
-      cursor: pointer;
-    }
-    text-decoration-line: none;
-  }
-
-  @include phone-portrait {
-    a {
-      font-size: 16px;
-    }
-    li {
-      padding: 8px 10px;
-    }
-  }
-  list-style: none;
-  padding: 0;
-  margin: 0;
 }

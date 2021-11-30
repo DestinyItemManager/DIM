@@ -13,6 +13,9 @@
     "destiny-icons": true,
     "manifest-cache": true
   },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
   "jest.jestCommandLine": "yarn test",
   "[javascript]": {
     "editor.codeActionsOnSave": {
@@ -39,5 +42,8 @@
     "typescriptreact",
     "yaml"
   ],
-  "css.customData": ["./.vscode/custom.css-data.json"]
+  "css.customData": ["./.vscode/custom.css-data.json"],
+  "css.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"]
 }

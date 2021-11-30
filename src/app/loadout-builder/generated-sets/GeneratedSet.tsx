@@ -132,8 +132,8 @@ function GeneratedSet({
   );
 }
 
-export default React.memo(
-  React.forwardRef<HTMLDivElement, Props>((props, ref) => (
-    <GeneratedSet forwardedRef={ref} {...props} />
-  ))
-);
+const ForwardedGeneratedSet = React.forwardRef<HTMLDivElement, Props>((props, ref) => (
+  <GeneratedSet forwardedRef={ref} {...props} />
+));
+
+export default React.memo(ForwardedGeneratedSet);

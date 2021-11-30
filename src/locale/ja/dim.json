@@ -35,8 +35,8 @@
     "YourItems": "あなたのアイテム"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "Steam": "Steam ブラウザにこのページが読み込まれているようです。 機能やリソースが限られているため、予期しないまたは断続的に DIM の実行に失敗する可能性があります。サポートを提供できません。",
+    "Unsupported": "DIM チームはこのブラウザの利用をサポートしていません。DIM の一部または全ての機能が動作しない可能性があります。"
   },
   "Bucket": {
     "": "",
@@ -481,6 +481,7 @@
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "ShareBuild": "ビルド設定を共有",
+    "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TheseModsCouldNotBeAssigned": "これらの mod は、既存のロードアウトに割り当てることができませんでした。",

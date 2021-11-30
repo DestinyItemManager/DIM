@@ -34,7 +34,7 @@
   // The height of the visible viewport, taking into account virtual keyboards on iOS. Set by JS. This is more accurate than 100vh!
   --viewport-height: 100vh;
   // The bottom offset of the visual viewport from the layout viewport. Set by JS. This can help attach things to virtual keyboards.
-  --viewport-bottom-offset: 0px;
+  --viewport-bottom-offset: 0;
   // The height of the header including padding that may be added on rounded-corner phones. Set by JS.
   --header-height: 44px;
   // The height of the inventory store header section. Set by JS.
@@ -124,7 +124,7 @@ span:focus {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #990000;
+  background: #900;
   padding: 8px;
   text-align: center;
   &.hidden {
@@ -194,7 +194,7 @@ option {
 }
 
 input[type='search'] {
-  -webkit-appearance: textfield;
+  appearance: textfield;
 }
 
 textarea {
@@ -210,8 +210,6 @@ textarea {
 }
 
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="white" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>')
     no-repeat;
@@ -274,6 +272,14 @@ select {
     font-size: 14px;
     padding: 8px 16px;
   }
+  img {
+    height: 1.3em;
+    width: auto;
+    vertical-align: bottom;
+    margin: 0 0.3em;
+    filter: drop-shadow(0 0 1px black);
+    transition: filter 150ms ease-out;
+  }
 
   &:hover,
   &:active,
@@ -300,14 +306,6 @@ select {
         filter: drop-shadow(0 0 1px black);
       }
     }
-  }
-  img {
-    height: 1.3em;
-    width: auto;
-    vertical-align: bottom;
-    margin: 0 0.3em;
-    filter: drop-shadow(0 0 1px black);
-    transition: filter 150ms ease-out;
   }
   &.danger {
     &:hover {

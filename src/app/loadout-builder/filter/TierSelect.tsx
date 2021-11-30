@@ -206,43 +206,27 @@ function MinMaxSelectInner({
       value={ignored ? '-' : value}
       onChange={handleChange}
     >
-      <option disabled={true}>
-        {t(`LoadoutBuilder.Select${type}`, { contextList: 'minMax' })}
-      </option>
-      {_.range(min, max + 1).map((tier) => (
-        <option
-          key={tier}
-          value={tier}
-          className={clsx({
-            [styles.hiddenOption]: ignored,
-          })}
-        >
-          {t('LoadoutBuilder.TierNumber', {
-            tier,
-          })}
-        </option>
-      ))}
-      <option key="-" value="-" className={styles.hiddenOption}>
+      <option disabled>{t(`LoadoutBuilder.Select${type}`, { contextList: 'minMax' })}</option>
+      {!ignored &&
+        _.range(min, max + 1).map((tier) => (
+          <option key={tier} value={tier}>
+            {t('LoadoutBuilder.TierNumber', {
+              tier,
+            })}
+          </option>
+        ))}
+      <option key="-" value="-" disabled>
         -
       </option>
-      <option
-        key={IGNORE}
-        value={IGNORE}
-        className={clsx({
-          [styles.hiddenOption]: ignored,
-        })}
-      >
-        {t('LoadoutBuilder.StatTierIgnoreOption')}
-      </option>
-      <option
-        key={INCLUDE}
-        value={INCLUDE}
-        className={clsx({
-          [styles.hiddenOption]: !ignored,
-        })}
-      >
-        {t('LoadoutBuilder.StatTierIncludeOption')}
-      </option>
+      {ignored ? (
+        <option key={INCLUDE} value={INCLUDE}>
+          {t('LoadoutBuilder.StatTierIncludeOption')}
+        </option>
+      ) : (
+        <option key={IGNORE} value={IGNORE}>
+          {t('LoadoutBuilder.StatTierIgnoreOption')}
+        </option>
+      )}
     </select>
   );
 }

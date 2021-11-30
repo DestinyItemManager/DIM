@@ -2,13 +2,11 @@
 
 .item-sockets {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 }
 
 .sockets {
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   display: flex;
   margin-top: 10px;
 }

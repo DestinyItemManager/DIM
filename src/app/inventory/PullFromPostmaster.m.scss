@@ -1,5 +1,14 @@
 @import '../variables.scss';
 
+.badge {
+  border-radius: 50%;
+  border-radius: 10px;
+  background: $orange;
+  padding: 0 4px;
+  color: black;
+  font-size: 9px;
+}
+
 .button {
   composes: dim-button from global;
   align-self: center;
@@ -12,13 +21,4 @@
       color: $orange;
     }
   }
-}
-
-.badge {
-  border-radius: 50%;
-  border-radius: 10px;
-  background: $orange;
-  padding: 0 4px;
-  color: black;
-  font-size: 9px;
 }

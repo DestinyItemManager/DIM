@@ -1,5 +1,13 @@
 @import '../variables.scss';
 
+.arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  border-color: #444;
+}
+
 .tooltip {
   position: absolute;
   background-color: #444;
@@ -43,11 +51,8 @@
   }
   &[data-popper-placement='bottom'] .arrow {
     border-width: 0 5px 5px 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
     top: -10px;
-    border-bottom-color: #888;
+    border-color: transparent transparent #888 transparent;
   }
   &[data-popper-placement='right'] .arrow {
     border-width: 5px 5px 5px 0;
@@ -63,14 +68,6 @@
     border-bottom-color: transparent;
     right: -10px;
   }
-}
-
-.arrow {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  border-color: #444;
 }
 
 .content {

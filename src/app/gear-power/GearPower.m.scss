@@ -38,6 +38,50 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(10, 1fr);
 
+    .kinetic,
+    .energy,
+    .power {
+      grid-column-start: 1;
+    }
+
+    .helmet,
+    .gauntlets,
+    .chest,
+    .leg,
+    .classItem {
+      grid-column-start: 2;
+
+      &.gearItem,
+      .gearItemInfo > div {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .kinetic {
+      grid-row-start: 3;
+    }
+    .energy {
+      grid-row-start: 5;
+    }
+    .power {
+      grid-row-start: 7;
+    }
+    .helmet {
+      grid-row-start: 1;
+    }
+    .gauntlets {
+      grid-row-start: 3;
+    }
+    .chest {
+      grid-row-start: 5;
+    }
+    .leg {
+      grid-row-start: 7;
+    }
+    .classItem {
+      grid-row-start: 9;
+    }
+
     .gearItem {
       grid-row-end: span 2;
       display: flex;
@@ -87,50 +131,6 @@
       .negative {
         margin: 0 3px;
       }
-    }
-
-    .kinetic,
-    .energy,
-    .power {
-      grid-column-start: 1;
-    }
-
-    .helmet,
-    .gauntlets,
-    .chest,
-    .leg,
-    .classItem {
-      grid-column-start: 2;
-
-      &.gearItem,
-      .gearItemInfo > div {
-        flex-direction: row-reverse;
-      }
-    }
-
-    .kinetic {
-      grid-row-start: 3;
-    }
-    .energy {
-      grid-row-start: 5;
-    }
-    .power {
-      grid-row-start: 7;
-    }
-    .helmet {
-      grid-row-start: 1;
-    }
-    .gauntlets {
-      grid-row-start: 3;
-    }
-    .chest {
-      grid-row-start: 5;
-    }
-    .leg {
-      grid-row-start: 7;
-    }
-    .classItem {
-      grid-row-start: 9;
     }
   }
 
