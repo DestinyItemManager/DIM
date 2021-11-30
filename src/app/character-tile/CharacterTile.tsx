@@ -1,5 +1,4 @@
 import type { DimStore } from 'app/inventory/store-types';
-import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import React from 'react';
@@ -36,10 +35,7 @@ export default function CharacterTile({ store }: { store: DimStore }) {
           <div className={styles.class}>{store.className}</div>
           {!store.isVault && (
             <>
-              <div className={styles.powerLevel}>
-                <AppIcon icon={powerActionIcon} />
-                {store.powerLevel}
-              </div>
+              <div className={styles.powerLevel}>{store.powerLevel}</div>
               {isPhonePortrait && <div className={styles.maxTotalPower}>/ {maxTotalPower}</div>}
             </>
           )}

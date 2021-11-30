@@ -109,9 +109,8 @@
   color: $power;
   margin-top: 1px;
 
-  :global(.app-icon) {
-    vertical-align: 70%;
-    font-size: 40%;
+  &:before {
+    content: '\2726'; /*  */
     margin-right: 2px;
   }
 }
