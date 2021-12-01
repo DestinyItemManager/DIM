@@ -12,6 +12,7 @@
     }
   ],
   "allowCompoundWords": true,
+  "flagWords": ["langauge"],
   "ignorePaths": [
     ".vscode/extensions.json",
     ".github/workflows/**",
