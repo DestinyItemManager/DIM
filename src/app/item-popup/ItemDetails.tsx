@@ -46,7 +46,7 @@ export default function ItemDetails({
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon
-    : String(FontGlyphs.hand_cannon);
+    : String.fromCodePoint(FontGlyphs.hand_cannon);
 
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 

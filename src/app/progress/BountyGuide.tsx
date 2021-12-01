@@ -26,11 +26,11 @@ enum KillType {
   ClassAbilities,
 }
 const killTypeIcons: { [key in KillType]: string | undefined } = {
-  [KillType.Melee]: String(FontGlyphs.melee),
+  [KillType.Melee]: String.fromCodePoint(FontGlyphs.melee),
   [KillType.Super]: undefined,
-  [KillType.Grenade]: String(FontGlyphs.grenade),
+  [KillType.Grenade]: String.fromCodePoint(FontGlyphs.grenade),
   [KillType.Finisher]: undefined,
-  [KillType.Precision]: String(FontGlyphs.headshot),
+  [KillType.Precision]: String.fromCodePoint(FontGlyphs.headshot),
   [KillType.ClassAbilities]: undefined,
 } as const;
 
