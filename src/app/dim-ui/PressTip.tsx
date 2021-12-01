@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './PressTip.m.scss';
+import { SheetContext } from './Sheet';
 import { usePopper } from './usePopper';
 
 interface Props {
@@ -46,6 +47,7 @@ function Control({
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
+  const sheetContext = useContext(SheetContext);
 
   usePopper({
     contents: tooltipContents,
@@ -73,7 +75,7 @@ function Control({
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
             <div className={styles.arrow} />
           </div>,
-          document.body
+          sheetContext?.current || document.body
         )}
     </Component>
   );
