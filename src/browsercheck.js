@@ -68,7 +68,7 @@ export function isSupported(browsersSupported, userAgent) {
   var supported = isBrowserSupported(browser);
   var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase();
 
-  console.info('Langauge Detected: ' + lang);
+  console.info('Language Detected: ' + lang);
   if (!supportedLanguages.includes(lang)) {
     lang = lang.split('-', 1);
   }
@@ -76,7 +76,7 @@ export function isSupported(browsersSupported, userAgent) {
     // fallback to 'en' if unsupported language after removing dialect
     lang = 'en';
   }
-  console.info('Langauge Assigned: ' + lang);
+  console.info('Language Assigned: ' + lang);
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome
