@@ -7,7 +7,7 @@ import Socket from 'app/item-popup/Socket';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getSocketsByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -78,7 +78,9 @@ function SocketCategory({
     );
     const availableFragments = _.sumBy(
       aspects,
-      (aspect) => aspect.plug.energyCapacity?.capacityValue || 0
+      (aspect) =>
+        aspect.investmentStats.find((stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity)
+          ?.value || 0
     );
 
     sockets = sockets.slice(0, availableFragments);

@@ -108,7 +108,10 @@ export default function SubclassPlugDrawer({
       const selectedFragments = selected.filter((plugDef) => fragments.has(plugDef));
       const allowedFragments = _.sumBy(
         selectedAspects,
-        (aspect) => aspect.plug.energyCapacity?.capacityValue || 0
+        (aspect) =>
+          aspect.investmentStats.find(
+            (stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity
+          )?.value || 0
       );
       if (fragments.has(plug)) {
         return selectedFragments.length < allowedFragments;
