@@ -229,7 +229,7 @@ export default function LoadoutDrawer() {
         isNew={isNew}
         modAssignmentDrawerRef={modAssignmentDrawerRef}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        onUpdateArmorMods={onUpdateArmorMods}
+        onUpdateMods={onUpdateMods}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         deleteLoadout={onDeleteLoadout}
