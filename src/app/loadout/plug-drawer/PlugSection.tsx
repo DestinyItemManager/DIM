@@ -6,6 +6,7 @@ import SelectablePlug from './SelectablePlug';
 export default function PlugSection({
   plugs,
   selected,
+  displayedStatHashes,
   isPlugSelectable,
   onPlugSelected,
   onPlugRemoved,
@@ -14,6 +15,7 @@ export default function PlugSection({
   plugs: readonly PluggableInventoryItemDefinition[];
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
   selected: PluggableInventoryItemDefinition[];
+  displayedStatHashes?: number[];
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
   onPlugSelected(mod: PluggableInventoryItemDefinition): void;
   onPlugRemoved(mod: PluggableInventoryItemDefinition): void;
@@ -33,6 +35,7 @@ export default function PlugSection({
             key={plug.hash}
             selected={selected.some((s) => s.hash === plug.hash)}
             plug={plug}
+            displayedStatHashes={displayedStatHashes}
             selectable={isPlugSelectable(plug)}
             onPlugSelected={onPlugSelected}
             onPlugRemoved={onPlugRemoved}
