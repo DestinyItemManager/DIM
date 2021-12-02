@@ -11,7 +11,7 @@ import { itemsForPlugSet } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 // We could probably compute this but I am doubtful bungie will change it to be more
 // than 2
 const MAX_ASPECTS = 2;
+
+const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
 
 // Hacky way to get the subclass abilities and fragments in roughly the right order.
 // Works because aspects and fragments have the most plugs.
@@ -124,6 +126,7 @@ export default function SubclassPlugDrawer({
       acceptButtonText={t('Loadouts.Apply')}
       language={language}
       plugs={plugs}
+      displayedStatHashes={DISPLAYED_PLUG_STATS}
       onAccept={onAcceptInternal}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}

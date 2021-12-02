@@ -2,6 +2,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -12,12 +13,14 @@ export default function SelectablePlug({
   plug,
   selected,
   selectable,
+  displayedStatHashes,
   onPlugSelected,
   onPlugRemoved,
 }: {
   plug: PluggableInventoryItemDefinition;
   selected: boolean;
   selectable: boolean;
+  displayedStatHashes?: number[];
   onPlugSelected(plug: PluggableInventoryItemDefinition): void;
   onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
 }) {
@@ -28,6 +31,9 @@ export default function SelectablePlug({
   }, [onPlugSelected, plug, selectable]);
 
   const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
+  const stats = plug.investmentStats.filter((stat) =>
+    displayedStatHashes?.includes(stat.statTypeHash)
+  );
 
   return (
     <ClosableContainer onClose={selected ? onClose : undefined}>
@@ -63,6 +69,17 @@ export default function SelectablePlug({
                 )}
               </div>
             ))
+          )}
+          {stats.length > 0 && (
+            <div className="plug-stats">
+              {stats.map((stat) => (
+                <StatValue
+                  key={stat.statTypeHash}
+                  statHash={stat.statTypeHash}
+                  value={stat.value}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>

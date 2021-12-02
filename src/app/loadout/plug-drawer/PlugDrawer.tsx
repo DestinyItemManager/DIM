@@ -20,6 +20,8 @@ interface Props {
    * An array of mods that are already locked.
    */
   initiallySelected: PluggableInventoryItemDefinition[];
+  /** A list of stat hashes that if present will be displayed for each plug. */
+  displayedStatHashes?: number[];
   /** Title of the sheet, displayed in the header. */
   title: string;
   /** The input placeholder for the search bar. */
@@ -53,6 +55,7 @@ interface Props {
 export default function PlugDrawer({
   plugs,
   initiallySelected,
+  displayedStatHashes,
   title,
   searchPlaceholder,
   language,
@@ -192,6 +195,7 @@ export default function PlugDrawer({
           key={plugItem[0].plug.plugCategoryHash}
           plugs={plugItem}
           selected={selected}
+          displayedStatHashes={displayedStatHashes}
           isPlugSelectable={(plug) => isPlugSelectable(plug, selected)}
           onPlugSelected={onPlugSelected}
           onPlugRemoved={onPlugRemoved}
