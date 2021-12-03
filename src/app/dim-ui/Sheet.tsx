@@ -2,7 +2,9 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, {
+  createContext,
   forwardRef,
+  MutableRefObject,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -13,6 +15,8 @@ import { animated, config, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import './Sheet.scss';
+
+export const SheetContext = createContext<MutableRefObject<HTMLDivElement | null> | null>(null);
 
 interface Props {
   header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
@@ -163,52 +167,60 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
   const dragHandleUp = useCallback(() => (dragging.current = false), []);
 
   return (
-    <animated.div
-      {...bindDrag()}
-      style={{ ...springProps, touchAction: 'none', zIndex }}
-      className={clsx('sheet', sheetClassName)}
-      ref={sheet}
-      role="dialog"
-      aria-modal="false"
-      onKeyDown={stopPropagation}
-      onKeyUp={stopPropagation}
-      onKeyPress={stopPropagation}
-      onClick={allowClickThrough ? undefined : stopPropagation}
-    >
-      <a href="#" className={clsx('sheet-close', { 'sheet-no-header': !header })} onClick={onClose}>
-        <AppIcon icon={disabledIcon} />
-      </a>
-
-      <div
-        ref={ref}
-        style={{ minHeight }}
-        className="sheet-container"
-        onMouseDown={dragHandleDown}
-        onMouseUp={dragHandleUp}
-        onTouchStart={dragHandleDown}
-        onTouchEnd={dragHandleUp}
+    <SheetContext.Provider value={sheet}>
+      <animated.div
+        {...bindDrag()}
+        style={{ ...springProps, touchAction: 'none', zIndex }}
+        className={clsx('sheet', sheetClassName)}
+        ref={sheet}
+        role="dialog"
+        aria-modal="false"
+        onKeyDown={stopPropagation}
+        onKeyUp={stopPropagation}
+        onKeyPress={stopPropagation}
+        onClick={allowClickThrough ? undefined : stopPropagation}
       >
-        {header && (
-          <div className="sheet-header" ref={dragHandle}>
-            {_.isFunction(header) ? header({ onClose }) : header}
-          </div>
-        )}
+        <a
+          href="#"
+          className={clsx('sheet-close', { 'sheet-no-header': !header })}
+          onClick={onClose}
+        >
+          <AppIcon icon={disabledIcon} />
+        </a>
 
         <div
-          className={clsx('sheet-contents', {
-            'sheet-has-footer': footer,
-          })}
-          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
-          ref={sheetContentsRefFn}
+          ref={ref}
+          style={{ minHeight }}
+          className="sheet-container"
+          onMouseDown={dragHandleDown}
+          onMouseUp={dragHandleUp}
+          onTouchStart={dragHandleDown}
+          onTouchEnd={dragHandleUp}
         >
-          {_.isFunction(children) ? children({ onClose }) : children}
-        </div>
+          {header && (
+            <div className="sheet-header" ref={dragHandle}>
+              {_.isFunction(header) ? header({ onClose }) : header}
+            </div>
+          )}
 
-        {footer && (
-          <div className="sheet-footer">{_.isFunction(footer) ? footer({ onClose }) : footer}</div>
-        )}
-      </div>
-    </animated.div>
+          <div
+            className={clsx('sheet-contents', {
+              'sheet-has-footer': footer,
+            })}
+            style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
+            ref={sheetContentsRefFn}
+          >
+            {_.isFunction(children) ? children({ onClose }) : children}
+          </div>
+
+          {footer && (
+            <div className="sheet-footer">
+              {_.isFunction(footer) ? footer({ onClose }) : footer}
+            </div>
+          )}
+        </div>
+      </animated.div>
+    </SheetContext.Provider>
   );
 });
 
