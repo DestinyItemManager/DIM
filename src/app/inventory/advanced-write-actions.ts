@@ -63,7 +63,9 @@ function canInsertForFree(
         socket.socketDefinition.randomizedPlugSetHash
     ) &&
     // And have no cost to insert
-    !plug.plug?.insertionMaterialRequirementHash;
+    !plug.plug?.insertionMaterialRequirementHash &&
+    // And the current plug didn't cost anything (can't replace a non-free mod with a free one)
+    (!socket.plugged || !socket.plugged.plugDef.plug.insertionMaterialRequirementHash);
 
   return free;
 }

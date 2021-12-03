@@ -159,13 +159,19 @@ export function createHttpClient(
     });
     const response = await fetchFunction(fetchOptions);
     let data: ServerResponse<unknown> | undefined;
+    let parseError: Error | undefined;
     try {
       data = await response.json();
-    } catch {}
+    } catch (e) {
+      parseError = e;
+    }
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
     // then throw errors on generic http error codes
     throwHttpError(response);
+    if (parseError) {
+      throw parseError;
+    }
     return data;
   };
 }
