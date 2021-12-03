@@ -5,11 +5,11 @@ import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { Comparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
-import { sortModGroups, sortMods } from '../mod-utils';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 
@@ -41,6 +41,8 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
+  sortPlugGroups?: Comparator<PluggableInventoryItemDefinition[]>;
+  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
@@ -62,6 +64,8 @@ export default function PlugDrawer({
   sheetRef,
   minHeight,
   isPlugSelectable,
+  sortPlugGroups,
+  sortPlugs,
   onAccept,
   onClose,
 }: Props) {
@@ -82,10 +86,13 @@ export default function PlugDrawer({
       setSelected((oldState) => {
         const newState = [...oldState];
         newState.push(mod);
-        return newState.sort(sortMods);
+        if (sortPlugs) {
+          newState.sort(sortPlugs);
+        }
+        return newState;
       });
     },
-    [setSelected]
+    [sortPlugs]
   );
 
   const onPlugRemoved = useCallback(
@@ -134,7 +141,11 @@ export default function PlugDrawer({
 
   const groupedPlugs = Object.values(
     _.groupBy(queryFilteredPlugs, (plugItem) => plugItem.plug.plugCategoryHash)
-  ).sort(sortModGroups);
+  );
+
+  if (sortPlugGroups) {
+    groupedPlugs.sort(sortPlugGroups);
+  }
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 

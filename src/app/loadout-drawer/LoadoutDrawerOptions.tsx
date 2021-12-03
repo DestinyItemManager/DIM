@@ -219,8 +219,8 @@ export default function LoadoutDrawerOptions({
           <ModAssignmentDrawer
             loadout={loadout}
             sheetRef={modAssignmentDrawerRef}
-            onUpdateMods={onUpdateMods}
             minHeight={calculateMinSheetHeight()}
+            onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body

@@ -646,6 +646,8 @@
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "ShowModPlacement": "Show Mod Placement",
+    "SubclassOptions": "{{subclass}} options",
+    "SubclassOptionsSearch": "Search {{subclass}} options",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",

@@ -1,0 +1,28 @@
+@import '../../dim-ui/common.m.scss';
+
+.container {
+  composes: flexRow;
+  align-items: flex-end;
+
+  > * {
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
+}
+
+.subclass {
+  // TODO (ryan) This is here because I can't get the super icon to
+  // display how I want it to.
+  margin-bottom: 2px;
+
+  :global(.item) {
+    height: calc(1.1 * var(--item-size));
+    width: calc(1.1 * var(--item-size));
+
+    img {
+      height: calc(1.1 * var(--item-size));
+      width: calc(1.1 * var(--item-size));
+    }
+  }
+}

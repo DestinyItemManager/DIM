@@ -30,6 +30,8 @@ declare const $featureFlags: {
   loadoutModAssignments: boolean;
   // Top level loadouts page
   loadoutsPage: boolean;
+  /** Enable the subclass drawer in loadouts */
+  loadoutSubclasses: boolean;
 };
 
 declare function ga(...params: string[]);

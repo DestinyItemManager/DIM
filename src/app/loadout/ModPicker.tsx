@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
-import { isInsertableArmor2Mod, sortMods } from './mod-utils';
+import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 
 /** Slot specific mods can have at most 2 mods. */
@@ -217,6 +217,8 @@ function ModPicker({
       initiallySelected={lockedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
+      sortPlugGroups={sortModGroups}
+      sortPlugs={sortMods}
       onAccept={onAccept}
       onClose={onClose}
     />

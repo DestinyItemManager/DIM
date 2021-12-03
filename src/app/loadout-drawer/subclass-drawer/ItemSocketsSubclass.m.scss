@@ -1,0 +1,44 @@
+@import '../../variables';
+@import '../../dim-ui/common.m.scss';
+
+.categories {
+  composes: flexRow;
+}
+
+.category {
+  margin-right: 16px;
+}
+
+.title {
+  margin-bottom: 4px;
+  font-size: 10px;
+}
+
+.socketCategory {
+  &:not(:last-child) {
+    margin-right: 4px;
+  }
+
+  image,
+  img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
+}
+
+.socket {
+  border: 1px solid #ddd;
+}
+
+.super {
+  // TODO (ryan) This is here because I can't get the super icon to
+  // display how I want it to.
+  margin-top: 2px;
+
+  height: var(--item-size);
+  width: var(--item-size);
+}
+
+.sockets {
+  composes: flexRow;
+}

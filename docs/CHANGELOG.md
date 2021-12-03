@@ -1,6 +1,7 @@
 ## Next
 
 * Loadouts can now have notes.
+* Loadouts can now save stasis subclass abilities, aspects, and fragments.
 * The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
 * Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5
 
