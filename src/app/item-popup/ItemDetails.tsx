@@ -110,7 +110,6 @@ export default function ItemDetails({
 
       <ApplyPerkSelection
         item={item}
-        socketOverrides={socketOverrides}
         setSocketOverride={onPlugClicked}
         onApplied={resetSocketOverrides}
       />
