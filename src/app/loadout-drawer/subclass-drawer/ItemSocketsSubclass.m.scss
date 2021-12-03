@@ -1,11 +1,8 @@
 @import '../../variables';
 @import '../../dim-ui/common.m.scss';
 
-.categories {
-  composes: flexRow;
-}
-
 .category {
+  margin-top: 8px;
   margin-right: 16px;
 }
 
@@ -31,9 +28,12 @@
 }
 
 .super {
-  // TODO (ryan) This is here because I can't get the super icon to
-  // display how I want it to.
-  margin-top: 2px;
+  position: relative;
+}
+
+.superOutline {
+  position: absolute;
+  left: 0;
 
   height: var(--item-size);
   width: var(--item-size);

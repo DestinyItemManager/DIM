@@ -1,10 +1,11 @@
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import Socket from 'app/item-popup/Socket';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { useSetting } from 'app/settings/hooks';
 import { getSocketsByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -33,7 +34,7 @@ export default React.memo(function ItemSocketsSubclass({
   }
 
   return (
-    <div className={styles.categories}>
+    <>
       {subclass.sockets.categories.map(
         (socketCategory) =>
           socketCategory && (
@@ -54,7 +55,7 @@ export default React.memo(function ItemSocketsSubclass({
           />,
           document.body
         )}
-    </div>
+    </>
   );
 });
 
@@ -120,24 +121,29 @@ function SocketForCategory({
   dimSocket: DimSocket;
   onClick(): void;
 }) {
+  const [itemSize] = useSetting('itemSize');
   if (
     socketCategory.category.categoryStyle === DestinySocketCategoryStyle.Supers &&
     dimSocket.plugged
   ) {
+    const viewBoxMax = itemSize - 1;
+    const viewBoxHalf = itemSize / 2 - 1;
     return (
       <PressTip tooltip={<DimPlugTooltip item={item} plug={dimSocket.plugged} />}>
-        <svg viewBox="0 0 49 49" className={styles.super}>
-          <image xlinkHref={bungieNetPath(dimSocket.plugged.plugDef.displayProperties.icon)} />
-          <polygon
-            strokeDasharray="265.87216"
-            style={{ strokeDashoffset: 0 }}
-            fillOpacity="0"
-            stroke="#ddd"
-            strokeWidth="1"
-            points="24,0 49,24 24,49 0,24"
-            strokeLinecap="butt"
-          />
-        </svg>
+        <div className={styles.super}>
+          <BungieImage src={dimSocket.plugged.plugDef.displayProperties.icon} />
+          <svg viewBox={`0 0 ${viewBoxMax} ${viewBoxMax}`} className={styles.superOutline}>
+            <polygon
+              strokeDasharray="265.87216"
+              style={{ strokeDashoffset: 0 }}
+              fillOpacity="0"
+              stroke="#ddd"
+              strokeWidth="1"
+              points={`${viewBoxHalf},0 ${viewBoxMax},${viewBoxHalf} ${viewBoxHalf},${viewBoxMax} 0,${viewBoxHalf}`}
+              strokeLinecap="butt"
+            />
+          </svg>
+        </div>
       </PressTip>
     );
   }
