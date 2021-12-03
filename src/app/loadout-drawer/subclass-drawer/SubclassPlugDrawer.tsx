@@ -16,16 +16,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-// We could probably compute this but I am doubtful bungie will change it to be more
-// than 2
-const MAX_ASPECTS = 2;
-
 const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
-
-// Hacky way to get the subclass abilities and fragments in roughly the right order.
-// Works because aspects and fragments have the most plugs.
-// TODO (ryan) sort by socket index
-const sortPlugGroups = compareBy((group: PluggableInventoryItemDefinition[]) => group.length);
 
 export default function SubclassPlugDrawer({
   subclass,
@@ -41,6 +32,9 @@ export default function SubclassPlugDrawer({
   const language = useSelector(languageSelector);
   const defs = useD2Definitions();
   const profileResponse = useSelector(profileResponseSelector);
+  const maxAspects = subclass.sockets
+    ? getSocketsByCategoryHash(subclass.sockets, SocketCategoryHashes.Aspects).length
+    : 0;
 
   const { initiallySelected, plugs, aspects, fragments } = useMemo(() => {
     const initiallySelected = Object.values(socketOverrides)
@@ -101,7 +95,7 @@ export default function SubclassPlugDrawer({
       // Aspects handling
       const selectedAspects = selected.filter((plugDef) => aspects.has(plugDef));
       if (aspects.has(plug)) {
-        return selectedAspects.length < MAX_ASPECTS;
+        return selectedAspects.length < maxAspects;
       }
 
       // Fragments handling
@@ -119,7 +113,17 @@ export default function SubclassPlugDrawer({
 
       return true;
     },
-    [aspects, fragments]
+    [aspects, fragments, maxAspects]
+  );
+
+  // The grouping we use in the plug drawer breaks the plug ordering, this puts the groups in the
+  // correct order again as we build the set of plugs by iterating the categories in order
+  const sortPlugGroups = useMemo(
+    () =>
+      compareBy(
+        (group: PluggableInventoryItemDefinition[]) => group.length && plugs.indexOf(group[0])
+      ),
+    [plugs]
   );
 
   return (

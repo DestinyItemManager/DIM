@@ -184,6 +184,7 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     id: item.id,
     hash: item.hash,
     amount: item.amount,
+    socketOverrides: item.socketOverrides,
     equipped,
   };
 }
