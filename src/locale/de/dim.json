@@ -35,8 +35,8 @@
     "YourItems": "Deine Gegenstände"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "Steam": "Es sieht so aus, als ob diese Seite im Steam-Browser geladen ist. Aufgrund seiner begrenzten Funktionen und Ressourcen, kann DIM eventuell unerwartet oder zeitweilig nicht laufen. Wir können dafür keinen Support bieten.",
+    "Unsupported": "Das DIM-Team unterstützt diesen Browser nicht. Einige oder alle DIM-Funktionen funktionieren möglicherweise nicht."
   },
   "Bucket": {
     "": "",
@@ -237,8 +237,9 @@
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "StatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs.",
-    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Gegenstands-Wert. Unterstützt das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
-    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk-Wert-Boni. Unterstützt das Hinzufügen von Werten durch das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
+    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchstmöglichen Wert für einen bestimmten Wert. Enthält alle Gegenstände mit den höchsten Werten.",
     "Tags": {
@@ -481,7 +482,8 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Teile Ausrüstungseinstellungen",
-    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
+    "ShareBuildWithNotes": "Share With Notes",
+    "SpeedReport": "{{combos, number}} Kombinationen in {{time}} Sekunden erstellt",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
     "TheseModsCouldNotBeAssigned": "Diese Mods konnten der bestehenden Ausrüstung nicht zugewiesen werden.",
@@ -492,6 +494,7 @@
   },
   "Loadouts": {
     "AddEquippedItems": "Ausgerüstetes hinzufügen",
+    "AddNotes": "Add Notes",
     "AddUnequippedItems": "Unausgerüstet hinzufügen",
     "AlreadyExistsClass": "Eine Ausrüstung mit diesem Namen existiert bereits für {{className}}.",
     "AlreadyExistsGlobal": "Eine globale Ausrüstung mit diesem Namen existiert bereits.",
@@ -544,6 +547,7 @@
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
+    "NotesPlaceholder": "Write some notes about this loadout",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
     "NotificationMessage_female": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
     "NotificationMessage_female_plural": "Übertrage Ausrüstung mit {{count}} Gegenständen auf {{store}}",
