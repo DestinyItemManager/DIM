@@ -144,7 +144,7 @@ export function getPlugsForSubclass(
   profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem
 ) {
-  const plugs: Set<PluggableInventoryItemDefinition> = new Set();
+  const plugs = new Set<PluggableInventoryItemDefinition>();
   const aspects: Set<PluggableInventoryItemDefinition> = new Set();
   const fragments: Set<PluggableInventoryItemDefinition> = new Set();
 
