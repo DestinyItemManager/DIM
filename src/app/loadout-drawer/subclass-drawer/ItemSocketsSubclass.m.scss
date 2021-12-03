@@ -16,7 +16,6 @@
     margin-right: 4px;
   }
 
-  image,
   img {
     height: var(--item-size);
     width: var(--item-size);
@@ -29,11 +28,17 @@
 
 .super {
   position: relative;
+  border: 1px solid transparent;
+
+  > img {
+    display: block;
+  }
 }
 
 .superOutline {
   position: absolute;
   left: 0;
+  top: 0;
 
   height: var(--item-size);
   width: var(--item-size);
