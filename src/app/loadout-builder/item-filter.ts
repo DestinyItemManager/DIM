@@ -49,15 +49,14 @@ export function filterItems(
     const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (items[bucket]) {
-      const pinnedItem = pinnedItems[bucket];
       // There can only be one pinned item as we hide items from the item picker once
       // a single item is pinned
-      const searchItems = items[bucket].filter(searchFilter);
+      const pinnedItem = pinnedItems[bucket];
       const exotics = items[bucket].filter((item) => item.hash === lockedExoticHash);
 
       // We prefer most specific filtering since there can be competing conditions.
-      // This means locked item, then exotic, then search filter is preferred in that order.
-      let firstPassFilteredItems = searchItems;
+      // This means locked item and then exotic
+      let firstPassFilteredItems = items[bucket];
 
       if (pinnedItem) {
         firstPassFilteredItems = [pinnedItem];
@@ -67,9 +66,9 @@ export function filterItems(
         firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
       }
 
-      // No matter the results we need to filter by mod energy otherwise mod assignment
-      // will go haywire, also we can exclude items at this point
-      filteredItems[bucket] = firstPassFilteredItems.filter(
+      // Filter out excluded items and items that can't take the bucket specific locked
+      // mods energy type
+      const excludedAndModsFilteredItems = firstPassFilteredItems.filter(
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
           matchedLockedModEnergy(
@@ -81,18 +80,11 @@ export function filterItems(
           )
       );
 
-      // If no items match we remove the search and item filters and just filter by mod energy
-      if (!filteredItems[bucket].length) {
-        filteredItems[bucket] = items[bucket].filter((item) =>
-          matchedLockedModEnergy(
-            defs,
-            item,
-            lockedModsByPlugCategoryHash,
-            upgradeSpendTier,
-            lockItemEnergyType
-          )
-        );
-      }
+      const searchFilteredItems = excludedAndModsFilteredItems.filter(searchFilter);
+
+      filteredItems[bucket] = searchFilteredItems.length
+        ? searchFilteredItems
+        : excludedAndModsFilteredItems;
     }
   }
 
