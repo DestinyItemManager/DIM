@@ -1,6 +1,7 @@
 ## Next
 
 * Loadouts can now have notes.
+* Loadouts can now save stasis subclass abilities, aspects, and fragments.
 * The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
 * Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5
 
@@ -36,11 +37,6 @@
 ## 6.91.1 <span class="changelog-date">(2021-11-16)</span>
 
 * Fix issue in Loadout Optimizer where only one set would show when using Safari or iOS apps.
-* Fix issue in Loadout Optimizer where only one set would show when using Safari or iOS apps.
-
-### Beta Only
-
-* Loadouts can now save stasis subclass abilities, aspects, and fragments.
 
 ## 6.91.0 <span class="changelog-date">(2021-11-14)</span>
 
@@ -60,9 +56,6 @@
 * Fixed an issue where clicking a mod icon in the Loadout Optimizer would select more than one of the mod.
 
 ## 6.89.0 <span class="changelog-date">(2021-10-31)</span>
-### Beta Only
-
-* Loadouts can now save stasis subclass abilities, aspects, and fragments.
 
 ## 6.88.1 <span class="changelog-date">(2021-10-28)</span>
 

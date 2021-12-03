@@ -128,8 +128,8 @@ export default function SubclassPlugDrawer({
 
   return (
     <PlugDrawer
-      title={t('Loadouts.AspectsAndFragments')}
-      searchPlaceholder={t('Loadouts.SearchAspectsAndFragments')}
+      title={t('Loadouts.SubclassOptions', { subclass: subclass.name })}
+      searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
       language={language}
       plugs={plugs}
