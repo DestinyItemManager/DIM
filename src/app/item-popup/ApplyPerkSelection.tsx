@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
-import { insertPlug } from 'app/inventory/advanced-write-actions';
+import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faCheckCircle, refreshIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { wishListSelector } from 'app/wishlists/selectors';
@@ -11,42 +11,23 @@ import styles from './ApplyPerkSelection.m.scss';
 
 export default function ApplyPerkSelection({
   item,
-  socketOverrides,
   setSocketOverride,
   onApplied,
 }: {
   item: DimItem;
-  socketOverrides: SocketOverrides;
   setSocketOverride: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
   onApplied: () => void;
 }) {
   const dispatch = useThunkDispatch();
+  const defs = useD2Definitions()!;
+  const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
   const [insertInProgress, setInsertInProgress] = useState(false);
   const wishlistRoll = useSelector(wishListSelector(item));
   if (!item.sockets) {
     return null;
   }
 
-  const onInsertPlugs = async () => {
-    if (insertInProgress) {
-      return;
-    }
-    setInsertInProgress(true);
-    try {
-      for (const [socketIndexStr, plugHash] of Object.entries(socketOverrides)) {
-        const socketIndex = parseInt(socketIndexStr, 10);
-        const socket = item.sockets?.allSockets.find((s) => s.socketIndex === socketIndex);
-        if (socket) {
-          await dispatch(insertPlug(item, socket, plugHash));
-        }
-      }
-      onApplied();
-    } finally {
-      setInsertInProgress(false);
-    }
-  };
-
-  let hasOverrides = false;
+  const plugOverridesToSave: { socket: DimSocket; plugHash: number }[] = [];
   const wishListSocketChanges: { socket: DimSocket; plugHash: number }[] = [];
   for (const socket of item.sockets.allSockets) {
     // Find wishlist perks that aren't selected
@@ -68,10 +49,29 @@ export default function ApplyPerkSelection({
       }
     }
 
-    if (socket.actuallyPlugged) {
-      hasOverrides = true;
+    if (
+      socket.actuallyPlugged &&
+      socket.plugged &&
+      canInsertPlug(socket, socket.plugged.plugDef.hash, destiny2CoreSettings, defs)
+    ) {
+      plugOverridesToSave.push({ socket, plugHash: socket.plugged.plugDef.hash });
     }
   }
+
+  const onInsertPlugs = async () => {
+    if (insertInProgress) {
+      return;
+    }
+    setInsertInProgress(true);
+    try {
+      for (const { socket, plugHash } of plugOverridesToSave) {
+        await dispatch(insertPlug(item, socket, plugHash));
+      }
+      onApplied();
+    } finally {
+      setInsertInProgress(false);
+    }
+  };
 
   const selectWishlistPerks = () => {
     for (const change of wishListSocketChanges) {
@@ -79,7 +79,7 @@ export default function ApplyPerkSelection({
     }
   };
 
-  if (!(wishListSocketChanges.length > 0 || ($featureFlags.awa && hasOverrides))) {
+  if (wishListSocketChanges.length === 0 && plugOverridesToSave.length === 0) {
     return null;
   }
 
@@ -91,7 +91,7 @@ export default function ApplyPerkSelection({
           <AppIcon icon={thumbsUpIcon} /> {t('Sockets.SelectWishlistPerks')}
         </button>
       )}
-      {$featureFlags.awa && hasOverrides && (
+      {plugOverridesToSave.length > 0 && (
         <button
           type="button"
           className={styles.insertButton}
