@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import LoadoutDrawerItem from '../LoadoutDrawerItem';
 import ItemSocketsSubclass from './ItemSocketsSubclass';
 import styles from './Subclass.m.scss';
@@ -20,20 +20,19 @@ export function Subclass({
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
   const defs = useD2Definitions();
-  const socketOverridesWithDefaultPlugs: SocketOverrides = { ...socketOverrides };
 
-  for (const socket of subclass.sockets?.allSockets || []) {
-    if (!socketOverridesWithDefaultPlugs[socket.socketIndex]) {
-      socketOverridesWithDefaultPlugs[socket.socketIndex] =
-        socket.socketDefinition.singleInitialItemHash;
+  const subclassWithOverrides = useMemo(() => {
+    const socketOverridesWithDefaultPlugs: SocketOverrides = { ...socketOverrides };
+
+    for (const socket of subclass.sockets?.allSockets || []) {
+      if (!socketOverridesWithDefaultPlugs[socket.socketIndex]) {
+        socketOverridesWithDefaultPlugs[socket.socketIndex] =
+          socket.socketDefinition.singleInitialItemHash;
+      }
     }
-  }
 
-  const subclassWithOverrides = applySocketOverrides(
-    defs!,
-    subclass,
-    socketOverridesWithDefaultPlugs
-  );
+    return applySocketOverrides(defs!, subclass, socketOverridesWithDefaultPlugs);
+  }, [defs, socketOverrides, subclass]);
 
   const updateSocketOverrides = useCallback(
     (overrides: SocketOverrides) => {

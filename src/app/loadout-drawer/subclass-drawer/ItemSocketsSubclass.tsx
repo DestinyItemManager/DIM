@@ -1,6 +1,6 @@
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
-import { DimItem, DimPlug, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
+import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import Socket from 'app/item-popup/Socket';
@@ -20,7 +20,7 @@ interface Props {
   updateSocketOverrides(socketOverrides: SocketOverrides): void;
 }
 
-export default function ItemSocketsSubclass({
+export default React.memo(function ItemSocketsSubclass({
   subclass,
   socketOverrides,
   updateSocketOverrides,
@@ -56,7 +56,7 @@ export default function ItemSocketsSubclass({
         )}
     </div>
   );
-}
+});
 
 function SocketCategory({
   subclass,
@@ -120,33 +120,31 @@ function SocketForCategory({
   dimSocket: DimSocket;
   onClick(): void;
 }) {
-  switch (socketCategory.category.categoryStyle) {
-    case DestinySocketCategoryStyle.Supers:
-      return <SuperSocket item={item} plug={dimSocket.plugged!} />;
-    default:
-      return (
-        <div className={styles.socket}>
-          <Socket item={item} socket={dimSocket} onClick={onClick} />
-        </div>
-      );
+  if (
+    socketCategory.category.categoryStyle === DestinySocketCategoryStyle.Supers &&
+    dimSocket.plugged
+  ) {
+    return (
+      <PressTip tooltip={<DimPlugTooltip item={item} plug={dimSocket.plugged} />}>
+        <svg viewBox="0 0 49 49" className={styles.super}>
+          <image xlinkHref={bungieNetPath(dimSocket.plugged.plugDef.displayProperties.icon)} />
+          <polygon
+            strokeDasharray="265.87216"
+            style={{ strokeDashoffset: 0 }}
+            fillOpacity="0"
+            stroke="#ddd"
+            strokeWidth="1"
+            points="24,0 49,24 24,49 0,24"
+            strokeLinecap="butt"
+          />
+        </svg>
+      </PressTip>
+    );
   }
-}
 
-function SuperSocket({ item, plug }: { item: DimItem; plug: DimPlug }) {
   return (
-    <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} />}>
-      <svg viewBox="0 0 49 49" className={styles.super}>
-        <image xlinkHref={bungieNetPath(plug.plugDef.displayProperties.icon)} />
-        <polygon
-          strokeDasharray="265.87216"
-          style={{ strokeDashoffset: 0 }}
-          fillOpacity="0"
-          stroke="#ddd"
-          strokeWidth="1"
-          points="24,0 49,24 24,49 0,24"
-          strokeLinecap="butt"
-        />
-      </svg>
-    </PressTip>
+    <div className={styles.socket}>
+      <Socket item={item} socket={dimSocket} onClick={onClick} />
+    </div>
   );
 }

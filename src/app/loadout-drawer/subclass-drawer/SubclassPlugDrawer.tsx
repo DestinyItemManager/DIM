@@ -36,18 +36,35 @@ export default function SubclassPlugDrawer({
     ? getSocketsByCategoryHash(subclass.sockets, SocketCategoryHashes.Aspects).length
     : 0;
 
-  const { initiallySelected, plugs, aspects, fragments } = useMemo(() => {
-    const initiallySelected = Object.values(socketOverrides)
-      .map((hash) => defs?.InventoryItem.get(hash))
-      .filter(isPluggableItem);
-    const { plugs, aspects, fragments } = getPlugsForSubclass(defs, profileResponse, subclass);
-    return {
-      initiallySelected,
-      plugs: Array.from(plugs),
-      aspects,
-      fragments,
-    };
-  }, [defs, profileResponse, socketOverrides, subclass]);
+  const { initiallySelected, plugs, aspects, fragments, sortPlugs, sortPlugGroups } =
+    useMemo(() => {
+      const initiallySelected = Object.values(socketOverrides)
+        .map((hash) => defs?.InventoryItem.get(hash))
+        .filter(isPluggableItem);
+      const { plugs, aspects, fragments } = getPlugsForSubclass(defs, profileResponse, subclass);
+
+      // Return these as an array as that is what the plug drawer uses
+      const plugsToReturn = Array.from(plugs);
+
+      const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
+        plugsToReturn.indexOf(plug)
+      );
+
+      // The grouping we use in the plug drawer breaks the plug ordering, this puts the groups in the
+      // correct order again as we build the set of plugs by iterating the categories in order
+      const sortPlugGroups = compareBy(
+        (group: PluggableInventoryItemDefinition[]) =>
+          group.length && plugsToReturn.indexOf(group[0])
+      );
+      return {
+        initiallySelected,
+        plugs: plugsToReturn,
+        aspects,
+        fragments,
+        sortPlugs,
+        sortPlugGroups,
+      };
+    }, [defs, profileResponse, socketOverrides, subclass]);
 
   const onAcceptInternal = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
@@ -116,16 +133,6 @@ export default function SubclassPlugDrawer({
     [aspects, fragments, maxAspects]
   );
 
-  // The grouping we use in the plug drawer breaks the plug ordering, this puts the groups in the
-  // correct order again as we build the set of plugs by iterating the categories in order
-  const sortPlugGroups = useMemo(
-    () =>
-      compareBy(
-        (group: PluggableInventoryItemDefinition[]) => group.length && plugs.indexOf(group[0])
-      ),
-    [plugs]
-  );
-
   return (
     <PlugDrawer
       title={t('Loadouts.SubclassOptions', { subclass: subclass.name })}
@@ -137,6 +144,7 @@ export default function SubclassPlugDrawer({
       onAccept={onAcceptInternal}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
+      sortPlugs={sortPlugs}
       sortPlugGroups={sortPlugGroups}
       initiallySelected={initiallySelected}
     />
