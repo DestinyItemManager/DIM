@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { HttpStatusError } from 'app/bungie-api/http-client';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
@@ -69,8 +70,6 @@ function canInsertForFree(
 
 /**
  * Modify an item to insert a new plug into one of its socket.
- *
- * @param free true if this plug has no cost to insert, and the plug
  */
 export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
@@ -95,7 +94,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       await dispatch(refreshItemAfterAWA(item, response.Response));
     } catch (e) {
       errorLog('AWA', "Couldn't insert plug", item, e);
-      if (e instanceof DimError && e.code === 'BungieService.Difficulties') {
+      if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
         showNotification({
           type: 'error',
           title: 'Not Yet!',
