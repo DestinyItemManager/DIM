@@ -1,4 +1,4 @@
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
 import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -33,7 +33,7 @@ export default React.memo(function ItemSocketsSubclass({
   }
 
   return (
-    <div className={styles.categories}>
+    <>
       {subclass.sockets.categories.map(
         (socketCategory) =>
           socketCategory && (
@@ -54,7 +54,7 @@ export default React.memo(function ItemSocketsSubclass({
           />,
           document.body
         )}
-    </div>
+    </>
   );
 });
 
@@ -126,18 +126,20 @@ function SocketForCategory({
   ) {
     return (
       <PressTip tooltip={<DimPlugTooltip item={item} plug={dimSocket.plugged} />}>
-        <svg viewBox="0 0 49 49" className={styles.super}>
-          <image xlinkHref={bungieNetPath(dimSocket.plugged.plugDef.displayProperties.icon)} />
-          <polygon
-            strokeDasharray="265.87216"
-            style={{ strokeDashoffset: 0 }}
-            fillOpacity="0"
-            stroke="#ddd"
-            strokeWidth="1"
-            points="24,0 49,24 24,49 0,24"
-            strokeLinecap="butt"
-          />
-        </svg>
+        <div className={styles.super}>
+          <BungieImage src={dimSocket.plugged.plugDef.displayProperties.icon} />
+          <svg viewBox="0 0 49 49" className={styles.superOutline}>
+            <polygon
+              strokeDasharray="265.87216"
+              style={{ strokeDashoffset: 0 }}
+              fillOpacity="0"
+              stroke="#ddd"
+              strokeWidth="1"
+              points="24,0 49,24 24,49 0,24"
+              strokeLinecap="butt"
+            />
+          </svg>
+        </div>
       </PressTip>
     );
   }

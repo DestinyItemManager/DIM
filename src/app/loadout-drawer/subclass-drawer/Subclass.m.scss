@@ -1,7 +1,7 @@
 @import '../../dim-ui/common.m.scss';
 
 .container {
-  composes: flexRow;
+  composes: flexWrap;
   align-items: flex-end;
 
   > * {
@@ -12,10 +12,6 @@
 }
 
 .subclass {
-  // TODO (ryan) This is here because I can't get the super icon to
-  // display how I want it to.
-  margin-bottom: 2px;
-
   :global(.item) {
     height: calc(1.1 * var(--item-size));
     width: calc(1.1 * var(--item-size));
