@@ -51,6 +51,7 @@ export function convertDimApiLoadoutItemToLoadoutItem(
     id: item.id || '0',
     hash: item.hash,
     amount: item.amount || 1,
+    socketOverrides: item.socketOverrides,
     equipped,
   };
 }

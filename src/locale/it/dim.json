@@ -239,7 +239,7 @@
     "StatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo.",
     "Stats": "Mostra gli oggetti basandosi su un valore di statistica specifico. $t(Filter.StatsExtras)",
     "StatsBase": "Filtra le armature basandosi sul loro valore di statistiche di base, senza contare le modifiche inserite o Prodigio. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supporta l'aggiunta di statistiche connettendo nomi di statistiche multipli con il simbolo \"+\". Ci sono anche parole chiave speciali \"highest\", \"secondhighest\", \"thirdhighest\" ecc con corrispondenza basata sul loro rango all'interno delle statistiche di un oggetto.",
+    "StatsExtras": "Supporta l'aggiunta di statistiche connettendo nomi di statistiche multipli con il simbolo \"+\" o \"&\". Ci sono anche parole chiave speciali \"highest\", \"secondhighest\", \"thirdhighest\" ecc con corrispondenza basata sul loro rango all'interno delle statistiche di un oggetto.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "Tags": {
@@ -581,6 +581,8 @@
     "ShowModPlacement": "Mostra Posizionamento Modifiche",
     "SortByEditTime": "Ordina per ultima modifica",
     "SortByName": "Ordina per nome",
+    "SubclassOptions": "{{subclass}} opzioni",
+    "SubclassOptionsSearch": "Cerca {{subclass}} opzioni",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedMods": "Modifiche non assegnate",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",

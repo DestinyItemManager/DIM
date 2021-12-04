@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { insertPlug } from 'app/inventory/advanced-write-actions';
+import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
@@ -9,7 +9,7 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
@@ -23,6 +23,7 @@ import { StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
@@ -55,6 +56,7 @@ export default function SocketDetailsSelectedPlug({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
   const selectedPlugPerk =
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
@@ -107,7 +109,8 @@ export default function SocketDetailsSelectedPlug({
   );
 
   // Can we actually insert this mod instead of just previewing it?
-  const canDoAWA = itemIsInstanced(item) && $featureFlags.awa;
+  const canDoAWA =
+    itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
   const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
@@ -148,7 +151,6 @@ export default function SocketDetailsSelectedPlug({
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
-        {!$featureFlags.awa && costs}
       </div>
       <div className={styles.modDescription}>
         <h3>

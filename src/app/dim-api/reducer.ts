@@ -1222,6 +1222,9 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   if (item.amount > 1) {
     result.amount = item.amount;
   }
+  if (item.socketOverrides) {
+    result.socketOverrides = item.socketOverrides;
+  }
   return result;
 }
 

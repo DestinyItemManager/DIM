@@ -186,6 +186,7 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     id: item.id,
     hash: item.hash,
     amount: item.amount,
+    socketOverrides: item.socketOverrides,
     equipped,
   };
 }
@@ -279,14 +280,15 @@ export function loadoutFromEquipped(store: DimStore): Loadout {
 
 /** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */
 export function getModsFromLoadout(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
   loadout: Loadout
 ) {
   const mods: PluggableInventoryItemDefinition[] = [];
 
-  if (defs.isDestiny2() && loadout.parameters?.mods) {
+  if (defs?.isDestiny2() && loadout.parameters?.mods) {
     for (const modHash of loadout.parameters.mods) {
       const item = defs.InventoryItem.get(modHash);
+
       if (isPluggableItem(item)) {
         mods.push(item);
       }

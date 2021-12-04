@@ -35,13 +35,11 @@ export default function PlugDef({ plug, onClick, onClose }: Props) {
 
   return (
     <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
-      <div className={styles.emptyItem}>
-        {showTooltip ? (
-          <PressTip tooltip={<PlugTooltip def={plug} />}>{contents}</PressTip>
-        ) : (
-          contents
-        )}
-      </div>
+      {showTooltip ? (
+        <PressTip tooltip={<PlugTooltip def={plug} />}>{contents}</PressTip>
+      ) : (
+        contents
+      )}
     </ClosableContainer>
   );
 }
