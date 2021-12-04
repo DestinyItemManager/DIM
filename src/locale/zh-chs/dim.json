@@ -239,7 +239,7 @@
     "StatLower": "显示相比其他同类别护甲而言属性全面更低的护甲。",
     "Stats": "按某个属性值显示物品。$t(Filter.StatsExtras)",
     "StatsBase": "按基础属性值筛选护甲，不包含附加模组或大师杰作属性。$t(Filter.StatsExtras)",
-    "StatsExtras": "要想相加多个属性，可用 + 号连接属性名称。要想按某一属性在物品整体属性中的排名来匹配，可使用 highest，secondhighest，thirdhighest 等特殊关键字。",
+    "StatsExtras": "要想相加多个属性，可用 + 或 & 号连接属性名称。要想按某一属性在物品整体属性中的排名来匹配，可使用 highest，secondhighest，thirdhighest 等特殊关键字。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "Tags": {
@@ -581,6 +581,8 @@
     "ShowModPlacement": "显示模组位置",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
+    "SubclassOptions": "{{subclass}}选项",
+    "SubclassOptionsSearch": "搜索{{subclass}}选项",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedMods": "未分配的模组",
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",

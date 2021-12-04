@@ -2,8 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Пожалуйста подтвердите доступ DIM к Вашим предметам в приложении Destiny 2 Companion.",
     "ConfirmTitle": "Подтверждение",
-    "Error": "Error changing item",
-    "FailedToken": "Couldn't get permission to change item"
+    "Error": "Ошибка изменения предмета",
+    "FailedToken": "Не удалось получить разрешение на изменение предмета"
   },
   "Accounts": {
     "ErrorLoadInventory": "Невозможно загрузить персонажей и инвентарь Destiny {{version}}",
@@ -25,14 +25,14 @@
     "WeeklyHeroic": "Недельный Героический Налёт"
   },
   "Armory": {
-    "NoNotes": "No Notes",
-    "Season": "Season {{season}}, Year {{year}}",
+    "NoNotes": "Нет заметок",
+    "Season": "Сезон {{season}}, год {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
     "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
-    "Unknown": "Unknown Item",
+    "Unknown": "Неизвестный предмет",
     "WishlistedRolls": "Wishlisted Roll",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
-    "YourItems": "Your Items"
+    "YourItems": "Ваши предметы"
   },
   "Browsercheck": {
     "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
@@ -239,7 +239,7 @@
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
     "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "Наборы брони с максимальной суммой Указанной Характеристики для каждого класса.",
     "StatsMax": "Броня в каждый слот с максимальной Указанной Характеристикой для всех персонажей. Фильтруются все предметы с максимальным значением Характеристики для каждого слота.",
     "Tags": {
@@ -283,7 +283,7 @@
     "FilterMatchCount_plural": "{{count}} предметов",
     "Filters": "Фильтры",
     "InstallDIM": "DIM как приложение",
-    "InstallDIMBanner": "Install DIM as an app on your home screen",
+    "InstallDIMBanner": "Установить DIM в качестве приложения на домашний экран",
     "Inventory": "Инвентарь",
     "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Горячие клавиши",
@@ -320,11 +320,11 @@
     "Vault": "Отправить в Хранилище"
   },
   "Infusion": {
-    "Filter": "Filter items",
+    "Filter": "Фильтры предметов",
     "InfuseSource": "Select item to infuse {{name}} into",
-    "InfuseTarget": "Select item to infuse into {{name}}",
-    "InfusionMaterials": "Infusion Materials",
-    "NoItems": "No infusable items available.",
+    "InfuseTarget": "Выберите предмет для синтеза c {{name}}",
+    "InfusionMaterials": "Материалы для синтеза",
+    "NoItems": "Нет предметов для синтеза.",
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
@@ -581,6 +581,8 @@
     "ShowModPlacement": "Show Mod Placement",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
+    "SubclassOptions": "{{subclass}} options",
+    "SubclassOptionsSearch": "Search {{subclass}} options",
     "TooManyRequested": "В наличии {{total}} {{itemname}}; Набор запрашивает {{requested}}. Передали все замеченные.",
     "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:",

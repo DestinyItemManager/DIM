@@ -239,7 +239,7 @@
     "StatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲。",
     "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "Tags": {
@@ -581,6 +581,8 @@
     "ShowModPlacement": "顯示模組位置",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
+    "SubclassOptions": "{{subclass}} options",
+    "SubclassOptionsSearch": "Search {{subclass}} options",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedMods": "未分配的模組",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",

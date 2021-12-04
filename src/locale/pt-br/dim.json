@@ -581,6 +581,8 @@
     "ShowModPlacement": "Exibir Localização do Mod",
     "SortByEditTime": "Ordenar pela última alteração",
     "SortByName": "Ordenar por nome",
+    "SubclassOptions": "Opções da {{subclass}}",
+    "SubclassOptionsSearch": "Pesquisa as opções da {{subclass}}",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
