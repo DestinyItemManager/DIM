@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -81,7 +80,7 @@ export default function ModAssignmentDrawer({
         .filter(isPluggableItem);
     }
 
-    return [getCheapestModAssignments(armor, mods, defs, UpgradeSpendTier.Nothing, true), mods];
+    return [getCheapestModAssignments(armor, mods, defs), mods];
   }, [defs, armor, loadout.parameters?.mods]);
 
   const onSocketClick = (
@@ -97,13 +96,16 @@ export default function ModAssignmentDrawer({
     }
   };
 
-  const flatAssigned = Array.from(itemModAssignments.values()).flat();
+  const flatAssigned = Object.values(itemModAssignments).flat();
 
   if (!defs) {
     return null;
   }
 
   const modCounts = {};
+
+  // TODO: button to apply mods
+  // TODO: consider existing mods in assignment
 
   return (
     <>
@@ -120,7 +122,7 @@ export default function ModAssignmentDrawer({
                 <ConnectedInventoryItem item={item} />
                 <Sockets
                   item={item}
-                  lockedMods={itemModAssignments.get(item.id)}
+                  lockedMods={itemModAssignments[item.id]}
                   onSocketClick={onSocketClick}
                 />
               </div>

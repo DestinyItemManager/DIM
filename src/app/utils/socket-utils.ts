@@ -47,7 +47,7 @@ export function isWeaponMasterworkSocket(socket: DimSocket) {
 }
 
 /** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-function isArmorModSocket(socket: DimSocket) {
+export function isArmorModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
 }
 

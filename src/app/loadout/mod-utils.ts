@@ -128,14 +128,14 @@ export function getCheapestModAssignments(
   items: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions | undefined,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean
+  upgradeSpendTier = UpgradeSpendTier.Nothing,
+  lockItemEnergyType = false
 ): {
-  itemModAssignments: Map<string, PluggableInventoryItemDefinition[]>;
+  itemModAssignments: { [itemInstanceId: string]: PluggableInventoryItemDefinition[] };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
   if (!defs) {
-    return { itemModAssignments: new Map(), unassignedMods: [] };
+    return { itemModAssignments: {}, unassignedMods: [] };
   }
 
   let bucketIndependentAssignments: ModAssignments = {};
@@ -285,15 +285,12 @@ export function getCheapestModAssignments(
     }
   }
 
-  const mergedResults = new Map<string, PluggableInventoryItemDefinition[]>();
+  const mergedResults: { [itemInstanceId: string]: PluggableInventoryItemDefinition[] } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults.set(item.id, [
-      ...independentAssignments.assigned,
-      ...specificAssignments.assigned,
-    ]);
+    mergedResults[item.id] = [...independentAssignments.assigned, ...specificAssignments.assigned];
     unassignedMods = [
       ...unassignedMods,
       ...independentAssignments.unassigned,

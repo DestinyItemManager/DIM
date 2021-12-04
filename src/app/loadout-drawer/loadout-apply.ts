@@ -1,5 +1,7 @@
+import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
+import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -7,11 +9,12 @@ import {
   getSimilarItem,
   MoveReservations,
 } from 'app/inventory/item-move-service';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import {
   amountOfItem,
   findItemsByBucket,
@@ -20,6 +23,8 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
+import { getCheapestModAssignments } from 'app/loadout/mod-utils';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -27,7 +32,8 @@ import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { errorLog, infoLog } from 'app/utils/log';
+import { errorLog, infoLog, warnLog } from 'app/utils/log';
+import { isArmorModSocket } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -45,6 +51,9 @@ interface Scope {
   failed: number;
   total: number;
   successfulItems: DimItem[];
+  totalMods: number;
+  successfulMods: number;
+  // TODO: mod errors?
   errors: {
     item: DimItem | null;
     message: string;
@@ -98,6 +107,7 @@ export function applyLoadout(
 
     // Start a notification that will show as long as the loadout is equipping
     // TODO: show the items in the notification and tick them down! Will require piping through some sort of event source?
+    // TODO: show how many mods
     showNotification(
       loadoutNotification(
         loadout,
@@ -197,6 +207,8 @@ function doApplyLoadout(
       failed: 0,
       total: applicableLoadoutItems.length,
       successfulItems: [] as DimItem[],
+      totalMods: 0,
+      successfulMods: 0,
       errors: [] as {
         item: DimItem | null;
         message: string;
@@ -215,6 +227,7 @@ function doApplyLoadout(
               getSimilarItem(getStores(), i, { exclusions: excludes, excludeExotic: i.isExotic })
             )
           );
+          // TODO: try/catch?
           return dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
         }
       );
@@ -222,6 +235,9 @@ function doApplyLoadout(
     }
 
     await dispatch(applyLoadoutItems(store.id, loadoutItemsToMove, excludes, cancelToken, scope));
+
+    // Try/catch around equip?
+    // TODO: stop if we can't perform this action (in activity)
 
     let equippedItems: LoadoutItem[];
     if (itemsToEquip.length > 1) {
@@ -258,6 +274,24 @@ function doApplyLoadout(
     if (scope.successfulItems.length > 0) {
       dispatch(updateCharacters());
     }
+
+    // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
+    if (loadout.parameters?.mods) {
+      try {
+        scope.totalMods = loadout.parameters.mods.length;
+        const successfulMods = await dispatch(applyLoadoutMods(store.id, loadout.parameters?.mods));
+        scope.successfulMods = successfulMods.length;
+      } catch (e) {
+        if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
+          warnLog('loadout', "InsertPlugFree isn't out yet, skipping mod equip");
+        } else {
+          // TODO: work on errors
+          throw e;
+        }
+      }
+    }
+
+    // TODO: Apply socketOverrides
 
     // If this is marked to clear space (and we're not applying it to the vault), move items not
     // in the loadout off the character
@@ -348,7 +382,7 @@ function applyLoadoutItems(
               amountNeeded -= amountToMove;
               totalAmount += amountToMove;
 
-              await dispatch(
+              /*const movedItem =*/ await dispatch(
                 executeMoveItem(sourceItem, store, {
                   equip: false,
                   amount: amountToMove,
@@ -356,6 +390,14 @@ function applyLoadoutItems(
                   cancelToken,
                 })
               );
+
+              // TODO: apply socket overrides
+              /*
+              if (pseudoItem.socketOverrides) {
+                const defs = d2ManifestSelector(getState())!;
+                await saveSocketOverrides(defs, movedItem, pseudoItem.socketOverrides);
+              }
+              */
             }
           }
         } else {
@@ -550,5 +592,157 @@ export function clearItemsOffCharacter(
         }
       }
     }
+  };
+}
+
+/**
+ * Apply all the mods in the loadout to the equipped armor.
+ *
+ * This uses our mod assignment algorithm to choose which armor gets which mod. It will socket
+ * mods into any equipped armor, not just armor in the loadout - this allows for loadouts that
+ * are *only* mods to be applied to current armor.
+ *
+ * Right now this will try to apply mods if they'll fit, but if they won't it'll blindly remove
+ * all mods on the piece before adding the new ones. We don't yet take into consideration which
+ * mods are already on the items.
+ */
+// TODO: If we fail to move/equip armor, should we still equip mods to it?
+function applyLoadoutMods(
+  storeId: string,
+  /** A list of inventory item hashes for plugs */
+  modHashes: number[]
+): ThunkResult<number[]> {
+  return async (dispatch, getState) => {
+    const defs = d2ManifestSelector(getState())!;
+    const stores = storesSelector(getState());
+    const store = getStore(stores, storeId)!;
+
+    // TODO: find cases where the loadout specified armor for a slot to be equipped and it's not equipped, bail if so
+    const armor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
+    //const loadoutArmor = loadout.items.filter((i) => i.equipped)
+
+    const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
+
+    // What mods are already on the equipped armor set?
+    const existingMods = new Set<number>();
+    for (const item of armor) {
+      if (item.sockets) {
+        for (const socket of item.sockets.allSockets) {
+          if (socket.plugged) {
+            existingMods.add(socket.plugged.plugDef.hash);
+          }
+        }
+      }
+    }
+
+    // Early exit - if all the mods are already there, nothing to do
+    if (modHashes.every((h) => existingMods.has(h))) {
+      return modHashes;
+    }
+
+    // TODO: stop if the API doesn't exist
+    // TODO: stop if we can't perform this action (in activity)
+    // TODO: prefer equipping to armor that *is* part of the loadout
+    // TODO: compute assigments should consider which mods are already on the item!
+    const modAssignments = getCheapestModAssignments(armor, mods, defs);
+
+    const successfulMods: number[] = [];
+
+    for (const item of armor) {
+      const modsForItem = modAssignments[item.id];
+      successfulMods.push(...(await dispatch(equipMods(item.id, modsForItem))));
+    }
+
+    // TODO: better mod assignment (for this problem):
+    // Pass 1: Find out which of the mods are already there
+    // Pass 2: Slot specific mods just go right away
+    // Pass 3: Figure out if we can slot mods into existing spaces
+    // Pass 4: Figure out the minimum mods to remove to get the new mods in
+
+    // TODO: notify unassigned mods!
+
+    // Return the mods that were successfully assigned (even if they didn't have to move)
+    return successfulMods;
+  };
+}
+
+/**
+ * Equip the specified mods on the item. Strips off existing mods if needed.
+ */
+function equipMods(
+  itemId: string,
+  modsForItem: PluggableInventoryItemDefinition[]
+): ThunkResult<number[]> {
+  return async (dispatch, getState) => {
+    const defs = d2ManifestSelector(getState())!;
+    const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
+
+    if (!item.sockets || !item.energy) {
+      return [];
+    }
+
+    /*
+    // TODO: trying to figure out minimum assignments. Should really do this all at once in the
+    // mod assignment algorithm and return both equips and de-equips
+    const {energyCapacity} = item.energy
+    const energyNeeded = _.sumBy(modsForItem, (m) => m.plug.energyCost?.energyCost || 0)
+    const existingMods = _.compact(item.sockets.allSockets.map((s) => s.plugged))
+    const modsToAdd = modsForItem.filter((m) => existingMods.some((em) => em.plugDef.hash === m.hash))
+
+    const modsBySocketType = new Map<DimSocket, PluggableInventoryItemDefinition[]>()
+    const existingModsBySocketType = new Map<DimSocket, DimPlug[]>()
+    */
+
+    const modSockets = item.sockets.allSockets.filter(isArmorModSocket);
+
+    const slotState = modsForItem.map((mod) => ({
+      mod,
+      alreadySocketed: false,
+    }));
+
+    const successfulMods: number[] = [];
+
+    // First, clear mods that aren't already the right one
+    // TODO: would love to be smarter about this and clear out the minimum required
+    for (const socket of modSockets) {
+      // Check off mods that are already where we want them to be
+      const matchingMod = slotState.find(
+        ({ mod, alreadySocketed }) => mod.hash === socket.plugged?.plugDef.hash && !alreadySocketed
+      );
+      if (matchingMod) {
+        matchingMod.alreadySocketed = true;
+        successfulMods.push(matchingMod.mod.hash);
+      } else if (socket.socketDefinition.singleInitialItemHash) {
+        // Clear out this socket
+        // TODO: don't refresh item
+        await dispatch(insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash));
+      }
+    }
+
+    for (const { mod, alreadySocketed } of slotState) {
+      if (alreadySocketed) {
+        continue;
+      }
+
+      const socketIndex = modSockets.findIndex((s) =>
+        defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
+          (plug) => plug.categoryHash === mod.plug.plugCategoryHash
+        )
+      );
+
+      if (socketIndex >= 0) {
+        // Use this socket
+        const socket = modSockets[socketIndex];
+        // TODO: don't refresh item
+        await dispatch(insertPlug(item, socket, mod.hash));
+        // Remove the socket from the list, we've used it
+        modSockets.splice(socketIndex, 1);
+        successfulMods.push(mod.hash);
+      } else {
+        throw new DimError('Loadouts.SocketError'); // TODO: do this for real
+      }
+    }
+
+    return successfulMods;
   };
 }

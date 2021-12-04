@@ -93,6 +93,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
       // Update items that changed
+      // TODO: param to skip this?
       await dispatch(refreshItemAfterAWA(item, response.Response));
     } catch (e) {
       errorLog('AWA', "Couldn't insert plug", item, e);
@@ -105,6 +106,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       } else {
         showNotification({ type: 'error', title: t('AWA.Error'), body: e.message });
       }
+      throw e;
     }
   };
 }
@@ -156,10 +158,10 @@ async function awaInsertSocketPlug(
 /**
  * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
  */
+// TODO: Would be nice to do bulk updates without reloading the item every time
 function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
     // Update items that changed
-    // TODO: reload item instead
     const account = currentAccountSelector(getState())!;
     try {
       const itemInfo = await getSingleItem(item.id, account);

@@ -21,6 +21,7 @@ export function useEquippedLoadoutArmor(loadout: Loadout) {
       const allItems = allItemsSelector(state);
       const loadoutDimItems = [];
 
+      // TODO: if there's not an item in one of the slots, pick the current equipped!
       for (const item of allItems) {
         if (
           item.bucket.inArmor &&
