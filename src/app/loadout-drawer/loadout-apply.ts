@@ -133,7 +133,9 @@ function doApplyLoadout(
 ): ThunkResult<Scope> {
   return async (dispatch, getState) => {
     dispatch(interruptFarming());
+    // The store and its items may change as we move things - make sure we're always looking at the latest version
     const getStores = () => storesSelector(getState());
+    const getTargetStore = () => getStore(getStores(), store.id)!;
     if (allowUndo && !store.isVault) {
       dispatch(
         savePreviousLoadout({
@@ -217,10 +219,11 @@ function doApplyLoadout(
       await Promise.all(dequips);
     }
 
-    await dispatch(applyLoadoutItems(store, loadoutItemsToMove, excludes, cancelToken, scope));
+    await dispatch(applyLoadoutItems(store.id, loadoutItemsToMove, excludes, cancelToken, scope));
 
     let equippedItems: LoadoutItem[];
     if (itemsToEquip.length > 1) {
+      const store = getTargetStore();
       // Use the bulk equipAll API to equip all at once.
       itemsToEquip = itemsToEquip.filter((i) => scope.successfulItems.find((si) => si.id === i.id));
       const realItemsToEquip = _.compact(
@@ -232,6 +235,7 @@ function doApplyLoadout(
     }
 
     if (equippedItems.length < itemsToEquip.length) {
+      const store = getTargetStore();
       const failedItems = _.compact(
         itemsToEquip
           .filter((i) => !equippedItems.find((it) => it.id === i.id))
@@ -258,7 +262,7 @@ function doApplyLoadout(
     if (loadout.clearSpace && !store.isVault) {
       await dispatch(
         clearSpaceAfterLoadout(
-          getStore(getStores(), store.id)!,
+          getTargetStore(),
           applicableLoadoutItems.map((i) => getLoadoutItem(i, store, getStores())!),
           cancelToken
         )
@@ -272,7 +276,7 @@ function doApplyLoadout(
 
 // Move one loadout item at a time. Called recursively to move items!
 function applyLoadoutItems(
-  store: DimStore,
+  storeId: string,
   items: LoadoutItem[],
   excludes: { id: string; hash: number }[],
   cancelToken: CancelToken,
@@ -293,10 +297,12 @@ function applyLoadoutItems(
       return;
     }
 
-    const getStores = () => storesSelector(getState());
+    // The store and its items may change as we move things - make sure we're always looking at the latest version
+    const stores = storesSelector(getState());
+    const store = getStore(stores, storeId)!;
 
     const pseudoItem = items.shift()!;
-    const item = getLoadoutItem(pseudoItem, store, getStores());
+    const item = getLoadoutItem(pseudoItem, store, stores);
 
     try {
       if (item) {
@@ -309,7 +315,7 @@ function applyLoadoutItems(
           const amountAlreadyHave = amountOfItem(store, pseudoItem);
           let amountNeeded = pseudoItem.amount - amountAlreadyHave;
           if (amountNeeded > 0) {
-            const otherStores = getStores().filter((otherStore) => store.id !== otherStore.id);
+            const otherStores = stores.filter((otherStore) => store.id !== otherStore.id);
             const storesByAmount = _.sortBy(
               otherStores.map((store) => ({
                 store,
@@ -381,7 +387,7 @@ function applyLoadoutItems(
     }
 
     // Keep going
-    return dispatch(applyLoadoutItems(store, items, excludes, cancelToken, scope));
+    return dispatch(applyLoadoutItems(storeId, items, excludes, cancelToken, scope));
   };
 }
 
