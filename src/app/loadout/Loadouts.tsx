@@ -293,7 +293,7 @@ function LoadoutRow({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subClass) && (
+        {(items.length > 0 || subClass || savedMods.length > 0) && (
           <>
             <div className={styles.subClass}>
               {subClass ? (
