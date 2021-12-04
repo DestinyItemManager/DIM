@@ -338,6 +338,13 @@ function LoadoutBuilder({
 
   const menuContent = (
     <>
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol>
+            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+          </ol>
+        </div>
+      )}
       <TierSelect
         stats={statFilters}
         statRangesFiltered={result?.statRangesFiltered}
@@ -347,7 +354,6 @@ function LoadoutBuilder({
         }
         onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
-
       <LockArmorAndPerks
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
@@ -359,6 +365,14 @@ function LoadoutBuilder({
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
       />
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol start={4}>
+            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+          </ol>
+          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
+        </div>
+      )}
     </>
   );
 
@@ -435,15 +449,17 @@ function LoadoutBuilder({
             </div>
           )}
         </div>
-        <div className={styles.guide}>
-          <ol>
-            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
-          </ol>
-          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
-        </div>
+        {!isPhonePortrait && (
+          <div className={styles.guide}>
+            <ol>
+              <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+            </ol>
+            <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
+          </div>
+        )}
         {notes && (
           <div className={styles.guide}>
             <p>
