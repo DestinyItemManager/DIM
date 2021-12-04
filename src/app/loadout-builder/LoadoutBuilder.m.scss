@@ -15,8 +15,9 @@
 }
 
 .menuContent {
+  box-sizing: border-box;
   @include phone-portrait {
-    padding: 0 12px;
+    padding: 0 10px;
   }
 
   @include vertical-space-children(8px);
@@ -51,11 +52,19 @@
 }
 
 .toolbar {
+  box-sizing: border-box;
+  @include phone-portrait {
+    padding: 0 10px;
+  }
   @include horizontal-space-children(4px);
   margin-top: 12px;
 }
 
 .guide {
+  box-sizing: border-box;
+  @include phone-portrait {
+    padding: 0 10px;
+  }
   user-select: text;
   p,
   li {
