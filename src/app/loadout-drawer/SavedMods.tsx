@@ -39,6 +39,7 @@ function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
         {groupedMods.map((group) =>
           group?.length ? (
             <SavedModCategory
+              key={group[0].plug.plugCategoryHash}
               mods={group}
               onRemove={(index: number) => removeModByHash(index)}
               onOpenModPicker={onOpenModPicker}

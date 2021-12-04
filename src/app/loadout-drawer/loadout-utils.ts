@@ -32,9 +32,11 @@ export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: numb
     classType: DestinyClass.Unknown,
     name,
     items,
-    parameters: {
-      mods: modsHashes?.length ? modsHashes : undefined,
-    },
+    parameters: modsHashes?.length
+      ? {
+          mods: modsHashes,
+        }
+      : undefined,
     clearSpace: false,
   };
 }

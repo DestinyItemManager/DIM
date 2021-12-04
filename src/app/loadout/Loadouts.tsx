@@ -32,6 +32,7 @@ import {
 import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import {
@@ -46,6 +47,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -227,6 +229,24 @@ function LoadoutRow({
     }
   };
 
+  const canShare = Boolean(loadout.parameters && !_.isEmpty(loadout.parameters));
+  const shareBuild = () => {
+    const p: Record<string, string> = {
+      class: loadout.classType.toString(),
+      p: JSON.stringify(loadout.parameters),
+    };
+    if (loadout.notes) {
+      p.n = loadout.notes;
+    }
+    const urlParams = new URLSearchParams(p);
+    const url = `${location.origin}/optimizer?${urlParams}`;
+    copyString(url);
+    showNotification({
+      type: 'success',
+      title: t('LoadoutBuilder.CopiedBuild'),
+    });
+  };
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -255,6 +275,11 @@ function LoadoutRow({
           >
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
+          {canShare && (
+            <button type="button" className="dim-button" onClick={shareBuild}>
+              {t('LoadoutBuilder.ShareBuild')}
+            </button>
+          )}
           {saved && (
             <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
               {t('Loadouts.Delete')}
