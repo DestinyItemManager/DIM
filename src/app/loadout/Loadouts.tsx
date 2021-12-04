@@ -124,7 +124,11 @@ function Loadouts() {
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const handleNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
+  const handleNewLoadout = () => {
+    const loadout = newLoadout('', []);
+    loadout.classType = selectedStore.classType;
+    editLoadout(loadout, { isNew: true });
+  };
 
   const sortOptions = [
     {
