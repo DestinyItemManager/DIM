@@ -11,10 +11,34 @@
       "src": "/android-chrome-512x512-6-2018.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-mask-512x512-6-2018.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Vendors",
+      "url": "/vendors",
+      "description": "View Vendors wares"
+    },
+    {
+      "name": "Loadouts",
+      "url": "/loadouts",
+      "description": "Create & share Loadouts"
+    },
+    {
+      "name": "Settings",
+      "url": "/settings"
     }
   ],
   "theme_color": "black",
   "background_color": "black",
   "display": "standalone",
+  "orientation": "any",
+  "categories": ["games", "entertainment", "productivity", "utilities"],
   "start_url": "/index.html?utm_source=homescreen"
 }
