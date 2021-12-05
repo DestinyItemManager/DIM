@@ -1,4 +1,5 @@
 import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
+import { DimItem } from 'app/inventory/item-types';
 
 export interface LoadoutItem {
   id: string;
@@ -13,3 +14,5 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
   // All items are flattened out into LoadoutItems that keep track of whether they're equipped.
   items: LoadoutItem[];
 };
+
+export type DimLoadoutItem = DimItem & LoadoutItem;

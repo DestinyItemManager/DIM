@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -7,11 +8,12 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
@@ -19,7 +21,7 @@ import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
   extractArmorModHashes,
@@ -47,14 +49,16 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
 
 const categoryStyles = {
@@ -205,14 +209,14 @@ function LoadoutRow({
   const allItems = useSelector(allItemsSelector);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [items, subClass, warnitems] = useMemo(() => {
+  const [items, subclass, warnitems] = useMemo(() => {
     const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, allItems);
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
-    const subClass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
-    if (subClass) {
-      equippableItems = equippableItems.filter((i) => i !== subClass);
+    const subclass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
+    if (subclass) {
+      equippableItems = equippableItems.filter((i) => i !== subclass);
     }
-    return [equippableItems, subClass, warnitems];
+    return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, allItems, store]);
 
   const savedMods = getModsFromLoadout(defs, loadout);
@@ -293,23 +297,10 @@ function LoadoutRow({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subClass) && (
+        {(items.length > 0 || subclass) && (
           <>
-            <div className={styles.subClass}>
-              {subClass ? (
-                <ItemPopupTrigger item={subClass}>
-                  {(ref, onClick) => (
-                    <ConnectedInventoryItem
-                      innerRef={ref}
-                      onClick={onClick}
-                      item={subClass}
-                      ignoreSelectedPerks
-                    />
-                  )}
-                </ItemPopupTrigger>
-              ) : (
-                <EmptyClassItem />
-              )}
+            <div>
+              <Subclass defs={defs} subclass={subclass} />
               {power !== 0 && (
                 <div className={styles.power}>
                   <AppIcon icon={powerActionIcon} />
@@ -340,6 +331,60 @@ function LoadoutRow({
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: DimLoadoutItem }) {
+  const plugs = useMemo(() => {
+    const plugs: PluggableInventoryItemDefinition[] = [];
+
+    if (subclass?.sockets?.categories) {
+      for (const category of subclass.sockets.categories) {
+        const showInitial =
+          category.category.hash !== SocketCategoryHashes.Aspects &&
+          category.category.hash !== SocketCategoryHashes.Fragments;
+        const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
+
+        for (const socket of sockets) {
+          const override = subclass.socketOverrides?.[socket.socketIndex];
+          const initial = socket.socketDefinition.singleInitialItemHash;
+          const hash = override || (showInitial && initial);
+          const plug = hash && defs.InventoryItem.get(hash);
+          if (plug && isPluggableItem(plug)) {
+            plugs.push(plug);
+          }
+        }
+      }
+    }
+
+    return plugs;
+  }, [subclass, defs]);
+
+  return (
+    <div
+      className={clsx({
+        [styles.subclass]: !plugs.length,
+        [styles.mods]: plugs.length,
+      })}
+    >
+      {subclass ? (
+        <ItemPopupTrigger item={subclass}>
+          {(ref, onClick) => (
+            <ConnectedInventoryItem
+              innerRef={ref}
+              onClick={onClick}
+              item={subclass}
+              ignoreSelectedPerks
+            />
+          )}
+        </ItemPopupTrigger>
+      ) : (
+        <EmptyClassItem />
+      )}
+      {plugs?.map((plug, index) => (
+        <PlugDef key={index} plug={plug} />
+      ))}
     </div>
   );
 }
