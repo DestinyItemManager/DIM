@@ -168,7 +168,7 @@ function doApplyLoadout(
           (loadoutItem.equipped && !item.equipped) ||
           // We always try to move consumable stacks because their logic is complicated
           (loadoutItem.amount && loadoutItem.amount > 1));
-      return notAlreadyThere;
+      return notAlreadyThere && !item.notransfer;
     });
 
     // vault can't equip
