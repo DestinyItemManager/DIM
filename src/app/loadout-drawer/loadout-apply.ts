@@ -211,7 +211,9 @@ function doApplyLoadout(
         _.groupBy(realItemsToDequip, (i) => i.owner),
         (dequipItems, owner) => {
           const itemsToEquip = _.compact(
-            dequipItems.map((i) => getSimilarItem(getStores(), i, excludes))
+            dequipItems.map((i) =>
+              getSimilarItem(getStores(), i, { exclusions: excludes, excludeExotic: i.isExotic })
+            )
           );
           return dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
         }

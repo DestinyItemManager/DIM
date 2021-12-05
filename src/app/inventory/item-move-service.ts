@@ -125,8 +125,13 @@ function updateItemModel(
 export function getSimilarItem(
   stores: DimStore[],
   item: DimItem,
-  exclusions?: Pick<DimItem, 'id' | 'hash'>[],
-  excludeExotic = false
+  {
+    exclusions,
+    excludeExotic = false,
+  }: {
+    exclusions?: Pick<DimItem, 'id' | 'hash'>[];
+    excludeExotic?: boolean;
+  } = {}
 ): DimItem | null {
   const target = getStore(stores, item.owner)!;
 
@@ -223,7 +228,9 @@ function searchForSimilarItem(
 export function equipItems(
   store: DimStore,
   items: DimItem[],
-  cancelToken: CancelToken = neverCanceled
+  cancelToken: CancelToken = neverCanceled,
+  /** A list of items to not consider equipping in order to de-equip an exotic */
+  exclusions = []
 ): ThunkResult<DimItem[]> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -235,7 +242,10 @@ export function equipItems(
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
           if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
-            const similarItem = getSimilarItem(getStores(), otherExotic);
+            const similarItem = getSimilarItem(getStores(), otherExotic, {
+              excludeExotic: true,
+              exclusions,
+            });
             if (!similarItem) {
               return Promise.reject(
                 new DimError(
@@ -300,7 +310,7 @@ function dequipItem(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
-    const similarItem = getSimilarItem(stores, item, [], excludeExotic);
+    const similarItem = getSimilarItem(stores, item, { excludeExotic });
     if (!similarItem) {
       throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
