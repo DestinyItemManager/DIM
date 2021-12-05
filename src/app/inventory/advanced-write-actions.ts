@@ -6,6 +6,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { mergedCollectiblesSelector } from 'app/vendors/selectors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
   AwaAuthorizationResult,
@@ -23,7 +24,8 @@ import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/de
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
-import { currentStoreSelector, d2BucketsSelector } from './selectors';
+import { currentStoreSelector, d2BucketsSelector, storesSelector } from './selectors';
+import { makeItemSingle } from './store/d2-item-factory';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -89,7 +91,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
     try {
-      const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
+      const insertFn = free && !$featureFlags.awa ? awaInsertSocketPlugFree : awaInsertSocketPlug;
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
       // Update items that changed
@@ -170,8 +172,15 @@ function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse):
       errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
     }
 
+    const defs = d2ManifestSelector(getState())!;
+    const buckets = d2BucketsSelector(getState())!;
+    const stores = storesSelector(getState());
+    const mergedCollectibles = mergedCollectiblesSelector(getState());
+    const newItem = makeItemSingle(defs, buckets, changes.item, stores, mergedCollectibles);
+
     dispatch(
       awaItemChanged({
+        item: newItem,
         changes,
         defs: d2ManifestSelector(getState())!,
         buckets: d2BucketsSelector(getState())!,

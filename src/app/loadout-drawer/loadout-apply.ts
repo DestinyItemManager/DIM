@@ -33,7 +33,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket } from 'app/utils/socket-utils';
+import { isArmorModSocket, isUsedArmorModSocket } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -278,9 +278,11 @@ function doApplyLoadout(
     // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
     if (loadout.parameters?.mods) {
       try {
+        infoLog('loadout mods', 'Mods to apply', loadout.parameters?.mods);
         scope.totalMods = loadout.parameters.mods.length;
         const successfulMods = await dispatch(applyLoadoutMods(store.id, loadout.parameters?.mods));
         scope.successfulMods = successfulMods.length;
+        infoLog('loadout mods', 'Mods applied', scope.successfulMods, scope.totalMods);
       } catch (e) {
         if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
           warnLog('loadout', "InsertPlugFree isn't out yet, skipping mod equip");
@@ -637,6 +639,7 @@ function applyLoadoutMods(
 
     // Early exit - if all the mods are already there, nothing to do
     if (modHashes.every((h) => existingMods.has(h))) {
+      infoLog('loadout mods', 'all mods are already there, skipping');
       return modHashes;
     }
 
@@ -649,8 +652,10 @@ function applyLoadoutMods(
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      const modsForItem = modAssignments[item.id];
-      successfulMods.push(...(await dispatch(equipMods(item.id, modsForItem))));
+      const modsForItem = modAssignments.itemModAssignments[item.id];
+      if (modsForItem) {
+        successfulMods.push(...(await dispatch(equipMods(item.id, modsForItem))));
+      }
     }
 
     // TODO: better mod assignment (for this problem):
@@ -709,14 +714,22 @@ function equipMods(
       const matchingModIndex = modsToApply.findIndex(
         (mod) => mod.hash === socket.plugged?.plugDef.hash
       );
-      if (matchingModIndex) {
+      if (matchingModIndex >= 0) {
         const matchingMod = modsToApply[matchingModIndex];
         modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
         modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
         successfulMods.push(matchingMod.hash);
-      } else if (socket.socketDefinition.singleInitialItemHash) {
+      } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
         // Clear out this socket
         // TODO: don't refresh item
+        infoLog(
+          'loadout mods',
+          'clearing mod from',
+          item.name,
+          'socket',
+          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+            socket.socketIndex
+        );
         await dispatch(insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash));
       }
     }
@@ -732,6 +745,16 @@ function equipMods(
         // Use this socket
         const socket = modSockets[socketIndex];
         // TODO: don't refresh item
+        infoLog(
+          'loadout mods',
+          'equipping mod',
+          mod.displayProperties.name,
+          'into',
+          item.name,
+          'socket',
+          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+            socket.socketIndex
+        );
         await dispatch(insertPlug(item, socket, mod.hash));
         // Remove the socket from the list, we've used it
         modSockets.splice(socketIndex, 1);
