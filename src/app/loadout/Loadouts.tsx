@@ -18,6 +18,7 @@ import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePic
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
@@ -251,6 +252,11 @@ function LoadoutRow({
     });
   };
 
+  const handleApply = () =>
+    dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
+
+  const handleEdit = () => editLoadout(loadout, { isNew: !saved });
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -265,18 +271,10 @@ function LoadoutRow({
           )}
         </h2>
         <div className={styles.actions}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
+          <button type="button" className="dim-button" onClick={handleApply}>
             {t('Loadouts.Apply')}
           </button>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
+          <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
           {canShare && (
