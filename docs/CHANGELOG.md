@@ -3,6 +3,7 @@
 * Loadouts can now have notes.
 * Share loadout build settings (mods, notes, loadout optimizer settings) from the Loadouts page.
 * Loadouts can now save stasis subclass abilities, aspects, and fragments.
+* We made several bugfixes to how loadouts are applied that should fix some issues where not all items got equipped or failures were shown when nothing failed.
 * The "Create Loadout" button on the Loadouts page defaults the loadout to match the class of the selected character.
 * The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
 * Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5
