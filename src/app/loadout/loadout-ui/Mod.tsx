@@ -1,9 +1,9 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import styles from './Mod.m.scss';
+import PlugDef from './PlugDef';
 
 interface Props {
   plugDef: PluggableInventoryItemDefinition;
@@ -26,7 +26,7 @@ function Mod({ plugDef, gridColumn, large, onClick }: Props) {
       tabIndex={0}
       onClick={onClick}
     >
-      <DefItemIcon itemDef={plugDef} />
+      <PlugDef plug={plugDef} />
     </div>
   );
 }
