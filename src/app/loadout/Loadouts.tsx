@@ -13,7 +13,6 @@ import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inv
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
@@ -56,6 +55,7 @@ import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
 
 const categoryStyles = {
@@ -328,7 +328,7 @@ function LoadoutRow({
               <div className={styles.mods}>
                 {savedMods.map((mod, index) => (
                   <div key={index}>
-                    <SocketDetailsMod itemDef={mod} />
+                    <PlugDef plug={mod} />
                   </div>
                 ))}
               </div>
