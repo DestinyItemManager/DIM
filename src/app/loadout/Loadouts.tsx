@@ -373,7 +373,9 @@ function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: 
           {(ref, onClick) => (
             <ConnectedInventoryItem
               innerRef={ref}
-              onClick={onClick}
+              // Disable the popup when plugs are available as we are showing
+              // plugs in the loadout and they may be different to the popup
+              onClick={plugs.length ? undefined : onClick}
               item={subclass}
               ignoreSelectedPerks
             />
