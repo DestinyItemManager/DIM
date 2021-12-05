@@ -237,9 +237,9 @@
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "StatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs.",
-    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
+    "Stats": "Zeigt Items basierend auf einem bestimmten Wert der Statistik. $t(Filter.StatsExtras)",
     "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, Mod- oder Meisterwerk-Verbesserungen werden ignoriert. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
+    "StatsExtras": "Unterstützt Wert-Addition durch das Verbinden mehrerer Wertenamen mit + oder &. Es gibt auch spezielle Schlüsselwörter (highest, secondhighest, thirdhighest, usw.), die den jeweiligen Werten je nach Rang innerhalb des Gegenstands entsprechen.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchstmöglichen Wert für einen bestimmten Wert. Enthält alle Gegenstände mit den höchsten Werten.",
     "Tags": {
