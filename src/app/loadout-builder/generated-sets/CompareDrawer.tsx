@@ -10,7 +10,7 @@ import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
+import { getCheapestModAssignments, useGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -91,6 +91,7 @@ export default function CompareDrawer({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
+  const getModRenderKey = useGetModRenderKey();
 
   const setItems = set.armor.map((items) => items[0]);
 
@@ -199,8 +200,6 @@ export default function CompareDrawer({
     );
   }
 
-  const modCounts = {};
-
   return (
     <Sheet onClose={onClose} header={header}>
       <div className={styles.content}>
@@ -279,11 +278,7 @@ export default function CompareDrawer({
               )}
               <div className={styles.unassignedMods}>
                 {unassignedMods.map((unassigned) => (
-                  <Mod
-                    key={getModRenderKey(unassigned, modCounts)}
-                    plugDef={unassigned}
-                    large={true}
-                  />
+                  <Mod key={getModRenderKey(unassigned)} plugDef={unassigned} large={true} />
                 ))}
               </div>
             </>

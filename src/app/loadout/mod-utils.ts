@@ -89,22 +89,20 @@ export function isInsertableArmor2Mod(
 }
 
 /**
- * Generates a unique key for a mod when rendering. As mods can appear multiple times as
- * siblings we need to count them and append a number to its hash to make it unique.
- *
- * Note that counts is mutated and a new object should be passed in with each render.
+ * Supplies a function that generates a unique key for a mod when rendering.
+ * As mods can appear multiple times as siblings we need to count them and append a
+ * number to its hash to make it unique.
  */
-export const getModRenderKey = (
-  mod: PluggableInventoryItemDefinition,
-  /** A supplied object to store the counts in. This is mutated. */
-  counts: Record<number, number>
-) => {
-  if (!counts[mod.hash]) {
-    counts[mod.hash] = 0;
-  }
+export function useGetModRenderKey() {
+  const counts = {};
+  return (mod: PluggableInventoryItemDefinition) => {
+    if (!counts[mod.hash]) {
+      counts[mod.hash] = 0;
+    }
 
-  return `${mod.hash}-${counts[mod.hash]++}`;
-};
+    return `${mod.hash}-${counts[mod.hash]++}`;
+  };
+}
 
 /** Used to track assigned and unassigned mods during the mod assignment algorithm.  */
 interface ModAssignments {

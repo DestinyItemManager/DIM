@@ -15,7 +15,7 @@ import React, { RefObject, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import { getCheapestModAssignments, getModRenderKey } from '../mod-utils';
+import { getCheapestModAssignments, useGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor } from './selectors';
@@ -72,6 +72,7 @@ export default function ModAssignmentDrawer({
 
   const defs = useD2Definitions();
   const armor = useEquippedLoadoutArmor(loadout);
+  const getModRenderKey = useGetModRenderKey();
 
   const [{ itemModAssignments, unassignedMods }, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
@@ -103,8 +104,6 @@ export default function ModAssignmentDrawer({
     return null;
   }
 
-  const modCounts = {};
-
   return (
     <>
       <Sheet
@@ -129,7 +128,7 @@ export default function ModAssignmentDrawer({
           <h3>{t('Loadouts.UnassignedMods')}</h3>
           <div className={styles.unassigned}>
             {unassignedMods.map((mod) => (
-              <Mod key={getModRenderKey(mod, modCounts)} plugDef={mod} />
+              <Mod key={getModRenderKey(mod)} plugDef={mod} />
             ))}
           </div>
         </div>
