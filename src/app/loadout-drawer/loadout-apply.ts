@@ -695,23 +695,25 @@ function equipMods(
 
     const modSockets = item.sockets.allSockets.filter(isArmorModSocket);
 
-    const slotState = modsForItem.map((mod) => ({
-      mod,
-      alreadySocketed: false,
-    }));
+    const modsToApply = [...modsForItem];
 
     const successfulMods: number[] = [];
 
     // First, clear mods that aren't already the right one
-    // TODO: would love to be smarter about this and clear out the minimum required
-    for (const socket of modSockets) {
+    // TODO: would love to be smarter about this and clear out the minimum required. It should be possible
+    // to iteratively replace plugs without going over the energy limit, and remove unwanted plugs only if
+    // swapping in a new plug would go over the limit.
+    for (let socketIndex = 0; socketIndex < modSockets.length; socketIndex++) {
+      const socket = modSockets[socketIndex];
       // Check off mods that are already where we want them to be
-      const matchingMod = slotState.find(
-        ({ mod, alreadySocketed }) => mod.hash === socket.plugged?.plugDef.hash && !alreadySocketed
+      const matchingModIndex = modsToApply.findIndex(
+        (mod) => mod.hash === socket.plugged?.plugDef.hash
       );
-      if (matchingMod) {
-        matchingMod.alreadySocketed = true;
-        successfulMods.push(matchingMod.mod.hash);
+      if (matchingModIndex) {
+        const matchingMod = modsToApply[matchingModIndex];
+        modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
+        modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
+        successfulMods.push(matchingMod.hash);
       } else if (socket.socketDefinition.singleInitialItemHash) {
         // Clear out this socket
         // TODO: don't refresh item
@@ -719,11 +721,7 @@ function equipMods(
       }
     }
 
-    for (const { mod, alreadySocketed } of slotState) {
-      if (alreadySocketed) {
-        continue;
-      }
-
+    for (const mod of modsToApply) {
       const socketIndex = modSockets.findIndex((s) =>
         defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
           (plug) => plug.categoryHash === mod.plug.plugCategoryHash
