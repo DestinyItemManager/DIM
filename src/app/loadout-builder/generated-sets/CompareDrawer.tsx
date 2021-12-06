@@ -10,7 +10,11 @@ import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { createGetModRenderKey, getCheapestModAssignments } from 'app/loadout/mod-utils';
+import {
+  compactModAssignments,
+  createGetModRenderKey,
+  getCheapestModAssignments,
+} from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -110,6 +114,30 @@ export default function CompareDrawer({
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
   }, [selectedLoadout, defs, allItems]);
+
+  const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
+    const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
+      setItems,
+      lockedMods,
+      defs,
+      upgradeSpendTier,
+      lockItemEnergyType
+    );
+    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
+      loadoutItems,
+      lockedMods,
+      defs,
+      upgradeSpendTier,
+      lockItemEnergyType
+    );
+
+    return {
+      loSetAssignedMods: compactModAssignments(loSetAssignedMods),
+      itemModAssignments: compactModAssignments(itemModAssignments),
+      unassignedMods,
+    };
+  }, [defs, loadoutItems, lockItemEnergyType, lockedMods, setItems, upgradeSpendTier]);
+
   if (!set) {
     return null;
   }
@@ -133,21 +161,6 @@ export default function CompareDrawer({
   for (const statHash of armorStats) {
     loadoutStats[statHash] += lockedModStats[statHash];
   }
-
-  const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
-    setItems,
-    lockedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
-  const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
-    loadoutItems,
-    lockedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
 
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();

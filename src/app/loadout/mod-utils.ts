@@ -14,8 +14,9 @@ import {
   getSpecialtySocketMetadatas,
   isArmor2Mod,
 } from 'app/utils/item-utils';
+import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import {
@@ -129,7 +130,9 @@ export function getCheapestModAssignments(
   upgradeSpendTier = UpgradeSpendTier.Nothing,
   lockItemEnergyType = true
 ): {
-  itemModAssignments: { [itemInstanceId: string]: PluggableInventoryItemDefinition[] };
+  itemModAssignments: {
+    [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+  };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
   if (!defs) {
@@ -283,12 +286,17 @@ export function getCheapestModAssignments(
     }
   }
 
-  const mergedResults: { [itemInstanceId: string]: PluggableInventoryItemDefinition[] } = {};
+  const mergedResults: {
+    [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+  } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults[item.id] = [...independentAssignments.assigned, ...specificAssignments.assigned];
+    mergedResults[item.id] = mergeAndOrderResults(defs, item, [
+      ...independentAssignments.assigned,
+      ...specificAssignments.assigned,
+    ]);
     unassignedMods = [
       ...unassignedMods,
       ...independentAssignments.unassigned,
@@ -297,6 +305,79 @@ export function getCheapestModAssignments(
   }
 
   return { itemModAssignments: mergedResults, unassignedMods };
+}
+
+/**
+ * This orders the results of the mod assignment algorithm for a given item and its mods.
+ *
+ * Basically
+ * - It will find all the relevant sockets
+ * - Assign mods to each socket or assign the default plug if there are no mods for the socket
+ * - Then order the results so that we never go over the energy limit if we were to assign them one
+ *   by one.
+ */
+function mergeAndOrderResults(
+  defs: D2ManifestDefinitions | undefined,
+  item: DimItem,
+  mods: PluggableInventoryItemDefinition[]
+) {
+  const results: {
+    socketIndex: number;
+    mod?: PluggableInventoryItemDefinition;
+    // This will be negative if we are recovering used energy back by swapping in a cheaper mod
+    energyChange: number;
+  }[] = [];
+
+  const modIndexes =
+    item.sockets?.categories.find(
+      (category) => category.category.hash === SocketCategoryHashes.ArmorMods
+    )?.socketIndexes || [];
+  const modSockets = getSocketsByIndexes(item.sockets!, modIndexes);
+
+  for (const mod of mods) {
+    // Check to see if its already socketed somewhere
+    let sortedSocketIndex = modSockets.findIndex(
+      (socket) => socket.plugged?.plugDef.hash === mod.hash
+    );
+    if (sortedSocketIndex < 0) {
+      // Otherwise find the first socket it can fit into
+      sortedSocketIndex = modSockets.findIndex(
+        (socket) => socket.plugged?.plugDef.plug.plugCategoryHash === mod.plug.plugCategoryHash
+      );
+    }
+
+    // This should always be the case, if its not then something is seriously wrong
+    if (sortedSocketIndex > 0) {
+      const pluggedCost =
+        modSockets[sortedSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
+      const modCost = mod.plug.energyCost?.energyCost || 0;
+      const energyChange = modCost - pluggedCost;
+      results.push({ socketIndex: modSockets[sortedSocketIndex].socketIndex, mod, energyChange });
+      modSockets.splice(sortedSocketIndex, 1);
+    }
+  }
+
+  // Add in the default plug of each socket to anything that didn't get a mod
+  for (const leftoverSocket of modSockets) {
+    const mod = defs?.InventoryItem.get(leftoverSocket.socketDefinition.singleInitialItemHash);
+    const currentModEnergy = leftoverSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
+    results.push({
+      socketIndex: leftoverSocket.socketIndex,
+      mod: mod as PluggableInventoryItemDefinition,
+      energyChange: -currentModEnergy,
+    });
+  }
+
+  // Sort so we take away energy before we add it if possible
+  return results.sort(compareBy((res) => res.energyChange));
+}
+
+export function compactModAssignments(assignments: {
+  [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+}) {
+  return _.mapValues(assignments, (assignmentsForItem) =>
+    _.compact(assignmentsForItem.map((a) => a.mod))
+  );
 }
 
 interface ItemEnergy {
