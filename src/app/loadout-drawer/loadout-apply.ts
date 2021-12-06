@@ -1,7 +1,7 @@
 import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { insertPlug } from 'app/inventory/advanced-write-actions';
+import { insertPlug, refreshItemAfterAWA } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -709,64 +709,69 @@ function equipMods(
 
     const successfulMods: number[] = [];
 
-    // First, clear mods that aren't already the right one
-    // TODO: would love to be smarter about this and clear out the minimum required. It should be possible
-    // to iteratively replace plugs without going over the energy limit, and remove unwanted plugs only if
-    // swapping in a new plug would go over the limit.
-    for (let socketIndex = 0; socketIndex < modSockets.length; socketIndex++) {
-      const socket = modSockets[socketIndex];
-      // Check off mods that are already where we want them to be
-      const matchingModIndex = modsToApply.findIndex(
-        (mod) => mod.hash === socket.plugged?.plugDef.hash
-      );
-      if (matchingModIndex >= 0) {
-        const matchingMod = modsToApply[matchingModIndex];
-        modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
-        modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
-        successfulMods.push(matchingMod.hash);
-      } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
-        // Clear out this socket
-        // TODO: don't refresh item
-        infoLog(
-          'loadout mods',
-          'clearing mod from',
-          item.name,
-          'socket',
-          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
-        );
-        await dispatch(insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash));
-      }
-    }
-
-    for (const mod of modsToApply) {
-      const socketIndex = modSockets.findIndex((s) =>
-        defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
-          (plug) => plug.categoryHash === mod.plug.plugCategoryHash
-        )
-      );
-
-      if (socketIndex >= 0) {
-        // Use this socket
+    try {
+      // First, clear mods that aren't already the right one
+      // TODO: would love to be smarter about this and clear out the minimum required. It should be possible
+      // to iteratively replace plugs without going over the energy limit, and remove unwanted plugs only if
+      // swapping in a new plug would go over the limit.
+      for (let socketIndex = 0; socketIndex < modSockets.length; socketIndex++) {
         const socket = modSockets[socketIndex];
-        // TODO: don't refresh item
-        infoLog(
-          'loadout mods',
-          'equipping mod',
-          mod.displayProperties.name,
-          'into',
-          item.name,
-          'socket',
-          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
+        // Check off mods that are already where we want them to be
+        const matchingModIndex = modsToApply.findIndex(
+          (mod) => mod.hash === socket.plugged?.plugDef.hash
         );
-        await dispatch(insertPlug(item, socket, mod.hash));
-        // Remove the socket from the list, we've used it
-        modSockets.splice(socketIndex, 1);
-        successfulMods.push(mod.hash);
-      } else {
-        throw new DimError('Loadouts.SocketError'); // TODO: do this for real
+        if (matchingModIndex >= 0) {
+          const matchingMod = modsToApply[matchingModIndex];
+          modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
+          modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
+          successfulMods.push(matchingMod.hash);
+        } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
+          // Clear out this socket
+          infoLog(
+            'loadout mods',
+            'clearing mod from',
+            item.name,
+            'socket',
+            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+              socket.socketIndex
+          );
+          await dispatch(
+            insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash, false)
+          );
+        }
       }
+
+      for (const mod of modsToApply) {
+        const socketIndex = modSockets.findIndex((s) =>
+          defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
+            (plug) => plug.categoryHash === mod.plug.plugCategoryHash
+          )
+        );
+
+        if (socketIndex >= 0) {
+          // Use this socket
+          const socket = modSockets[socketIndex];
+          infoLog(
+            'loadout mods',
+            'equipping mod',
+            mod.displayProperties.name,
+            'into',
+            item.name,
+            'socket',
+            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+              socket.socketIndex
+          );
+          await dispatch(insertPlug(item, socket, mod.hash, false));
+          // Remove the socket from the list, we've used it
+          modSockets.splice(socketIndex, 1);
+          successfulMods.push(mod.hash);
+        } else {
+          throw new DimError('Loadouts.SocketError'); // TODO: do this for real
+        }
+      }
+    } finally {
+      // Maybe remove this after testing after Dec. 7th patch!
+      await dispatch(refreshItemAfterAWA(item));
     }
 
     return successfulMods;

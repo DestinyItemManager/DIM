@@ -75,7 +75,12 @@ function canInsertForFree(
 /**
  * Modify an item to insert a new plug into one of its socket.
  */
-export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
+export function insertPlug(
+  item: DimItem,
+  socket: DimSocket,
+  plugItemHash: number,
+  refresh = true
+): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
 
@@ -94,9 +99,11 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       const insertFn = free && !$featureFlags.awa ? awaInsertSocketPlugFree : awaInsertSocketPlug;
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
-      // Update items that changed
-      // TODO: param to skip this?
-      await dispatch(refreshItemAfterAWA(item, response.Response));
+      // Update items that changed. It'd be great if we could rely on the response rom insertSocketPlug but it's
+      // often wrong. Test after December 7th and reevaluate.
+      if (refresh) {
+        await dispatch(refreshItemAfterAWA(item, response.Response));
+      }
     } catch (e) {
       errorLog('AWA', "Couldn't insert plug", item, e);
       if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
@@ -161,15 +168,25 @@ async function awaInsertSocketPlug(
  * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
  */
 // TODO: Would be nice to do bulk updates without reloading the item every time
-function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse): ThunkResult {
+export function refreshItemAfterAWA(
+  item: DimItem,
+  changes?: DestinyItemChangeResponse
+): ThunkResult {
   return async (dispatch, getState) => {
     // Update items that changed
     const account = currentAccountSelector(getState())!;
     try {
       const itemInfo = await getSingleItem(item.id, account);
-      changes = { ...changes, item: itemInfo };
+      changes = {
+        item: itemInfo,
+        addedInventoryItems: changes?.addedInventoryItems ?? [],
+        removedInventoryItems: changes?.removedInventoryItems ?? [],
+      };
     } catch (e) {
       errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
+      if (!changes) {
+        throw e;
+      }
     }
 
     const defs = d2ManifestSelector(getState())!;
