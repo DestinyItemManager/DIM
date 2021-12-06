@@ -365,21 +365,27 @@ function createOrderedAssignmentResults(
       existingModSockets[destinationSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
     const plannedModCost = mod.plug.energyCost?.energyCost || 0;
     const energyChange = plannedModCost - existingModCost;
+
     pluggingActions.push({
       socketIndex: existingModSockets[destinationSocketIndex].socketIndex,
       mod,
       energyChange,
     });
+
+    // remove this existing socket from consideration
     existingModSockets.splice(destinationSocketIndex, 1);
   }
 
-  // Add in the default plug of each socket to anything that didn't get a mod
+  // For each remaining socket that won't have mods assigned,
+  // return it to its default (usually "Empty Mod Socket")
   for (const leftoverSocket of existingModSockets) {
-    const mod = defs?.InventoryItem.get(leftoverSocket.socketDefinition.singleInitialItemHash);
+    const defaultMod = defs?.InventoryItem.get(
+      leftoverSocket.socketDefinition.singleInitialItemHash
+    );
     const currentModEnergy = leftoverSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
     pluggingActions.push({
       socketIndex: leftoverSocket.socketIndex,
-      mod: mod as PluggableInventoryItemDefinition,
+      mod: defaultMod as PluggableInventoryItemDefinition,
       energyChange: -currentModEnergy,
     });
   }
