@@ -185,6 +185,7 @@ function Loadouts() {
             loadout={loadout}
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
+            equippable={loadout !== currentLoadout}
           />
         ))}
       </PageWithMenu.Contents>
@@ -196,10 +197,12 @@ function LoadoutRow({
   loadout,
   store,
   saved,
+  equippable,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
+  equippable: boolean;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
@@ -271,9 +274,11 @@ function LoadoutRow({
           )}
         </h2>
         <div className={styles.actions}>
-          <button type="button" className="dim-button" onClick={handleApply}>
-            {t('Loadouts.Apply')}
-          </button>
+          {equippable && (
+            <button type="button" className="dim-button" onClick={handleApply}>
+              {t('Loadouts.Apply')}
+            </button>
+          )}
           <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
