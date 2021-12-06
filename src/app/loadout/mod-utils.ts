@@ -129,7 +129,7 @@ export function getCheapestModAssignments(
   mods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions | undefined,
   upgradeSpendTier = UpgradeSpendTier.Nothing,
-  lockItemEnergyType = false
+  lockItemEnergyType = true
 ): {
   itemModAssignments: { [itemInstanceId: string]: PluggableInventoryItemDefinition[] };
   unassignedMods: PluggableInventoryItemDefinition[];
