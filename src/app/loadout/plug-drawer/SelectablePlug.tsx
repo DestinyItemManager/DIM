@@ -5,7 +5,6 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React, { useCallback } from 'react';
 import styles from './SelectablePlug.m.scss';
 
@@ -31,9 +30,12 @@ export default function SelectablePlug({
   }, [onPlugSelected, plug, selectable]);
 
   const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
-  const stats = plug.investmentStats.filter((stat) =>
+  const displayedStats = plug.investmentStats.filter((stat) =>
     displayedStatHashes?.includes(stat.statTypeHash)
   );
+
+  // within this plug, let's not repeat any descriptions or requirement strings
+  const uniqueStrings = new Set<string>();
 
   return (
     <ClosableContainer onClose={selected ? onClose : undefined}>
@@ -51,27 +53,35 @@ export default function SelectablePlug({
         </div>
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-          {_.uniqBy(
-            plug.perks,
-            (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
-          ).map((perk) => (
-            <div className={styles.partialDescription} key={perk.perkHash}>
-              <RichDestinyText
-                text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
-              />
-              {perk.requirementDisplayString && (
-                <div className={styles.requirement}>{perk.requirementDisplayString}</div>
-              )}
-            </div>
-          ))}
-          {plug.displayProperties.description && (
-            <div className={styles.partialDescription}>
-              <RichDestinyText text={plug.displayProperties.description} />
-            </div>
-          )}
-          {stats.length > 0 && (
+          {plug.perks.map((perk) => {
+            const defDesc = defs.SandboxPerk.get(perk.perkHash).displayProperties.description;
+            const defReq = perk.requirementDisplayString;
+
+            const description = (!uniqueStrings.has(defDesc) && defDesc) || undefined;
+            const requirement = (!uniqueStrings.has(defReq) && defReq) || undefined;
+
+            defDesc && uniqueStrings.add(defDesc);
+            defReq && uniqueStrings.add(defReq);
+
+            return description || requirement ? (
+              <div className={styles.partialDescription} key={perk.perkHash}>
+                <RichDestinyText text={description} />
+                {requirement && <div className={styles.requirement}>{requirement}</div>}
+              </div>
+            ) : null;
+          })}
+          {plug.displayProperties.description &&
+            !uniqueStrings.has(plug.displayProperties.description) && (
+              // if uniqueStrings has entries, then we printed some perks. if that's true,
+              // and description is still unique, this means description is basically a "requirements"
+              // string like "This mod's perks are only active" etc etc etc
+              <div className={uniqueStrings.size ? styles.requirement : styles.partialDescription}>
+                <RichDestinyText text={plug.displayProperties.description} />
+              </div>
+            )}
+          {displayedStats.length > 0 && (
             <div className="plug-stats">
-              {stats.map((stat) => (
+              {displayedStats.map((stat) => (
                 <StatValue
                   key={stat.statTypeHash}
                   statHash={stat.statTypeHash}
