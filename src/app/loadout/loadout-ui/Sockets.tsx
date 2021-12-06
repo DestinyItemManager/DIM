@@ -21,15 +21,23 @@ interface Props {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
   size?: 'small';
-  onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
+  onSocketClick?(
+    plugDef: PluggableInventoryItemDefinition,
+    /** An allow-list of plug category hashes that can be inserted into this socket */
+    plugCategoryHashWhitelist: number[]
+  ): void;
 }
 
+/**
+ * Show sockets (mod slots) for an armor item with the specified locked mods slotted into
+ */
 function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
   }
 
+  // A list of mods to show. If we aren't showing a plug for a socket we show the empty plug.
   const modsAndWhitelist: { plugDef: PluggableInventoryItemDefinition; whitelist: number[] }[] = [];
   const modsToUse = lockedMods ? [...lockedMods] : [];
 
@@ -44,6 +52,7 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       ) {
         toSave = mod;
         modsToUse.splice(modIndex, 1);
+        break;
       }
     }
 
@@ -71,7 +80,7 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
           key={index}
           gridColumn={(index % 2) + 1}
           plugDef={plugDef}
-          onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
+          onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
         />
       ))}
     </div>
