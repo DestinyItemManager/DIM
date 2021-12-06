@@ -1,5 +1,7 @@
 ## Next
 
+## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
+
 * You can change perks and slot zero-cost mods from the item Popup.
 * Loadouts can now apply mods. See [Mods in Loadouts](https://destinyitemmanager.fandom.com/wiki/Mods_in_Loadouts) for details. Some things to keep in mind:
   * This will not work until the 30th Anniversary patch.
