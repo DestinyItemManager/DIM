@@ -60,6 +60,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
+import { createGetModRenderKey } from './mod-utils';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -210,6 +211,7 @@ function LoadoutRow({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
+  const getModRenderKey = createGetModRenderKey();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
@@ -321,8 +323,8 @@ function LoadoutRow({
             ))}
             {savedMods.length > 0 ? (
               <div className={styles.mods}>
-                {savedMods.map((mod, index) => (
-                  <div key={index}>
+                {savedMods.map((mod) => (
+                  <div key={getModRenderKey(mod)}>
                     <PlugDef plug={mod} />
                   </div>
                 ))}
@@ -338,6 +340,7 @@ function LoadoutRow({
 }
 
 function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: DimLoadoutItem }) {
+  const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => {
     const plugs: PluggableInventoryItemDefinition[] = [];
 
@@ -386,8 +389,8 @@ function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: 
       ) : (
         <EmptyClassItem />
       )}
-      {plugs?.map((plug, index) => (
-        <PlugDef key={index} plug={plug} />
+      {plugs?.map((plug) => (
+        <PlugDef key={getModRenderKey(plug)} plug={plug} />
       ))}
     </div>
   );
