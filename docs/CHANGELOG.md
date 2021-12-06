@@ -1,5 +1,7 @@
 ## Next
 
+* Fix image paths for D1 perks.
+
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
 * You can change perks and slot zero-cost mods from the item Popup.
