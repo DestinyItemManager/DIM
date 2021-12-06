@@ -1,7 +1,11 @@
 import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { insertPlug, refreshItemAfterAWA } from 'app/inventory/advanced-write-actions';
+import {
+  canInsertPlug,
+  insertPlug,
+  refreshItemAfterAWA,
+} from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -24,7 +28,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { getCheapestModAssignments } from 'app/loadout/mod-utils';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -686,6 +690,7 @@ function equipMods(
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
+    const destiny2CoreSettings = destiny2CoreSettingsSelector(getState())!;
 
     if (!item.sockets || !item.energy) {
       return [];
@@ -726,18 +731,36 @@ function equipMods(
           modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
           successfulMods.push(matchingMod.hash);
         } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
-          // Clear out this socket
-          infoLog(
-            'loadout mods',
-            'clearing mod from',
-            item.name,
-            'socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
-          await dispatch(
-            insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash, false)
-          );
+          if (
+            canInsertPlug(
+              socket,
+              socket.socketDefinition.singleInitialItemHash,
+              destiny2CoreSettings,
+              defs
+            )
+          ) {
+            // Clear out this socket
+            infoLog(
+              'loadout mods',
+              'clearing mod from',
+              item.name,
+              'socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+            await dispatch(
+              insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash, false)
+            );
+          } else {
+            warnLog(
+              'loadout mods',
+              'cannot clear mod from',
+              item.name,
+              'socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+          }
         }
       }
 
@@ -749,22 +772,35 @@ function equipMods(
         );
 
         if (socketIndex >= 0) {
-          // Use this socket
           const socket = modSockets[socketIndex];
-          infoLog(
-            'loadout mods',
-            'equipping mod',
-            mod.displayProperties.name,
-            'into',
-            item.name,
-            'socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
-          await dispatch(insertPlug(item, socket, mod.hash, false));
-          // Remove the socket from the list, we've used it
-          modSockets.splice(socketIndex, 1);
-          successfulMods.push(mod.hash);
+          if (canInsertPlug(socket, mod.hash, destiny2CoreSettings, defs)) {
+            // Use this socket
+            infoLog(
+              'loadout mods',
+              'equipping mod',
+              mod.displayProperties.name,
+              'into',
+              item.name,
+              'socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+            await dispatch(insertPlug(item, socket, mod.hash, false));
+            // Remove the socket from the list, we've used it
+            modSockets.splice(socketIndex, 1);
+            successfulMods.push(mod.hash);
+          } else {
+            warnLog(
+              'loadout mods',
+              'cannot equip mod',
+              mod.displayProperties.name,
+              'into',
+              item.name,
+              'socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+          }
         } else {
           throw new DimError('Loadouts.SocketError'); // TODO: do this for real
         }
