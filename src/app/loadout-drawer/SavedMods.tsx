@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { sortModGroups } from 'app/loadout/mod-utils';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import SavedModCategory from './SavedModCategory';
@@ -46,10 +45,6 @@ function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
             />
           ) : null
         )}
-      </div>
-      <div className={styles.disclaimer}>
-        <AppIcon className={styles.warningIcon} icon={faExclamationTriangle} />
-        {t('Loadouts.ModsInfo')}
       </div>
     </div>
   );

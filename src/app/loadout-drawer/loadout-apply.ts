@@ -633,19 +633,31 @@ function applyLoadoutMods(
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // What mods are already on the equipped armor set?
-    const existingMods = new Set<number>();
+    const existingMods: number[] = [];
     for (const item of armor) {
       if (item.sockets) {
         for (const socket of item.sockets.allSockets) {
           if (socket.plugged) {
-            existingMods.add(socket.plugged.plugDef.hash);
+            existingMods.push(socket.plugged.plugDef.hash);
           }
         }
       }
     }
 
     // Early exit - if all the mods are already there, nothing to do
-    if (modHashes.every((h) => existingMods.has(h))) {
+    if (
+      modHashes.every((h) => {
+        const foundAt = existingMods.indexOf(h);
+        if (foundAt === -1) {
+          // a mod was missing
+          return false;
+        } else {
+          // the mod was found, but we have consumed this copy of it
+          delete existingMods[foundAt];
+          return true;
+        }
+      })
+    ) {
       infoLog('loadout mods', 'all mods are already there, skipping');
       return modHashes;
     }
