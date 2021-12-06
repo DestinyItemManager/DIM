@@ -311,7 +311,9 @@ export function getCheapestModAssignments(
 }
 
 /**
- * This orders the results of the mod assignment algorithm for a given item and its mods.
+ * For a given item, and mods that need attaching, this creates an ordered list of plugging actions,
+ * to prefer plugging desired mod X into a slot that already has X,
+ * and prefer freeing up armor energy before comsuming it.
  *
  * Basically
  * - It will find all the relevant sockets
@@ -325,62 +327,79 @@ function createOrderedAssignmentResults(
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
   bucketIndependentAssignments: PluggableInventoryItemDefinition[]
 ) {
-  const results: {
+  const pluggingActions: {
     socketIndex: number;
     mod?: PluggableInventoryItemDefinition;
     // This will be negative if we are recovering used energy back by swapping in a cheaper mod
     energyChange: number;
   }[] = [];
 
-  const mods = [...bucketIndependentAssignments, ...bucketSpecificAssignments];
+  const modsToInsert = [...bucketIndependentAssignments, ...bucketSpecificAssignments];
 
-  const modIndexes =
+  const armorModIndexes =
     item.sockets?.categories.find(
       (category) => category.category.hash === SocketCategoryHashes.ArmorMods
     )?.socketIndexes || [];
-  const modSockets = getSocketsByIndexes(item.sockets!, modIndexes);
+  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes);
 
-  for (const mod of mods) {
-    // Check to see if its already socketed somewhere
-    let sortedSocketIndex = modSockets.findIndex(
+  for (const mod of modsToInsert) {
+    // If it's already plugged somewhere, that's the slot we want to "plug it into"
+    let destinationSocketIndex = existingModSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === mod.hash
     );
-    if (sortedSocketIndex < 0) {
-      // Otherwise find the first socket it can fit into
-      sortedSocketIndex = modSockets.findIndex(
+    // If it wasn't found already plugged, find the first socket it can fit into
+    if (destinationSocketIndex === -1) {
+      destinationSocketIndex = existingModSockets.findIndex(
         (socket) => socket.plugged?.plugDef.plug.plugCategoryHash === mod.plug.plugCategoryHash
       );
     }
 
-    // This should always be the case, if its not then something is seriously wrong
-    if (sortedSocketIndex > 0) {
-      const pluggedCost =
-        modSockets[sortedSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
-      const modCost = mod.plug.energyCost?.energyCost || 0;
-      const energyChange = modCost - pluggedCost;
-      results.push({ socketIndex: modSockets[sortedSocketIndex].socketIndex, mod, energyChange });
-      modSockets.splice(sortedSocketIndex, 1);
+    // If a destination socket couldn't be found for this plug, something is seriously wrong
+    if (destinationSocketIndex === -1) {
+      throw new Error(
+        `We couldn't find anywhere to plug the mod ${mod.displayProperties.name} (${mod.hash})`
+      );
     }
+
+    const existingModCost =
+      existingModSockets[destinationSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
+    const plannedModCost = mod.plug.energyCost?.energyCost || 0;
+    const energyChange = plannedModCost - existingModCost;
+    pluggingActions.push({
+      socketIndex: existingModSockets[destinationSocketIndex].socketIndex,
+      mod,
+      energyChange,
+    });
+    existingModSockets.splice(destinationSocketIndex, 1);
   }
 
   // Add in the default plug of each socket to anything that didn't get a mod
-  for (const leftoverSocket of modSockets) {
+  for (const leftoverSocket of existingModSockets) {
     const mod = defs?.InventoryItem.get(leftoverSocket.socketDefinition.singleInitialItemHash);
     const currentModEnergy = leftoverSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
-    results.push({
+    pluggingActions.push({
       socketIndex: leftoverSocket.socketIndex,
       mod: mod as PluggableInventoryItemDefinition,
       energyChange: -currentModEnergy,
     });
   }
 
-  // Sort so we take away energy before we add it if possible
-  return results.sort(compareBy((res) => res.energyChange));
+  // Sort so we free up energy before we consume it, if possible
+  return pluggingActions.sort(compareBy((res) => res.energyChange));
 }
 
+/**
+ * input: a dictionary keyed by instanceId, of `{ socketIndex, mod|undefined}[]`
+ *
+ * output: a dictionary keyed by instanceId, of `mod[]`
+ *
+ * used to make a series of mod assignments slot-agnostic?
+ */
 export function compactModAssignments(assignments: {
   [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
-}) {
+}): {
+  [itemInstanceId: string]: PluggableInventoryItemDefinition[];
+} {
   return _.mapValues(assignments, (assignmentsForItem) =>
     _.compact(assignmentsForItem.map((a) => a.mod))
   );
