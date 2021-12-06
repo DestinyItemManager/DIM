@@ -293,10 +293,13 @@ export function getCheapestModAssignments(
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults[item.id] = mergeAndOrderResults(defs, item, [
-      ...independentAssignments.assigned,
-      ...specificAssignments.assigned,
-    ]);
+    mergedResults[item.id] = createOrderedAssignmentResults(
+      defs,
+      item,
+      specificAssignments.assigned,
+      independentAssignments.assigned
+    );
+
     unassignedMods = [
       ...unassignedMods,
       ...independentAssignments.unassigned,
@@ -316,10 +319,11 @@ export function getCheapestModAssignments(
  * - Then order the results so that we never go over the energy limit if we were to assign them one
  *   by one.
  */
-function mergeAndOrderResults(
+function createOrderedAssignmentResults(
   defs: D2ManifestDefinitions | undefined,
   item: DimItem,
-  mods: PluggableInventoryItemDefinition[]
+  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
+  bucketIndependentAssignments: PluggableInventoryItemDefinition[]
 ) {
   const results: {
     socketIndex: number;
@@ -327,6 +331,8 @@ function mergeAndOrderResults(
     // This will be negative if we are recovering used energy back by swapping in a cheaper mod
     energyChange: number;
   }[] = [];
+
+  const mods = [...bucketIndependentAssignments, ...bucketSpecificAssignments];
 
   const modIndexes =
     item.sockets?.categories.find(
