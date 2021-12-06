@@ -62,6 +62,7 @@ export const itemMoved = createAction('inventory/MOVE_ITEM')<{
  * We need to update the inventory with the updated item and any removed/added items.
  */
 export const awaItemChanged = createAction('inventory/AWA_CHANGE')<{
+  item: DimItem | null;
   changes: DestinyItemChangeResponse;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;

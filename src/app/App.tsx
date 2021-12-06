@@ -104,6 +104,7 @@ export default function App() {
                     'progress',
                     'records',
                     'optimizer',
+                    'loadouts',
                     'organizer',
                     'vendors/:vendorId',
                     'vendors',

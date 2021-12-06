@@ -120,6 +120,7 @@ export default function SocketDetailsSelectedPlug({
         await dispatch(insertPlug(item, socket, plug.hash));
         closeMenu();
       } catch (e) {
+        // TODO: notification already shown
         showNotification({ type: 'error', title: t('Sockets.InsertPlugError'), body: e.message });
       } finally {
         setInsertInProgress(false);

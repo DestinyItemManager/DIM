@@ -557,7 +557,7 @@
     "NotificationTitle": "ロードアウト: {{name}}",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "OpenInOptimizer": "防具の最適化",
-    "PullFromPostmaster": "ポストマスターからのアイテムの取得",
+    "PullFromPostmaster": "ポストマスターからアイテムを取得する",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
     "PullFromPostmasterGeneralError": "ポストマスターからすべてのアイテムを取得できません。",
     "PullFromPostmasterNotification": "1つのポストマスターアイテムを{{store}} に引き出します。",

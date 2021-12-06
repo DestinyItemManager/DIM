@@ -92,7 +92,7 @@ export default function LoadoutDrawerOptions({
 
   const saveDisabled =
     !loadout.name.length ||
-    !loadout.items.length ||
+    (!loadout.items.length && !loadout.parameters?.mods?.length) ||
     // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
     Boolean(clashingLoadout && clashingLoadout.id !== loadout.id);
 

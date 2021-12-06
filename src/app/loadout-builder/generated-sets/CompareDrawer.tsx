@@ -223,7 +223,7 @@ export default function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} size="small" />
+                <Sockets item={item} lockedMods={loSetAssignedMods[item.id]} size="small" />
               </div>
             ))}
           </div>
@@ -263,11 +263,7 @@ export default function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets
-                      item={item}
-                      lockedMods={itemModAssignments.get(item.id)}
-                      size="small"
-                    />
+                    <Sockets item={item} lockedMods={itemModAssignments[item.id]} size="small" />
                   </div>
                 ))}
               </div>

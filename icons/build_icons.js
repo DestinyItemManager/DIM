@@ -31,6 +31,11 @@ for (const VERSION of ['release', 'beta', 'dev']) {
   execSync(
     `rsvg-convert -w 512 -h 512 -o "${VERSION}/android-chrome-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
   );
+  if (VERSION === 'release') {
+    execSync(
+      `rsvg-convert -w 512 -h 512 -b "#ee6d0d" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+    );
+  }
 }
 
 rimraf.sync('splash');
