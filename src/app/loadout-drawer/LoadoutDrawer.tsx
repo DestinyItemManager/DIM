@@ -160,6 +160,13 @@ export default function LoadoutDrawer() {
       return;
     }
 
+    if (loadoutToSave.name === t('Loadouts.FromEquipped')) {
+      loadoutToSave = {
+        ...loadoutToSave,
+        name: `${loadoutToSave.name} ${new Date().toLocaleString()}`,
+      };
+    }
+
     dispatch(updateLoadout(loadoutToSave));
     close();
   };

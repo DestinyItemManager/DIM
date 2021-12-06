@@ -9,6 +9,7 @@ import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isUsedArmorModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -172,10 +173,22 @@ export function loadoutFromAllItems(store: DimStore, name: string): Loadout {
   const allItems = store.items.filter(
     (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster
   );
-  return newLoadout(
+  const loadout = newLoadout(
     name,
     allItems.map((i) => convertToLoadoutItem(i, i.equipped))
   );
+  // Save mods too, so we put them back if you undo
+  loadout.parameters = {
+    mods: allItems
+      .filter((i) => i.equipped)
+      .flatMap((i) =>
+        _.compact(
+          i.sockets?.allSockets.filter(isUsedArmorModSocket).map((s) => s.plugged?.plugDef.hash) ??
+            []
+        )
+      ),
+  };
+  return loadout;
 }
 
 /**

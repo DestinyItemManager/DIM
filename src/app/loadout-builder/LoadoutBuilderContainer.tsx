@@ -6,7 +6,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -39,21 +39,28 @@ export default function LoadoutBuilderContainer({ account }: Props) {
 
   const urlClassType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
 
+  let query = '';
   let urlLoadoutParameters: LoadoutParameters | undefined;
   if (urlLoadoutParametersJSON) {
     urlLoadoutParameters = JSON.parse(urlLoadoutParametersJSON);
     if (urlLoadoutParameters?.query) {
-      dispatch(setSearchQuery(urlLoadoutParameters.query));
+      query = urlLoadoutParameters.query;
     }
-  }
-
-  if (!stores || !stores.length || !defs) {
-    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   const preloadedLoadout = location.state?.loadout as Loadout | undefined;
   if (preloadedLoadout?.parameters?.query) {
-    dispatch(setSearchQuery(preloadedLoadout.parameters.query));
+    query = preloadedLoadout.parameters.query;
+  }
+
+  useEffect(() => {
+    if (query) {
+      dispatch(setSearchQuery(query));
+    }
+  }, [dispatch, query]);
+
+  if (!stores || !stores.length || !defs) {
+    return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   // TODO: key off the URL params?

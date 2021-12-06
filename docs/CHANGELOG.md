@@ -1,9 +1,19 @@
 ## Next
 
+* Fix image paths for D1 perks.
+* Loadouts can now save stasis subclass abilities, aspects, and fragments.
+
+## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
+
+* You can change perks and slot zero-cost mods from the item Popup.
+* Loadouts can now apply mods. See [Mods in Loadouts](https://destinyitemmanager.fandom.com/wiki/Mods_in_Loadouts) for details. Some things to keep in mind:
+  * This will not work until the 30th Anniversary patch.
+  * Applying mods will also strip off any mods that aren't in your loadout from your equipped armor.
+  * Mods will be placed on your equipped armor whether that armor came from your loadout or not.
 * Loadouts can now have notes.
 * Share loadout build settings (mods, notes, loadout optimizer settings) from the Loadouts page.
-* Loadouts can now save stasis subclass abilities, aspects, and fragments.
-* Stasis subclass abilities, aspects, and fragments are shown on the loadouts page.
+* Loadouts can now save stasis subclass abilities, aspects, and fragments. These do not yet get applied when applying a loadout.
+* We made several bugfixes to how loadouts are applied that should fix some issues where not all items got equipped or failures were shown when nothing failed.
 * The "Create Loadout" button on the Loadouts page defaults the loadout to match the class of the selected character.
 * The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
 * Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5

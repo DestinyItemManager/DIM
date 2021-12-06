@@ -6,6 +6,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { mergedCollectiblesSelector } from 'app/vendors/selectors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
   AwaAuthorizationResult,
@@ -23,7 +24,8 @@ import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/de
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
-import { currentStoreSelector, d2BucketsSelector } from './selectors';
+import { currentStoreSelector, d2BucketsSelector, storesSelector } from './selectors';
+import { makeItemSingle } from './store/d2-item-factory';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };
@@ -73,7 +75,12 @@ function canInsertForFree(
 /**
  * Modify an item to insert a new plug into one of its socket.
  */
-export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
+export function insertPlug(
+  item: DimItem,
+  socket: DimSocket,
+  plugItemHash: number,
+  refresh = true
+): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
 
@@ -89,11 +96,14 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
     try {
-      const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
+      const insertFn = free && !$featureFlags.awa ? awaInsertSocketPlugFree : awaInsertSocketPlug;
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
-      // Update items that changed
-      await dispatch(refreshItemAfterAWA(item, response.Response));
+      // Update items that changed. It'd be great if we could rely on the response rom insertSocketPlug but it's
+      // often wrong. Test after December 7th and reevaluate.
+      if (refresh) {
+        await dispatch(refreshItemAfterAWA(item, response.Response));
+      }
     } catch (e) {
       errorLog('AWA', "Couldn't insert plug", item, e);
       if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
@@ -105,6 +115,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       } else {
         showNotification({ type: 'error', title: t('AWA.Error'), body: e.message });
       }
+      throw e;
     }
   };
 }
@@ -156,20 +167,37 @@ async function awaInsertSocketPlug(
 /**
  * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
  */
-function refreshItemAfterAWA(item: DimItem, changes: DestinyItemChangeResponse): ThunkResult {
+// TODO: Would be nice to do bulk updates without reloading the item every time
+export function refreshItemAfterAWA(
+  item: DimItem,
+  changes?: DestinyItemChangeResponse
+): ThunkResult {
   return async (dispatch, getState) => {
     // Update items that changed
-    // TODO: reload item instead
     const account = currentAccountSelector(getState())!;
     try {
       const itemInfo = await getSingleItem(item.id, account);
-      changes = { ...changes, item: itemInfo };
+      changes = {
+        item: itemInfo,
+        addedInventoryItems: changes?.addedInventoryItems ?? [],
+        removedInventoryItems: changes?.removedInventoryItems ?? [],
+      };
     } catch (e) {
       errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
+      if (!changes) {
+        throw e;
+      }
     }
+
+    const defs = d2ManifestSelector(getState())!;
+    const buckets = d2BucketsSelector(getState())!;
+    const stores = storesSelector(getState());
+    const mergedCollectibles = mergedCollectiblesSelector(getState());
+    const newItem = makeItemSingle(defs, buckets, changes.item, stores, mergedCollectibles);
 
     dispatch(
       awaItemChanged({
+        item: newItem,
         changes,
         defs: d2ManifestSelector(getState())!,
         buckets: d2BucketsSelector(getState())!,

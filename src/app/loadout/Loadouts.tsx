@@ -15,11 +15,11 @@ import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
@@ -188,6 +188,7 @@ function Loadouts() {
             loadout={loadout}
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
+            equippable={loadout !== currentLoadout}
           />
         ))}
       </PageWithMenu.Contents>
@@ -199,10 +200,12 @@ function LoadoutRow({
   loadout,
   store,
   saved,
+  equippable,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
+  equippable: boolean;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
@@ -255,6 +258,11 @@ function LoadoutRow({
     });
   };
 
+  const handleApply = () =>
+    dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
+
+  const handleEdit = () => editLoadout(loadout, { isNew: !saved });
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -269,18 +277,12 @@ function LoadoutRow({
           )}
         </h2>
         <div className={styles.actions}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
-            {t('Loadouts.Apply')}
-          </button>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
+          {equippable && (
+            <button type="button" className="dim-button" onClick={handleApply}>
+              {t('Loadouts.Apply')}
+            </button>
+          )}
+          <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
           {canShare && (
@@ -297,7 +299,7 @@ function LoadoutRow({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass) && (
+        {(items.length > 0 || subclass || savedMods.length > 0) && (
           <>
             <div>
               <Subclass defs={defs} subclass={subclass} />
@@ -321,7 +323,7 @@ function LoadoutRow({
               <div className={styles.mods}>
                 {savedMods.map((mod, index) => (
                   <div key={index}>
-                    <SocketDetailsMod itemDef={mod} />
+                    <PlugDef plug={mod} />
                   </div>
                 ))}
               </div>
