@@ -10,7 +10,7 @@ import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { getCheapestModAssignments, useGetModRenderKey } from 'app/loadout/mod-utils';
+import { createGetModRenderKey, getCheapestModAssignments } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -91,7 +91,7 @@ export default function CompareDrawer({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
-  const getModRenderKey = useGetModRenderKey();
+  const getModRenderKey = createGetModRenderKey();
 
   const setItems = set.armor.map((items) => items[0]);
 

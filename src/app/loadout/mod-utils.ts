@@ -93,7 +93,7 @@ export function isInsertableArmor2Mod(
  * As mods can appear multiple times as siblings we need to count them and append a
  * number to its hash to make it unique.
  */
-export function useGetModRenderKey() {
+export function createGetModRenderKey() {
   const counts = {};
   return (mod: PluggableInventoryItemDefinition) => {
     if (!counts[mod.hash]) {

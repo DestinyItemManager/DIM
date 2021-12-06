@@ -2,7 +2,7 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
-import { useGetModRenderKey } from '../mod-utils';
+import { createGetModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
 
 interface Props {
@@ -21,7 +21,7 @@ export default function Footer({
   onPlugSelected,
 }: Props) {
   useHotkey('enter', acceptButtonText, onSubmit);
-  const getModRenderKey = useGetModRenderKey();
+  const getModRenderKey = createGetModRenderKey();
 
   return (
     <div className={styles.footer}>

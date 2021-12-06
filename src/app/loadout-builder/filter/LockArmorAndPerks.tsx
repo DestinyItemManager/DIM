@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { useGetModRenderKey } from 'app/loadout/mod-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
@@ -53,7 +53,7 @@ export default memo(function LockArmorAndPerks({
   const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
-  const getModRenderKey = useGetModRenderKey();
+  const getModRenderKey = createGetModRenderKey();
 
   /**
    * Lock currently equipped items on a character
