@@ -33,6 +33,7 @@ jobs:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
+          DISCORD_EMBEDS: ${{ toJSON(secrets.DISCORD_EMBEDS) }}
         uses: Ilshidur/action-discord@master
         with:
           args: "<@&622449489008918548> - New translations have been added to Crowdin."
