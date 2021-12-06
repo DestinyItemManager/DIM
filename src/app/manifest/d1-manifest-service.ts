@@ -71,7 +71,7 @@ function loadManifest(): ThunkResult<any> {
     await settingsReady; // wait for settings to be ready
     const language = settingsSelector(getState()).language;
     const manifestLang = manifestLangs.has(language) ? language : 'en';
-    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json?v=2020-02-17`;
+    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json?v=2021-12-05`;
 
     // Use the path as the version
     version = path;
