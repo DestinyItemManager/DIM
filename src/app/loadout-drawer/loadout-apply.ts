@@ -107,11 +107,11 @@ export function applyLoadout(
 
     // Start a notification that will show as long as the loadout is equipping
     // TODO: show the items in the notification and tick them down! Will require piping through some sort of event source?
-    // TODO: show how many mods
     showNotification(
       loadoutNotification(
         loadout,
         applicableLoadoutItems.length,
+        loadout.parameters?.mods?.length ?? 0,
         store,
         // TODO: allow for an error view function to be passed in
         loadoutPromise.then((scope) => {
@@ -124,6 +124,15 @@ export function applyLoadout(
                 t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
               );
             }
+          }
+          if (scope.successfulMods < scope.totalMods) {
+            throw new DimError(
+              'Loadouts.AppliedModsWarn',
+              t('Loadouts.AppliedModsWarn', {
+                successful: scope.successfulMods,
+                total: scope.totalMods,
+              })
+            );
           }
         }),
         cancel
@@ -292,8 +301,6 @@ function doApplyLoadout(
         }
       }
     }
-
-    // TODO: Apply socketOverrides
 
     // If this is marked to clear space (and we're not applying it to the vault), move items not
     // in the loadout off the character
@@ -663,8 +670,6 @@ function applyLoadoutMods(
     // Pass 2: Slot specific mods just go right away
     // Pass 3: Figure out if we can slot mods into existing spaces
     // Pass 4: Figure out the minimum mods to remove to get the new mods in
-
-    // TODO: notify unassigned mods!
 
     // Return the mods that were successfully assigned (even if they didn't have to move)
     return successfulMods;
