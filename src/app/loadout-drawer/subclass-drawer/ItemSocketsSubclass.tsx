@@ -38,6 +38,7 @@ export default React.memo(function ItemSocketsSubclass({
         (socketCategory) =>
           socketCategory && (
             <SocketCategory
+              key={socketCategory.category.hash}
               subclass={subclass}
               socketCategory={socketCategory}
               onSocketClick={() => setPlugDrawerOpen(true)}
