@@ -51,24 +51,23 @@ export default function SelectablePlug({
         </div>
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-          {plug.displayProperties.description ? (
-            <div>
+          {_.uniqBy(
+            plug.perks,
+            (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
+          ).map((perk) => (
+            <div className={styles.partialDescription} key={perk.perkHash}>
+              <RichDestinyText
+                text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
+              />
+              {perk.requirementDisplayString && (
+                <div className={styles.requirement}>{perk.requirementDisplayString}</div>
+              )}
+            </div>
+          ))}
+          {plug.displayProperties.description && (
+            <div className={styles.partialDescription}>
               <RichDestinyText text={plug.displayProperties.description} />
             </div>
-          ) : (
-            _.uniqBy(
-              plug.perks,
-              (p) => defs.SandboxPerk.get(p.perkHash).displayProperties.description
-            ).map((perk) => (
-              <div key={perk.perkHash}>
-                <RichDestinyText
-                  text={defs.SandboxPerk.get(perk.perkHash).displayProperties.description}
-                />
-                {perk.requirementDisplayString && (
-                  <div className={styles.requirement}>{perk.requirementDisplayString}</div>
-                )}
-              </div>
-            ))
           )}
           {stats.length > 0 && (
             <div className="plug-stats">
