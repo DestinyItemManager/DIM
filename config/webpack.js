@@ -13,7 +13,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -483,15 +482,6 @@ module.exports = (env) => {
       })
     );
 
-    if (process.env.CI === 'true') {
-      config.plugins.push(
-        new PacktrackerPlugin({
-          upload: true,
-          fail_build: true,
-          project_token: 'b3b16a32-bc8b-489e-a6fd-2d1b98c25704',
-        })
-      );
-    }
   }
 
   return config;
