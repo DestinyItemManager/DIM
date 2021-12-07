@@ -2,6 +2,7 @@
 
 * Fix image paths for D1 perks.
 * Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
+* Fix issue where Optimizer throws an error when selecting a raid or combat mod.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 

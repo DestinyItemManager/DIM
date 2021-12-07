@@ -12,7 +12,9 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
+  getSpecialtySockets,
   isArmor2Mod,
+  modMetadataBySocketTypeHash,
 } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -364,10 +366,22 @@ function createOrderedAssignmentInstructions(
     );
     // If it wasn't found already plugged, find the first socket it can fit into
     if (destinationSocketIndex === -1) {
+      // check for general and item specifc mods
       destinationSocketIndex = existingModSockets.findIndex(
         (socket) =>
           socket.plugged?.plugDef.plug.plugCategoryHash === modToInsert.plug.plugCategoryHash
       );
+    }
+
+    if (destinationSocketIndex === -1) {
+      const specialtySockets = getSpecialtySockets(item) || [];
+      for (const socket of specialtySockets) {
+        const metadata = modMetadataBySocketTypeHash[socket.socketDefinition.socketTypeHash];
+        if (metadata?.compatiblePlugCategoryHashes.includes(modToInsert.plug.plugCategoryHash)) {
+          destinationSocketIndex = existingModSockets.indexOf(socket);
+          break;
+        }
+      }
     }
 
     // If a destination socket couldn't be found for this plug, something is seriously wrong
