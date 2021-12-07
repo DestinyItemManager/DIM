@@ -5,13 +5,17 @@ jobs:
     name: report webpack stats
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Setup Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16.x
-    - name: report webpack stats
-      uses: packtracker/report@2.2.1
-      env:
-        PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
-        WEBPACK_CONFIG_PATH: ./config/webpack.js
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: report webpack stats
+        uses: packtracker/report@2.2.1
+        env:
+          PT_PROJECT_TOKEN: ${{ secrets.PT_PROJECT_TOKEN }}
+          WEBPACK_CONFIG_PATH: ./config/webpack.js
