@@ -10,11 +10,16 @@ import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React, { RefObject, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import { createGetModRenderKey, getCheapestModAssignments } from '../mod-utils';
+import {
+  compactModAssignments,
+  createGetModRenderKey,
+  getCheapestModAssignments,
+} from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor } from './selectors';
@@ -69,19 +74,20 @@ export default function ModAssignmentDrawer({
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   const armor = useEquippedLoadoutArmor(loadout);
   const getModRenderKey = createGetModRenderKey();
 
-  const [{ itemModAssignments, unassignedMods }, mods] = useMemo(() => {
+  const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
     if (defs && loadout.parameters?.mods?.length) {
       mods = loadout.parameters?.mods
         .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
     }
+    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(armor, mods, defs);
 
-    return [getCheapestModAssignments(armor, mods, defs), mods];
+    return [compactModAssignments(itemModAssignments), unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);
 
   const onSocketClick = (
@@ -97,7 +103,7 @@ export default function ModAssignmentDrawer({
     }
   };
 
-  const flatAssigned = Object.values(itemModAssignments).flat();
+  const flatAssigned = _.compact(Object.values(itemModAssignments).flat());
 
   if (!defs) {
     return null;

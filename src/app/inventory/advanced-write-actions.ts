@@ -96,7 +96,7 @@ export function insertPlug(
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
     try {
-      const insertFn = free && !$featureFlags.awa ? awaInsertSocketPlugFree : awaInsertSocketPlug;
+      const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
       // Update items that changed. It'd be great if we could rely on the response rom insertSocketPlug but it's
@@ -146,6 +146,10 @@ async function awaInsertSocketPlug(
   socket: DimSocket,
   plugItemHash: number
 ) {
+  if (!$featureFlags.awa) {
+    throw new Error('AWA.NotSupported');
+  }
+
   const actionToken = await getAwaToken(account, AwaType.InsertPlugs, storeId, item);
 
   // TODO: if the plug costs resources to insert, add a confirmation. This'd

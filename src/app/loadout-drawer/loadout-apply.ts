@@ -1,7 +1,11 @@
 import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { insertPlug, refreshItemAfterAWA } from 'app/inventory/advanced-write-actions';
+import {
+  canInsertPlug,
+  insertPlug,
+  refreshItemAfterAWA,
+} from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -24,7 +28,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { getCheapestModAssignments } from 'app/loadout/mod-utils';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -33,7 +37,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket, isUsedArmorModSocket } from 'app/utils/socket-utils';
+import { isArmorModSocket } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -619,7 +623,9 @@ export function clearItemsOffCharacter(
 function applyLoadoutMods(
   storeId: string,
   /** A list of inventory item hashes for plugs */
-  modHashes: number[]
+  modHashes: number[],
+  /** if an item would be wiped to default in all sockets, don't do anything to that item */
+  skipArmorsWithNoAssignments = true
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -633,20 +639,32 @@ function applyLoadoutMods(
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // What mods are already on the equipped armor set?
-    const existingMods = new Set<number>();
+    const existingMods: number[] = [];
     for (const item of armor) {
       if (item.sockets) {
         for (const socket of item.sockets.allSockets) {
           if (socket.plugged) {
-            existingMods.add(socket.plugged.plugDef.hash);
+            existingMods.push(socket.plugged.plugDef.hash);
           }
         }
       }
     }
 
     // Early exit - if all the mods are already there, nothing to do
-    if (modHashes.every((h) => existingMods.has(h))) {
-      infoLog('loadout mods', 'all mods are already there, skipping');
+    if (
+      modHashes.every((h) => {
+        const foundAt = existingMods.indexOf(h);
+        if (foundAt === -1) {
+          // a mod was missing
+          return false;
+        } else {
+          // the mod was found, but we have consumed this copy of it
+          delete existingMods[foundAt];
+          return true;
+        }
+      })
+    ) {
+      infoLog('loadout mods', 'all mods are already there. loadout already applied');
       return modHashes;
     }
 
@@ -654,14 +672,26 @@ function applyLoadoutMods(
     // TODO: stop if we can't perform this action (in activity)
     // TODO: prefer equipping to armor that *is* part of the loadout
     // TODO: compute assigments should consider which mods are already on the item!
-    const modAssignments = getCheapestModAssignments(armor, mods, defs);
+    const modAssignments = getCheapestModAssignments(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      const modsForItem = modAssignments.itemModAssignments[item.id];
-      if (modsForItem) {
-        successfulMods.push(...(await dispatch(equipMods(item.id, modsForItem))));
+      const assignmentSequence = modAssignments[item.id];
+      if (assignmentSequence) {
+        if (
+          skipArmorsWithNoAssignments &&
+          // if this assignmentSequence would return all sockets to their default
+          assignmentSequence.every(
+            (assignment) =>
+              assignment.mod.hash ===
+              item.sockets?.allSockets[assignment.socketIndex].socketDefinition
+                .singleInitialItemHash
+          )
+        ) {
+          continue;
+        }
+        successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
       }
     }
 
@@ -677,15 +707,17 @@ function applyLoadoutMods(
 }
 
 /**
- * Equip the specified mods on the item. Strips off existing mods if needed.
+ * Equip the specified mods on the item, in the order provided.
+ * Strips off existing mods if needed.
  */
 function equipMods(
   itemId: string,
-  modsForItem: PluggableInventoryItemDefinition[]
+  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[]
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
+    const destiny2CoreSettings = destiny2CoreSettingsSelector(getState())!;
 
     if (!item.sockets || !item.energy) {
       return [];
@@ -710,61 +742,44 @@ function equipMods(
     const successfulMods: number[] = [];
 
     try {
-      // First, clear mods that aren't already the right one
-      // TODO: would love to be smarter about this and clear out the minimum required. It should be possible
-      // to iteratively replace plugs without going over the energy limit, and remove unwanted plugs only if
-      // swapping in a new plug would go over the limit.
-      for (let socketIndex = 0; socketIndex < modSockets.length; socketIndex++) {
-        const socket = modSockets[socketIndex];
-        // Check off mods that are already where we want them to be
-        const matchingModIndex = modsToApply.findIndex(
-          (mod) => mod.hash === socket.plugged?.plugDef.hash
-        );
-        if (matchingModIndex >= 0) {
-          const matchingMod = modsToApply[matchingModIndex];
-          modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
-          modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
-          successfulMods.push(matchingMod.hash);
-        } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
-          // Clear out this socket
-          infoLog(
-            'loadout mods',
-            'clearing mod from',
-            item.name,
-            'socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
-          await dispatch(
-            insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash, false)
-          );
-        }
-      }
-
-      for (const mod of modsToApply) {
-        const socketIndex = modSockets.findIndex((s) =>
-          defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
-            (plug) => plug.categoryHash === mod.plug.plugCategoryHash
-          )
-        );
-
-        if (socketIndex >= 0) {
+      for (const { socketIndex, mod } of modsToApply) {
+        if (socketIndex >= 0 && mod) {
           // Use this socket
           const socket = modSockets[socketIndex];
-          infoLog(
-            'loadout mods',
-            'equipping mod',
-            mod.displayProperties.name,
-            'into',
-            item.name,
-            'socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
-          await dispatch(insertPlug(item, socket, mod.hash, false));
-          // Remove the socket from the list, we've used it
-          modSockets.splice(socketIndex, 1);
-          successfulMods.push(mod.hash);
+          // If the plug is already inserted we can skip this
+          if (socket.plugged?.plugDef.hash === mod.hash) {
+            continue;
+          }
+          if (
+            canInsertPlug(
+              socket,
+              socket.socketDefinition.singleInitialItemHash,
+              destiny2CoreSettings,
+              defs
+            )
+          ) {
+            infoLog(
+              'loadout mods',
+              'equipping mod',
+              mod.displayProperties.name,
+              'into',
+              item.name,
+              'socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+            await dispatch(insertPlug(item, socket, mod.hash, false));
+            successfulMods.push(mod.hash);
+          } else {
+            warnLog(
+              'loadout mods',
+              'cannot equip mod',
+              item.name,
+              'to socket',
+              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+                socket.socketIndex
+            );
+          }
         } else {
           throw new DimError('Loadouts.SocketError'); // TODO: do this for real
         }

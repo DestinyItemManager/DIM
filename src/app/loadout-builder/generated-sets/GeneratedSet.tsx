@@ -2,11 +2,11 @@ import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getCheapestModAssignments } from 'app/loadout/mod-utils';
+import { compactModAssignments, getCheapestModAssignments } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useMemo } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
@@ -64,15 +64,6 @@ function GeneratedSet({
     });
   };
 
-  if (set.armor.some((items) => !items.length)) {
-    errorLog('loadout optimizer', 'No valid sets!');
-    return null;
-  }
-
-  const canCompareLoadouts =
-    set.armor.every((items) => items[0].classType === selectedStore.classType) &&
-    loadouts.some((l) => l.classType === selectedStore.classType);
-
   let existingLoadout: Loadout | undefined;
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
 
@@ -87,13 +78,25 @@ function GeneratedSet({
     }
   }
 
-  const { itemModAssignments } = getCheapestModAssignments(
-    displayedItems,
-    lockedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
+  const itemModAssignments = useMemo(() => {
+    const { itemModAssignments } = getCheapestModAssignments(
+      displayedItems,
+      lockedMods,
+      defs,
+      upgradeSpendTier,
+      lockItemEnergyType
+    );
+    return compactModAssignments(itemModAssignments);
+  }, [defs, displayedItems, lockItemEnergyType, lockedMods, upgradeSpendTier]);
+
+  if (set.armor.some((items) => !items.length)) {
+    errorLog('loadout optimizer', 'No valid sets!');
+    return null;
+  }
+
+  const canCompareLoadouts =
+    set.armor.every((items) => items[0].classType === selectedStore.classType) &&
+    loadouts.some((l) => l.classType === selectedStore.classType);
 
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
