@@ -623,7 +623,9 @@ export function clearItemsOffCharacter(
 function applyLoadoutMods(
   storeId: string,
   /** A list of inventory item hashes for plugs */
-  modHashes: number[]
+  modHashes: number[],
+  /** if an item would be wiped to default in all sockets, don't do anything to that item */
+  skipArmorsWithNoAssignments = true
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -662,7 +664,7 @@ function applyLoadoutMods(
         }
       })
     ) {
-      infoLog('loadout mods', 'all mods are already there, skipping');
+      infoLog('loadout mods', 'all mods are already there. loadout already applied');
       return modHashes;
     }
 
@@ -670,14 +672,26 @@ function applyLoadoutMods(
     // TODO: stop if we can't perform this action (in activity)
     // TODO: prefer equipping to armor that *is* part of the loadout
     // TODO: compute assigments should consider which mods are already on the item!
-    const modAssignments = getCheapestModAssignments(armor, mods, defs);
+    const modAssignments = getCheapestModAssignments(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      const modsForItem = modAssignments.itemModAssignments[item.id];
-      if (modsForItem) {
-        successfulMods.push(...(await dispatch(equipMods(item.id, modsForItem))));
+      const assignmentSequence = modAssignments[item.id];
+      if (assignmentSequence) {
+        if (
+          skipArmorsWithNoAssignments &&
+          // if this assignmentSequence would return all sockets to their default
+          assignmentSequence.every(
+            (assignment) =>
+              assignment.mod.hash ===
+              item.sockets?.allSockets[assignment.socketIndex].socketDefinition
+                .singleInitialItemHash
+          )
+        ) {
+          continue;
+        }
+        successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
       }
     }
 
@@ -693,11 +707,12 @@ function applyLoadoutMods(
 }
 
 /**
- * Equip the specified mods on the item. Strips off existing mods if needed.
+ * Equip the specified mods on the item, in the order provided.
+ * Strips off existing mods if needed.
  */
 function equipMods(
   itemId: string,
-  modsForItem: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[]
+  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[]
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -758,9 +773,9 @@ function equipMods(
           } else {
             warnLog(
               'loadout mods',
-              'cannot clear mod from',
+              'cannot equip mod',
               item.name,
-              'socket',
+              'to socket',
               defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
                 socket.socketIndex
             );
