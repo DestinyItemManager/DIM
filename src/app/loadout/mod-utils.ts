@@ -105,10 +105,16 @@ export function createGetModRenderKey() {
   };
 }
 
-/** Used to track assigned and unassigned mods during the mod assignment algorithm.  */
+/**
+ * a temporary structure, keyed by item ID,
+ * used to track which mods have been assigned to each item,
+ * and which mods were unable to be assigned to each item
+ */
 interface ModAssignments {
   [itemId: string]: {
+    /* which mods are currently proposed to get assigned to this item */
     assigned: PluggableInventoryItemDefinition[];
+    /* which mods didn't meet the conditions to be assigned to this item */
     unassigned: PluggableInventoryItemDefinition[];
   };
 }
@@ -124,8 +130,10 @@ interface ModAssignments {
  * unassigned mods or an equal amount of unassigned mods and a lower energy cost.
  */
 export function getCheapestModAssignments(
+  /** a set (i.e. helmet, erms, etc) of items that we are trying to assign mods to */
   items: DimItem[],
-  mods: PluggableInventoryItemDefinition[],
+  /** mods we are trying to place on the items */
+  plannedMods: PluggableInventoryItemDefinition[],
   defs: D2ManifestDefinitions | undefined,
   upgradeSpendTier = UpgradeSpendTier.Nothing,
   lockItemEnergyType = true
@@ -163,34 +171,36 @@ export function getCheapestModAssignments(
   const activityMods: PluggableInventoryItemDefinition[] = [];
 
   // Divide up the locked mods into general, combat and activity mod arrays. Also we
-  // take the bucket specific mods and put them in a map of item id's to mods so
+  // take the bucket specific mods and put them in a map of item ids to mods so
   // we can calculate the used energy values for each item
-  for (const mod of mods) {
-    if (mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-      generalMods.push(mod);
-    } else if (combatCompatiblePlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-      combatMods.push(mod);
-    } else if (activityModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)) {
-      activityMods.push(mod);
+  for (const plannedMod of plannedMods) {
+    if (plannedMod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+      generalMods.push(plannedMod);
+    } else if (combatCompatiblePlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
+      combatMods.push(plannedMod);
+    } else if (activityModPlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
+      activityMods.push(plannedMod);
     } else {
-      const itemForMod = items.find(
-        (item) => mod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
+      // possible target for plugging this mod
+      const targetItem = items.find(
+        (item) => plannedMod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
       );
 
-      if (
-        itemForMod &&
-        isBucketSpecificModValid(
-          defs,
-          upgradeSpendTier,
-          lockItemEnergyType,
-          itemForMod,
-          mod,
-          bucketSpecificAssignments[itemForMod.id].assigned
-        )
-      ) {
-        bucketSpecificAssignments[itemForMod.id].assigned.push(mod);
-      } else if (itemForMod) {
-        bucketSpecificAssignments[itemForMod.id].unassigned.push(mod);
+      if (targetItem) {
+        if (
+          isBucketSpecificModValid(
+            defs,
+            upgradeSpendTier,
+            lockItemEnergyType,
+            targetItem,
+            plannedMod,
+            bucketSpecificAssignments[targetItem.id].assigned
+          )
+        ) {
+          bucketSpecificAssignments[targetItem.id].assigned.push(plannedMod);
+        } else {
+          bucketSpecificAssignments[targetItem.id].unassigned.push(plannedMod);
+        }
       }
     }
   }
@@ -290,6 +300,7 @@ export function getCheapestModAssignments(
     [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
   } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
+
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
@@ -320,6 +331,10 @@ export function getCheapestModAssignments(
  * - Assign mods to each socket or assign the default plug if there are no mods for the socket
  * - Then order the results so that we never go over the energy limit if we were to assign them one
  *   by one.
+ *
+ * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
+ * on this item, with its specific mod slots, and will throw if they are not.
+ * this doesn't account for total armor energy, just orders the swaps to avoid overusing energy points.
  */
 function createOrderedAssignmentResults(
   defs: D2ManifestDefinitions | undefined,
@@ -399,7 +414,8 @@ function createOrderedAssignmentResults(
  *
  * output: a dictionary keyed by instanceId, of `mod[]`
  *
- * used to make a series of mod assignments slot-agnostic?
+ * used to turn a collections of specific mod assignments,
+ * into a socket-agnostic list
  */
 export function compactModAssignments(assignments: {
   [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
@@ -435,15 +451,19 @@ function buildItemEnergy(
   };
 }
 
+/** given conditions and assigned mods, can this mod be placed on this armor item? */
 function isBucketSpecificModValid(
   defs: D2ManifestDefinitions,
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
   item: DimItem,
   mod: PluggableInventoryItemDefinition,
+  /** mods that are already assigned to this item */
   assignedMods: PluggableInventoryItemDefinition[]
 ) {
+  // given spending rules, what we can assume this item's energy is
   const itemEnergyCapacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item);
+  // given spending/element rules & current assignments, what element is this armor?
   const itemEnergyType = getItemEnergyType(
     defs,
     item,
@@ -451,13 +471,15 @@ function isBucketSpecificModValid(
     lockItemEnergyType,
     assignedMods
   );
+
+  // how many armor energy points are already used
   const energyUsed = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+  // cost of inserting this new proposed mod
   const modCost = mod.plug.energyCost?.energyCost || 0;
+  // element of this new proposed mod
   const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-  const energyTypeIsValid =
-    modEnergyType === itemEnergyType ||
-    modEnergyType === DestinyEnergyType.Any ||
-    itemEnergyType === DestinyEnergyType.Any;
+  // is the proposed mod's element compatible with armor's element?
+  const energyTypeIsValid = energyTypesAreCompatible(modEnergyType, itemEnergyType);
 
   return energyTypeIsValid && energyUsed + modCost <= itemEnergyCapacity;
 }
