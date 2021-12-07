@@ -37,7 +37,8 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHash, isArmorModSocket } from 'app/utils/socket-utils';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -306,14 +307,14 @@ function doApplyLoadout(
     try {
       // TODO (ryan) the items with overrides here don't have the default plugs included in them
       infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-      scope.totalItemOverrides = itemsWithOverrides.length;
-      const successfulItemOverrides = await dispatch(applySocketOverrides(itemsWithOverrides));
-      scope.successfulItemOverrides = successfulItemOverrides.length;
+      const { total, successful } = await dispatch(applySocketOverrides(itemsWithOverrides));
+      scope.totalItemOverrides = total;
+      scope.successfulItemOverrides = successful;
       infoLog(
         'loadout socket overrides',
         'Socket overrides applied',
-        scope.successfulMods,
-        scope.totalMods
+        scope.successfulItemOverrides,
+        scope.totalItemOverrides
       );
     } catch (e) {
       if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
@@ -650,34 +651,71 @@ export function clearItemsOffCharacter(
  * This gets all the sockets for an item and either applies the override plug in the items
  * socket overrides, or applies the default item plug. If the plug is already in the socket
  * we don't actually make an API call, it is just counted as a success.
- *
- * At the moment this naively assigns the mods in their index order. As it is currently
- * only used for subclasses, this means we will try and socket the abilities, aspects and then
- * fragments.
  */
-function applySocketOverrides(itemsWithOverrides: LoadoutItem[]): ThunkResult<number[]> {
+function applySocketOverrides(
+  itemsWithOverrides: LoadoutItem[]
+): ThunkResult<{ total: number; successful: number }> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
-    const successfulOverrides: number[] = [];
+    const overrideResults = { total: 0, successful: 0 };
 
     for (const item of itemsWithOverrides) {
       if (item.socketOverrides) {
-        const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
         const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
 
-        for (const socket of dimItem.sockets!.allSockets) {
-          const socketIndex = socket.socketIndex;
-          const modHash =
-            item.socketOverrides[socketIndex] || socket.socketDefinition.singleInitialItemHash;
-          const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-          modsForItem.push({ socketIndex, mod });
-        }
+        // We only handle class items at the moment
+        if (dimItem.bucket.type === 'Class') {
+          // First we clear out the fragment sockets as they take up an energy value provided by aspects
+          const fragmentsToClear: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] =
+            [];
+          const fragmentSockets = getSocketsByCategoryHash(
+            dimItem.sockets!,
+            SocketCategoryHashes.Fragments
+          );
 
-        successfulOverrides.push(...(await dispatch(equipMods(item.id, modsForItem))));
+          for (const fragmentSocket of fragmentSockets) {
+            const initialPlug = defs.InventoryItem.get(
+              fragmentSocket.socketDefinition.singleInitialItemHash
+            ) as PluggableInventoryItemDefinition;
+            fragmentsToClear.push({ socketIndex: fragmentSocket.socketIndex, mod: initialPlug });
+          }
+
+          // TODO more logging around the clearing of aspects.
+          // If this fails atm I just expect the following code block that assigns overrides to also
+          // fail and notify the user of it
+          await dispatch(equipMods(item.id, fragmentsToClear));
+
+          // Next we loop through the category hash order so that fragments come after aspects
+          // TODO hoist this out into a constant, here for readability atm
+          const subclassApplicationOrder = [
+            SocketCategoryHashes.Abilities,
+            SocketCategoryHashes.Aspects,
+            SocketCategoryHashes.Fragments,
+          ];
+
+          // We build up an array of mods to socket in order
+          const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
+
+          for (const categoryHash of subclassApplicationOrder) {
+            const sockets = getSocketsByCategoryHash(dimItem.sockets!, categoryHash);
+
+            for (const socket of sockets) {
+              const socketIndex = socket.socketIndex;
+              const modHash =
+                item.socketOverrides[socketIndex] || socket.socketDefinition.singleInitialItemHash;
+              const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+              modsForItem.push({ socketIndex, mod });
+            }
+          }
+
+          overrideResults.total += modsForItem.length;
+          const successful = await dispatch(equipMods(item.id, modsForItem));
+          overrideResults.successful += successful.length;
+        }
       }
     }
-    return successfulOverrides;
+    return overrideResults;
   };
 }
 
