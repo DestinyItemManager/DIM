@@ -55,8 +55,8 @@ interface Scope {
   failed: number;
   total: number;
   successfulItems: DimItem[];
-  totalItemsWithOverrides: number;
-  successfulItemsWithOverrides: number;
+  totalItemOverrides: number;
+  successfulItemOverrides: number;
   totalMods: number;
   successfulMods: number;
   // TODO: mod errors?
@@ -130,6 +130,15 @@ export function applyLoadout(
                 t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total })
               );
             }
+          }
+          if (scope.successfulItemOverrides < scope.totalItemOverrides) {
+            throw new DimError(
+              'Loadouts.AppliedOverridesWarn',
+              t('Loadouts.AppliedOverridesWarn', {
+                successful: scope.successfulItemOverrides,
+                total: scope.totalItemOverrides,
+              })
+            );
           }
           if (scope.successfulMods < scope.totalMods) {
             throw new DimError(
@@ -222,8 +231,8 @@ function doApplyLoadout(
       failed: 0,
       total: applicableLoadoutItems.length,
       successfulItems: [] as DimItem[],
-      totalItemsWithOverrides: 0,
-      successfulItemsWithOverrides: 0,
+      totalItemOverrides: 0,
+      successfulItemOverrides: 0,
       totalMods: 0,
       successfulMods: 0,
       errors: [] as {
@@ -297,9 +306,9 @@ function doApplyLoadout(
     try {
       // TODO (ryan) the items with overrides here don't have the default plugs included in them
       infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-      scope.totalItemsWithOverrides = itemsWithOverrides.length;
-      const successfulItemsWithOverrides = await dispatch(applySocketOverrides(itemsWithOverrides));
-      scope.successfulItemsWithOverrides = successfulItemsWithOverrides.length;
+      scope.totalItemOverrides = itemsWithOverrides.length;
+      const successfulItemOverrides = await dispatch(applySocketOverrides(itemsWithOverrides));
+      scope.successfulItemOverrides = successfulItemOverrides.length;
       infoLog(
         'loadout socket overrides',
         'Socket overrides applied',
@@ -646,11 +655,11 @@ export function clearItemsOffCharacter(
  * only used for subclasses, this means we will try and socket the abilities, aspects and then
  * fragments.
  */
-function applySocketOverrides(itemsWithOverrides: LoadoutItem[]): ThunkResult<string[]> {
+function applySocketOverrides(itemsWithOverrides: LoadoutItem[]): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
-    const successfulItems: string[] = [];
+    const successfulOverrides: number[] = [];
 
     for (const item of itemsWithOverrides) {
       if (item.socketOverrides) {
@@ -665,13 +674,10 @@ function applySocketOverrides(itemsWithOverrides: LoadoutItem[]): ThunkResult<st
           modsForItem.push({ socketIndex, mod });
         }
 
-        const successfulMods = await dispatch(equipMods(item.id, modsForItem));
-        if (successfulMods.length === modsForItem.length) {
-          successfulItems.push(item.id);
-        }
+        successfulOverrides.push(...(await dispatch(equipMods(item.id, modsForItem))));
       }
     }
-    return successfulItems;
+    return successfulOverrides;
   };
 }
 
