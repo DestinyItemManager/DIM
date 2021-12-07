@@ -1,7 +1,7 @@
 ## Next
 
 * Fix image paths for D1 perks.
-* Loadouts can now save stasis subclass abilities, aspects, and fragments.
+* Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
