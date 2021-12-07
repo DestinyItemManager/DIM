@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -249,17 +249,17 @@ export function getItemsFromLoadoutItems(
   loadoutItems: LoadoutItem[] | undefined,
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[]
-): [DimItem[], DimItem[]] {
+): [DimLoadoutItem[], DimItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
-  const items: DimItem[] = [];
+  const items: DimLoadoutItem[] = [];
   const warnitems: DimItem[] = [];
   for (const loadoutItem of loadoutItems) {
     const item = findItem(allItems, loadoutItem);
     if (item) {
-      items.push(item);
+      items.push({ ...item, ...loadoutItem });
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {

@@ -493,6 +493,7 @@
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
+    "Abilities": "Abilities",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -544,7 +545,6 @@
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModPlacement": "Mod Placement",
     "Mods": "Mods",
-    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
