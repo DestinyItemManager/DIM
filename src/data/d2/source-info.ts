@@ -514,6 +514,7 @@ const D2Sources: {
       611838069, // Source: Earned during the seasonal Guardian Games event.
       641018908, // Source: Earned during the 2018 Solstice of Heroes event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
+      930411416, // Source: Dawning 2021
       1054169368, // Source: Festival of the Lost 2021.
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
@@ -523,6 +524,7 @@ const D2Sources: {
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
       2502262376, // Source: Earned during the seasonal Crimson Days event.
+      2797674516, // Source: Moments of Triumph 2021
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019.
       3388021959, // Source: Earned during the Guardian Games event.
