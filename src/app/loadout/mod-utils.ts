@@ -143,7 +143,11 @@ export function getCheapestModAssignments(
   lockItemEnergyType = true
 ): {
   itemModAssignments: {
-    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: {
+      socketIndex: number;
+      mod: PluggableInventoryItemDefinition;
+      energyChange: number;
+    }[];
   };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
@@ -297,7 +301,11 @@ export function getCheapestModAssignments(
   }
 
   const mergedResults: {
-    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: {
+      socketIndex: number;
+      mod: PluggableInventoryItemDefinition;
+      energyChange: number;
+    }[];
   } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
 

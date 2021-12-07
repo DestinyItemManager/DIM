@@ -37,7 +37,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket } from 'app/utils/socket-utils';
+import { getSocketByIndex } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -625,7 +625,9 @@ function applyLoadoutMods(
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
   /** if an item would be wiped to default in all sockets, don't do anything to that item */
-  skipArmorsWithNoAssignments = true
+  skipArmorsWithNoAssignments = true,
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
+  clearUnassignedSocketsPerItem = false
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -685,13 +687,17 @@ function applyLoadoutMods(
           assignmentSequence.every(
             (assignment) =>
               assignment.mod.hash ===
-              item.sockets?.allSockets[assignment.socketIndex].socketDefinition
+              getSocketByIndex(item.sockets!, assignment.socketIndex)!.socketDefinition
                 .singleInitialItemHash
           )
         ) {
           continue;
         }
-        successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
+        successfulMods.push(
+          ...(await dispatch(
+            equipModsToItem(item.id, assignmentSequence, clearUnassignedSocketsPerItem)
+          ))
+        );
       }
     }
 
@@ -710,9 +716,16 @@ function applyLoadoutMods(
  * Equip the specified mods on the item, in the order provided.
  * Strips off existing mods if needed.
  */
-function equipMods(
+function equipModsToItem(
   itemId: string,
-  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[]
+  assignmentInstructions: {
+    socketIndex: number;
+    mod: PluggableInventoryItemDefinition;
+    // This will be negative if we are recovering used energy back by swapping in a cheaper mod
+    energyChange: number;
+  }[],
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
+  clearUnassignedSocketsPerItem = false
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -723,6 +736,8 @@ function equipMods(
       return [];
     }
 
+    const itemTotalEnergy = item.energy.energyCapacity;
+    let itemCurrentUsedEnergy = item.energy.energyUsed;
     /*
     // TODO: trying to figure out minimum assignments. Should really do this all at once in the
     // mod assignment algorithm and return both equips and de-equips
@@ -735,58 +750,84 @@ function equipMods(
     const existingModsBySocketType = new Map<DimSocket, DimPlug[]>()
     */
 
-    const modSockets = item.sockets.allSockets.filter(isArmorModSocket);
-
-    const modsToApply = [...modsForItem];
+    const [removals, desireds] = _.partition(
+      assignmentInstructions,
+      // eslint-disable-next-line radar/no-identical-functions
+      (assignment) =>
+        assignment.mod.hash ===
+        getSocketByIndex(item.sockets!, assignment.socketIndex)!.socketDefinition
+          .singleInitialItemHash
+    );
 
     const successfulMods: number[] = [];
 
-    try {
-      for (const { socketIndex, mod } of modsToApply) {
-        if (socketIndex >= 0 && mod) {
-          // Use this socket
-          const socket = modSockets[socketIndex];
-          // If the plug is already inserted we can skip this
-          if (socket.plugged?.plugDef.hash === mod.hash) {
-            continue;
-          }
-          if (
-            canInsertPlug(
-              socket,
-              socket.socketDefinition.singleInitialItemHash,
-              destiny2CoreSettings,
-              defs
-            )
-          ) {
-            infoLog(
-              'loadout mods',
-              'equipping mod',
-              mod.displayProperties.name,
-              'into',
-              item.name,
-              'socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-            await dispatch(insertPlug(item, socket, mod.hash, false));
-            successfulMods.push(mod.hash);
-          } else {
-            warnLog(
-              'loadout mods',
-              'cannot equip mod',
-              item.name,
-              'to socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-          }
-        } else {
-          throw new DimError('Loadouts.SocketError'); // TODO: do this for real
-        }
+    while (
+      // normally we stop when we have assigned all desired mods
+      desireds.length ||
+      // but if "clear other sockets" is on, we keep going
+      // until all removals are processed as well
+      (clearUnassignedSocketsPerItem && removals.length)
+    ) {
+      // the type of operation we're doing. lets us know later which queue we picked from
+      let removing = false;
+      let thisInsert = desireds[0];
+
+      if (
+        // if there's no more adds,
+        !thisInsert ||
+        // or if this is an add
+        (thisInsert.energyChange > 0 &&
+          // but it won't fit yet
+          itemCurrentUsedEnergy + thisInsert.energyChange > itemTotalEnergy)
+      ) {
+        // let's do a remove instead
+        removing = true;
+        thisInsert = removals[0];
       }
-    } finally {
-      // Maybe remove this after testing after Dec. 7th patch!
-      await dispatch(refreshItemAfterAWA(item));
+
+      const socketToOperateOn = getSocketByIndex(item.sockets, thisInsert.socketIndex)!;
+      const modToInsert = thisInsert.mod;
+
+      try {
+        // If the plug is already inserted we can skip this
+        if (socketToOperateOn.plugged?.plugDef.hash === modToInsert.hash) {
+          continue;
+        }
+
+        if (canInsertPlug(socketToOperateOn, modToInsert.hash, destiny2CoreSettings, defs)) {
+          infoLog(
+            'loadout mods',
+            'equipping mod',
+            modToInsert.displayProperties.name,
+            'into',
+            item.name,
+            'socket',
+            defs.SocketType.get(socketToOperateOn.socketDefinition.socketTypeHash)
+              ?.displayProperties.name || socketToOperateOn.socketIndex
+          );
+          await dispatch(insertPlug(item, socketToOperateOn, modToInsert.hash, false));
+          successfulMods.push(modToInsert.hash);
+        } else {
+          warnLog(
+            'loadout mods',
+            'cannot equip mod',
+            item.name,
+            'to socket',
+            defs.SocketType.get(socketToOperateOn.socketDefinition.socketTypeHash)
+              ?.displayProperties.name || socketToOperateOn.socketIndex
+          );
+        }
+      } finally {
+        // Maybe remove this after testing after Dec. 7th patch!
+        await dispatch(refreshItemAfterAWA(item));
+      }
+
+      // cleanup after this operation: splice out the operation from the queue
+      const arrayToSplice = removing ? removals : desireds;
+      const indexOfThisOperation = arrayToSplice.indexOf(thisInsert);
+      arrayToSplice.splice(indexOfThisOperation, 1);
+      // and apply the energy change
+      itemCurrentUsedEnergy += thisInsert.energyChange;
     }
 
     return successfulMods;
