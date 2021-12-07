@@ -304,13 +304,7 @@ function LoadoutRow({
         {(items.length > 0 || subclass || savedMods.length > 0) && (
           <>
             <div>
-              <Subclass defs={defs} subclass={subclass} />
-              {power !== 0 && (
-                <div className={styles.power}>
-                  <AppIcon icon={powerActionIcon} />
-                  <span>{power}</span>
-                </div>
-              )}
+              <Subclass defs={defs} subclass={subclass} power={power} />
             </div>
             {['Weapons', 'Armor', 'General'].map((category) => (
               <ItemCategory
@@ -339,7 +333,15 @@ function LoadoutRow({
   );
 }
 
-function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: DimLoadoutItem }) {
+function Subclass({
+  defs,
+  subclass,
+  power,
+}: {
+  defs: D2ManifestDefinitions;
+  subclass?: DimLoadoutItem;
+  power: number;
+}) {
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => {
     const plugs: PluggableInventoryItemDefinition[] = [];
@@ -367,31 +369,40 @@ function Subclass({ defs, subclass }: { defs: D2ManifestDefinitions; subclass?: 
   }, [subclass, defs]);
 
   return (
-    <div
-      className={clsx({
-        [styles.subclass]: !plugs.length,
-        [styles.mods]: plugs.length,
-      })}
-    >
-      {subclass ? (
-        <ItemPopupTrigger item={subclass}>
-          {(ref, onClick) => (
-            <ConnectedInventoryItem
-              innerRef={ref}
-              // Disable the popup when plugs are available as we are showing
-              // plugs in the loadout and they may be different to the popup
-              onClick={plugs.length ? undefined : onClick}
-              item={subclass}
-              ignoreSelectedPerks
-            />
-          )}
-        </ItemPopupTrigger>
+    <div className={styles.subclassContainer}>
+      <div className={styles.subclass}>
+        {subclass ? (
+          <ItemPopupTrigger item={subclass}>
+            {(ref, onClick) => (
+              <ConnectedInventoryItem
+                innerRef={ref}
+                // Disable the popup when plugs are available as we are showing
+                // plugs in the loadout and they may be different to the popup
+                onClick={plugs.length ? undefined : onClick}
+                item={subclass}
+                ignoreSelectedPerks
+              />
+            )}
+          </ItemPopupTrigger>
+        ) : (
+          <EmptyClassItem />
+        )}
+        {power !== 0 && (
+          <div className={styles.power}>
+            <AppIcon icon={powerActionIcon} />
+            <span>{power}</span>
+          </div>
+        )}
+      </div>
+      {plugs.length ? (
+        <div className={styles.subclassMods}>
+          {plugs?.map((plug) => (
+            <PlugDef key={getModRenderKey(plug)} plug={plug} />
+          ))}
+        </div>
       ) : (
-        <EmptyClassItem />
+        <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
       )}
-      {plugs?.map((plug) => (
-        <PlugDef key={getModRenderKey(plug)} plug={plug} />
-      ))}
     </div>
   );
 }

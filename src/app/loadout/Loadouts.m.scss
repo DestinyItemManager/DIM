@@ -94,12 +94,20 @@
   margin-right: 8px;
 }
 
+.subclassContainer {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  composes: flexRow from '../dim-ui/common.m.scss';
+  width: calc(var(--item-icon-size) + 3 * var(--item-icon-size) + 2 * var(--item-margin));
+}
+
 .subclass {
   width: var(--item-size);
+  min-width: var(--item-size);
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include vertical-space-children(18px);
+  margin-right: var(--item-margin);
+  @include vertical-space-children(var(--item-margin));
 }
 
 .itemCategory {
@@ -192,6 +200,12 @@
     --item-size: var(--item-icon-size);
   }
 }
+
+.subclassMods {
+  composes: mods;
+  min-width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+}
+
 .modsPlaceholder {
   composes: placeholder;
   flex: 1;
