@@ -7,8 +7,8 @@ jobs:
     steps:
     - name: Setup Node
       uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+      with:
+        node-version: 16.x
     - uses: actions/checkout@master
     - name: report webpack stats
       uses: packtracker/report@2.2.1
