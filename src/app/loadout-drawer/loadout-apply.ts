@@ -37,7 +37,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket, isUsedArmorModSocket } from 'app/utils/socket-utils';
+import { isArmorModSocket } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -685,7 +685,7 @@ function applyLoadoutMods(
  */
 function equipMods(
   itemId: string,
-  modsForItem: PluggableInventoryItemDefinition[]
+  modsForItem: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[]
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -715,22 +715,14 @@ function equipMods(
     const successfulMods: number[] = [];
 
     try {
-      // First, clear mods that aren't already the right one
-      // TODO: would love to be smarter about this and clear out the minimum required. It should be possible
-      // to iteratively replace plugs without going over the energy limit, and remove unwanted plugs only if
-      // swapping in a new plug would go over the limit.
-      for (let socketIndex = 0; socketIndex < modSockets.length; socketIndex++) {
-        const socket = modSockets[socketIndex];
-        // Check off mods that are already where we want them to be
-        const matchingModIndex = modsToApply.findIndex(
-          (mod) => mod.hash === socket.plugged?.plugDef.hash
-        );
-        if (matchingModIndex >= 0) {
-          const matchingMod = modsToApply[matchingModIndex];
-          modsToApply.splice(matchingModIndex, 1); // remove it from the list so we don't pay attention to it anymore
-          modSockets.splice(socketIndex, 1); // remove the socket from the list too, it's done
-          successfulMods.push(matchingMod.hash);
-        } else if (isUsedArmorModSocket(socket) && socket.socketDefinition.singleInitialItemHash) {
+      for (const { socketIndex, mod } of modsToApply) {
+        if (socketIndex >= 0 && mod) {
+          // Use this socket
+          const socket = modSockets[socketIndex];
+          // If the plug is already inserted we can skip this
+          if (socket.plugged?.plugDef.hash === mod.hash) {
+            continue;
+          }
           if (
             canInsertPlug(
               socket,
@@ -739,42 +731,6 @@ function equipMods(
               defs
             )
           ) {
-            // Clear out this socket
-            infoLog(
-              'loadout mods',
-              'clearing mod from',
-              item.name,
-              'socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-            await dispatch(
-              insertPlug(item, socket, socket.socketDefinition.singleInitialItemHash, false)
-            );
-          } else {
-            warnLog(
-              'loadout mods',
-              'cannot clear mod from',
-              item.name,
-              'socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-          }
-        }
-      }
-
-      for (const mod of modsToApply) {
-        const socketIndex = modSockets.findIndex((s) =>
-          defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
-            (plug) => plug.categoryHash === mod.plug.plugCategoryHash
-          )
-        );
-
-        if (socketIndex >= 0) {
-          const socket = modSockets[socketIndex];
-          if (canInsertPlug(socket, mod.hash, destiny2CoreSettings, defs)) {
-            // Use this socket
             infoLog(
               'loadout mods',
               'equipping mod',
@@ -786,15 +742,11 @@ function equipMods(
                 socket.socketIndex
             );
             await dispatch(insertPlug(item, socket, mod.hash, false));
-            // Remove the socket from the list, we've used it
-            modSockets.splice(socketIndex, 1);
             successfulMods.push(mod.hash);
           } else {
             warnLog(
               'loadout mods',
-              'cannot equip mod',
-              mod.displayProperties.name,
-              'into',
+              'cannot clear mod from',
               item.name,
               'socket',
               defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
