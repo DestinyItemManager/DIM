@@ -37,7 +37,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { isArmorModSocket } from 'app/utils/socket-utils';
+import { getSocketByIndex } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -735,19 +735,17 @@ function equipMods(
     const existingModsBySocketType = new Map<DimSocket, DimPlug[]>()
     */
 
-    const modSockets = item.sockets.allSockets.filter(isArmorModSocket);
-
     const modsToApply = [...modsForItem];
-
     const successfulMods: number[] = [];
 
     try {
       for (const { socketIndex, mod } of modsToApply) {
         if (socketIndex >= 0 && mod) {
           // Use this socket
-          const socket = modSockets[socketIndex];
+          const socket = getSocketByIndex(item.sockets, socketIndex)!;
           // If the plug is already inserted we can skip this
           if (socket.plugged?.plugDef.hash === mod.hash) {
+            successfulMods.push(mod.hash);
             continue;
           }
           if (
