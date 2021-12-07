@@ -787,13 +787,6 @@ const missingSources: { [key: string]: number[] } = {
   deepstonecrypt: [],
   deluxe: [
     2683682447, // Traitor's Fate
-    3752071760, //
-    3752071761, //
-    3752071762, //
-    3752071763, //
-    3752071765, //
-    3752071766, //
-    3752071767, //
   ],
   do: [
     66235782, // Anti-Extinction Grasps
@@ -1988,13 +1981,6 @@ const missingSources: { [key: string]: number[] } = {
   ],
   limited: [
     2683682447, // Traitor's Fate
-    3752071760, //
-    3752071761, //
-    3752071762, //
-    3752071763, //
-    3752071765, //
-    3752071766, //
-    3752071767, //
   ],
   lostsectors: [],
   mars: [],
