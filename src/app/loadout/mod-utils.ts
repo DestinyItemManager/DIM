@@ -304,10 +304,12 @@ export function getCheapestModAssignments(
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults[item.id] = createOrderedAssignmentInstructions(defs, item, [
-      ...specificAssignments.assigned,
-      ...independentAssignments.assigned,
-    ]);
+    mergedResults[item.id] = createOrderedAssignmentInstructions(
+      defs,
+      item,
+      specificAssignments.assigned,
+      independentAssignments.assigned
+    );
 
     unassignedMods = [
       ...unassignedMods,
@@ -334,10 +336,11 @@ export function getCheapestModAssignments(
  * on this item, with its specific mod slots, and will throw if they are not.
  * this doesn't account for total armor energy, just orders the swaps to avoid overusing energy points.
  */
-export function createOrderedAssignmentInstructions(
+function createOrderedAssignmentInstructions(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  modsToInsert: PluggableInventoryItemDefinition[]
+  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
+  bucketIndependentAssignments: PluggableInventoryItemDefinition[]
 ) {
   const pluggingActions: {
     socketIndex: number;
@@ -345,6 +348,8 @@ export function createOrderedAssignmentInstructions(
     // This will be negative if we are recovering used energy back by swapping in a cheaper mod
     energyChange: number;
   }[] = [];
+
+  const modsToInsert = [...bucketIndependentAssignments, ...bucketSpecificAssignments];
 
   const armorModIndexes =
     item.sockets?.categories.find(
