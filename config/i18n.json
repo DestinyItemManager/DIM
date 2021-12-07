@@ -3,7 +3,8 @@
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing item",
-    "FailedToken": "Couldn't get permission to change item"
+    "FailedToken": "Couldn't get permission to change item",
+    "NotSupported": "We cannot change this type of mod or perk"
   },
   "Accounts": {
     "Blizzard": "PC",

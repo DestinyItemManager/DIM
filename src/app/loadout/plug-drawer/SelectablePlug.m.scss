@@ -54,3 +54,9 @@
   margin-top: 8px;
   font-style: italic;
 }
+
+.partialDescription {
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+}
