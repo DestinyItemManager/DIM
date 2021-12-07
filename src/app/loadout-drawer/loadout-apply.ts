@@ -55,6 +55,8 @@ interface Scope {
   failed: number;
   total: number;
   successfulItems: DimItem[];
+  totalItemsWithOverrides: number;
+  successfulItemsWithOverrides: number;
   totalMods: number;
   successfulMods: number;
   // TODO: mod errors?
@@ -220,6 +222,8 @@ function doApplyLoadout(
       failed: 0,
       total: applicableLoadoutItems.length,
       successfulItems: [] as DimItem[],
+      totalItemsWithOverrides: 0,
+      successfulItemsWithOverrides: 0,
       totalMods: 0,
       successfulMods: 0,
       errors: [] as {
@@ -286,6 +290,29 @@ function doApplyLoadout(
     // is fixed on Bungie's end. When that happens, just remove this call.
     if (scope.successfulItems.length > 0) {
       dispatch(updateCharacters());
+    }
+
+    const itemsWithOverrides = equippedItems.filter((item) => item.socketOverrides);
+
+    try {
+      // TODO (ryan) the items with overrides here don't have the default plugs included in them
+      infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
+      scope.totalItemsWithOverrides = itemsWithOverrides.length;
+      const successfulItemsWithOverrides = await dispatch(applySocketOverrides(itemsWithOverrides));
+      scope.successfulItemsWithOverrides = successfulItemsWithOverrides.length;
+      infoLog(
+        'loadout socket overrides',
+        'Socket overrides applied',
+        scope.successfulMods,
+        scope.totalMods
+      );
+    } catch (e) {
+      if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
+        warnLog('loadout', "InsertPlugFree isn't out yet, skipping item overrides");
+      } else {
+        // TODO: work on errors
+        throw e;
+      }
     }
 
     // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
@@ -609,6 +636,46 @@ export function clearItemsOffCharacter(
 }
 
 /**
+ * Applies the socket overrides for the passed in loadout items.
+ *
+ * This gets all the sockets for an item and either applies the override plug in the items
+ * socket overrides, or applies the default item plug. If the plug is already in the socket
+ * we don't actually make an API call, it is just counted as a success.
+ *
+ * At the moment this naively assigns the mods in their index order. As it is currently
+ * only used for subclasses, this means we will try and socket the abilities, aspects and then
+ * fragments.
+ */
+function applySocketOverrides(itemsWithOverrides: LoadoutItem[]): ThunkResult<string[]> {
+  return async (dispatch, getState) => {
+    const defs = d2ManifestSelector(getState())!;
+
+    const successfulItems: string[] = [];
+
+    for (const item of itemsWithOverrides) {
+      if (item.socketOverrides) {
+        const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
+        const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
+
+        for (const socket of dimItem.sockets!.allSockets) {
+          const socketIndex = socket.socketIndex;
+          const modHash =
+            item.socketOverrides[socketIndex] || socket.socketDefinition.singleInitialItemHash;
+          const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+          modsForItem.push({ socketIndex, mod });
+        }
+
+        const successfulMods = await dispatch(equipMods(item.id, modsForItem));
+        if (successfulMods.length === modsForItem.length) {
+          successfulItems.push(item.id);
+        }
+      }
+    }
+    return successfulItems;
+  };
+}
+
+/**
  * Apply all the mods in the loadout to the equipped armor.
  *
  * This uses our mod assignment algorithm to choose which armor gets which mod. It will socket
@@ -748,6 +815,7 @@ function equipMods(
           const socket = modSockets[socketIndex];
           // If the plug is already inserted we can skip this
           if (socket.plugged?.plugDef.hash === mod.hash) {
+            successfulMods.push(mod.hash);
             continue;
           }
           if (
