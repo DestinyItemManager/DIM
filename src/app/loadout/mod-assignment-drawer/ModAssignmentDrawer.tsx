@@ -74,7 +74,7 @@ export default function ModAssignmentDrawer({
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   const armor = useEquippedLoadoutArmor(loadout);
   const getModRenderKey = createGetModRenderKey();
 

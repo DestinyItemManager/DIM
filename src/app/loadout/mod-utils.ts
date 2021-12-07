@@ -128,25 +128,25 @@ interface ModAssignments {
  * To do this we create permutations of general, combat and activity mods and loop over each
  * set of permutations and validate the combination. Validate is done via a lower number of
  * unassigned mods or an equal amount of unassigned mods and a lower energy cost.
+ *
+ * This returns a list of `unassignedMods` it was unable to find places for,
+ * and `itemModAssignments`, an item ID-keyed dictionary of *ordered* instructions
+ * for which mods to apply to each item
  */
 export function getCheapestModAssignments(
   /** a set (i.e. helmet, erms, etc) of items that we are trying to assign mods to */
   items: DimItem[],
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   upgradeSpendTier = UpgradeSpendTier.Nothing,
   lockItemEnergyType = true
 ): {
   itemModAssignments: {
-    [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
   };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
-  if (!defs) {
-    return { itemModAssignments: {}, unassignedMods: [] };
-  }
-
   let bucketIndependentAssignments: ModAssignments = {};
   const bucketSpecificAssignments: ModAssignments = {};
 
@@ -297,14 +297,14 @@ export function getCheapestModAssignments(
   }
 
   const mergedResults: {
-    [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
   } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
 
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults[item.id] = createOrderedAssignmentResults(
+    mergedResults[item.id] = createOrderedAssignmentInstructions(
       defs,
       item,
       specificAssignments.assigned,
@@ -336,15 +336,15 @@ export function getCheapestModAssignments(
  * on this item, with its specific mod slots, and will throw if they are not.
  * this doesn't account for total armor energy, just orders the swaps to avoid overusing energy points.
  */
-function createOrderedAssignmentResults(
-  defs: D2ManifestDefinitions | undefined,
+function createOrderedAssignmentInstructions(
+  defs: D2ManifestDefinitions,
   item: DimItem,
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
   bucketIndependentAssignments: PluggableInventoryItemDefinition[]
 ) {
   const pluggingActions: {
     socketIndex: number;
-    mod?: PluggableInventoryItemDefinition;
+    mod: PluggableInventoryItemDefinition;
     // This will be negative if we are recovering used energy back by swapping in a cheaper mod
     energyChange: number;
   }[] = [];
@@ -357,33 +357,34 @@ function createOrderedAssignmentResults(
     )?.socketIndexes || [];
   const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes);
 
-  for (const mod of modsToInsert) {
+  for (const modToInsert of modsToInsert) {
     // If it's already plugged somewhere, that's the slot we want to "plug it into"
     let destinationSocketIndex = existingModSockets.findIndex(
-      (socket) => socket.plugged?.plugDef.hash === mod.hash
+      (socket) => socket.plugged?.plugDef.hash === modToInsert.hash
     );
     // If it wasn't found already plugged, find the first socket it can fit into
     if (destinationSocketIndex === -1) {
       destinationSocketIndex = existingModSockets.findIndex(
-        (socket) => socket.plugged?.plugDef.plug.plugCategoryHash === mod.plug.plugCategoryHash
+        (socket) =>
+          socket.plugged?.plugDef.plug.plugCategoryHash === modToInsert.plug.plugCategoryHash
       );
     }
 
     // If a destination socket couldn't be found for this plug, something is seriously wrong
     if (destinationSocketIndex === -1) {
       throw new Error(
-        `We couldn't find anywhere to plug the mod ${mod.displayProperties.name} (${mod.hash})`
+        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`
       );
     }
 
     const existingModCost =
       existingModSockets[destinationSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
-    const plannedModCost = mod.plug.energyCost?.energyCost || 0;
+    const plannedModCost = modToInsert.plug.energyCost?.energyCost || 0;
     const energyChange = plannedModCost - existingModCost;
 
     pluggingActions.push({
       socketIndex: existingModSockets[destinationSocketIndex].socketIndex,
-      mod,
+      mod: modToInsert,
       energyChange,
     });
 
@@ -418,7 +419,7 @@ function createOrderedAssignmentResults(
  * into a socket-agnostic list
  */
 export function compactModAssignments(assignments: {
-  [itemInstanceId: string]: { socketIndex: number; mod?: PluggableInventoryItemDefinition }[];
+  [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
 }): {
   [itemInstanceId: string]: PluggableInventoryItemDefinition[];
 } {
