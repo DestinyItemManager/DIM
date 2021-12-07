@@ -745,7 +745,6 @@ function equipMods(
           const socket = getSocketByIndex(item.sockets, socketIndex)!;
           // If the plug is already inserted we can skip this
           if (socket.plugged?.plugDef.hash === mod.hash) {
-            successfulMods.push(mod.hash);
             continue;
           }
           if (
