@@ -282,12 +282,6 @@ function doApplyLoadout(
       });
     }
 
-    // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
-    // is fixed on Bungie's end. When that happens, just remove this call.
-    if (scope.successfulItems.length > 0) {
-      dispatch(updateCharacters());
-    }
-
     // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
     if (loadout.parameters?.mods) {
       try {
@@ -316,6 +310,12 @@ function doApplyLoadout(
           cancelToken
         )
       );
+    }
+
+    // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
+    // is fixed on Bungie's end. When that happens, just remove this call.
+    if (scope.successfulItems.length > 0) {
+      dispatch(updateCharacters());
     }
 
     dispatch(resumeFarming());
