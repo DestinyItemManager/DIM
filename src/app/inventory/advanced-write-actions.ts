@@ -1,8 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { HttpStatusError } from 'app/bungie-api/http-client';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
@@ -109,16 +108,15 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       // Update items that changed
       await dispatch(refreshItemAfterAWA(response.Response));
     } catch (e) {
-      errorLog('AWA', "Couldn't insert plug", item, e);
-      if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
-        showNotification({
-          type: 'error',
-          title: 'Not Yet!',
-          body: "Changing perks and mods won't be available until the launch of the Bungie 30th Anniversary patch on December 7th.",
-        });
-      } else {
-        showNotification({ type: 'error', title: t('AWA.Error'), body: e.message });
-      }
+      const defs = useD2Definitions()!;
+      const plugName =
+        defs.InventoryItem.get(plugItemHash)?.displayProperties.name ?? 'Unknown Plug';
+      errorLog('AWA', "Couldn't insert", plugName, 'into', item.name, e);
+      showNotification({
+        type: 'error',
+        title: t('AWA.Error'),
+        body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+      });
       throw e;
     }
   };
