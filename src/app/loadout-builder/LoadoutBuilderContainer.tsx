@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -43,6 +43,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   let urlLoadoutParameters: LoadoutParameters | undefined;
   if (urlLoadoutParametersJSON) {
     urlLoadoutParameters = JSON.parse(urlLoadoutParametersJSON);
+    urlLoadoutParameters = { ...defaultLoadoutParameters, ...urlLoadoutParameters };
     if (urlLoadoutParameters?.query) {
       query = urlLoadoutParameters.query;
     }
