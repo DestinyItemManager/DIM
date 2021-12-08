@@ -672,17 +672,20 @@ function applyLoadoutMods(
 
     for (const item of armor) {
       const assignmentSequence = modAssignments[item.id];
+      infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
         if (
           skipArmorsWithNoAssignments &&
           // if this assignmentSequence would return all sockets to their default
-          assignmentSequence.every(
-            (assignment) =>
-              assignment.mod.hash ===
-              getSocketByIndex(item.sockets!, assignment.socketIndex)!.socketDefinition
-                .singleInitialItemHash
-          )
+          assignmentSequence.every((assignment) => isAssigningToDefault(item, assignment))
         ) {
+          infoLog(
+            'loadout mods',
+            'Skipping applying ',
+            ...assignmentSequence.map((m) => m.mod.hash),
+            'because it would reset all sockets to default'
+          );
+          // TODO: successful mods?
           continue;
         }
         successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
@@ -698,6 +701,27 @@ function applyLoadoutMods(
     // Return the mods that were successfully assigned (even if they didn't have to move)
     return successfulMods;
   };
+}
+
+function isAssigningToDefault(
+  item: DimItem,
+  assignment: {
+    socketIndex: number;
+    mod: PluggableInventoryItemDefinition;
+  }
+) {
+  const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
+  if (!socket) {
+    warnLog(
+      'loadout mods',
+      'Why does socket',
+      assignment.socketIndex,
+      'not exist on',
+      item.name,
+      item.hash
+    );
+  }
+  return socket && assignment.mod.hash === socket.socketDefinition.singleInitialItemHash;
 }
 
 /**
@@ -738,6 +762,10 @@ function equipMods(
         const socket = getSocketByIndex(item.sockets, socketIndex)!;
         // If the plug is already inserted we can skip this
         if (socket.plugged?.plugDef.hash === mod.hash) {
+          // Don't count removing mods as applying a mod successfully
+          if (!isAssigningToDefault(item, { socketIndex, mod })) {
+            successfulMods.push(mod.hash);
+          }
           continue;
         }
         if (
@@ -759,7 +787,10 @@ function equipMods(
               socket.socketIndex
           );
           await dispatch(insertPlug(item, socket, mod.hash));
-          successfulMods.push(mod.hash);
+          // Don't count removing mods as applying a mod successfully
+          if (!isAssigningToDefault(item, { socketIndex, mod })) {
+            successfulMods.push(mod.hash);
+          }
         } else {
           warnLog(
             'loadout mods',
