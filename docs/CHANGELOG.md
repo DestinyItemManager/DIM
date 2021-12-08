@@ -4,6 +4,7 @@
 * Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
 * Fix issue where Optimizer throws an error when selecting a raid or combat mod.
 * Fix an error that can occur when loading a shared build link.
+* Items in the postmaster are now included in search transfers.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
