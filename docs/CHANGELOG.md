@@ -7,6 +7,7 @@
 * Fix an error that can occur when loading a shared build link.
 * Items in the postmaster are now included in search transfers.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
+* Fix emblems and subclasses not applying from loadouts.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
