@@ -308,8 +308,7 @@ function doApplyLoadout(
       );
     }
 
-    // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
-    // is fixed on Bungie's end. When that happens, just remove this call.
+    // Update the character stats after all the equips
     if (scope.successfulItems.length > 0) {
       dispatch(updateCharacters());
     }
