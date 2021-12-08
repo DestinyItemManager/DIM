@@ -5,6 +5,7 @@
 * Fix issue where Optimizer throws an error when selecting a raid or combat mod.
 * Fix a bug that prevented applying shaders or ornaments from the item popup.
 * Fix an error that can occur when loading a shared build link.
+* Added 'source:30th' for items coming the Bungie 30th Anniversary.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
