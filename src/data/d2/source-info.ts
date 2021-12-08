@@ -1,6 +1,17 @@
 const D2Sources: {
   [key: string]: { itemHashes: number[]; sourceHashes: number[]; searchString: string[] };
 } = {
+  '30th': {
+    itemHashes: [],
+    sourceHashes: [
+      443340273, // Source: Xûr's Treasure Hoard in Eternity
+      675740011, // Source: "Grasp of Avarice" Dungeon
+      1102533392, // Source: Xûr (Eternity)
+      1394793197, // Source: "Magnum Opus" Quest
+      2763252588, // Source: "And Out Fly the Wolves" Quest
+    ],
+    searchString: [],
+  },
   ada: {
     itemHashes: [
       417164956, // Jötunn
