@@ -178,16 +178,19 @@ function doApplyLoadout(
       ...i,
     })).filter((loadoutItem) => {
       const item = getLoadoutItem(loadoutItem, store, getStores());
+      // Ignore any items that are already in the correct state
       const notAlreadyThere =
         item &&
-        (item.owner !== store.id ||
+        // We need to move to another location - but exclude items that can't be transferred
+        ((item.owner !== store.id && !item.notransfer) ||
+          // Items in the postmaster should be moved even if they're on the same character
           item.location.inPostmaster ||
           // Needs to be equipped. Stuff not marked "equip" doesn't
           // necessarily mean to de-equip it.
           (loadoutItem.equipped && !item.equipped) ||
           // We always try to move consumable stacks because their logic is complicated
           (loadoutItem.amount && loadoutItem.amount > 1));
-      return notAlreadyThere && !item.notransfer;
+      return notAlreadyThere;
     });
 
     // vault can't equip
