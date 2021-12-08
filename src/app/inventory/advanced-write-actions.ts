@@ -20,7 +20,7 @@ import {
 import { get, set } from 'idb-keyval';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
-import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
+import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
@@ -75,12 +75,7 @@ function canInsertForFree(
 /**
  * Modify an item to insert a new plug into one of its socket.
  */
-export function insertPlug(
-  item: DimItem,
-  socket: DimSocket,
-  plugItemHash: number,
-  refresh = true
-): ThunkResult {
+export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
 
@@ -99,11 +94,8 @@ export function insertPlug(
       const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
       const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
-      // Update items that changed. It'd be great if we could rely on the response rom insertSocketPlug but it's
-      // often wrong. Test after December 7th and reevaluate.
-      if (refresh) {
-        await dispatch(refreshItemAfterAWA(item, response.Response));
-      }
+      // Update items that changed
+      await dispatch(refreshItemAfterAWA(response.Response));
     } catch (e) {
       errorLog('AWA', "Couldn't insert plug", item, e);
       if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
@@ -169,30 +161,10 @@ async function awaInsertSocketPlug(
 }
 
 /**
- * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
+ * Update our view of the item based on the new item state Bungie returned.
  */
-// TODO: Would be nice to do bulk updates without reloading the item every time
-export function refreshItemAfterAWA(
-  item: DimItem,
-  changes?: DestinyItemChangeResponse
-): ThunkResult {
+function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
-    // Update items that changed
-    const account = currentAccountSelector(getState())!;
-    try {
-      const itemInfo = await getSingleItem(item.id, account);
-      changes = {
-        item: itemInfo,
-        addedInventoryItems: changes?.addedInventoryItems ?? [],
-        removedInventoryItems: changes?.removedInventoryItems ?? [],
-      };
-    } catch (e) {
-      errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
-      if (!changes) {
-        throw e;
-      }
-    }
-
     const defs = d2ManifestSelector(getState())!;
     const buckets = d2BucketsSelector(getState())!;
     const stores = storesSelector(getState());
