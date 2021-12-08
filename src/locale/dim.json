@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
     "ConfirmTitle": "Confirm Action",
-    "Error": "Error changing item",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}: {{error}}",
     "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Activities",

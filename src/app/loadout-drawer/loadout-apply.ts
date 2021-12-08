@@ -1,4 +1,3 @@
-import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -287,12 +286,9 @@ function doApplyLoadout(
         scope.successfulMods = successfulMods.length;
         infoLog('loadout mods', 'Mods applied', scope.successfulMods, scope.totalMods);
       } catch (e) {
-        if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
-          warnLog('loadout', "InsertPlugFree isn't out yet, skipping mod equip");
-        } else {
-          // TODO: work on errors
-          throw e;
-        }
+        warnLog('loadout mods', 'error applying mods', e);
+        // TODO: work on errors
+        throw e;
       }
     }
 
