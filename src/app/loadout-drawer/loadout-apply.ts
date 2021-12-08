@@ -1,11 +1,7 @@
 import { HttpStatusError } from 'app/bungie-api/http-client';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import {
-  canInsertPlug,
-  insertPlug,
-  refreshItemAfterAWA,
-} from 'app/inventory/advanced-write-actions';
+import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
@@ -312,8 +308,7 @@ function doApplyLoadout(
       );
     }
 
-    // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
-    // is fixed on Bungie's end. When that happens, just remove this call.
+    // Update the character stats after all the equips
     if (scope.successfulItems.length > 0) {
       dispatch(updateCharacters());
     }
@@ -738,52 +733,47 @@ function equipMods(
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
 
-    try {
-      for (const { socketIndex, mod } of modsToApply) {
-        if (socketIndex >= 0 && mod) {
-          // Use this socket
-          const socket = getSocketByIndex(item.sockets, socketIndex)!;
-          // If the plug is already inserted we can skip this
-          if (socket.plugged?.plugDef.hash === mod.hash) {
-            continue;
-          }
-          if (
-            canInsertPlug(
-              socket,
-              socket.socketDefinition.singleInitialItemHash,
-              destiny2CoreSettings,
-              defs
-            )
-          ) {
-            infoLog(
-              'loadout mods',
-              'equipping mod',
-              mod.displayProperties.name,
-              'into',
-              item.name,
-              'socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-            await dispatch(insertPlug(item, socket, mod.hash, false));
-            successfulMods.push(mod.hash);
-          } else {
-            warnLog(
-              'loadout mods',
-              'cannot equip mod',
-              item.name,
-              'to socket',
-              defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-                socket.socketIndex
-            );
-          }
-        } else {
-          throw new DimError('Loadouts.SocketError'); // TODO: do this for real
+    for (const { socketIndex, mod } of modsToApply) {
+      if (socketIndex >= 0 && mod) {
+        // Use this socket
+        const socket = getSocketByIndex(item.sockets, socketIndex)!;
+        // If the plug is already inserted we can skip this
+        if (socket.plugged?.plugDef.hash === mod.hash) {
+          continue;
         }
+        if (
+          canInsertPlug(
+            socket,
+            socket.socketDefinition.singleInitialItemHash,
+            destiny2CoreSettings,
+            defs
+          )
+        ) {
+          infoLog(
+            'loadout mods',
+            'equipping mod',
+            mod.displayProperties.name,
+            'into',
+            item.name,
+            'socket',
+            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+              socket.socketIndex
+          );
+          await dispatch(insertPlug(item, socket, mod.hash));
+          successfulMods.push(mod.hash);
+        } else {
+          warnLog(
+            'loadout mods',
+            'cannot equip mod',
+            item.name,
+            'to socket',
+            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+              socket.socketIndex
+          );
+        }
+      } else {
+        throw new DimError('Loadouts.SocketError'); // TODO: do this for real
       }
-    } finally {
-      // Maybe remove this after testing after Dec. 7th patch!
-      await dispatch(refreshItemAfterAWA(item));
     }
 
     return successfulMods;
