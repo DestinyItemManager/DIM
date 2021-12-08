@@ -12,6 +12,7 @@ import {
   AwaAuthorizationResult,
   AwaType,
   AwaUserSelection,
+  DestinyInventoryItemDefinition,
   DestinyItemChangeResponse,
   DestinySocketArrayType,
   insertSocketPlug,
@@ -40,6 +41,17 @@ export function canInsertPlug(
   return $featureFlags.awa || canInsertForFree(socket, plugItemHash, destiny2CoreSettings, defs);
 }
 
+function hasInsertionCost(defs: D2ManifestDefinitions, plug: DestinyInventoryItemDefinition) {
+  if (plug.plug?.insertionMaterialRequirementHash) {
+    const requirements = defs.MaterialRequirementSet.get(
+      plug.plug?.insertionMaterialRequirementHash
+    );
+    // There are some items that explicitly point to a definition that says it costs 0 glimmer:
+    return requirements.materials.some((m) => m.count !== 0);
+  }
+  return false;
+}
+
 function canInsertForFree(
   socket: DimSocket,
   plugItemHash: number,
@@ -65,9 +77,9 @@ function canInsertForFree(
         socket.socketDefinition.randomizedPlugSetHash
     ) &&
     // And have no cost to insert
-    !plug.plug?.insertionMaterialRequirementHash &&
+    !hasInsertionCost(defs, plug) &&
     // And the current plug didn't cost anything (can't replace a non-free mod with a free one)
-    (!socket.plugged || !socket.plugged.plugDef.plug.insertionMaterialRequirementHash);
+    (!socket.plugged || !hasInsertionCost(defs, socket.plugged.plugDef));
 
   return free;
 }
