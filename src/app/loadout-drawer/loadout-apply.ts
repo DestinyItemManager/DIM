@@ -679,7 +679,7 @@ function applyLoadoutMods(
           assignmentSequence.every(
             (assignment) =>
               assignment.mod.hash ===
-              item.sockets?.allSockets[assignment.socketIndex].socketDefinition
+              getSocketByIndex(item.sockets!, assignment.socketIndex)!.socketDefinition
                 .singleInitialItemHash
           )
         ) {
