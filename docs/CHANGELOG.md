@@ -8,6 +8,7 @@
 * Items in the postmaster are now included in search transfers.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
+* Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
