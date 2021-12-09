@@ -8,6 +8,7 @@
 * Items in the postmaster are now included in search transfers.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
