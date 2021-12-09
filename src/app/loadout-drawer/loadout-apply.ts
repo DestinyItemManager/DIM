@@ -687,7 +687,7 @@ function applyLoadoutMods(
           // TODO: successful mods?
           continue;
         }
-        successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
+        successfulMods.push(...(await dispatch(equipModsToItem(item.id, assignmentSequence))));
       }
     }
 
@@ -696,13 +696,12 @@ function applyLoadoutMods(
   };
 }
 
-function isAssigningToDefault(
-  item: DimItem,
-  assignment: {
-    socketIndex: number;
-    mod: PluggableInventoryItemDefinition;
-  }
-) {
+type Assignment = {
+  socketIndex: number;
+  mod: PluggableInventoryItemDefinition;
+};
+
+function isAssigningToDefault(item: DimItem, assignment: Assignment) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {
     warnLog(
@@ -721,10 +720,7 @@ function isAssigningToDefault(
  * Equip the specified mods on the item, in the order provided.
  * Strips off existing mods if needed.
  */
-function equipMods(
-  itemId: string,
-  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[]
-): ThunkResult<number[]> {
+function equipModsToItem(itemId: string, modsForItem: Assignment[]): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;

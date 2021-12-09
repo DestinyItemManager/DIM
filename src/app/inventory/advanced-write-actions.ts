@@ -108,6 +108,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
   };
 }
 
+/** basically just the DIM version of api-ts' `insertSocketPlugFree` */
 async function awaInsertSocketPlugFree(
   account: DestinyAccount,
   storeId: string,
@@ -127,6 +128,10 @@ async function awaInsertSocketPlugFree(
   });
 }
 
+/**
+ * DIM's wrapper around insertSocketPlug, the actual paid
+ * insertion endpoint that gets user push approval
+ */
 async function awaInsertSocketPlug(
   account: DestinyAccount,
   storeId: string,

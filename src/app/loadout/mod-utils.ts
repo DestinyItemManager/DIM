@@ -306,7 +306,7 @@ export function getCheapestModAssignments(
   for (const item of items) {
     const independentAssignments = bucketIndependentAssignments[item.id];
     const specificAssignments = bucketSpecificAssignments[item.id];
-    mergedResults[item.id] = createOrderedAssignmentInstructions(
+    mergedResults[item.id] = createPluggingStrategy(
       defs,
       item,
       specificAssignments.assigned,
@@ -338,7 +338,7 @@ export function getCheapestModAssignments(
  * on this item, with its specific mod slots, and will throw if they are not.
  * this doesn't account for total armor energy, just orders the swaps to avoid overusing energy points.
  */
-function createOrderedAssignmentInstructions(
+function createPluggingStrategy(
   defs: D2ManifestDefinitions,
   item: DimItem,
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
