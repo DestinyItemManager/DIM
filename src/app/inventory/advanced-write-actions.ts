@@ -140,8 +140,8 @@ async function awaInsertSocketPlug(
 
   const actionToken = await getAwaToken(account, AwaType.InsertPlugs, storeId, item);
 
-  // TODO: if the plug costs resources to insert, add a confirmation. This'd
-  // be a great place for a dialog component?
+  // TODO: if the plug costs resources to insert, add a confirmation. This
+  // would be a great place for a dialog component?
 
   return insertSocketPlug(authenticatedHttpClient, {
     actionToken,
