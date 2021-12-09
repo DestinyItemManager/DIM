@@ -3,7 +3,7 @@
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing mods or perks",
-    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}: {{error}}",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Couldn't get permission to change item",
     "NotSupported": "We cannot change this type of mod or perk"
   },
@@ -902,7 +902,6 @@
     "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
-    "InsertPlugError": "Couldn't insert mod",
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"
   },

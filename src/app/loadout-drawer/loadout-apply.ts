@@ -662,10 +662,9 @@ function applyLoadoutMods(
       return modHashes;
     }
 
-    // TODO: stop if the API doesn't exist
     // TODO: stop if we can't perform this action (in activity)
     // TODO: prefer equipping to armor that *is* part of the loadout
-    // TODO: compute assigments should consider which mods are already on the item!
+    // TODO: compute assignments should consider which mods are already on the item!
     const modAssignments = getCheapestModAssignments(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
@@ -691,12 +690,6 @@ function applyLoadoutMods(
         successfulMods.push(...(await dispatch(equipMods(item.id, assignmentSequence))));
       }
     }
-
-    // TODO: better mod assignment (for this problem):
-    // Pass 1: Find out which of the mods are already there
-    // Pass 2: Slot specific mods just go right away
-    // Pass 3: Figure out if we can slot mods into existing spaces
-    // Pass 4: Figure out the minimum mods to remove to get the new mods in
 
     // Return the mods that were successfully assigned (even if they didn't have to move)
     return successfulMods;
@@ -741,68 +734,61 @@ function equipMods(
       return [];
     }
 
-    /*
-    // TODO: trying to figure out minimum assignments. Should really do this all at once in the
-    // mod assignment algorithm and return both equips and de-equips
-    const {energyCapacity} = item.energy
-    const energyNeeded = _.sumBy(modsForItem, (m) => m.plug.energyCost?.energyCost || 0)
-    const existingMods = _.compact(item.sockets.allSockets.map((s) => s.plugged))
-    const modsToAdd = modsForItem.filter((m) => existingMods.some((em) => em.plugDef.hash === m.hash))
-
-    const modsBySocketType = new Map<DimSocket, PluggableInventoryItemDefinition[]>()
-    const existingModsBySocketType = new Map<DimSocket, DimPlug[]>()
-    */
-
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
 
     for (const { socketIndex, mod } of modsToApply) {
-      if (socketIndex >= 0 && mod) {
-        // Use this socket
-        const socket = getSocketByIndex(item.sockets, socketIndex)!;
-        // If the plug is already inserted we can skip this
-        if (socket.plugged?.plugDef.hash === mod.hash) {
-          // Don't count removing mods as applying a mod successfully
-          if (!isAssigningToDefault(item, { socketIndex, mod })) {
-            successfulMods.push(mod.hash);
-          }
-          continue;
+      // Use this socket
+      const socket = getSocketByIndex(item.sockets, socketIndex)!;
+      // If the plug is already inserted we can skip this
+      if (socket.plugged?.plugDef.hash === mod.hash) {
+        // Don't count removing mods as applying a mod successfully
+        if (!isAssigningToDefault(item, { socketIndex, mod })) {
+          successfulMods.push(mod.hash);
         }
-        if (
-          canInsertPlug(
-            socket,
-            socket.socketDefinition.singleInitialItemHash,
-            destiny2CoreSettings,
-            defs
-          )
-        ) {
-          infoLog(
-            'loadout mods',
-            'equipping mod',
-            mod.displayProperties.name,
-            'into',
-            item.name,
-            'socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
+        continue;
+      }
+      if (
+        canInsertPlug(
+          socket,
+          socket.socketDefinition.singleInitialItemHash,
+          destiny2CoreSettings,
+          defs
+        )
+      ) {
+        infoLog(
+          'loadout mods',
+          'equipping mod',
+          mod.displayProperties.name,
+          'into',
+          item.name,
+          'socket',
+          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+            socket.socketIndex
+        );
+        try {
           await dispatch(insertPlug(item, socket, mod.hash));
           // Don't count removing mods as applying a mod successfully
           if (!isAssigningToDefault(item, { socketIndex, mod })) {
             successfulMods.push(mod.hash);
           }
-        } else {
-          warnLog(
-            'loadout mods',
-            'cannot equip mod',
-            item.name,
-            'to socket',
-            defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-              socket.socketIndex
-          );
+        } catch (e) {
+          const plugName = mod.displayProperties.name ?? 'Unknown Plug';
+          showNotification({
+            type: 'error',
+            title: t('AWA.Error'),
+            body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+          });
         }
       } else {
-        throw new DimError('Loadouts.SocketError'); // TODO: do this for real
+        warnLog(
+          'loadout mods',
+          'cannot equip mod',
+          item.name,
+          'to socket',
+          defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
+            socket.socketIndex
+        );
       }
     }
 
