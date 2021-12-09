@@ -696,6 +696,7 @@ function applyLoadoutMods(
   };
 }
 
+/** represents a single mod, and where to place it (on a non-specific item) */
 type Assignment = {
   socketIndex: number;
   mod: PluggableInventoryItemDefinition;
