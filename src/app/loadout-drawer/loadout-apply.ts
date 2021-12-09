@@ -32,7 +32,7 @@ import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
@@ -659,32 +659,28 @@ function applySocketOverrides(
       if (item.socketOverrides) {
         const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
 
-        // We only handle class items at the moment
-        if (dimItem.bucket.type === 'Class') {
-          // Next we loop through the category hash order so that fragments come after aspects
-          // TODO hoist this out into a constant, here for readability atm
-          const subclassApplicationOrder = [
-            SocketCategoryHashes.Abilities,
-            SocketCategoryHashes.Aspects,
-            SocketCategoryHashes.Fragments,
-          ];
+        // We build up an array of mods to socket in order
+        const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
+        const categories = dimItem.sockets?.categories || [];
 
-          // We build up an array of mods to socket in order
-          const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
+        for (const category of categories) {
+          const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
 
-          for (const categoryHash of subclassApplicationOrder) {
-            const sockets = getSocketsByCategoryHash(dimItem.sockets!, categoryHash);
+          for (const socket of sockets) {
+            const socketIndex = socket.socketIndex;
+            let modHash = item.socketOverrides[socketIndex];
 
-            for (const socket of sockets) {
-              const socketIndex = socket.socketIndex;
-              let modHash = item.socketOverrides[socketIndex];
-              if (modHash === undefined && categoryHash === SocketCategoryHashes.Abilities) {
-                modHash = socket.socketDefinition.singleInitialItemHash;
-              }
-              if (modHash) {
-                const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-                modsForItem.push({ socketIndex, mod });
-              }
+            // So far only subclass abilities are known to be able to socket the initial item
+            // aspects and fragments return a 500
+            if (
+              modHash === undefined &&
+              category.category.hash === SocketCategoryHashes.Abilities
+            ) {
+              modHash = socket.socketDefinition.singleInitialItemHash;
+            }
+            if (modHash) {
+              const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+              modsForItem.push({ socketIndex, mod });
             }
           }
 
