@@ -136,7 +136,7 @@ interface ModAssignments {
  * for which mods to apply to each item
  */
 export function getCheapestModAssignments(
-  /** a set (i.e. helmet, erms, etc) of items that we are trying to assign mods to */
+  /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
   items: DimItem[],
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[],
