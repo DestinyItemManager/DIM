@@ -18,7 +18,6 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -89,7 +88,6 @@ function Loadouts() {
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allItems = useSelector(allItemsSelector);
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
@@ -108,10 +106,6 @@ function Loadouts() {
     [allLoadouts, classType, loadoutSort]
   );
 
-  // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
-
-  const maxLoadout = maxLightLoadout(allItems, selectedStore);
-
   const currentLoadout = useMemo(() => {
     const items = selectedStore.items.filter(
       (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
@@ -125,7 +119,7 @@ function Loadouts() {
     return loadout;
   }, [selectedStore]);
 
-  const loadouts = _.compact([currentLoadout, maxLoadout, ...savedLoadouts]);
+  const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
