@@ -56,10 +56,12 @@ import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
+import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
 
 const categoryStyles = {
@@ -212,6 +214,7 @@ function LoadoutRow({
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
@@ -287,6 +290,14 @@ function LoadoutRow({
           <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
+          <button
+            className="dim-button"
+            type="button"
+            title="Assign Mods"
+            onClick={() => setShowModAssignmentDrawer(true)}
+          >
+            {t('Loadouts.ShowModPlacement')}
+          </button>
           {canShare && (
             <button type="button" className="dim-button" onClick={shareBuild}>
               {t('LoadoutBuilder.ShareBuild')}
@@ -329,6 +340,14 @@ function LoadoutRow({
           </>
         )}
       </div>
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }
