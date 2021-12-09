@@ -8,6 +8,7 @@
 * Items in the postmaster are now included in search transfers.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
+* The mod picker launched from the item popup or Loadout Optimizer will now correctly show the mods unlocked by the applicable character, rather than across all characters. This helps a lot with artifact mods where you may have different ones unlocked on different characters. Note that this also means opening the mod picker for items in the vault will show no artifact mods unlocked - move the item to a character if you want to apply that mod.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 

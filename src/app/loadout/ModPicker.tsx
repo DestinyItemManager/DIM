@@ -1,17 +1,19 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
+import {
+  itemsForCharacterOrProfilePlugSet,
+  itemsForPlugSetEverywhere,
+} from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { DestinyClass, DestinyEnergyType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
@@ -33,10 +35,13 @@ interface ProvidedProps {
    */
   lockedMods: PluggableInventoryItemDefinition[];
   /**
-   * The DestinyClass instance that is used to filter items on when building up the
-   * set of available mods.
+   * The character we'll show unlocked mods for.
    */
-  classType: DestinyClass;
+  classType?: DestinyClass;
+  /**
+   * The store ID that we're picking mods for. Used to restrict mods to those unlocked by that store.
+   */
+  owner?: string;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** The min height for the sheet. */
@@ -67,16 +72,18 @@ function mapStateToProps() {
     allItemsSelector,
     d2ManifestSelector,
     (_state: RootState, props: ProvidedProps) => props.classType,
+    (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
     (
-      profileResponse: DestinyProfileResponse,
-      allItems: DimItem[],
-      defs: D2ManifestDefinitions,
-      classType?: DestinyClass,
-      plugCategoryHashWhitelist?: number[]
+      profileResponse,
+      allItems,
+      defs,
+      classType,
+      owner,
+      plugCategoryHashWhitelist
     ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
-      if (!profileResponse || classType === undefined) {
+      if (!profileResponse || !defs) {
         return [];
       }
 
@@ -111,7 +118,10 @@ function mapStateToProps() {
         const unlockedPlugs: number[] = [];
 
         for (const plugSetHash of sets) {
-          const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+          // If an owner store ID was provided, get only plugs accessible to that store
+          const plugSetItems = owner
+            ? itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner)
+            : itemsForPlugSetEverywhere(profileResponse, plugSetHash);
           for (const plugSetItem of plugSetItems) {
             if (plugIsInsertable(plugSetItem)) {
               unlockedPlugs.push(plugSetItem.plugItemHash);

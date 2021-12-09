@@ -7,7 +7,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
+import { itemsForPlugSetEverywhere } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -200,5 +200,5 @@ function getPlugHashesForSocket(
     return [];
   }
 
-  return itemsForPlugSet(profileResponse, plugSetHash).map((plug) => plug.plugItemHash);
+  return itemsForPlugSetEverywhere(profileResponse, plugSetHash).map((plug) => plug.plugItemHash);
 }
