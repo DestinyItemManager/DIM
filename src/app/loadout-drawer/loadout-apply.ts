@@ -106,6 +106,11 @@ export function applyLoadout(
       dispatch(doApplyLoadout(store, loadout, applicableLoadoutItems, cancelToken, allowUndo))
     );
     loadingTracker.addPromise(loadoutPromise);
+    // TODO (ryan) this is only correct as we only have socket overrides on subclasses atm.
+    const numSubclassOverrides = _.sumBy(
+      applicableLoadoutItems,
+      (item) => _.compact(Object.values(item.socketOverrides || {})).length
+    );
 
     // Start a notification that will show as long as the loadout is equipping
     // TODO: show the items in the notification and tick them down! Will require piping through some sort of event source?
@@ -114,6 +119,7 @@ export function applyLoadout(
         loadout,
         applicableLoadoutItems.length,
         loadout.parameters?.mods?.length ?? 0,
+        numSubclassOverrides,
         store,
         // TODO: allow for an error view function to be passed in
         loadoutPromise.then((scope) => {
@@ -294,7 +300,9 @@ function doApplyLoadout(
       });
     }
 
-    const itemsWithOverrides = equippedItems.filter((item) => item.socketOverrides);
+    const itemsWithOverrides = loadout.items.filter(
+      (item) => item.socketOverrides && loadout.classType === store.classType
+    );
 
     if (itemsWithOverrides.length) {
       // TODO (ryan) the items with overrides here don't have the default plugs included in them
@@ -653,26 +661,6 @@ function applySocketOverrides(
 
         // We only handle class items at the moment
         if (dimItem.bucket.type === 'Class') {
-          // First we clear out the fragment sockets as they take up an energy value provided by aspects
-          const fragmentsToClear: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] =
-            [];
-          const fragmentSockets = getSocketsByCategoryHash(
-            dimItem.sockets!,
-            SocketCategoryHashes.Fragments
-          );
-
-          for (const fragmentSocket of fragmentSockets) {
-            const initialPlug = defs.InventoryItem.get(
-              fragmentSocket.socketDefinition.singleInitialItemHash
-            ) as PluggableInventoryItemDefinition;
-            fragmentsToClear.push({ socketIndex: fragmentSocket.socketIndex, mod: initialPlug });
-          }
-
-          // TODO more logging around the clearing of aspects.
-          // If this fails atm I just expect the following code block that assigns overrides to also
-          // fail and notify the user of it
-          await dispatch(equipMods(item.id, fragmentsToClear));
-
           // Next we loop through the category hash order so that fragments come after aspects
           // TODO hoist this out into a constant, here for readability atm
           const subclassApplicationOrder = [
@@ -689,15 +677,19 @@ function applySocketOverrides(
 
             for (const socket of sockets) {
               const socketIndex = socket.socketIndex;
-              const modHash =
-                item.socketOverrides[socketIndex] || socket.socketDefinition.singleInitialItemHash;
-              const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-              modsForItem.push({ socketIndex, mod });
+              let modHash = item.socketOverrides[socketIndex];
+              if (modHash === undefined && categoryHash === SocketCategoryHashes.Abilities) {
+                modHash = socket.socketDefinition.singleInitialItemHash;
+              }
+              if (modHash) {
+                const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+                modsForItem.push({ socketIndex, mod });
+              }
             }
           }
 
           overrideResults.total += modsForItem.length;
-          const successful = await dispatch(equipMods(item.id, modsForItem));
+          const successful = await dispatch(equipMods(item.id, modsForItem, true));
           overrideResults.successful += successful.length;
         }
       }
@@ -827,7 +819,8 @@ function isAssigningToDefault(
  */
 function equipMods(
   itemId: string,
-  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[]
+  modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[],
+  includeAssignToDefault = false
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -847,7 +840,7 @@ function equipMods(
       // If the plug is already inserted we can skip this
       if (socket.plugged?.plugDef.hash === mod.hash) {
         // Don't count removing mods as applying a mod successfully
-        if (!isAssigningToDefault(item, { socketIndex, mod })) {
+        if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod })) {
           successfulMods.push(mod.hash);
         }
         continue;
@@ -873,7 +866,7 @@ function equipMods(
         try {
           await dispatch(insertPlug(item, socket, mod.hash));
           // Don't count removing mods as applying a mod successfully
-          if (!isAssigningToDefault(item, { socketIndex, mod })) {
+          if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod })) {
             successfulMods.push(mod.hash);
           }
         } catch (e) {

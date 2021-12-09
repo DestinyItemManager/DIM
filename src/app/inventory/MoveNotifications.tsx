@@ -43,6 +43,7 @@ export function loadoutNotification(
   loadout: Loadout,
   numApplicableItems: number,
   numMods: number,
+  numSubclassOverrides: number,
   store: DimStore,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
@@ -65,6 +66,12 @@ export function loadoutNotification(
         ? '\n\n' +
           t('Loadouts.NotificationMessageMods', {
             count: numMods,
+          })
+        : '') +
+      (numSubclassOverrides > 0
+        ? '\n\n' +
+          t('Loadouts.NotificationMessageSubclass', {
+            count: numSubclassOverrides,
           })
         : ''),
     onCancel: cancel,

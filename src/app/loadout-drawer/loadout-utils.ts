@@ -3,13 +3,14 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { isUsedArmorModSocket } from 'app/utils/socket-utils';
+import { getSocketsByIndexes, isUsedArmorModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -200,6 +201,34 @@ export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
     hash: item.hash,
     amount: item.amount,
     socketOverrides: item.socketOverrides,
+    equipped,
+  };
+}
+
+/**
+ * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ */
+export function convertToLoadoutItemAndHydrateOverrides(item: DimItem, equipped: boolean) {
+  const socketOverrides: SocketOverrides = {};
+  if (item.bucket.type === 'Class' && item.sockets) {
+    for (const category of item.sockets.categories) {
+      const socketIndexes = category.socketIndexes;
+      const sockets = getSocketsByIndexes(item.sockets, socketIndexes);
+      for (const socket of sockets) {
+        if (
+          socket.plugged &&
+          socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
+        ) {
+          socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+        }
+      }
+    }
+  }
+  return {
+    id: item.id,
+    hash: item.hash,
+    amount: item.amount,
+    socketOverrides,
     equipped,
   };
 }

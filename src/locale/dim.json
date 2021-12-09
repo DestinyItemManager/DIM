@@ -554,6 +554,8 @@
     "NotificationMessage": "Sending loadout with 1 item to vault.",
     "NotificationMessageMods": "This will apply 1 mod and remove all other mods from your equipped armor.",
     "NotificationMessageMods_plural": "This will apply {{count}} mods and remove all other mods from your equipped armor.",
+    "NotificationMessageSubclass": "This will apply 1 option to the equipped subclass.",
+    "NotificationMessageSubclass_plural": "This will apply {{count}} options to the equipped subclass.",
     "NotificationMessage_female": "Applying loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Applying loadout with {{count}} items to {{store}}",
     "NotificationMessage_male": "Applying loadout with 1 item to {{store}}",

@@ -625,6 +625,8 @@
     "NotificationMessage_male_plural": "Applying loadout with {{count}} items to {{store}}",
     "NotificationMessageMods": "This will apply 1 mod and remove all other mods from your equipped armor.",
     "NotificationMessageMods_plural": "This will apply {{count}} mods and remove all other mods from your equipped armor.",
+    "NotificationMessageSubclass": "This will apply 1 option to the equipped subclass.",
+    "NotificationMessageSubclass_plural": "This will apply {{count}} options to the equipped subclass.",
     "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "OpenInOptimizer": "Optimize Armor",

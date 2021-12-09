@@ -23,7 +23,7 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  convertToLoadoutItem,
+  convertToLoadoutItemAndHydrateOverrides,
   extractArmorModHashes,
   getArmorStats,
   getItemsFromLoadoutItems,
@@ -118,7 +118,7 @@ function Loadouts() {
     );
     const loadout = newLoadout(
       t('Loadouts.FromEquipped'),
-      items.map((i) => convertToLoadoutItem(i, true)),
+      items.map((i) => convertToLoadoutItemAndHydrateOverrides(i, true)),
       items.flatMap((i) => extractArmorModHashes(i))
     );
     loadout.classType = selectedStore.classType;
