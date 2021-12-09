@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { errorLog } from 'app/utils/log';
 import { mergedCollectiblesSelector } from 'app/vendors/selectors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
@@ -101,24 +100,11 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     // the current character ID if the item is in the vault.
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
-    try {
-      const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
-      const response = await insertFn(account, storeId, item, socket, plugItemHash);
+    const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
+    const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
-      // Update items that changed
-      await dispatch(refreshItemAfterAWA(response.Response));
-    } catch (e) {
-      const defs = d2ManifestSelector(getState())!;
-      const plugName =
-        defs.InventoryItem.get(plugItemHash)?.displayProperties.name ?? 'Unknown Plug';
-      errorLog('AWA', "Couldn't insert", plugName, 'into', item.name, e);
-      showNotification({
-        type: 'error',
-        title: t('AWA.Error'),
-        body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
-      });
-      throw e;
-    }
+    // Update items that changed
+    await dispatch(refreshItemAfterAWA(response.Response));
   };
 }
 
