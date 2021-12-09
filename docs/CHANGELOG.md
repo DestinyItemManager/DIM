@@ -5,7 +5,6 @@
 * Fix issue where Optimizer throws an error when selecting a raid or combat mod.
 * Fix a bug that prevented applying shaders or ornaments from the item popup.
 * Fix an error that can occur when loading a shared build link.
-* Items in the postmaster are now included in search transfers.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
 * Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
