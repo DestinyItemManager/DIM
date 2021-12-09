@@ -1,17 +1,16 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { HttpStatusError } from 'app/bungie-api/http-client';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { errorLog } from 'app/utils/log';
 import { mergedCollectiblesSelector } from 'app/vendors/selectors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
   AwaAuthorizationResult,
   AwaType,
   AwaUserSelection,
+  DestinyInventoryItemDefinition,
   DestinyItemChangeResponse,
   DestinySocketArrayType,
   insertSocketPlug,
@@ -20,7 +19,7 @@ import {
 import { get, set } from 'idb-keyval';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
-import { getSingleItem, requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
+import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
@@ -38,6 +37,17 @@ export function canInsertPlug(
   defs: D2ManifestDefinitions
 ) {
   return $featureFlags.awa || canInsertForFree(socket, plugItemHash, destiny2CoreSettings, defs);
+}
+
+function hasInsertionCost(defs: D2ManifestDefinitions, plug: DestinyInventoryItemDefinition) {
+  if (plug.plug?.insertionMaterialRequirementHash) {
+    const requirements = defs.MaterialRequirementSet.get(
+      plug.plug?.insertionMaterialRequirementHash
+    );
+    // There are some items that explicitly point to a definition that says it costs 0 glimmer:
+    return requirements.materials.some((m) => m.count !== 0);
+  }
+  return false;
 }
 
 function canInsertForFree(
@@ -65,9 +75,9 @@ function canInsertForFree(
         socket.socketDefinition.randomizedPlugSetHash
     ) &&
     // And have no cost to insert
-    !plug.plug?.insertionMaterialRequirementHash &&
+    !hasInsertionCost(defs, plug) &&
     // And the current plug didn't cost anything (can't replace a non-free mod with a free one)
-    (!socket.plugged || !socket.plugged.plugDef.plug.insertionMaterialRequirementHash);
+    (!socket.plugged || !hasInsertionCost(defs, socket.plugged.plugDef));
 
   return free;
 }
@@ -75,12 +85,7 @@ function canInsertForFree(
 /**
  * Modify an item to insert a new plug into one of its socket.
  */
-export function insertPlug(
-  item: DimItem,
-  socket: DimSocket,
-  plugItemHash: number,
-  refresh = true
-): ThunkResult {
+export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
 
@@ -95,28 +100,11 @@ export function insertPlug(
     // the current character ID if the item is in the vault.
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
 
-    try {
-      const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
-      const response = await insertFn(account, storeId, item, socket, plugItemHash);
+    const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
+    const response = await insertFn(account, storeId, item, socket, plugItemHash);
 
-      // Update items that changed. It'd be great if we could rely on the response rom insertSocketPlug but it's
-      // often wrong. Test after December 7th and reevaluate.
-      if (refresh) {
-        await dispatch(refreshItemAfterAWA(item, response.Response));
-      }
-    } catch (e) {
-      errorLog('AWA', "Couldn't insert plug", item, e);
-      if (e instanceof DimError && e.cause instanceof HttpStatusError && e.cause.status === 404) {
-        showNotification({
-          type: 'error',
-          title: 'Not Yet!',
-          body: "Changing perks and mods won't be available until the launch of the Bungie 30th Anniversary patch on December 7th.",
-        });
-      } else {
-        showNotification({ type: 'error', title: t('AWA.Error'), body: e.message });
-      }
-      throw e;
-    }
+    // Update items that changed
+    await dispatch(refreshItemAfterAWA(response.Response));
   };
 }
 
@@ -169,30 +157,10 @@ async function awaInsertSocketPlug(
 }
 
 /**
- * Updating items is supposed to return the new item... but sometimes it comes back weird. Instead we'll just load the item.
+ * Update our view of the item based on the new item state Bungie returned.
  */
-// TODO: Would be nice to do bulk updates without reloading the item every time
-export function refreshItemAfterAWA(
-  item: DimItem,
-  changes?: DestinyItemChangeResponse
-): ThunkResult {
+function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
-    // Update items that changed
-    const account = currentAccountSelector(getState())!;
-    try {
-      const itemInfo = await getSingleItem(item.id, account);
-      changes = {
-        item: itemInfo,
-        addedInventoryItems: changes?.addedInventoryItems ?? [],
-        removedInventoryItems: changes?.removedInventoryItems ?? [],
-      };
-    } catch (e) {
-      errorLog('AWA', 'Unable to refresh item, falling back on AWA response', item, e);
-      if (!changes) {
-        throw e;
-      }
-    }
-
     const defs = d2ManifestSelector(getState())!;
     const buckets = d2BucketsSelector(getState())!;
     const stores = storesSelector(getState());

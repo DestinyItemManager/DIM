@@ -64,7 +64,7 @@ export function loadoutNotification(
       (numMods > 0
         ? '\n\n' +
           t('Loadouts.NotificationMessageMods', {
-            count: numApplicableItems,
+            count: numMods,
           })
         : ''),
     onCancel: cancel,

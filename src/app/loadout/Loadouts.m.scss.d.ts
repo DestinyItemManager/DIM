@@ -30,7 +30,9 @@ interface CssExports {
   'page': string;
   'placeholder': string;
   'power': string;
-  'subClass': string;
+  'subclass': string;
+  'subclassContainer': string;
+  'subclassMods': string;
   'title': string;
   'unequipped': string;
 }

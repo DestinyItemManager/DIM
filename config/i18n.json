@@ -2,17 +2,18 @@
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
     "ConfirmTitle": "Confirm Action",
-    "Error": "Error changing item",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Couldn't get permission to change item",
     "NotSupported": "We cannot change this type of mod or perk"
   },
   "Accounts": {
     "Blizzard": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1",
+    "Xbox": "Xbox",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingTitle": "Account Not Found",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
@@ -557,6 +558,7 @@
     "YouTubeLink": "Watch a tutorial about Loadout Optimizer on YouTube."
   },
   "Loadouts": {
+    "Abilities": "Abilities",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -901,7 +903,6 @@
     "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
-    "InsertPlugError": "Couldn't insert mod",
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"
   },

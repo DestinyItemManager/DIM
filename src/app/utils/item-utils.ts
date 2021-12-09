@@ -43,7 +43,7 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 
 // these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 
-const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
+export const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);

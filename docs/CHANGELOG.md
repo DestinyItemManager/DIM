@@ -1,6 +1,13 @@
 ## Next
 
 * Fix image paths for D1 perks.
+* Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
+* Fix issue where Optimizer throws an error when selecting a raid or combat mod.
+* Fix a bug that prevented applying shaders or ornaments from the item popup.
+* Fix an error that can occur when loading a shared build link.
+* Items in the postmaster are now included in search transfers.
+* Added 'source:30th' for items coming from the Bungie 30th Anniversary.
+* Fix emblems and subclasses not applying from loadouts.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
