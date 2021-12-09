@@ -145,7 +145,7 @@ export function getCheapestModAssignments(
   lockItemEnergyType = true
 ): {
   itemModAssignments: {
-    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: PluggingAction[];
   };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
@@ -299,7 +299,7 @@ export function getCheapestModAssignments(
   }
 
   const mergedResults: {
-    [itemInstanceId: string]: { socketIndex: number; mod: PluggableInventoryItemDefinition }[];
+    [itemInstanceId: string]: PluggingAction[];
   } = {};
   let unassignedMods: PluggableInventoryItemDefinition[] = [];
 
@@ -323,16 +323,26 @@ export function getCheapestModAssignments(
   return { itemModAssignments: mergedResults, unassignedMods };
 }
 
+type PluggingAction = {
+  /** what item to plug */
+  mod: PluggableInventoryItemDefinition;
+  /** which socket to plug it into */
+  socketIndex: number;
+  /** This will be negative if we are recovering used energy back by swapping in a cheaper mod */
+  energySpend: number;
+  /**
+   * if required, this instruction must be completed. the user wants this mod plugged.
+   * if not, this is an optional action which clears out other mod slots
+   */
+  required: boolean;
+};
+
 /**
- * For a given item, and mods that need attaching, this creates an ordered list of plugging actions,
- * to prefer plugging desired mod X into a slot that already has X,
- * and prefer freeing up armor energy before comsuming it.
- *
- * Basically
- * - It will find all the relevant sockets
- * - Assign mods to each socket or assign the default plug if there are no mods for the socket
- * - Then order the results so that we never go over the energy limit if we were to assign them one
- *   by one.
+ * For a given item, and mods that need attaching,
+ * this creates an ordered list of plugging actions, which:
+ * - prefer plugging desired mod X into a slot that already has X
+ * - remove or swap in cheaper mods to free up enough armor energy, before applying those which cost more
+ * - mark mod removals as optional, if they aren't required to free up a slot or energy
  *
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
@@ -344,35 +354,42 @@ function createPluggingStrategy(
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
   bucketIndependentAssignments: PluggableInventoryItemDefinition[]
 ) {
-  const pluggingActions: {
-    socketIndex: number;
-    mod: PluggableInventoryItemDefinition;
-    // This will be negative if we are recovering used energy back by swapping in a cheaper mod
-    energyChange: number;
-  }[] = [];
-
   const modsToInsert = [...bucketIndependentAssignments, ...bucketSpecificAssignments];
 
-  const armorModIndexes =
-    item.sockets?.categories.find(
-      (category) => category.category.hash === SocketCategoryHashes.ArmorMods
-    )?.socketIndexes || [];
-  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes);
+  // collect a list of socketdefs for only the sockets we can assign to
+  const armorModIndexes = item.sockets?.categories.find(
+    ({ category }) => category.hash === SocketCategoryHashes.ArmorMods
+  )?.socketIndexes;
+
+  // YES, we address this by index.
+  // but only because we are find()ing through it and seeking a DimSocket object.
+  // at the end, we will properly extract that DimSocket's socketIndex
+  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []);
+
+  // stuff we need to apply, that frees up energy. we'll apply these first
+  const requiredRegains: PluggingAction[] = [];
+  // stuff we need to apply, but it will cost us...
+  const requiredSpends: PluggingAction[] = [];
+  // stuff we MAY apply, if we need more energy freed up
+  const optionalRegains: PluggingAction[] = [];
 
   for (const modToInsert of modsToInsert) {
-    // If it's already plugged somewhere, that's the slot we want to "plug it into"
+    // If this mod is already plugged somewhere, that's the slot we want to keep it in
     let destinationSocketIndex = existingModSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === modToInsert.hash
     );
-    // If it wasn't found already plugged, find the first socket it can fit into
+
+    // If it wasn't found already plugged, find the first socket with a matching PCH
+    // TO-DO: this is naive and is going to fail for artificer armor
     if (destinationSocketIndex === -1) {
-      // check for general and item specifc mods
       destinationSocketIndex = existingModSockets.findIndex(
         (socket) =>
           socket.plugged?.plugDef.plug.plugCategoryHash === modToInsert.plug.plugCategoryHash
       );
     }
 
+    // If we didn't find a matching PCH, check deeper for any specialty sockets,
+    // which may support multiple PCHes
     if (destinationSocketIndex === -1) {
       const specialtySockets = getSpecialtySockets(item) || [];
       for (const socket of specialtySockets) {
@@ -384,22 +401,25 @@ function createPluggingStrategy(
       }
     }
 
-    // If a destination socket couldn't be found for this plug, something is seriously wrong
+    // If a destination socket couldn't be found for this plug, something is seriously? wrong
     if (destinationSocketIndex === -1) {
       throw new Error(
         `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`
       );
     }
 
-    const existingModCost =
-      existingModSockets[destinationSocketIndex].plugged?.plugDef.plug.energyCost?.energyCost || 0;
-    const plannedModCost = modToInsert.plug.energyCost?.energyCost || 0;
-    const energyChange = plannedModCost - existingModCost;
+    // we found it!! this is where we have chosen to place the mod
+    const destinationSocket = existingModSockets[destinationSocketIndex];
 
-    pluggingActions.push({
-      socketIndex: existingModSockets[destinationSocketIndex].socketIndex,
+    const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
+    const plannedModCost = modToInsert.plug.energyCost?.energyCost || 0;
+    const energySpend = plannedModCost - existingModCost;
+
+    (energySpend >= 0 ? requiredSpends : requiredRegains).push({
+      socketIndex: destinationSocket.socketIndex,
       mod: modToInsert,
-      energyChange,
+      energySpend,
+      required: true,
     });
 
     // remove this existing socket from consideration
@@ -408,20 +428,72 @@ function createPluggingStrategy(
 
   // For each remaining socket that won't have mods assigned,
   // return it to its default (usually "Empty Mod Socket")
+  // TO-DO: here's another thing that will fail for artificer armor.
+  // those have no singleInitialItemHash
   for (const leftoverSocket of existingModSockets) {
-    const defaultMod = defs?.InventoryItem.get(
+    const defaultMod = defs.InventoryItem.get(
       leftoverSocket.socketDefinition.singleInitialItemHash
     );
     const currentModEnergy = leftoverSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
-    pluggingActions.push({
+    optionalRegains.push({
       socketIndex: leftoverSocket.socketIndex,
       mod: defaultMod as PluggableInventoryItemDefinition,
-      energyChange: -currentModEnergy,
+      energySpend: -currentModEnergy,
+      required: false,
     });
   }
 
-  // Sort so we free up energy before we consume it, if possible
-  return pluggingActions.sort(compareBy((res) => res.energyChange));
+  // sort lower gains first
+  optionalRegains.sort(compareBy((res) => -res.energySpend));
+
+  const operationSet: PluggingAction[] = [];
+
+  const itemTotalEnergy = item.energy!.energyCapacity;
+  let itemCurrentUsedEnergy = item.energy!.energyUsed;
+
+  // apply all required regains first
+  for (const regainOperation of requiredRegains) {
+    operationSet.push(regainOperation);
+    itemCurrentUsedEnergy += regainOperation.energySpend;
+  }
+
+  // keep looping til we have placed all desired mods
+  for (const spendOperation of requiredSpends) {
+    // while there's not enough energy for this mod,
+    while (itemCurrentUsedEnergy + spendOperation.energySpend > itemTotalEnergy) {
+      if (!optionalRegains.length) {
+        throw new Error(
+          `there's not enough energy to assign ${spendOperation.mod.displayProperties.name} to ${item.name}, but no more energy can be freed up`
+        );
+      }
+      // we'll apply optional energy regains to make space
+      const itemCurrentFreeEnergy = itemTotalEnergy - itemCurrentUsedEnergy;
+      const extraEnergyNeeded = spendOperation.energySpend - itemCurrentFreeEnergy;
+
+      const whichRegainToUse =
+        optionalRegains.find((r) => -r.energySpend >= extraEnergyNeeded) ?? optionalRegains[0];
+
+      // this is now required, because it helps place a required mod
+      whichRegainToUse.required = true;
+      // apply this regain
+      operationSet.push(whichRegainToUse);
+      // apply its energy change
+      itemCurrentUsedEnergy += whichRegainToUse.energySpend;
+      // and remove it from the optional regains list
+      optionalRegains.splice(optionalRegains.indexOf(whichRegainToUse), 1);
+    }
+
+    // now we can apply this spend
+    operationSet.push(spendOperation);
+    // and apply its energy change
+    itemCurrentUsedEnergy += spendOperation.energySpend;
+  }
+
+  // append any "reset to default"s that we didn't consume
+  for (const regainOperation of optionalRegains) {
+    operationSet.push(regainOperation);
+  }
+  return operationSet;
 }
 
 /**

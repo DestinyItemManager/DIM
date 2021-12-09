@@ -8,7 +8,7 @@ import {
   getSimilarItem,
   MoveReservations,
 } from 'app/inventory/item-move-service';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
@@ -35,7 +35,7 @@ import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { getSocketByIndex } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { Assignment, Loadout, LoadoutItem } from './loadout-types';
 import { loadoutFromAllItems } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
@@ -619,7 +619,9 @@ function applyLoadoutMods(
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
   /** if an item would be wiped to default in all sockets, don't do anything to that item */
-  skipArmorsWithNoAssignments = true
+  skipArmorsWithNoAssignments = true,
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
+  clearUnassignedSocketsPerItem = false
 ): ThunkResult<number[]> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -665,12 +667,23 @@ function applyLoadoutMods(
     // TODO: stop if we can't perform this action (in activity)
     // TODO: prefer equipping to armor that *is* part of the loadout
     // TODO: compute assignments should consider which mods are already on the item!
-    const modAssignments = getCheapestModAssignments(armor, mods, defs).itemModAssignments;
+    const modAssignments = getCheapestModAssignments(
+      armor,
+      mods,
+      defs,
+      undefined
+    ).itemModAssignments;
 
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      const assignmentSequence = modAssignments[item.id];
+      const assignmentSequence = modAssignments[item.id].filter(
+        (assignment) =>
+          // keep all assignments if we want to wipe unassigned sockets
+          clearUnassignedSocketsPerItem ||
+          // otherwise, rely on requiredness
+          assignment.required
+      );
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
         if (
@@ -687,6 +700,7 @@ function applyLoadoutMods(
           // TODO: successful mods?
           continue;
         }
+
         successfulMods.push(...(await dispatch(equipModsToItem(item.id, assignmentSequence))));
       }
     }
@@ -695,12 +709,6 @@ function applyLoadoutMods(
     return successfulMods;
   };
 }
-
-/** represents a single mod, and where to place it (on a non-specific item) */
-type Assignment = {
-  socketIndex: number;
-  mod: PluggableInventoryItemDefinition;
-};
 
 function isAssigningToDefault(item: DimItem, assignment: Assignment) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
@@ -719,7 +727,8 @@ function isAssigningToDefault(item: DimItem, assignment: Assignment) {
 
 /**
  * Equip the specified mods on the item, in the order provided.
- * Strips off existing mods if needed.
+ * This applies each assignment, and does not account item energy,
+ * which should be pre-calculated .
  */
 function equipModsToItem(itemId: string, modsForItem: Assignment[]): ThunkResult<number[]> {
   return async (dispatch, getState) => {
