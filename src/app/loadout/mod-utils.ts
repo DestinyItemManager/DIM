@@ -2,6 +2,7 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { PluggingAction } from 'app/loadout-drawer/loadout-types';
 import { generateModPermutations } from 'app/loadout/mod-permutations';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import {
@@ -322,20 +323,6 @@ export function getCheapestModAssignments(
 
   return { itemModAssignments: mergedResults, unassignedMods };
 }
-
-type PluggingAction = {
-  /** what item to plug */
-  mod: PluggableInventoryItemDefinition;
-  /** which socket to plug it into */
-  socketIndex: number;
-  /** This will be negative if we are recovering used energy back by swapping in a cheaper mod */
-  energySpend: number;
-  /**
-   * if required, this instruction must be completed. the user wants this mod plugged.
-   * if not, this is an optional action which clears out other mod slots
-   */
-  required: boolean;
-};
 
 /**
  * For a given item, and mods that need attaching,
