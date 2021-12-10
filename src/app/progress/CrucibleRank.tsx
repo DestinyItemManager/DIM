@@ -1,3 +1,4 @@
+import { useDynamicStringReplacer } from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
@@ -18,6 +19,7 @@ interface CrucibleRankProps {
  */
 export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
   const defs = useD2Definitions()!;
+  const replacer = useDynamicStringReplacer();
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
@@ -32,7 +34,7 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
   return (
     <div
       className={clsx(factionClass, styles.activityRank)}
-      title={progressionDef.displayProperties.description}
+      title={replacer(progressionDef.displayProperties.description)}
     >
       <div>
         <CrucibleRankIcon progress={progress} />
