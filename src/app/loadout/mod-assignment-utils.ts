@@ -418,7 +418,7 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
       required: true,
     };
 
-    if (pluggingAction.energySpend >= 0) {
+    if (pluggingAction.energySpend > 0) {
       requiredSpends.push(pluggingAction);
     } else if (isAssigningToDefault(item, assignment)) {
       pluggingAction.required = false;
