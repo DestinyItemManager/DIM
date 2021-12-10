@@ -362,16 +362,26 @@ export function pickPlugPositions(
 
   // For each remaining socket that won't have mods assigned,
   // return it to its default (usually "Empty Mod Socket")
-  // TO-DO: here's another thing that will fail for artificer armor.
-  // those have no singleInitialItemHash
-  for (const leftoverSocket of existingModSockets) {
-    const defaultMod = defs.InventoryItem.get(
-      leftoverSocket.socketDefinition.singleInitialItemHash
-    );
-    assignments.push({
-      socketIndex: leftoverSocket.socketIndex,
-      mod: defaultMod as PluggableInventoryItemDefinition,
-    });
+
+  // artificer armor is weird, and has no singleInitialItemHash,
+  // so we fall back to the first item in its reusable PlugSet
+  for (const {
+    socketDefinition: { singleInitialItemHash, reusablePlugSetHash },
+    socketIndex,
+  } of existingModSockets) {
+    const defaultMod =
+      (singleInitialItemHash && defs.InventoryItem.get(singleInitialItemHash)) ||
+      (reusablePlugSetHash &&
+        defs.InventoryItem.get(
+          defs.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
+        ));
+
+    if (defaultMod) {
+      assignments.push({
+        socketIndex,
+        mod: defaultMod as PluggableInventoryItemDefinition,
+      });
+    }
   }
 
   return assignments;
