@@ -393,7 +393,7 @@ module.exports = (env) => {
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips
-        '$featureFlags.abilityCooldowns': JSON.stringify(true),
+        '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Show achievable stat ranges in LO
         '$featureFlags.loStatRanges': JSON.stringify(true),
         // Show mod assignment button in loadout drawer
@@ -481,7 +481,6 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       })
     );
-
   }
 
   return config;
