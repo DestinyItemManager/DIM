@@ -15,11 +15,8 @@ import React, { RefObject, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import {
-  compactModAssignments,
-  createGetModRenderKey,
-  getCheapestModAssignments,
-} from '../mod-utils';
+import { getCheapestModAssignments } from '../mod-assignment-utils';
+import { compactModAssignments, createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor } from './selectors';
