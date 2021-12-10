@@ -4,6 +4,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import _ from 'lodash';
 import { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -43,13 +44,13 @@ export function useEquippedLoadoutArmor(loadout: Loadout) {
         }
       }
 
-      return bucketOrder
-        .map(
+      return _.compact(
+        bucketOrder.map(
           (bucketHash) =>
             loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
             currentItems?.find((item) => item.bucket.hash === bucketHash)
         )
-        .filter((item): item is DimItem => Boolean(item));
+      );
     },
     [loadout, stores]
   );
