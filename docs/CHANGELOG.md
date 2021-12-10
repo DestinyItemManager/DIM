@@ -7,6 +7,7 @@
 * Fix an error that can occur when loading a shared build link.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
 * Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
