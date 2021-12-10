@@ -677,9 +677,6 @@ function applyLoadoutMods(
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      if (item.name === 'Corrupting Echo Boots') {
-        console.log(modAssignments[item.id]);
-      }
       const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
       const pluggingSteps = createPluggingStrategy(item, assignments, defs);
       const assignmentSequence = pluggingSteps.filter(
