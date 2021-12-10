@@ -6,8 +6,11 @@
 * Fix a bug that prevented applying shaders or ornaments from the item popup.
 * Fix an error that can occur when loading a shared build link.
 * Items in the postmaster are now included in search transfers.
+* When displaying mod placement in loadouts, if an item is not present for a given armor slot in the loadout the characters current armor will be used.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
+* Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
