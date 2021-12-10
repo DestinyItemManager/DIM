@@ -22,7 +22,12 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { getCheapestModAssignments } from 'app/loadout/mod-utils';
+import {
+  createPluggingStrategy,
+  fitMostMods,
+  isAssigningToDefault,
+  pickPlugPositions,
+} from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -667,17 +672,14 @@ function applyLoadoutMods(
     // TODO: stop if we can't perform this action (in activity)
     // TODO: prefer equipping to armor that *is* part of the loadout
     // TODO: compute assignments should consider which mods are already on the item!
-    const modAssignments = getCheapestModAssignments(
-      armor,
-      mods,
-      defs,
-      undefined
-    ).itemModAssignments;
+    const modAssignments = fitMostMods(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
 
     for (const item of armor) {
-      const assignmentSequence = modAssignments[item.id].filter(
+      const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
+      const pluggingSteps = createPluggingStrategy(item, assignments);
+      const assignmentSequence = pluggingSteps.filter(
         (assignment) =>
           // keep all assignments if we want to wipe unassigned sockets
           clearUnassignedSocketsPerItem ||
@@ -708,21 +710,6 @@ function applyLoadoutMods(
     // Return the mods that were successfully assigned (even if they didn't have to move)
     return successfulMods;
   };
-}
-
-function isAssigningToDefault(item: DimItem, assignment: Assignment) {
-  const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
-  if (!socket) {
-    warnLog(
-      'loadout mods',
-      'Why does socket',
-      assignment.socketIndex,
-      'not exist on',
-      item.name,
-      item.hash
-    );
-  }
-  return socket && assignment.mod.hash === socket.socketDefinition.singleInitialItemHash;
 }
 
 /**
