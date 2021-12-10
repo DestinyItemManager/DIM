@@ -525,7 +525,6 @@ function isCombatModValid(
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
 
-  // The activity mods wont fit in the item set so move on to the next set of mods
   return (
     isModEnergyValid(itemEnergy, combatMod, ...assignedMods) &&
     modTag &&
