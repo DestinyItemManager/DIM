@@ -290,14 +290,6 @@ function LoadoutRow({
           <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
-          <button
-            className="dim-button"
-            type="button"
-            title="Assign Mods"
-            onClick={() => setShowModAssignmentDrawer(true)}
-          >
-            {t('Loadouts.ShowModPlacement')}
-          </button>
           {canShare && (
             <button type="button" className="dim-button" onClick={shareBuild}>
               {t('LoadoutBuilder.ShareBuild')}
@@ -328,11 +320,21 @@ function LoadoutRow({
             ))}
             {savedMods.length > 0 ? (
               <div className={styles.mods}>
-                {savedMods.map((mod) => (
-                  <div key={getModRenderKey(mod)}>
-                    <PlugDef plug={mod} />
-                  </div>
-                ))}
+                <div className={styles.modsGrid}>
+                  {savedMods.map((mod) => (
+                    <div key={getModRenderKey(mod)}>
+                      <PlugDef plug={mod} />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className={clsx('dim-button', styles.showModPlacementButton)}
+                  type="button"
+                  title="Show mod placement"
+                  onClick={() => setShowModAssignmentDrawer(true)}
+                >
+                  {t('Loadouts.ShowModPlacement')}
+                </button>
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>

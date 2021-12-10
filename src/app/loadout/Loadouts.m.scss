@@ -188,8 +188,11 @@
 }
 
 .mods {
-  --item-icon-size: calc(0.8 * var(--item-size));
   flex: 1;
+}
+
+.modsGrid {
+  --item-icon-size: calc(0.8 * var(--item-size));
   min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));
@@ -201,8 +204,12 @@
   }
 }
 
+.showModPlacementButton {
+  margin-top: 8px;
+}
+
 .subclassMods {
-  composes: mods;
+  composes: modsGrid;
   min-width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
 }
 
