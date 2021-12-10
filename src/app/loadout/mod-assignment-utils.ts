@@ -520,7 +520,6 @@ function isActivityModValid(
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(activityMod.plug.plugCategoryHash);
 
-  // The activity mods wont fit in the item set so move on to the next set of mods
   return (
     isModEnergyValid(itemEnergy, activityMod) &&
     modTag &&
@@ -536,7 +535,6 @@ function isCombatModValid(
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
 
-  // The activity mods wont fit in the item set so move on to the next set of mods
   return (
     isModEnergyValid(itemEnergy, combatMod, ...assignedMods) &&
     modTag &&
