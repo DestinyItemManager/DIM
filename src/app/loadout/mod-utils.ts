@@ -142,3 +142,26 @@ export function getItemEnergyType(
     ? DestinyEnergyType.Any
     : item.energy.energyType;
 }
+
+// this exists because singleInitialItemHash may be absent,
+// for example on Artifice Armor. in that case, the default
+// plug can be found in the socket's reusable PlugSet.
+
+/**
+ * gets the InventoryItem hash corresponding to a socket's default contents.
+ *
+ * param 1 can be a socketDefinition (DestinyItemSocketEntryDefinition)
+ */
+export function getDefaultPlugHash(
+  {
+    singleInitialItemHash,
+    reusablePlugSetHash,
+  }: { singleInitialItemHash: number; reusablePlugSetHash?: number },
+  defs?: D2ManifestDefinitions
+) {
+  return singleInitialItemHash
+    ? singleInitialItemHash
+    : reusablePlugSetHash
+    ? defs?.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
+    : undefined;
+}

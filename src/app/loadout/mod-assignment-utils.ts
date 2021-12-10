@@ -21,7 +21,12 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { upgradeSpendTierToMaxEnergy } from './armor-upgrade-utils';
 import { generateModPermutations } from './mod-permutations';
-import { activityModPlugCategoryHashes, bucketsToCategories, getItemEnergyType } from './mod-utils';
+import {
+  activityModPlugCategoryHashes,
+  bucketsToCategories,
+  getDefaultPlugHash,
+  getItemEnergyType,
+} from './mod-utils';
 
 /** long run let's get rid of this. it just juggles data into a format that some functions want */
 export function getCheapestModAssignments(
@@ -320,7 +325,7 @@ export function pickPlugPositions(
     );
 
     // If it wasn't found already plugged, find the first socket with a matching PCH
-    // TO-DO: this is naive and is going to fail for artificer armor
+    // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
       destinationSocketIndex = existingModSockets.findIndex(
         (socket) =>
@@ -363,23 +368,20 @@ export function pickPlugPositions(
   // For each remaining socket that won't have mods assigned,
   // return it to its default (usually "Empty Mod Socket")
 
-  // artificer armor is weird, and has no singleInitialItemHash,
   // so we fall back to the first item in its reusable PlugSet
   for (const {
     socketDefinition: { singleInitialItemHash, reusablePlugSetHash },
     socketIndex,
   } of existingModSockets) {
-    const defaultMod =
-      (singleInitialItemHash && defs.InventoryItem.get(singleInitialItemHash)) ||
-      (reusablePlugSetHash &&
-        defs.InventoryItem.get(
-          defs.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
-        ));
+    const defaultModHash = getDefaultPlugHash({ singleInitialItemHash, reusablePlugSetHash });
+    const mod =
+      defaultModHash &&
+      (defs.InventoryItem.get(defaultModHash) as PluggableInventoryItemDefinition);
 
-    if (defaultMod) {
+    if (mod) {
       assignments.push({
         socketIndex,
-        mod: defaultMod as PluggableInventoryItemDefinition,
+        mod,
       });
     }
   }
@@ -393,11 +395,17 @@ export function pickPlugPositions(
  * - remove or swap in cheaper mods to free up enough armor energy, before applying mods which cost more
  * - mark mod removals as optional, if they aren't required to free up a slot or energy
  *
+ * Artifice armor may not be accurate unless you pass in defs.
+ *
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
  * This consumes the output of `pickPlugPositions` and just orders & adds metadata
  */
-export function createPluggingStrategy(item: DimItem, assignments: Assignment[]): PluggingAction[] {
+export function createPluggingStrategy(
+  item: DimItem,
+  assignments: Assignment[],
+  defs?: D2ManifestDefinitions
+): PluggingAction[] {
   // stuff we need to apply, that frees up energy. we'll apply these first
   const requiredRegains: PluggingAction[] = [];
   // stuff we need to apply, but it will cost us...
@@ -420,7 +428,7 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
 
     if (pluggingAction.energySpend > 0) {
       requiredSpends.push(pluggingAction);
-    } else if (isAssigningToDefault(item, assignment)) {
+    } else if (isAssigningToDefault(item, assignment, defs)) {
       pluggingAction.required = false;
       optionalRegains.push(pluggingAction);
     } else {
@@ -622,7 +630,12 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
   return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
 }
 
-export function isAssigningToDefault(item: DimItem, assignment: Assignment) {
+/** Artifice Armor won't be properly detected unless defs are passed in */
+export function isAssigningToDefault(
+  item: DimItem,
+  assignment: Assignment,
+  defs?: D2ManifestDefinitions
+) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {
     warnLog(
@@ -634,5 +647,5 @@ export function isAssigningToDefault(item: DimItem, assignment: Assignment) {
       item.hash
     );
   }
-  return socket && assignment.mod.hash === socket.socketDefinition.singleInitialItemHash;
+  return socket && assignment.mod.hash === getDefaultPlugHash(socket.socketDefinition, defs);
 }

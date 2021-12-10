@@ -677,8 +677,11 @@ function applyLoadoutMods(
     const successfulMods: number[] = [];
 
     for (const item of armor) {
+      if (item.name === 'Corrupting Echo Boots') {
+        console.log(modAssignments[item.id]);
+      }
       const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
-      const pluggingSteps = createPluggingStrategy(item, assignments);
+      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
       const assignmentSequence = pluggingSteps.filter(
         (assignment) =>
           // keep all assignments if we want to wipe unassigned sockets
@@ -695,7 +698,7 @@ function applyLoadoutMods(
         ) {
           infoLog(
             'loadout mods',
-            'Skipping applying ',
+            'Skipping applying',
             ...assignmentSequence.map((m) => m.mod.hash),
             'because it would reset all sockets to default'
           );
