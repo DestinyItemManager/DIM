@@ -31,7 +31,10 @@ function EnergySwap({
 
   const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
   const modEnergyHashNotAny = assignedMods?.find(
-    (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
+    (mod) =>
+      mod.plug.energyCost &&
+      mod.plug.energyCost.energyCost > 0 &&
+      mod.plug.energyCost.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyTypeHash;
   const modEnergy = (modEnergyHashNotAny && defs.EnergyType.get(modEnergyHashNotAny)) || null;
 

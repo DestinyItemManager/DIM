@@ -364,7 +364,10 @@ function LoadoutPopup({
 
         {loadouts.map((loadout) => (
           <li key={loadout.id} className={styles.menuItem}>
-            <span title={loadout.name} onClick={() => applySavedLoadout(loadout)}>
+            <span
+              title={loadout.notes ? loadout.notes : loadout.name}
+              onClick={() => applySavedLoadout(loadout)}
+            >
               {isMissingItems(allItems, loadout) && (
                 <AppIcon
                   className={styles.warningIcon}

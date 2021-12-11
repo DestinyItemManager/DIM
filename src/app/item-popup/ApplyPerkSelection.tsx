@@ -50,6 +50,7 @@ export default function ApplyPerkSelection({
     }
 
     if (
+      !item.vendor &&
       socket.actuallyPlugged &&
       socket.plugged &&
       canInsertPlug(socket, socket.plugged.plugDef.hash, destiny2CoreSettings, defs)
