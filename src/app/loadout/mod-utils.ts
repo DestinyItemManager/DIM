@@ -55,10 +55,14 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 export const sortModGroups = chainComparator(
   compareBy((mods: PluggableInventoryItemDefinition[]) => {
     // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
-    const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
+    const knownIndex = mods.length
+      ? knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash)
+      : -1;
     return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
   }),
-  compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
+  compareBy((mods: PluggableInventoryItemDefinition[]) =>
+    mods.length ? mods[0].itemTypeDisplayName : ''
+  )
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */

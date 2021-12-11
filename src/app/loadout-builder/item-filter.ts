@@ -3,7 +3,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsToCategories } from 'app/loadout/mod-utils';
 import { ItemFilter } from 'app/search/filter-types';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { compareBy } from 'app/utils/comparators';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { doEnergiesMatch } from './mod-utils';
 import {
@@ -46,7 +48,7 @@ export function filterItems(
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
 
   for (const bucket of LockableBucketHashes) {
-    const lockedModsByPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
+    const lockedModsForPlugCategoryHash = lockedModMap[bucketsToCategories[bucket]];
 
     if (items[bucket]) {
       // There can only be one pinned item as we hide items from the item picker once
@@ -74,10 +76,11 @@ export function filterItems(
           matchedLockedModEnergy(
             defs,
             item,
-            lockedModsByPlugCategoryHash,
+            lockedModsForPlugCategoryHash,
             upgradeSpendTier,
             lockItemEnergyType
-          )
+          ) &&
+          hasEnoughSocketsForMods(defs, item, lockedModsForPlugCategoryHash)
       );
 
       const searchFilteredItems = excludedAndModsFilteredItems.filter(searchFilter);
@@ -94,14 +97,45 @@ export function filterItems(
 function matchedLockedModEnergy(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  lockedModsByPlugCategoryHash: PluggableInventoryItemDefinition[],
+  lockedMods: PluggableInventoryItemDefinition[] | undefined,
   upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
 ) {
-  if (!lockedModsByPlugCategoryHash) {
+  if (!lockedMods) {
     return true;
   }
-  return lockedModsByPlugCategoryHash.every((mod) =>
+  return lockedMods.every((mod) =>
     doEnergiesMatch(defs, mod, item, upgradeSpendTier, lockItemEnergyType)
   );
+}
+
+function hasEnoughSocketsForMods(
+  defs: D2ManifestDefinitions,
+  item: DimItem,
+  lockedMods: PluggableInventoryItemDefinition[]
+) {
+  if (!lockedMods?.length) {
+    return true;
+  }
+
+  const sockets = getSocketsByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorMods);
+  const plugSets = _.compact(
+    sockets.map(
+      (socket) =>
+        socket.socketDefinition.reusablePlugSetHash &&
+        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash).reusablePlugItems.map(
+          (plugItem) => plugItem.plugItemHash
+        )
+    )
+  ).sort(compareBy((plugHashes) => plugHashes.length));
+
+  for (const mod of lockedMods) {
+    const plugSetIndex = plugSets.findIndex((set) => set.includes(mod.hash));
+    if (plugSetIndex === -1) {
+      return false;
+    }
+    plugSets.splice(plugSetIndex, 1);
+  }
+
+  return true;
 }

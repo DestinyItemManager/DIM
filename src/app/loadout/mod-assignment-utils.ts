@@ -8,12 +8,7 @@ import {
   ModSocketMetadata,
 } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
-import {
-  getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
-  getSpecialtySockets,
-  modMetadataBySocketTypeHash,
-} from 'app/utils/item-utils';
+import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -316,7 +311,14 @@ export function pickPlugPositions(
   // YES, we address this by index.
   // but only because we are find()ing through it and seeking a DimSocket object.
   // at the end, we will properly extract that DimSocket's socketIndex
-  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []);
+  const socketsForCategory = getSocketsByIndexes(item.sockets!, armorModIndexes || []);
+  const existingModSocketsInitial = socketsForCategory.sort(
+    compareBy(
+      (socket) =>
+        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash!).reusablePlugItems.length
+    )
+  );
+  const existingModSockets = [...existingModSocketsInitial];
 
   for (const modToInsert of modsToInsert) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
@@ -327,23 +329,11 @@ export function pickPlugPositions(
     // If it wasn't found already plugged, find the first socket with a matching PCH
     // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex(
-        (socket) =>
-          socket.plugged?.plugDef.plug.plugCategoryHash === modToInsert.plug.plugCategoryHash
+      destinationSocketIndex = existingModSockets.findIndex((socket) =>
+        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash!).reusablePlugItems.some(
+          (plugItem) => plugItem.plugItemHash === modToInsert.hash
+        )
       );
-    }
-
-    // If we didn't find a matching PCH, check deeper for any specialty sockets,
-    // which may support multiple PCHes
-    if (destinationSocketIndex === -1) {
-      const specialtySockets = getSpecialtySockets(item) || [];
-      for (const socket of specialtySockets) {
-        const metadata = modMetadataBySocketTypeHash[socket.socketDefinition.socketTypeHash];
-        if (metadata?.compatiblePlugCategoryHashes.includes(modToInsert.plug.plugCategoryHash)) {
-          destinationSocketIndex = existingModSockets.indexOf(socket);
-          break;
-        }
-      }
     }
 
     // If a destination socket couldn't be found for this plug, something is seriously? wrong

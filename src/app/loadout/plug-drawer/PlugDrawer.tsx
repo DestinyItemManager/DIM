@@ -5,7 +5,7 @@ import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { Comparator } from 'app/utils/comparators';
+import { Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Sheet from '../../dim-ui/Sheet';
@@ -13,9 +13,15 @@ import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 
+export interface PlugsWithMaxSelectable {
+  plugSetHash: number;
+  plugs: PluggableInventoryItemDefinition[];
+  maxSelectable: number;
+}
+
 interface Props {
   /** A list of plugs the user can choose from */
-  plugs: PluggableInventoryItemDefinition[];
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
   /**
    * An array of mods that are already locked.
    */
@@ -41,7 +47,7 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
-  sortPlugGroups?: Comparator<PluggableInventoryItemDefinition[]>;
+  sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
@@ -53,7 +59,7 @@ interface Props {
  * A sheet to pick plugs.
  */
 export default function PlugDrawer({
-  plugs,
+  plugsWithMaxSelectableSets,
   initiallySelected,
   displayedStatHashes,
   title,
@@ -71,7 +77,27 @@ export default function PlugDrawer({
 }: Props) {
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
-  const [selected, setSelected] = useState(() => [...initiallySelected]);
+  const [selected, setSelected] = useState(() => {
+    const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
+
+    selectedPlugLoop: for (const plug of initiallySelected) {
+      const possibleSets = plugsWithMaxSelectableSets
+        .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
+        .sort(compareBy((set) => set.plugs.length));
+
+      for (const set of possibleSets) {
+        if (!rtn[set.plugSetHash]) {
+          rtn[set.plugSetHash] = [plug];
+          continue selectedPlugLoop;
+        } else if (rtn[set.plugSetHash]!.length < set.maxSelectable) {
+          rtn[set.plugSetHash]!.push(plug);
+          continue selectedPlugLoop;
+        }
+      }
+    }
+
+    return rtn;
+  });
   const filterInput = useRef<SearchFilterRef | null>(null);
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -82,13 +108,16 @@ export default function PlugDrawer({
   }, [isPhonePortrait, filterInput]);
 
   const onPlugSelected = useCallback(
-    (mod: PluggableInventoryItemDefinition) => {
+    (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
+      // TODO (ryan) use immer
       setSelected((oldState) => {
-        const newState = [...oldState];
-        newState.push(mod);
+        const newState = { ...oldState };
+        const newSelected = newState[plugSetHash] || [];
+        newSelected.push(mod);
         if (sortPlugs) {
-          newState.sort(sortPlugs);
+          newSelected.sort(sortPlugs);
         }
+        newState[plugSetHash] = newSelected;
         return newState;
       });
     },
@@ -96,13 +125,17 @@ export default function PlugDrawer({
   );
 
   const onPlugRemoved = useCallback(
-    (mod: PluggableInventoryItemDefinition) => {
+    (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
+      // TODO (ryan) use immer
       setSelected((oldState) => {
-        const firstIndex = oldState.findIndex((locked) => locked.hash === mod.hash);
+        const oldSelected = oldState[plugSetHash] || [];
+        const firstIndex = oldSelected.findIndex((locked) => locked.hash === mod.hash);
 
         if (firstIndex >= 0) {
-          const newState = [...oldState];
-          newState.splice(firstIndex, 1);
+          const newSelected = [...oldSelected];
+          newSelected.splice(firstIndex, 1);
+          const newState = { ...oldState };
+          newState[plugSetHash] = newSelected;
           return newState;
         }
 
@@ -112,50 +145,76 @@ export default function PlugDrawer({
     [setSelected]
   );
 
+  const onPlugRemovedFromFooter = useCallback(
+    (plug: PluggableInventoryItemDefinition) => {
+      // TODO (ryan) use immer
+      setSelected((oldState) => {
+        for (const plugSetHashAsString of Object.keys(oldState)) {
+          const plugSetHash = parseInt(plugSetHashAsString, 10);
+          const selected = oldState[plugSetHash] || [];
+          const firstIndex = selected.findIndex((s) => s.hash === plug.hash);
+          if (firstIndex !== -1) {
+            const newSelected = [...selected];
+            newSelected.splice(firstIndex, 1);
+            const newState = { ...oldState };
+            newState[plugSetHash] = newSelected;
+            return newState;
+          }
+        }
+        return oldState;
+      });
+    },
+    [setSelected]
+  );
+
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(selected);
+    onAccept(_.compact(Object.values(selected).flat()));
     onClose();
   };
 
-  const queryFilteredPlugs = useMemo(() => {
+  const queryFilteredPlugSets = useMemo(() => {
     const regexp = startWordRegexp(query, language);
-    return query.length
-      ? plugs.filter(
-          (plug) =>
-            regexp.test(plug.displayProperties.name) ||
-            regexp.test(plug.displayProperties.description) ||
-            regexp.test(plug.itemTypeDisplayName) ||
-            plug.perks.some((perk) => {
-              const perkDef = defs.SandboxPerk.get(perk.perkHash);
-              return (
-                perkDef &&
-                (regexp.test(perkDef.displayProperties.name) ||
-                  regexp.test(perkDef.displayProperties.description) ||
-                  regexp.test(perk.requirementDisplayString))
-              );
-            })
-        )
-      : plugs;
-  }, [query, plugs, defs.SandboxPerk, language]);
+    const rtn: PlugsWithMaxSelectable[] = [];
 
-  const groupedPlugs = Object.values(
-    _.groupBy(queryFilteredPlugs, (plugItem) => plugItem.plug.plugCategoryHash)
-  );
+    const searchFilter = (plug: PluggableInventoryItemDefinition) =>
+      regexp.test(plug.displayProperties.name) ||
+      regexp.test(plug.displayProperties.description) ||
+      regexp.test(plug.itemTypeDisplayName) ||
+      plug.perks.some((perk) => {
+        const perkDef = defs.SandboxPerk.get(perk.perkHash);
+        return (
+          perkDef &&
+          (regexp.test(perkDef.displayProperties.name) ||
+            regexp.test(perkDef.displayProperties.description) ||
+            regexp.test(perk.requirementDisplayString))
+        );
+      });
+
+    for (const { plugs, maxSelectable, plugSetHash } of plugsWithMaxSelectableSets) {
+      rtn.push({
+        plugSetHash,
+        maxSelectable,
+        plugs: query.length ? plugs.filter(searchFilter) : plugs,
+      });
+    }
+
+    return rtn;
+  }, [query, plugsWithMaxSelectableSets, defs.SandboxPerk, language]);
 
   if (sortPlugGroups) {
-    groupedPlugs.sort(sortPlugGroups);
+    queryFilteredPlugSets.sort(sortPlugGroups);
   }
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
-      selected={selected}
+      selected={_.compact(Object.values(selected).flat())}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
-      onPlugSelected={onPlugRemoved}
+      onPlugSelected={onPlugRemovedFromFooter}
     />
   );
 
@@ -190,13 +249,15 @@ export default function PlugDrawer({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {groupedPlugs.map((plugItem) => (
+      {queryFilteredPlugSets.map((plugsWithMaxSelectable) => (
         <PlugSection
-          key={plugItem[0].plug.plugCategoryHash}
-          plugs={plugItem}
-          selected={selected}
+          key={plugsWithMaxSelectable.plugSetHash}
+          plugsWithMaxSelectable={plugsWithMaxSelectable}
+          selected={selected[plugsWithMaxSelectable.plugSetHash] || []}
           displayedStatHashes={displayedStatHashes}
-          isPlugSelectable={(plug) => isPlugSelectable(plug, selected)}
+          isPlugSelectable={(plug) =>
+            isPlugSelectable(plug, _.compact(Object.values(selected).flat()))
+          }
           onPlugSelected={onPlugSelected}
           onPlugRemoved={onPlugRemoved}
         />
