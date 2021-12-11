@@ -42,15 +42,15 @@ export function getCheapestModAssignments(
   );
 
   const itemModAssignments: {
-    [itemInstanceId: string]: Assignment[];
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   } = {};
 
   for (const itemId in modArmorSlotAssignments) {
-    itemModAssignments[itemId] = pickPlugPositions(
-      defs,
-      items.find((i) => i.id === itemId)!,
-      modArmorSlotAssignments[itemId]
-    );
+    const assignmentsForItem = modArmorSlotAssignments[itemId];
+    itemModAssignments[itemId] = [
+      ...assignmentsForItem.bucketIndependent,
+      ...assignmentsForItem.bucketSpecific,
+    ];
   }
 
   return { itemModAssignments, unassignedMods };

@@ -16,7 +16,7 @@ import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
 import { getCheapestModAssignments } from '../mod-assignment-utils';
-import { compactModAssignments, createGetModRenderKey } from '../mod-utils';
+import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmor } from './selectors';
@@ -84,7 +84,7 @@ export default function ModAssignmentDrawer({
     }
     const { itemModAssignments, unassignedMods } = getCheapestModAssignments(armor, mods, defs);
 
-    return [compactModAssignments(itemModAssignments), unassignedMods, mods];
+    return [itemModAssignments, unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);
 
   const onSocketClick = useCallback(
