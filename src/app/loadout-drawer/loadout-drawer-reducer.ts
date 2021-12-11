@@ -205,7 +205,6 @@ function addItem(
           loadoutItem.equipped = true;
         }
 
-        console.log('add', loadoutItem);
         draftLoadout.items.push(loadoutItem);
       } else {
         showNotification({
