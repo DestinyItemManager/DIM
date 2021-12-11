@@ -26,10 +26,12 @@ interface CssExports {
   'menuButtons': string;
   'missingItems': string;
   'mods': string;
+  'modsGrid': string;
   'modsPlaceholder': string;
   'page': string;
   'placeholder': string;
   'power': string;
+  'showModPlacementButton': string;
   'subclass': string;
   'subclassContainer': string;
   'subclassMods': string;
