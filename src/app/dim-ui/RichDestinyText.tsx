@@ -26,15 +26,9 @@ export default function RichDestinyText({
   text?: string;
   ownerId?: string;
 }): React.ReactElement {
-  const dynamicStrings = useSelector(dynamicStringsSelector);
-
+  const replacer = useDynamicStringReplacer(ownerId);
   // perform dynamic string replacement
-  text = (text ?? '').replace(dynamicTextFinder, (segment) => {
-    const hash = segment.match(/\d+/)![0];
-    const dynamicValue =
-      dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
-    return dynamicValue?.toString() ?? segment;
-  });
+  text = replacer(text);
 
   // split into segments, filter out empty, try replacing each piece with an icon if one matches
   const richTextSegments = text
@@ -55,4 +49,17 @@ function replaceWithIcon(textSegment: string, index: number) {
       {replacementInfo?.unicode ?? textSegment}
     </span>
   );
+}
+
+export function useDynamicStringReplacer(ownerId = '') {
+  const dynamicStrings = useSelector(dynamicStringsSelector);
+
+  return function (text = '') {
+    return text.replace(dynamicTextFinder, (segment) => {
+      const hash = segment.match(/\d+/)![0];
+      const dynamicValue =
+        dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
+      return dynamicValue?.toString() ?? segment;
+    });
+  };
 }
