@@ -1,13 +1,14 @@
 import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  currentStoreSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import {
-  itemsForCharacterOrProfilePlugSet,
-  itemsForPlugSetEverywhere,
-} from 'app/records/plugset-helpers';
+import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
@@ -74,13 +75,15 @@ function mapStateToProps() {
     (_state: RootState, props: ProvidedProps) => props.classType,
     (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
+    currentStoreSelector,
     (
       profileResponse,
       allItems,
       defs,
       classType,
       owner,
-      plugCategoryHashWhitelist
+      plugCategoryHashWhitelist,
+      currentStore
     ): PluggableInventoryItemDefinition[] => {
       const plugSets: { [bucketHash: number]: Set<number> } = {};
       if (!profileResponse || !defs) {
@@ -119,9 +122,12 @@ function mapStateToProps() {
 
         for (const plugSetHash of sets) {
           // If an owner store ID was provided, get only plugs accessible to that store
-          const plugSetItems = owner
-            ? itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner)
-            : itemsForPlugSetEverywhere(profileResponse, plugSetHash);
+          const plugSetItems = itemsForCharacterOrProfilePlugSet(
+            profileResponse,
+            plugSetHash,
+            // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
+            owner ?? currentStore!.id
+          );
           for (const plugSetItem of plugSetItems) {
             if (plugIsInsertable(plugSetItem)) {
               unlockedPlugs.push(plugSetItem.plugItemHash);
