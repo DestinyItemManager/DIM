@@ -1,3 +1,5 @@
+// organize-imports-ignore
+import 'cross-fetch/polyfill';
 import { Search } from '@destinyitemmanager/dim-api-types';
 import {
   autocompleteTermSuggestions,

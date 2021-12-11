@@ -1,3 +1,5 @@
+// organize-imports-ignore
+import 'cross-fetch/polyfill';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { setSettingAction } from 'app/settings/actions';
