@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Por favor, usa la App Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
     "ConfirmTitle": "Confirmar Acción",
-    "Error": "Error al cambiar objeto",
+    "Error": "Error cambiando modificadores o ventajas",
+    "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
     "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -582,7 +583,6 @@
     "SaveAsNew": "Guardar Nuevo",
     "SaveLoadout": "Guardar Equipación",
     "ShowModPlacement": "Mostrar Colocación de Mods",
-    "SocketError": "",
     "SortByEditTime": "Ordenar por última edición",
     "SortByName": "Ordenar por nombre",
     "SubclassOptions": "Opciones de {{subclass}}",
@@ -826,7 +826,6 @@
     "ApplyPerks": "Aplicar Perks",
     "GridStyle": "Mostrar perks como una cuadrícula",
     "InsertModButton": "Insertar Mod",
-    "InsertPlugError": "No se pudo insertar mod",
     "ListStyle": "Mostrar perks en forma de lista",
     "SelectModButton": "Selecciona Mods",
     "SelectWishlistPerks": "Vista previa de la lista de deseos de Perks"
