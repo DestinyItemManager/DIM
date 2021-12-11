@@ -17,7 +17,7 @@ import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
-import { extractArmorModHashes } from './loadout-utils';
+import { extractArmorModHashes, fromEquippedTypes } from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
 import { Subclass } from './subclass-drawer/Subclass';
@@ -47,27 +47,6 @@ const loadoutTypes: DimBucketType[] = [
   'Ships',
   'Vehicle',
   'Horn',
-];
-
-// We don't want to prepopulate the loadout with D1 cosmetics
-export const fromEquippedTypes: DimBucketType[] = [
-  'Class',
-  'KineticSlot',
-  'Energy',
-  'Power',
-  'Primary',
-  'Special',
-  'Heavy',
-  'Helmet',
-  'Gauntlets',
-  'Chest',
-  'Leg',
-  'ClassItem',
-  'Artifact',
-  'Ghost',
-  'Ships',
-  'Vehicle',
-  'Emblems',
 ];
 
 export default function LoadoutDrawerContents(
