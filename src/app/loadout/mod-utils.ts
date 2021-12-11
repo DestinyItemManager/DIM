@@ -160,7 +160,10 @@ export function getDefaultPlugHash(
   {
     singleInitialItemHash,
     reusablePlugSetHash,
-  }: { singleInitialItemHash: number; reusablePlugSetHash?: number },
+  }: {
+    singleInitialItemHash?: number;
+    reusablePlugSetHash?: number;
+  },
   defs?: D2ManifestDefinitions
 ) {
   return singleInitialItemHash

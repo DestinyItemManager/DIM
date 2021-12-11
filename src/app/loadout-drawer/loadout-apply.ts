@@ -28,6 +28,7 @@ import {
   isAssigningToDefault,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -744,7 +745,7 @@ function equipModsToItem(itemId: string, modsForItem: Assignment[]): ThunkResult
       if (
         canInsertPlug(
           socket,
-          socket.socketDefinition.singleInitialItemHash,
+          getDefaultPlugHash(socket.socketDefinition, defs),
           destiny2CoreSettings,
           defs
         )

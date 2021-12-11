@@ -32,7 +32,7 @@ let awaCache: {
 
 export function canInsertPlug(
   socket: DimSocket,
-  plugItemHash: number,
+  plugItemHash: number | undefined,
   destiny2CoreSettings: Destiny2CoreSettings,
   defs: D2ManifestDefinitions
 ) {
@@ -52,13 +52,14 @@ function hasInsertionCost(defs: D2ManifestDefinitions, plug: DestinyInventoryIte
 
 function canInsertForFree(
   socket: DimSocket,
-  plugItemHash: number,
+  plugItemHash: number | undefined,
   destiny2CoreSettings: Destiny2CoreSettings,
   defs: D2ManifestDefinitions
 ) {
   const { insertPlugFreeProtectedPlugItemHashes, insertPlugFreeBlockedSocketTypeHashes } =
     destiny2CoreSettings;
   if (
+    !plugItemHash ||
     (insertPlugFreeProtectedPlugItemHashes || []).includes(plugItemHash) ||
     (insertPlugFreeBlockedSocketTypeHashes || []).includes(socket.socketDefinition.socketTypeHash)
   ) {

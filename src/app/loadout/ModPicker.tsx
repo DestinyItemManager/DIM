@@ -95,12 +95,7 @@ function mapStateToProps() {
         const modSockets = getSocketsByCategoryHash(
           item.sockets,
           SocketCategoryHashes.ArmorMods
-        ).filter(
-          (socket) =>
-            socket.socketDefinition.reusablePlugSetHash &&
-            // Ensure they have a singleInitialItemHash, this seems to be missing on sockets that are disabled.
-            socket.socketDefinition.singleInitialItemHash
-        );
+        ).filter((socket) => socket.socketDefinition.reusablePlugSetHash);
 
         // Group the sockets by their reusablePlugSetHash, this lets us get a count of availabe mods for
         // each socket in the case of bucket specific mods/sockets
