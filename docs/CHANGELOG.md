@@ -12,6 +12,7 @@
 * Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
 * Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 * If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
+* The Artificer mods are now handled in Loadouts and the Loadout Optimizer.
 * Vendor items no longer offer to apply perks.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
