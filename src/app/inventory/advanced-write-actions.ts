@@ -114,6 +114,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
   };
 }
 
+/** basically just the DIM version of api-ts' `insertSocketPlugFree` */
 async function awaInsertSocketPlugFree(
   account: DestinyAccount,
   storeId: string,
@@ -133,6 +134,10 @@ async function awaInsertSocketPlugFree(
   });
 }
 
+/**
+ * DIM's wrapper around insertSocketPlug, the actual paid
+ * insertion endpoint that gets user push approval
+ */
 async function awaInsertSocketPlug(
   account: DestinyAccount,
   storeId: string,
@@ -146,8 +151,8 @@ async function awaInsertSocketPlug(
 
   const actionToken = await getAwaToken(account, AwaType.InsertPlugs, storeId, item);
 
-  // TODO: if the plug costs resources to insert, add a confirmation. This'd
-  // be a great place for a dialog component?
+  // TODO: if the plug costs resources to insert, add a confirmation. This
+  // would be a great place for a dialog component?
 
   return insertSocketPlug(authenticatedHttpClient, {
     actionToken,

@@ -3,19 +3,21 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { createSocketOverridesFromEquipped } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { isUsedArmorModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
+import { fromEquippedTypes } from './LoadoutDrawerContents';
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -27,19 +29,41 @@ const gearSlotOrder: DimItem['type'][] = [
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(name: string, items: LoadoutItem[], modsHashes?: number[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
   return {
     id: uuidv4(),
     classType: DestinyClass.Unknown,
     name,
     items,
-    parameters: modsHashes?.length
-      ? {
-          mods: modsHashes,
-        }
-      : undefined,
     clearSpace: false,
   };
+}
+
+/**
+ * Create a new loadout that includes all the equipped items and mods on the character.
+ */
+export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
+  const items = dimStore.items.filter(
+    (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+  );
+  const loadout = newLoadout(
+    name,
+    items.map((i) => {
+      const item = convertToLoadoutItem(i, true);
+      if (i.bucket.hash === BucketHashes.Subclass) {
+        item.socketOverrides = createSocketOverridesFromEquipped(i);
+      }
+      return item;
+    })
+  );
+  const mods = items.flatMap((i) => extractArmorModHashes(i));
+  if (mods.length) {
+    loadout.parameters = {
+      mods,
+    };
+  }
+  loadout.classType = dimStore.classType;
+  return loadout;
 }
 
 /*
@@ -168,25 +192,27 @@ export function optimalLoadout(
     equippable.map((i) => convertToLoadoutItem(i, true))
   );
 }
-/** Create a loadout from all of this character's items that can be in loadouts */
-export function loadoutFromAllItems(store: DimStore, name: string): Loadout {
+/**
+ * Create a loadout from all of this character's items that can be in loadouts,
+ * as a backup.
+ */
+export function backupLoadout(store: DimStore, name: string): Loadout {
   const allItems = store.items.filter(
     (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster
   );
   const loadout = newLoadout(
     name,
-    allItems.map((i) => convertToLoadoutItem(i, i.equipped))
+    allItems.map((i) => {
+      const item = convertToLoadoutItem(i, i.equipped);
+      if (i.bucket.hash === BucketHashes.Subclass) {
+        item.socketOverrides = createSocketOverridesFromEquipped(i);
+      }
+      return item;
+    })
   );
   // Save mods too, so we put them back if you undo
   loadout.parameters = {
-    mods: allItems
-      .filter((i) => i.equipped)
-      .flatMap((i) =>
-        _.compact(
-          i.sockets?.allSockets.filter(isUsedArmorModSocket).map((s) => s.plugged?.plugDef.hash) ??
-            []
-        )
-      ),
+    mods: allItems.filter((i) => i.equipped).flatMap(extractArmorModHashes),
   };
   return loadout;
 }
@@ -278,6 +304,7 @@ export function getItemsFromLoadoutItems(
 
 /**
  * Returns a Loadout object containing currently equipped items
+ * @deprecated
  */
 export function loadoutFromEquipped(store: DimStore): Loadout {
   const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));

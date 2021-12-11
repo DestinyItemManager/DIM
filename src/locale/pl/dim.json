@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Proszę użyć aplikacji Destiny 2 Companion aby zezwolić DIM na modyfikację Twoich przedmiotów.",
     "ConfirmTitle": "Potwierdź działanie",
-    "Error": "Błąd podczas zmiany przedmiotu",
+    "Error": "Błąd podczas zmiany modyfikacji lub perków",
+    "ErrorMessage": "Nie mogliśmy włożyć {{plug}} w {{item}}.\n\n{{error}}",
     "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "Konto, które próbujesz zobaczyć, nie jest kontem połączonym z Twoim profilem Bungie.net.",
     "MissingTitle": "Nie znaleziono konta",
     "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -582,7 +583,6 @@
     "SaveAsNew": "Zapisz Nowy",
     "SaveLoadout": "Zapisz Uzbrojenie",
     "ShowModPlacement": "Pokaż Umieszczenie Modyfikacji",
-    "SocketError": "",
     "SortByEditTime": "Sortuj według ostatniej modyfikacji",
     "SortByName": "Sortuj według nazwy",
     "SubclassOptions": "Opcje {{subclass}}",
@@ -826,7 +826,6 @@
     "ApplyPerks": "Zastosuj perki",
     "GridStyle": "Wyświetl perki w siatce",
     "InsertModButton": "Wstaw modyfikację",
-    "InsertPlugError": "Nie można wstawić modyfikacji",
     "ListStyle": "Wyświetlaj perki jako listę",
     "SelectModButton": "Wybierz modyfikacje",
     "SelectWishlistPerks": "Podgląd listy życzeń perków"

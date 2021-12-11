@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus itens.",
     "ConfirmTitle": "Confirmar Ação",
-    "Error": "Falha ao alterar o item",
+    "Error": "Erro ao modificar mods ou perks",
+    "ErrorMessage": "Não foi possível equipar {{plug}} em {{item}}.\n\n{{error}}",
     "FailedToken": "Não foi possível obter a permissão para alterar o item"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
     "MissingTitle": "Conta não encontrada",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -582,7 +583,6 @@
     "SaveAsNew": "Salvar Novo",
     "SaveLoadout": "Salvar Set",
     "ShowModPlacement": "Exibir Localização do Mod",
-    "SocketError": "",
     "SortByEditTime": "Ordenar pela última alteração",
     "SortByName": "Ordenar por nome",
     "SubclassOptions": "Opções da {{subclass}}",
@@ -826,7 +826,6 @@
     "ApplyPerks": "Aplicar perks",
     "GridStyle": "Exibir perks em grades",
     "InsertModButton": "Inserir mod",
-    "InsertPlugError": "Mod não pôde ser inserido",
     "ListStyle": "Exibir perks em listagem",
     "SelectModButton": "Selecionar mod",
     "SelectWishlistPerks": "Pré-visualizar lista de desejos de perks"

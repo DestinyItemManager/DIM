@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Veuillez utiliser l'application Compagnon de Destiny 2 pour donner à DIM l'autorisation de modifier vos objets.",
     "ConfirmTitle": "Confirmer L'Action",
-    "Error": "Erreur lors de la modification de l'objet",
+    "Error": "Erreur lors du changement des mods ou des attributs",
+    "ErrorMessage": "Nous n'avons pas pu équiper {{plug}} dans {{item}}.\n\n{{error}}",
     "FailedToken": "Impossible d'obtenir la permission de modifier l'objet"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Activités",
@@ -296,7 +297,7 @@
     "Shop": "Boutique",
     "TagAs": "Étiqueter comme '{{tag}}'",
     "UpgradeDIM": "Mettre à jour DIM",
-    "WhatsNew": "Quoi de neuf"
+    "WhatsNew": "Nouveautés"
   },
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
@@ -447,7 +448,7 @@
     "ElementLockedDescription": "Les objets utiliseront leur élément actuel.",
     "ElementNotLockedDescription": "Les objets changeront leur élément pour permettre l'équipement de mods.",
     "EquipItems": "Équiper",
-    "ExcludeItem": "Exclure L'Objet",
+    "ExcludeItem": "Exclure un objet",
     "ExistingLoadout": "Arsenal Existant",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
@@ -493,7 +494,7 @@
     "UnlockItem": "Désépingler Objet"
   },
   "Loadouts": {
-    "Abilities": "Abilities",
+    "Abilities": "Capacités",
     "AddEquippedItems": "Ajouter les objets équipés",
     "AddNotes": "Ajouter des notes",
     "AddUnequippedItems": "Ajouter les objets non équipés",
@@ -582,7 +583,6 @@
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveLoadout": "Sauvegarder l'arsenal",
     "ShowModPlacement": "Afficher le placement des mods",
-    "SocketError": "",
     "SortByEditTime": "Trier par dernière modification",
     "SortByName": "Trier par nom",
     "SubclassOptions": "Options de {{subclass}}",
@@ -814,7 +814,7 @@
     "SortByRating": "Qualité de l'Armure (D1)",
     "SortByRecent": "Acquis récemment (D2)",
     "SortBySeason": "Saison (D2)",
-    "SortBySunset": "Puissance Maximale actuelle inatteignable (D2)",
+    "SortBySunset": "Limite de puissance (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortCustom": "Tri personnalisé",
@@ -826,7 +826,6 @@
     "ApplyPerks": "Appliquer les attributs",
     "GridStyle": "Afficher les attributs sous forme de grille",
     "InsertModButton": "Insérer Mod",
-    "InsertPlugError": "Impossible d'insérer le mod",
     "ListStyle": "Afficher les attributs sous forme de liste",
     "SelectModButton": "Sélectionner le mod",
     "SelectWishlistPerks": "Aperçu des attributs de la liste de souhaits"

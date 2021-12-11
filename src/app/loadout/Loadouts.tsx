@@ -18,20 +18,17 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  convertToLoadoutItem,
-  extractArmorModHashes,
   getArmorStats,
   getItemsFromLoadoutItems,
   getLight,
   getModsFromLoadout,
   newLoadout,
+  newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
-import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -48,7 +45,7 @@ import {
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -56,10 +53,12 @@ import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
+import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
 
 const categoryStyles = {
@@ -89,7 +88,6 @@ function Loadouts() {
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allItems = useSelector(allItemsSelector);
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
@@ -108,24 +106,12 @@ function Loadouts() {
     [allLoadouts, classType, loadoutSort]
   );
 
-  // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
+  const currentLoadout = useMemo(
+    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
+    [selectedStore]
+  );
 
-  const maxLoadout = maxLightLoadout(allItems, selectedStore);
-
-  const currentLoadout = useMemo(() => {
-    const items = selectedStore.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
-    );
-    const loadout = newLoadout(
-      t('Loadouts.FromEquipped'),
-      items.map((i) => convertToLoadoutItem(i, true)),
-      items.flatMap((i) => extractArmorModHashes(i))
-    );
-    loadout.classType = selectedStore.classType;
-    return loadout;
-  }, [selectedStore]);
-
-  const loadouts = _.compact([currentLoadout, maxLoadout, ...savedLoadouts]);
+  const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
@@ -212,6 +198,7 @@ function LoadoutRow({
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
@@ -317,11 +304,21 @@ function LoadoutRow({
             ))}
             {savedMods.length > 0 ? (
               <div className={styles.mods}>
-                {savedMods.map((mod) => (
-                  <div key={getModRenderKey(mod)}>
-                    <PlugDef plug={mod} />
-                  </div>
-                ))}
+                <div className={styles.modsGrid}>
+                  {savedMods.map((mod) => (
+                    <div key={getModRenderKey(mod)}>
+                      <PlugDef plug={mod} />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className={clsx('dim-button', styles.showModPlacementButton)}
+                  type="button"
+                  title="Show mod placement"
+                  onClick={() => setShowModAssignmentDrawer(true)}
+                >
+                  {t('Loadouts.ShowModPlacement')}
+                </button>
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
@@ -329,6 +326,14 @@ function LoadoutRow({
           </>
         )}
       </div>
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }

@@ -6,9 +6,17 @@
 * Fix a bug that prevented applying shaders or ornaments from the item popup.
 * Fix an error that can occur when loading a shared build link.
 * Items in the postmaster are now included in search transfers.
+* When displaying mod placement in loadouts, if an item is not present for a given armor slot in the loadout the characters current armor will be used.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
 * Fix emblems and subclasses not applying from loadouts.
 * The mod picker launched from the item popup or Loadout Optimizer will now correctly show the mods unlocked by the applicable character, rather than across all characters. This helps a lot with artifact mods where you may have different ones unlocked on different characters. Note that this also means opening the mod picker for items in the vault will show no artifact mods unlocked - move the item to a character if you want to apply that mod.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
+* Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
+* If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
+* Hitting +Equipped in the loadout editor will add current mods.
+* Creating a new loadout from equipped items will also save your subclass configuration.
+* Creating a new loadout from equipped or hitting +Equipped in the loadout editor will now also include your current emblem, ship, and sparrow.
+* Vendor items no longer offer to apply perks.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
