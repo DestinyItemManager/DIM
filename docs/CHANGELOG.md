@@ -14,6 +14,7 @@
 * If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
 * Hitting +Equipped in the loadout editor will add current mods.
 * Creating a new loadout from equipped items will also save your subclass configuration.
+* Creating a new loadout from equipped or hitting +Equipped in the loadout editor will now also include your current emblem, ship, and sparrow.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 

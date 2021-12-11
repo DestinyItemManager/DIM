@@ -49,8 +49,7 @@ const loadoutTypes: DimBucketType[] = [
   'Horn',
 ];
 
-// We don't want to prepopulate the loadout with a bunch of cosmetic junk
-// like emblems and ships and horns.
+// We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: DimBucketType[] = [
   'Class',
   'KineticSlot',
@@ -66,6 +65,9 @@ export const fromEquippedTypes: DimBucketType[] = [
   'ClassItem',
   'Artifact',
   'Ghost',
+  'Ships',
+  'Vehicle',
+  'Emblems',
 ];
 
 export default function LoadoutDrawerContents(
