@@ -17,6 +17,7 @@ import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout } from './loadout-types';
+import { extractArmorModHashes } from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
 import { Subclass } from './subclass-drawer/Subclass';
@@ -78,6 +79,7 @@ export default function LoadoutDrawerContents(
     equip,
     remove,
     add,
+    onUpdateMods,
     onOpenModPicker,
     removeModByHash,
     onApplySocketOverrides,
@@ -90,6 +92,7 @@ export default function LoadoutDrawerContents(
     equip(item: DimItem, e: React.MouseEvent): void;
     remove(item: DimItem, e: React.MouseEvent): void;
     add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+    onUpdateMods(mods: number[]): void;
     onOpenModPicker(): void;
     removeModByHash(itemHash: number): void;
     onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
@@ -99,7 +102,14 @@ export default function LoadoutDrawerContents(
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutFromEquipped(loadout, itemsByBucket, stores, add, onApplySocketOverrides);
+    fillLoadoutFromEquipped(
+      loadout,
+      itemsByBucket,
+      stores,
+      add,
+      onUpdateMods,
+      onApplySocketOverrides
+    );
   }
   function doFillLoadOutFromUnequipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -300,6 +310,7 @@ function fillLoadoutFromEquipped(
   itemsByBucket: { [bucketId: string]: DimItem[] },
   stores: DimStore[],
   add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void,
+  onUpdateMods: (mods: number[]) => void,
   onApplySocketOverrides: (item: DimItem, socketOverrides: SocketOverrides) => void
 ) {
   if (!loadout) {
@@ -316,6 +327,7 @@ function fillLoadoutFromEquipped(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
 
+  const mods: number[] = [];
   for (const item of items) {
     if (
       !itemsByBucket[item.bucket.hash] ||
@@ -325,9 +337,13 @@ function fillLoadoutFromEquipped(
       if (item.bucket.hash === BucketHashes.Subclass) {
         createSocketOverridesFromEquipped(item, onApplySocketOverrides);
       }
+      mods.push(...extractArmorModHashes(item));
     } else {
       infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
     }
+  }
+  if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
+    onUpdateMods(mods);
   }
 }
 
