@@ -22,15 +22,13 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  convertToLoadoutItem,
-  extractArmorModHashes,
   getArmorStats,
   getItemsFromLoadoutItems,
   getLight,
   getModsFromLoadout,
   newLoadout,
+  newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
-import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -47,7 +45,7 @@ import {
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -108,18 +106,10 @@ function Loadouts() {
     [allLoadouts, classType, loadoutSort]
   );
 
-  const currentLoadout = useMemo(() => {
-    const items = selectedStore.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
-    );
-    const loadout = newLoadout(
-      t('Loadouts.FromEquipped'),
-      items.map((i) => convertToLoadoutItem(i, true)),
-      items.flatMap((i) => extractArmorModHashes(i))
-    );
-    loadout.classType = selectedStore.classType;
-    return loadout;
-  }, [selectedStore]);
+  const currentLoadout = useMemo(
+    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
+    [selectedStore]
+  );
 
   const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
 
