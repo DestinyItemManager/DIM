@@ -311,14 +311,14 @@ export function pickPlugPositions(
   // YES, we address this by index.
   // but only because we are find()ing through it and seeking a DimSocket object.
   // at the end, we will properly extract that DimSocket's socketIndex
-  const socketsForCategory = getSocketsByIndexes(item.sockets!, armorModIndexes || []);
-  const existingModSocketsInitial = socketsForCategory.sort(
+  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []).sort(
+    // We are sorting so that we can assign mods to the socket with the least number of possible options
+    // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
     compareBy(
       (socket) =>
         defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash!).reusablePlugItems.length
     )
   );
-  const existingModSockets = [...existingModSocketsInitial];
 
   for (const modToInsert of modsToInsert) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in

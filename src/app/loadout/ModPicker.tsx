@@ -91,49 +91,61 @@ function mapStateToProps() {
           continue;
         }
 
+        // Get all the armor mod sockets we can use for an item.
         const modSockets = getSocketsByCategoryHash(
           item.sockets,
           SocketCategoryHashes.ArmorMods
         ).filter(
           (socket) =>
             socket.socketDefinition.reusablePlugSetHash &&
-            socket.socketDefinition.singleInitialItemHash &&
-            (!plugCategoryHashWhitelist ||
-              (socket.plugged &&
-                plugCategoryHashWhitelist.includes(socket.plugged.plugDef.plug.plugCategoryHash)))
+            // Ensure they have a singleInitialItemHash, this seems to be missing on sockets that are disabled.
+            socket.socketDefinition.singleInitialItemHash
         );
+
+        // Group the sockets by their reusablePlugSetHash, this lets us get a count of availabe mods for
+        // each socket in the case of bucket specific mods/sockets
         const socketsGroupedByPlugSetHash = _.groupBy(
           modSockets,
           (socket) => socket.socketDefinition.reusablePlugSetHash
         );
+
         for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
-          const hash = parseInt(hashAsString, 10);
+          const plugSetHash = parseInt(hashAsString, 10);
           const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
 
-          for (const itemPlug of itemsForPlugSet(profileResponse, hash)) {
+          // Get the item plugs actually available to the profile
+          for (const itemPlug of itemsForPlugSet(profileResponse, plugSetHash)) {
             const plugDef = defs.InventoryItem.get(itemPlug.plugItemHash);
-            if (isInsertableArmor2Mod(plugDef)) {
+            if (
+              isInsertableArmor2Mod(plugDef) &&
+              (!plugCategoryHashWhitelist ||
+                plugCategoryHashWhitelist?.includes(plugDef.plug.plugCategoryHash))
+            ) {
               plugsWithDuplicates.push(plugDef);
             }
           }
 
           const plugs = _.uniqBy(plugsWithDuplicates, (plug) => plug.hash);
 
-          if (plugs.length && !plugsWithMaxSelectableSets[hash]) {
-            plugsWithMaxSelectableSets[hash] = {
-              plugSetHash: hash,
-              maxSelectable: plugs.some((p) =>
-                slotSpecificPlugCategoryHashes.includes(p.plug.plugCategoryHash)
-              )
-                ? sockets.length
-                : MAX_SLOT_INDEPENDENT_MODS,
+          // Combat, general and raid mods are restricted across items so we need to manually
+          // set the max selectable
+          const maxSelectable = plugs.some((p) =>
+            slotSpecificPlugCategoryHashes.includes(p.plug.plugCategoryHash)
+          )
+            ? sockets.length
+            : MAX_SLOT_INDEPENDENT_MODS;
+
+          if (plugs.length && !plugsWithMaxSelectableSets[plugSetHash]) {
+            plugsWithMaxSelectableSets[plugSetHash] = {
+              plugSetHash,
+              maxSelectable,
               plugs,
             };
           } else if (
             plugs.length &&
-            plugsWithMaxSelectableSets[hash].maxSelectable < sockets.length
+            plugsWithMaxSelectableSets[plugSetHash].maxSelectable < sockets.length
           ) {
-            plugsWithMaxSelectableSets[hash].maxSelectable = sockets.length;
+            plugsWithMaxSelectableSets[plugSetHash].maxSelectable = sockets.length;
           }
         }
       }

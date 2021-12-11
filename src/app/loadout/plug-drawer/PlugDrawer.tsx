@@ -20,7 +20,9 @@ export interface PlugsWithMaxSelectable {
 }
 
 interface Props {
-  /** A list of plugs the user can choose from */
+  /**
+   * A list of plug items that come from a PlugSet, along with the maximum number of these plugs that can be chosen.
+   */
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
   /**
    * An array of mods that are already locked.
@@ -77,27 +79,9 @@ export default function PlugDrawer({
 }: Props) {
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
-  const [selected, setSelected] = useState(() => {
-    const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
-
-    selectedPlugLoop: for (const plug of initiallySelected) {
-      const possibleSets = plugsWithMaxSelectableSets
-        .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
-        .sort(compareBy((set) => set.plugs.length));
-
-      for (const set of possibleSets) {
-        if (!rtn[set.plugSetHash]) {
-          rtn[set.plugSetHash] = [plug];
-          continue selectedPlugLoop;
-        } else if (rtn[set.plugSetHash]!.length < set.maxSelectable) {
-          rtn[set.plugSetHash]!.push(plug);
-          continue selectedPlugLoop;
-        }
-      }
-    }
-
-    return rtn;
-  });
+  const [selected, setSelected] = useState(() =>
+    createInternalSelectedState(plugsWithMaxSelectableSets, initiallySelected)
+  );
   const filterInput = useRef<SearchFilterRef | null>(null);
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -264,4 +248,35 @@ export default function PlugDrawer({
       ))}
     </Sheet>
   );
+}
+
+/**
+ * This creates the internally used state for the selected plugs.
+ * We want to split the selected plugs up into groups based on the plugSetHash we attribute them too.
+ */
+function createInternalSelectedState(
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
+  initiallySelected: PluggableInventoryItemDefinition[]
+) {
+  const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
+
+  selectedPlugLoop: for (const plug of initiallySelected) {
+    // Find all the possible sets this plug could go in and sort them so the set with the
+    // smallest number of options is first. Because artificer armor has a socket that is a
+    // subset of the normal slot specific sockets, this ensure we will it first.
+    const possibleSets = plugsWithMaxSelectableSets
+      .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
+      .sort(compareBy((set) => set.plugs.length));
+
+    for (const set of possibleSets) {
+      const selectedForPlugSet = rtn[set.plugSetHash] || [];
+      if (selectedForPlugSet.length < set.maxSelectable) {
+        selectedForPlugSet.push(plug);
+        rtn[set.plugSetHash] = selectedForPlugSet;
+        continue selectedPlugLoop;
+      }
+    }
+  }
+
+  return rtn;
 }

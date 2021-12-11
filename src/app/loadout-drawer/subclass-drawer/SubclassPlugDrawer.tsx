@@ -49,6 +49,8 @@ export default function SubclassPlugDrawer({
       profileResponse,
       subclass
     );
+    // A flat list of possible subclass plugs we use this to figure out how to sort plugs
+    // and the different sections in the plug picker
     const flatPlugs = plugsWithMaxSelectableSets.flatMap((set) => set.plugs);
     const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
       flatPlugs.indexOf(plug)
@@ -69,6 +71,8 @@ export default function SubclassPlugDrawer({
     };
   }, [defs, profileResponse, socketOverrides, subclass]);
 
+  // The handler when when a user accepts the selection in the plug picker
+  // This will create a new set of socket overrides
   const onAcceptInternal = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
       if (!subclass.sockets) {
@@ -149,7 +153,11 @@ export default function SubclassPlugDrawer({
   );
 }
 
-export function getPlugsForSubclass(
+/**
+ * This creates the the plugsWithMaxSelectableSets for the plug picker and also creates sets
+ * of aspect and fragment plugs.
+ */
+function getPlugsForSubclass(
   defs: D2ManifestDefinitions | undefined,
   profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem
@@ -164,12 +172,15 @@ export function getPlugsForSubclass(
 
   for (const category of subclass.sockets.categories) {
     const sockets = getSocketsByCategoryHash(subclass.sockets, category.category.hash);
+    // Group sockets by their plugSetHash so that we can figure out how many aspect or ability
+    // choices the user will get
     const socketsGroupedBySetHash = _.groupBy(
       sockets,
       (socket) => socket.socketDefinition.reusablePlugSetHash
     );
+
     for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
-      if (sockets.length) {
+      if (socketGroup.length) {
         const firstSocket = socketGroup[0];
         const plugSetHash = firstSocket.socketDefinition.reusablePlugSetHash;
 
@@ -179,6 +190,7 @@ export function getPlugsForSubclass(
             plugSetHash,
             maxSelectable: socketGroup.length,
           };
+          // Get all the availabe plugs for the given profile
           const plugHashes = itemsForPlugSet(profileResponse, plugSetHash).map(
             (plug) => plug.plugItemHash
           );
