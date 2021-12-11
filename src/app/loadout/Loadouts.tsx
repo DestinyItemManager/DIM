@@ -53,10 +53,12 @@ import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
+import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
 
 const categoryStyles = {
@@ -196,6 +198,7 @@ function LoadoutRow({
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
@@ -301,11 +304,21 @@ function LoadoutRow({
             ))}
             {savedMods.length > 0 ? (
               <div className={styles.mods}>
-                {savedMods.map((mod) => (
-                  <div key={getModRenderKey(mod)}>
-                    <PlugDef plug={mod} />
-                  </div>
-                ))}
+                <div className={styles.modsGrid}>
+                  {savedMods.map((mod) => (
+                    <div key={getModRenderKey(mod)}>
+                      <PlugDef plug={mod} />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className={clsx('dim-button', styles.showModPlacementButton)}
+                  type="button"
+                  title="Show mod placement"
+                  onClick={() => setShowModAssignmentDrawer(true)}
+                >
+                  {t('Loadouts.ShowModPlacement')}
+                </button>
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
@@ -313,6 +326,14 @@ function LoadoutRow({
           </>
         )}
       </div>
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { RefObject, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
@@ -66,7 +66,7 @@ export default function ModAssignmentDrawer({
   minHeight?: number;
   /** A ref passed down to the sheets container. */
   sheetRef?: RefObject<HTMLDivElement>;
-  onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
+  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
@@ -87,18 +87,18 @@ export default function ModAssignmentDrawer({
     return [compactModAssignments(itemModAssignments), unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);
 
-  const onSocketClick = (
-    plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist: number[]
-  ) => {
-    const { plugCategoryHash } = plugDef.plug;
+  const onSocketClick = useCallback(
+    (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
+      const { plugCategoryHash } = plugDef.plug;
 
-    if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
-      // Do nothing, it's an exotic plug
-    } else {
-      setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
-    }
-  };
+      if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
+        // Do nothing, it's an exotic plug
+      } else {
+        setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
+      }
+    },
+    []
+  );
 
   const flatAssigned = _.compact(Object.values(itemModAssignments).flat());
 
@@ -125,20 +125,25 @@ export default function ModAssignmentDrawer({
                 <Sockets
                   item={item}
                   lockedMods={itemModAssignments[item.id]}
-                  onSocketClick={onSocketClick}
+                  onSocketClick={onUpdateMods ? onSocketClick : undefined}
                 />
               </div>
             ))}
           </div>
-          <h3>{t('Loadouts.UnassignedMods')}</h3>
-          <div className={styles.unassigned}>
-            {unassignedMods.map((mod) => (
-              <Mod key={getModRenderKey(mod)} plugDef={mod} />
-            ))}
-          </div>
+          {unassignedMods.length > 0 && (
+            <>
+              <h3>{t('Loadouts.UnassignedMods')}</h3>
+              <div className={styles.unassigned}>
+                {unassignedMods.map((mod) => (
+                  <Mod key={getModRenderKey(mod)} plugDef={mod} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </Sheet>
-      {plugCategoryHashWhitelist &&
+      {onUpdateMods &&
+        plugCategoryHashWhitelist &&
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}

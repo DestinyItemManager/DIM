@@ -15,6 +15,7 @@
 * Hitting +Equipped in the loadout editor will add current mods.
 * Creating a new loadout from equipped items will also save your subclass configuration.
 * Creating a new loadout from equipped or hitting +Equipped in the loadout editor will now also include your current emblem, ship, and sparrow.
+* Vendor items no longer offer to apply perks.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
