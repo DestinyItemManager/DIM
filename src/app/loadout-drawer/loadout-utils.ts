@@ -2,8 +2,9 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
+import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
-import { createSocketOverridesFromEquipped } from 'app/inventory/store/override-sockets';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
@@ -17,7 +18,27 @@ import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
-import { fromEquippedTypes } from './LoadoutDrawerContents';
+
+// We don't want to prepopulate the loadout with D1 cosmetics
+export const fromEquippedTypes: DimBucketType[] = [
+  'Class',
+  'KineticSlot',
+  'Energy',
+  'Power',
+  'Primary',
+  'Special',
+  'Heavy',
+  'Helmet',
+  'Gauntlets',
+  'Chest',
+  'Leg',
+  'ClassItem',
+  'Artifact',
+  'Ghost',
+  'Ships',
+  'Vehicle',
+  'Emblems',
+];
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
@@ -37,6 +58,24 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
     items,
     clearSpace: false,
   };
+}
+
+/**
+ * Create a socket overrides structure from the item's currently plugged sockets.
+ */
+function createSocketOverridesFromEquipped(item: DimItem) {
+  const socketOverrides: SocketOverrides = {};
+  for (const socket of item.sockets?.allSockets || []) {
+    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
+    // to the loadout.
+    if (
+      socket.plugged &&
+      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
+    ) {
+      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+    }
+  }
+  return socketOverrides;
 }
 
 /**
