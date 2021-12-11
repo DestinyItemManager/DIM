@@ -41,7 +41,7 @@ import { getSocketByIndex } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
-import { loadoutFromAllItems } from './loadout-utils';
+import { backupLoadout } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -164,7 +164,7 @@ function doApplyLoadout(
         savePreviousLoadout({
           storeId: store.id,
           loadoutId: loadout.id,
-          previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name })),
+          previousLoadout: backupLoadout(store, t('Loadouts.Before', { name: loadout.name })),
         })
       );
     }

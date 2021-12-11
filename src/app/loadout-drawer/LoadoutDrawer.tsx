@@ -198,34 +198,16 @@ export default function LoadoutDrawer() {
   const savedMods = getModsFromLoadout(defs, loadout);
 
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
-    const newLoadout = { ...loadout };
-
-    newLoadout.parameters = {
-      ...newLoadout.parameters,
-      mods: newMods.map((mod) => mod.hash),
-    };
-    stateDispatch({ type: 'update', loadout: newLoadout });
-  };
+  const onUpdateModHashes = (mods: number[]) => stateDispatch({ type: 'updateMods', mods });
+  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
+    onUpdateModHashes(newMods.map((mod) => mod.hash));
 
   /** Removes a single mod from the loadout with the supplied itemHash. */
-  const removeModByHash = (itemHash: number) => {
-    const newLoadout = { ...loadout };
-    const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
-    const index = newMods.indexOf(itemHash);
-    if (index !== -1) {
-      newMods.splice(index, 1);
-      newLoadout.parameters = {
-        ...newLoadout.parameters,
-        mods: newMods,
-      };
-      stateDispatch({ type: 'update', loadout: newLoadout });
-    }
-  };
+  const removeModByHash = (itemHash: number) =>
+    stateDispatch({ type: 'removeMod', hash: itemHash });
 
-  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
-  };
 
   const header = (
     <div className="loadout-drawer-header">
@@ -285,6 +267,7 @@ export default function LoadoutDrawer() {
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
+                onUpdateMods={onUpdateModHashes}
                 onOpenModPicker={(query?: string) =>
                   stateDispatch({ type: 'openModPicker', query })
                 }

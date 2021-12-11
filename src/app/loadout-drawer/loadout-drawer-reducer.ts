@@ -38,6 +38,8 @@ export type Action =
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
+  | { type: 'updateMods'; mods: number[] }
+  | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
   | { type: 'closeModPicker' };
 
@@ -107,6 +109,42 @@ export function stateReducer(state: State, action: Action): State {
       return loadout
         ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
         : state;
+    }
+
+    case 'updateMods': {
+      const { loadout } = state;
+      const { mods } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                mods,
+              },
+            },
+          }
+        : state;
+    }
+
+    case 'removeMod': {
+      const { loadout } = state;
+      const { hash } = action;
+      if (loadout) {
+        const newLoadout = { ...loadout };
+        const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
+        const index = newMods.indexOf(hash);
+        if (index !== -1) {
+          newMods.splice(index, 1);
+          newLoadout.parameters = {
+            ...newLoadout.parameters,
+            mods: newMods,
+          };
+          return { ...state, loadout: newLoadout };
+        }
+      }
+      return state;
     }
 
     case 'openModPicker': {
