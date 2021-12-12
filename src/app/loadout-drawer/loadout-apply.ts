@@ -742,7 +742,7 @@ function equipModsToItem(itemId: string, modsForItem: Assignment[]): ThunkResult
         }
         continue;
       }
-      const defaultPlugHash = getDefaultPlugHash(socket.socketDefinition, defs);
+      const defaultPlugHash = getDefaultPlugHash(socket, defs);
       if (defaultPlugHash && canInsertPlug(socket, defaultPlugHash, destiny2CoreSettings, defs)) {
         infoLog(
           'loadout mods',
