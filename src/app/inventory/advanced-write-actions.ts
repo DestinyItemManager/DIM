@@ -59,7 +59,6 @@ function canInsertForFree(
   const { insertPlugFreeProtectedPlugItemHashes, insertPlugFreeBlockedSocketTypeHashes } =
     destiny2CoreSettings;
   if (
-    !plugItemHash ||
     (insertPlugFreeProtectedPlugItemHashes || []).includes(plugItemHash) ||
     (insertPlugFreeBlockedSocketTypeHashes || []).includes(socket.socketDefinition.socketTypeHash)
   ) {
