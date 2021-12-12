@@ -359,16 +359,15 @@ export function pickPlugPositions(
   // return it to its default (usually "Empty Mod Socket")
 
   // so we fall back to the first item in its reusable PlugSet
-  for (const {
-    socketDefinition: { singleInitialItemHash, reusablePlugSetHash },
-    socketIndex,
-  } of existingModSockets) {
-    const defaultModHash = getDefaultPlugHash({ singleInitialItemHash, reusablePlugSetHash });
+  // so we fall back to the first item in its reusable PlugSet
+  for (const socket of existingModSockets) {
+    const defaultModHash = getDefaultPlugHash(socket);
     const mod =
       defaultModHash &&
       (defs.InventoryItem.get(defaultModHash) as PluggableInventoryItemDefinition);
 
     if (mod) {
+      const { socketIndex } = socket;
       assignments.push({
         socketIndex,
         mod,
@@ -637,5 +636,5 @@ export function isAssigningToDefault(
       item.hash
     );
   }
-  return socket && assignment.mod.hash === getDefaultPlugHash(socket.socketDefinition, defs);
+  return socket && assignment.mod.hash === getDefaultPlugHash(socket, defs);
 }
