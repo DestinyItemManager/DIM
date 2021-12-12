@@ -689,11 +689,11 @@ function applySocketOverrides(
               modsForItem.push({ socketIndex, mod });
             }
           }
-
-          overrideResults.total += modsForItem.length;
-          const successful = await dispatch(equipModsToItem(item.id, modsForItem, true));
-          overrideResults.successful += successful.length;
         }
+
+        overrideResults.total = modsForItem.length;
+        const successful = await dispatch(equipModsToItem(item.id, modsForItem, true));
+        overrideResults.successful += successful.length;
       }
     }
     return overrideResults;
