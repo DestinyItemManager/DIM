@@ -191,7 +191,9 @@ function getPlugsForSubclass(
             maxSelectable: socketGroup.length,
           };
           // Get all the availabe plugs for the given profile
-          const plugHashes = itemsForPlugSet(profileResponse, plugSetHash).map(
+          // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
+          // but it should future proof things
+          const plugHashes = itemsForPlugSetEverywhere(profileResponse, plugSetHash).map(
             (plug) => plug.plugItemHash
           );
 

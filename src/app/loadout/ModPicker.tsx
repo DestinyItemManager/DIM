@@ -101,11 +101,12 @@ function mapStateToProps() {
           continue;
         }
 
-        // Get all the armor mod sockets we can use for an item.
+        // Get all the armor mod sockets we can use for an item. Note that sockets without `plugged`
+        // are considered disabled by the API
         const modSockets = getSocketsByCategoryHash(
           item.sockets,
           SocketCategoryHashes.ArmorMods
-        ).filter((socket) => socket.socketDefinition.reusablePlugSetHash);
+        ).filter((socket) => socket.socketDefinition.reusablePlugSetHash && socket.plugged);
 
         // Group the sockets by their reusablePlugSetHash, this lets us get a count of availabe mods for
         // each socket in the case of bucket specific mods/sockets
