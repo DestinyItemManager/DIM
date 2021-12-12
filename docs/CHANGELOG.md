@@ -2,6 +2,7 @@
 
 * Fix image paths for D1 perks.
 * Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
+* Stasis subclass can also be applied in the Loadouts page.
 * Fix issue where Optimizer throws an error when selecting a raid or combat mod.
 * Fix a bug that prevented applying shaders or ornaments from the item popup.
 * Fix an error that can occur when loading a shared build link.
