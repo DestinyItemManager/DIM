@@ -6,6 +6,7 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator, compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import _ from 'lodash';
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Sheet from '../../dim-ui/Sheet';
@@ -91,7 +92,7 @@ export default function PlugDrawer({
     }
   }, [isPhonePortrait, filterInput]);
 
-  const onPlugSelected = useCallback(
+  const handlePlugSelected = useCallback(
     (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
       // TODO (ryan) use immer
       setSelected((oldState) => {
@@ -108,7 +109,7 @@ export default function PlugDrawer({
     [sortPlugs]
   );
 
-  const onPlugRemoved = useCallback(
+  const handlePlugRemoved = useCallback(
     (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
       // TODO (ryan) use immer
       setSelected((oldState) => {
@@ -129,7 +130,7 @@ export default function PlugDrawer({
     [setSelected]
   );
 
-  const onPlugRemovedFromFooter = useCallback(
+  const handlePlugRemovedFromFooter = useCallback(
     (plug: PluggableInventoryItemDefinition) => {
       // TODO (ryan) use immer
       setSelected((oldState) => {
@@ -192,13 +193,15 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
+  const flatSelectedMods = _.compact(Object.values(selected).flat());
+
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
-      selected={_.compact(Object.values(selected).flat())}
+      selected={flatSelectedMods}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
-      onPlugSelected={onPlugRemovedFromFooter}
+      handlePlugSelected={handlePlugRemovedFromFooter}
     />
   );
 
@@ -239,11 +242,9 @@ export default function PlugDrawer({
           plugsWithMaxSelectable={plugsWithMaxSelectable}
           selected={selected[plugsWithMaxSelectable.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
-          isPlugSelectable={(plug) =>
-            isPlugSelectable(plug, _.compact(Object.values(selected).flat()))
-          }
-          onPlugSelected={onPlugSelected}
-          onPlugRemoved={onPlugRemoved}
+          isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedMods)}
+          handlePlugSelected={handlePlugSelected}
+          handlePlugRemoved={handlePlugRemoved}
         />
       ))}
     </Sheet>
@@ -253,6 +254,11 @@ export default function PlugDrawer({
 /**
  * This creates the internally used state for the selected plugs.
  * We want to split the selected plugs up into groups based on the plugSetHash we attribute them too.
+ *
+ * We need to do this to correctly handle artificer armor sockets. The plugsets that they can take are
+ * a subset of the bucket specific sockets on an item (as in they just take the artifact mods). So
+ * to track which plugset they chose a mod from, we key the selected mods by the plugset they were
+ * picked from.
  */
 function createInternalSelectedState(
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
@@ -260,7 +266,7 @@ function createInternalSelectedState(
 ) {
   const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
 
-  selectedPlugLoop: for (const plug of initiallySelected) {
+  for (const plug of initiallySelected) {
     // Find all the possible sets this plug could go in and sort them so the set with the
     // smallest number of options is first. Because artificer armor has a socket that is a
     // subset of the normal slot specific sockets, this ensure we will it first.
@@ -273,7 +279,7 @@ function createInternalSelectedState(
       if (selectedForPlugSet.length < set.maxSelectable) {
         selectedForPlugSet.push(plug);
         rtn[set.plugSetHash] = selectedForPlugSet;
-        continue selectedPlugLoop;
+        break;
       }
     }
   }

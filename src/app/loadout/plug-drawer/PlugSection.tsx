@@ -15,27 +15,27 @@ export default function PlugSection({
   selected,
   displayedStatHashes,
   isPlugSelectable,
-  onPlugSelected,
-  onPlugRemoved,
+  handlePlugSelected,
+  handlePlugRemoved,
 }: {
   plugsWithMaxSelectable: PlugsWithMaxSelectable;
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
   selected: PluggableInventoryItemDefinition[];
   displayedStatHashes?: number[];
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
-  onPlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
-  onPlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  handlePlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
 }) {
   const { plugs, maxSelectable, plugSetHash } = plugsWithMaxSelectable;
 
-  const onPlugSelectedInternal = useCallback(
-    (plug: PluggableInventoryItemDefinition) => onPlugSelected(plugSetHash, plug),
-    [onPlugSelected, plugSetHash]
+  const handlePlugSelectedInternal = useCallback(
+    (plug: PluggableInventoryItemDefinition) => handlePlugSelected(plugSetHash, plug),
+    [handlePlugSelected, plugSetHash]
   );
 
-  const onPlugRemovedInternal = useCallback(
-    (plug: PluggableInventoryItemDefinition) => onPlugRemoved(plugSetHash, plug),
-    [onPlugRemoved, plugSetHash]
+  const handlePlugRemovedInternal = useCallback(
+    (plug: PluggableInventoryItemDefinition) => handlePlugRemoved(plugSetHash, plug),
+    [handlePlugRemoved, plugSetHash]
   );
 
   if (!plugs.length) {
@@ -64,8 +64,8 @@ export default function PlugSection({
                 plug={plug}
                 displayedStatHashes={displayedStatHashes}
                 selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
-                onPlugSelected={onPlugSelectedInternal}
-                onPlugRemoved={onPlugRemovedInternal}
+                onPlugSelected={handlePlugSelectedInternal}
+                onPlugRemoved={handlePlugRemovedInternal}
               />
             ))}
           </div>

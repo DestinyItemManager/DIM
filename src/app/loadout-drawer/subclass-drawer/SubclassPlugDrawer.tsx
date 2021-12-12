@@ -42,7 +42,7 @@ export default function SubclassPlugDrawer({
     sortPlugGroups,
   } = useMemo(() => {
     const initiallySelected = Object.values(socketOverrides)
-      .map((hash) => defs?.InventoryItem.get(hash))
+      .map((hash) => defs!.InventoryItem.get(hash))
       .filter(isPluggableItem);
     const { plugsWithMaxSelectableSets, aspects, fragments } = getPlugsForSubclass(
       defs,
@@ -56,8 +56,8 @@ export default function SubclassPlugDrawer({
       flatPlugs.indexOf(plug)
     );
 
-    // The grouping we use in the plug drawer breaks the plug ordering, this puts the groups in the
-    // correct order again as we build the set of plugs by iterating the categories in order
+    // This ensures the plug groups are ordered by the socket order in the item def.
+    // The order in the item def matches the order displayed in the game.
     const sortPlugGroups = compareBy(
       (group: PlugsWithMaxSelectable) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
     );

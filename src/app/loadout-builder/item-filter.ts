@@ -109,6 +109,14 @@ function matchedLockedModEnergy(
   );
 }
 
+/**
+ * This ensures the item has enough sockets for the given mods by checking the plug sets for the items sockets.
+ * It does the following
+ * 1. Get a list of plugsets from the item sockets and sorts them so the shortest plugsets are used first (needed
+ *   for artificer sockets which is a subset of the bucket specific mod sockets)
+ * 2. For each locked mod, if it can go into one of the sockets, remove that socket from the list.
+ * 3. If we ever can't find a socket, we can't fit them all.
+ */
 function hasEnoughSocketsForMods(
   defs: D2ManifestDefinitions,
   item: DimItem,
