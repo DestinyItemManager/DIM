@@ -119,10 +119,18 @@ function hasEnoughSocketsForMods(
   }
 
   const sockets = getSocketsByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorMods);
+
+  // We get the plugSets for each item because they indicate which mods can go in which socket.
+  // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+  // of the plugItems in the plugset so we use that first if possible.
   const plugSets = _.compact(
     sockets.map(
       (socket) =>
         socket.socketDefinition.reusablePlugSetHash &&
+        // If a socket is not plugged (even with an empty socket) we consider it disabled
+        // This needs to be checked as the 30th anniversary armour has has the Artificer socket
+        // but the API considers it to be disabled.
+        socket.plugged &&
         defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash).reusablePlugItems.map(
           (plugItem) => plugItem.plugItemHash
         )
