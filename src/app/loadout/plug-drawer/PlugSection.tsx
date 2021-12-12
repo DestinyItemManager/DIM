@@ -1,4 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { Comparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import styles from './PlugSection.m.scss';
@@ -17,6 +18,7 @@ export default function PlugSection({
   isPlugSelectable,
   handlePlugSelected,
   handlePlugRemoved,
+  sortPlugs,
 }: {
   plugsWithMaxSelectable: PlugsWithMaxSelectable;
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
@@ -25,6 +27,7 @@ export default function PlugSection({
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
   handlePlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
 }) {
   const { plugs, maxSelectable, plugSetHash } = plugsWithMaxSelectable;
 
@@ -40,6 +43,10 @@ export default function PlugSection({
 
   if (!plugs.length) {
     return null;
+  }
+
+  if (sortPlugs) {
+    plugs.sort(sortPlugs);
   }
 
   // Here we split the section into further pieces so that each plug category has has its own title

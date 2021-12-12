@@ -97,7 +97,8 @@ export default function PlugDrawer({
       // TODO (ryan) use immer
       setSelected((oldState) => {
         const newState = { ...oldState };
-        const newSelected = newState[plugSetHash] || [];
+        const oldSelected = oldState[plugSetHash];
+        const newSelected = oldSelected ? [...oldSelected] : [];
         newSelected.push(mod);
         if (sortPlugs) {
           newSelected.sort(sortPlugs);
@@ -245,6 +246,7 @@ export default function PlugDrawer({
           isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedMods)}
           handlePlugSelected={handlePlugSelected}
           handlePlugRemoved={handlePlugRemoved}
+          sortPlugs={sortPlugs}
         />
       ))}
     </Sheet>
