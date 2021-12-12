@@ -11,7 +11,7 @@ import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
-import { compactModAssignments, createGetModRenderKey } from 'app/loadout/mod-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -129,8 +129,8 @@ export default function CompareDrawer({
     );
 
     return {
-      loSetAssignedMods: compactModAssignments(loSetAssignedMods),
-      itemModAssignments: compactModAssignments(itemModAssignments),
+      loSetAssignedMods: loSetAssignedMods,
+      itemModAssignments: itemModAssignments,
       unassignedMods,
     };
   }, [defs, loadoutItems, lockItemEnergyType, lockedMods, setItems, upgradeSpendTier]);

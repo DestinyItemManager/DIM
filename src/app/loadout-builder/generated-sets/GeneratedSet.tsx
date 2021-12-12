@@ -3,7 +3,6 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
-import { compactModAssignments } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
@@ -87,7 +86,7 @@ function GeneratedSet({
       upgradeSpendTier,
       lockItemEnergyType
     );
-    return compactModAssignments(itemModAssignments);
+    return itemModAssignments;
   }, [defs, displayedItems, lockItemEnergyType, lockedMods, upgradeSpendTier]);
 
   if (set.armor.some((items) => !items.length)) {

@@ -10,7 +10,7 @@ interface Props {
   selected: PluggableInventoryItemDefinition[];
   acceptButtonText: string;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
-  onPlugSelected(plug: PluggableInventoryItemDefinition): void;
+  handlePlugSelected(plug: PluggableInventoryItemDefinition): void;
 }
 
 export default function Footer({
@@ -18,7 +18,7 @@ export default function Footer({
   selected,
   acceptButtonText,
   onSubmit,
-  onPlugSelected,
+  handlePlugSelected,
 }: Props) {
   useHotkey('enter', acceptButtonText, onSubmit);
   const getModRenderKey = createGetModRenderKey();
@@ -33,7 +33,11 @@ export default function Footer({
       </div>
       <div className={styles.selectedMods}>
         {selected.map((plug) => (
-          <PlugDef key={getModRenderKey(plug)} plug={plug} onClose={() => onPlugSelected(plug)} />
+          <PlugDef
+            key={getModRenderKey(plug)}
+            plug={plug}
+            onClose={() => handlePlugSelected(plug)}
+          />
         ))}
       </div>
     </div>

@@ -13,6 +13,7 @@
 * Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
 * Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 * If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
+* Artifice Armor mod slots are now handled in Loadouts and the Loadout Optimizer.
 * Hitting +Equipped in the loadout editor will add current mods.
 * Creating a new loadout from equipped items will also save your subclass configuration.
 * Creating a new loadout from equipped or hitting +Equipped in the loadout editor will now also include your current emblem, ship, and sparrow.

@@ -1,15 +1,13 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { Assignment } from 'app/loadout-drawer/loadout-types';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
-import _ from 'lodash';
 import { canSwapEnergyFromUpgradeSpendTier } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
@@ -55,10 +53,14 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
 export const sortModGroups = chainComparator(
   compareBy((mods: PluggableInventoryItemDefinition[]) => {
     // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
-    const knownIndex = knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash);
+    const knownIndex = mods.length
+      ? knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash)
+      : -1;
     return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
   }),
-  compareBy((mods: PluggableInventoryItemDefinition[]) => mods[0].itemTypeDisplayName)
+  compareBy((mods: PluggableInventoryItemDefinition[]) =>
+    mods.length ? mods[0].itemTypeDisplayName : ''
+  )
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */
@@ -91,22 +93,6 @@ export function createGetModRenderKey() {
 
     return `${mod.hash}-${counts[mod.hash]++}`;
   };
-}
-
-/**
- * input: a dictionary keyed by instanceId, of `{ socketIndex, mod|undefined}[]`
- *
- * output: a dictionary keyed by instanceId, of `mod[]`
- *
- * used to turn a collections of specific mod assignments,
- * into a socket-agnostic list
- */
-export function compactModAssignments(assignments: { [itemInstanceId: string]: Assignment[] }): {
-  [itemInstanceId: string]: PluggableInventoryItemDefinition[];
-} {
-  return _.mapValues(assignments, (assignmentsForItem) =>
-    _.compact(assignmentsForItem.map((a) => a.mod))
-  );
 }
 
 /**
@@ -148,20 +134,16 @@ export function getItemEnergyType(
 // plug can be found in the socket's reusable PlugSet.
 
 /**
- * gets the InventoryItem hash corresponding to a socket's default contents.
- *
- * param 1 can be a socketDefinition (DestinyItemSocketEntryDefinition)
+ * gets the InventoryItem hash corresponding to a socket's default contents
+ * (what should be plugged in order to "revert/clear" it)
  */
-export function getDefaultPlugHash(
-  {
-    singleInitialItemHash,
-    reusablePlugSetHash,
-  }: { singleInitialItemHash: number; reusablePlugSetHash?: number },
-  defs?: D2ManifestDefinitions
-) {
-  return singleInitialItemHash
-    ? singleInitialItemHash
-    : reusablePlugSetHash
-    ? defs?.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
-    : undefined;
+export function getDefaultPlugHash(socket: DimSocket, defs?: D2ManifestDefinitions) {
+  if (socket.plugged) {
+    const { singleInitialItemHash, reusablePlugSetHash } = socket.socketDefinition;
+    return singleInitialItemHash
+      ? singleInitialItemHash
+      : reusablePlugSetHash
+      ? defs?.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
+      : undefined;
+  }
 }

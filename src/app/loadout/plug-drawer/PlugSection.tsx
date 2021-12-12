@@ -1,47 +1,83 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import React from 'react';
+import { Comparator } from 'app/utils/comparators';
+import _ from 'lodash';
+import React, { useCallback } from 'react';
 import styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
 
+export interface PlugsWithMaxSelectable {
+  plugSetHash: number;
+  plugs: PluggableInventoryItemDefinition[];
+  maxSelectable: number;
+}
+
 export default function PlugSection({
-  plugs,
+  plugsWithMaxSelectable,
   selected,
   displayedStatHashes,
   isPlugSelectable,
-  onPlugSelected,
-  onPlugRemoved,
+  handlePlugSelected,
+  handlePlugRemoved,
+  sortPlugs,
 }: {
-  /** A array of mods where plug.plugCategoryHash's are equal. */
-  plugs: readonly PluggableInventoryItemDefinition[];
+  plugsWithMaxSelectable: PlugsWithMaxSelectable;
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
   selected: PluggableInventoryItemDefinition[];
   displayedStatHashes?: number[];
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
-  onPlugSelected(mod: PluggableInventoryItemDefinition): void;
-  onPlugRemoved(mod: PluggableInventoryItemDefinition): void;
+  handlePlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
 }) {
+  const { plugs, maxSelectable, plugSetHash } = plugsWithMaxSelectable;
+
+  const handlePlugSelectedInternal = useCallback(
+    (plug: PluggableInventoryItemDefinition) => handlePlugSelected(plugSetHash, plug),
+    [handlePlugSelected, plugSetHash]
+  );
+
+  const handlePlugRemovedInternal = useCallback(
+    (plug: PluggableInventoryItemDefinition) => handlePlugRemoved(plugSetHash, plug),
+    [handlePlugRemoved, plugSetHash]
+  );
+
   if (!plugs.length) {
     return null;
   }
 
-  const title = plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName;
+  if (sortPlugs) {
+    plugs.sort(sortPlugs);
+  }
+
+  // Here we split the section into further pieces so that each plug category has has its own title
+  // This is important for combat mods, which would otherwise be grouped into one massive category
+  const plugsGroupedByPlugCategoryHash = _.groupBy(
+    plugs,
+    (plugDef) => plugDef.plug.plugCategoryHash
+  );
 
   return (
-    <div className={styles.bucket}>
-      <div className={styles.header}>{title}</div>
-      <div className={styles.items}>
-        {plugs.map((plug) => (
-          <SelectablePlug
-            key={plug.hash}
-            selected={selected.some((s) => s.hash === plug.hash)}
-            plug={plug}
-            displayedStatHashes={displayedStatHashes}
-            selectable={isPlugSelectable(plug)}
-            onPlugSelected={onPlugSelected}
-            onPlugRemoved={onPlugRemoved}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      {Object.entries(plugsGroupedByPlugCategoryHash).map(([pch, plugs]) => (
+        <div key={pch} className={styles.bucket}>
+          <div className={styles.header}>
+            {plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName}
+          </div>
+          <div className={styles.items}>
+            {plugs.map((plug) => (
+              <SelectablePlug
+                key={plug.hash}
+                selected={selected.some((s) => s.hash === plug.hash)}
+                plug={plug}
+                displayedStatHashes={displayedStatHashes}
+                selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
+                onPlugSelected={handlePlugSelectedInternal}
+                onPlugRemoved={handlePlugRemovedInternal}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
   );
 }
