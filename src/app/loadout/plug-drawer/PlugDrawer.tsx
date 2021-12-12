@@ -237,7 +237,7 @@ export default function PlugDrawer({
         <PlugSection
           key={plugsWithMaxSelectable.plugSetHash}
           plugsWithMaxSelectable={plugsWithMaxSelectable}
-          selected={selected[plugsWithMaxSelectable.plugSetHash] || []}
+          selected={selected[plugsWithMaxSelectable.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
           isPlugSelectable={(plug) =>
             isPlugSelectable(plug, _.compact(Object.values(selected).flat()))
