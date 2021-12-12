@@ -5,9 +5,9 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
+import PlugDrawer, { PlugsWithMaxSelectable } from 'app/loadout/plug-drawer/PlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
+import { itemsForPlugSetEverywhere } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -32,40 +32,47 @@ export default function SubclassPlugDrawer({
   const language = useSelector(languageSelector);
   const defs = useD2Definitions();
   const profileResponse = useSelector(profileResponseSelector);
-  const maxAspects = subclass.sockets
-    ? getSocketsByCategoryHash(subclass.sockets, SocketCategoryHashes.Aspects).length
-    : 0;
 
-  const { initiallySelected, plugs, aspects, fragments, sortPlugs, sortPlugGroups } =
-    useMemo(() => {
-      const initiallySelected = Object.values(socketOverrides)
-        .map((hash) => defs?.InventoryItem.get(hash))
-        .filter(isPluggableItem);
-      const { plugs, aspects, fragments } = getPlugsForSubclass(defs, profileResponse, subclass);
+  const {
+    initiallySelected,
+    plugsWithMaxSelectableSets,
+    aspects,
+    fragments,
+    sortPlugs,
+    sortPlugGroups,
+  } = useMemo(() => {
+    const initiallySelected = Object.values(socketOverrides)
+      .map((hash) => defs!.InventoryItem.get(hash))
+      .filter(isPluggableItem);
+    const { plugsWithMaxSelectableSets, aspects, fragments } = getPlugsForSubclass(
+      defs,
+      profileResponse,
+      subclass
+    );
+    // A flat list of possible subclass plugs we use this to figure out how to sort plugs
+    // and the different sections in the plug picker
+    const flatPlugs = plugsWithMaxSelectableSets.flatMap((set) => set.plugs);
+    const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
+      flatPlugs.indexOf(plug)
+    );
 
-      // Return these as an array as that is what the plug drawer uses
-      const plugsToReturn = Array.from(plugs);
+    // This ensures the plug groups are ordered by the socket order in the item def.
+    // The order in the item def matches the order displayed in the game.
+    const sortPlugGroups = compareBy(
+      (group: PlugsWithMaxSelectable) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
+    );
+    return {
+      initiallySelected,
+      plugsWithMaxSelectableSets,
+      aspects,
+      fragments,
+      sortPlugs,
+      sortPlugGroups,
+    };
+  }, [defs, profileResponse, socketOverrides, subclass]);
 
-      const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
-        plugsToReturn.indexOf(plug)
-      );
-
-      // The grouping we use in the plug drawer breaks the plug ordering, this puts the groups in the
-      // correct order again as we build the set of plugs by iterating the categories in order
-      const sortPlugGroups = compareBy(
-        (group: PluggableInventoryItemDefinition[]) =>
-          group.length && plugsToReturn.indexOf(group[0])
-      );
-      return {
-        initiallySelected,
-        plugs: plugsToReturn,
-        aspects,
-        fragments,
-        sortPlugs,
-        sortPlugGroups,
-      };
-    }, [defs, profileResponse, socketOverrides, subclass]);
-
+  // The handler when when a user accepts the selection in the plug picker
+  // This will create a new set of socket overrides
   const onAcceptInternal = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
       if (!subclass.sockets) {
@@ -109,13 +116,8 @@ export default function SubclassPlugDrawer({
         return !selected.some((s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash);
       }
 
-      // Aspects handling
-      const selectedAspects = selected.filter((plugDef) => aspects.has(plugDef));
-      if (aspects.has(plug)) {
-        return selectedAspects.length < maxAspects;
-      }
-
       // Fragments handling
+      const selectedAspects = selected.filter((plugDef) => aspects.has(plugDef));
       const selectedFragments = selected.filter((plugDef) => fragments.has(plugDef));
       const allowedFragments = _.sumBy(
         selectedAspects,
@@ -130,7 +132,7 @@ export default function SubclassPlugDrawer({
 
       return true;
     },
-    [aspects, fragments, maxAspects]
+    [aspects, fragments]
   );
 
   return (
@@ -139,7 +141,7 @@ export default function SubclassPlugDrawer({
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
       language={language}
-      plugs={plugs}
+      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
       displayedStatHashes={DISPLAYED_PLUG_STATS}
       onAccept={onAcceptInternal}
       onClose={onClose}
@@ -151,43 +153,78 @@ export default function SubclassPlugDrawer({
   );
 }
 
-export function getPlugsForSubclass(
+/**
+ * This creates the the plugsWithMaxSelectableSets for the plug picker and also creates sets
+ * of aspect and fragment plugs.
+ */
+function getPlugsForSubclass(
   defs: D2ManifestDefinitions | undefined,
   profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem
 ) {
-  const plugs = new Set<PluggableInventoryItemDefinition>();
+  const plugsWithMaxSelectableSets: PlugsWithMaxSelectable[] = [];
   const aspects: Set<PluggableInventoryItemDefinition> = new Set();
   const fragments: Set<PluggableInventoryItemDefinition> = new Set();
 
   if (!subclass.sockets || !defs) {
-    return { plugs, aspects, fragments };
+    return { plugsWithMaxSelectableSets, aspects, fragments };
   }
 
   for (const category of subclass.sockets.categories) {
     const sockets = getSocketsByCategoryHash(subclass.sockets, category.category.hash);
+    // Group sockets by their plugSetHash so that we can figure out how many aspect or ability
+    // choices the user will get
+    const socketsGroupedBySetHash = _.groupBy(
+      sockets,
+      (socket) => socket.socketDefinition.reusablePlugSetHash
+    );
 
-    for (const socket of sockets) {
-      for (const hash of getPlugHashesForSocket(socket, profileResponse)) {
-        const plugDef = defs.InventoryItem.get(hash);
-        const isAspect = category.category.hash === SocketCategoryHashes.Aspects;
-        const isFragment = category.category.hash === SocketCategoryHashes.Fragments;
-        const isEmptySocket =
-          (isAspect || isFragment) && hash === socket.socketDefinition.singleInitialItemHash;
+    for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
+      if (socketGroup.length) {
+        const firstSocket = socketGroup[0];
+        const plugSetHash = firstSocket.socketDefinition.reusablePlugSetHash;
 
-        if (!isEmptySocket && isPluggableItem(plugDef)) {
-          plugs.add(plugDef);
+        if (plugSetHash && profileResponse) {
+          const plugsWithMaxSelectable: PlugsWithMaxSelectable = {
+            plugs: [],
+            plugSetHash,
+            maxSelectable: socketGroup.length,
+          };
+          // Get all the availabe plugs for the given profile
+          // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
+          // but it should future proof things
+          const plugHashes = itemsForPlugSetEverywhere(profileResponse, plugSetHash).map(
+            (plug) => plug.plugItemHash
+          );
 
-          if (isAspect) {
-            aspects.add(plugDef);
-          } else if (isFragment) {
-            fragments.add(plugDef);
+          for (const hash of plugHashes) {
+            const plugDef = defs.InventoryItem.get(hash);
+            const isAspect = category.category.hash === SocketCategoryHashes.Aspects;
+            const isFragment = category.category.hash === SocketCategoryHashes.Fragments;
+            const isEmptySocket =
+              (isAspect || isFragment) &&
+              hash === firstSocket.socketDefinition.singleInitialItemHash;
+
+            if (!isEmptySocket && isPluggableItem(plugDef)) {
+              plugsWithMaxSelectable.plugs.push(plugDef);
+
+              if (isAspect) {
+                aspects.add(plugDef);
+              } else if (isFragment) {
+                fragments.add(plugDef);
+              }
+            }
           }
+          plugsWithMaxSelectable.plugs = _.uniqBy(
+            plugsWithMaxSelectable.plugs,
+            (plug) => plug.hash
+          );
+          plugsWithMaxSelectableSets.push(plugsWithMaxSelectable);
         }
       }
     }
   }
-  return { plugs, aspects, fragments };
+  return { plugsWithMaxSelectableSets, aspects, fragments };
 }
 
 function getPlugHashesForSocket(
@@ -200,5 +237,5 @@ function getPlugHashesForSocket(
     return [];
   }
 
-  return itemsForPlugSet(profileResponse, plugSetHash).map((plug) => plug.plugItemHash);
+  return itemsForPlugSetEverywhere(profileResponse, plugSetHash).map((plug) => plug.plugItemHash);
 }

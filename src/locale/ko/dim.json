@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주세요.",
     "ConfirmTitle": "작업 확인",
-    "Error": "아이템 변경 오류",
+    "Error": "개조 부품이나 특성 교체 실패",
+    "ErrorMessage": "{{item}}에 {{plug}}을(를) 장착할 수 없습니다.\n\n{{error}}",
     "FailedToken": "아이템을 변경할 권한이 없음"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "활동",
@@ -582,7 +583,6 @@
     "SaveAsNew": "새로 저장",
     "SaveLoadout": "로드아웃 저장",
     "ShowModPlacement": "개조 부품 배치 표시",
-    "SocketError": "",
     "SortByEditTime": "수정한 날짜순 정렬",
     "SortByName": "이름순 정렬",
     "SubclassOptions": "{{subclass}} 옵션",
@@ -826,7 +826,6 @@
     "ApplyPerks": "특성 적용",
     "GridStyle": "특성을 격자 모양으로 표시",
     "InsertModButton": "개조 부품 장착",
-    "InsertPlugError": "개조 부품 장착 불가",
     "ListStyle": "특성을 목록으로 표시",
     "SelectModButton": "개조 부품 선택",
     "SelectWishlistPerks": "희망 아이템 목록 특성 미리보기"

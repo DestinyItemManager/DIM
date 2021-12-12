@@ -6,7 +6,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
+import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -40,15 +40,15 @@ function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,
-    (_state: RootState, props: ProvidedProps) =>
-      props.socket.socketDefinition.reusablePlugSetHash ||
-      props.socket.socketDefinition.randomizedPlugSetHash,
-    (profileResponse, plugSetHash) => {
+    (_state: RootState, { item }: ProvidedProps) => item.owner,
+    (_state: RootState, { socket }: ProvidedProps) =>
+      socket.socketDefinition.reusablePlugSetHash || socket.socketDefinition.randomizedPlugSetHash,
+    (profileResponse, owner, plugSetHash) => {
       if (!plugSetHash || !profileResponse) {
         return emptySet<number>();
       }
       const unlockedPlugs = new Set<number>();
-      const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
+      const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
       for (const plugSetItem of plugSetItems) {
         if (plugSetItem.enabled) {
           unlockedPlugs.add(plugSetItem.plugItemHash);

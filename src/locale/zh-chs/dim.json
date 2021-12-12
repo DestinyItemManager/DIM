@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的许可权。",
     "ConfirmTitle": "确认操作",
-    "Error": "更换物品时出错",
+    "Error": "更改模组或特性时出错",
+    "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
     "FailedToken": "无权限更换物品"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
     "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "活动",
@@ -493,7 +494,7 @@
     "UnlockItem": "取消固定物品"
   },
   "Loadouts": {
-    "Abilities": "Abilities",
+    "Abilities": "技能",
     "AddEquippedItems": "添加已装备",
     "AddNotes": "添加备注",
     "AddUnequippedItems": "添加未装备的",
@@ -582,7 +583,6 @@
     "SaveAsNew": "保存新增",
     "SaveLoadout": "保存配装",
     "ShowModPlacement": "显示模组位置",
-    "SocketError": "",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
     "SubclassOptions": "{{subclass}}选项",
@@ -826,7 +826,6 @@
     "ApplyPerks": "应用特性",
     "GridStyle": "按网格显示特性",
     "InsertModButton": "插入模组",
-    "InsertPlugError": "无法插入模组",
     "ListStyle": "按列表显示特性",
     "SelectModButton": "选择模组",
     "SelectWishlistPerks": "预览愿望单特性"

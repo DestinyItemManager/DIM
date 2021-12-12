@@ -1,4 +1,5 @@
 import { itemSortOrderSelector } from 'app/settings/item-sort';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { InventoryBucket } from '../inventory/inventory-buckets';
@@ -42,6 +43,8 @@ export default function LoadoutDrawerBucket({
     ),
     itemSortOrder
   );
+  // Only allow one emblem
+  const capacity = bucket.hash === BucketHashes.Emblems ? 1 : bucket.capacity;
 
   return (
     <div className="loadout-bucket">
@@ -68,7 +71,7 @@ export default function LoadoutDrawerBucket({
                 {unequippedItems.map((item) => (
                   <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
                 ))}
-                {equippedItems.length > 0 && unequippedItems.length < bucket.capacity - 1 && (
+                {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
                   <AddButton onClick={() => pickLoadoutItem(bucket)} />
                 )}
               </div>

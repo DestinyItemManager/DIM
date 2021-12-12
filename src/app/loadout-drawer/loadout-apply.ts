@@ -28,6 +28,7 @@ import {
   isAssigningToDefault,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -42,7 +43,7 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
-import { loadoutFromAllItems } from './loadout-utils';
+import { backupLoadout } from './loadout-utils';
 
 const outOfSpaceWarning = _.throttle((store) => {
   showNotification({
@@ -182,7 +183,7 @@ function doApplyLoadout(
         savePreviousLoadout({
           storeId: store.id,
           loadoutId: loadout.id,
-          previousLoadout: loadoutFromAllItems(store, t('Loadouts.Before', { name: loadout.name })),
+          previousLoadout: backupLoadout(store, t('Loadouts.Before', { name: loadout.name })),
         })
       );
     }
@@ -837,14 +838,8 @@ function equipModsToItem(
         }
         continue;
       }
-      if (
-        canInsertPlug(
-          socket,
-          socket.socketDefinition.singleInitialItemHash,
-          destiny2CoreSettings,
-          defs
-        )
-      ) {
+      const defaultPlugHash = getDefaultPlugHash(socket, defs);
+      if (defaultPlugHash && canInsertPlug(socket, defaultPlugHash, destiny2CoreSettings, defs)) {
         infoLog(
           'loadout mods',
           'equipping mod',

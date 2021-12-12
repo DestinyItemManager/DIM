@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Destiny2コンパニオンアプリを使用してDIMを承認してから、アイテムを変更をしてください。",
     "ConfirmTitle": "操作を確認",
-    "Error": "アイテムの変更エラー",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "アイテムを変更する権限を取得できません"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
     "MissingTitle": "アカウントが見つかりません",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -582,7 +583,6 @@
     "SaveAsNew": "新規保存",
     "SaveLoadout": "ロードアウトを保存",
     "ShowModPlacement": "Mod の配置を表示",
-    "SocketError": "",
     "SortByEditTime": "最終更新でソート",
     "SortByName": "名前でソート",
     "SubclassOptions": "{{subclass}} オプション",
@@ -826,7 +826,6 @@
     "ApplyPerks": "パークを適用",
     "GridStyle": "パークをグリッドで表示",
     "InsertModButton": "Mod を挿入",
-    "InsertPlugError": "Mod を挿入できません",
     "ListStyle": "パークをリストで表示",
     "SelectModButton": "Mod を選択",
     "SelectWishlistPerks": "お気に入りパークのプレビュー"

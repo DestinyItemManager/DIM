@@ -1,17 +1,21 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
-import { plugIsInsertable } from 'app/item-popup/SocketDetails';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import {
+  allItemsSelector,
+  currentStoreSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { itemsForPlugSet } from 'app/records/plugset-helpers';
+import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { DestinyClass, DestinyEnergyType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
@@ -20,12 +24,13 @@ import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
-import PlugDrawer from './plug-drawer/PlugDrawer';
+import PlugDrawer, { PlugsWithMaxSelectable } from './plug-drawer/PlugDrawer';
 
-/** Slot specific mods can have at most 2 mods. */
-const MAX_SLOT_SPECIFIC_MODS = 2;
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
+
+const sortModPickerGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
+  sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
   /**
@@ -33,10 +38,13 @@ interface ProvidedProps {
    */
   lockedMods: PluggableInventoryItemDefinition[];
   /**
-   * The DestinyClass instance that is used to filter items on when building up the
-   * set of available mods.
+   * The character we'll show unlocked mods for.
    */
-  classType: DestinyClass;
+  classType?: DestinyClass;
+  /**
+   * The store ID that we're picking mods for. Used to restrict mods to those unlocked by that store.
+   */
+  owner?: string;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** The min height for the sheet. */
@@ -51,36 +59,35 @@ interface ProvidedProps {
 
 interface StoreProps {
   language: string;
-  /**
-   * An array of mods built from looking at the current DestinyClass's
-   * items and finding all the available mods that could be socketed.
-   */
-  mods: PluggableInventoryItemDefinition[];
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
   /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
-  const unlockedModsSelector = createSelector(
+  const unlockedPlugSetsSelector = createSelector(
     profileResponseSelector,
     allItemsSelector,
     d2ManifestSelector,
     (_state: RootState, props: ProvidedProps) => props.classType,
+    (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
+    currentStoreSelector,
     (
-      profileResponse: DestinyProfileResponse,
-      allItems: DimItem[],
-      defs: D2ManifestDefinitions,
-      classType?: DestinyClass,
-      plugCategoryHashWhitelist?: number[]
-    ): PluggableInventoryItemDefinition[] => {
-      const plugSets: { [bucketHash: number]: Set<number> } = {};
-      if (!profileResponse || classType === undefined) {
+      profileResponse,
+      allItems,
+      defs,
+      classType,
+      owner,
+      plugCategoryHashWhitelist,
+      currentStore
+    ): PlugsWithMaxSelectable[] => {
+      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugsWithMaxSelectable } = {};
+      if (!profileResponse || !defs) {
         return [];
       }
 
-      // 1. loop through all items, build up a map of mod sockets by bucket
       for (const item of allItems) {
         if (
           !item ||
@@ -93,55 +100,74 @@ function mapStateToProps() {
         ) {
           continue;
         }
-        if (!plugSets[item.bucket.hash]) {
-          plugSets[item.bucket.hash] = new Set<number>();
-        }
-        // build the filtered unique mods
-        item.sockets.allSockets
-          .filter((s) => !s.isPerk)
-          .forEach((socket) => {
-            if (socket.socketDefinition.reusablePlugSetHash) {
-              plugSets[item.bucket.hash].add(socket.socketDefinition.reusablePlugSetHash);
+
+        // Get all the armor mod sockets we can use for an item. Note that sockets without `plugged`
+        // are considered disabled by the API
+        const modSockets = getSocketsByCategoryHash(
+          item.sockets,
+          SocketCategoryHashes.ArmorMods
+        ).filter((socket) => socket.socketDefinition.reusablePlugSetHash && socket.plugged);
+
+        // Group the sockets by their reusablePlugSetHash, this lets us get a count of availabe mods for
+        // each socket in the case of bucket specific mods/sockets
+        const socketsGroupedByPlugSetHash = _.groupBy(
+          modSockets,
+          (socket) => socket.socketDefinition.reusablePlugSetHash
+        );
+
+        for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
+          const plugSetHash = parseInt(hashAsString, 10);
+          const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
+
+          const plugSetItems = itemsForCharacterOrProfilePlugSet(
+            profileResponse,
+            plugSetHash,
+            // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
+            owner ?? currentStore!.id
+          );
+
+          // Get the item plugs actually available to the profile
+          for (const itemPlug of plugSetItems) {
+            const plugDef = defs.InventoryItem.get(itemPlug.plugItemHash);
+            if (
+              isInsertableArmor2Mod(plugDef) &&
+              (!plugCategoryHashWhitelist ||
+                plugCategoryHashWhitelist?.includes(plugDef.plug.plugCategoryHash))
+            ) {
+              plugsWithDuplicates.push(plugDef);
             }
-          });
+          }
+
+          const plugs = _.uniqBy(plugsWithDuplicates, (plug) => plug.hash);
+
+          // Combat, general and raid mods are restricted across items so we need to manually
+          // set the max selectable
+          const maxSelectable = plugs.some((p) =>
+            slotSpecificPlugCategoryHashes.includes(p.plug.plugCategoryHash)
+          )
+            ? sockets.length
+            : MAX_SLOT_INDEPENDENT_MODS;
+
+          if (plugs.length && !plugsWithMaxSelectableSets[plugSetHash]) {
+            plugsWithMaxSelectableSets[plugSetHash] = {
+              plugSetHash,
+              maxSelectable,
+              plugs,
+            };
+          } else if (
+            plugs.length &&
+            plugsWithMaxSelectableSets[plugSetHash].maxSelectable < sockets.length
+          ) {
+            plugsWithMaxSelectableSets[plugSetHash].maxSelectable = sockets.length;
+          }
+        }
       }
-
-      // 2. for each unique socket (type?) get a list of unlocked mods
-      const allUnlockedMods = Object.values(plugSets).flatMap((sets) => {
-        const unlockedPlugs: number[] = [];
-
-        for (const plugSetHash of sets) {
-          const plugSetItems = itemsForPlugSet(profileResponse, plugSetHash);
-          for (const plugSetItem of plugSetItems) {
-            if (plugIsInsertable(plugSetItem)) {
-              unlockedPlugs.push(plugSetItem.plugItemHash);
-            }
-          }
-        }
-
-        const finalMods: PluggableInventoryItemDefinition[] = [];
-
-        for (const plug of unlockedPlugs) {
-          const def = defs.InventoryItem.get(plug);
-          const isWhitelisted =
-            def.plug &&
-            (!plugCategoryHashWhitelist ||
-              plugCategoryHashWhitelist.includes(def.plug.plugCategoryHash));
-
-          if (isWhitelisted && isInsertableArmor2Mod(def)) {
-            finalMods.push(def);
-          }
-        }
-
-        return finalMods.sort(sortMods);
-      });
-
-      return _.uniqBy(allUnlockedMods, (unlocked) => unlocked.hash);
+      return Object.values(plugsWithMaxSelectableSets);
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     language: languageSelector(state),
-    mods: unlockedModsSelector(state, props),
+    plugsWithMaxSelectableSets: unlockedPlugSetsSelector(state, props),
   });
 }
 
@@ -149,7 +175,7 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
-  mods,
+  plugsWithMaxSelectableSets,
   language,
   lockedMods,
   initialQuery,
@@ -190,7 +216,6 @@ function ModPicker({
         const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
         return (
-          associatedLockedMods.length < MAX_SLOT_SPECIFIC_MODS &&
           lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
           (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
             associatedLockedMods.some((l) => l.plug.energyCost?.energyType === modEnergyType) || // Matches some other energy
@@ -213,11 +238,11 @@ function ModPicker({
       acceptButtonText={t('LB.SelectMods')}
       language={language}
       initialQuery={initialQuery}
-      plugs={mods}
+      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
       initiallySelected={lockedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
-      sortPlugGroups={sortModGroups}
+      sortPlugGroups={sortModPickerGroups}
       sortPlugs={sortMods}
       onAccept={onAccept}
       onClose={onClose}
