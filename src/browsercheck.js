@@ -66,7 +66,7 @@ export function isSupported(browsersSupported, userAgent) {
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
-  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase();
+  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
 
   console.info('Language Detected: ' + lang);
   if (!supportedLanguages.includes(lang)) {
@@ -95,7 +95,7 @@ export function isSupported(browsersSupported, userAgent) {
   return supported;
 }
 
-if ($BROWSERS.length) {
+if ($BROWSERS.length && lang) {
   // t('Browsercheck.Unsupported')
   // t('Browsercheck.Steam')
   var supported = isSupported($BROWSERS, navigator.userAgent);
