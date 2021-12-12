@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Пожалуйста подтвердите доступ DIM к Вашим предметам в приложении Destiny 2 Companion.",
     "ConfirmTitle": "Подтверждение",
-    "Error": "Ошибка изменения предмета",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Не удалось получить разрешение на изменение предмета"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "Учетная запись, которую вы пытаетесь просмотреть, не связана с вашим профилем Bungie.net.",
     "MissingTitle": "Аккаунт не найден",
     "NoCharacters": "На данном аккаунте Bungie.net ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Google Stadia",
     "Steam": "Steam",
-    "Xbox": "Xbox One"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Активности",
@@ -582,7 +583,6 @@
     "SaveAsNew": "Сохранить как...",
     "SaveLoadout": "Save Loadout",
     "ShowModPlacement": "Show Mod Placement",
-    "SocketError": "",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
     "SubclassOptions": "{{subclass}} options",
@@ -826,7 +826,6 @@
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
     "InsertModButton": "Выбрать модификатор",
-    "InsertPlugError": "Не удалось установить модификатор",
     "ListStyle": "Display perks as a list",
     "SelectModButton": "Select Mod",
     "SelectWishlistPerks": "Preview Wishlist Perks"

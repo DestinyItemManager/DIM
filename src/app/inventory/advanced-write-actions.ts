@@ -97,6 +97,12 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       d2ManifestSelector(getState())!
     );
 
+    // TODO: if applying to the vault, choose a character that has the mod unlocked rather than current store
+    // look at all plugsets on all characters to find one that's unlocked?
+    // memoize that index probably
+
+    // TODO: if applying a mod with a seasonal variant, use the seasonal variant instead (may need d2ai power)
+
     // The API requires either the ID of the character that owns the item, or
     // the current character ID if the item is in the vault.
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;

@@ -162,21 +162,3 @@ export function useSocketOverridesForItems(
 
   return [socketOverrides, onPlugClicked, resetSocketOverrides];
 }
-
-/**
- * Create a socket overrides structure from the item's currently plugged sockets.
- */
-export function createSocketOverridesFromEquipped(item: DimItem) {
-  const socketOverrides: SocketOverrides = {};
-  for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
-      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
-    }
-  }
-  return socketOverrides;
-}

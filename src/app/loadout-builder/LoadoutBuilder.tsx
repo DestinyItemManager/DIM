@@ -488,9 +488,10 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <ModPicker
               classType={classType}
+              owner={selectedStore.id}
               lockedMods={lockedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
-              onAccept={(newLockedMods: PluggableInventoryItemDefinition[]) =>
+              onAccept={(newLockedMods) =>
                 lbDispatch({
                   type: 'lockedModsChanged',
                   lockedMods: newLockedMods,
