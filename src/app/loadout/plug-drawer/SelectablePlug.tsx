@@ -4,6 +4,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import styles from './SelectablePlug.m.scss';
@@ -54,6 +55,9 @@ export default function SelectablePlug({
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
           {plug.perks.map((perk) => {
+            if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
+              return null;
+            }
             const defDesc = defs.SandboxPerk.get(perk.perkHash).displayProperties.description;
             const defReq = perk.requirementDisplayString;
 
