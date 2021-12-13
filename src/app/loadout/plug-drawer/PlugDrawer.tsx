@@ -14,14 +14,11 @@ import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 
-export interface PlugSet {
+export interface PlugsWithMaxSelectable {
   /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
   /** A list of plugs from this plugset. */
   plugs: PluggableInventoryItemDefinition[];
-}
-
-export interface PlugSetWithMaxSelectable extends PlugSet {
   /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
 }
@@ -30,7 +27,7 @@ interface Props {
   /**
    * A list of plug items that come from a PlugSet, along with the maximum number of these plugs that can be chosen.
    */
-  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[];
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
   /**
    * An array of mods that are already locked.
    */
@@ -56,7 +53,7 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
-  sortPlugSets?: Comparator<PlugSetWithMaxSelectable>;
+  sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
@@ -68,7 +65,7 @@ interface Props {
  * A sheet to pick plugs.
  */
 export default function PlugDrawer({
-  plugSetWithMaxSelectables,
+  plugsWithMaxSelectableSets,
   initiallySelected,
   displayedStatHashes,
   title,
@@ -79,7 +76,7 @@ export default function PlugDrawer({
   sheetRef,
   minHeight,
   isPlugSelectable,
-  sortPlugSets,
+  sortPlugGroups,
   sortPlugs,
   onAccept,
   onClose,
@@ -87,7 +84,7 @@ export default function PlugDrawer({
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
   const [selected, setSelected] = useState(() =>
-    createInternalSelectedState(plugSetWithMaxSelectables, initiallySelected)
+    createInternalSelectedState(plugsWithMaxSelectableSets, initiallySelected)
   );
   const filterInput = useRef<SearchFilterRef | null>(null);
   const isPhonePortrait = useIsPhonePortrait();
@@ -167,7 +164,7 @@ export default function PlugDrawer({
 
   const queryFilteredPlugSets = useMemo(() => {
     const regexp = startWordRegexp(query, language);
-    const rtn: PlugSetWithMaxSelectable[] = [];
+    const rtn: PlugsWithMaxSelectable[] = [];
 
     const searchFilter = (plug: PluggableInventoryItemDefinition) =>
       regexp.test(plug.displayProperties.name) ||
@@ -183,7 +180,7 @@ export default function PlugDrawer({
         );
       });
 
-    for (const { plugs, maxSelectable, plugSetHash } of plugSetWithMaxSelectables) {
+    for (const { plugs, maxSelectable, plugSetHash } of plugsWithMaxSelectableSets) {
       rtn.push({
         plugSetHash,
         maxSelectable,
@@ -192,10 +189,10 @@ export default function PlugDrawer({
     }
 
     return rtn;
-  }, [query, plugSetWithMaxSelectables, defs.SandboxPerk, language]);
+  }, [query, plugsWithMaxSelectableSets, defs.SandboxPerk, language]);
 
-  if (sortPlugSets) {
-    queryFilteredPlugSets.sort(sortPlugSets);
+  if (sortPlugGroups) {
+    queryFilteredPlugSets.sort(sortPlugGroups);
   }
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
@@ -278,7 +275,7 @@ type InternalSelectedState = {
  * selected from the bucket specific set.
  */
 function createInternalSelectedState(
-  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[],
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
   const rtn: InternalSelectedState = {};
@@ -288,7 +285,7 @@ function createInternalSelectedState(
     // smallest number of options is first. Because artificer armor has a socket that is a
     // subset of the normal slot specific sockets, this ensure we will fill it with plugs
     // first.
-    const possibleSets = plugSetWithMaxSelectables
+    const possibleSets = plugsWithMaxSelectableSets
       .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
       .sort(compareBy((set) => set.plugs.length));
 

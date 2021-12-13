@@ -5,7 +5,7 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import PlugDrawer, { PlugSetWithMaxSelectable } from 'app/loadout/plug-drawer/PlugDrawer';
+import PlugDrawer, { PlugsWithMaxSelectable } from 'app/loadout/plug-drawer/PlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemsForPlugSetEverywhere } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
@@ -35,39 +35,39 @@ export default function SubclassPlugDrawer({
 
   const {
     initiallySelected,
-    plugSetWithMaxSelectables,
+    plugsWithMaxSelectableSets,
     aspects,
     fragments,
     sortPlugs,
-    sortPlugSets,
+    sortPlugGroups,
   } = useMemo(() => {
     const initiallySelected = Object.values(socketOverrides)
       .map((hash) => defs!.InventoryItem.get(hash))
       .filter(isPluggableItem);
-    const { plugSetWithMaxSelectables, aspects, fragments } = getPlugsForSubclass(
+    const { plugsWithMaxSelectableSets, aspects, fragments } = getPlugsForSubclass(
       defs,
       profileResponse,
       subclass
     );
     // A flat list of possible subclass plugs we use this to figure out how to sort plugs
     // and the different sections in the plug picker
-    const flatPlugs = plugSetWithMaxSelectables.flatMap((set) => set.plugs);
+    const flatPlugs = plugsWithMaxSelectableSets.flatMap((set) => set.plugs);
     const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
       flatPlugs.indexOf(plug)
     );
 
     // This ensures the plug groups are ordered by the socket order in the item def.
     // The order in the item def matches the order displayed in the game.
-    const sortPlugSets = compareBy(
-      (group: PlugSetWithMaxSelectable) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
+    const sortPlugGroups = compareBy(
+      (group: PlugsWithMaxSelectable) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
     );
     return {
       initiallySelected,
-      plugSetWithMaxSelectables,
+      plugsWithMaxSelectableSets,
       aspects,
       fragments,
       sortPlugs,
-      sortPlugSets,
+      sortPlugGroups,
     };
   }, [defs, profileResponse, socketOverrides, subclass]);
 
@@ -141,13 +141,13 @@ export default function SubclassPlugDrawer({
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
       language={language}
-      plugSetWithMaxSelectables={plugSetWithMaxSelectables}
+      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
       displayedStatHashes={DISPLAYED_PLUG_STATS}
       onAccept={onAcceptInternal}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
       sortPlugs={sortPlugs}
-      sortPlugSets={sortPlugSets}
+      sortPlugGroups={sortPlugGroups}
       initiallySelected={initiallySelected}
     />
   );
@@ -162,12 +162,12 @@ function getPlugsForSubclass(
   profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem
 ) {
-  const plugSetWithMaxSelectables: PlugSetWithMaxSelectable[] = [];
+  const plugsWithMaxSelectableSets: PlugsWithMaxSelectable[] = [];
   const aspects: Set<PluggableInventoryItemDefinition> = new Set();
   const fragments: Set<PluggableInventoryItemDefinition> = new Set();
 
   if (!subclass.sockets || !defs) {
-    return { plugSetWithMaxSelectables, aspects, fragments };
+    return { plugsWithMaxSelectableSets, aspects, fragments };
   }
 
   for (const category of subclass.sockets.categories) {
@@ -185,7 +185,7 @@ function getPlugsForSubclass(
         const plugSetHash = firstSocket.socketDefinition.reusablePlugSetHash;
 
         if (plugSetHash && profileResponse) {
-          const plugsWithMaxSelectable: PlugSetWithMaxSelectable = {
+          const plugsWithMaxSelectable: PlugsWithMaxSelectable = {
             plugs: [],
             plugSetHash,
             maxSelectable: socketGroup.length,
@@ -219,12 +219,12 @@ function getPlugsForSubclass(
             plugsWithMaxSelectable.plugs,
             (plug) => plug.hash
           );
-          plugSetWithMaxSelectables.push(plugsWithMaxSelectable);
+          plugsWithMaxSelectableSets.push(plugsWithMaxSelectable);
         }
       }
     }
   }
-  return { plugSetWithMaxSelectables, aspects, fragments };
+  return { plugsWithMaxSelectableSets, aspects, fragments };
 }
 
 function getPlugHashesForSocket(

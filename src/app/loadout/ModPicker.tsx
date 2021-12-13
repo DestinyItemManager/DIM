@@ -24,12 +24,12 @@ import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
-import PlugDrawer, { PlugSetWithMaxSelectable } from './plug-drawer/PlugDrawer';
+import PlugDrawer, { PlugsWithMaxSelectable } from './plug-drawer/PlugDrawer';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
 
-const sortModPickerPlugSets = (a: PlugSetWithMaxSelectable, b: PlugSetWithMaxSelectable) =>
+const sortModPickerPlugGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
   sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
@@ -59,7 +59,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   language: string;
-  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[];
+  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -82,8 +82,8 @@ function mapStateToProps() {
       owner,
       plugCategoryHashWhitelist,
       currentStore
-    ): PlugSetWithMaxSelectable[] => {
-      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugSetWithMaxSelectable } = {};
+    ): PlugsWithMaxSelectable[] => {
+      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugsWithMaxSelectable } = {};
       if (!profileResponse || !defs) {
         return [];
       }
@@ -167,7 +167,7 @@ function mapStateToProps() {
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     language: languageSelector(state),
-    plugSetWithMaxSelectables: unlockedPlugSetsSelector(state, props),
+    plugsWithMaxSelectableSets: unlockedPlugSetsSelector(state, props),
   });
 }
 
@@ -175,7 +175,7 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
-  plugSetWithMaxSelectables,
+  plugsWithMaxSelectableSets,
   language,
   lockedMods,
   initialQuery,
@@ -234,11 +234,11 @@ function ModPicker({
   const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
     () =>
       _.partition(lockedMods, (mod) =>
-        plugSetWithMaxSelectables.some((plugSet) =>
+        plugsWithMaxSelectableSets.some((plugSet) =>
           plugSet.plugs.some((plug) => plug.hash === mod.hash)
         )
       ),
-    [lockedMods, plugSetWithMaxSelectables]
+    [lockedMods, plugsWithMaxSelectableSets]
   );
 
   const onAcceptWithHiddenSelectedMods = useCallback(
@@ -255,11 +255,11 @@ function ModPicker({
       acceptButtonText={t('LB.SelectMods')}
       language={language}
       initialQuery={initialQuery}
-      plugSetWithMaxSelectables={plugSetWithMaxSelectables}
+      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
       initiallySelected={visibleSelectedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
-      sortPlugSets={sortModPickerPlugSets}
+      sortPlugGroups={sortModPickerPlugGroups}
       sortPlugs={sortMods}
       onAccept={onAcceptWithHiddenSelectedMods}
       onClose={onClose}
