@@ -14,9 +14,15 @@ import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 
-export interface PlugsWithMaxSelectable {
+export interface PlugSet {
+  /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
+  /** A list of plugs from this plugset. */
   plugs: PluggableInventoryItemDefinition[];
+}
+
+export interface PlugSetWithMaxSelectable extends PlugSet {
+  /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
 }
 
@@ -24,7 +30,7 @@ interface Props {
   /**
    * A list of plug items that come from a PlugSet, along with the maximum number of these plugs that can be chosen.
    */
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
+  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[];
   /**
    * An array of mods that are already locked.
    */
@@ -50,7 +56,7 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
-  sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
+  sortPlugSets?: Comparator<PlugSetWithMaxSelectable>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new lockedMods when the user accepts the new modset. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
@@ -62,7 +68,7 @@ interface Props {
  * A sheet to pick plugs.
  */
 export default function PlugDrawer({
-  plugsWithMaxSelectableSets,
+  plugSetWithMaxSelectables,
   initiallySelected,
   displayedStatHashes,
   title,
@@ -73,7 +79,7 @@ export default function PlugDrawer({
   sheetRef,
   minHeight,
   isPlugSelectable,
-  sortPlugGroups,
+  sortPlugSets,
   sortPlugs,
   onAccept,
   onClose,
@@ -81,7 +87,7 @@ export default function PlugDrawer({
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
   const [selected, setSelected] = useState(() =>
-    createInternalSelectedState(plugsWithMaxSelectableSets, initiallySelected)
+    createInternalSelectedState(plugSetWithMaxSelectables, initiallySelected)
   );
   const filterInput = useRef<SearchFilterRef | null>(null);
   const isPhonePortrait = useIsPhonePortrait();
@@ -161,7 +167,7 @@ export default function PlugDrawer({
 
   const queryFilteredPlugSets = useMemo(() => {
     const regexp = startWordRegexp(query, language);
-    const rtn: PlugsWithMaxSelectable[] = [];
+    const rtn: PlugSetWithMaxSelectable[] = [];
 
     const searchFilter = (plug: PluggableInventoryItemDefinition) =>
       regexp.test(plug.displayProperties.name) ||
@@ -177,7 +183,7 @@ export default function PlugDrawer({
         );
       });
 
-    for (const { plugs, maxSelectable, plugSetHash } of plugsWithMaxSelectableSets) {
+    for (const { plugs, maxSelectable, plugSetHash } of plugSetWithMaxSelectables) {
       rtn.push({
         plugSetHash,
         maxSelectable,
@@ -186,10 +192,10 @@ export default function PlugDrawer({
     }
 
     return rtn;
-  }, [query, plugsWithMaxSelectableSets, defs.SandboxPerk, language]);
+  }, [query, plugSetWithMaxSelectables, defs.SandboxPerk, language]);
 
-  if (sortPlugGroups) {
-    queryFilteredPlugSets.sort(sortPlugGroups);
+  if (sortPlugSets) {
+    queryFilteredPlugSets.sort(sortPlugSets);
   }
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
@@ -254,25 +260,35 @@ export default function PlugDrawer({
 }
 
 /**
+ * A map of plugSetHashes to the selected plugs for that plugSetHash.
+ */
+type InternalSelectedState = {
+  [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined;
+};
+
+/**
  * This creates the internally used state for the selected plugs.
- * We want to split the selected plugs up into groups based on the plugSetHash we attribute them too.
  *
- * We need to do this to correctly handle artificer armor sockets. The plugsets that they can take are
- * a subset of the bucket specific sockets on an item (as in they just take the artifact mods). So
- * to track which plugset they chose a mod from, we key the selected mods by the plugset they were
- * picked from.
+ * We need to associate each selected plug with a plugSetHash to correctly handle artificer
+ * socket plugs. The plugsets that they can take are a subset of the bucket specific sockets
+ * plugsets on an item, specifically they are just the artifact mods.
+ *
+ * To do this we create a map from plugSet to a list of plugs selected. This ensure that when
+ * a user selects a plug from the artificer set, it won't appear to the user that a plug was
+ * selected from the bucket specific set.
  */
 function createInternalSelectedState(
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
+  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[],
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
-  const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
+  const rtn: InternalSelectedState = {};
 
   for (const plug of initiallySelected) {
     // Find all the possible sets this plug could go in and sort them so the set with the
     // smallest number of options is first. Because artificer armor has a socket that is a
-    // subset of the normal slot specific sockets, this ensure we will it first.
-    const possibleSets = plugsWithMaxSelectableSets
+    // subset of the normal slot specific sockets, this ensure we will fill it with plugs
+    // first.
+    const possibleSets = plugSetWithMaxSelectables
       .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
       .sort(compareBy((set) => set.plugs.length));
 

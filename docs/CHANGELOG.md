@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.
+
 ## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
 
 * Fix image paths for D1 perks.

@@ -18,18 +18,18 @@ import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
-import PlugDrawer, { PlugsWithMaxSelectable } from './plug-drawer/PlugDrawer';
+import PlugDrawer, { PlugSetWithMaxSelectable } from './plug-drawer/PlugDrawer';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
 
-const sortModPickerGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
+const sortModPickerPlugSets = (a: PlugSetWithMaxSelectable, b: PlugSetWithMaxSelectable) =>
   sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
@@ -59,7 +59,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   language: string;
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
+  plugSetWithMaxSelectables: PlugSetWithMaxSelectable[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -82,8 +82,8 @@ function mapStateToProps() {
       owner,
       plugCategoryHashWhitelist,
       currentStore
-    ): PlugsWithMaxSelectable[] => {
-      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugsWithMaxSelectable } = {};
+    ): PlugSetWithMaxSelectable[] => {
+      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugSetWithMaxSelectable } = {};
       if (!profileResponse || !defs) {
         return [];
       }
@@ -167,7 +167,7 @@ function mapStateToProps() {
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     language: languageSelector(state),
-    plugsWithMaxSelectableSets: unlockedPlugSetsSelector(state, props),
+    plugSetWithMaxSelectables: unlockedPlugSetsSelector(state, props),
   });
 }
 
@@ -175,7 +175,7 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
-  plugsWithMaxSelectableSets,
+  plugSetWithMaxSelectables,
   language,
   lockedMods,
   initialQuery,
@@ -231,6 +231,23 @@ function ModPicker({
     []
   );
 
+  const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
+    () =>
+      _.partition(lockedMods, (mod) =>
+        plugSetWithMaxSelectables.some((plugSet) =>
+          plugSet.plugs.some((plug) => plug.hash === mod.hash)
+        )
+      ),
+    [lockedMods, plugSetWithMaxSelectables]
+  );
+
+  const onAcceptWithHiddenSelectedMods = useCallback(
+    (newLockedMods: PluggableInventoryItemDefinition[]) => {
+      onAccept([...hiddenSelectedMods, ...newLockedMods]);
+    },
+    [hiddenSelectedMods, onAccept]
+  );
+
   return (
     <PlugDrawer
       title={t('LB.ChooseAMod')}
@@ -238,13 +255,13 @@ function ModPicker({
       acceptButtonText={t('LB.SelectMods')}
       language={language}
       initialQuery={initialQuery}
-      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
-      initiallySelected={lockedMods}
+      plugSetWithMaxSelectables={plugSetWithMaxSelectables}
+      initiallySelected={visibleSelectedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
-      sortPlugGroups={sortModPickerGroups}
+      sortPlugSets={sortModPickerPlugSets}
       sortPlugs={sortMods}
-      onAccept={onAccept}
+      onAccept={onAcceptWithHiddenSelectedMods}
       onClose={onClose}
     />
   );
