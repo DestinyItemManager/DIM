@@ -49,11 +49,19 @@ export default function PlugSection({
     plugs.sort(sortPlugs);
   }
 
+  // allow a plug category hash to be "locked" to
+  // the first itemTypeDisplayName that shows up using it.
+  // this prevents "Class Item Mod" and "Class Item Armor Mod"
+  // from forming two different categories
+  const nameByPCH: NodeJS.Dict<string> = {};
+
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
   const plugsGroupedByPlugCategoryHash = _.groupBy(
     plugs,
-    (plugDef) => plugDef.plug.plugCategoryHash
+    (plugDef) =>
+      (nameByPCH[plugDef.plug.plugCategoryHash] ??=
+        plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName)
   );
 
   return (
