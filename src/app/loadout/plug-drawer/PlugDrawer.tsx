@@ -25,11 +25,15 @@ export interface PlugsWithMaxSelectable {
 
 interface Props {
   /**
-   * A list of plug items that come from a PlugSet, along with the maximum number of these plugs that can be chosen.
+   * A list of plug items that come from a PlugSet, along with the maximum number of these plugs
+   * that can be chosen.
    */
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
   /**
    * An array of mods that are already locked.
+   *
+   * These must be a subset of the plugs in plugsWithMaxSelectableSets otherwise unknown plugs
+   * will be discarded on accept.
    */
   initiallySelected: PluggableInventoryItemDefinition[];
   /** A list of stat hashes that if present will be displayed for each plug. */
@@ -267,7 +271,7 @@ type InternalSelectedState = {
  * This creates the internally used state for the selected plugs.
  *
  * We need to associate each selected plug with a plugSetHash to correctly handle artificer
- * socket plugs. The plugsets that they can take are a subset of the bucket specific sockets
+ * sockets. The plugsets that they can take are a subset of the bucket specific sockets
  * plugsets on an item, specifically they are just the artifact mods.
  *
  * To do this we create a map from plugSet to a list of plugs selected. This ensure that when
