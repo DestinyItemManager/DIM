@@ -22,9 +22,9 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  getArmorStats,
   getItemsFromLoadoutItems,
   getLight,
+  getLoadoutStats,
   getModsFromLoadout,
   newLoadout,
   newLoadoutFromEquipped,
@@ -297,7 +297,9 @@ function LoadoutRow({
               <ItemCategory
                 key={category}
                 category={category}
+                subclass={subclass}
                 items={categories[category]}
+                savedMods={savedMods}
                 equippedItemIds={equippedItemIds}
                 loadout={loadout}
               />
@@ -414,12 +416,16 @@ function Subclass({
 
 function ItemCategory({
   category,
+  subclass,
   items,
+  savedMods,
   equippedItemIds,
   loadout,
 }: {
   category: string;
+  subclass?: DimLoadoutItem;
   items?: DimItem[];
+  savedMods: PluggableInventoryItemDefinition[];
   equippedItemIds: Set<string>;
   loadout: Loadout;
 }) {
@@ -457,7 +463,10 @@ function ItemCategory({
         <>
           {items.length === 5 && (
             <div className="stat-bars destiny2">
-              <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
+              <LoadoutStats
+                stats={getLoadoutStats(defs, loadout.classType, subclass, items, savedMods)}
+                characterClass={loadout.classType}
+              />
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}

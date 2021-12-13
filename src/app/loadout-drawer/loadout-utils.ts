@@ -6,6 +6,7 @@ import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
@@ -162,6 +163,40 @@ export function getArmorStats(
   });
 
   return statsByArmorHash;
+}
+
+/**
+ * This gets the loadout stats for all the equipped items and mods.
+ */
+export function getLoadoutStats(
+  defs: D2ManifestDefinitions,
+  classType: DestinyClass,
+  subclass: LoadoutItem | undefined,
+  armor: DimItem[],
+  mods: PluggableInventoryItemDefinition[]
+) {
+  const stats = getArmorStats(defs, armor);
+
+  if (subclass?.socketOverrides) {
+    for (const plugHash of Object.values(subclass.socketOverrides)) {
+      const plug = defs.InventoryItem.get(plugHash);
+      for (const stat of plug.investmentStats) {
+        if (stat.statTypeHash in stats) {
+          stats[stat.statTypeHash].value += stat.value;
+        }
+      }
+    }
+  }
+
+  for (const mod of mods) {
+    for (const stat of mod.investmentStats) {
+      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
+        stats[stat.statTypeHash].value += stat.value;
+      }
+    }
+  }
+
+  return stats;
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function

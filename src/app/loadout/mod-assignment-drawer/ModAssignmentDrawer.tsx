@@ -4,9 +4,8 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isModStatActive } from 'app/loadout-builder/process/mappers';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -19,28 +18,22 @@ import { getCheapestModAssignments } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
-import { useEquippedLoadoutArmor } from './selectors';
+import { useEquippedLoadoutArmorAndSubclass } from './selectors';
 
 function Header({
   defs,
   loadout,
+  subclass,
   armor,
   mods,
 }: {
   defs: D2ManifestDefinitions;
   loadout: Loadout;
+  subclass: LoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
-  const stats = getArmorStats(defs, armor);
-
-  for (const mod of mods) {
-    for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(loadout.classType, mod.hash, stat, mods)) {
-        stats[stat.statTypeHash].value += stat.value;
-      }
-    }
-  }
+  const stats = getLoadoutStats(defs, loadout.classType, subclass, armor, mods);
 
   return (
     <div>
@@ -72,7 +65,7 @@ export default function ModAssignmentDrawer({
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions()!;
-  const armor = useEquippedLoadoutArmor(loadout);
+  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout);
   const getModRenderKey = createGetModRenderKey();
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
@@ -112,7 +105,15 @@ export default function ModAssignmentDrawer({
   return (
     <>
       <Sheet
-        header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
+        header={
+          <Header
+            defs={defs}
+            loadout={loadout}
+            subclass={subclass}
+            armor={armor}
+            mods={flatAssigned}
+          />
+        }
         ref={sheetRef}
         minHeight={minHeight}
         onClose={onClose}

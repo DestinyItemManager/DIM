@@ -11,10 +11,10 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import type { InventoryBuckets } from '../inventory/inventory-buckets';
-import type { DimItem } from '../inventory/item-types';
+import type { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { maxLightItemSet } from './auto-loadouts';
-import type { Loadout } from './loadout-types';
-import { getArmorStats, getLight } from './loadout-utils';
+import type { DimLoadoutItem, Loadout } from './loadout-types';
+import { getLight, getLoadoutStats } from './loadout-utils';
 
 function getItemsInListByCategory({
   buckets,
@@ -45,7 +45,15 @@ function getItemsInListByCategory({
   return { itemSet, missingBuckets };
 }
 
-export function GeneratedLoadoutStats({ items, loadout }: { items: DimItem[]; loadout: Loadout }) {
+export function GeneratedLoadoutStats({
+  items,
+  loadout,
+  savedMods,
+}: {
+  items: DimLoadoutItem[];
+  loadout: Loadout;
+  savedMods: PluggableInventoryItemDefinition[];
+}) {
   const allItems = useSelector(allItemsSelector);
   const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -65,8 +73,9 @@ export function GeneratedLoadoutStats({ items, loadout }: { items: DimItem[]; lo
   const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
   if (weaponItems.missingBuckets) {
     // If any weapon types are missing, fill them in with max weapons to assume light level
-    const subclass = stores.find((store) => store.classType === loadout.classType) ?? stores[0];
-    const maxPowerItems = maxLightItemSet(allItems, subclass).unrestricted;
+    const characterClass =
+      stores.find((store) => store.classType === loadout.classType) ?? stores[0];
+    const maxPowerItems = maxLightItemSet(allItems, characterClass).unrestricted;
     const maxWeapons = _.compact(
       weaponItems.missingBuckets.map(
         (bucket) => maxPowerItems.find((item) => bucket.type === item.type)!
@@ -75,8 +84,23 @@ export function GeneratedLoadoutStats({ items, loadout }: { items: DimItem[]; lo
     weaponItems.itemSet.push(...maxWeapons);
   }
 
+  const equippedSubclass = items.find(
+    (item) =>
+      item.equipped &&
+      item.bucket.hash === BucketHashes.Subclass &&
+      // TODO (ryan) this should probably be based off the selected store for loadouts
+      // that span multiple characters.
+      item.classType === loadout.classType
+  );
+
   // Compute stats and power level.
-  const stats = getArmorStats(defs, armorItems.itemSet);
+  const stats = getLoadoutStats(
+    defs,
+    loadout.classType,
+    equippedSubclass,
+    armorItems.itemSet,
+    savedMods
+  );
   const power = Math.floor(
     getLight(stores[0], weaponItems.itemSet.concat(armorItems.itemSet)) +
       getArtifactBonus(stores[0])

@@ -1,9 +1,10 @@
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -16,7 +17,7 @@ const bucketOrder = [
   armorBuckets.classitem,
 ];
 
-export function useEquippedLoadoutArmor(loadout: Loadout) {
+export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
   const stores = useSelector(sortedStoresSelector);
 
   const loadoutItemSelector = useCallback(
@@ -33,6 +34,7 @@ export function useEquippedLoadoutArmor(loadout: Loadout) {
       const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
       const allItems = allItemsSelector(state);
       const loadoutDimItems: DimItem[] = [];
+      let subclass: LoadoutItem | undefined;
 
       // TODO: if there's not an item in one of the slots, pick the current equipped!
       for (const item of allItems) {
@@ -41,16 +43,20 @@ export function useEquippedLoadoutArmor(loadout: Loadout) {
           equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
         ) {
           loadoutDimItems.push(item);
+        } else if (item.bucket.hash === BucketHashes.Subclass) {
+          subclass = equippedLoadoutItems.find((loadoutItem) => loadoutItem.id === item.id);
         }
       }
 
-      return _.compact(
+      const armor = _.compact(
         bucketOrder.map(
           (bucketHash) =>
             loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
             currentItems?.find((item) => item.bucket.hash === bucketHash)
         )
       );
+
+      return { armor, subclass };
     },
     [loadout, stores]
   );
