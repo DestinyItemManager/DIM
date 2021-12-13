@@ -1,5 +1,7 @@
 ## Next
 
+## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
+
 * Fix image paths for D1 perks.
 * Strange Favor rank now correctly shows remaining reset count, when you hover the icon.
 * Ability Cooldown times are no longer shown for stat tooltips. This may return but at the moment, they were incorrect.
