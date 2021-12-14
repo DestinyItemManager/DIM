@@ -162,7 +162,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         (exampleItem.destinyVersion === 2 && intrinsic
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
             `perkname:"${intrinsic.displayProperties.name}"`
-          : `stat:rpm:${getRpm(exampleItem)}`)
+          : `stat:rpm:${getRpm(exampleItem)}`) +
         ')',
     },
 
