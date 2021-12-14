@@ -12,8 +12,9 @@ import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
@@ -167,6 +168,10 @@ export function getArmorStats(
 
 /**
  * This gets the loadout stats for all the equipped items and mods.
+ *
+ * It will add all stats from the mods whether they are equipped or not. If
+ * you want to ensure it will be the same as the game stats, make sure to check
+ * if all mods will fit on the items.
  */
 export function getLoadoutStats(
   defs: D2ManifestDefinitions,
@@ -175,8 +180,26 @@ export function getLoadoutStats(
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[]
 ) {
-  const stats = getArmorStats(defs, armor);
+  const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
+  // Construct map of stat hash to DimCharacterStat
+  const stats: { [hash: number]: DimCharacterStat } = {};
+  statDefs.forEach(({ hash, displayProperties: { description, icon, name } }) => {
+    stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
+  });
+
+  // Sum the items stats into the stats
+  armor.forEach((item) => {
+    const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
+    const energySocket =
+      item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
+    Object.entries(stats).forEach(([hash, stat]) => {
+      stat.value += itemStats[hash]?.[0].base ?? 0;
+      stat.value += energySocket?.plugged?.stats?.[hash] || 0;
+    });
+  });
+
+  // Add stats that come from the subclass fragments
   if (subclass?.socketOverrides) {
     for (const plugHash of Object.values(subclass.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
@@ -188,6 +211,7 @@ export function getLoadoutStats(
     }
   }
 
+  // Add the mod stats
   for (const mod of mods) {
     for (const stat of mod.investmentStats) {
       if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
