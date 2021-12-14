@@ -8,6 +8,7 @@ import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import _ from 'lodash';
 import { canSwapEnergyFromUpgradeSpendTier } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
@@ -146,4 +147,22 @@ export function getDefaultPlugHash(socket: DimSocket, defs?: D2ManifestDefinitio
       ? defs?.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
       : undefined;
   }
+}
+
+/**
+ * group a whole variety of mod definitions into related mod-type groups
+ */
+export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
+  // allow a plug category hash to be "locked" to
+  // the first itemTypeDisplayName that shows up using it.
+  // this prevents "Class Item Mod" and "Class Item Armor Mod"
+  // from forming two different categories
+  const nameByPCH: NodeJS.Dict<string> = {};
+
+  return _.groupBy(
+    plugs,
+    (plugDef) =>
+      (nameByPCH[plugDef.plug.plugCategoryHash] ??=
+        plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName)
+  );
 }

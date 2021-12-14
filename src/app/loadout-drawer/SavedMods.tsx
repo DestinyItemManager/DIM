@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { sortModGroups } from 'app/loadout/mod-utils';
-import _ from 'lodash';
+import { groupModsByModType, sortModGroups } from 'app/loadout/mod-utils';
 import React, { useMemo } from 'react';
 import SavedModCategory from './SavedModCategory';
 import styles from './SavedMods.m.scss';
@@ -21,7 +20,7 @@ interface Props {
 function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
   // Turn savedMods into an array of mod groups where each group is
   const groupedMods = useMemo(() => {
-    const indexedMods = _.groupBy(savedMods, (mod) => mod.plug.plugCategoryHash);
+    const indexedMods = groupModsByModType(savedMods);
     return Object.values(indexedMods).sort(sortModGroups);
   }, [savedMods]);
 

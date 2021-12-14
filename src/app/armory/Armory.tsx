@@ -107,7 +107,9 @@ export default function Armory({
         <div className={styles.headerContent}>
           <div className={styles.subtitle}>
             <ElementIcon element={item.element} className={styles.element} />
-            {item.breakerType && <BungieImage src={item.breakerType.displayProperties.icon} />}
+            {item.breakerType && (
+              <BungieImage src={item.breakerType.displayProperties.icon} height={15} />
+            )}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
             {item.pursuit?.questStepNum && (
