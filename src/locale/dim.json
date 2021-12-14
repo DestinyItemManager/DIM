@@ -623,6 +623,12 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favorite {{itemType}}",
+      "Favorited": "Favorited",
+      "Unfavorite": "Unfavorite {{itemType}}",
+      "Unfavorited": "Unfavorited"
+    },
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",

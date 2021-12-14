@@ -425,7 +425,7 @@ export function makeItem(
     element,
     energy: instanceDef?.energy ?? null,
     powerCap,
-    lockable: item.lockable,
+    lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),

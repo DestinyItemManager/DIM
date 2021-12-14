@@ -693,6 +693,12 @@
     "Equip": "Equip",
     "EquipWithName": "Equip to {{character}}",
     "Expand": "Expand item details",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favorite {{itemType}}",
+      "Unfavorite": "Unfavorite {{itemType}}",
+      "Favorited": "Favorited",
+      "Unfavorited": "Unfavorited"
+    },
     "Infuse": "Infuse",
     "ItemDetailSheet": "Open item details",
     "LockUnlock": {
