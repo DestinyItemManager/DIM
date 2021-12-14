@@ -11,8 +11,11 @@ import SelectablePlug from './SelectablePlug';
  * - the plugset whence these plugs originate
  */
 export interface PlugsWithMaxSelectable {
-  plugs: PluggableInventoryItemDefinition[];
+  /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
+  /** A list of plugs from this plugset. */
+  plugs: PluggableInventoryItemDefinition[];
+  /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
   headerSuffix?: string;
 }
