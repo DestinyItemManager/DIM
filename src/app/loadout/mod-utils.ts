@@ -159,13 +159,10 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
   // from forming two different categories
   const nameByPCH: NodeJS.Dict<string> = {};
 
-  const ret = _.groupBy(
+  return _.groupBy(
     plugs,
     (plugDef) =>
       (nameByPCH[plugDef.plug.plugCategoryHash] ??=
         plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName)
   );
-  console.log(nameByPCH);
-  console.log(ret);
-  return ret;
 }

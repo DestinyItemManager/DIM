@@ -38,6 +38,7 @@ export default function SelectablePlug({
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
 
+  // filter out things with no displayable text, or that are meant to be hidden
   const perksToDisplay = plug.perks.filter((perk) => {
     if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
       return false;
@@ -59,10 +60,14 @@ export default function SelectablePlug({
   });
 
   let plugDescription = plug.displayProperties.description || undefined;
+  // don't repeat plug description if it's already going to appear in perks
   if (uniqueStrings.has(plugDescription!)) {
     plugDescription = undefined;
   }
 
+  // a fallback: if there's no description, and we filtered down to zero perks,
+  // at least keep the first perk for display. there are mods like this: no desc,
+  // and annoyingly all perks are set to ItemPerkVisibility.Hidden
   if (!plugDescription && !perksToDisplay.length && plug.perks.length) {
     perksToDisplay.push(plug.perks[0]);
   }

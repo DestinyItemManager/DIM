@@ -59,30 +59,30 @@ export default function PlugSection({
   // This is important for combat mods, which would otherwise be grouped into one massive category
   const plugsGroupedByModType = groupModsByModType(plugs);
 
-  let header = plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName;
-  if (headerSuffix) {
-    header += ` (${headerSuffix})`;
-  }
   return (
     <>
-      {Object.entries(plugsGroupedByModType).map(([pch, plugs]) => (
-        <div key={pch} className={styles.bucket}>
-          <div className={styles.header}>{header}</div>
-          <div className={styles.items}>
-            {plugs.map((plug) => (
-              <SelectablePlug
-                key={plug.hash}
-                selected={selected.some((s) => s.hash === plug.hash)}
-                plug={plug}
-                displayedStatHashes={displayedStatHashes}
-                selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
-                onPlugSelected={handlePlugSelectedInternal}
-                onPlugRemoved={handlePlugRemovedInternal}
-              />
-            ))}
+      {Object.entries(plugsGroupedByModType).map(([groupName, plugs]) => {
+        const header = groupName + (headerSuffix ? ` (${headerSuffix})` : '');
+
+        return (
+          <div key={header} className={styles.bucket}>
+            <div className={styles.header}>{header}</div>
+            <div className={styles.items}>
+              {plugs.map((plug) => (
+                <SelectablePlug
+                  key={plug.hash}
+                  selected={selected.some((s) => s.hash === plug.hash)}
+                  plug={plug}
+                  displayedStatHashes={displayedStatHashes}
+                  selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
+                  onPlugSelected={handlePlugSelectedInternal}
+                  onPlugRemoved={handlePlugRemovedInternal}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }
