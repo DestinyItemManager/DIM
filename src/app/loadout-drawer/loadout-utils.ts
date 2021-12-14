@@ -13,7 +13,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -140,30 +140,6 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 
     return Math.floor(exactLight * 10) / 10;
   }
-}
-
-/** Returns a map of armor stat hashes to stats. There should be just one of each item */
-export function getArmorStats(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  items: DimItem[]
-): { [hash: number]: DimCharacterStat } {
-  const statDefs = armorStats.map((hash) => defs.Stat.get(hash) as DestinyStatDefinition);
-
-  // Construct map of stat hash to DimCharacterStat
-  const statsByArmorHash: { [hash: number]: DimCharacterStat } = {};
-  statDefs.forEach(({ hash, displayProperties: { description, icon, name } }) => {
-    statsByArmorHash[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
-  });
-
-  // Sum the items stats into the statsByArmorHash
-  items.forEach((item) => {
-    const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
-    Object.entries(statsByArmorHash).forEach(([hash, stat]) => {
-      stat.value += itemStats[hash]?.[0].value ?? 0;
-    });
-  });
-
-  return statsByArmorHash;
 }
 
 /**
