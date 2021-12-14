@@ -38,6 +38,35 @@ export default function SelectablePlug({
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
 
+  const perksToDisplay = plug.perks.filter((perk) => {
+    if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
+      return false;
+    }
+    let perkDescription =
+      defs.SandboxPerk.get(perk.perkHash).displayProperties.description || undefined;
+    let perkRequirement = perk.requirementDisplayString || undefined;
+
+    if (uniqueStrings.has(perkDescription!)) {
+      perkDescription = undefined;
+    }
+    if (uniqueStrings.has(perkRequirement!)) {
+      perkRequirement = undefined;
+    }
+
+    perkDescription && uniqueStrings.add(perkDescription);
+    perkRequirement && uniqueStrings.add(perkRequirement);
+    return perkDescription || perkRequirement;
+  });
+
+  let plugDescription = plug.displayProperties.description || undefined;
+  if (uniqueStrings.has(plugDescription!)) {
+    plugDescription = undefined;
+  }
+
+  if (!plugDescription && !perksToDisplay.length && plug.perks.length) {
+    perksToDisplay.push(plug.perks[0]);
+  }
+
   return (
     <ClosableContainer onClose={selected ? onClose : undefined}>
       <div
@@ -54,25 +83,19 @@ export default function SelectablePlug({
         </div>
         <div className={styles.plugInfo}>
           <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-          {plug.perks.map((perk) => {
-            if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
-              return null;
-            }
-            const defDesc = defs.SandboxPerk.get(perk.perkHash).displayProperties.description;
-            const defReq = perk.requirementDisplayString;
+          {perksToDisplay.map((perk) => {
+            const perkDescription = defs.SandboxPerk.get(perk.perkHash).displayProperties
+              .description;
+            const perkRequirement = perk.requirementDisplayString;
 
-            const description = (!uniqueStrings.has(defDesc) && defDesc) || undefined;
-            const requirement = (!uniqueStrings.has(defReq) && defReq) || undefined;
-
-            defDesc && uniqueStrings.add(defDesc);
-            defReq && uniqueStrings.add(defReq);
-
-            return description || requirement ? (
+            return (
               <div className={styles.partialDescription} key={perk.perkHash}>
-                <RichDestinyText text={description} />
-                {requirement && <div className={styles.requirement}>{requirement}</div>}
+                <RichDestinyText text={perkDescription} />
+                {perkRequirement && (
+                  <div className={styles.requirement}>{perkRequirement}</div>
+                )}{' '}
               </div>
-            ) : null;
+            );
           })}
           {plug.displayProperties.description &&
             !uniqueStrings.has(plug.displayProperties.description) && (
