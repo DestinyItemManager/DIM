@@ -1,5 +1,7 @@
 ## Next
 
+* Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
+
 ## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
 
 * Fix image paths for D1 perks.
