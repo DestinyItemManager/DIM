@@ -1,14 +1,23 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Comparator } from 'app/utils/comparators';
-import _ from 'lodash';
 import React, { useCallback } from 'react';
+import { groupModsByModType } from '../mod-utils';
 import styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
 
+/**
+ * a list of plugs, plus some metadata about:
+ * - the maximum we should let the user choose at once
+ * - the plugset whence these plugs originate
+ */
 export interface PlugsWithMaxSelectable {
+  /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
+  /** A list of plugs from this plugset. */
   plugs: PluggableInventoryItemDefinition[];
+  /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
+  headerSuffix?: string;
 }
 
 export default function PlugSection({
@@ -29,7 +38,7 @@ export default function PlugSection({
   handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
 }) {
-  const { plugs, maxSelectable, plugSetHash } = plugsWithMaxSelectable;
+  const { plugs, maxSelectable, plugSetHash, headerSuffix } = plugsWithMaxSelectable;
 
   const handlePlugSelectedInternal = useCallback(
     (plug: PluggableInventoryItemDefinition) => handlePlugSelected(plugSetHash, plug),
@@ -51,33 +60,32 @@ export default function PlugSection({
 
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
-  const plugsGroupedByPlugCategoryHash = _.groupBy(
-    plugs,
-    (plugDef) => plugDef.plug.plugCategoryHash
-  );
+  const plugsGroupedByModType = groupModsByModType(plugs);
 
   return (
     <>
-      {Object.entries(plugsGroupedByPlugCategoryHash).map(([pch, plugs]) => (
-        <div key={pch} className={styles.bucket}>
-          <div className={styles.header}>
-            {plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName}
+      {Object.entries(plugsGroupedByModType).map(([groupName, plugs]) => {
+        const header = groupName + (headerSuffix ? ` (${headerSuffix})` : '');
+
+        return (
+          <div key={header} className={styles.bucket}>
+            <div className={styles.header}>{header}</div>
+            <div className={styles.items}>
+              {plugs.map((plug) => (
+                <SelectablePlug
+                  key={plug.hash}
+                  selected={selected.some((s) => s.hash === plug.hash)}
+                  plug={plug}
+                  displayedStatHashes={displayedStatHashes}
+                  selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
+                  onPlugSelected={handlePlugSelectedInternal}
+                  onPlugRemoved={handlePlugRemovedInternal}
+                />
+              ))}
+            </div>
           </div>
-          <div className={styles.items}>
-            {plugs.map((plug) => (
-              <SelectablePlug
-                key={plug.hash}
-                selected={selected.some((s) => s.hash === plug.hash)}
-                plug={plug}
-                displayedStatHashes={displayedStatHashes}
-                selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
-                onPlugSelected={handlePlugSelectedInternal}
-                onPlugRemoved={handlePlugRemovedInternal}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }

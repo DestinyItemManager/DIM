@@ -1,5 +1,11 @@
 ## Next
 
+## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
+
+* Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.
+
+## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
+
 * Fix image paths for D1 perks.
 * Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
 * Stasis subclass can also be applied in the Loadouts page.
@@ -8,18 +14,46 @@
 * Fix an error that can occur when loading a shared build link.
 * Items in the postmaster are now included in search transfers.
 * When displaying mod placement in loadouts, if an item is not present for a given armor slot in the loadout the characters current armor will be used.
+* Strange Favor rank now correctly shows remaining reset count, when you hover the icon.
+* Ability Cooldown times are no longer shown for stat tooltips. This may return but at the moment, they were incorrect.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
-* Fix emblems and subclasses not applying from loadouts.
-* The mod picker launched from the item popup or Loadout Optimizer will now correctly show the mods unlocked by the applicable character, rather than across all characters. This helps a lot with artifact mods where you may have different ones unlocked on different characters. Note that this also means opening the mod picker for items in the vault will show no artifact mods unlocked - move the item to a character if you want to apply that mod.
-* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
+
+### Loadouts
+* Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
+* When displaying mod placement in Loadouts, if an armor slot has no item in the loadout, the character's current armor piece will be used.
 * Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
 * If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
 * Artifice Armor mod slots are now handled in Loadouts and the Loadout Optimizer.
 * Hitting +Equipped in the loadout editor will add current mods.
 * Creating a new loadout from equipped items will also save your subclass configuration.
-* Creating a new loadout from equipped or hitting +Equipped in the loadout editor will now also include your current emblem, ship, and sparrow.
-* Vendor items no longer offer to apply perks.
+* Creating a new loadout from equipped, or hitting +Equipped in the loadout editor, will now also include your current emblem, ship, and sparrow.
 * Added more visual distinction between loadouts on the loadouts page.
+* Some repeat text and unnecessary instructions were removed from mods and Stasis Fragments, in the mod picker.
+
+### Loadout Optimizer
+* Fix an error that can occur when loading a shared build link.
+* Fix issue where Optimizer throws an error when selecting a raid or combat mod.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
+
+### Mod Plugging Capabilities
+* Bungie has enabled the API capabilities to apply armor mods, toggle weapon perks, and perform other plugging-in type operations. So now you can take advantage of these features of DIM!
+  * This works from the item popup, and when applying loadouts that contain mods.
+  * DIM can apply weapon perks, armor mods, shaders, weapon & exotic ornaments, and Stasis Aspects and Fragments.
+  * It cannot apply weapon mods, which still cost glimmer in the game.
+  * It can't yet apply transmog/Synthesis ornaments, but Bungie is working on addressing this.
+  * Swapping Stasis aspects & fragments via loadouts is coming soon.
+
+### Mods in Loadouts
+* When you apply a loadout with armor mods, DIM will automatically assign these among armor pieces.
+* If there's no armor in the loadout, it will apply these mods to your character's current pieces.
+* More specific/custom placement options are in the works.
+* DIM will not clear off existing mods except to make room for requested ones.
+
+### Plugging-Related Fixes
+* Fix a bug that prevented applying shaders or ornaments from the item popup.
+* Fix emblems and subclasses not applying from loadouts.
+* The mod picker launched from the item popup or Loadout Optimizer will now correctly show the mods unlocked by the applicable character, rather than across all characters. This helps a lot with artifact mods where you may have different ones unlocked on different characters. Note that this also means opening the mod picker for items in the vault will show no artifact mods unlocked - move the item to a character if you want to apply that mod.
+* Vendor items no longer offer to apply perks.
 
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 

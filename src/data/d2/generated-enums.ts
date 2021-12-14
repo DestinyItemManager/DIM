@@ -778,6 +778,7 @@ export const enum ItemCategoryHashes {
   Hunter = 23,
   InfusionMaterials = 2266591099,
   Inventory = 52,
+  ItemCategoriesCategorySubclassModsTitle = 1043342778,
   ItemSets = 2423200735,
   KineticWeapon = 2,
   Legs = 48,
