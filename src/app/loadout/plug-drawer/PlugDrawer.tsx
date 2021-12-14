@@ -15,8 +15,17 @@ import Footer from './Footer';
 import PlugSection, { PlugsWithMaxSelectable } from './PlugSection';
 
 interface Props {
+  /**
+   * A list of plug items that come from a PlugSet, along with the maximum number of these plugs
+   * that can be chosen.
+   */
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
-  /** An array of mods that are already locked. */
+  /**
+   * An array of mods that are already locked.
+   *
+   * These must be a subset of the plugs in plugsWithMaxSelectableSets otherwise unknown plugs
+   * will be discarded on accept.
+   */
   initiallySelected: PluggableInventoryItemDefinition[];
   /** A list of stat hashes that if present will be displayed for each plug. */
   displayedStatHashes?: number[];
@@ -244,24 +253,34 @@ export default function PlugDrawer({
 }
 
 /**
+ * A map of plugSetHashes to the selected plugs for that plugSetHash.
+ */
+type InternalSelectedState = {
+  [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined;
+};
+
+/**
  * This creates the internally used state for the selected plugs.
- * We want to split the selected plugs up into groups based on the plugSetHash we attribute them too.
  *
- * We need to do this to correctly handle artificer armor sockets. The plugsets that they can take are
- * a subset of the bucket specific sockets on an item (as in they just take the artifact mods). So
- * to track which plugset they chose a mod from, we key the selected mods by the plugset they were
- * picked from.
+ * We need to associate each selected plug with a plugSetHash to correctly handle artificer
+ * sockets. The plugsets that they can take are a subset of the bucket specific sockets
+ * plugsets on an item, specifically they are just the artifact mods.
+ *
+ * To do this we create a map from plugSet to a list of plugs selected. This ensure that when
+ * a user selects a plug from the artificer set, it won't appear to the user that a plug was
+ * selected from the bucket specific set.
  */
 function createInternalSelectedState(
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
-  const rtn: { [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined } = {};
+  const rtn: InternalSelectedState = {};
 
   for (const plug of initiallySelected) {
     // Find all the possible sets this plug could go in and sort them so the set with the
     // smallest number of options is first. Because artificer armor has a socket that is a
-    // subset of the normal slot specific sockets, this ensure we will it first.
+    // subset of the normal slot specific sockets, this ensure we will fill it with plugs
+    // first.
     const possibleSets = plugsWithMaxSelectableSets
       .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
       .sort(compareBy((set) => set.plugs.length));

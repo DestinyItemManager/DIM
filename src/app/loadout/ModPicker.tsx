@@ -19,7 +19,7 @@ import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
@@ -31,7 +31,7 @@ import { PlugsWithMaxSelectable } from './plug-drawer/PlugSection';
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
 
-const sortModPickerGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
+const sortModPickerPlugGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
   sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
@@ -242,6 +242,23 @@ function ModPicker({
     []
   );
 
+  const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
+    () =>
+      _.partition(lockedMods, (mod) =>
+        plugsWithMaxSelectableSets.some((plugSet) =>
+          plugSet.plugs.some((plug) => plug.hash === mod.hash)
+        )
+      ),
+    [lockedMods, plugsWithMaxSelectableSets]
+  );
+
+  const onAcceptWithHiddenSelectedMods = useCallback(
+    (newLockedMods: PluggableInventoryItemDefinition[]) => {
+      onAccept([...hiddenSelectedMods, ...newLockedMods]);
+    },
+    [hiddenSelectedMods, onAccept]
+  );
+
   return (
     <PlugDrawer
       title={t('LB.ChooseAMod')}
@@ -250,12 +267,12 @@ function ModPicker({
       language={language}
       initialQuery={initialQuery}
       plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
-      initiallySelected={lockedMods}
+      initiallySelected={visibleSelectedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}
-      sortPlugGroups={sortModPickerGroups}
+      sortPlugGroups={sortModPickerPlugGroups}
       sortPlugs={sortMods}
-      onAccept={onAccept}
+      onAccept={onAcceptWithHiddenSelectedMods}
       onClose={onClose}
     />
   );
