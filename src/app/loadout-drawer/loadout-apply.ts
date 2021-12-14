@@ -820,7 +820,7 @@ function equipModsToItem(
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
     const destiny2CoreSettings = destiny2CoreSettingsSelector(getState())!;
 
-    if (!item.sockets || !item.energy) {
+    if (!item.sockets) {
       return [];
     }
 
