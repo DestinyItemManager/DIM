@@ -1,5 +1,7 @@
 ## Next
 
+* Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
+
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 
 * Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.

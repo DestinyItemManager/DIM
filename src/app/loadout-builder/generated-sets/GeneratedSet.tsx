@@ -133,6 +133,7 @@ function GeneratedSet({
         onLoadoutSet={setCreateLoadout}
         lbDispatch={lbDispatch}
         notes={notes}
+        params={params}
       />
     </div>
   );
