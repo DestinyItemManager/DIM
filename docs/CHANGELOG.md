@@ -1,5 +1,7 @@
 ## Next
 
+* Stasis subclass can also be applied in the Loadouts page.
+
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 
 * Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.
@@ -7,13 +9,6 @@
 ## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
 
 * Fix image paths for D1 perks.
-* Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
-* Stasis subclass can also be applied in the Loadouts page.
-* Fix issue where Optimizer throws an error when selecting a raid or combat mod.
-* Fix a bug that prevented applying shaders or ornaments from the item popup.
-* Fix an error that can occur when loading a shared build link.
-* Items in the postmaster are now included in search transfers.
-* When displaying mod placement in loadouts, if an item is not present for a given armor slot in the loadout the characters current armor will be used.
 * Strange Favor rank now correctly shows remaining reset count, when you hover the icon.
 * Ability Cooldown times are no longer shown for stat tooltips. This may return but at the moment, they were incorrect.
 * Added 'source:30th' for items coming from the Bungie 30th Anniversary.
