@@ -12,16 +12,7 @@ import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } f
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
-import PlugSection from './PlugSection';
-
-export interface PlugsWithMaxSelectable {
-  /** The hash that links to the PlugSet definition. */
-  plugSetHash: number;
-  /** A list of plugs from this plugset. */
-  plugs: PluggableInventoryItemDefinition[];
-  /** The maximum number of plugs a user can select from this plug set. */
-  maxSelectable: number;
-}
+import PlugSection, { PlugsWithMaxSelectable } from './PlugSection';
 
 interface Props {
   /**
@@ -184,10 +175,11 @@ export default function PlugDrawer({
         );
       });
 
-    for (const { plugs, maxSelectable, plugSetHash } of plugsWithMaxSelectableSets) {
+    for (const { plugs, maxSelectable, plugSetHash, headerSuffix } of plugsWithMaxSelectableSets) {
       rtn.push({
         plugSetHash,
         maxSelectable,
+        headerSuffix,
         plugs: query.length ? plugs.filter(searchFilter) : plugs,
       });
     }

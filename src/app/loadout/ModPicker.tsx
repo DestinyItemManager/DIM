@@ -9,6 +9,7 @@ import {
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
+  armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
@@ -24,7 +25,8 @@ import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
-import PlugDrawer, { PlugsWithMaxSelectable } from './plug-drawer/PlugDrawer';
+import PlugDrawer from './plug-drawer/PlugDrawer';
+import { PlugsWithMaxSelectable } from './plug-drawer/PlugSection';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
@@ -83,6 +85,8 @@ function mapStateToProps() {
       plugCategoryHashWhitelist,
       currentStore
     ): PlugsWithMaxSelectable[] => {
+      const artificeString = defs?.InventoryItem.get(3727270518).displayProperties.name;
+
       const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugsWithMaxSelectable } = {};
       if (!profileResponse || !defs) {
         return [];
@@ -92,10 +96,11 @@ function mapStateToProps() {
         if (
           !item ||
           !item.sockets ||
-          // Makes sure its an armour 2.0 item
+          // Makes sure it's an armour 2.0 item
           !isLoadoutBuilderItem(item) ||
-          // If classType is passed in only use items from said class otherwise use
-          // items from all characters. Usefull if in loadouts and only mods and guns.
+          // If classType is passed in, only use items from said class,
+          // otherwise use items from all characters.
+          // Useful if in loadouts and only mods and guns
           !(classType === DestinyClass.Unknown || item.classType === classType)
         ) {
           continue;
@@ -108,7 +113,7 @@ function mapStateToProps() {
           SocketCategoryHashes.ArmorMods
         ).filter((socket) => socket.socketDefinition.reusablePlugSetHash && socket.plugged);
 
-        // Group the sockets by their reusablePlugSetHash, this lets us get a count of availabe mods for
+        // Group the sockets by their reusablePlugSetHash, this lets us get a count of available mods for
         // each socket in the case of bucket specific mods/sockets
         const socketsGroupedByPlugSetHash = _.groupBy(
           modSockets,
@@ -154,6 +159,12 @@ function mapStateToProps() {
               maxSelectable,
               plugs,
             };
+            if (
+              maxSelectable === 1 &&
+              armor2PlugCategoryHashes.includes(plugs[0].plug.plugCategoryHash)
+            ) {
+              plugsWithMaxSelectableSets[plugSetHash].headerSuffix = artificeString;
+            }
           } else if (
             plugs.length &&
             plugsWithMaxSelectableSets[plugSetHash].maxSelectable < sockets.length
@@ -211,7 +222,7 @@ function ModPicker({
         : 0;
 
       if (isSlotSpecificCategory) {
-        // Traction has no energy type so its basically Any energy and 0 cost
+        // Traction has no energy type so it's basically Any energy and 0 cost
         const modCost = mod.plug.energyCost?.energyCost || 0;
         const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
