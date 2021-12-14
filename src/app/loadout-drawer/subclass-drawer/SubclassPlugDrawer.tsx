@@ -5,7 +5,8 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import PlugDrawer, { PlugsWithMaxSelectable } from 'app/loadout/plug-drawer/PlugDrawer';
+import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
+import { PlugsWithMaxSelectable } from 'app/loadout/plug-drawer/PlugSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemsForPlugSetEverywhere } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';

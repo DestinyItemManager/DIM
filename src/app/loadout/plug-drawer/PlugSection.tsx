@@ -1,14 +1,20 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Comparator } from 'app/utils/comparators';
-import _ from 'lodash';
 import React, { useCallback } from 'react';
+import { groupModsByModType } from '../mod-utils';
 import styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
 
+/**
+ * a list of plugs, plus some metadata about:
+ * - the maximum we should let the user choose at once
+ * - the plugset whence these plugs originate
+ */
 export interface PlugsWithMaxSelectable {
-  plugSetHash: number;
   plugs: PluggableInventoryItemDefinition[];
+  plugSetHash: number;
   maxSelectable: number;
+  headerSuffix?: string;
 }
 
 export default function PlugSection({
@@ -29,7 +35,7 @@ export default function PlugSection({
   handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
 }) {
-  const { plugs, maxSelectable, plugSetHash } = plugsWithMaxSelectable;
+  const { plugs, maxSelectable, plugSetHash, headerSuffix } = plugsWithMaxSelectable;
 
   const handlePlugSelectedInternal = useCallback(
     (plug: PluggableInventoryItemDefinition) => handlePlugSelected(plugSetHash, plug),
@@ -51,18 +57,17 @@ export default function PlugSection({
 
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
-  const plugsGroupedByPlugCategoryHash = _.groupBy(
-    plugs,
-    (plugDef) => plugDef.plug.plugCategoryHash
-  );
+  const plugsGroupedByModType = groupModsByModType(plugs);
 
+  let header = plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName;
+  if (headerSuffix) {
+    header += ` (${headerSuffix})`;
+  }
   return (
     <>
-      {Object.entries(plugsGroupedByPlugCategoryHash).map(([pch, plugs]) => (
+      {Object.entries(plugsGroupedByModType).map(([pch, plugs]) => (
         <div key={pch} className={styles.bucket}>
-          <div className={styles.header}>
-            {plugs[0].itemTypeDisplayName || plugs[0].itemTypeAndTierDisplayName}
-          </div>
+          <div className={styles.header}>{header}</div>
           <div className={styles.items}>
             {plugs.map((plug) => (
               <SelectablePlug
