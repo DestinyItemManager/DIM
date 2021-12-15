@@ -19,6 +19,20 @@ function getBrowserName(agent) {
   return agent.browser.name;
 }
 
+function getUserLocale() {
+  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
+  console.info('Language Detected: ' + lang);
+  if (!supportedLanguages.includes(lang)) {
+    lang = lang.split('-', 1);
+  }
+  if (!supportedLanguages.includes(lang)) {
+    // fallback to 'en' if unsupported language after removing dialect
+    lang = 'en';
+  }
+  console.info('Language Assigned: ' + lang);
+  return lang;
+}
+
 function getBrowserVersionFromUserAgent(agent) {
   var browserName = getBrowserName(agent).toLowerCase();
   var version = (
@@ -66,17 +80,6 @@ export function isSupported(browsersSupported, userAgent) {
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
-  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
-
-  console.info('Language Detected: ' + lang);
-  if (!supportedLanguages.includes(lang)) {
-    lang = lang.split('-', 1);
-  }
-  if (!supportedLanguages.includes(lang)) {
-    // fallback to 'en' if unsupported language after removing dialect
-    lang = 'en';
-  }
-  console.info('Language Assigned: ' + lang);
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome
@@ -94,6 +97,8 @@ export function isSupported(browsersSupported, userAgent) {
   }
   return supported;
 }
+
+var lang = getUserLocale();
 
 if ($BROWSERS.length && lang) {
   // t('Browsercheck.Unsupported')
