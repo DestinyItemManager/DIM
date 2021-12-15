@@ -6,7 +6,7 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -143,7 +143,8 @@ export function getModCostInfo(
     mod = defs.InventoryItem.get(mod);
   }
 
-  if (mod?.plug) {
+  // hide cost for Stasis fragments as these are currently always set to 1
+  if (mod?.plug && mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {
@@ -155,5 +156,6 @@ export function getModCostInfo(
       )?.displayProperties.icon;
     }
   }
+
   return modCostInfo;
 }
