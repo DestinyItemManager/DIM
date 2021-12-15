@@ -156,12 +156,14 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
       query:
+        '(' + 
         bucketToSearch[exampleItem.bucket.hash] +
         ' ' +
         (exampleItem.destinyVersion === 2 && intrinsic
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
             `perkname:"${intrinsic.displayProperties.name}"`
-          : `stat:rpm:${getRpm(exampleItem)}`),
+          : `stat:rpm:${getRpm(exampleItem)}`) +
+        ')',
     },
 
     // above, but also same (kinetic/energy/heavy) slot
