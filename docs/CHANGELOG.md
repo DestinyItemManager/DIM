@@ -1,5 +1,6 @@
 ## Next
 
+* Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Stasis subclass can also be applied in the Loadouts page.
 
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
