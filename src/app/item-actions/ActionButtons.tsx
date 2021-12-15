@@ -54,7 +54,11 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
   const title =
     type === 'lock'
       ? item.locked
-        ? t('MovePopup.LockUnlock.Locked')
+        ? item.type === 'Finishers'
+          ? t('MovePopup.FavoriteUnFavorite.Favorited')
+          : t('MovePopup.LockUnlock.Locked')
+        : item.type === 'Finishers'
+        ? t('MovePopup.FavoriteUnFavorite.Unfavorited')
         : t('MovePopup.LockUnlock.Unlocked')
       : item.tracked
       ? t('MovePopup.TrackUntrack.Tracked')
