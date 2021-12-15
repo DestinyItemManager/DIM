@@ -30,7 +30,7 @@ export default function PlugSection({
   /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
   selected: PluggableInventoryItemDefinition[];
   displayedStatHashes?: number[];
-  isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
+  isPlugSelectable(plug: PluggableInventoryItemDefinition): number;
   handlePlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
@@ -66,7 +66,10 @@ export default function PlugSection({
 
         return (
           <div key={header} className={styles.bucket}>
-            <div className={styles.header}>{header}</div>
+            <div className={styles.header}>
+              {header}{' '}
+              <span className={styles.dimmedText}>({isPlugSelectable(plugs[0])} Remaining)</span>
+            </div>
             <div className={styles.items}>
               {plugs.map((plug) => (
                 <SelectablePlug
@@ -74,7 +77,9 @@ export default function PlugSection({
                   selected={selected.some((s) => s.hash === plug.hash)}
                   plug={plug}
                   displayedStatHashes={displayedStatHashes}
-                  selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
+                  selectable={Boolean(
+                    Math.min(maxSelectable - selected.length, isPlugSelectable(plug))
+                  )}
                   onPlugSelected={handlePlugSelectedInternal}
                   onPlugRemoved={handlePlugRemovedInternal}
                 />

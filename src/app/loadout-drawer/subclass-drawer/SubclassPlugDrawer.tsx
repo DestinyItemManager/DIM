@@ -106,15 +106,19 @@ export default function SubclassPlugDrawer({
   const isPlugSelectable = useCallback(
     (plug: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
       if (selected.some((s) => s.hash === plug.hash)) {
-        return false;
+        return 0;
       }
 
       // Abilities handling
-      if (!aspects.has(plug) && !fragments.has(plug)) {
+      if (
+        !aspects.has(plug) &&
+        !fragments.has(plug) &&
+        !selected.some((s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash)
+      ) {
         // TODO (ryan) this is annoying as you cannot just click a different ability to auto
         // deselect the current one. We should come up with a way to allow swapping by a single
         // click
-        return !selected.some((s) => s.plug.plugCategoryHash === plug.plug.plugCategoryHash);
+        return 0;
       }
 
       // Fragments handling
@@ -128,10 +132,10 @@ export default function SubclassPlugDrawer({
           )?.value || 0
       );
       if (fragments.has(plug)) {
-        return selectedFragments.length < allowedFragments;
+        return allowedFragments - selectedFragments.length;
       }
 
-      return true;
+      return 999;
     },
     [aspects, fragments]
   );
