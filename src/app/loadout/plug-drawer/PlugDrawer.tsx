@@ -52,7 +52,7 @@ interface Props {
   sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new selected plugs when the user clicks the accept button. */
-  onAccept(newLockedPlugs: PluggableInventoryItemDefinition[]): void;
+  onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new plugset or closes the sheet. */
   onClose(): void;
 }
