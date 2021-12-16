@@ -1,4 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
+import PressTip from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -121,7 +123,26 @@ export default function ModAssignmentDrawer({
           <div className={styles.assigned}>
             {armor.map((item) => (
               <div key={item.id} className={styles.itemAndMods}>
-                <ConnectedInventoryItem item={item} />
+                <div>
+                  <ConnectedInventoryItem item={item} />
+                  {item.energy && (
+                    <PressTip
+                      tooltip={
+                        <>
+                          {t('EnergyMeter.Energy')}
+                          <hr />
+                          {t('EnergyMeter.Used')}: {item.energy.energyUsed}
+                          <br />
+                          {t('EnergyMeter.Unused')}: {item.energy.energyUnused}
+                        </>
+                      }
+                      className={styles.energyMeter}
+                    >
+                      <EnergyIncrements item={item} />
+                    </PressTip>
+                  )}
+                </div>
+
                 <Sockets
                   item={item}
                   lockedMods={itemModAssignments[item.id]}

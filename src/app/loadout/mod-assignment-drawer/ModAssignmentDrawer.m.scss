@@ -26,6 +26,13 @@
   @include phone-portrait {
     margin-bottom: 16px;
   }
+  .energyMeter {
+    margin-top: 3px;
+    padding: 3px 0;
+    @include phone-portrait {
+      padding: 3px 0 20px;
+    }
+  }
 }
 
 .unassigned {
