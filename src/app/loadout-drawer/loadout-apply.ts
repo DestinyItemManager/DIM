@@ -36,6 +36,7 @@ import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -694,8 +695,8 @@ function applySocketOverrides(
         }
 
         overrideResults.total = modsForItem.length;
-        const successful = await dispatch(equipModsToItem(item.id, modsForItem, true));
-        overrideResults.successful += successful.length;
+        const result = await dispatch(equipModsToItem(item.id, modsForItem, true));
+        overrideResults.successful += result.successfulMods.length;
       }
     }
     return overrideResults;
@@ -770,7 +771,8 @@ function applyLoadoutMods(
     const modAssignments = fitMostMods(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
-    const applyModsToItemResultPromises: Promise<number[]>[] = [];
+    const applyModsToItemResultPromises: Promise<{ successfulMods: number[]; errors: Error[] }>[] =
+      [];
 
     for (const item of armor) {
       const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
@@ -803,11 +805,19 @@ function applyLoadoutMods(
       }
     }
 
-    const modsToItemResults = await Promise.allSettled(applyModsToItemResultPromises);
-    for (const successfulModHashes of modsToItemResults) {
-      if (successfulModHashes.status === 'fulfilled') {
-        successfulMods.push(...successfulModHashes.value);
-      }
+    const modsToItemResults = await Promise.all(applyModsToItemResultPromises);
+    for (const result of modsToItemResults) {
+      successfulMods.push(...result.successfulMods);
+    }
+
+    const firstError = modsToItemResults.flatMap((r) => r.errors).find(Boolean);
+
+    if (firstError) {
+      showNotification({
+        type: 'error',
+        title: t('AWA.Error'),
+        body: firstError.message,
+      });
     }
 
     // Return the mods that were successfully assigned (even if they didn't have to move)
@@ -824,18 +834,19 @@ function equipModsToItem(
   itemId: string,
   modsForItem: Assignment[],
   includeAssignToDefault = false
-): ThunkResult<number[]> {
+): ThunkResult<{ successfulMods: number[]; errors: Error[] }> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
     const destiny2CoreSettings = destiny2CoreSettingsSelector(getState())!;
 
     if (!item.sockets) {
-      return [];
+      return { successfulMods: emptyArray(), errors: emptyArray() };
     }
 
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
+    const errors: Error[] = [];
     const applyModResultPromises: Promise<number | undefined>[] = [];
 
     for (const { socketIndex, mod } of modsToApply) {
@@ -875,13 +886,15 @@ function equipModsToItem(
     }
 
     const applyModsResults = await Promise.allSettled(applyModResultPromises);
-    for (const modHash of applyModsResults) {
-      if (modHash.status === 'fulfilled' && modHash.value) {
-        successfulMods.push(modHash.value);
+    for (const result of applyModsResults) {
+      if (result.status === 'fulfilled' && result.value) {
+        successfulMods.push(result.value);
+      } else if (result.status === 'rejected') {
+        errors.push(result.reason);
       }
     }
 
-    return successfulMods;
+    return { successfulMods, errors };
   };
 }
 
@@ -902,12 +915,13 @@ function applyMod(
         return mod.hash;
       }
     } catch (e) {
-      const plugName = mod.displayProperties.name ?? 'Unknown Plug';
-      showNotification({
-        type: 'error',
-        title: t('AWA.Error'),
-        body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
-      });
+      throw new Error(
+        t('AWA.ErrorMessage', {
+          error: e.message,
+          item: item.name,
+          plug: mod.displayProperties.name ?? 'Unknown Plug',
+        })
+      );
     }
   };
 }
