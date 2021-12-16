@@ -7,7 +7,15 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
+import {
+  AppIcon,
+  lockIcon,
+  starIcon,
+  starOutlineIcon,
+  trackedIcon,
+  unlockedIcon,
+  unTrackedIcon,
+} from '../shell/icons';
 import ActionButton from './ActionButton';
 import styles from './LockButton.m.scss';
 
@@ -54,7 +62,11 @@ export default function LockButton({ type, item, children }: Props) {
   const icon =
     type === 'lock'
       ? item.locked
-        ? lockIcon
+        ? item.type === 'Finishers'
+          ? starIcon
+          : lockIcon
+        : item.type === 'Finishers'
+        ? starOutlineIcon
         : unlockedIcon
       : item.tracked
       ? trackedIcon
@@ -80,7 +92,11 @@ export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   return (
     (type === 'lock'
       ? !item.locked
-        ? t('MovePopup.LockUnlock.Lock', data)
+        ? item.type === 'Finishers'
+          ? t('MovePopup.FavoriteUnFavorite.Favorite', data)
+          : t('MovePopup.LockUnlock.Lock', data)
+        : item.type === 'Finishers'
+        ? t('MovePopup.FavoriteUnFavorite.Unfavorite', data)
         : t('MovePopup.LockUnlock.Unlock', data)
       : !item.tracked
       ? t('MovePopup.TrackUntrack.Track', data)

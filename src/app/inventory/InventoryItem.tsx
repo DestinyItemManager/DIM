@@ -101,7 +101,10 @@ export default function InventoryItem({
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
             {item.locked && (
-              <AppIcon className={styles.icon} icon={item.lockable ? lockIcon : starIcon} />
+              <AppIcon
+                className={styles.icon}
+                icon={item.type !== 'Finishers' ? lockIcon : starIcon}
+              />
             )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}
             {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}

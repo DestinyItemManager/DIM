@@ -1,11 +1,13 @@
 ## Next
 
 * Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
+* Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Stasis subclass can also be applied in the Loadouts page.
 
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 
 * Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.
+* Added the ability to favorite finishers
 
 ## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
 

@@ -136,6 +136,7 @@ unassended
 unequip
 unequippable
 unexclude
+unfavorited
 UniFFFD
 uninstanced
 unly
