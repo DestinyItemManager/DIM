@@ -8,7 +8,7 @@ import {
   getSimilarItem,
   MoveReservations,
 } from 'app/inventory/item-move-service';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
@@ -37,7 +37,7 @@ import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { errorLog, infoLog, warnLog } from 'app/utils/log';
+import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -92,6 +92,7 @@ export function applyLoadout(
     if ($featureFlags.debugMoves) {
       infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
     }
+    const stopTimer = timer('Loadout Application');
 
     const stores = storesSelector(getState());
 
@@ -163,6 +164,7 @@ export function applyLoadout(
     );
 
     await loadoutPromise;
+    stopTimer();
   };
 }
 
@@ -768,6 +770,7 @@ function applyLoadoutMods(
     const modAssignments = fitMostMods(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
+    const applyModsToItemResultPromises: Promise<number[]>[] = [];
 
     for (const item of armor) {
       const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
@@ -796,7 +799,14 @@ function applyLoadoutMods(
           continue;
         }
 
-        successfulMods.push(...(await dispatch(equipModsToItem(item.id, assignmentSequence))));
+        applyModsToItemResultPromises.push(dispatch(equipModsToItem(item.id, assignmentSequence)));
+      }
+    }
+
+    const modsToItemResults = await Promise.allSettled(applyModsToItemResultPromises);
+    for (const successfulModHashes of modsToItemResults) {
+      if (successfulModHashes.status === 'fulfilled') {
+        successfulMods.push(...successfulModHashes.value);
       }
     }
 
@@ -826,6 +836,7 @@ function equipModsToItem(
 
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
+    const applyModResultPromises: Promise<number | undefined>[] = [];
 
     for (const { socketIndex, mod } of modsToApply) {
       // Use this socket
@@ -850,20 +861,7 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        try {
-          await dispatch(insertPlug(item, socket, mod.hash));
-          // Don't count removing mods as applying a mod successfully
-          if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod })) {
-            successfulMods.push(mod.hash);
-          }
-        } catch (e) {
-          const plugName = mod.displayProperties.name ?? 'Unknown Plug';
-          showNotification({
-            type: 'error',
-            title: t('AWA.Error'),
-            body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
-          });
-        }
+        applyModResultPromises.push(dispatch(applyMod(item, socket, mod, includeAssignToDefault)));
       } else {
         warnLog(
           'loadout mods',
@@ -876,6 +874,40 @@ function equipModsToItem(
       }
     }
 
+    const applyModsResults = await Promise.allSettled(applyModResultPromises);
+    for (const modHash of applyModsResults) {
+      if (modHash.status === 'fulfilled' && modHash.value) {
+        successfulMods.push(modHash.value);
+      }
+    }
+
     return successfulMods;
+  };
+}
+
+function applyMod(
+  item: DimItem,
+  socket: DimSocket,
+  mod: PluggableInventoryItemDefinition,
+  includeAssignToDefault: boolean
+): ThunkResult<number | undefined> {
+  return async (dispatch) => {
+    try {
+      await dispatch(insertPlug(item, socket, mod.hash));
+      // Don't count removing mods as applying a mod successfully
+      if (
+        includeAssignToDefault ||
+        !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod })
+      ) {
+        return mod.hash;
+      }
+    } catch (e) {
+      const plugName = mod.displayProperties.name ?? 'Unknown Plug';
+      showNotification({
+        type: 'error',
+        title: t('AWA.Error'),
+        body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+      });
+    }
   };
 }
