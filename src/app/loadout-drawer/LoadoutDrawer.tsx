@@ -231,7 +231,7 @@ export default function LoadoutDrawer() {
           placeholder={t('Loadouts.NotesPlaceholder')}
         />
       )}
-      <GeneratedLoadoutStats items={items} loadout={loadout} />
+      <GeneratedLoadoutStats items={items} loadout={loadout} savedMods={savedMods} />
     </div>
   );
 

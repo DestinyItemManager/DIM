@@ -1,5 +1,6 @@
 ## Next
 
+* Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
 * Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Stasis subclass can also be applied in the Loadouts page.
 
