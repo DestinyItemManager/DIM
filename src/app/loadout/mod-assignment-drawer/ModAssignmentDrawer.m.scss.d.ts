@@ -3,6 +3,7 @@
 interface CssExports {
   'assigned': string;
   'container': string;
+  'energyMeter': string;
   'headerInfo': string;
   'headerName': string;
   'headerStats': string;

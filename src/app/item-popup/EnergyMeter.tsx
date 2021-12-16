@@ -1,4 +1,6 @@
 import ElementIcon from 'app/dim-ui/ElementIcon';
+import { energyStyles } from 'app/dim-ui/EnergyIncrements';
+import 'app/dim-ui/EnergyMeterIncrements.scss';
 import Select, { Option } from 'app/dim-ui/Select';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
@@ -17,13 +19,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
-
-export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
-  [DestinyEnergyType.Arc]: styles.arc,
-  [DestinyEnergyType.Thermal]: styles.solar,
-  [DestinyEnergyType.Void]: styles.void,
-  [DestinyEnergyType.Stasis]: styles.stasis,
-} as const;
 
 const swappableEnergyTypes = [
   DestinyEnergyType.Arc,
@@ -49,15 +44,15 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
 
   // layer in possible total slots, then earned slots, then currently used slots
   const meterIncrements = Array<string>(10)
-    .fill(styles.disabled)
+    .fill('unavailable')
     .fill(
-      styles.unused,
+      'unused',
       0,
       previewEnergyType === energyType
         ? Math.max(energyCapacity, hoverEnergyCapacity || previewCapacity || 0)
         : Math.max(1, hoverEnergyCapacity || previewCapacity || 0)
     )
-    .fill(styles.used, 0, previewEnergyType === energyType ? item.energy.energyUsed : 0);
+    .fill('used', 0, previewEnergyType === energyType ? item.energy.energyUsed : 0);
 
   const onMouseOver = (i: number) => {
     setHoverEnergyCapacity(i);
@@ -140,7 +135,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
             <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
           </div>
         </div>
-        <div className={clsx(styles.inner, energyStyles[previewEnergyType])}>
+        <div className={clsx('energyMeterIncrements', 'medium', energyStyles[previewEnergyType])}>
           {swappableEnergyTypes.includes(item.energy.energyType) && (
             <Select<DestinyEnergyType>
               options={energyOptions}
@@ -155,7 +150,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
           {meterIncrements.map((incrementStyle, i) => (
             <div
               key={i}
-              className={clsx(styles.increments, incrementStyle, {
+              className={clsx(incrementStyle, {
                 [styles.clickable]: i + 1 > energyCapacity,
               })}
               onMouseOver={() => onMouseOver(i + 1)}
