@@ -138,7 +138,7 @@ export function getItemEnergyType(
  * gets the InventoryItem hash corresponding to a socket's default contents
  * (what should be plugged in order to "revert/clear" it)
  */
-export function getDefaultPlugHash(socket: DimSocket, defs?: D2ManifestDefinitions) {
+export function getDefaultPlugHash(socket: DimSocket, defs: D2ManifestDefinitions) {
   if (socket.plugged) {
     const { singleInitialItemHash, reusablePlugSetHash } = socket.socketDefinition;
     return singleInitialItemHash
