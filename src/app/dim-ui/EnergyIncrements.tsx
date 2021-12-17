@@ -11,8 +11,21 @@ export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Stasis]: 'stasis',
 } as const;
 
-export function EnergyIncrements({ item }: { item: DimItem }) {
-  const { energyCapacity, energyUsed, energyType } = item.energy!;
+/** this accepts either an item, or a partial DimItem.energy */
+export function EnergyIncrements({
+  item,
+  energy,
+}:
+  | { item: DimItem; energy?: undefined }
+  | {
+      item?: undefined;
+      energy: {
+        energyType: DestinyEnergyType;
+        energyCapacity: number;
+        energyUsed: number;
+      };
+    }) {
+  const { energyCapacity, energyUsed, energyType } = item?.energy ?? energy!;
   // layer in possible total slots, then earned slots, then currently used slots
   const meterIncrements = Array<string>(10)
     .fill('unavailable')
