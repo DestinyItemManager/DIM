@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -872,7 +873,9 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        applyModResultPromises.push(dispatch(applyMod(item, socket, mod, includeAssignToDefault)));
+        applyModResultPromises.push(
+          dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs))
+        );
       } else {
         warnLog(
           'loadout mods',
@@ -902,7 +905,8 @@ function applyMod(
   item: DimItem,
   socket: DimSocket,
   mod: PluggableInventoryItemDefinition,
-  includeAssignToDefault: boolean
+  includeAssignToDefault: boolean,
+  defs: D2ManifestDefinitions
 ): ThunkResult<number | undefined> {
   return async (dispatch) => {
     try {
@@ -910,7 +914,7 @@ function applyMod(
       // Don't count removing mods as applying a mod successfully
       if (
         includeAssignToDefault ||
-        !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod })
+        !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod }, defs)
       ) {
         return mod.hash;
       }
