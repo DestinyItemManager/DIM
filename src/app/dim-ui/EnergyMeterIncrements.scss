@@ -1,0 +1,89 @@
+// <div class=`energyMeterIncrements small`> (or medium)
+//   <div class=used/><div class=used/><div class=unused/><div class=unavailable/><div class=unavailable/>
+// </div>
+//
+// results:
+// ■ ■ ■ □ ▬ ▬
+
+.energyMeterIncrements {
+  display: flex;
+  align-items: center;
+
+  .unavailable,
+  .used,
+  .unused {
+    display: block;
+    flex-grow: 1;
+    border-style: solid;
+  }
+  .unavailable {
+    height: 0;
+  }
+  &.small {
+    .unavailable,
+    .used,
+    .unused {
+      border-width: 1px;
+      margin: 0 0.5px;
+    }
+
+    .used,
+    .unused {
+      height: 2px;
+    }
+  }
+
+  &.medium {
+    .unavailable,
+    .used,
+    .unused {
+      border-width: 3px;
+      margin: 0 1px;
+    }
+
+    .used,
+    .unused {
+      height: 6px;
+    }
+  }
+
+  .unavailable {
+    border-color: #888;
+  }
+
+  &.solar > .used {
+    border-color: #f0631e;
+    background: #f0631e;
+  }
+
+  &.solar > .unused {
+    border-color: #f0631e;
+  }
+
+  &.arc > .used {
+    border-color: #79bbe8;
+    background: #79bbe8;
+  }
+
+  &.arc > .unused {
+    border-color: #79bbe8;
+  }
+
+  &.void > .used {
+    border-color: #8e749e;
+    background: #8e749e;
+  }
+
+  &.void > .unused {
+    border-color: #8e749e;
+  }
+
+  &.stasis > .used {
+    border-color: #4d88ff;
+    background: #4d88ff;
+  }
+
+  &.stasis > .unused {
+    border-color: #4d88ff;
+  }
+}

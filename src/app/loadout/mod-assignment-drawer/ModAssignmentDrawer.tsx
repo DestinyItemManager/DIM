@@ -1,4 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
+import PressTip from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -120,16 +122,47 @@ export default function ModAssignmentDrawer({
       >
         <div className={styles.container}>
           <div className={styles.assigned}>
-            {armor.map((item) => (
-              <div key={item.id} className={styles.itemAndMods}>
-                <ConnectedInventoryItem item={item} />
-                <Sockets
-                  item={item}
-                  lockedMods={itemModAssignments[item.id]}
-                  onSocketClick={onUpdateMods ? onSocketClick : undefined}
-                />
-              </div>
-            ))}
+            {armor.map((item) => {
+              const energyUsed = _.sumBy(
+                itemModAssignments[item.id],
+                (m) => m.plug.energyCost?.energyCost || 0
+              );
+              return (
+                <div key={item.id} className={styles.itemAndMods}>
+                  <div>
+                    <ConnectedInventoryItem item={item} />
+                    {item.energy && (
+                      <PressTip
+                        tooltip={
+                          <>
+                            {t('EnergyMeter.Energy')}
+                            <hr />
+                            {t('EnergyMeter.Used')}: {item.energy.energyUsed}
+                            <br />
+                            {t('EnergyMeter.Unused')}: {item.energy.energyUnused}
+                          </>
+                        }
+                        className={styles.energyMeter}
+                      >
+                        <EnergyIncrements
+                          energy={{
+                            energyType: item.energy.energyType,
+                            energyCapacity: item.energy.energyCapacity,
+                            energyUsed,
+                          }}
+                        />
+                      </PressTip>
+                    )}
+                  </div>
+
+                  <Sockets
+                    item={item}
+                    lockedMods={itemModAssignments[item.id]}
+                    onSocketClick={onUpdateMods ? onSocketClick : undefined}
+                  />
+                </div>
+              );
+            })}
           </div>
           {unassignedMods.length > 0 && (
             <>

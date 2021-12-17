@@ -118,7 +118,9 @@
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "EnergyMeter": {
-    "Energy": "Energy"
+    "Energy": "Energy",
+    "Used": "Used",
+    "Unused": "Unused"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"

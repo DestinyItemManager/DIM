@@ -30,7 +30,7 @@ export default function PlugSection({
   sortPlugs,
 }: {
   plugsWithMaxSelectable: PlugsWithMaxSelectable;
-  /** The current set of selected mods. Needed to figure out selection limits for some plugCategoryHashes. */
+  /** The current set of selected plugs. */
   selected: PluggableInventoryItemDefinition[];
   displayedStatHashes?: number[];
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
