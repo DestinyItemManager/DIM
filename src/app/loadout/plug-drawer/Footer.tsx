@@ -31,7 +31,7 @@ export default function Footer({
           {acceptButtonText}
         </button>
       </div>
-      <div className={styles.selectedMods}>
+      <div className={styles.selectedPlugs}>
         {selected.map((plug) => (
           <PlugDef
             key={getModRenderKey(plug)}

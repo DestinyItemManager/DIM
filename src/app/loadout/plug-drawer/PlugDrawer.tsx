@@ -7,6 +7,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
+import { produce } from 'immer';
 import _ from 'lodash';
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Sheet from '../../dim-ui/Sheet';
@@ -21,7 +22,7 @@ interface Props {
    */
   plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
   /**
-   * An array of mods that are already locked.
+   * An array of plugs that are pre selected.
    *
    * These must be a subset of the plugs in plugsWithMaxSelectableSets otherwise unknown plugs
    * will be discarded on accept.
@@ -35,7 +36,7 @@ interface Props {
   searchPlaceholder: string;
   /** Language for the search filter. */
   language: string;
-  /** A query string that is passed to the filtering logic to prefilter the available mods. */
+  /** A query string that is passed to the filtering logic to prefilter the available plugs. */
   initialQuery?: string;
   /** Displayed on the accept button in the footer. */
   acceptButtonText: string;
@@ -50,9 +51,9 @@ interface Props {
   ): boolean;
   sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
-  /** Called with the new lockedMods when the user accepts the new modset. */
-  onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
-  /** Called when the user accepts the new modset of closes the sheet. */
+  /** Called with the new selected plugs when the user clicks the accept button. */
+  onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
+  /** Called when the user accepts the new plugset or closes the sheet. */
   onClose(): void;
 }
 
@@ -91,62 +92,51 @@ export default function PlugDrawer({
   }, [isPhonePortrait, filterInput]);
 
   const handlePlugSelected = useCallback(
-    (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
-      // TODO (ryan) use immer
-      setSelected((oldState) => {
-        const newState = { ...oldState };
-        const oldSelected = oldState[plugSetHash];
-        const newSelected = oldSelected ? [...oldSelected] : [];
-        newSelected.push(mod);
-        if (sortPlugs) {
-          newSelected.sort(sortPlugs);
-        }
-        newState[plugSetHash] = newSelected;
-        return newState;
-      });
+    (plugSetHash: number, plug: PluggableInventoryItemDefinition) => {
+      setSelected(
+        produce((draft) => {
+          const selectedPlugs = draft[plugSetHash] || [];
+          selectedPlugs.push(plug);
+          if (sortPlugs) {
+            selectedPlugs.sort(sortPlugs);
+          }
+          draft[plugSetHash] = selectedPlugs;
+        })
+      );
     },
     [sortPlugs]
   );
 
   const handlePlugRemoved = useCallback(
-    (plugSetHash: number, mod: PluggableInventoryItemDefinition) => {
-      // TODO (ryan) use immer
-      setSelected((oldState) => {
-        const oldSelected = oldState[plugSetHash] || [];
-        const firstIndex = oldSelected.findIndex((locked) => locked.hash === mod.hash);
-
-        if (firstIndex >= 0) {
-          const newSelected = [...oldSelected];
-          newSelected.splice(firstIndex, 1);
-          const newState = { ...oldState };
-          newState[plugSetHash] = newSelected;
-          return newState;
-        }
-
-        return oldState;
-      });
+    (plugSetHash: number, plug: PluggableInventoryItemDefinition) => {
+      setSelected(
+        produce((draft) => {
+          const selectedPlugs = draft[plugSetHash];
+          if (selectedPlugs) {
+            const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
+            if (firstIndex >= 0) {
+              selectedPlugs.splice(firstIndex, 1);
+            }
+          }
+        })
+      );
     },
     [setSelected]
   );
 
   const handlePlugRemovedFromFooter = useCallback(
     (plug: PluggableInventoryItemDefinition) => {
-      // TODO (ryan) use immer
-      setSelected((oldState) => {
-        for (const plugSetHashAsString of Object.keys(oldState)) {
-          const plugSetHash = parseInt(plugSetHashAsString, 10);
-          const selected = oldState[plugSetHash] || [];
-          const firstIndex = selected.findIndex((s) => s.hash === plug.hash);
-          if (firstIndex !== -1) {
-            const newSelected = [...selected];
-            newSelected.splice(firstIndex, 1);
-            const newState = { ...oldState };
-            newState[plugSetHash] = newSelected;
-            return newState;
+      setSelected(
+        produce((draft) => {
+          for (const selectedPlugs of _.compact(Object.values(draft))) {
+            const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
+            if (firstIndex >= 0) {
+              selectedPlugs?.splice(firstIndex, 1);
+              return;
+            }
           }
-        }
-        return oldState;
-      });
+        })
+      );
     },
     [setSelected]
   );
@@ -193,11 +183,15 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const flatSelectedMods = _.compact(Object.values(selected).flat());
+  const flatSelectedPlugs = _.compact(Object.values(selected).flat());
+
+  if (sortPlugs) {
+    flatSelectedPlugs.sort(sortPlugs);
+  }
 
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
-      selected={flatSelectedMods}
+      selected={flatSelectedPlugs}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
@@ -242,7 +236,7 @@ export default function PlugDrawer({
           plugsWithMaxSelectable={plugsWithMaxSelectable}
           selected={selected[plugsWithMaxSelectable.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
-          isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedMods)}
+          isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedPlugs)}
           handlePlugSelected={handlePlugSelected}
           handlePlugRemoved={handlePlugRemoved}
           sortPlugs={sortPlugs}
