@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -8,7 +9,7 @@ import {
   getSimilarItem,
   MoveReservations,
 } from 'app/inventory/item-move-service';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
@@ -36,8 +37,9 @@ import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { errorLog, infoLog, warnLog } from 'app/utils/log';
+import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -92,6 +94,7 @@ export function applyLoadout(
     if ($featureFlags.debugMoves) {
       infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
     }
+    const stopTimer = timer('Loadout Application');
 
     const stores = storesSelector(getState());
 
@@ -163,6 +166,7 @@ export function applyLoadout(
     );
 
     await loadoutPromise;
+    stopTimer();
   };
 }
 
@@ -692,8 +696,8 @@ function applySocketOverrides(
         }
 
         overrideResults.total = modsForItem.length;
-        const successful = await dispatch(equipModsToItem(item.id, modsForItem, true));
-        overrideResults.successful += successful.length;
+        const result = await dispatch(equipModsToItem(item.id, modsForItem, true));
+        overrideResults.successful += result.successfulMods.length;
       }
     }
     return overrideResults;
@@ -768,6 +772,8 @@ function applyLoadoutMods(
     const modAssignments = fitMostMods(armor, mods, defs).itemModAssignments;
 
     const successfulMods: number[] = [];
+    const applyModsToItemResultPromises: Promise<{ successfulMods: number[]; errors: Error[] }>[] =
+      [];
 
     for (const item of armor) {
       const assignments = pickPlugPositions(defs, item, modAssignments[item.id]);
@@ -796,8 +802,23 @@ function applyLoadoutMods(
           continue;
         }
 
-        successfulMods.push(...(await dispatch(equipModsToItem(item.id, assignmentSequence))));
+        applyModsToItemResultPromises.push(dispatch(equipModsToItem(item.id, assignmentSequence)));
       }
+    }
+
+    const modsToItemResults = await Promise.all(applyModsToItemResultPromises);
+    for (const result of modsToItemResults) {
+      successfulMods.push(...result.successfulMods);
+    }
+
+    const firstError = modsToItemResults.flatMap((r) => r.errors).find(Boolean);
+
+    if (firstError) {
+      showNotification({
+        type: 'error',
+        title: t('AWA.Error'),
+        body: firstError.message,
+      });
     }
 
     // Return the mods that were successfully assigned (even if they didn't have to move)
@@ -814,18 +835,20 @@ function equipModsToItem(
   itemId: string,
   modsForItem: Assignment[],
   includeAssignToDefault = false
-): ThunkResult<number[]> {
+): ThunkResult<{ successfulMods: number[]; errors: Error[] }> {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
     const item = getItemAcrossStores(storesSelector(getState()), { id: itemId })!;
     const destiny2CoreSettings = destiny2CoreSettingsSelector(getState())!;
 
     if (!item.sockets) {
-      return [];
+      return { successfulMods: emptyArray(), errors: emptyArray() };
     }
 
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
+    const errors: Error[] = [];
+    const applyModResultPromises: Promise<number | undefined>[] = [];
 
     for (const { socketIndex, mod } of modsToApply) {
       // Use this socket
@@ -850,20 +873,9 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        try {
-          await dispatch(insertPlug(item, socket, mod.hash));
-          // Don't count removing mods as applying a mod successfully
-          if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod }, defs)) {
-            successfulMods.push(mod.hash);
-          }
-        } catch (e) {
-          const plugName = mod.displayProperties.name ?? 'Unknown Plug';
-          showNotification({
-            type: 'error',
-            title: t('AWA.Error'),
-            body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
-          });
-        }
+        applyModResultPromises.push(
+          dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs))
+        );
       } else {
         warnLog(
           'loadout mods',
@@ -876,6 +888,44 @@ function equipModsToItem(
       }
     }
 
-    return successfulMods;
+    const applyModsResults = await Promise.allSettled(applyModResultPromises);
+    for (const result of applyModsResults) {
+      if (result.status === 'fulfilled' && result.value) {
+        successfulMods.push(result.value);
+      } else if (result.status === 'rejected') {
+        errors.push(result.reason);
+      }
+    }
+
+    return { successfulMods, errors };
+  };
+}
+
+function applyMod(
+  item: DimItem,
+  socket: DimSocket,
+  mod: PluggableInventoryItemDefinition,
+  includeAssignToDefault: boolean,
+  defs: D2ManifestDefinitions
+): ThunkResult<number | undefined> {
+  return async (dispatch) => {
+    try {
+      await dispatch(insertPlug(item, socket, mod.hash));
+      // Don't count removing mods as applying a mod successfully
+      if (
+        includeAssignToDefault ||
+        !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod }, defs)
+      ) {
+        return mod.hash;
+      }
+    } catch (e) {
+      throw new Error(
+        t('AWA.ErrorMessage', {
+          error: e.message,
+          item: item.name,
+          plug: mod.displayProperties.name ?? 'Unknown Plug',
+        })
+      );
+    }
   };
 }
