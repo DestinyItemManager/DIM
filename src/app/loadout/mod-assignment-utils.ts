@@ -359,9 +359,8 @@ export function pickPlugPositions(
   // return it to its default (usually "Empty Mod Socket")
 
   // so we fall back to the first item in its reusable PlugSet
-  // so we fall back to the first item in its reusable PlugSet
   for (const socket of existingModSockets) {
-    const defaultModHash = getDefaultPlugHash(socket);
+    const defaultModHash = getDefaultPlugHash(socket, defs);
     const mod =
       defaultModHash &&
       (defs.InventoryItem.get(defaultModHash) as PluggableInventoryItemDefinition);
@@ -393,7 +392,7 @@ export function pickPlugPositions(
 export function createPluggingStrategy(
   item: DimItem,
   assignments: Assignment[],
-  defs?: D2ManifestDefinitions
+  defs: D2ManifestDefinitions
 ): PluggingAction[] {
   // stuff we need to apply, that frees up energy. we'll apply these first
   const requiredRegains: PluggingAction[] = [];
@@ -623,7 +622,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 export function isAssigningToDefault(
   item: DimItem,
   assignment: Assignment,
-  defs?: D2ManifestDefinitions
+  defs: D2ManifestDefinitions
 ) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {

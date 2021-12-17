@@ -5,6 +5,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { getDefaultPlugHash } from '../mod-utils';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -56,8 +57,11 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       }
     }
 
-    if (!toSave && socket.socketDefinition.singleInitialItemHash) {
-      toSave = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+    if (!toSave) {
+      const plugHash = getDefaultPlugHash(socket, defs);
+      if (plugHash) {
+        toSave = defs.InventoryItem.get(plugHash);
+      }
     }
 
     if (
