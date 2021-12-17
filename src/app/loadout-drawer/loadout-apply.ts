@@ -784,7 +784,7 @@ function applyLoadoutMods(
         if (
           skipArmorsWithNoAssignments &&
           // if this assignmentSequence would return all sockets to their default
-          assignmentSequence.every((assignment) => isAssigningToDefault(item, assignment))
+          assignmentSequence.every((assignment) => isAssigningToDefault(item, assignment, defs))
         ) {
           infoLog(
             'loadout mods',
@@ -833,7 +833,7 @@ function equipModsToItem(
       // If the plug is already inserted we can skip this
       if (socket.plugged?.plugDef.hash === mod.hash) {
         // Don't count removing mods as applying a mod successfully
-        if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod })) {
+        if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod }, defs)) {
           successfulMods.push(mod.hash);
         }
         continue;
@@ -853,7 +853,7 @@ function equipModsToItem(
         try {
           await dispatch(insertPlug(item, socket, mod.hash));
           // Don't count removing mods as applying a mod successfully
-          if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod })) {
+          if (includeAssignToDefault || !isAssigningToDefault(item, { socketIndex, mod }, defs)) {
             successfulMods.push(mod.hash);
           }
         } catch (e) {
