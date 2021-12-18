@@ -90,8 +90,6 @@
     "@types/react-dnd-multi-backend": "^6.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.0.3",
-    "@types/react-router": "^5.1.11",
-    "@types/react-router-dom": "^5.1.4",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.2.0",
     "@types/react-virtualized": "^9.21.1",
