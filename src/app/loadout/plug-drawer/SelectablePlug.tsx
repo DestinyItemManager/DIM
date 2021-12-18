@@ -13,6 +13,7 @@ export default function SelectablePlug({
   plug,
   selected,
   selectable,
+  removable,
   displayedStatHashes,
   onPlugSelected,
   onPlugRemoved,
@@ -20,6 +21,7 @@ export default function SelectablePlug({
   plug: PluggableInventoryItemDefinition;
   selected: boolean;
   selectable: boolean;
+  removable: boolean;
   displayedStatHashes?: number[];
   onPlugSelected(plug: PluggableInventoryItemDefinition): void;
   onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
@@ -73,7 +75,7 @@ export default function SelectablePlug({
   }
 
   return (
-    <ClosableContainer onClose={selected ? onClose : undefined}>
+    <ClosableContainer onClose={selected && removable ? onClose : undefined}>
       <div
         className={clsx(styles.plug, {
           [styles.lockedPerk]: selected,

@@ -26,13 +26,12 @@ import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
-import { PlugsWithMaxSelectable } from './plug-drawer/PlugSection';
+import { PlugSet } from './plug-drawer/PlugSection';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
 
-const sortModPickerPlugGroups = (a: PlugsWithMaxSelectable, b: PlugsWithMaxSelectable) =>
-  sortModGroups(a.plugs, b.plugs);
+const sortModPickerPlugGroups = (a: PlugSet, b: PlugSet) => sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
   /**
@@ -61,7 +60,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   language: string;
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
+  plugSets: PlugSet[];
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -84,10 +83,10 @@ function mapStateToProps() {
       owner,
       plugCategoryHashWhitelist,
       currentStore
-    ): PlugsWithMaxSelectable[] => {
+    ): PlugSet[] => {
       const artificeString = defs?.InventoryItem.get(3727270518).displayProperties.name;
 
-      const plugsWithMaxSelectableSets: { [plugSetHash: number]: PlugsWithMaxSelectable } = {};
+      const plugSets: { [plugSetHash: number]: PlugSet } = {};
       if (!profileResponse || !defs) {
         return [];
       }
@@ -153,32 +152,30 @@ function mapStateToProps() {
             ? sockets.length
             : MAX_SLOT_INDEPENDENT_MODS;
 
-          if (plugs.length && !plugsWithMaxSelectableSets[plugSetHash]) {
-            plugsWithMaxSelectableSets[plugSetHash] = {
+          if (plugs.length && !plugSets[plugSetHash]) {
+            plugSets[plugSetHash] = {
               plugSetHash,
               maxSelectable,
+              selectionType: 'multi',
               plugs,
             };
             if (
               maxSelectable === 1 &&
               armor2PlugCategoryHashes.includes(plugs[0].plug.plugCategoryHash)
             ) {
-              plugsWithMaxSelectableSets[plugSetHash].headerSuffix = artificeString;
+              plugSets[plugSetHash].headerSuffix = artificeString;
             }
-          } else if (
-            plugs.length &&
-            plugsWithMaxSelectableSets[plugSetHash].maxSelectable < sockets.length
-          ) {
-            plugsWithMaxSelectableSets[plugSetHash].maxSelectable = sockets.length;
+          } else if (plugs.length && plugSets[plugSetHash].maxSelectable < sockets.length) {
+            plugSets[plugSetHash].maxSelectable = sockets.length;
           }
         }
       }
-      return Object.values(plugsWithMaxSelectableSets);
+      return Object.values(plugSets);
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     language: languageSelector(state),
-    plugsWithMaxSelectableSets: unlockedPlugSetsSelector(state, props),
+    plugSets: unlockedPlugSetsSelector(state, props),
   });
 }
 
@@ -186,7 +183,7 @@ function mapStateToProps() {
  * A sheet to pick mods that are required in the final loadout sets.
  */
 function ModPicker({
-  plugsWithMaxSelectableSets,
+  plugSets,
   language,
   lockedMods,
   initialQuery,
@@ -245,11 +242,9 @@ function ModPicker({
   const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
     () =>
       _.partition(lockedMods, (mod) =>
-        plugsWithMaxSelectableSets.some((plugSet) =>
-          plugSet.plugs.some((plug) => plug.hash === mod.hash)
-        )
+        plugSets.some((plugSet) => plugSet.plugs.some((plug) => plug.hash === mod.hash))
       ),
-    [lockedMods, plugsWithMaxSelectableSets]
+    [lockedMods, plugSets]
   );
 
   const onAcceptWithHiddenSelectedMods = useCallback(
@@ -266,7 +261,7 @@ function ModPicker({
       acceptButtonText={t('LB.SelectMods')}
       language={language}
       initialQuery={initialQuery}
-      plugsWithMaxSelectableSets={plugsWithMaxSelectableSets}
+      plugSets={plugSets}
       initiallySelected={visibleSelectedMods}
       minHeight={minHeight}
       isPlugSelectable={isModSelectable}

@@ -9,19 +9,26 @@ import SelectablePlug from './SelectablePlug';
  * a list of plugs, plus some metadata about:
  * - the maximum we should let the user choose at once
  * - the plugset whence these plugs originate
+ * - the behaveour we use for selecting plugs
  */
-export interface PlugsWithMaxSelectable {
+export interface PlugSet {
   /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
   /** A list of plugs from this plugset. */
   plugs: PluggableInventoryItemDefinition[];
   /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
+  /**
+   * The select behaveour of the plug set.
+   * multi: how armour mods are selected in game, you need to manually remove ones that have been added.
+   * single: how abilities in subclasses are selected, selecting an option replaces the current one.
+   */
+  selectionType: 'multi' | 'single';
   headerSuffix?: string;
 }
 
 export default function PlugSection({
-  plugsWithMaxSelectable,
+  plugSet,
   selected,
   displayedStatHashes,
   isPlugSelectable,
@@ -29,20 +36,25 @@ export default function PlugSection({
   handlePlugRemoved,
   sortPlugs,
 }: {
-  plugsWithMaxSelectable: PlugsWithMaxSelectable;
+  plugSet: PlugSet;
   /** The current set of selected plugs. */
   selected: PluggableInventoryItemDefinition[];
   displayedStatHashes?: number[];
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
-  handlePlugSelected(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  handlePlugSelected(
+    plugSetHash: number,
+    mod: PluggableInventoryItemDefinition,
+    selectionType: 'multi' | 'single'
+  ): void;
   handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
 }) {
-  const { plugs, maxSelectable, plugSetHash, headerSuffix } = plugsWithMaxSelectable;
+  const { plugs, maxSelectable, plugSetHash, headerSuffix, selectionType } = plugSet;
 
   const handlePlugSelectedInternal = useCallback(
-    (plug: PluggableInventoryItemDefinition) => handlePlugSelected(plugSetHash, plug),
-    [handlePlugSelected, plugSetHash]
+    (plug: PluggableInventoryItemDefinition) =>
+      handlePlugSelected(plugSetHash, plug, selectionType),
+    [handlePlugSelected, plugSetHash, selectionType]
   );
 
   const handlePlugRemovedInternal = useCallback(
@@ -77,7 +89,12 @@ export default function PlugSection({
                   selected={selected.some((s) => s.hash === plug.hash)}
                   plug={plug}
                   displayedStatHashes={displayedStatHashes}
-                  selectable={maxSelectable > selected.length && isPlugSelectable(plug)}
+                  selectable={
+                    plugSet.selectionType === 'multi'
+                      ? maxSelectable > selected.length && isPlugSelectable(plug)
+                      : !selected.some((s) => s.hash === plug.hash) && isPlugSelectable(plug)
+                  }
+                  removable={plugSet.selectionType === 'multi'}
                   onPlugSelected={handlePlugSelectedInternal}
                   onPlugRemoved={handlePlugRemovedInternal}
                 />

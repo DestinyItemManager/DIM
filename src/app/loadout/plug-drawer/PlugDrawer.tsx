@@ -13,18 +13,18 @@ import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } f
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
-import PlugSection, { PlugsWithMaxSelectable } from './PlugSection';
+import PlugSection, { PlugSet } from './PlugSection';
 
 interface Props {
   /**
    * A list of plug items that come from a PlugSet, along with the maximum number of these plugs
    * that can be chosen.
    */
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[];
+  plugSets: PlugSet[];
   /**
    * An array of plugs that are pre selected.
    *
-   * These must be a subset of the plugs in plugsWithMaxSelectableSets otherwise unknown plugs
+   * These must be a subset of the plugs in plugSets otherwise unknown plugs
    * will be discarded on accept.
    */
   initiallySelected: PluggableInventoryItemDefinition[];
@@ -49,7 +49,7 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
-  sortPlugGroups?: Comparator<PlugsWithMaxSelectable>;
+  sortPlugGroups?: Comparator<PlugSet>;
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the new selected plugs when the user clicks the accept button. */
   onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
@@ -61,7 +61,7 @@ interface Props {
  * A sheet to pick plugs.
  */
 export default function PlugDrawer({
-  plugsWithMaxSelectableSets,
+  plugSets,
   initiallySelected,
   displayedStatHashes,
   title,
@@ -80,7 +80,7 @@ export default function PlugDrawer({
   const defs = useD2Definitions()!;
   const [query, setQuery] = useState(initialQuery || '');
   const [selected, setSelected] = useState(() =>
-    createInternalSelectedState(plugsWithMaxSelectableSets, initiallySelected)
+    createInternalSelectedState(plugSets, initiallySelected)
   );
   const filterInput = useRef<SearchFilterRef | null>(null);
   const isPhonePortrait = useIsPhonePortrait();
@@ -92,10 +92,15 @@ export default function PlugDrawer({
   }, [isPhonePortrait, filterInput]);
 
   const handlePlugSelected = useCallback(
-    (plugSetHash: number, plug: PluggableInventoryItemDefinition) => {
+    (
+      plugSetHash: number,
+      plug: PluggableInventoryItemDefinition,
+      selectionType: 'multi' | 'single'
+    ) => {
       setSelected(
         produce((draft) => {
-          const selectedPlugs = draft[plugSetHash] || [];
+          const currentlySelected = draft[plugSetHash] || [];
+          const selectedPlugs = selectionType === 'multi' ? currentlySelected : [];
           selectedPlugs.push(plug);
           if (sortPlugs) {
             selectedPlugs.sort(sortPlugs);
@@ -149,7 +154,7 @@ export default function PlugDrawer({
 
   const queryFilteredPlugSets = useMemo(() => {
     const regexp = startWordRegexp(query, language);
-    const rtn: PlugsWithMaxSelectable[] = [];
+    const rtn: PlugSet[] = [];
 
     const searchFilter = (plug: PluggableInventoryItemDefinition) =>
       regexp.test(plug.displayProperties.name) ||
@@ -165,17 +170,15 @@ export default function PlugDrawer({
         );
       });
 
-    for (const { plugs, maxSelectable, plugSetHash, headerSuffix } of plugsWithMaxSelectableSets) {
+    for (const plugSet of plugSets) {
       rtn.push({
-        plugSetHash,
-        maxSelectable,
-        headerSuffix,
-        plugs: query.length ? plugs.filter(searchFilter) : plugs,
+        ...plugSet,
+        plugs: query.length ? plugSet.plugs.filter(searchFilter) : plugSet.plugs,
       });
     }
 
     return rtn;
-  }, [query, plugsWithMaxSelectableSets, defs.SandboxPerk, language]);
+  }, [query, plugSets, defs.SandboxPerk, language]);
 
   if (sortPlugGroups) {
     queryFilteredPlugSets.sort(sortPlugGroups);
@@ -183,15 +186,29 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
+  // Flatten our the plugs and sort so the footer has a predictable order
   const flatSelectedPlugs = _.compact(Object.values(selected).flat());
-
   if (sortPlugs) {
     flatSelectedPlugs.sort(sortPlugs);
   }
 
+  const footerPlugs = useMemo(() => {
+    const rtn: { plug: PluggableInventoryItemDefinition; selectionType: 'multi' | 'single' }[] = [];
+    // We decorate each plug with its selection type so we can handle removal appropriately in the footer
+    // This allows us to preserve the sort order
+    for (const plug of flatSelectedPlugs) {
+      const selectionType =
+        plugSets.find((set) => set.plugs.some((p) => p.hash === plug.hash))?.selectionType ||
+        'multi';
+      rtn.push({ plug, selectionType });
+    }
+
+    return rtn;
+  }, [flatSelectedPlugs, plugSets]);
+
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
-      selected={flatSelectedPlugs}
+      selected={footerPlugs}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
@@ -230,11 +247,11 @@ export default function PlugDrawer({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {queryFilteredPlugSets.map((plugsWithMaxSelectable) => (
+      {queryFilteredPlugSets.map((plugSet) => (
         <PlugSection
-          key={plugsWithMaxSelectable.plugSetHash}
-          plugsWithMaxSelectable={plugsWithMaxSelectable}
-          selected={selected[plugsWithMaxSelectable.plugSetHash] ?? emptyArray()}
+          key={plugSet.plugSetHash}
+          plugSet={plugSet}
+          selected={selected[plugSet.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
           isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedPlugs)}
           handlePlugSelected={handlePlugSelected}
@@ -265,7 +282,7 @@ type InternalSelectedState = {
  * selected from the bucket specific set.
  */
 function createInternalSelectedState(
-  plugsWithMaxSelectableSets: PlugsWithMaxSelectable[],
+  plugSets: PlugSet[],
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
   const rtn: InternalSelectedState = {};
@@ -275,7 +292,7 @@ function createInternalSelectedState(
     // smallest number of options is first. Because artificer armor has a socket that is a
     // subset of the normal slot specific sockets, this ensure we will fill it with plugs
     // first.
-    const possibleSets = plugsWithMaxSelectableSets
+    const possibleSets = plugSets
       .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
       .sort(compareBy((set) => set.plugs.length));
 
