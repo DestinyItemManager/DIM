@@ -8,7 +8,6 @@
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "orta.vscode-jest",
-    "msjsdiag.debugger-for-chrome",
     "stylelint.vscode-stylelint"
   ]
 }

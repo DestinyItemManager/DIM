@@ -4,6 +4,7 @@
 * Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Improved the time taken to apply a loadout with mods.
 * Stasis subclass can also be applied in the Loadouts page.
+* Fixed showing the amount of Dawning Spirit in the holiday oven popup.
 
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 
