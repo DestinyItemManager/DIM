@@ -112,7 +112,9 @@
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energia"
+    "Energy": "Energia",
+    "Unused": "Não usado",
+    "Used": "Usado"
   },
   "ErrorBoundary": {
     "Title": "Algo deu errado"
@@ -503,6 +505,7 @@
     "Any": "Qualquer classe",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
     "AppliedModsWarn": "Apenas {{successful}} de {{total}} mods puderam ser aplicados.",
+    "AppliedOverridesWarn": "Apenas {{successful}} de {{total}} opções da subclasse foram atualizadas.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "Apply": "Aplicar",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Enviando set com um item para o cofre.",
     "NotificationMessageMods": "Será aplicado um único mod e serão removidos todos os demais de sua armadura equipada.",
     "NotificationMessageMods_plural": "Serão aplicados {{count}} mods e serão removidos todos os demais de sua armadura equipada.",
+    "NotificationMessageSubclass": "Será aplicado 1 opção na subclasse equipada.",
+    "NotificationMessageSubclass_plural": "Serão aplicadas {{count}} opções na subclasse equipada.",
     "NotificationMessage_female": "Aplicando set com 1 item na {{store}}",
     "NotificationMessage_female_plural": "Aplicando set com {{count}} itens na {{store}}",
     "NotificationMessage_male": "Aplicando set com 1 item no {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favoritar {{itemType}}",
+      "Favorited": "Favoritado",
+      "Unfavorite": "Desfavoritar {{itemType}}",
+      "Unfavorited": "Desfavoritado"
+    },
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",

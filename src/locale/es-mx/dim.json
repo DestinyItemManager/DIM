@@ -2,7 +2,7 @@
   "AWA": {
     "ConfirmDescription": "Por favor, usa la App Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
     "ConfirmTitle": "Confirmar Acción",
-    "Error": "Error cambiando modificadores o ventajas",
+    "Error": "Error cambiando mods o perks",
     "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
     "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
   },
@@ -112,7 +112,9 @@
     "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energía"
+    "Energy": "Energía",
+    "Unused": "Sin usar",
+    "Used": "Usado"
   },
   "ErrorBoundary": {
     "Title": "Algo salió mal"
@@ -503,6 +505,7 @@
     "Any": "Cualquier clase",
     "AppliedError": "Ninguno de los objetos en tu cargador de equipo pudo ser transferido.",
     "AppliedModsWarn": "Solo se han podido aplicar {{successful}} de {{total}} mods.",
+    "AppliedOverridesWarn": "Sólo {{successful}} de {{total}} opciones de subclase pudieron ser actualizadas.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "Apply": "Aplicar",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
     "NotificationMessageMods": "Esto aplicará 1 mod y eliminará todos los otros mods de tu armadura equipada.",
     "NotificationMessageMods_plural": "Esto aplicará {{count}} mods y eliminará todos los demás mods de tu armadura equipada.",
+    "NotificationMessageSubclass": "Esto aplicará 1 opción a la subclase equipada.",
+    "NotificationMessageSubclass_plural": "Esto aplicará {{count}} opciones a la subclase equipada.",
     "NotificationMessage_female": "Aplicando equipación con 1 objeto a {{store}}",
     "NotificationMessage_female_plural": "Aplicando equipación con {{count}} objetos a {{store}}",
     "NotificationMessage_male": "Aplicando equipación con 1 objeto a {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir Equitativamente",
     "Equip": "Equipa",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} Favorita",
+      "Favorited": "Favoritos",
+      "Unfavorite": "{{itemType}} Menospreciada",
+      "Unfavorited": "Quitar de Favoritos"
+    },
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",

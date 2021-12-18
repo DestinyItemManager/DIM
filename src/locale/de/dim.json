@@ -112,7 +112,9 @@
     "WrongFields": "CSV muss die Spalten 'Id', 'Notes', 'Tag' und 'Hash' haben."
   },
   "EnergyMeter": {
-    "Energy": "Energie"
+    "Energy": "Energie",
+    "Unused": "Nicht benutzt",
+    "Used": "Benutzt"
   },
   "ErrorBoundary": {
     "Title": "Ein Fehler ist aufgetreten"
@@ -503,6 +505,7 @@
     "Any": "Jede Klasse",
     "AppliedError": "Keines der Gegenstände in deiner Ausrüstung konnte übertragen werden.",
     "AppliedModsWarn": "Es konnten nur {{successful}} von {{total}} Mods angewendet werden.",
+    "AppliedOverridesWarn": "Es konnten nur {{successful}} von {{total}} Fokus-Optionen angewendet werden.",
     "AppliedWarn": "Deine Ausrüstung wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
     "Apply": "Anwenden",
     "ApplySearch": "Übertrage Suche \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
     "NotificationMessageMods": "Dies wird 1 Mod anwenden und alle anderen Mods von deiner ausgerüsteten Rüstung entfernen.",
     "NotificationMessageMods_plural": "Dies wird {{count}} Mods anwenden und alle anderen Mods von deiner ausgerüsteten Rüstung entfernen.",
+    "NotificationMessageSubclass": "Dies wird 1 Option auf den ausgerüsteten Fokus anwenden.",
+    "NotificationMessageSubclass_plural": "Dies wird {{count}} Optionen auf den ausgerüsteten Fokus anwenden.",
     "NotificationMessage_female": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
     "NotificationMessage_female_plural": "Übertrage Ausrüstung mit {{count}} Gegenständen auf {{store}}",
     "NotificationMessage_male": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} zu Favoriten hinzufügen",
+      "Favorited": "Favorit",
+      "Unfavorite": "{{itemType}} aus Favoriten entfernen",
+      "Unfavorited": "Kein Favorit"
+    },
     "Infuse": "Infundieren",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
