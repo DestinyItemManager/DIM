@@ -110,8 +110,12 @@ export function fitMostMods(
   const bucketSpecificAssignments: ModAssignments = {};
 
   // just an arbitrarily large number
+  // The total cost to assign all the mods to a set
+  // this includes energy used to upgrade and energy wasted on changing elements
   let assignmentEnergyCost = 10000;
+  // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = 10000;
+  // The total number of conditional mods that are activated in the assignment
   let assignmentActiveConditionalMods = 0;
 
   for (const item of items) {
@@ -236,9 +240,19 @@ export function fitMostMods(
         }
 
         // This is after the item loop
+        // Skip further checks if we have more unassigned mods in this assignment
+        if (unassignedModCount > assignmentUnassignedModCount) {
+          continue;
+        }
+
         let energyUsedAndWasted = 0;
         for (const [itemId, { assigned }] of Object.entries(assignments)) {
           energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
+        }
+
+        // Skip further checks if energy used and wasted is higher for this assignment
+        if (energyUsedAndWasted > assignmentEnergyCost) {
+          continue;
         }
 
         let totalActiveConditionalMods = 0;
@@ -249,14 +263,12 @@ export function fitMostMods(
           totalActiveConditionalMods += calculateTotalActivatedMods(assigned, allAssignedMods);
         }
 
-        // if the cost of the new assignment set is better than the old one
-        // we replace it and carry on until we have exhausted all permutations.
-        if (
-          unassignedModCount < assignmentUnassignedModCount ||
-          (unassignedModCount <= assignmentUnassignedModCount &&
-            energyUsedAndWasted < assignmentEnergyCost &&
-            totalActiveConditionalMods > assignmentActiveConditionalMods)
-        ) {
+        // at this point we know
+        // 1. We have less or the same unassigned mods
+        // 2. Less or the same energy used and wasted by energy changes/upgrade
+        // So now we check if we have more conditional mods active and if we do we
+        // save the new assignment
+        if (totalActiveConditionalMods > assignmentActiveConditionalMods) {
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
@@ -589,7 +601,7 @@ function calculateEnergyChange(
 
 /**
  * Calculates the total number of active conditional mods on the item.
- * Used to ensure mod assignments favour results that activate these mods.
+ * Used to ensure mod assignments favor results that activate these mods.
  */
 function calculateTotalActivatedMods(
   assignedModsForItem: PluggableInventoryItemDefinition[],
@@ -606,6 +618,10 @@ function calculateTotalActivatedMods(
   return activeMods;
 }
 
+/**
+ * Determines whether a conditional mod has had its requirements met by the other mods.
+ * Currently only used for radiant light and powerful friends
+ */
 function isPlugActive(
   mod: PluggableInventoryItemDefinition,
   modsForItem: PluggableInventoryItemDefinition[],
@@ -615,7 +631,6 @@ function isPlugActive(
     mod.hash === modsWithConditionalStats.powerfulFriends ||
     mod.hash === modsWithConditionalStats.radiantLight
   ) {
-    // Powerful Friends & Radiant Light
     // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
     return Boolean(
       modsForItem.some(
