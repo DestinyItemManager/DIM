@@ -314,9 +314,10 @@ export function pickPlugPositions(
   const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []).sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
-    compareBy(
-      (socket) =>
-        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash!).reusablePlugItems.length
+    compareBy((socket) =>
+      socket.socketDefinition.reusablePlugSetHash
+        ? defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash).reusablePlugItems.length
+        : 999
     )
   );
 
