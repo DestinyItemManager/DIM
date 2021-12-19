@@ -279,6 +279,7 @@ export function fitMostMods(
             totalActiveConditionalMods === assignmentActiveConditionalMods &&
             energyUsedAndWasted <= assignmentEnergyCost)
         ) {
+          // We save this assignment and its metadata because it is determined to be better
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
