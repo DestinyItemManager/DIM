@@ -264,7 +264,7 @@ export function fitMostMods(
         }
 
         // at this point we know
-        // 1. We have less or the same unassigned mods
+        // 1. We have fewer or the same unassigned mods
         // 2. Less or the same energy used and wasted by energy changes/upgrade
         // So now we check if we have more conditional mods active and if we do we
         // save the new assignment
