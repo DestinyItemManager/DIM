@@ -116,7 +116,7 @@ export function fitMostMods(
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
   // The total number of conditional mods that are activated in the assignment
-  let assignmentActiveConditionalMods = 0;
+  let assignmentActiveConditionalMods = Number.MIN_SAFE_INTEGER;
 
   for (const item of items) {
     bucketSpecificAssignments[item.id] = { assigned: [], unassigned: [] };
@@ -245,16 +245,6 @@ export function fitMostMods(
           continue;
         }
 
-        let energyUsedAndWasted = 0;
-        for (const [itemId, { assigned }] of Object.entries(assignments)) {
-          energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
-        }
-
-        // Skip further checks if energy used and wasted is higher for this assignment
-        if (energyUsedAndWasted > assignmentEnergyCost) {
-          continue;
-        }
-
         let totalActiveConditionalMods = 0;
         const modsAssigned = Object.values(assignments).map((assignment) => assignment.assigned);
         const allAssignedMods = modsAssigned.flat();
@@ -262,12 +252,33 @@ export function fitMostMods(
           totalActiveConditionalMods += calculateTotalActivatedMods(assigned, allAssignedMods);
         }
 
-        // at this point we know
-        // 1. We have fewer or the same unassigned mods
-        // 2. Less or the same energy used and wasted by energy changes/upgrade
-        // So now we check if we have more conditional mods active and if we do we
-        // save the new assignment
-        if (totalActiveConditionalMods > assignmentActiveConditionalMods) {
+        // Skip further checks if we have less active condition mods and we have an equal amount
+        // of unassigned mods. If we have less unassigned mods we should continue because its a better
+        // assignment
+        if (
+          unassignedModCount === assignmentUnassignedModCount &&
+          totalActiveConditionalMods < assignmentActiveConditionalMods
+        ) {
+          continue;
+        }
+
+        let energyUsedAndWasted = 0;
+        for (const [itemId, { assigned }] of Object.entries(assignments)) {
+          energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
+        }
+
+        // One of the following three conditions needs to be true for the assignment to be better
+        if (
+          // Less unassigned mods
+          unassignedModCount < assignmentUnassignedModCount ||
+          // The same amount of unassigned mods and more active conditional mods
+          (unassignedModCount === assignmentUnassignedModCount &&
+            totalActiveConditionalMods > assignmentActiveConditionalMods) ||
+          // The same amount of unassigned and active mods but the assignment is cheaper
+          (unassignedModCount === assignmentUnassignedModCount &&
+            totalActiveConditionalMods === assignmentActiveConditionalMods &&
+            energyUsedAndWasted <= assignmentEnergyCost)
+        ) {
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
