@@ -30,6 +30,7 @@ import {
   isAssigningToDefault,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
@@ -49,7 +50,6 @@ import { savePreviousLoadout } from './actions';
 import {
   LoadoutApplyPhase,
   LoadoutItemState,
-  LoadoutModResult,
   LoadoutModState,
   LoadoutSocketOverrideState,
   LoadoutStateGetter,
@@ -57,6 +57,7 @@ import {
   makeLoadoutApplyState,
   setLoadoutApplyPhase,
   setModResult,
+  setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
 import { backupLoadout } from './loadout-utils';
@@ -419,14 +420,19 @@ function doApplyLoadout(
 
         // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-        const { total, successful } = await dispatch(applySocketOverrides(itemsWithOverrides));
-        scope.totalItemOverrides = total;
-        scope.successfulItemOverrides = successful;
+        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState));
+        const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
+          Object.values(r.results)
+        );
+        const successfulItemOverrides = count(
+          overrideResults,
+          (r) => r.state === LoadoutSocketOverrideState.Applied
+        );
         infoLog(
           'loadout socket overrides',
           'Socket overrides applied',
-          scope.successfulItemOverrides,
-          scope.totalItemOverrides
+          successfulItemOverrides,
+          overrideResults.length
         );
       }
 
@@ -435,7 +441,7 @@ function doApplyLoadout(
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         try {
           infoLog('loadout mods', 'Mods to apply', modsToApply);
-          await dispatch(applyLoadoutMods(store.id, modsToApply, getLoadoutState, setLoadoutState));
+          await dispatch(applyLoadoutMods(store.id, modsToApply, setLoadoutState));
           const { modStates } = getLoadoutState();
           infoLog(
             'loadout mods',
@@ -732,13 +738,13 @@ export function clearItemsOffCharacter(
  * socket overrides, or applies the default item plug. If the plug is already in the socket
  * we don't actually make an API call, it is just counted as a success.
  */
+// TODO: Leave unmentioned sockets alone!
 function applySocketOverrides(
-  itemsWithOverrides: LoadoutItem[]
-): ThunkResult<{ total: number; successful: number }> {
+  itemsWithOverrides: LoadoutItem[],
+  setLoadoutState: LoadoutStateUpdater
+): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
-
-    const overrideResults = { total: 0, successful: 0 };
 
     for (const item of itemsWithOverrides) {
       if (item.socketOverrides) {
@@ -753,7 +759,7 @@ function applySocketOverrides(
 
           for (const socket of sockets) {
             const socketIndex = socket.socketIndex;
-            let modHash = item.socketOverrides[socketIndex];
+            let modHash: number | undefined = item.socketOverrides[socketIndex];
 
             // So far only subclass abilities are known to be able to socket the initial item
             // aspects and fragments return a 500
@@ -761,7 +767,7 @@ function applySocketOverrides(
               modHash === undefined &&
               category.category.hash === SocketCategoryHashes.Abilities
             ) {
-              modHash = socket.socketDefinition.singleInitialItemHash;
+              modHash = getDefaultPlugHash(socket, defs);
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
@@ -770,12 +776,18 @@ function applySocketOverrides(
           }
         }
 
-        overrideResults.total = modsForItem.length;
-        const result = await dispatch(equipModsToItem(item.id, modsForItem, true));
-        overrideResults.successful += result.successfulMods.length;
+        const handleSuccess = ({ socketIndex }: Assignment) =>
+          setLoadoutState(
+            setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
+          );
+        const handleFailure = ({ socketIndex }: Assignment, error?: Error) =>
+          setLoadoutState(
+            setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Failed, error)
+          );
+
+        await dispatch(equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, true));
       }
     }
-    return overrideResults;
   };
 }
 
@@ -795,7 +807,6 @@ function applyLoadoutMods(
   storeId: string,
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
-  getLoadoutState: LoadoutStateGetter,
   setLoadoutState: LoadoutStateUpdater,
   /** if an item would be wiped to default in all sockets, don't do anything to that item */
   skipArmorsWithNoAssignments = true,
@@ -837,6 +848,11 @@ function applyLoadoutMods(
 
     const applyModsPromises: Promise<void>[] = [];
 
+    const handleSuccess = ({ mod }: Assignment) =>
+      setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
+    const handleFailure = ({ mod }: Assignment, error?: Error) =>
+      setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Failed, error }));
+
     for (const item of armor) {
       const assignments = pickPlugPositions(defs, item, itemModAssignments[item.id]);
       const pluggingSteps = createPluggingStrategy(item, assignments, defs);
@@ -864,7 +880,7 @@ function applyLoadoutMods(
         }
 
         applyModsPromises.push(
-          dispatch(equipModsToItem(item.id, assignmentSequence, getLoadoutState, setLoadoutState))
+          dispatch(equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure))
         );
       }
     }
@@ -911,8 +927,10 @@ function allModsAreAlreadyApplied(armor: DimItem[], modHashes: number[]) {
 function equipModsToItem(
   itemId: string,
   modsForItem: Assignment[],
-  getLoadoutState: LoadoutStateGetter,
-  setLoadoutState: LoadoutStateUpdater,
+  /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
+  onSuccess: (assignment: Assignment) => void,
+  /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
+  onFailure: (assignment: Assignment, error?: Error) => void,
   includeAssignToDefault = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -935,7 +953,7 @@ function equipModsToItem(
       if (socket.plugged?.plugDef.hash === mod.hash) {
         // Don't count removing mods as applying a mod successfully
         if (includeAssignToDefault || !isAssigningToDefault(item, assignment, defs)) {
-          setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
+          onSuccess(assignment);
         }
         continue;
       }
@@ -957,7 +975,11 @@ function equipModsToItem(
               applyMod(item, socket, mod, includeAssignToDefault, defs)
             );
             if (result) {
-              setLoadoutState(setModResult(result));
+              if (result.success) {
+                onSuccess(assignment);
+              } else {
+                onFailure(assignment, result.error);
+              }
             }
           })()
         );
@@ -972,8 +994,8 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        // TODO: exception/error here explaining why
-        setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Failed }));
+        // TODO: error here explaining why
+        onFailure(assignment);
       }
     }
 
@@ -988,7 +1010,7 @@ function applyMod(
   mod: PluggableInventoryItemDefinition,
   includeAssignToDefault: boolean,
   defs: D2ManifestDefinitions
-): ThunkResult<LoadoutModResult | undefined> {
+): ThunkResult<{ success: boolean; error?: Error } | undefined> {
   return async (dispatch) => {
     try {
       await dispatch(insertPlug(item, socket, mod.hash));
@@ -997,7 +1019,7 @@ function applyMod(
         includeAssignToDefault ||
         !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod }, defs)
       ) {
-        return { modHash: mod.hash, state: LoadoutModState.Applied };
+        return { success: true };
       }
     } catch (e) {
       if (
@@ -1026,7 +1048,7 @@ function applyMod(
           plug: plugName,
         })
       ).withError(e);
-      return { modHash: mod.hash, state: LoadoutModState.Failed, error };
+      return { success: false, error };
     }
   };
 }

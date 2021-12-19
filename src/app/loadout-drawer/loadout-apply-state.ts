@@ -163,3 +163,14 @@ export function setModResult(result: LoadoutModResult) {
     }
   });
 }
+
+export function setSocketOverrideResult(
+  item: DimItem,
+  socketIndex: number,
+  socketState: LoadoutSocketOverrideState,
+  error?: Error
+) {
+  return produce<LoadoutApplyState>((state) => {
+    state.socketOverrideStates[item.index].results[socketIndex] = { state: socketState, error };
+  });
+}
