@@ -5,6 +5,7 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/PlugSection';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -178,15 +179,14 @@ function getPlugsForSubclass(
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
         const plugSetHash = firstSocket.socketDefinition.reusablePlugSetHash;
-
-        if (plugSetHash && profileResponse) {
+        const defaultPlugHash = getDefaultPlugHash(firstSocket, defs);
+        const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
+        if (plugSetHash && profileResponse && isPluggableItem(defaultPlug)) {
           const plugSet: PlugSetWithDefaultPlug = {
             plugs: [],
             plugSetHash,
             maxSelectable: socketGroup.length,
-            defaultPlug: defs.InventoryItem.get(
-              firstSocket.socketDefinition.singleInitialItemHash
-            ) as PluggableInventoryItemDefinition,
+            defaultPlug,
             selectionType:
               category.category.hash === SocketCategoryHashes.Abilities ? 'single' : 'multi',
           };
