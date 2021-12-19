@@ -152,7 +152,7 @@ export function setLoadoutApplyPhase(phase: LoadoutApplyPhase) {
   });
 }
 
-export function setModResult(result: LoadoutModResult) {
+export function setModResult(result: LoadoutModResult, equipNotPossible?: boolean) {
   return produce<LoadoutApplyState>((state) => {
     const mod = state.modStates.find(
       (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending
@@ -163,6 +163,7 @@ export function setModResult(result: LoadoutModResult) {
     } else {
       state.modStates.push(result);
     }
+    state.equipNotPossible ||= equipNotPossible || false;
   });
 }
 
@@ -170,9 +171,11 @@ export function setSocketOverrideResult(
   item: DimItem,
   socketIndex: number,
   socketState: LoadoutSocketOverrideState,
-  error?: Error
+  error?: Error,
+  equipNotPossible?: boolean
 ) {
   return produce<LoadoutApplyState>((state) => {
     state.socketOverrideStates[item.index].results[socketIndex] = { state: socketState, error };
+    state.equipNotPossible ||= equipNotPossible || false;
   });
 }

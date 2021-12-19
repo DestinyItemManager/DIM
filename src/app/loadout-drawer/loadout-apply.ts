@@ -426,7 +426,10 @@ function doApplyLoadout(
                   ? LoadoutItemState.FailedEquip
                   : LoadoutItemState.FailedMove;
                 state.itemStates[updatedItem.index].error = e;
-                state.equipNotPossible ||= isOnCorrectStore && checkEquipNotAllowed(e);
+                state.equipNotPossible ||=
+                  isOnCorrectStore &&
+                  e instanceof DimError &&
+                  checkequipNotPossible(e.bungieErrorCode());
               })
             );
           }
@@ -464,7 +467,7 @@ function doApplyLoadout(
                 // TODO how to set the error code here?
                 // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
 
-                state.equipNotPossible ||= checkEquipNotAllowed(errorCode);
+                state.equipNotPossible ||= checkequipNotPossible(errorCode);
               }
             })
           );
@@ -848,9 +851,19 @@ function applySocketOverrides(
           setLoadoutState(
             setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
           );
-        const handleFailure = ({ socketIndex }: Assignment, error?: Error) =>
+        const handleFailure = (
+          { socketIndex }: Assignment,
+          error?: Error,
+          equipNotPossible?: boolean
+        ) =>
           setLoadoutState(
-            setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Failed, error)
+            setSocketOverrideResult(
+              dimItem,
+              socketIndex,
+              LoadoutSocketOverrideState.Failed,
+              error,
+              equipNotPossible
+            )
           );
 
         await dispatch(equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, true));
@@ -935,8 +948,10 @@ function applyLoadoutMods(
 
     const handleSuccess = ({ mod }: Assignment) =>
       setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
-    const handleFailure = ({ mod }: Assignment, error?: Error) =>
-      setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Failed, error }));
+    const handleFailure = ({ mod }: Assignment, error?: Error, equipNotPossible?: boolean) =>
+      setLoadoutState(
+        setModResult({ modHash: mod.hash, state: LoadoutModState.Failed, error }, equipNotPossible)
+      );
 
     for (const item of armor) {
       const assignments = pickPlugPositions(defs, item, itemModAssignments[item.id]);
@@ -1015,7 +1030,7 @@ function equipModsToItem(
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
-  onFailure: (assignment: Assignment, error?: Error) => void,
+  onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
   includeAssignToDefault = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -1062,7 +1077,7 @@ function equipModsToItem(
           if (result.success) {
             onSuccess(assignment);
           } else {
-            onFailure(assignment, result.error);
+            onFailure(assignment, result.error, result.equipNotPossible);
           }
         }
       } else {
@@ -1089,7 +1104,7 @@ function applyMod(
   mod: PluggableInventoryItemDefinition,
   includeAssignToDefault: boolean,
   defs: D2ManifestDefinitions
-): ThunkResult<{ success: boolean; error?: Error } | undefined> {
+): ThunkResult<{ success: boolean; error?: Error; equipNotPossible?: boolean } | undefined> {
   return async (dispatch) => {
     try {
       await dispatch(insertPlug(item, socket, mod.hash));
@@ -1101,7 +1116,6 @@ function applyMod(
         return { success: true };
       }
     } catch (e) {
-      // TODO: set equip not allowed here
       errorLog(
         'loadout mods',
         'failed to equip mod',
@@ -1121,7 +1135,12 @@ function applyMod(
           plug: plugName,
         })
       ).withError(e);
-      return { success: false, error };
+      return {
+        success: false,
+        error,
+        equipNotPossible:
+          (e instanceof DimError && checkequipNotPossible(e.bungieErrorCode())) || false,
+      };
     }
   };
 }
@@ -1130,7 +1149,7 @@ function applyMod(
  * Check error code to see if it indicates one of the known conditions where no
  * equips or mod changes will succeed for the active character.
  */
-function checkEquipNotAllowed(errorCode: PlatformErrorCodes) {
+function checkequipNotPossible(errorCode?: PlatformErrorCodes) {
   return (
     // Player is in an activity
     errorCode === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||
