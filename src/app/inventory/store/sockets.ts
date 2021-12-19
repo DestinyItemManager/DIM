@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { itemsForProfilePlugSet } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
 import {
   DestinyInventoryItemDefinition,
@@ -19,6 +20,7 @@ import {
 import _ from 'lodash';
 import {
   DimPlug,
+  DimPlugSet,
   DimSocket,
   DimSocketCategory,
   DimSockets,
@@ -297,6 +299,9 @@ function buildDefinedSocket(
     socketIndex: index,
     plugged,
     plugOptions,
+    plugSet: socketDef.reusablePlugSetHash
+      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+      : undefined,
     curatedRoll: null,
     reusablePlugItems: [],
     hasRandomizedPlugItems:
@@ -479,10 +484,51 @@ function buildSocket(
     socketIndex: index,
     plugged,
     plugOptions,
+    plugSet: socketDef.reusablePlugSetHash
+      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+      : undefined,
     curatedRoll,
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
     socketDefinition: socketDef,
   };
+}
+
+// This cache is used to reuse DimPlugSets across items. If we didn't do this each
+// item would have their own instances of shaders, which is 100's of plugs.
+let reusablePlugSetCache: { [plugSetHash: number]: DimPlugSet | undefined } = {};
+
+/**
+ * Resets the cache we use to ensure plug sets are only created once per hash.
+ */
+export function resetReusablePlugSetCache() {
+  reusablePlugSetCache = {};
+}
+
+/**
+ * This builds a DimPlugSet based off hash passed in, that links to a DestinyPlugSetDefinition.
+ * We cache values so if a plug set is present on more than one item, all those items will share
+ * the plug set instance.
+ */
+function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number) {
+  const cachedValue = reusablePlugSetCache[plugSetHash];
+  if (cachedValue) {
+    return cachedValue;
+  }
+
+  const plugs: DimPlug[] = [];
+  const defPlugSet = defs.PlugSet.get(plugSetHash);
+  for (const def of defPlugSet.reusablePlugItems) {
+    const plug = buildDefinedPlug(defs, def.plugItemHash);
+    if (plug) {
+      plugs.push(plug);
+    }
+  }
+  itemsForProfilePlugSet;
+
+  const dimPlugSet = { plugs, hash: plugSetHash };
+  reusablePlugSetCache[plugSetHash] = dimPlugSet;
+
+  return dimPlugSet;
 }

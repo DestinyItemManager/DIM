@@ -37,7 +37,7 @@ import { getVault } from '../stores-helpers';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
-import { buildSockets } from './sockets';
+import { buildSockets, resetReusablePlugSetCache } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
@@ -71,6 +71,7 @@ export function processItems(
   }
 ): DimItem[] {
   const result: DimItem[] = [];
+  resetReusablePlugSetCache();
   for (const item of items) {
     let createdItem: DimItem | null = null;
     try {
