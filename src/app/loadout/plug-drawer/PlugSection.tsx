@@ -19,7 +19,7 @@ export interface PlugSet {
   /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
   /**
-   * The select behaveour of the plug set.
+   * The select behavior of the plug set.
    * multi: how armour mods are selected in game, you need to manually remove ones that have been added.
    * single: how abilities in subclasses are selected, selecting an option replaces the current one.
    */
