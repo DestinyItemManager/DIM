@@ -570,7 +570,7 @@ function isCombatModValid(
  * Calculates the energy needed to be bought to assign the given mods.
  *
  * For example
- * - if an itemneeds to be upgraded to fit the mod in, it will be the number of energy levels the user
+ * - if an item needs to be upgraded to fit the mod in, it will be the number of energy levels the user
  * buys
  * - if an items energy needs to be changed, it will be the energy needed for the mods plus
  * energy the item originally had (the energy wasted).
