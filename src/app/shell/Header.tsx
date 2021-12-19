@@ -29,7 +29,7 @@ import { installPrompt$ } from './app-install';
 import AppInstallBanner from './AppInstallBanner';
 import styles from './Header.m.scss';
 //import './header.scss';
-import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
+import { AppIcon, faExternalLinkAlt, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import RefreshButton from './RefreshButton';
@@ -111,6 +111,18 @@ export default function Header() {
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !isStandalone;
 
   const installable = installPromptEvent || iosPwaAvailable;
+
+  const offerRelaunch =
+    // as an alternative to installing,
+    !isStandalone &&
+    !installable &&
+    // offer desktop users the choice to relaunch in a no-tabs, less-UI window
+    window.name !== 'dim-solo-window' &&
+    !isPhonePortrait;
+
+  const reLaunchDim = () => {
+    window.open(window.location.href, 'dim-solo-window', 'resizable,scrollbars,status');
+  };
 
   // Search filter
   const searchFilter = useRef<SearchFilterRef>(null);
@@ -307,11 +319,16 @@ export default function Header() {
                 >
                   {t('General.UserGuideLink')}
                 </ExternalLink>
-                {installable && (
+                {installable ? (
                   <a className={styles.menuItem} onClick={installDim}>
                     {t('Header.InstallDIM')}
                   </a>
-                )}
+                ) : offerRelaunch ? (
+                  <a className={styles.menuItem} onClick={reLaunchDim}>
+                    {t('Header.LaunchDIMAlone')}{' '}
+                    <AppIcon icon={faExternalLinkAlt} className={styles.launchSeparateIcon} />
+                  </a>
+                ) : null}
                 {dimLinks}
                 <MenuAccounts closeDropdown={hideDropdown} />
               </ClickOutside>

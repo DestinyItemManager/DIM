@@ -311,6 +311,7 @@
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "FilterHelpMenuItem": "Filters Help...",
+    "LaunchDIMAlone": "Separate Window",
     "InstallDIM": "Install as an App",
     "InstallDIMBanner": "Install DIM as an app on your home screen",
     "Inventory": "Inventory",
