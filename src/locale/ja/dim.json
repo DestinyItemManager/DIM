@@ -2,8 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Destiny2コンパニオンアプリを使用してDIMを承認してから、アイテムを変更をしてください。",
     "ConfirmTitle": "操作を確認",
-    "Error": "Error changing mods or perks",
-    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
+    "Error": "Modまたはパークの変更でエラーが発生しました",
+    "ErrorMessage": "{{item}} に {{plug}} を装備できませんでした。\n\n{{error}}",
     "FailedToken": "アイテムを変更する権限を取得できません"
   },
   "Accounts": {
@@ -13,7 +13,7 @@
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
     "MissingTitle": "アカウントが見つかりません",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
-    "PlayStation": "PlayStation",
+    "PlayStation": "Playstation",
     "Stadia": "Stadia",
     "Steam": "Steam",
     "Xbox": "Xbox"
@@ -112,7 +112,9 @@
     "WrongFields": "CSVには「Id」、「Notes」、「Tag」、および「Hash」の列が必要です"
   },
   "EnergyMeter": {
-    "Energy": "エネルギー"
+    "Energy": "エネルギー",
+    "Unused": "不使用",
+    "Used": "使用中"
   },
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
@@ -494,7 +496,7 @@
     "UnlockItem": "アイテムのピン留めを解除"
   },
   "Loadouts": {
-    "Abilities": "Abilities",
+    "Abilities": "アビリティ",
     "AddEquippedItems": "設備品を追加",
     "AddNotes": "メモを追加する",
     "AddUnequippedItems": "未装備を追加",
@@ -503,6 +505,7 @@
     "Any": "全てのクラス",
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
     "AppliedModsWarn": "{{successful}} 個中 {{total}} 個の mod のみ適用できます。",
+    "AppliedOverridesWarn": "{{total}} 個中の {{successful}} 個のサブクラスオプションのみ更新できます。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}} の{{failed}} アイテムにエラーがありました。",
     "Apply": "適用",
     "ApplySearch": "検索 {{query}} を転送",
@@ -553,6 +556,8 @@
     "NotificationMessage": "1つのアイテムを含むロードアウトを保管庫に送信します。",
     "NotificationMessageMods": "これにより1個の mod が適用され、他の全 mod が装備されたアーマーから除去されます。",
     "NotificationMessageMods_plural": "これにより {{count}} 個の mod が適用され、他の全 mod が装備されたアーマーから除去されます。",
+    "NotificationMessageSubclass": "これにより、装備されたサブクラスに 1 つのオプションが適用されます。",
+    "NotificationMessageSubclass_plural": "これにより、装備されたサブクラスに {{count}} オプションが適用されます。",
     "NotificationMessage_female": "{{store}} に1つのロードアウトのアイテムを装備します。",
     "NotificationMessage_female_plural": "{{count}} 個のロードアウトのアイテムを{{store}} に装備します。",
     "NotificationMessage_male": "{{store}} に1つのロードアウトのアイテムを装備します。",
@@ -623,6 +628,12 @@
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} をお気に入りに追加する",
+      "Favorited": "お気に入りに追加する",
+      "Unfavorite": "{{itemType}} をお気に入りから解除",
+      "Unfavorited": "お気に入りから解除"
+    },
     "Infuse": "融合する",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",

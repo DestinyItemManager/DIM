@@ -27,7 +27,7 @@ export const unsupported = {
   pl: 'Zespół DIM nie obsługuje tej przeglądarki. Niektóre lub wszystkie funkcje DIM mogą nie działać.',
   'pt-br':
     'A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar.',
-  ru: 'The DIM team does not support using this browser. Some or all DIM features may not work.',
+  ru: 'Команда DIM не поддерживает использование этого браузера. Некоторые или все функции DIM могуть не работать.',
   'zh-chs': 'DIM 团队不支持使用此浏览器。DIM 可能部分或完全不可用。',
   'zh-cht':
     'The DIM team does not support using this browser. Some or all DIM features may not work.',
@@ -46,7 +46,7 @@ export const steamBrowser = {
   pl: 'Wygląda na to, że ta strona jest załadowana w przeglądarce Steam. Ze względu na ograniczone funkcje i zasoby, DIM może nie działać. Nie możemy zapewnić wsparcia dla tej przeglądarki.',
   'pt-br':
     'Parece que esta página foi aberta no navegador do Steam. Devido à limitações, a execução do DIM pode falhar de forma inesperada ou intermitente. Nós não podemos oferecer suporte a ele.',
-  ru: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
+  ru: 'Похоже, эта страница загружена в браузере Steam. Из-за его ограниченных возможностей и ресурсов, он может неожиданно или периодически не запускать DIM. Мы не можем предоставить помощь с этим.',
   'zh-chs':
     '这个页面似乎是在 Steam 的浏览器里打开的。因为 Steam 浏览器的功能和资源限制，DIM 可能会出现问题。我们无法为此提供支持。',
   'zh-cht':

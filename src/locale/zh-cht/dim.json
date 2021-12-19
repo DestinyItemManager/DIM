@@ -112,7 +112,9 @@
     "WrongFields": "CSV檔案中必須有'Id'，'Notes'，'Tag'，'Hash'列（編號，注釋，標籤，雜湊）"
   },
   "EnergyMeter": {
-    "Energy": "能量"
+    "Energy": "能量",
+    "Unused": "Unused",
+    "Used": "Used"
   },
   "ErrorBoundary": {
     "Title": "發生了一些錯誤"
@@ -503,6 +505,7 @@
     "Any": "全部職業",
     "AppliedError": "沒有物品可用於配裝.",
     "AppliedModsWarn": "Only {{successful}} of {{total}} mods could be applied.",
+    "AppliedOverridesWarn": "Only {{successful}} of {{total}} subclass options could be updated.",
     "AppliedWarn": "已為您完成部分配裝，但{{total}} 個中有{{failed}} 個物品發生錯誤。",
     "Apply": "Apply",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "正在將包含1件物品的配裝轉移到保險櫃",
     "NotificationMessageMods": "This will apply 1 mod and remove all other mods from your equipped armor.",
     "NotificationMessageMods_plural": "This will apply {{count}} mods and remove all other mods from your equipped armor.",
+    "NotificationMessageSubclass": "This will apply 1 option to the equipped subclass.",
+    "NotificationMessageSubclass_plural": "This will apply {{count}} options to the equipped subclass.",
     "NotificationMessage_female": "正在為{{store}}應用 1 件物品的配裝",
     "NotificationMessage_female_plural": "正在為{{store}}應用{{count}}件物品的配裝",
     "NotificationMessage_male": "正在為{{store}}應用 1 件物品的配裝",
@@ -623,6 +628,12 @@
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favorite {{itemType}}",
+      "Favorited": "Favorited",
+      "Unfavorite": "Unfavorite {{itemType}}",
+      "Unfavorited": "Unfavorited"
+    },
     "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
