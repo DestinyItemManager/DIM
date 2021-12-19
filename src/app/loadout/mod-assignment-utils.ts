@@ -112,9 +112,9 @@ export function fitMostMods(
   // just an arbitrarily large number
   // The total cost to assign all the mods to a set
   // this includes energy used to upgrade and energy wasted on changing elements
-  let assignmentEnergyCost = 10000;
+  let assignmentEnergyCost = Number.MAX_SAFE_INTEGER;
   // The total number of mods that couldn't be assigned to the items
-  let assignmentUnassignedModCount = 10000;
+  let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
   // The total number of conditional mods that are activated in the assignment
   let assignmentActiveConditionalMods = 0;
 
@@ -256,10 +256,9 @@ export function fitMostMods(
         }
 
         let totalActiveConditionalMods = 0;
-        const allAssignedMods = Object.values(assignments).flatMap(
-          (assignment) => assignment.assigned
-        );
-        for (const { assigned } of Object.values(assignments)) {
+        const modsAssigned = Object.values(assignments).map((assignment) => assignment.assigned);
+        const allAssignedMods = modsAssigned.flat();
+        for (const assigned of modsAssigned) {
           totalActiveConditionalMods += calculateTotalActivatedMods(assigned, allAssignedMods);
         }
 
