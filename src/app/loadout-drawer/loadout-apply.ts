@@ -23,6 +23,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
+import { LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -512,7 +513,9 @@ function doApplyLoadout(
       if (modsToApply.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
-        await dispatch(applyLoadoutMods(store.id, modsToApply, setLoadoutState));
+        await dispatch(
+          applyLoadoutMods(applicableLoadoutItems, store.id, modsToApply, setLoadoutState)
+        );
         const { modStates } = getLoadoutState();
         infoLog(
           'loadout mods',
@@ -865,13 +868,9 @@ function applySocketOverrides(
  * This uses our mod assignment algorithm to choose which armor gets which mod. It will socket
  * mods into any equipped armor, not just armor in the loadout - this allows for loadouts that
  * are *only* mods to be applied to current armor.
- *
- * Right now this will try to apply mods if they'll fit, but if they won't it'll blindly remove
- * all mods on the piece before adding the new ones. We don't yet take into consideration which
- * mods are already on the items.
  */
-// TODO: If we fail to move/equip armor, should we still equip mods to it?
 function applyLoadoutMods(
+  loadoutItems: LoadoutItem[],
   storeId: string,
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
@@ -886,8 +885,29 @@ function applyLoadoutMods(
     const stores = storesSelector(getState());
     const store = getStore(stores, storeId)!;
 
-    // TODO: find cases where the loadout specified armor for a slot to be equipped and it's not equipped, bail if so
-    const armor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
+    // Apply mods to the armor items in the loadout that were marked "equipped"
+    // even if they failed to equip. For each slot that doesn't have an equipped
+    // item in the loadout, use the current equipped item (whatever it is)
+    // instead.
+    const currentEquippedArmor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
+    const equippedLoadoutItems = loadoutItems.filter((item) => item.equipped);
+    const loadoutDimItems: DimItem[] = [];
+    for (const loadoutItem of loadoutItems) {
+      const item = getLoadoutItem(loadoutItem, store, stores);
+      if (
+        item?.bucket.inArmor &&
+        equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
+      ) {
+        loadoutDimItems.push(item);
+      }
+    }
+    const armor = _.compact(
+      LockableBucketHashes.map(
+        (bucketHash) =>
+          loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
+          currentEquippedArmor.find((item) => item.bucket.hash === bucketHash)
+      )
+    );
 
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
@@ -1115,9 +1135,15 @@ function applyMod(
   };
 }
 
+/**
+ * Check error code to see if it indicates one of the known conditions where no
+ * equips or mod changes will succeed for the active character.
+ */
 function checkEquipNotAllowed(errorCode: PlatformErrorCodes) {
   return (
+    // Player is in an activity
     errorCode === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||
+    // This happens when you log out while still in a locked equipment activity
     errorCode === PlatformErrorCodes.DestinyItemUnequippable
   );
 }
