@@ -263,7 +263,7 @@ export function fitMostMods(
         }
 
         // at this point we know
-        // 1. We have less or the same unassigned mods
+        // 1. We have fewer or the same unassigned mods
         // 2. Less or the same energy used and wasted by energy changes/upgrade
         // So now we check if we have more conditional mods active and if we do we
         // save the new assignment
@@ -569,9 +569,9 @@ function isCombatModValid(
  * Calculates the energy needed to be bought to assign the given mods.
  *
  * For example
- * - if an itemneeds to be upgraded to fit the mod in, it will be the number of energy levels the user
+ * - if an item needs to be upgraded to fit the mod in, it will be the number of energy levels the user
  * buys
- * - if an items energy needs to be changed, it will be the energy needed for the mods plus
+ * - if an items energy element needs to be changed, it will be the energy needed for the mods plus
  * energy the item originally had (the energy wasted).
  */
 function calculateEnergyChange(
