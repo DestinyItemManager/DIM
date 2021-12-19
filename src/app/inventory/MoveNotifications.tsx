@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { LoadoutApplyState } from 'app/loadout-drawer/loadout-apply-state';
+import { LoadoutApplyPhase, LoadoutApplyState } from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
@@ -78,23 +78,26 @@ function ApplyLoadoutProgressBody({
 
   return (
     <>
-      {t('Loadouts.NotificationMessage', {
-        count: numApplicableItems,
-        store: store.name,
-        context: store.genderName,
-      }) +
-        (numMods > 0
-          ? '\n\n' +
-            t('Loadouts.NotificationMessageMods', {
-              count: numMods,
-            })
-          : '') +
-        (numSubclassOverrides > 0
-          ? '\n\n' +
-            t('Loadouts.NotificationMessageSubclass', {
-              count: numSubclassOverrides,
-            })
-          : '')}
+      <div>{LoadoutApplyPhase[state.phase]}</div>
+      <div>
+        {t('Loadouts.NotificationMessage', {
+          count: numApplicableItems,
+          store: store.name,
+          context: store.genderName,
+        }) +
+          (numMods > 0
+            ? '\n\n' +
+              t('Loadouts.NotificationMessageMods', {
+                count: numMods,
+              })
+            : '') +
+          (numSubclassOverrides > 0
+            ? '\n\n' +
+              t('Loadouts.NotificationMessageSubclass', {
+                count: numSubclassOverrides,
+              })
+            : '')}
+      </div>
     </>
   );
 }

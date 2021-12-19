@@ -433,9 +433,6 @@ function doApplyLoadout(
         }
       }
 
-      // Try/catch around equip?
-      // TODO: stop if we can't perform this action (in activity)
-
       // After moving all items into the right place, do a single bulk-equip to the selected store.
       // If only one item needed to be equipped we will have handled it as part of applyLoadoutItem.
       setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.EquipItems));
@@ -1031,7 +1028,9 @@ function equipModsToItem(
     }
 
     const modsToApply = [...modsForItem];
-    const applyModResultPromises: Promise<void>[] = [];
+
+    // TODO: we tried to do these applies in parallel, but you can get into trouble
+    // if you need to remove a mod before applying another.
 
     for (const assignment of modsToApply) {
       const { socketIndex, mod } = assignment;
@@ -1056,21 +1055,16 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        applyModResultPromises.push(
-          (async () => {
-            // TODO: short circuit if equipping is not possible
-            const result = await dispatch(
-              applyMod(item, socket, mod, includeAssignToDefault, defs)
-            );
-            if (result) {
-              if (result.success) {
-                onSuccess(assignment);
-              } else {
-                onFailure(assignment, result.error);
-              }
-            }
-          })()
-        );
+
+        // TODO: short circuit if equipping is not possible
+        const result = await dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs));
+        if (result) {
+          if (result.success) {
+            onSuccess(assignment);
+          } else {
+            onFailure(assignment, result.error);
+          }
+        }
       } else {
         warnLog(
           'loadout mods',
@@ -1086,9 +1080,6 @@ function equipModsToItem(
         onFailure(assignment);
       }
     }
-
-    // These promises handle their own errors and won't reject
-    await Promise.all(applyModResultPromises);
   };
 }
 

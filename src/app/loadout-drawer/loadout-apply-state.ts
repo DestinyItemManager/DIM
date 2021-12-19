@@ -155,7 +155,7 @@ export function setLoadoutApplyPhase(phase: LoadoutApplyPhase) {
 export function setModResult(result: LoadoutModResult) {
   return produce<LoadoutApplyState>((state) => {
     const mod = state.modStates.find(
-      (m) => m.modHash === result.modHash && m.state !== LoadoutModState.Pending
+      (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending
     );
     if (mod) {
       mod.state = result.state;
