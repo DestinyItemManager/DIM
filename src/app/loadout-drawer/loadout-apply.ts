@@ -919,11 +919,12 @@ function applyMod(
         return mod.hash;
       }
     } catch (e) {
+      const plugName = mod.displayProperties.name ?? 'Unknown Plug';
       throw new Error(
         t('AWA.ErrorMessage', {
           error: e.message,
           item: item.name,
-          plug: mod.displayProperties.name ?? 'Unknown Plug',
+          plug: plugName,
         })
       );
     }
