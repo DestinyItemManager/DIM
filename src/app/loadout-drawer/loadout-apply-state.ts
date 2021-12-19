@@ -9,7 +9,7 @@ import produce from 'immer';
  */
 export enum LoadoutApplyPhase {
   NotStarted,
-  /** De-eqipp loadout items from other characters so they can be moved */
+  /** De-equip loadout items from other characters so they can be moved */
   Deequip,
   /** Moving items to the selected store */
   MoveItems,
@@ -31,9 +31,11 @@ export enum LoadoutItemState {
   Pending,
   /** A successful state (maybe we don't need to distinguish this) for items that didn't need to be moved. */
   AlreadyThere,
+  DequippedPendingMove,
   /** The item was moved but still needs to be equipped */
   MovedPendingEquip,
   Succeeded,
+  FailedDequip,
   FailedMove,
   FailedEquip,
 }

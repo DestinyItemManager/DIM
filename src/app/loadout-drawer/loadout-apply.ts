@@ -1,4 +1,3 @@
-import { BungieError } from 'app/bungie-api/http-client';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
@@ -177,6 +176,11 @@ export function applyLoadout(
   };
 }
 
+/**
+ * This is the task in the action queue that actually performs the loadout application. It is responsible for
+ * making all the various moves, equips, and item reconfiguration that the loadout requested. It does not
+ * notify errors or progress - that is handled by LoadoutApplyState and the caller.
+ */
 function doApplyLoadout(
   store: DimStore,
   loadout: Loadout,
@@ -221,8 +225,8 @@ function doApplyLoadout(
         );
       });
 
+      // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
-      // Don't apply mods when moving to the vault or applying the item
       const itemsWithOverrides = loadout.items.filter((loadoutItem) => {
         const item = getLoadoutItem(loadoutItem, store, getStores());
         return (
@@ -238,7 +242,7 @@ function doApplyLoadout(
       // Don't apply mods when moving to the vault
       const modsToApply = (!store.isVault && loadout.parameters?.mods) || [];
 
-      // Initialize items/mods/etc in the loadout state
+      // Initialize items/mods/etc in the LoadoutApplyState, for the notification
       setLoadoutState(
         produce((state) => {
           state.phase = LoadoutApplyPhase.Deequip;
@@ -272,48 +276,50 @@ function doApplyLoadout(
         })
       );
 
-      // Shallow copy all items so we can mutate equipped, and filter out items
-      // that don't need to move
-      const loadoutItemsToMove: LoadoutItem[] = Array.from(applicableLoadoutItems, (i) => ({
-        ...i,
-      })).filter((loadoutItem) => {
-        const item = getLoadoutItem(loadoutItem, store, getStores());
-        // Ignore any items that are already in the correct state
-        const notAlreadyThere =
-          item &&
-          // We need to move to another location - but exclude items that can't be transferred
-          ((item.owner !== store.id && !item.notransfer) ||
-            // Items in the postmaster should be moved even if they're on the same character
-            item.location.inPostmaster ||
-            // Needs to be equipped. Stuff not marked "equip" doesn't
-            // necessarily mean to de-equip it.
-            (loadoutItem.equipped && !item.equipped) ||
-            // We always try to move consumable stacks because their logic is complicated
-            (loadoutItem.amount && loadoutItem.amount > 1));
+      // Filter out items that don't need to move
+      const loadoutItemsToMove: LoadoutItem[] = Array.from(
+        applicableLoadoutItems.filter((loadoutItem) => {
+          const item = getLoadoutItem(loadoutItem, store, getStores());
+          // Ignore any items that are already in the correct state
+          const notAlreadyThere =
+            item &&
+            // We need to move to another location - but exclude items that can't be transferred
+            ((item.owner !== store.id && !item.notransfer) ||
+              // Items in the postmaster should be moved even if they're on the same character
+              item.location.inPostmaster ||
+              // Needs to be equipped. Stuff not marked "equip" doesn't
+              // necessarily mean to de-equip it.
+              (loadoutItem.equipped && !item.equipped) ||
+              // We always try to move consumable stacks because their logic is complicated
+              (loadoutItem.amount && loadoutItem.amount > 1));
 
-        // TODO: hate the double negative
-        if (item && !notAlreadyThere) {
-          setLoadoutState(
-            produce((state) => {
-              state.itemStates[item.index].state = LoadoutItemState.AlreadyThere;
-            })
-          );
-        }
+          // TODO: hate the double negative
+          if (item && !notAlreadyThere) {
+            setLoadoutState(
+              produce((state) => {
+                state.itemStates[item.index].state = LoadoutItemState.AlreadyThere;
+              })
+            );
+          }
 
-        return notAlreadyThere;
-      });
+          return notAlreadyThere;
+        }),
+        // Shallow copy all LoadoutItems so we can mutate the equipped flag later
+        (i) => ({
+          ...i,
+        })
+      );
 
-      // vault can't equip
+      // The vault can't equip items, so set equipped to false
       if (store.isVault) {
         for (const loadoutItem of loadoutItemsToMove) {
           loadoutItem.equipped = false;
         }
       }
 
-      // We'll equip these all in one go!
       let itemsToEquip = loadoutItemsToMove.filter((i) => i.equipped);
+      // If we need to equip many items at once, we'll use a single bulk-equip later
       if (itemsToEquip.length > 1) {
-        // we'll use the equipItems function
         // TODO: just set a bulkEquip flag
         itemsToEquip.forEach((i) => {
           i.equipped = false;
@@ -321,64 +327,120 @@ function doApplyLoadout(
       }
 
       // Dequip items from the loadout off of other characters so they can be moved.
+      // TODO: break out into its own action
       const itemsToDequip = loadoutItemsToMove.filter((loadoutItem) => {
         const item = getItemAcrossStores(getStores(), loadoutItem);
         return item?.equipped && item.owner !== store.id;
       });
 
-      if (itemsToDequip.length > 1) {
-        const stores = getStores();
-        const realItemsToDequip = _.compact(
-          itemsToDequip.map((i) => getItemAcrossStores(stores, i))
-        );
-        // Bulk-dequip per character
-        const dequips = _.map(
-          _.groupBy(realItemsToDequip, (i) => i.owner),
-          (dequipItems, owner) => {
-            const itemsToEquip = _.compact(
-              dequipItems.map((i) =>
-                getSimilarItem(getStores(), i, {
-                  exclusions: applicableLoadoutItems,
-                  excludeExotic: i.isExotic,
-                })
-              )
-            );
-            // TODO: try/catch?
-            return dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
+      const stores = getStores();
+      const realItemsToDequip = _.compact(itemsToDequip.map((i) => getItemAcrossStores(stores, i)));
+      // Group dequips per character
+      const dequips = _.map(
+        _.groupBy(realItemsToDequip, (i) => i.owner),
+        async (dequipItems, owner) => {
+          // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
+          // automatically when we try to move the item.
+          if (dequipItems.length === 1) {
+            return;
           }
-        );
-        await Promise.all(dequips);
-      }
+          // You can't directly dequip things, you have to equip something
+          // else - so choose an appropriate replacement for each item.
+          const itemsToEquip = _.compact(
+            dequipItems.map((i) =>
+              getSimilarItem(getStores(), i, {
+                exclusions: applicableLoadoutItems,
+                excludeExotic: i.isExotic,
+              })
+            )
+          );
+          try {
+            const result = await dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
+            // Bulk equip can partially fail
+            setLoadoutState(
+              produce((state) => {
+                for (const item of dequipItems) {
+                  const errorCode = result[item.id];
+                  state.itemStates[item.index].state =
+                    errorCode === PlatformErrorCodes.Success
+                      ? LoadoutItemState.DequippedPendingMove
+                      : LoadoutItemState.FailedDequip;
 
-      setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.MoveItems));
+                  // TODO how to set the error code here?
+                  // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
+                }
+              })
+            );
+          } catch (e) {
+            if (e instanceof CanceledError) {
+              throw e;
+            }
+            errorLog('loadout dequip', 'Failed to dequip items from', owner, e);
+            setLoadoutState(
+              produce((state) => {
+                for (const item of dequipItems) {
+                  state.itemStates[item.index].state = LoadoutItemState.FailedDequip;
+                  state.itemStates[item.index].error = e;
+                }
+              })
+            );
+          }
+        }
+      );
+      // Run each character's bulk dequip in parallel
+      await Promise.all(dequips);
 
       // Move all items to the right location
+      setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.MoveItems));
       for (const loadoutItem of loadoutItemsToMove) {
         // TODO: try parallelizing these too?
-        // TODO: pass in state updaters!
+        // TODO: respect flag for equip not allowed
         try {
-          const skipEquip = getLoadoutState().equipNotPossible;
           await dispatch(
-            applyLoadoutItem(store.id, loadoutItem, applicableLoadoutItems, cancelToken, skipEquip)
+            applyLoadoutItem(store.id, loadoutItem, applicableLoadoutItems, cancelToken)
           );
+          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          if (updatedItem) {
+            setLoadoutState(
+              produce((state) => {
+                state.itemStates[updatedItem.index].state =
+                  // If we're doing a bulk equip later, set to MovedPendingEquip
+                  itemsToEquip.length > 1
+                    ? LoadoutItemState.MovedPendingEquip
+                    : LoadoutItemState.Succeeded;
+              })
+            );
+          }
         } catch (e) {
           if (e instanceof CanceledError) {
             throw e;
           }
-          // TODO: handle errors, reload item to decide whether it failed to move or just failed to equip?
-          // TODO: at each step decide whether to fail the whole thing?
+          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          if (updatedItem) {
+            setLoadoutState(
+              produce((state) => {
+                // If it made it to the right store, the failure was in equipping, not moving
+                const isOnCorrectStore = updatedItem.owner === store.id;
+                state.itemStates[updatedItem.index].state = isOnCorrectStore
+                  ? LoadoutItemState.FailedEquip
+                  : LoadoutItemState.FailedMove;
+                state.itemStates[updatedItem.index].error = e;
+                state.equipNotPossible ||= isOnCorrectStore && checkEquipNotAllowed(e);
+              })
+            );
+          }
         }
       }
 
       // Try/catch around equip?
       // TODO: stop if we can't perform this action (in activity)
 
-      // After moving all items, bulk-equip
+      // After moving all items into the right place, do a single bulk-equip to the selected store.
+      // If only one item needed to be equipped we will have handled it as part of applyLoadoutItem.
       setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.EquipItems));
-
-      let equippedItems: LoadoutItem[];
       if (itemsToEquip.length > 1) {
         const store = getTargetStore();
+        const stores = getStores();
         const successfulItems = Object.values(getLoadoutState().itemStates).filter(
           (s) => s.equip && s.state === LoadoutItemState.MovedPendingEquip
         );
@@ -387,34 +449,44 @@ function doApplyLoadout(
           successfulItems.some((si) => si.item.id === i.id)
         );
         const realItemsToEquip = _.compact(
-          itemsToEquip.map((i) => getLoadoutItem(i, store, getStores()))
+          itemsToEquip.map((i) => getLoadoutItem(i, store, stores))
         );
-        equippedItems = await dispatch(equipItems(store, realItemsToEquip));
-      } else {
-        equippedItems = itemsToEquip;
+        try {
+          const result = await dispatch(equipItems(store, realItemsToEquip));
+          // Bulk equip can partially fail
+          setLoadoutState(
+            produce((state) => {
+              for (const item of realItemsToEquip) {
+                const errorCode = result[item.id];
+                state.itemStates[item.index].state =
+                  errorCode === PlatformErrorCodes.Success
+                    ? LoadoutItemState.Succeeded
+                    : LoadoutItemState.FailedEquip;
+
+                // TODO how to set the error code here?
+                // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
+
+                state.equipNotPossible ||= checkEquipNotAllowed(errorCode);
+              }
+            })
+          );
+        } catch (e) {
+          if (e instanceof CanceledError) {
+            throw e;
+          }
+          errorLog('loadout equip', 'Failed to equip items', e);
+          setLoadoutState(
+            produce((state) => {
+              for (const item of realItemsToEquip) {
+                state.itemStates[item.index].state = LoadoutItemState.FailedEquip;
+                state.itemStates[item.index].error = e;
+              }
+            })
+          );
+        }
       }
 
-      if (equippedItems.length < itemsToEquip.length) {
-        const store = getTargetStore();
-        const failedItems = _.compact(
-          itemsToEquip
-            .filter((i) => !equippedItems.find((it) => it.id === i.id))
-            .map((i) => getLoadoutItem(i, store, getStores()))
-        );
-        setLoadoutState(
-          produce((state) => {
-            for (const item of failedItems) {
-              state.itemStates[item.index].state = LoadoutItemState.FailedEquip;
-              // TODO the state may be enough here?
-              state.itemStates[item.index].error = new DimError(
-                'Loadouts.CouldNotEquip',
-                t('Loadouts.CouldNotEquip', { itemname: item.name })
-              );
-            }
-          })
-        );
-      }
-
+      // Apply socket overrides to items that have them, to set specific mods and perks
       if (itemsWithOverrides.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.SocketOverrides));
 
@@ -439,28 +511,21 @@ function doApplyLoadout(
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
       if (modsToApply.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
-        try {
-          infoLog('loadout mods', 'Mods to apply', modsToApply);
-          await dispatch(applyLoadoutMods(store.id, modsToApply, setLoadoutState));
-          const { modStates } = getLoadoutState();
-          infoLog(
-            'loadout mods',
-            'Mods applied',
-            count(modStates, (s) => s.state === LoadoutModState.Applied),
-            modStates.length
-          );
-        } catch (e) {
-          warnLog('loadout mods', 'error applying mods', e);
-          // TODO: work on errors
-          throw e;
-        }
+        infoLog('loadout mods', 'Mods to apply', modsToApply);
+        await dispatch(applyLoadoutMods(store.id, modsToApply, setLoadoutState));
+        const { modStates } = getLoadoutState();
+        infoLog(
+          'loadout mods',
+          'Mods applied',
+          count(modStates, (s) => s.state === LoadoutModState.Applied),
+          modStates.length
+        );
       }
 
       // If this is marked to clear space (and we're not applying it to the vault), move items not
       // in the loadout off the character
       if (loadout.clearSpace && !store.isVault) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ClearSpace));
-
         await dispatch(
           clearSpaceAfterLoadout(
             getTargetStore(),
@@ -473,15 +538,8 @@ function doApplyLoadout(
       // TODO: throw errors based on whether we consider the loadout to be a failure
       setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.Succeeded));
     } finally {
-      const successfulItems = Object.values(getLoadoutState().itemStates).filter(
-        (s) => s.equip && s.state === LoadoutItemState.Succeeded
-      );
-
-      // Update the character stats after all the equips
-      if (successfulItems.length > 0) {
-        dispatch(updateCharacters());
-      }
-
+      // Update the characters to get the latest stats
+      dispatch(updateCharacters());
       dispatch(resumeFarming());
     }
   };
@@ -494,8 +552,7 @@ function applyLoadoutItem(
   storeId: string,
   loadoutItem: LoadoutItem,
   excludes: { id: string; hash: number }[],
-  cancelToken: CancelToken,
-  skipEquip: boolean
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     // The store and its items may change as we move things - make sure we're always looking at the latest version
@@ -526,6 +583,7 @@ function applyLoadoutItem(
         ).reverse();
 
         let totalAmount = amountAlreadyHave;
+        // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
           const source = _.maxBy(storesByAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
@@ -559,9 +617,10 @@ function applyLoadoutItem(
         }
       }
     } else {
+      // Normal items get a straightforward move
       await dispatch(
         executeMoveItem(item, store, {
-          equip: !skipEquip && loadoutItem.equipped,
+          equip: loadoutItem.equipped,
           amount: item.amount,
           excludes,
           cancelToken,
@@ -571,21 +630,23 @@ function applyLoadoutItem(
   };
 }
 
-// A special getItem that takes into account the fact that
-// subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
+/**
+ * A special getItem that takes into account the fact that
+ * subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
+ */
 function getLoadoutItem(
-  pseudoItem: LoadoutItem,
+  loadoutItem: LoadoutItem,
   store: DimStore,
   stores: DimStore[]
 ): DimItem | null {
-  let item = getItemAcrossStores(stores, _.omit(pseudoItem, 'amount'));
+  let item = getItemAcrossStores(stores, _.omit(loadoutItem, 'amount'));
   if (!item) {
     return null;
   }
   if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
     // Same character first
     item =
-      store.items.find((i) => i.hash === pseudoItem.hash) ||
+      store.items.find((i) => i.hash === loadoutItem.hash) ||
       // Then other characters
       getItemAcrossStores(stores, { hash: item.hash }) ||
       item;
@@ -593,7 +654,14 @@ function getLoadoutItem(
   return item;
 }
 
-function clearSpaceAfterLoadout(store: DimStore, items: DimItem[], cancelToken: CancelToken) {
+/**
+ * Clear out non-loadout items from a character. "items" are the items from the loadout.
+ */
+function clearSpaceAfterLoadout(
+  store: DimStore,
+  items: DimItem[],
+  cancelToken: CancelToken
+): ThunkResult {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {};
@@ -602,10 +670,10 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[], cancelToken: 
 
   const itemsToRemove: DimItem[] = [];
 
-  _.forIn(itemsByType, (loadoutItems, bucketId) => {
+  for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
     // Exclude a handful of buckets from being cleared out
     if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
-      return;
+      continue;
     }
     let numUnequippedLoadoutItems = 0;
     const bucketHash = parseInt(bucketId, 10);
@@ -635,7 +703,7 @@ function clearSpaceAfterLoadout(store: DimStore, items: DimItem[], cancelToken: 
     // Reserve enough space to only leave the loadout items
     reservations[store.id][loadoutItems[0].bucket.type!] =
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
-  });
+  }
 
   return clearItemsOffCharacter(store, itemsToRemove, cancelToken, reservations);
 }
@@ -1022,13 +1090,7 @@ function applyMod(
         return { success: true };
       }
     } catch (e) {
-      if (
-        e instanceof BungieError &&
-        (e.code === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||
-          e.code === PlatformErrorCodes.DestinyItemUnequippable)
-      ) {
-        // TODO: set equipping forbidden
-      }
+      // TODO: set equip not allowed here
       errorLog(
         'loadout mods',
         'failed to equip mod',
@@ -1051,4 +1113,11 @@ function applyMod(
       return { success: false, error };
     }
   };
+}
+
+function checkEquipNotAllowed(errorCode: PlatformErrorCodes) {
+  return (
+    errorCode === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||
+    errorCode === PlatformErrorCodes.DestinyItemUnequippable
+  );
 }

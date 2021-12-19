@@ -223,7 +223,10 @@ function searchForSimilarItem(
 }
 
 /**
- * Bulk equip items. Only use for multiple equips at once.
+ * Bulk equip items. Only use for multiple equips at once (just loadouts).
+ * Returns a list of items that were successfully equipped, which can be less
+ * that what was passed in or even more than what was passed in because
+ * sometimes we have to de-equip an exotic to equip another exotic.
  */
 export function equipItems(
   store: DimStore,
@@ -231,13 +234,13 @@ export function equipItems(
   cancelToken: CancelToken = neverCanceled,
   /** A list of items to not consider equipping in order to de-equip an exotic */
   exclusions = []
-): ThunkResult<DimItem[]> {
+): ThunkResult<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
     // Check for (and move aside) exotics
     const extraItemsToEquip: Promise<DimItem>[] = _.compact(
-      items.map(async (i) => {
+      items.map((i) => {
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
@@ -274,20 +277,38 @@ export function equipItems(
     const extraItems = await Promise.all(extraItemsToEquip);
     items = items.concat(extraItems);
     if (items.length === 0) {
-      return [];
+      return {};
     }
+
+    // It's faster to call equipItem for a single item
     if (items.length === 1) {
-      const equippedItem = await dispatch(equipItem(items[0], cancelToken));
-      return [equippedItem];
+      try {
+        await dispatch(equipItem(items[0], cancelToken));
+        return { [items[0].id]: PlatformErrorCodes.Success };
+      } catch (e) {
+        return {
+          [items[0].id]:
+            (e instanceof DimError && e.bungieErrorCode()) || PlatformErrorCodes.UnhandledException,
+        };
+      }
     }
 
     cancelToken.checkCanceled();
-    const equippedItems = await equipItemsApi(items[0])(
+    const results = await equipItemsApi(items[0])(
       currentAccountSelector(getState())!,
       store,
       items
     );
-    return equippedItems.map((i) => dispatch(updateItemModel(i, store, store, true)));
+    // Update our view of each successful item
+    for (const [itemInstanceId, resultCode] of Object.entries(results)) {
+      if (resultCode === PlatformErrorCodes.Success) {
+        const item = items.find((i) => i.id === itemInstanceId);
+        if (item) {
+          dispatch(updateItemModel(item, store, store, true));
+        }
+      }
+    }
+    return results;
   };
 }
 

@@ -2,7 +2,11 @@ import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
-import { ServerResponse } from 'bungie-api-ts/destiny2';
+import {
+  DestinyEquipItemResults,
+  PlatformErrorCodes,
+  ServerResponse,
+} from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { D1Item, DimItem } from '../inventory/item-types';
@@ -170,7 +174,11 @@ export function equip(account: DestinyAccount, item: DimItem) {
 }
 
 // Returns a list of items that were successfully equipped
-export async function equipItems(account: DestinyAccount, store: D1Store, items: D1Item[]) {
+export async function equipItems(
+  account: DestinyAccount,
+  store: D1Store,
+  items: D1Item[]
+): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
@@ -181,11 +189,9 @@ export async function equipItems(account: DestinyAccount, store: D1Store, items:
       itemIds: items.map((i) => i.id),
     })
   );
-  const data = response.Response;
-  return items.filter((i) => {
-    const item = data.equipResults.find((r: any) => r.itemInstanceId === i.id);
-    return item?.equipStatus === 1;
-  });
+
+  const data = response.Response as DestinyEquipItemResults;
+  return Object.fromEntries(data.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]));
 }
 
 export function setItemState(
