@@ -848,7 +848,9 @@ function equipModsToItem(
     const modsToApply = [...modsForItem];
     const successfulMods: number[] = [];
     const errors: Error[] = [];
-    const applyModResultPromises: Promise<number | undefined>[] = [];
+
+    // TODO: we tried to do these applies in parallel, but you can get into trouble
+    // if you need to remove a mod before applying another.
 
     for (const { socketIndex, mod } of modsToApply) {
       // Use this socket
@@ -873,9 +875,14 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-        applyModResultPromises.push(
-          dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs))
-        );
+        try {
+          const modHash = await dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs));
+          if (modHash) {
+            successfulMods.push(modHash);
+          }
+        } catch (e) {
+          errors.push(e);
+        }
       } else {
         warnLog(
           'loadout mods',
@@ -885,15 +892,6 @@ function equipModsToItem(
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
             socket.socketIndex
         );
-      }
-    }
-
-    const applyModsResults = await Promise.allSettled(applyModResultPromises);
-    for (const result of applyModsResults) {
-      if (result.status === 'fulfilled' && result.value) {
-        successfulMods.push(result.value);
-      } else if (result.status === 'rejected') {
-        errors.push(result.reason);
       }
     }
 
