@@ -9,7 +9,7 @@ import SelectablePlug from './SelectablePlug';
  * a list of plugs, plus some metadata about:
  * - the maximum we should let the user choose at once
  * - the plugset whence these plugs originate
- * - the behaveour we use for selecting plugs
+ * - the behavior we use for selecting plugs
  */
 export interface PlugSet {
   /** The hash that links to the PlugSet definition. */
