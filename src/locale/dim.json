@@ -57,6 +57,8 @@
   },
   "BungieService": {
     "AppNotPermitted": "DIM does not have permission to perform this action.",
+    "DestinyCannotPerformActionAtThisLocation": "You cannot equip items or change mods while in an activity. Try heading to orbit or a social area. This is a limitation of the Bungie.net API, not DIM.",
+    "DestinyItemUnequippable": "You cannot equip this item. If the character was last in an activity with locked equipment, try logging into the character again.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",

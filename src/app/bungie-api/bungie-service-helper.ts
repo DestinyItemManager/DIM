@@ -191,6 +191,14 @@ export function handleErrors(error: Error) {
       case PlatformErrorCodes.DestinyLegacyPlatformInaccessible:
         throw new DimError('BungieService.DestinyLegacyPlatform').withError(error);
 
+      // These just need a custom error message because people ask questions all the time
+      case PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation:
+        throw new DimError('BungieService.DestinyCannotPerformActionAtThisLocation').withError(
+          error
+        );
+      case PlatformErrorCodes.DestinyItemUnequippable:
+        throw new DimError('BungieService.DestinyItemUnequippable').withError(error);
+
       case PlatformErrorCodes.ApiInvalidOrExpiredKey:
       case PlatformErrorCodes.ApiKeyMissingFromRequest:
       case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
