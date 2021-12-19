@@ -237,7 +237,7 @@ export function equipItems(
 
     // Check for (and move aside) exotics
     const extraItemsToEquip: Promise<DimItem>[] = _.compact(
-      items.map((i) => {
+      items.map(async (i) => {
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
@@ -270,6 +270,7 @@ export function equipItems(
       })
     );
 
+    // TODO: handle individual errors?
     const extraItems = await Promise.all(extraItemsToEquip);
     items = items.concat(extraItems);
     if (items.length === 0) {

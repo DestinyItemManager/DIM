@@ -38,6 +38,7 @@ export interface Notify {
  * An error that allows setting the properties of the notification. Throw this from your promise
  * to transform the notification into an error.
  */
+// TODO: maybe remove this?
 export class NotificationError extends Error {
   title?: string;
   body?: React.ReactNode;

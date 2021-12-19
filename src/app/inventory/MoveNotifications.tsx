@@ -1,9 +1,13 @@
 import { t } from 'app/i18next-t';
+import { LoadoutApplyState } from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
+import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { useSubscription } from 'use-subscription';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { DimItem } from './item-types';
 import styles from './MoveNotifications.m.scss';
@@ -41,9 +45,7 @@ export function moveItemNotification(
  */
 export function loadoutNotification(
   loadout: Loadout,
-  numApplicableItems: number,
-  numMods: number,
-  numSubclassOverrides: number,
+  stateObservable: Observable<LoadoutApplyState>,
   store: DimStore,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
@@ -56,26 +58,45 @@ export function loadoutNotification(
     duration: lingerMs,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
-    body:
-      t('Loadouts.NotificationMessage', {
+    body: <ApplyLoadoutProgressBody store={store} stateObservable={stateObservable} />,
+    onCancel: cancel,
+  };
+}
+
+function ApplyLoadoutProgressBody({
+  store,
+  stateObservable,
+}: {
+  store: DimStore;
+  stateObservable: Observable<LoadoutApplyState>;
+}) {
+  // TODO: throttle subscription?
+  const state = useSubscription(stateObservable);
+  const numApplicableItems = _.size(state.itemStates);
+  const numSubclassOverrides = _.size(state.socketOverrideStates);
+  const numMods = state.modStates.length;
+
+  return (
+    <>
+      {t('Loadouts.NotificationMessage', {
         count: numApplicableItems,
         store: store.name,
         context: store.genderName,
       }) +
-      (numMods > 0
-        ? '\n\n' +
-          t('Loadouts.NotificationMessageMods', {
-            count: numMods,
-          })
-        : '') +
-      (numSubclassOverrides > 0
-        ? '\n\n' +
-          t('Loadouts.NotificationMessageSubclass', {
-            count: numSubclassOverrides,
-          })
-        : ''),
-    onCancel: cancel,
-  };
+        (numMods > 0
+          ? '\n\n' +
+            t('Loadouts.NotificationMessageMods', {
+              count: numMods,
+            })
+          : '') +
+        (numSubclassOverrides > 0
+          ? '\n\n' +
+            t('Loadouts.NotificationMessageSubclass', {
+              count: numSubclassOverrides,
+            })
+          : '')}
+    </>
+  );
 }
 
 /**
