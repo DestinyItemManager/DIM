@@ -112,7 +112,9 @@
     "WrongFields": "Il CSV deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energia"
+    "Energy": "Energia",
+    "Unused": "Inutilizzata",
+    "Used": "Utilizzata"
   },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
@@ -503,6 +505,7 @@
     "Any": "Qualsiasi classe",
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
     "AppliedModsWarn": "Solo {{successful}} di {{total}} modifiche possono essere applicate.",
+    "AppliedOverridesWarn": "Solo {{successful}} di {{total}} opzioni della sottoclasse possono essere aggiornate.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "Apply": "Applica",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
     "NotificationMessageMods": "Questo applicherà 1 modifica e rimuoverà tutte le altre modifiche dalla tua armatura equipaggiata.",
     "NotificationMessageMods_plural": "Questo applicherà {{count}} modifiche e rimuoverà tutte le altre modifiche dalla tua armatura equipaggiata.",
+    "NotificationMessageSubclass": "Questo applicherà 1 opzione alla sottoclasse equipaggiata.",
+    "NotificationMessageSubclass_plural": "Questo applicherà {{count}} opzioni alla sottoclasse equipaggiata.",
     "NotificationMessage_female": "Equipaggiamento loadout con 1 oggetto sulla {{store}}",
     "NotificationMessage_female_plural": "Equipaggiamento loadout con {{count}} oggetti sulla {{store}}",
     "NotificationMessage_male": "Equipaggiamento loadout con 1 oggetto sul {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
+    "FavoriteUnFavorite": {
+      "Favorite": "Aggiungi a preferite {{itemType}}",
+      "Favorited": "Preferita",
+      "Unfavorite": "Elimina dalle preferite {{itemType}}",
+      "Unfavorited": "Non preferita"
+    },
     "Infuse": "Infondi",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",

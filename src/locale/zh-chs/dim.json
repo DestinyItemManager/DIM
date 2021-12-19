@@ -112,7 +112,9 @@
     "WrongFields": "CSV文件中必须有'Id', 'Notes', 'Tag', 'Hash'列 (编号, 注释, 标签, 哈希)"
   },
   "EnergyMeter": {
-    "Energy": "能量"
+    "Energy": "能量",
+    "Unused": "未使用",
+    "Used": "已使用"
   },
   "ErrorBoundary": {
     "Title": "发生了一些错误"
@@ -503,6 +505,7 @@
     "Any": "全部职业",
     "AppliedError": "没有物品可用于配装.",
     "AppliedModsWarn": "总共 {{total}} 个模组中只能成功应用 {{successful}} 个。",
+    "AppliedOverridesWarn": "只能更新 {{total}} 个子职业选项中的 {{successful}} 个。",
     "AppliedWarn": "已为您完成部分配装，但{{total}} 个中有{{failed}} 个物品发生错误。",
     "Apply": "应用",
     "ApplySearch": "转移搜索 \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "正在将包含1件物品的配装转移到保险柜",
     "NotificationMessageMods": "这将应用 1 个模组，并从你装备的护甲上移除所有其他模组。",
     "NotificationMessageMods_plural": "这将应用 {{count}} 个模组，并从你装备的护甲上移除所有其他模组。",
+    "NotificationMessageSubclass": "这将为当前装备的子职业应用 1 个选项。",
+    "NotificationMessageSubclass_plural": "这将为当前装备的子职业应用 {{count}} 个选项。",
     "NotificationMessage_female": "正在为{{store}}应用 1 件物品的配装",
     "NotificationMessage_female_plural": "正在为{{store}}应用{{count}}件物品的配装",
     "NotificationMessage_male": "正在为{{store}}应用 1 件物品的配装",
@@ -623,6 +628,12 @@
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
+    "FavoriteUnFavorite": {
+      "Favorite": "收藏{{itemType}}",
+      "Favorited": "已收藏",
+      "Unfavorite": "取消收藏{{itemType}}",
+      "Unfavorited": "已取消收藏"
+    },
     "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "锁定{{itemType}}",

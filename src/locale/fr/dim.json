@@ -112,7 +112,9 @@
     "WrongFields": "Le CSV doit avoir les colonnes \"Id\", \"Notes\", \"Tag\", et \"Hash\"."
   },
   "EnergyMeter": {
-    "Energy": "Énergie"
+    "Energy": "Énergie",
+    "Unused": "Libre",
+    "Used": "Utilisé"
   },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
@@ -503,6 +505,7 @@
     "Any": "Tout",
     "AppliedError": "Aucun des objets de votre arsenal n'a pu être transféré.",
     "AppliedModsWarn": "Seuls {{successful}} de {{total}} mods ont pu être appliqués.",
+    "AppliedOverridesWarn": "Seules {{successful}} de {{total}} options de doctrine ont pu être mises à jour.",
     "AppliedWarn": "Votre arsenal a été partiellement transféré, mais {{failed}} objets sur {{total}} ont échoués.",
     "Apply": "Appliquer",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Envoie d'un groupe de 1 objet dans le coffre.",
     "NotificationMessageMods": "Ceci appliquera 1 mod et supprimera tous les autres mods de votre armure équipée.",
     "NotificationMessageMods_plural": "Cela appliquera {{count}} mods et supprimera tous les autres mods de votre armure équipée.",
+    "NotificationMessageSubclass": "Cela appliquera 1 option à la doctrine équipée.",
+    "NotificationMessageSubclass_plural": "Cela appliquera {{count}} options à la doctrine équipée.",
     "NotificationMessage_female": "Application d'un arsenal de 1 objet sur {{store}}",
     "NotificationMessage_female_plural": "Application d'un arsenal de {{count}} objets sur {{store}}",
     "NotificationMessage_male": "Application d'un arsenal de 1 objet sur {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
+    "FavoriteUnFavorite": {
+      "Favorite": "Mettre {{itemType}} en favoris",
+      "Favorited": "Favoris",
+      "Unfavorite": "Enlever {{itemType}} des favoris",
+      "Unfavorited": "Non favoris"
+    },
     "Infuse": "Infuser",
     "LockUnlock": {
       "Lock": "Bloquer {{itemType}}",
@@ -736,7 +747,7 @@
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
     "NoTrackedTriumph": "Vous ne suivez pas de triomphes. Suivez en un dans le jeu, ou autant que vous voulez sur DIM.",
-    "PercentPrestige": "{{pct}}% pour réinitialiser",
+    "PercentPrestige": "{{pct}}% de la réinitialisation",
     "Progress": "Progression",
     "QueryFilteredTrackedTriumphs": "Aucun de vos triomphes suivis ne correspond à la recherche",
     "QuestExpired": "Expiré",
@@ -914,7 +925,7 @@
     "Junk": "Camelote",
     "Keep": "Garder",
     "LockAll": "Verouiller les objets",
-    "TagItem": "Étiqueter l'objet",
+    "TagItem": "Étiqueter",
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triumphs": {
@@ -987,7 +998,7 @@
     "BestRatedTip": "Cet attribut correspond exactement à une arme de votre liste de souhaits.",
     "BestRatedTip_plural": "Ces attributs correspondent exactement à une arme de votre liste de souhaits.",
     "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron est une liste de souhaits et d'objets à éviter JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement.",
+    "ChoosyVoltronDescription": "choosy_voltron est une liste de souhaits et d'objets indésirables JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement.",
     "Clear": "Effacer la liste de souhaits",
     "ExternalSource": "Optionnel, fournisses le(s) URL(s) pour une liste de souhaits (séparé par des barres verticales |)",
     "Header": "Liste de souhaits",

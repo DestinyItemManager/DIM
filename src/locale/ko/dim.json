@@ -112,7 +112,9 @@
     "WrongFields": "CSV는 'Id', 'Notes', 'Tag', 'Hash' 열을 포함해야 합니다."
   },
   "EnergyMeter": {
-    "Energy": "에너지"
+    "Energy": "에너지",
+    "Unused": "사용되지 않음",
+    "Used": "사용됨"
   },
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
@@ -503,6 +505,7 @@
     "Any": "모든 직업",
     "AppliedError": "로드아웃에 이동할 수 있는 장비가 없습니다.",
     "AppliedModsWarn": "{{total}}개의 개조 부품 중 {{successful}}개만 적용되었습니다.",
+    "AppliedOverridesWarn": "{{total}}개의 하위직업 옵션 중 {{successful}}개만 적용되었습니다.",
     "AppliedWarn": "로드아웃이 부분적으로 옮겨졌으며 {{total}}개의 아이템 중 {{failed}}개에서 오류가 발생하였습니다.",
     "Apply": "적용",
     "ApplySearch": "\"{{query}}\"로 검색된 아이템 이동",
@@ -553,6 +556,8 @@
     "NotificationMessage": "1개의 아이템이 포함된 로드아웃을 금고로 이동하였습니다.",
     "NotificationMessageMods": "장착된 방어구에 1개의 개조 부품만 적용되며 나머지 개조 부품은 제거됩니다.",
     "NotificationMessageMods_plural": "장착된 방어구에 {{count}}개의 개조 부품만 적용되며 나머지 개조 부품은 제거됩니다.",
+    "NotificationMessageSubclass": "장착된 하위직업에 1개의 옵션을 적용합니다.",
+    "NotificationMessageSubclass_plural": "장착된 하위직업에 {{count}}개의 옵션을 적용합니다.",
     "NotificationMessage_female": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
     "NotificationMessage_female_plural": "{{count}}개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
     "NotificationMessage_male": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
@@ -623,6 +628,12 @@
     "Consolidate": "모으기",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} 즐겨찾기",
+      "Favorited": "즐겨찾기 추가됨",
+      "Unfavorite": "{{itemType}} 즐겨찾기 해제",
+      "Unfavorited": "즐겨찾기 해제됨"
+    },
     "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",

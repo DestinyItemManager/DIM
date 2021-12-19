@@ -112,7 +112,9 @@
     "WrongFields": "CSV musi posiadać kolumny 'Id', 'Notes', 'Tag' i 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energia"
+    "Energy": "Energia",
+    "Unused": "Nieużywane",
+    "Used": "Używane"
   },
   "ErrorBoundary": {
     "Title": "Coś poszło nie tak"
@@ -503,6 +505,7 @@
     "Any": "Dowolna klasa",
     "AppliedError": "Nie można było przenieść żadnego przedmiotu z twojego uzbrojenia.",
     "AppliedModsWarn": "Założono tylko {{successful}} z {{total}} modyfikacji.",
+    "AppliedOverridesWarn": "Tylko {{successful}} z {{total}} opcji podklasy można zaktualizować.",
     "AppliedWarn": "Twoje uzbrojenie zostało częściowo przeniesione, ale {{failed}} z {{total}} przedmiotów miało błędy.",
     "Apply": "Zatwierdź",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Wysyłanie uzbrojenia z 1 przedmiotem do schowka.",
     "NotificationMessageMods": "To założy 1 modyfikację i usunie wszystkie inne modyfikacje z Twojej założonej zbroi.",
     "NotificationMessageMods_plural": "To założy {{count}} modyfikacji i usunie wszystkie inne modyfikacje z Twojej założonej zbroi.",
+    "NotificationMessageSubclass": "Spowoduje to zastosowanie 1 opcji do wyposażonej podklasy.",
+    "NotificationMessageSubclass_plural": "Spowoduje to zastosowanie {{count}} opcji do wyposażonej podklasy.",
     "NotificationMessage_female": "Zakładanie uzbrojenia z 1 przedmiotem na {{store}}",
     "NotificationMessage_female_plural": "Zakładanie uzbrojenia z {{count}} przedmiotami na {{store}}",
     "NotificationMessage_male": "Zakładanie uzbrojenia z 1 przedmiotem na {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Połącz",
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
+    "FavoriteUnFavorite": {
+      "Favorite": "Ulubiony {{itemType}}",
+      "Favorited": "Ulubione",
+      "Unfavorite": "Usuń {{itemType}} z ulubionych",
+      "Unfavorited": "Nieulubione"
+    },
     "Infuse": "Nasyć",
     "LockUnlock": {
       "Lock": "Zablokuj {{itemType}}",

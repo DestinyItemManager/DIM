@@ -28,11 +28,11 @@
   "Armory": {
     "NoNotes": "Sin Notas",
     "Season": "Temporada {{season}}, Año {{year}}",
-    "TrashlistedRolls": "Tirada en listabasura",
-    "TrashlistedRolls_plural": "{{count, number}} Tiradas en listabasura",
+    "TrashlistedRolls": "Tirada en lista de basura",
+    "TrashlistedRolls_plural": "{{count, number}} Tiradas en Lista de Basura",
     "Unknown": "Objeto Desconocido",
-    "WishlistedRolls": "Tirada en listadeseos",
-    "WishlistedRolls_plural": "{{count, number}} Tiradas en listadeseos",
+    "WishlistedRolls": "Tirada en lista de deseos",
+    "WishlistedRolls_plural": "{{count, number}} Tiradas en Lista de Deseos",
     "YourItems": "Tus Objetos"
   },
   "Browsercheck": {
@@ -112,7 +112,9 @@
     "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energía"
+    "Energy": "Energía",
+    "Unused": "Sin usar",
+    "Used": "Usado"
   },
   "ErrorBoundary": {
     "Title": "Algo fue mal"
@@ -503,6 +505,7 @@
     "Any": "Cualquier clase",
     "AppliedError": "Ninguno de los objetos en tu equipo pudo ser transferido.",
     "AppliedModsWarn": "Sólo {{successful}} de {{total}} modificadores pudieron ser aplicados.",
+    "AppliedOverridesWarn": "Sólo {{successful}} de {{total}} opciones de subclase pudieron ser actualizadas.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "Apply": "Aplicar",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
@@ -553,6 +556,8 @@
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
     "NotificationMessageMods": "Estos aplicará 1 modificador y eliminará todos los otros modificadores de tu armadura equipada.",
     "NotificationMessageMods_plural": "Esto aplicará {{count}} modificadores y eliminará todos los otros modificadores de tu armadura equipada.",
+    "NotificationMessageSubclass": "Esto aplicará 1 opción a la subclase equipada.",
+    "NotificationMessageSubclass_plural": "Esto aplicará {{count}} opciones a la subclase equipada.",
     "NotificationMessage_female": "Aplicando equipación con 1 objeto a {{store}}",
     "NotificationMessage_female_plural": "Aplicando equipación con {{count}} objetos a {{store}}",
     "NotificationMessage_male": "Aplicando equipación con 1 objeto a {{store}}",
@@ -623,6 +628,12 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
+    "FavoriteUnFavorite": {
+      "Favorite": "Marcar favorito {{itemType}}",
+      "Favorited": "Favorito",
+      "Unfavorite": "Desmarcar favorito {{itemType}}",
+      "Unfavorited": "No favorito"
+    },
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
