@@ -839,8 +839,12 @@
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insert Mod",
+    "InsertOrnamentButton": "Apply Ornament",
+    "InsertShaderButton": "Apply Shader",
     "ListStyle": "Display perks as a list",
     "SelectModButton": "Select Mod",
+    "SelectOrnamentButton": "Select Ornament",
+    "SelectShaderButton": "Select Shader",
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {

@@ -11,6 +11,7 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -112,6 +113,20 @@ export default function SocketDetailsSelectedPlug({
   const canDoAWA =
     itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
+  const initialPlugHash = socket.socketDefinition.singleInitialItemHash;
+  let insertName;
+  if (initialPlugHash) {
+    if (initialPlugHash === DEFAULT_SHADER) {
+      insertName = canDoAWA ? t('Sockets.InsertShaderButton') : t('Sockets.SelectShaderButton');
+    } else if (DEFAULT_ORNAMENTS.includes(initialPlugHash)) {
+      insertName = canDoAWA ? t('Sockets.InsertOrnamentButton') : t('Sockets.SelectOrnamentButton');
+    } else {
+      insertName = canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton');
+    }
+  } else {
+    insertName = canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton');
+  }
+
   const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
     if (canDoAWA) {
@@ -193,9 +208,7 @@ export default function SocketDetailsSelectedPlug({
             </motion.span>
           )}
           <motion.span layout>
-            <motion.span layout>
-              {canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton')}
-            </motion.span>
+            <motion.span layout>{insertName}</motion.span>
             <motion.span layout>{costs}</motion.span>
           </motion.span>
         </motion.button>

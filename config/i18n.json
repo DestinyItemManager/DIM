@@ -915,6 +915,10 @@
     "SelectWishlistPerks": "Preview Wishlist Perks",
     "InsertModButton": "Insert Mod",
     "SelectModButton": "Select Mod",
+    "InsertShaderButton": "Apply Shader",
+    "SelectShaderButton": "Select Shader",
+    "InsertOrnamentButton": "Apply Ornament",
+    "SelectOrnamentButton": "Select Ornament",
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"
   },
