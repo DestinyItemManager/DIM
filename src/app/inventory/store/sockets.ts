@@ -525,7 +525,6 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       plugs.push(plug);
     }
   }
-  itemsForProfilePlugSet;
 
   const dimPlugSet = { plugs, hash: plugSetHash };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
