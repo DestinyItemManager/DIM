@@ -1,6 +1,13 @@
 import { t } from 'app/i18next-t';
-import { LoadoutApplyPhase, LoadoutApplyState } from 'app/loadout-drawer/loadout-apply-state';
+import {
+  LoadoutApplyPhase,
+  LoadoutApplyState,
+  LoadoutItemState,
+  LoadoutModState,
+  LoadoutSocketOverrideState,
+} from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
 import { Observable } from 'app/utils/observable';
@@ -71,14 +78,42 @@ function ApplyLoadoutProgressBody({
   stateObservable: Observable<LoadoutApplyState>;
 }) {
   // TODO: throttle subscription?
-  const state = useSubscription(stateObservable);
-  const numApplicableItems = _.size(state.itemStates);
-  const numSubclassOverrides = _.size(state.socketOverrideStates);
-  const numMods = state.modStates.length;
+  const { phase, equipNotPossible, itemStates, socketOverrideStates, modStates } =
+    useSubscription(stateObservable);
+  const numApplicableItems = _.size(itemStates);
+  const numSubclassOverrides = _.size(socketOverrideStates);
+  const numMods = modStates.length;
+  const defs = useD2Definitions()!;
 
   return (
     <>
-      <div>{LoadoutApplyPhase[state.phase]}</div>
+      <div>{LoadoutApplyPhase[phase]}</div>
+      {equipNotPossible && <div>{t('BungieService.DestinyCannotPerformActionAtThisLocation')}</div>}
+      <div>
+        {Object.values(itemStates).map(({ item, state, error }) => (
+          <div key={item.index}>
+            Item: {item.name} {LoadoutItemState[state]} {error?.message}
+            {socketOverrideStates[item.index] && (
+              <div>
+                {Object.entries(socketOverrideStates[item.index].results).map(
+                  ([socketIndex, { state, error }]) => (
+                    <div key={socketIndex}>
+                      {socketIndex} {LoadoutSocketOverrideState[state]} {error?.message}
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div>
+        {modStates.map(({ modHash, state }, i) => (
+          <div key={i}>
+            Mod: {defs.InventoryItem.get(modHash).displayProperties.name} {LoadoutModState[state]}
+          </div>
+        ))}
+      </div>
       <div>
         {t('Loadouts.NotificationMessage', {
           count: numApplicableItems,
