@@ -531,7 +531,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
 /**
  * This builds DimPlugs and caches their values so we reduce the number of instances in memory.
  */
-function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number) {
+function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): DimPlug | null {
   const cachedValue = definedPlugCache[plugHash];
   // The result of buildDefinedPlug can be null, we still consider that a cached value.
   if (cachedValue !== undefined) {
