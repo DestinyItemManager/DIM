@@ -94,6 +94,7 @@ export default function PlugSection({
                       ? maxSelectable > selected.length && isPlugSelectable(plug)
                       : !selected.some((s) => s.hash === plug.hash) && isPlugSelectable(plug)
                   }
+                  selectionType={plugSet.selectionType}
                   removable={plugSet.selectionType === 'multi'}
                   onPlugSelected={handlePlugSelectedInternal}
                   onPlugRemoved={handlePlugRemovedInternal}
