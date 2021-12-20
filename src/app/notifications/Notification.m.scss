@@ -47,6 +47,9 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  > div {
+    white-space: pre-wrap;
+  }
 }
 
 .title {

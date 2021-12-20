@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Por favor, usa la App Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
     "ConfirmTitle": "Confirmar Acción",
-    "Error": "Error al cambiar objeto",
+    "Error": "Error cambiando mods o perks",
+    "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
     "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -111,7 +112,9 @@
     "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energía"
+    "Energy": "Energía",
+    "Unused": "Sin usar",
+    "Used": "Usado"
   },
   "ErrorBoundary": {
     "Title": "Algo salió mal"
@@ -237,8 +240,9 @@
     "StackLevel": "Muestra los elementos según la cantidad de elementos apilados.",
     "Stackable": "Muestra objetos que pueden ser apilados (munición sintética, monedas extrañas, etc)",
     "StatLower": "Muestra armadura cuyas estadísticas son estrictamente más bajas que otra del mismo tipo de armadura.",
-    "Stats": "Muestra objetos basados en un valor de estadística específico. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
-    "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluir modificadores insertados u obras maestras. Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\".",
+    "Stats": "Muestra elementos basados en un valor de estadística específico. $t(Filter.StatsExtras)",
+    "StatsBase": "Filtra la armadura basada en su valor de estadística base, sin incluir mods aplicados u obras maestras. $t(Filter.StatsExtras)",
+    "StatsExtras": "Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\" o \"&\". También hay palabras clave especiales (highest, secondhighest, thirdhighest, etc.) que coincidan con estadísticas basadas en su rango dentro de las estadísticas de un objeto.",
     "StatsLoadout": "Encuentra sets de objetos para equipar con el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
     "Tags": {
@@ -481,6 +485,7 @@
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "ShareBuild": "Compartir Configuración de la Equipación",
+    "ShareBuildWithNotes": "Compartir con notas",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -491,12 +496,16 @@
     "UnlockItem": "Desanclar objeto"
   },
   "Loadouts": {
+    "Abilities": "Habilidades",
     "AddEquippedItems": "Añadir Equipados",
+    "AddNotes": "Agregar nota",
     "AddUnequippedItems": "Añadir Desequipados",
     "AlreadyExistsClass": "Una equipación con este nombre ya existe para tu {{className}}.",
     "AlreadyExistsGlobal": "Una equipación global ya existe con este nombre.",
     "Any": "Cualquier clase",
     "AppliedError": "Ninguno de los objetos en tu cargador de equipo pudo ser transferido.",
+    "AppliedModsWarn": "Solo se han podido aplicar {{successful}} de {{total}} mods.",
+    "AppliedOverridesWarn": "Sólo {{successful}} de {{total}} opciones de subclase pudieron ser actualizadas.",
     "AppliedWarn": "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores.",
     "Apply": "Aplicar",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
     "ModPlacement": "Colocación de Mods",
     "Mods": "Mods",
-    "ModsInfo": "DIM no puede equipar mods, debe hacerse dentro del juego.",
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
     "NoSpace": "Estas sin espacio en el depósito y en cualquier otro personaje.",
+    "NotesPlaceholder": "Escribe algunas notas sobre este equipamiento",
     "NotificationMessage": "Enviando equipación con 1 objeto al depósito.",
+    "NotificationMessageMods": "Esto aplicará 1 mod y eliminará todos los otros mods de tu armadura equipada.",
+    "NotificationMessageMods_plural": "Esto aplicará {{count}} mods y eliminará todos los demás mods de tu armadura equipada.",
+    "NotificationMessageSubclass": "Esto aplicará 1 opción a la subclase equipada.",
+    "NotificationMessageSubclass_plural": "Esto aplicará {{count}} opciones a la subclase equipada.",
     "NotificationMessage_female": "Aplicando equipación con 1 objeto a {{store}}",
     "NotificationMessage_female_plural": "Aplicando equipación con {{count}} objetos a {{store}}",
     "NotificationMessage_male": "Aplicando equipación con 1 objeto a {{store}}",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "Mostrar Colocación de Mods",
     "SortByEditTime": "Ordenar por última edición",
     "SortByName": "Ordenar por nombre",
+    "SubclassOptions": "Opciones de {{subclass}}",
+    "SubclassOptionsSearch": "Buscar opciones de {{subclass}}",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedMods": "Mods sin Asignar",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o haz click en la X para quitar:",
@@ -613,6 +628,12 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir Equitativamente",
     "Equip": "Equipa",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} Favorita",
+      "Favorited": "Favoritos",
+      "Unfavorite": "{{itemType}} Menospreciada",
+      "Unfavorited": "Quitar de Favoritos"
+    },
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Bloquear {{itemType}}",
@@ -726,7 +747,7 @@
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
     "NoTrackedTriumph": "No tienes triunfos para seguir. Selecciona uno en el juego, o tantos como quieras en DIM.",
-    "PercentPrestige": "{{pct}}% para el reinicio",
+    "PercentPrestige": "{{pct}}% progreso para el reinicio",
     "Progress": "Progreso",
     "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos ha seguir coincidió con la búsqueda",
     "QuestExpired": "Caducado",
@@ -816,7 +837,6 @@
     "ApplyPerks": "Aplicar Perks",
     "GridStyle": "Mostrar perks como una cuadrícula",
     "InsertModButton": "Insertar Mod",
-    "InsertPlugError": "No se pudo insertar mod",
     "ListStyle": "Mostrar perks en forma de lista",
     "SelectModButton": "Selecciona Mods",
     "SelectWishlistPerks": "Vista previa de la lista de deseos de Perks"

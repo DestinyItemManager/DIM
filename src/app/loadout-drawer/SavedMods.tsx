@@ -1,8 +1,6 @@
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { sortModGroups } from 'app/loadout/mod-utils';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
-import _ from 'lodash';
+import { groupModsByModType, sortModGroups } from 'app/loadout/mod-utils';
 import React, { useMemo } from 'react';
 import SavedModCategory from './SavedModCategory';
 import styles from './SavedMods.m.scss';
@@ -22,7 +20,7 @@ interface Props {
 function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
   // Turn savedMods into an array of mod groups where each group is
   const groupedMods = useMemo(() => {
-    const indexedMods = _.groupBy(savedMods, (mod) => mod.plug.plugCategoryHash);
+    const indexedMods = groupModsByModType(savedMods);
     return Object.values(indexedMods).sort(sortModGroups);
   }, [savedMods]);
 
@@ -39,16 +37,13 @@ function SavedMods({ savedMods, onOpenModPicker, removeModByHash }: Props) {
         {groupedMods.map((group) =>
           group?.length ? (
             <SavedModCategory
+              key={group[0].plug.plugCategoryHash}
               mods={group}
               onRemove={(index: number) => removeModByHash(index)}
               onOpenModPicker={onOpenModPicker}
             />
           ) : null
         )}
-      </div>
-      <div className={styles.disclaimer}>
-        <AppIcon className={styles.warningIcon} icon={faExclamationTriangle} />
-        {t('Loadouts.ModsInfo')}
       </div>
     </div>
   );

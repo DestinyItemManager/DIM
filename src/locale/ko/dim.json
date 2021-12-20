@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "데스티니 가디언즈 컴패니언 앱을 실행하여 DIM이 아이템을 수정할 수 있도록 허용해주세요.",
     "ConfirmTitle": "작업 확인",
-    "Error": "아이템 변경 오류",
+    "Error": "개조 부품이나 특성 교체 실패",
+    "ErrorMessage": "{{item}}에 {{plug}}을(를) 장착할 수 없습니다.\n\n{{error}}",
     "FailedToken": "아이템을 변경할 권한이 없음"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "활동",
@@ -111,7 +112,9 @@
     "WrongFields": "CSV는 'Id', 'Notes', 'Tag', 'Hash' 열을 포함해야 합니다."
   },
   "EnergyMeter": {
-    "Energy": "에너지"
+    "Energy": "에너지",
+    "Unused": "사용되지 않음",
+    "Used": "사용됨"
   },
   "ErrorBoundary": {
     "Title": "문제가 발생했습니다"
@@ -237,8 +240,9 @@
     "StackLevel": "중첩된 개수에 따른 아이템 표시",
     "Stackable": "중첩 가능한 아이템(탄약 신스, 이상한 동전 등) 표시",
     "StatLower": "동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구 표시",
-    "Stats": "특정 능력치 값에 따라 아이템을 표시합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
-    "StatsBase": "방어구를 장착된 개조 부품이나 걸작을 포함하지 않은 기초 능력치 값으로 필터링합니다. + 기호를 사용하여 여러 능력치 이름을 더할 수 있습니다.",
+    "Stats": "특정 능력치의 값에 따라 아이템 표시. $t(Filter.StatsExtras)",
+    "StatsBase": "방어구를 장착된 개조 부품과 걸작을 제외한 기본 능력치 값으로 필터링. $t(Filter.StatsExtras)",
+    "StatsExtras": "여러 능력치 이름을 +, & 기호로 연결하여 능력치를 더할 수 있습니다. highest, secondhighest, thirdhighest 등의 특수 키워드가 있으며, 아이템의 능력치 순위를 기준으로 합니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
     "Tags": {
@@ -481,7 +485,8 @@
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "ShareBuild": "빌드 설정 공유",
-    "SpeedReport": "{{time}}초 안에 {{combos, number}}개의 조합 생성",
+    "ShareBuildWithNotes": "메모와 함께 공유",
+    "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TheseModsCouldNotBeAssigned": "이 개조 부품은 기존 로드아웃에 적용될 수 없습니다.",
@@ -491,12 +496,16 @@
     "UnlockItem": "아이템 고정 해제"
   },
   "Loadouts": {
+    "Abilities": "능력",
     "AddEquippedItems": "장착한 아이템 추가",
+    "AddNotes": "메모 추가",
     "AddUnequippedItems": "장착하지 않은 아이템 추가",
     "AlreadyExistsClass": "동일한 이름을 가진 로드아웃이 {{className}} 직업에 존재합니다.",
     "AlreadyExistsGlobal": "동일한 이름을 가진 공용 로드아웃이 존재합니다.",
     "Any": "모든 직업",
     "AppliedError": "로드아웃에 이동할 수 있는 장비가 없습니다.",
+    "AppliedModsWarn": "{{total}}개의 개조 부품 중 {{successful}}개만 적용되었습니다.",
+    "AppliedOverridesWarn": "{{total}}개의 하위직업 옵션 중 {{successful}}개만 적용되었습니다.",
     "AppliedWarn": "로드아웃이 부분적으로 옮겨졌으며 {{total}}개의 아이템 중 {{failed}}개에서 오류가 발생하였습니다.",
     "Apply": "적용",
     "ApplySearch": "\"{{query}}\"로 검색된 아이템 이동",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
     "ModPlacement": "개조 부품 배치",
     "Mods": "개조 부품",
-    "ModsInfo": "DIM에서 개조 부품을 장착할 수 없으며, 반드시 게임 내에서 해야 됩니다.",
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
+    "NotesPlaceholder": "이 로드아웃에 메모 입력하기",
     "NotificationMessage": "1개의 아이템이 포함된 로드아웃을 금고로 이동하였습니다.",
+    "NotificationMessageMods": "장착된 방어구에 1개의 개조 부품만 적용되며 나머지 개조 부품은 제거됩니다.",
+    "NotificationMessageMods_plural": "장착된 방어구에 {{count}}개의 개조 부품만 적용되며 나머지 개조 부품은 제거됩니다.",
+    "NotificationMessageSubclass": "장착된 하위직업에 1개의 옵션을 적용합니다.",
+    "NotificationMessageSubclass_plural": "장착된 하위직업에 {{count}}개의 옵션을 적용합니다.",
     "NotificationMessage_female": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
     "NotificationMessage_female_plural": "{{count}}개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
     "NotificationMessage_male": "1개의 아이템이 포함된 로드아웃을 {{store}}에게 적용하였습니다.",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "개조 부품 배치 표시",
     "SortByEditTime": "수정한 날짜순 정렬",
     "SortByName": "이름순 정렬",
+    "SubclassOptions": "{{subclass}} 옵션",
+    "SubclassOptionsSearch": "{{subclass}} 옵션 검색",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "UnassignedMods": "할당되지 않은 개조 부품",
     "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 삭제합니다:",
@@ -613,6 +628,12 @@
     "Consolidate": "모으기",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} 즐겨찾기",
+      "Favorited": "즐겨찾기 추가됨",
+      "Unfavorite": "{{itemType}} 즐겨찾기 해제",
+      "Unfavorited": "즐겨찾기 해제됨"
+    },
     "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
@@ -816,7 +837,6 @@
     "ApplyPerks": "특성 적용",
     "GridStyle": "특성을 격자 모양으로 표시",
     "InsertModButton": "개조 부품 장착",
-    "InsertPlugError": "개조 부품 장착 불가",
     "ListStyle": "특성을 목록으로 표시",
     "SelectModButton": "개조 부품 선택",
     "SelectWishlistPerks": "희망 아이템 목록 특성 미리보기"

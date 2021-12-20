@@ -21,3 +21,20 @@
     min-width: 0;
   }
 }
+
+.item-picker-item {
+  position: relative;
+}
+
+.item-picker-item-class-icon {
+  box-sizing: border-box;
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  font-size: calc(var(--item-size) * 0.71);
+  color: white;
+  position: absolute;
+  z-index: 1;
+  left: 1px;
+  bottom: 1px;
+  display: block;
+}

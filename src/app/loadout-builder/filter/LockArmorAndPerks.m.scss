@@ -30,3 +30,8 @@
     }
   }
 }
+
+// TODO: dedupe this
+.guide {
+  composes: guide from '../LoadoutBuilder.m.scss';
+}

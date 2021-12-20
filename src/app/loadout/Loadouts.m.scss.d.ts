@@ -20,16 +20,21 @@ interface CssExports {
   'loStat': string;
   'loStats': string;
   'loadout': string;
+  'loadoutNotes': string;
   'menu': string;
   'menuButton': string;
   'menuButtons': string;
   'missingItems': string;
   'mods': string;
+  'modsGrid': string;
   'modsPlaceholder': string;
   'page': string;
   'placeholder': string;
   'power': string;
-  'subClass': string;
+  'showModPlacementButton': string;
+  'subclass': string;
+  'subclassContainer': string;
+  'subclassMods': string;
   'title': string;
   'unequipped': string;
 }

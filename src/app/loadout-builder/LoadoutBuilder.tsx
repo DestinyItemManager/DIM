@@ -7,9 +7,8 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -51,6 +50,7 @@ import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOT
 interface ProvidedProps {
   stores: DimStore[];
   initialClassType: DestinyClass | undefined;
+  notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
 }
@@ -166,6 +166,7 @@ function LoadoutBuilder({
   searchFilter,
   preloadedLoadout,
   initialClassType,
+  notes,
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
@@ -301,17 +302,28 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
-  const shareBuild = () => {
-    const urlParams = new URLSearchParams({
+  const shareBuild = (notes?: string) => {
+    const p: Record<string, string> = {
       class: classType.toString(),
       p: JSON.stringify(params),
-    });
+    };
+    if (notes) {
+      p.n = notes;
+    }
+    const urlParams = new URLSearchParams(p);
     const url = `${location.origin}/optimizer?${urlParams}`;
     copyString(url);
     showNotification({
       type: 'success',
       title: t('LoadoutBuilder.CopiedBuild'),
     });
+  };
+
+  const shareBuildWithNotes = () => {
+    const newNotes = prompt(t('MovePopup.Notes'), notes);
+    if (newNotes) {
+      shareBuild(newNotes);
+    }
   };
 
   // I don't think this can actually happen?
@@ -325,6 +337,13 @@ function LoadoutBuilder({
 
   const menuContent = (
     <>
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol>
+            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+          </ol>
+        </div>
+      )}
       <TierSelect
         stats={statFilters}
         statRangesFiltered={result?.statRangesFiltered}
@@ -334,7 +353,6 @@ function LoadoutBuilder({
         }
         onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
-
       <LockArmorAndPerks
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
@@ -343,8 +361,17 @@ function LoadoutBuilder({
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
         lockedExoticHash={lockedExoticHash}
+        searchFilter={searchFilter}
         lbDispatch={lbDispatch}
       />
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol start={4}>
+            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+          </ol>
+          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
+        </div>
+      )}
     </>
   );
 
@@ -390,17 +417,18 @@ function LoadoutBuilder({
           <button
             type="button"
             className="dim-button"
-            onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
+            onClick={() => shareBuild(notes)}
+            disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.NewEmptyLoadout')}
+            {t('LoadoutBuilder.ShareBuild')}
           </button>
           <button
             type="button"
             className="dim-button"
-            onClick={shareBuild}
+            onClick={shareBuildWithNotes}
             disabled={!filteredSets}
           >
-            {t('LoadoutBuilder.ShareBuild')}
+            {t('LoadoutBuilder.ShareBuildWithNotes')}
           </button>
           {result && (
             <div className={styles.speedReport}>
@@ -411,16 +439,24 @@ function LoadoutBuilder({
             </div>
           )}
         </div>
-        <div className={styles.guide}>
-          <ol>
-            <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
-            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
-          </ol>
-          <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
-        </div>
-
+        {!isPhonePortrait && (
+          <div className={styles.guide}>
+            <ol>
+              <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
+              <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+            </ol>
+            <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
+          </div>
+        )}
+        {notes && (
+          <div className={styles.guide}>
+            <p>
+              <b>{t('MovePopup.Notes')}</b> {notes}
+            </p>
+          </div>
+        )}
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
@@ -435,15 +471,17 @@ function LoadoutBuilder({
             halfTierMods={halfTierMods}
             upgradeSpendTier={upgradeSpendTier}
             lockItemEnergyType={lockItemEnergyType}
+            notes={notes}
           />
         )}
         {modPicker.open &&
           ReactDOM.createPortal(
             <ModPicker
               classType={classType}
+              owner={selectedStore.id}
               lockedMods={lockedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
-              onAccept={(newLockedMods: PluggableInventoryItemDefinition[]) =>
+              onAccept={(newLockedMods) =>
                 lbDispatch({
                   type: 'lockedModsChanged',
                   lockedMods: newLockedMods,
@@ -465,6 +503,7 @@ function LoadoutBuilder({
               upgradeSpendTier={upgradeSpendTier}
               lockItemEnergyType={lockItemEnergyType}
               params={params}
+              notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />,
             document.body

@@ -6,7 +6,6 @@ import { PlugTooltip } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import React from 'react';
-import styles from './PlugDef.m.scss';
 
 interface Props {
   plug: PluggableInventoryItemDefinition;
@@ -20,28 +19,24 @@ export default function PlugDef({ plug, onClick, onClose }: Props) {
   const showTooltip = defs && !isPhonePortrait;
 
   const contents = (
-    <div className={styles.emptyItem}>
-      <div
-        role="button"
-        className="item"
-        title={showTooltip ? undefined : plug.displayProperties.name}
-        onClick={onClick}
-        tabIndex={0}
-      >
-        <DefItemIcon itemDef={plug} />
-      </div>
+    <div
+      role="button"
+      className="item"
+      title={showTooltip ? undefined : plug.displayProperties.name}
+      onClick={onClick}
+      tabIndex={0}
+    >
+      <DefItemIcon itemDef={plug} />
     </div>
   );
 
   return (
     <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
-      <div className={styles.emptyItem}>
-        {showTooltip ? (
-          <PressTip tooltip={<PlugTooltip def={plug} />}>{contents}</PressTip>
-        ) : (
-          contents
-        )}
-      </div>
+      {showTooltip ? (
+        <PressTip tooltip={<PlugTooltip def={plug} />}>{contents}</PressTip>
+      ) : (
+        contents
+      )}
     </ClosableContainer>
   );
 }

@@ -15,7 +15,6 @@ import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -49,13 +48,7 @@ import {
 } from './auto-loadouts';
 import { applyLoadout } from './loadout-apply';
 import { Loadout } from './loadout-types';
-import {
-  convertToLoadoutItem,
-  extractArmorModHashes,
-  isMissingItems,
-  newLoadout,
-} from './loadout-utils';
-import { fromEquippedTypes } from './LoadoutDrawerContents';
+import { isMissingItems, newLoadout, newLoadoutFromEquipped } from './loadout-utils';
 import styles from './LoadoutPopup.m.scss';
 import {
   makeRoomForPostmaster,
@@ -75,7 +68,6 @@ interface StoreProps {
   previousLoadout?: Loadout;
   loadouts: Loadout[];
   query: string;
-  classTypeId: DestinyClass;
   stores: DimStore[];
   hasClassified: boolean;
   buckets: InventoryBuckets;
@@ -100,28 +92,21 @@ function mapStateToProps() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        $featureFlags.loadoutsPage && loadoutSort === LoadoutSort.ByEditTime
-          ? (l) => -(l.lastUpdatedAt ?? 0)
-          : (l) => l.name
+        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
       )
   );
 
-  return (state: RootState, ownProps: ProvidedProps): StoreProps => {
-    const { dimStore } = ownProps;
-
-    return {
-      previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
-      loadouts: loadoutsForPlatform(state, ownProps),
-      query: querySelector(state),
-      searchFilter: searchFilterSelector(state),
-      classTypeId: dimStore.classType,
-      stores: storesSelector(state),
-      buckets: bucketsSelector(state)!,
-      hasClassified: hasClassifiedSelector(state),
-      allItems: allItemsSelector(state),
-      filteredItems: filteredItemsSelector(state),
-    };
-  };
+  return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
+    previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
+    loadouts: loadoutsForPlatform(state, ownProps),
+    query: querySelector(state),
+    searchFilter: searchFilterSelector(state),
+    stores: storesSelector(state),
+    buckets: bucketsSelector(state)!,
+    hasClassified: hasClassifiedSelector(state),
+    allItems: allItemsSelector(state),
+    filteredItems: filteredItemsSelector(state),
+  });
 }
 
 function LoadoutPopup({
@@ -133,7 +118,6 @@ function LoadoutPopup({
   query,
   onClick,
   hasClassified,
-  classTypeId,
   searchFilter,
   buckets,
   allItems,
@@ -148,20 +132,10 @@ function LoadoutPopup({
 
   const makeNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
 
-  const newLoadoutFromEquipped = () => {
-    const items = dimStore.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
-    );
-    const loadout = newLoadout(
-      '',
-      items.map((i) => convertToLoadoutItem(i, true)),
-      items.flatMap((i) => extractArmorModHashes(i))
-    );
-    loadout.classType = classTypeId;
+  const handleNewLoadoutFromEquipped = () => {
+    const loadout = newLoadoutFromEquipped('', dimStore);
     editLoadout(loadout, { isNew: true });
   };
-
-  // TODO: move all these fancy loadouts to a new service
 
   const applySavedLoadout = (loadout: Loadout, { filterToEquipped = false } = {}) => {
     if (filterToEquipped) {
@@ -241,7 +215,7 @@ function LoadoutPopup({
             <span>{t('Loadouts.Create')}</span>
           </span>
           {!dimStore.isVault && (
-            <span onClick={newLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
+            <span onClick={handleNewLoadoutFromEquipped}>{t('Loadouts.FromEquipped')}</span>
           )}
         </li>
 
@@ -353,18 +327,19 @@ function LoadoutPopup({
           </li>
         )}
 
-        {$featureFlags.loadoutsPage && (
-          <li className={styles.menuItem}>
-            <Link to="../loadouts">
-              <AppIcon icon={faList} />
-              <span>{t('Loadouts.ManageLoadouts')}</span>
-            </Link>
-          </li>
-        )}
+        <li className={styles.menuItem}>
+          <Link to="../loadouts">
+            <AppIcon icon={faList} />
+            <span>{t('Loadouts.ManageLoadouts')}</span>
+          </Link>
+        </li>
 
         {loadouts.map((loadout) => (
           <li key={loadout.id} className={styles.menuItem}>
-            <span title={loadout.name} onClick={() => applySavedLoadout(loadout)}>
+            <span
+              title={loadout.notes ? loadout.notes : loadout.name}
+              onClick={() => applySavedLoadout(loadout)}
+            >
               {isMissingItems(allItems, loadout) && (
                 <AppIcon
                   className={styles.warningIcon}

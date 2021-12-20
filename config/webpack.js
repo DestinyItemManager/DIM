@@ -13,7 +13,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
-const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -394,13 +393,7 @@ module.exports = (env) => {
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips
-        '$featureFlags.abilityCooldowns': JSON.stringify(true),
-        // Show achievable stat ranges in LO
-        '$featureFlags.loStatRanges': JSON.stringify(true),
-        // Show mod assignment button in loadout drawer
-        '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
-        // Top level loadouts page
-        '$featureFlags.loadoutsPage': JSON.stringify(true),
+        '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(!env.release),
       }),
@@ -482,16 +475,6 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       })
     );
-
-    if (process.env.CI === 'true') {
-      config.plugins.push(
-        new PacktrackerPlugin({
-          upload: true,
-          fail_build: true,
-          project_token: 'b3b16a32-bc8b-489e-a6fd-2d1b98c25704',
-        })
-      );
-    }
   }
 
   return config;

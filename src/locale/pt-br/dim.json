@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus itens.",
     "ConfirmTitle": "Confirmar Ação",
-    "Error": "Falha ao alterar o item",
+    "Error": "Erro ao modificar mods ou perks",
+    "ErrorMessage": "Não foi possível equipar {{plug}} em {{item}}.\n\n{{error}}",
     "FailedToken": "Não foi possível obter a permissão para alterar o item"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
     "MissingTitle": "Conta não encontrada",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -111,7 +112,9 @@
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energia"
+    "Energy": "Energia",
+    "Unused": "Não usado",
+    "Used": "Usado"
   },
   "ErrorBoundary": {
     "Title": "Algo deu errado"
@@ -237,8 +240,9 @@
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
     "StatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo.",
-    "Stats": "Exibe itens baseado em um valor de atributo específico. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
-    "StatsBase": "Filtra armaduras com base no valor base do atributo, sem incluir mods anexados ou obra-prima. Suporta a adição de atributos conectando vários nomes de atributos com o símbolo +.",
+    "Stats": "Mostra itens baseado em um atributo específico. $t(Filter.StatsExtras)",
+    "StatsBase": "Filtra armaduras baseando-se no valor base do atributo, não incluindo mods anexados ou obra-prima. $t(Filter.StatsExtras)",
+    "StatsExtras": "Suporta a adição de atributos conectando vários nomes de atributos (em inglês) com o símbolo +. Há também palavras-chave especiais highest (mais alto), secondhighest (segundo mais alto), thirdhighest (terceiro mais alto), etc. que correspondem à uma classificação dentre os atributos de um item.",
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "Tags": {
@@ -481,6 +485,7 @@
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "ShareBuild": "Compartilhar esta configuração",
+    "ShareBuildWithNotes": "Compartilhar Com Anotações",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
@@ -491,12 +496,16 @@
     "UnlockItem": "Desfixar item"
   },
   "Loadouts": {
+    "Abilities": "Habilidades",
     "AddEquippedItems": "Adicionar Equipado",
+    "AddNotes": "Adicionar Anotações",
     "AddUnequippedItems": "Adicionar Não Equipados",
     "AlreadyExistsClass": "Um set com este nome já existe para o seu {{className}}.",
     "AlreadyExistsGlobal": "Um set global com este nome já existe.",
     "Any": "Qualquer classe",
     "AppliedError": "Nenhum dos itens do seu set pode ser transferido.",
+    "AppliedModsWarn": "Apenas {{successful}} de {{total}} mods puderam ser aplicados.",
+    "AppliedOverridesWarn": "Apenas {{successful}} de {{total}} opções da subclasse foram atualizadas.",
     "AppliedWarn": "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros.",
     "Apply": "Aplicar",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "Alguns itens deste set não estão mais em seu inventário.",
     "ModPlacement": "Localização do Mod",
     "Mods": "Mods",
-    "ModsInfo": "Mods devem ser equipados diretamente no jogo, uma vez que o DIM não pode de fazer isso.",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
+    "NotesPlaceholder": "Escreva algumas anotações sobre este set",
     "NotificationMessage": "Enviando set com um item para o cofre.",
+    "NotificationMessageMods": "Será aplicado um único mod e serão removidos todos os demais de sua armadura equipada.",
+    "NotificationMessageMods_plural": "Serão aplicados {{count}} mods e serão removidos todos os demais de sua armadura equipada.",
+    "NotificationMessageSubclass": "Será aplicado 1 opção na subclasse equipada.",
+    "NotificationMessageSubclass_plural": "Serão aplicadas {{count}} opções na subclasse equipada.",
     "NotificationMessage_female": "Aplicando set com 1 item na {{store}}",
     "NotificationMessage_female_plural": "Aplicando set com {{count}} itens na {{store}}",
     "NotificationMessage_male": "Aplicando set com 1 item no {{store}}",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "Exibir Localização do Mod",
     "SortByEditTime": "Ordenar pela última alteração",
     "SortByName": "Ordenar por nome",
+    "SubclassOptions": "Opções da {{subclass}}",
+    "SubclassOptionsSearch": "Pesquisa as opções da {{subclass}}",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
@@ -613,6 +628,12 @@
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favoritar {{itemType}}",
+      "Favorited": "Favoritado",
+      "Unfavorite": "Desfavoritar {{itemType}}",
+      "Unfavorited": "Desfavoritado"
+    },
     "Infuse": "Infundir",
     "LockUnlock": {
       "Lock": "Travar {{itemType}}",
@@ -816,7 +837,6 @@
     "ApplyPerks": "Aplicar perks",
     "GridStyle": "Exibir perks em grades",
     "InsertModButton": "Inserir mod",
-    "InsertPlugError": "Mod não pôde ser inserido",
     "ListStyle": "Exibir perks em listagem",
     "SelectModButton": "Selecionar mod",
     "SelectWishlistPerks": "Pré-visualizar lista de desejos de perks"

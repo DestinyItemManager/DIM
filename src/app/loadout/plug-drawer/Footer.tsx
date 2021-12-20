@@ -2,15 +2,15 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
-import { getModRenderKey } from '../mod-utils';
+import { createGetModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
 
 interface Props {
   isPhonePortrait: boolean;
-  selected: PluggableInventoryItemDefinition[];
+  selected: { plug: PluggableInventoryItemDefinition; selectionType: 'multi' | 'single' }[];
   acceptButtonText: string;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
-  onPlugSelected(plug: PluggableInventoryItemDefinition): void;
+  handlePlugSelected(plug: PluggableInventoryItemDefinition): void;
 }
 
 export default function Footer({
@@ -18,12 +18,10 @@ export default function Footer({
   selected,
   acceptButtonText,
   onSubmit,
-  onPlugSelected,
+  handlePlugSelected,
 }: Props) {
   useHotkey('enter', acceptButtonText, onSubmit);
-
-  // used for creating unique keys for the mods
-  const plugCounts = {};
+  const getModRenderKey = createGetModRenderKey();
 
   return (
     <div className={styles.footer}>
@@ -33,12 +31,12 @@ export default function Footer({
           {acceptButtonText}
         </button>
       </div>
-      <div className={styles.selectedMods}>
-        {selected.map((plug) => (
+      <div className={styles.selectedPlugs}>
+        {selected.map((s) => (
           <PlugDef
-            key={getModRenderKey(plug, plugCounts)}
-            plug={plug}
-            onClose={() => onPlugSelected(plug)}
+            key={getModRenderKey(s.plug)}
+            plug={s.plug}
+            onClose={s.selectionType === 'multi' ? () => handlePlugSelected(s.plug) : undefined}
           />
         ))}
       </div>

@@ -165,6 +165,7 @@ export default React.memo(function ItemActionsDropdown({
     <Dropdown
       options={dropdownOptions}
       kebab={true}
+      className={styles.dropdownButton}
       offset={isPhonePortrait ? 10 : 3}
       fixed={fixed}
     />

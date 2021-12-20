@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Destiny2コンパニオンアプリを使用してDIMを承認してから、アイテムを変更をしてください。",
     "ConfirmTitle": "操作を確認",
-    "Error": "アイテムの変更エラー",
+    "Error": "Modまたはパークの変更でエラーが発生しました",
+    "ErrorMessage": "{{item}} に {{plug}} を装備できませんでした。\n\n{{error}}",
     "FailedToken": "アイテムを変更する権限を取得できません"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
     "MissingTitle": "アカウントが見つかりません",
     "NoCharacters": "このBungie.netアカウントに関連付けられているDestinyキャラクタはありません。別のアカウントにログインしてみてください。",
-    "PlayStation": "PS4",
+    "PlayStation": "Playstation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -111,7 +112,9 @@
     "WrongFields": "CSVには「Id」、「Notes」、「Tag」、および「Hash」の列が必要です"
   },
   "EnergyMeter": {
-    "Energy": "エネルギー"
+    "Energy": "エネルギー",
+    "Unused": "不使用",
+    "Used": "使用中"
   },
   "ErrorBoundary": {
     "Title": "何か問題が発生したようです"
@@ -237,8 +240,9 @@
     "StackLevel": "スタック内のアイテムの量に基づいてアイテムを表示します。",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど) を表示",
     "StatLower": "同じ種類の防具の中で、他のアーマーよりも厳密にステータスが低い防具を表示します。",
-    "Stats": "特定のステータス値に基づいてアイテムを表示します。複数のステータス名を + 記号で繋ぐことで、ステータスの追加をサポートします。",
-    "StatsBase": "Mod の追加やマスターワークを含まず、基本ステータスの値でアーマーをフィルターします。複数のステータス名を + 記号で繋ぐことで、ステータスの追加をサポートします。",
+    "Stats": "特定のステータス値に基づいてアイテムを表示します。 $t(Filter.StatsExtras)",
+    "StatsBase": "装備済のModやマスターワークの増量分を含まず、基礎のステータス値に基づいてアーマーをフィルタリングします。$t(Filter.StatsExtras)",
+    "StatsExtras": "複数のステータス名を＋マークでつなぐことで、ステータスの追加に対応しています。  また、アイテムのステータスの中での順位に基づいてステータスを一致させる特別なキーワード、highest、secondhighest、thirdhighestなどがあります。",
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
     "Tags": {
@@ -481,6 +485,7 @@
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "ShareBuild": "ビルド設定を共有",
+    "ShareBuildWithNotes": "メモで共有する",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
@@ -491,12 +496,16 @@
     "UnlockItem": "アイテムのピン留めを解除"
   },
   "Loadouts": {
+    "Abilities": "アビリティ",
     "AddEquippedItems": "設備品を追加",
+    "AddNotes": "メモを追加する",
     "AddUnequippedItems": "未装備を追加",
     "AlreadyExistsClass": "{{className}} にはこの名前のロードアウトが既に存在します。",
     "AlreadyExistsGlobal": "この名前のグローバルロードアウトは既に存在します。",
     "Any": "全てのクラス",
     "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
+    "AppliedModsWarn": "{{successful}} 個中 {{total}} 個の mod のみ適用できます。",
+    "AppliedOverridesWarn": "{{total}} 個中の {{successful}} 個のサブクラスオプションのみ更新できます。",
     "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{{total}} の{{failed}} アイテムにエラーがありました。",
     "Apply": "適用",
     "ApplySearch": "検索 {{query}} を転送",
@@ -514,10 +523,10 @@
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
-    "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは通称「1つのエキゾチック」ルールによって制限されません。",
     "FilteredItems": "フィルタ処理された項目",
     "FindAnother": "別の {{name}} を検索する",
-    "FromEquipped": "装備している",
+    "FromEquipped": "装備中",
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
     "Generated": "T{{tier}} ロードアウト",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "このロードアウトに含まれるアイテムの一部は保管庫に存在しません。",
     "ModPlacement": "Mod の配置",
     "Mods": "Mod",
-    "ModsInfo": "DIMはMODを装備できません。ゲーム内で行う必要があります。",
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
     "NoExotics": "エングラムは転送できません。",
     "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
+    "NotesPlaceholder": "この装備に関するメモを書く",
     "NotificationMessage": "1つのアイテムを含むロードアウトを保管庫に送信します。",
+    "NotificationMessageMods": "これにより1個の mod が適用され、他の全 mod が装備されたアーマーから除去されます。",
+    "NotificationMessageMods_plural": "これにより {{count}} 個の mod が適用され、他の全 mod が装備されたアーマーから除去されます。",
+    "NotificationMessageSubclass": "これにより、装備されたサブクラスに 1 つのオプションが適用されます。",
+    "NotificationMessageSubclass_plural": "これにより、装備されたサブクラスに {{count}} オプションが適用されます。",
     "NotificationMessage_female": "{{store}} に1つのロードアウトのアイテムを装備します。",
     "NotificationMessage_female_plural": "{{count}} 個のロードアウトのアイテムを{{store}} に装備します。",
     "NotificationMessage_male": "{{store}} に1つのロードアウトのアイテムを装備します。",
@@ -553,7 +566,7 @@
     "NotificationTitle": "ロードアウト: {{name}}",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "OpenInOptimizer": "防具の最適化",
-    "PullFromPostmaster": "ポストマスターからのアイテムの取得",
+    "PullFromPostmaster": "ポストマスターからアイテムを取得する",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
     "PullFromPostmasterGeneralError": "ポストマスターからすべてのアイテムを取得できません。",
     "PullFromPostmasterNotification": "1つのポストマスターアイテムを{{store}} に引き出します。",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "Mod の配置を表示",
     "SortByEditTime": "最終更新でソート",
     "SortByName": "名前でソート",
+    "SubclassOptions": "{{subclass}} オプション",
+    "SubclassOptionsSearch": "{{subclass}} オプションを検索",
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedMods": "割り当てられていない Mod",
     "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
@@ -613,6 +628,12 @@
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} をお気に入りに追加する",
+      "Favorited": "お気に入りに追加する",
+      "Unfavorite": "{{itemType}} をお気に入りから解除",
+      "Unfavorited": "お気に入りから解除"
+    },
     "Infuse": "融合する",
     "LockUnlock": {
       "Lock": "ロックする {{itemType}}",
@@ -816,7 +837,6 @@
     "ApplyPerks": "パークを適用",
     "GridStyle": "パークをグリッドで表示",
     "InsertModButton": "Mod を挿入",
-    "InsertPlugError": "Mod を挿入できません",
     "ListStyle": "パークをリストで表示",
     "SelectModButton": "Mod を選択",
     "SelectWishlistPerks": "お気に入りパークのプレビュー"

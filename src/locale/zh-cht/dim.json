@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "請使用\"命運2同伴應用\"授予DIM修改您物品的許可權。",
     "ConfirmTitle": "確認操作",
-    "Error": "更換物品時出錯",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "無權限更換物品"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "你試圖查看的賬戶並未連接到你的 Bungie.net 賬戶。",
     "MissingTitle": "找不到帳戶",
     "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "活動",
@@ -111,7 +112,9 @@
     "WrongFields": "CSV檔案中必須有'Id'，'Notes'，'Tag'，'Hash'列（編號，注釋，標籤，雜湊）"
   },
   "EnergyMeter": {
-    "Energy": "能量"
+    "Energy": "能量",
+    "Unused": "Unused",
+    "Used": "Used"
   },
   "ErrorBoundary": {
     "Title": "發生了一些錯誤"
@@ -237,8 +240,9 @@
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
     "StatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲。",
-    "Stats": "按特定屬性的數值顯示物品。用加號銜接多個屬性名稱便可組合過濾。",
-    "StatsBase": "按基礎屬性數值過濾護甲，並排除模組或大師傑作的影響。用加號銜接多個屬性名稱便可組合過濾。",
+    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "Tags": {
@@ -481,6 +485,7 @@
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "ShareBuild": "分享配裝設置",
+    "ShareBuildWithNotes": "Share With Notes",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
@@ -491,12 +496,16 @@
     "UnlockItem": "取消固定物品"
   },
   "Loadouts": {
+    "Abilities": "Abilities",
     "AddEquippedItems": "添加已裝備",
+    "AddNotes": "Add Notes",
     "AddUnequippedItems": "添加未裝備的",
     "AlreadyExistsClass": "{{className}} 下同名配裝已經存在",
     "AlreadyExistsGlobal": "同名全域配裝已經存在",
     "Any": "全部職業",
     "AppliedError": "沒有物品可用於配裝.",
+    "AppliedModsWarn": "Only {{successful}} of {{total}} mods could be applied.",
+    "AppliedOverridesWarn": "Only {{successful}} of {{total}} subclass options could be updated.",
     "AppliedWarn": "已為您完成部分配裝，但{{total}} 個中有{{failed}} 個物品發生錯誤。",
     "Apply": "Apply",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModPlacement": "模組位置",
     "Mods": "模組",
-    "ModsInfo": "DIM 無法裝備模組，必須在遊戲中完成。",
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
     "NoExotics": "沒有記憶水晶可以轉移.",
     "NoSpace": "你的保險庫和其他角色均已滿。",
+    "NotesPlaceholder": "Write some notes about this loadout",
     "NotificationMessage": "正在將包含1件物品的配裝轉移到保險櫃",
+    "NotificationMessageMods": "This will apply 1 mod and remove all other mods from your equipped armor.",
+    "NotificationMessageMods_plural": "This will apply {{count}} mods and remove all other mods from your equipped armor.",
+    "NotificationMessageSubclass": "This will apply 1 option to the equipped subclass.",
+    "NotificationMessageSubclass_plural": "This will apply {{count}} options to the equipped subclass.",
     "NotificationMessage_female": "正在為{{store}}應用 1 件物品的配裝",
     "NotificationMessage_female_plural": "正在為{{store}}應用{{count}}件物品的配裝",
     "NotificationMessage_male": "正在為{{store}}應用 1 件物品的配裝",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "顯示模組位置",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
+    "SubclassOptions": "{{subclass}} options",
+    "SubclassOptionsSearch": "Search {{subclass}} options",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedMods": "未分配的模組",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
@@ -613,6 +628,12 @@
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favorite {{itemType}}",
+      "Favorited": "Favorited",
+      "Unfavorite": "Unfavorite {{itemType}}",
+      "Unfavorited": "Unfavorited"
+    },
     "Infuse": "灌注",
     "LockUnlock": {
       "Lock": "鎖定{{itemType}}",
@@ -816,7 +837,6 @@
     "ApplyPerks": "應用特性",
     "GridStyle": "按網格顯示特性",
     "InsertModButton": "插入模組",
-    "InsertPlugError": "無法插入模組",
     "ListStyle": "按列表顯示特性",
     "SelectModButton": "選擇模組",
     "SelectWishlistPerks": "預覽願望單特性"

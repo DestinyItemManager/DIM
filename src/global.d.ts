@@ -24,12 +24,6 @@ declare const $featureFlags: {
   awa: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
-  /** Show achievable stat ranges in LO */
-  loStatRanges: boolean;
-  /** Show mod assignment button in loadout drawer */
-  loadoutModAssignments: boolean;
-  /** Top level loadouts page */
-  loadoutsPage: boolean;
   /** Item feed sidebar */
   itemFeed: boolean;
 };

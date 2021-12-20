@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Bitte benutze die Destiny 2-Gefährten-App, um DIM das Modifizieren deiner Gegenstände zu erlauben.",
     "ConfirmTitle": "Aktion bestätigen",
-    "Error": "Fehler beim Ändern des Gegenstands",
+    "Error": "Fehler beim Ändern von Mods oder Perks",
+    "ErrorMessage": "Wir konnten {{plug}} nicht auf {{item}} ausrüsten.\n\n{{error}}",
     "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
     "MissingTitle": "Account nicht gefunden",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -30,13 +31,13 @@
     "TrashlistedRolls": "Mülllisten Roll",
     "TrashlistedRolls_plural": "{{count, number}} Mülllisten Rolls",
     "Unknown": "Unbekannter Gegenstand",
-    "WishlistedRolls": "Wunschlisten Roll",
-    "WishlistedRolls_plural": "{{count, number}} Wunschlisten Rolls",
+    "WishlistedRolls": "Wunschlisten-Roll",
+    "WishlistedRolls_plural": "{{count, number}} Wunschlisten-Rolls",
     "YourItems": "Deine Gegenstände"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "Steam": "Es sieht so aus, als ob diese Seite im Steam-Browser geladen ist. Aufgrund seiner begrenzten Funktionen und Ressourcen, kann DIM eventuell unerwartet oder zeitweilig nicht laufen. Wir können dafür keinen Support bieten.",
+    "Unsupported": "Das DIM-Team unterstützt diesen Browser nicht. Einige oder alle DIM-Funktionen funktionieren möglicherweise nicht."
   },
   "Bucket": {
     "": "",
@@ -59,15 +60,15 @@
     "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
     "DevVersion": "Sie haben eine Entwicklungsversion von DIM? Sie müssen Ihre Chrome-Erweiterung mit Bungie.net registrieren.",
     "Difficulties": "Bungie.net hat derzeit Schwierigkeiten.",
-    "ErrorTitle": "Bungie.net Fehler",
+    "ErrorTitle": "Bungie.net-Fehler",
     "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_female": "Du hast versucht '{{name}}' {{type}} zu deiner {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
     "ItemUniquenessExplanation_male": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
-    "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
+    "Maintenance": "Bungie.net-Server werden zur Zeit gewartet.",
     "MissingInventory": "Bungie.net hat dein Inventar nicht zurückgegeben, möglicherweise weil deine Privatsphäre-Einstellungen es verhindern. Versuche dich auszuloggen und dich wieder einzuloggen.",
-    "NetworkError": "Netzwerk Fehler - {{status}} {{statusText}}",
+    "NetworkError": "Netzwerkfehler - {{status}} {{statusText}}",
     "NoAccount": "Kein Destiny Konto gefunden. Hast du die richtige Plattform ausgewählt?",
-    "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
+    "NoAccountForPlatform": "Konnte auf {{platform}} keinen Destiny-Account für dich finden.",
     "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
     "NotConnectedOrBlocked": "Du bist eventuell nicht mit dem Internet verbunden, oder ein Werbeblocker oder eine Privatsphäre-Erweiterung blockieren möglicherweise Bungie.net.",
     "NotLoggedIn": "Bitte autorisiere DIM, um diese App zu nutzen.",
@@ -77,7 +78,7 @@
     "Throttled": "Bungie.net beschränkt, wie viele Anfragen DIM machen kann.",
     "Twitter": "Hol dir Status-Updates auf:",
     "UnknownError": "Bungie.net Nachricht: {{message}}",
-    "VendorNotFound": "Händler Daten nicht verfügbar."
+    "VendorNotFound": "Händlerdaten nicht verfügbar."
   },
   "Compare": {
     "Archetype": "Urtyp",
@@ -91,9 +92,9 @@
     "SwipeAdvice": "Zum Scrollen zwei Finger benutzen"
   },
   "Cooldown": {
-    "Grenade": "Granaten Abklingzeit: {{cooldown}}",
-    "Melee": "Nahkampf Abklingzeit: {{cooldown}}",
-    "Super": "Super Abklingzeit: {{cooldown}}"
+    "Grenade": "Granaten-Abklingzeit: {{cooldown}}",
+    "Melee": "Nahkampf-Abklingzeit: {{cooldown}}",
+    "Super": "Super-Abklingzeit: {{cooldown}}"
   },
   "Countdown": {
     "Days": "1 Tag",
@@ -107,11 +108,13 @@
     "ImportFailed": "Fehler beim Importieren von Tags/Notizen von CSV: {{error}}",
     "ImportSuccess": "Markierung/Notiz für ein Element geladen.",
     "ImportSuccess_plural": "Markierungen/Notizen für {{count}} Einträge geladen.",
-    "ImportWrongFileType": "Die Datei ist keine CSV Datei.",
-    "WrongFields": "CSV muss 'Id', 'Notes', 'Tag' und 'Hash' Spalten haben."
+    "ImportWrongFileType": "Die Datei ist keine CSV-Datei.",
+    "WrongFields": "CSV muss die Spalten 'Id', 'Notes', 'Tag' und 'Hash' haben."
   },
   "EnergyMeter": {
-    "Energy": "Energie"
+    "Energy": "Energie",
+    "Unused": "Nicht benutzt",
+    "Used": "Benutzt"
   },
   "ErrorBoundary": {
     "Title": "Ein Fehler ist aufgetreten"
@@ -164,7 +167,7 @@
     "BulkTag_plural": "{{count}} ausgewählte Gegenstände als {{tag}} markiert.",
     "Class": "Zeigt Gegenstände basierend auf ihrer Klassenaffinität an.",
     "Combine": "Filter können kombiniert oder mit Klammern gruppiert werden. Nutze \"or\" und \"and\", um deine Suche einzugrenzen, zum Beispiel \"{{example}}\".",
-    "ContributePower": "Zeige Gegenstände die Power haben und zu deinem Power-Level beitragen können.",
+    "ContributePower": "Zeige Gegenstände, die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Curated": "Zeigt Gegenstände, welche empfohlene Perks besitzen.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
@@ -176,7 +179,7 @@
     "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "Energy": "Zeigt Gegenstände mit Energiekapazität (Rüstung 2.0).",
     "Engrams": "Zeige Engramme.",
-    "Equipment": "Gegenstände die ausgerüstet werden können.",
+    "Equipment": "Gegenstände, die ausgerüstet werden können.",
     "Equipped": "Gegenstände, die aktuell von einem Charakter ausgerüstet sind.",
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
     "Filter": "Filter",
@@ -209,7 +212,7 @@
     "ModSlot": "Zeigt Rüstungen mit einem bestimmten Saisonal Mod Slot.",
     "Mods": {
       "Y2": "Zeigt Gegenstände mit einem ausgerüstetem Jahr 2 Mod.",
-      "Y3": "Zeigt Gegenstände mit beliebigen Rüstung 2.0 Mods."
+      "Y3": "Zeigt Gegenstände mit beliebigen Rüstung-2.0-Mods."
     },
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
     "Negate": "Um eine Suche zu negieren, nutze ein Minuszeichen als Präfix für diesen Suchbegriff oder dem Wort \"not\", zum Beispiel \"{{notexample}}\" oder \"{{notexample2}}\".",
@@ -220,13 +223,13 @@
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PinnacleReward": "Zeigt Jagden, welche eine Spitzenbelohnung hervorbringen.",
-    "Postmaster": "Items die derzeit bei der Poststelle sind.",
+    "Postmaster": "Gegenstände, die derzeit bei der Poststelle sind.",
     "PowerKeywords": "Verwende das Hardcap (pinnaclecap) oder Softcap Schlüsselwort statt einer Zahl, um auf das Powerlevel der aktuellen Saison zu verweisen.",
     "PowerLevel": "Zeigt Gegenstände basierend auf ihrem Powerlevel an. $t(Filter.PowerKeywords)",
     "PowerLimit": "Zeigt Gegenstände basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Zeigt Jagden welche eine mächtige Belohnung hervorbringen.",
     "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
-    "RandomRoll": "Zeige Items die mit Zufalls-Rolls droppen.",
+    "RandomRoll": "Zeige Items, die mit Zufalls-Rolls droppen.",
     "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
@@ -237,8 +240,9 @@
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "StatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs.",
-    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Gegenstands-Wert. Unterstützt das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
-    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, ohne ausgerüstete Mods oder Meisterwerk-Wert-Boni. Unterstützt das Hinzufügen von Werten durch das Verbinden mehrerer Wertbezeichnungen mit dem + Symbol.",
+    "Stats": "Zeigt Items basierend auf einem bestimmten Wert der Statistik. $t(Filter.StatsExtras)",
+    "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, Mod- oder Meisterwerk-Verbesserungen werden ignoriert. $t(Filter.StatsExtras)",
+    "StatsExtras": "Unterstützt Wert-Addition durch das Verbinden mehrerer Wertenamen mit + oder &. Es gibt auch spezielle Schlüsselwörter (highest, secondhighest, thirdhighest, usw.), die den jeweiligen Werten je nach Rang innerhalb des Gegenstands entsprechen.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchstmöglichen Wert für einen bestimmten Wert. Enthält alle Gegenstände mit den höchsten Werten.",
     "Tags": {
@@ -247,7 +251,7 @@
     },
     "Timelost": "\\(zeitverirrt\\)",
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
-    "Transferable": "Gegenstände die zwischen den Charakteren verschoben werden können.",
+    "Transferable": "Gegenstände, die zwischen den Charakteren verschoben werden können.",
     "Trashlist": "Zeigt Gegenstände, die der Müllliste deiner Wunschliste entsprechen.",
     "Unascended": "Zeigt Gegenstände, die einen aufsteigenden Knoten haben, die nicht aufgestiegen sind.",
     "Undo": "Rückgängig",
@@ -349,7 +353,7 @@
       "Vault": "Es sind zu viele '{{itemtype}}'-Gegenstände im {{store}}."
     },
     "Classified": "Dieser Gegenstand ist geheim und kann zur Zeit nicht übertragen werden.",
-    "Classified2": "Klassifizierter Gegenstand. Über diesen Gegenstand werden aktuell noch keine Informationen durch Bungie bereitgestellt. Füge dem Gegenstand Notizen hinzu und nutze \"notes:\"-Suchfilter um ihn zu finden.",
+    "Classified2": "Klassifizierter Gegenstand. Über diesen Gegenstand werden aktuell noch keine Informationen durch Bungie bereitgestellt. Füge dem Gegenstand Notizen hinzu und nutze den \"notes:\"-Suchfilter, um ihn zu finden.",
     "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden, um {{itemname}} abzulegen",
     "ExoticError": "'{{itemname}}' kann nicht ausgerüstet werden, da der exotische Gegenstand im {{slot}} Slot nicht abgelegt werden kann. ({{error}})",
     "NotEnoughRoom": "Es gibt nichts, was wir vom {{store}} wegbewegen könnten, um Platz für {{itemname}} zu schaffen",
@@ -375,18 +379,18 @@
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
       "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen der Ausrüstung angezeigt werden.",
-      "Discipline": "Disziplin beschleunigt die Granaten Aufladezeit",
+      "Discipline": "Disziplin beschleunigt die Granaten-Aufladezeit",
       "DragAndDrop": "Klicke und ziehe Gegenstände in die Felder, um Sets aus nur dieser Ausrüstung zu erstellen",
       "Help": "Brauchst du Hilfe?",
       "HigherTiers": "Höhere Stufen sind besser",
-      "Intellect": "Intellekt beschleunigt die Super Aufladezeit",
+      "Intellect": "Intellekt beschleunigt die Super-Aufladezeit",
       "Lock": "Sperre eine bestimmte Art von Perk, indem du auf sein Feld klickst und den Perk auswählst",
       "MultiPerk": "Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die gewünschten Perks",
-      "NoPerk": "Wenn ein Perk nicht auftaucht besitzt du keinen Gegenstand mit diesem Perk",
+      "NoPerk": "Wenn ein Perk nicht auftaucht, besitzt du keinen Gegenstand mit diesem Perk",
       "Or": "Rüstung mit irgendeinem dieser Perks wird benutzt (\"oder\")",
       "ShiftClick": "Shift+Klick auf einen Gegenstand, um Sets ohne diese Ausrüstung zu erstellen",
       "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu.",
-      "Strength": "Stärke beschleunigt die Nahkampf Aufladezeit",
+      "Strength": "Stärke beschleunigt die Nahkampf-Aufladezeit",
       "Synergy": "Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen geben, die du benutzt.",
       "Tier11Example": "4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Stufe 11)"
     },
@@ -420,7 +424,7 @@
     "SelectMods": "Mods auswählen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
-    "ShowGear": "{{class}} Rüstung",
+    "ShowGear": "{{class}}-Rüstung",
     "Vendor": "Gegenstände von Händlern einbeziehen"
   },
   "Loading": {
@@ -481,7 +485,8 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Teile Ausrüstungseinstellungen",
-    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
+    "ShareBuildWithNotes": "Mit Notizen teilen",
+    "SpeedReport": "{{combos, number}} Kombinationen in {{time}} Sekunden erstellt",
     "StatTierIgnoreOption": "Ignorieren",
     "StatTierIncludeOption": "Einschließen",
     "TheseModsCouldNotBeAssigned": "Diese Mods konnten der bestehenden Ausrüstung nicht zugewiesen werden.",
@@ -491,12 +496,16 @@
     "UnlockItem": "Abpinnen"
   },
   "Loadouts": {
+    "Abilities": "Fähigkeiten",
     "AddEquippedItems": "Ausgerüstetes hinzufügen",
+    "AddNotes": "Notizen hinzufügen",
     "AddUnequippedItems": "Unausgerüstet hinzufügen",
     "AlreadyExistsClass": "Eine Ausrüstung mit diesem Namen existiert bereits für {{className}}.",
     "AlreadyExistsGlobal": "Eine globale Ausrüstung mit diesem Namen existiert bereits.",
     "Any": "Jede Klasse",
     "AppliedError": "Keines der Gegenstände in deiner Ausrüstung konnte übertragen werden.",
+    "AppliedModsWarn": "Es konnten nur {{successful}} von {{total}} Mods angewendet werden.",
+    "AppliedOverridesWarn": "Es konnten nur {{successful}} von {{total}} Fokus-Optionen angewendet werden.",
     "AppliedWarn": "Deine Ausrüstung wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler.",
     "Apply": "Anwenden",
     "ApplySearch": "Übertrage Suche \"{{query}}\"",
@@ -525,10 +534,10 @@
     "LoadoutName": "Ausrüstungs-Name",
     "Loadouts": "Ausrüstungen",
     "MakeRoom": "Schaffe Platz für Poststelle",
-    "MakeRoomDone": "Platz für einen Poststellen-Gegenstand durch verschieben von einem Gegenstand vom {{store}} geschaffen.",
-    "MakeRoomDone_female": "Platz für einen Poststellen-Gegenstand durch verschieben von einem Gegenstand von {{store}} geschaffen.",
+    "MakeRoomDone": "Platz für 1 Poststellen-Gegenstand durch Verschieben von 1 Gegenstand vom {{store}} geschaffen.",
+    "MakeRoomDone_female": "Platz für 1 Poststellen-Gegenstand durch Verschieben von 1 Gegenstand von {{store}} geschaffen.",
     "MakeRoomDone_female_plural": "Platz für {{count}} Poststellen-Gegenstände durch Verschieben von {{movedNum}} Gegenständen von {{store}} geschaffen.",
-    "MakeRoomDone_male": "Platz für einen Poststellen-Gegenstand durch verschieben von einem Gegenstand vom {{store}} geschaffen.",
+    "MakeRoomDone_male": "Platz für 1 Poststellen-Gegenstand durch Verschieben von 1 Gegenstand vom {{store}} geschaffen.",
     "MakeRoomDone_male_plural": "Platz für {{count}} Poststellen-Gegenstände durch Verschieben von {{movedNum}} Gegenständen vom {{store}} geschaffen.",
     "MakeRoomDone_plural": "Platz für {{count}} Poststellen-Gegenstände durch Verschieben von {{movedNum}} Gegenständen vom {{store}} geschaffen.",
     "MakeRoomError": "Es kann kein Platz für alle Poststellen-Gegenstände geschaffen werden: {{error}}.",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
     "ModPlacement": "Mod-Platzierung",
     "Mods": "Mods",
-    "ModsInfo": "DIM kann keine Mods ausstatten, das muss im Spiel geschehen.",
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
+    "NotesPlaceholder": "Schreibe ein paar Notizen zu dieser Ausrüstung",
     "NotificationMessage": "Sende Ausrüstung mit 1 Gegenstand zum Tresor.",
+    "NotificationMessageMods": "Dies wird 1 Mod anwenden und alle anderen Mods von deiner ausgerüsteten Rüstung entfernen.",
+    "NotificationMessageMods_plural": "Dies wird {{count}} Mods anwenden und alle anderen Mods von deiner ausgerüsteten Rüstung entfernen.",
+    "NotificationMessageSubclass": "Dies wird 1 Option auf den ausgerüsteten Fokus anwenden.",
+    "NotificationMessageSubclass_plural": "Dies wird {{count}} Optionen auf den ausgerüsteten Fokus anwenden.",
     "NotificationMessage_female": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
     "NotificationMessage_female_plural": "Übertrage Ausrüstung mit {{count}} Gegenständen auf {{store}}",
     "NotificationMessage_male": "Übertrage Ausrüstung mit 1 Gegenstand auf {{store}}",
@@ -577,9 +590,11 @@
     "ShowModPlacement": "Mod-Platzierung anzeigen",
     "SortByEditTime": "Nach Änderungsdatum sortieren",
     "SortByName": "Nach Namen sortieren",
+    "SubclassOptions": "{{subclass}}-Optionen",
+    "SubclassOptionsSearch": "{{subclass}}-Optionen suchen",
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber deine Ausrüstung verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedMods": "Nicht zugewiesene Mods",
-    "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X, zum Entfernen:",
+    "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X zum Entfernen:",
     "WeaponsOnly": "Waffen"
   },
   "Manifest": {
@@ -593,7 +608,7 @@
     "Daily": "Tägliche Herausforderung",
     "OneTime": "Einmalige Herausforderung",
     "SeasonEnds": "Saison endet in ",
-    "SeasonalRank": "Saison Rang {{rank}}",
+    "SeasonalRank": "Saisonrang {{rank}}",
     "Special": "Besondere Event-Herausforderung",
     "Tutorial": "Tutorial-Herausforderung",
     "Unknown": "Herausforderung",
@@ -613,6 +628,12 @@
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
     "Equip": "Ausrüsten",
+    "FavoriteUnFavorite": {
+      "Favorite": "{{itemType}} zu Favoriten hinzufügen",
+      "Favorited": "Favorit",
+      "Unfavorite": "{{itemType}} aus Favoriten entfernen",
+      "Unfavorited": "Kein Favorit"
+    },
     "Infuse": "Infundieren",
     "LockUnlock": {
       "Lock": "{{itemType}} sperren",
@@ -620,7 +641,7 @@
       "Unlock": "{{itemType}} entsperren",
       "Unlocked": "Entsperrt"
     },
-    "MissingSockets": "Perk und Mod Details sind nicht verfügbar, während Bungie ihre Dienste aktualisiert. Sie kommen zurück, sobald die Aktualisierung beendet wurde, in der Regel in ein paar Stunden.",
+    "MissingSockets": "Perk- und Mod-Details sind nicht verfügbar, während Bungie ihre Dienste aktualisiert. Sie kommen zurück, sobald die Aktualisierung beendet wurde, in der Regel in ein paar Stunden.",
     "Notes": "Notizen:",
     "OverviewTab": "Übersicht",
     "Owned": "Dieser Gegenstand ist in deinem Inventar.",
@@ -767,16 +788,16 @@
     "ColumnSizeAuto": "Automatisch",
     "CsvImport": "Importiere CSV",
     "CustomStatDesc": "Wähle Rüstungswerte, um einen benutzerdefinierten Gesamtwert zu erstellen, der im Popup, Organizer und Vergleich angezeigt wird. Suche mit stat:custom:>=30.",
-    "Data": "Excel Tabelle",
+    "Data": "Excel-Tabelle",
     "DefaultItemSizeNote": "Eine Größe von 50px wird am schärfsten aussehen, ohne das Bild oder den Text zu verwischen.",
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Gegenstände zu finden und du kannst das Vergleichstool oder den Organizer nutzen, um verwandte Gegenstände zu begutachten.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
     "ExpandSingleCharacter": "Alle Charaktere anzeigen",
-    "ExportSS": "Inventar Tabellen",
+    "ExportSS": "Inventar-Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
-    "ExportSSNoStores": "Du musst dein Inventar einmal laden bevor du diesen Knopf drückst.",
+    "ExportSSNoStores": "Du musst dein Inventar einmal laden, bevor du diesen Knopf drückst.",
     "Inventory": "Inventar-Anzeige",
-    "InventoryColumns": "Charakter Inventar Spalten",
+    "InventoryColumns": "Charakter-Inventar-Breite",
     "InventoryColumnsMobile": "Charakter-Inventar-Breite auf Mobilgeräten (Portrait)",
     "InventoryColumnsMobileLine2": "Die Größe der Gegenstände wird an die neue Einstellung angepasst",
     "InventoryNumberOfSpacesToClear": "Anzahl der leeren Plätze, die beim Benutzen des Farmmodus bereitgestellt werden sollen (Platz machen)",
@@ -788,7 +809,7 @@
     "PerkDisplay": "Perk Anzeige im Gegenstands-Popup",
     "PerkGrid": "Raster",
     "PerkList": "Liste",
-    "ReloadDIM": "Aktualisiere DIM um die Sprache abschließend zu wechseln",
+    "ReloadDIM": "Aktualisiere DIM, um die Sprache abschließend zu wechseln",
     "ResetToDefault": "Zurücksetzen",
     "SetSort": "Sortiere Gegenstände nach:",
     "Settings": "Einstellungen",
@@ -797,7 +818,7 @@
     "SingleCharacterExplanation": "DIM wird alle bis auf den zuletzt gespielten Charakter ausblenden. Die Inventare anderer Charaktere werden angezeigt, als wären sie im Tresor.",
     "SizeItem": "Gegenstandsgröße",
     "SortByAmmoType": "Munitionstyp",
-    "SortByAmount": "Stapel Größe",
+    "SortByAmount": "Stapelgröße",
     "SortByClassType": "Benötigte Klasse",
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
@@ -816,7 +837,6 @@
     "ApplyPerks": "Perks anwenden",
     "GridStyle": "Perks als Raster anzeigen",
     "InsertModButton": "Mod Einsetzen",
-    "InsertPlugError": "Konnte Mod nicht einfügen",
     "ListStyle": "Perks als Liste anzeigen",
     "SelectModButton": "Wähle Mod",
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
@@ -836,7 +856,7 @@
     "LightSuperCooldown": "Helle Super Abklingzeit",
     "MaxGearPower": "Maximale Power von verfügbarer Ausrüstung",
     "MaxGearPowerAll": "Maximale Power von gesamter Ausrüstung",
-    "MaxTotalPower": "Maximale Gesamt Power",
+    "MaxTotalPower": "Maximale Gesamt-Power",
     "Milliseconds": "ms",
     "NoBonus": "Kein Bonus",
     "NotApplicable": "N/V",
@@ -867,7 +887,7 @@
     "DeleteAllDataConfirm": "Bist du sicher, dass du ALLE deine Daten für alle Konten von DIM Sync löschen möchtest? Du kannst dies nicht rückgängig machen.",
     "DeleteAllDataLabel": "DIM Sync-Daten löschen",
     "Details": {
-      "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim löschen deiner Browserdaten, werden diese Informationen gelöscht."
+      "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim Löschen deiner Browserdaten werden diese Informationen gelöscht."
     },
     "DimApiFinePrint": "DIM speichert deine Tags, Ausrüstungen und Einstellungen auf den DIM-Servern und synchronisiert sie zwischen verschiedenen Versionen von DIM.",
     "DimSyncEnabled": "DIM Sync aktiviert",
@@ -887,8 +907,8 @@
       "SuccessTitle": "Import erfolgreich"
     },
     "ImportTooManyFiles": "Bitte nur eine Datei zum Importieren wählen.",
-    "ImportWrongFileType": "Die Datei ist keine JSON Datei. Womöglich ist es keine DIM Sicherung.",
-    "IndexedDBStorage": "Lokaler Browser Speicher",
+    "ImportWrongFileType": "Die Datei ist keine JSON-Datei. Womöglich ist es keine DIM-Sicherung.",
+    "IndexedDBStorage": "Lokaler Browserspeicher",
     "LearnMore": "Erfahre mehr über DIM Sync",
     "MenuTitle": "Sync & Backups",
     "ProfileErrorBody": "Wir haben ein Problem beim Laden deiner Daten von DIM Sync. Wir versuchen weiterhin sie automatisch zu laden.",
@@ -920,56 +940,56 @@
   },
   "Views": {
     "About": {
-      "APIHistory": "Übersicht aller Aktionen von DIM anzeigen (und anderen Destiny Apps)",
+      "APIHistory": "Übersicht aller Aktionen von DIM (und anderen Destiny-Apps) anzeigen",
       "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie.",
       "Discord": "Discord",
       "DiscordHelp": "Stelle Fragen, gib Feedback und erhalte Unterstützung in unseren Discord-Kanälen.",
       "FAQ": "Häufig Gestellte Fragen",
       "FAQAccess": "Wie bekommt DIM Zugriff auf meine Destiny-Daten?",
-      "FAQAccessAnswer": "Wir benutzen Bungies App Authentifizierung um DIM deine Items sehen und verschieben lassen zu können. DIM sieht niemals deinen Benutzernamen oder Passwort. So arbeitet auch Bungies eigene Gefährten-App.",
+      "FAQAccessAnswer": "Wir benutzen Bungies App-Authentifizierung, um DIM deine Items sehen und verschieben lassen zu können. DIM sieht niemals deinen Benutzernamen oder Passwort. So arbeitet auch Bungies eigene Gefährten-App.",
       "FAQKeyboard": "Unterstützt DIM Tastaturkürzel?",
       "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
       "FAQLogout": "Wie kann ich mich von DIM abmelden?",
       "FAQLogoutAnswer": "Öffne das Menü mit dem linken oberen Symbol und wähle \"Abmelden\"",
       "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
-      "FAQLostItemAnswer": "Bungie erlaubt es Apps nicht Gegenstände zu löschen (selbst nicht der Eigenen!). Wahrscheinlicher ist, dass die Übertragung fehlgeschlagen ist und dein Gegenstand im Tresor oder auf einem anderen Charakter verblieben ist. Du könntest nach ihm suchen. Wenn es dir nicht angezeigt wird, lade die Seite erneut. Überprüfe {{link}} oder im Spiel, um zu sehen ob der Gegenstand noch existiert. Wir sind sicher er ist immer noch da.",
+      "FAQLostItemAnswer": "Bungie erlaubt es Apps nicht, Gegenstände zu löschen (selbst der eigenen nicht!). Wahrscheinlicher ist, dass die Übertragung fehlgeschlagen ist und dein Gegenstand im Tresor oder auf einem anderen Charakter verblieben ist. Du könntest nach ihm suchen. Wenn es dir nicht angezeigt wird, lade die Seite erneut. Überprüfe {{link}} oder im Spiel, um zu sehen, ob der Gegenstand noch existiert. Wir sind sicher, er ist immer noch da.",
       "FAQMobile": "Wird DIM auf mobilen Endgeräten unterstützt? Wird es eine App geben?",
       "FAQMobileAnswer": "Die DIM-Website kann heute auf Smartphones und Tablets geladen werden, und du kannst es zu deinem Homescreen für eine App-ähnliche Erfahrung hinzufügen.",
       "GitHub": "GitHub",
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM ist eine kostenlose Open Source-App, die von Community-Entwicklern, mit den gleichen Diensten von Bungie.net und der Destiny Companion App, gebaut wurde.",
+      "HowItsMade": "DIM ist eine kostenlose Open-Source-App, die von Community-Entwicklern, mit den gleichen Diensten von Bungie.net und der Destiny Companion App, gebaut wurde.",
       "Reddit": "Reddit",
       "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule": {
-        "beta": "Diese Beta-Version von DIM wird jedes Mal aktualisiert wenn wir etwas am Code ändern - sie erhält die neuesten Funktionen und Fehlerbehebungen, aber auch die neuesten Fehler!",
+        "beta": "Diese Beta-Version von DIM wird jedes Mal aktualisiert, wenn wir etwas am Code ändern - sie erhält die neuesten Funktionen und Fehlerbehebungen, aber auch die neuesten Fehler!",
         "release": "Diese Version von DIM wird pro Woche einmal um circa Mitternacht am Sonntag, US Pazifischer Zeit aktualisiert."
       },
-      "Translation": "Trete dem Übersetzer-Team bei!",
-      "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei.",
+      "Translation": "Tritt dem Übersetzer-Team bei!",
+      "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM-Übersetzung in einer Sprache verbessern möchtest, tritt dem Team bei.",
       "Twitter": "Twitter",
       "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
       "Wiki": "DIM Benutzerhandbuch Wiki",
       "WikiHelp": "Erfahre wie Du DIM nutzen kannst und um unserem Community-gesteuerten Benutzerhandbuch beizutragen.",
       "YouTube": "YouTube",
-      "YouTubeHelp": "Lerne auf unserem YouTube Kanal, wie man DIM verwendet."
+      "YouTubeHelp": "Lerne auf unserem YouTube-Kanal, wie man DIM verwendet."
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",
       "BackupPrompt": "Bist du sicher, dass du DIM Sync ohne Sicherung aktivieren möchtest?",
       "EnableDimSyncWarning": "Du hattest DIM Sync zuvor deaktiviert und nur lokalen Datenspeicher verwendet. Das Aktivieren von DIM Sync ersetzt alle lokalen Daten durch die Daten von DIM Sync. Du solltest deine Daten sichern bevor du DIM Sync aktivierst. Du kannst sie in den Einstellungen wiederherstellen.",
-      "Explanation": "Erlaube DIM deine Destiny Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
+      "Explanation": "Erlaube DIM, deine Destiny-Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
       "LearnMore": "Erfahre mehr über Konten und Login",
       "NewAccount": "Mit einem anderen Bungie.net-Konto anmelden",
       "Permission": "Wir brauchen dein Einverständnis...",
-      "UpgradeExplanation": "Home screen Apps in deiner iOS Version erlauben es nicht, sich bei DIM anzumelden. Bitte aktualisiere auf iOS 12.2 oder neuer und füge DIM deinem Home-Bildschirm neu hinzu.",
-      "UpgradeiOS": "Bitte iOS Updaten"
+      "UpgradeExplanation": "Home-Bildschirm-Apps in deiner iOS-Version erlauben es nicht, sich bei DIM anzumelden. Bitte aktualisiere auf iOS 12.2 oder neuer und füge DIM deinem Home-Bildschirm neu hinzu.",
+      "UpgradeiOS": "Bitte aktualisiere iOS"
     },
     "Support": {
       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln.",
       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-      "OpenCollective": "Wir benutzen den {{link}} Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
+      "OpenCollective": "Wir benutzen den {{link}}-Service, um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
       "Store": "Wir haben Fan-Artikel mit unserem Logo und anderen Designs zum Verkauf auf {{link}}",
       "Support": "Unterstütze DIM"
     }
@@ -978,11 +998,11 @@
     "BestRatedTip": "Dieser Perk passt genau zu einem Waffenroll auf deiner Wunschliste.",
     "BestRatedTip_plural": "Diese Perks entsprechen genau einem Waffenroll auf deiner Wunschliste.",
     "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy, zusammen mit einigen Mülllistenrolls.",
+    "ChoosyVoltronDescription": "choosy_voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlisten-Rolls von Mercules904 und Pandapaxxy, zusammen mit einigen Mülllisten-Rolls.",
     "Clear": "Wunschliste löschen",
     "ExternalSource": "Optional die URL(s) für eine Wunschliste angeben (Pipe | getrennt)",
     "Header": "Wunschliste",
-    "Import": "Wunschlisten Rolls laden",
+    "Import": "Wunschlisten-Rolls laden",
     "ImportError": "Fehler beim Laden der Wunschliste: {{error}}",
     "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
@@ -994,7 +1014,7 @@
     "PreMadeFiles": "Eine vorgefertigte Wunschliste verwenden",
     "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",
     "Voltron": "Voltron (Standard)",
-    "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlistenrolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
+    "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlisten-Rolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",
     "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
   },
   "no-space": "",

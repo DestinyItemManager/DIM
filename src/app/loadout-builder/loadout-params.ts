@@ -1,6 +1,7 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
 import {
+  defaultLoadoutParameters,
   LoadoutParameters,
   StatConstraint,
   UpgradeSpendTier,
@@ -60,7 +61,9 @@ export function buildLoadoutParams(
 
 export function statOrderFromLoadoutParameters(params: LoadoutParameters): ArmorStatHashes[] {
   return _.sortBy(armorStats, (h) => {
-    const index = params.statConstraints!.findIndex((c) => c.statHash === h);
+    const index = (params.statConstraints ?? defaultLoadoutParameters.statConstraints!).findIndex(
+      (c) => c.statHash === h
+    );
     return index >= 0 ? index : 100;
   }) as ArmorStatHashes[];
 }

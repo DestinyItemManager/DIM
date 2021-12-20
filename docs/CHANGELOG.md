@@ -1,5 +1,81 @@
 ## Next
 
+## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
+
+* Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
+* Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
+* Improved the time taken to apply a loadout with mods.
+* Stasis subclass can also be applied in the Loadouts page.
+* Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
+* Fixed showing the amount of Dawning Spirit in the holiday oven popup.
+* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
+
+## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
+
+* Fixed issue where selecting mods from the Mod Picker, opened from an item socket, would clear other mod selections.
+* Added the ability to favorite finishers
+
+## 6.95.0 <span class="changelog-date">(2021-12-12)</span>
+
+* Fix image paths for D1 perks.
+* Strange Favor rank now correctly shows remaining reset count, when you hover the icon.
+* Ability Cooldown times are no longer shown for stat tooltips. This may return but at the moment, they were incorrect.
+* Added 'source:30th' for items coming from the Bungie 30th Anniversary.
+
+### Loadouts
+* Stasis subclass abilities, aspects, and fragments are now displayed in the loadouts page.
+* When displaying mod placement in Loadouts, if an armor slot has no item in the loadout, the character's current armor piece will be used.
+* Removed the "Max Power" loadout from the loadouts page. You can still apply it from the loadout menu on the inventory screen.
+* If loadouts have notes, those notes are now displayed in the hover text on the loadout dropdown
+* Artifice Armor mod slots are now handled in Loadouts and the Loadout Optimizer.
+* Hitting +Equipped in the loadout editor will add current mods.
+* Creating a new loadout from equipped items will also save your subclass configuration.
+* Creating a new loadout from equipped, or hitting +Equipped in the loadout editor, will now also include your current emblem, ship, and sparrow.
+* Added more visual distinction between loadouts on the loadouts page.
+* Some repeat text and unnecessary instructions were removed from mods and Stasis Fragments, in the mod picker.
+
+### Loadout Optimizer
+* Fix an error that can occur when loading a shared build link.
+* Fix issue where Optimizer throws an error when selecting a raid or combat mod.
+* Fix an issue where energy swaps in the Optimizer where not displaying the correct resulting energy.
+
+### Mod Plugging Capabilities
+* Bungie has enabled the API capabilities to apply armor mods, toggle weapon perks, and perform other plugging-in type operations. So now you can take advantage of these features of DIM!
+  * This works from the item popup, and when applying loadouts that contain mods.
+  * DIM can apply weapon perks, armor mods, shaders, weapon & exotic ornaments, and Stasis Aspects and Fragments.
+  * It cannot apply weapon mods, which still cost glimmer in the game.
+  * It can't yet apply transmog/Synthesis ornaments, but Bungie is working on addressing this.
+  * Swapping Stasis aspects & fragments via loadouts is coming soon.
+
+### Mods in Loadouts
+* When you apply a loadout with armor mods, DIM will automatically assign these among armor pieces.
+* If there's no armor in the loadout, it will apply these mods to your character's current pieces.
+* More specific/custom placement options are in the works.
+* DIM will not clear off existing mods except to make room for requested ones.
+
+### Plugging-Related Fixes
+* Fix a bug that prevented applying shaders or ornaments from the item popup.
+* Fix emblems and subclasses not applying from loadouts.
+* The mod picker launched from the item popup or Loadout Optimizer will now correctly show the mods unlocked by the applicable character, rather than across all characters. This helps a lot with artifact mods where you may have different ones unlocked on different characters. Note that this also means opening the mod picker for items in the vault will show no artifact mods unlocked - move the item to a character if you want to apply that mod.
+* Vendor items no longer offer to apply perks.
+
+## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
+
+* You can change perks and slot zero-cost mods from the item Popup.
+* Loadouts can now apply mods. See [Mods in Loadouts](https://destinyitemmanager.fandom.com/wiki/Mods_in_Loadouts) for details. Some things to keep in mind:
+  * This will not work until the 30th Anniversary patch.
+  * Applying mods will also strip off any mods that aren't in your loadout from your equipped armor.
+  * Mods will be placed on your equipped armor whether that armor came from your loadout or not.
+* Loadouts can now have notes.
+* Share loadout build settings (mods, notes, loadout optimizer settings) from the Loadouts page.
+* Loadouts can now save stasis subclass abilities, aspects, and fragments. These do not yet get applied when applying a loadout.
+* We made several bugfixes to how loadouts are applied that should fix some issues where not all items got equipped or failures were shown when nothing failed.
+* The "Create Loadout" button on the Loadouts page defaults the loadout to match the class of the selected character.
+* The menu for pinning or excluding an item in Loadout Optimizer now only shows items that match the overall search filter.
+* Stat searches support keywords like "highest" and "secondhighest" in stat total/mean expressions. e.g. basestat:highest&secondhighest:>=17.5
+
+## 6.93.0 <span class="changelog-date">(2021-11-28)</span>
+
 * Steam browser is officially unsupported, and we now show a banner explaining that.
 * However, we have managed to fix DIM so it doesn't crash loop in the Steam overlay. Until the next time Steam updates...
 * Loadout Optimizer performance has been improved significantly - so much so that we now always look at all possible combinations of armor. Previously we trimmed some items out to get below an a number that we could process in time. This means that your LO builds are now guaranteed to be optimal, and the "Max" range shown in the stat tiles will always be accurate.

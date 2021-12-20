@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { insertPlug } from 'app/inventory/advanced-write-actions';
+import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
@@ -9,8 +9,9 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -23,6 +24,7 @@ import { StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
@@ -55,6 +57,7 @@ export default function SocketDetailsSelectedPlug({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
   const selectedPlugPerk =
     Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
 
@@ -107,7 +110,22 @@ export default function SocketDetailsSelectedPlug({
   );
 
   // Can we actually insert this mod instead of just previewing it?
-  const canDoAWA = itemIsInstanced(item) && $featureFlags.awa;
+  const canDoAWA =
+    itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
+
+  const initialPlugHash = socket.socketDefinition.singleInitialItemHash;
+  let insertName;
+  if (initialPlugHash) {
+    if (initialPlugHash === DEFAULT_SHADER) {
+      insertName = canDoAWA ? t('Sockets.InsertShaderButton') : t('Sockets.SelectShaderButton');
+    } else if (DEFAULT_ORNAMENTS.includes(initialPlugHash)) {
+      insertName = canDoAWA ? t('Sockets.InsertOrnamentButton') : t('Sockets.SelectOrnamentButton');
+    } else {
+      insertName = canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton');
+    }
+  } else {
+    insertName = canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton');
+  }
 
   const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
@@ -117,7 +135,12 @@ export default function SocketDetailsSelectedPlug({
         await dispatch(insertPlug(item, socket, plug.hash));
         closeMenu();
       } catch (e) {
-        showNotification({ type: 'error', title: t('Sockets.InsertPlugError'), body: e.message });
+        const plugName = plug.displayProperties.name ?? 'Unknown Plug';
+        showNotification({
+          type: 'error',
+          title: t('AWA.Error'),
+          body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+        });
       } finally {
         setInsertInProgress(false);
       }
@@ -148,7 +171,6 @@ export default function SocketDetailsSelectedPlug({
     <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
-        {!$featureFlags.awa && costs}
       </div>
       <div className={styles.modDescription}>
         <h3>
@@ -186,9 +208,7 @@ export default function SocketDetailsSelectedPlug({
             </motion.span>
           )}
           <motion.span layout>
-            <motion.span layout>
-              {canDoAWA ? t('Sockets.InsertModButton') : t('Sockets.SelectModButton')}
-            </motion.span>
+            <motion.span layout>{insertName}</motion.span>
             <motion.span layout>{costs}</motion.span>
           </motion.span>
         </motion.button>

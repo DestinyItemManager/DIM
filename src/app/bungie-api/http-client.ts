@@ -49,7 +49,7 @@ function throwHttpError(response: Response) {
  * but throws JS errors for "successful" fetches with Bungie error information
  */
 function throwBungieError<T>(
-  serverResponse: ServerResponse<T> & { error?: string; error_description?: string },
+  serverResponse: (ServerResponse<T> & { error?: string; error_description?: string }) | undefined,
   request: Request
 ) {
   // There's an alternate error response that can be returned during maintenance
@@ -65,7 +65,7 @@ function throwBungieError<T>(
     );
   }
 
-  if (serverResponse.ErrorCode !== PlatformErrorCodes.Success) {
+  if (serverResponse && serverResponse.ErrorCode !== PlatformErrorCodes.Success) {
     throw new BungieError(serverResponse, request);
   }
 
@@ -158,11 +158,20 @@ export function createHttpClient(
       credentials: withCredentials ? 'include' : 'omit',
     });
     const response = await fetchFunction(fetchOptions);
-    const data: ServerResponse<unknown> = await response.json();
+    let data: ServerResponse<unknown> | undefined;
+    let parseError: Error | undefined;
+    try {
+      data = await response.json();
+    } catch (e) {
+      parseError = e;
+    }
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
     // then throw errors on generic http error codes
     throwHttpError(response);
+    if (parseError) {
+      throw parseError;
+    }
     return data;
   };
 }

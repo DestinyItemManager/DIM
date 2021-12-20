@@ -4,9 +4,11 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { getModRenderKey } from 'app/loadout/mod-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { ItemFilter } from 'app/search/filter-types';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useState } from 'react';
@@ -29,6 +31,7 @@ interface Props {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   lockedExoticHash?: number;
+  searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -43,11 +46,14 @@ export default memo(function LockArmorAndPerks({
   upgradeSpendTier,
   lockItemEnergyType,
   lockedExoticHash,
+  searchFilter,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
   const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
+  const getModRenderKey = createGetModRenderKey();
 
   /**
    * Lock currently equipped items on a character
@@ -97,9 +103,9 @@ export default memo(function LockArmorAndPerks({
   const chooseLockItem = chooseItem(
     pinItem,
     // Exclude types that already have a locked item represented
-    (item) => !pinnedItems[item.bucket.hash]
+    (item) => Boolean(!pinnedItems[item.bucket.hash] && searchFilter(item))
   );
-  const chooseExcludeItem = chooseItem(excludeItem);
+  const chooseExcludeItem = chooseItem(excludeItem, (item) => Boolean(searchFilter(item)));
 
   const allPinnedItems = _.sortBy(_.compact(Object.values(pinnedItems)), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)
@@ -107,23 +113,28 @@ export default memo(function LockArmorAndPerks({
   const allExcludedItems = _.sortBy(_.compact(Object.values(excludedItems)).flat(), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
-  const modCounts: Record<number, number> = {};
 
   return (
     <>
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol start={2}>
+            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+          </ol>
+        </div>
+      )}
       <div className={styles.area}>
-        <SelectedArmorUpgrade
-          defs={defs}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
-        />
+        {lockedExoticHash && (
+          <div className={styles.notItemGrid}>
+            <ExoticArmorChoice
+              lockedExoticHash={lockedExoticHash}
+              onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
+            />
+          </div>
+        )}
         <div className={styles.buttons}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => setShowArmorUpgradePicker(true)}
-          >
-            {t('LoadoutBuilder.SelectArmorUpgrade')}
+          <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
+            {t('LB.SelectExotic')}
           </button>
         </div>
       </div>
@@ -131,11 +142,7 @@ export default memo(function LockArmorAndPerks({
         {Boolean(lockedMods.length) && (
           <div className={styles.itemGrid}>
             {lockedMods.map((mod) => (
-              <PlugDef
-                key={getModRenderKey(mod, modCounts)}
-                plug={mod}
-                onClose={() => onModClicked(mod)}
-              />
+              <PlugDef key={getModRenderKey(mod)} plug={mod} onClose={() => onModClicked(mod)} />
             ))}
           </div>
         )}
@@ -149,18 +156,26 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol start={3}>
+            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
+          </ol>
+        </div>
+      )}
       <div className={styles.area}>
-        {lockedExoticHash && (
-          <div className={styles.notItemGrid}>
-            <ExoticArmorChoice
-              lockedExoticHash={lockedExoticHash}
-              onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
-            />
-          </div>
-        )}
+        <SelectedArmorUpgrade
+          defs={defs}
+          upgradeSpendTier={upgradeSpendTier}
+          lockItemEnergyType={lockItemEnergyType}
+        />
         <div className={styles.buttons}>
-          <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
-            {t('LB.SelectExotic')}
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => setShowArmorUpgradePicker(true)}
+          >
+            {t('LoadoutBuilder.SelectArmorUpgrade')}
           </button>
         </div>
       </div>

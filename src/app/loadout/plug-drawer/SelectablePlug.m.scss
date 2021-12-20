@@ -44,6 +44,9 @@
 
 .lockedPerk {
   border-color: $orange;
+  &:focus {
+    outline: none;
+  }
 }
 
 .iconContainer {
@@ -53,4 +56,10 @@
 .requirement {
   margin-top: 8px;
   font-style: italic;
+}
+
+.partialDescription {
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
 }

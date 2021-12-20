@@ -1,8 +1,11 @@
-import { allItemsSelector } from 'app/inventory/selectors';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { compareBy } from 'app/utils/comparators';
+import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -14,25 +17,48 @@ const bucketOrder = [
   armorBuckets.classitem,
 ];
 
-export function useEquippedLoadoutArmor(loadout: Loadout) {
+export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
+  const stores = useSelector(sortedStoresSelector);
+
   const loadoutItemSelector = useCallback(
     (state: RootState) => {
+      const currentStore = getCurrentStore(stores)!;
+      // TODO (ryan) how do we handle multiple chars with the same store? Does it matter?
+      const storeToHydrateFrom =
+        currentStore.classType === loadout.classType
+          ? currentStore
+          : stores.find((store) => store.classType === loadout.classType);
+      const currentItems = storeToHydrateFrom?.items.filter(
+        (item) => item.equipped && item.bucket.inArmor
+      );
       const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
       const allItems = allItemsSelector(state);
-      const loadoutDimItems = [];
+      const loadoutDimItems: DimItem[] = [];
+      let subclass: LoadoutItem | undefined;
 
+      // TODO: if there's not an item in one of the slots, pick the current equipped!
       for (const item of allItems) {
         if (
           item.bucket.inArmor &&
           equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
         ) {
           loadoutDimItems.push(item);
+        } else if (item.bucket.hash === BucketHashes.Subclass) {
+          subclass = equippedLoadoutItems.find((loadoutItem) => loadoutItem.id === item.id);
         }
       }
 
-      return loadoutDimItems.sort(compareBy((item) => bucketOrder.indexOf(item.bucket.hash)));
+      const armor = _.compact(
+        bucketOrder.map(
+          (bucketHash) =>
+            loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
+            currentItems?.find((item) => item.bucket.hash === bucketHash)
+        )
+      );
+
+      return { armor, subclass };
     },
-    [loadout]
+    [loadout, stores]
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);

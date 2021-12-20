@@ -5,6 +5,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { getDefaultPlugHash } from '../mod-utils';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -21,15 +22,23 @@ interface Props {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
   size?: 'small';
-  onSocketClick?(plugDef: PluggableInventoryItemDefinition, whitelist: number[]): void;
+  onSocketClick?(
+    plugDef: PluggableInventoryItemDefinition,
+    /** An allow-list of plug category hashes that can be inserted into this socket */
+    plugCategoryHashWhitelist: number[]
+  ): void;
 }
 
+/**
+ * Show sockets (mod slots) for an armor item with the specified locked mods slotted into
+ */
 function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
   }
 
+  // A list of mods to show. If we aren't showing a plug for a socket we show the empty plug.
   const modsAndWhitelist: { plugDef: PluggableInventoryItemDefinition; whitelist: number[] }[] = [];
   const modsToUse = lockedMods ? [...lockedMods] : [];
 
@@ -44,11 +53,15 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       ) {
         toSave = mod;
         modsToUse.splice(modIndex, 1);
+        break;
       }
     }
 
-    if (!toSave && socket.socketDefinition.singleInitialItemHash) {
-      toSave = defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+    if (!toSave) {
+      const plugHash = getDefaultPlugHash(socket, defs);
+      if (plugHash) {
+        toSave = defs.InventoryItem.get(plugHash);
+      }
     }
 
     if (
@@ -71,7 +84,7 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
           key={index}
           gridColumn={(index % 2) + 1}
           plugDef={plugDef}
-          onClick={onSocketClick ? () => onSocketClick?.(plugDef, whitelist) : undefined}
+          onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
         />
       ))}
     </div>

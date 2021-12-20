@@ -10,7 +10,8 @@ import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { getCheapestModAssignments, getModRenderKey } from 'app/loadout/mod-utils';
+import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -60,6 +61,7 @@ interface Props {
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
   params: LoadoutParameters;
+  notes?: string;
   onClose(): void;
 }
 
@@ -84,11 +86,13 @@ export default function CompareDrawer({
   upgradeSpendTier,
   lockItemEnergyType,
   params,
+  notes,
   onClose,
 }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
+  const getModRenderKey = createGetModRenderKey();
 
   const setItems = set.armor.map((items) => items[0]);
 
@@ -107,6 +111,30 @@ export default function CompareDrawer({
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
   }, [selectedLoadout, defs, allItems]);
+
+  const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
+    const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
+      setItems,
+      lockedMods,
+      defs,
+      upgradeSpendTier,
+      lockItemEnergyType
+    );
+    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
+      loadoutItems,
+      lockedMods,
+      defs,
+      upgradeSpendTier,
+      lockItemEnergyType
+    );
+
+    return {
+      loSetAssignedMods: loSetAssignedMods,
+      itemModAssignments: itemModAssignments,
+      unassignedMods,
+    };
+  }, [defs, loadoutItems, lockItemEnergyType, lockedMods, setItems, upgradeSpendTier]);
+
   if (!set) {
     return null;
   }
@@ -130,21 +158,6 @@ export default function CompareDrawer({
   for (const statHash of armorStats) {
     loadoutStats[statHash] += lockedModStats[statHash];
   }
-
-  const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
-    setItems,
-    lockedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
-  const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
-    loadoutItems,
-    lockedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
 
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -174,6 +187,7 @@ export default function CompareDrawer({
         }
         draftLoadout.items = newItems;
         draftLoadout.parameters = params;
+        draftLoadout.notes = notes || draftLoadout.notes;
       }
     });
 
@@ -195,8 +209,6 @@ export default function CompareDrawer({
       </Sheet>
     );
   }
-
-  const modCounts = {};
 
   return (
     <Sheet onClose={onClose} header={header}>
@@ -221,7 +233,7 @@ export default function CompareDrawer({
             {setItems.map((item) => (
               <div key={item.bucket.hash} className={styles.item}>
                 <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={loSetAssignedMods.get(item.id)} size="small" />
+                <Sockets item={item} lockedMods={loSetAssignedMods[item.id]} size="small" />
               </div>
             ))}
           </div>
@@ -261,11 +273,7 @@ export default function CompareDrawer({
                     style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
                   >
                     <ConnectedInventoryItem item={item} />
-                    <Sockets
-                      item={item}
-                      lockedMods={itemModAssignments.get(item.id)}
-                      size="small"
-                    />
+                    <Sockets item={item} lockedMods={itemModAssignments[item.id]} size="small" />
                   </div>
                 ))}
               </div>
@@ -276,11 +284,7 @@ export default function CompareDrawer({
               )}
               <div className={styles.unassignedMods}>
                 {unassignedMods.map((unassigned) => (
-                  <Mod
-                    key={getModRenderKey(unassigned, modCounts)}
-                    plugDef={unassigned}
-                    large={true}
-                  />
+                  <Mod key={getModRenderKey(unassigned)} plugDef={unassigned} large={true} />
                 ))}
               </div>
             </>

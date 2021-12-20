@@ -92,7 +92,7 @@ export default function LoadoutDrawerOptions({
 
   const saveDisabled =
     !loadout.name.length ||
-    !loadout.items.length ||
+    (!loadout.items.length && !loadout.parameters?.mods?.length) ||
     // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
     Boolean(clashingLoadout && clashingLoadout.id !== loadout.id);
 
@@ -100,6 +100,13 @@ export default function LoadoutDrawerOptions({
     saveDisabled ||
     // There's an existing loadout with the same name & class
     Boolean(clashingLoadout);
+
+  const addNotes = () => {
+    updateLoadout({
+      ...loadout,
+      notes: '',
+    });
+  };
 
   return (
     <div className="loadout-options">
@@ -162,7 +169,19 @@ export default function LoadoutDrawerOptions({
             </button>
           </div>
         )}
-        {Boolean($featureFlags.loadoutModAssignments && loadout.parameters?.mods?.length) && (
+        {loadout.notes === undefined && (
+          <div className="input-group">
+            <button
+              className="dim-button danger"
+              onClick={addNotes}
+              type="button"
+              title={t('Loadouts.AddNotes')}
+            >
+              {t('Loadouts.AddNotes')}
+            </button>
+          </div>
+        )}
+        {Boolean(loadout.parameters?.mods?.length) && (
           <div className="input-group">
             <button
               className="dim-button"
@@ -200,8 +219,8 @@ export default function LoadoutDrawerOptions({
           <ModAssignmentDrawer
             loadout={loadout}
             sheetRef={modAssignmentDrawerRef}
-            onUpdateMods={onUpdateMods}
             minHeight={calculateMinSheetHeight()}
+            onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body

@@ -3,9 +3,7 @@
 interface CssExports {
   'categories': string;
   'container': string;
-  'disclaimer': string;
   'title': string;
-  'warningIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

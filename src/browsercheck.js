@@ -19,6 +19,20 @@ function getBrowserName(agent) {
   return agent.browser.name;
 }
 
+function getUserLocale() {
+  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
+  console.info('Language Detected: ' + lang);
+  if (!supportedLanguages.includes(lang)) {
+    lang = lang.split('-', 1);
+  }
+  if (!supportedLanguages.includes(lang)) {
+    // fallback to 'en' if unsupported language after removing dialect
+    lang = 'en';
+  }
+  console.info('Language Assigned: ' + lang);
+  return lang;
+}
+
 function getBrowserVersionFromUserAgent(agent) {
   var browserName = getBrowserName(agent).toLowerCase();
   var version = (
@@ -38,6 +52,11 @@ function getBrowserVersionFromUserAgent(agent) {
 export function isSupported(browsersSupported, userAgent) {
   if (userAgent.includes('Steam')) {
     return false;
+  }
+
+  if (navigator.standalone) {
+    // Assume support if we're installed as an iOS PWA.
+    return true;
   }
 
   var agent = parser(userAgent);
@@ -66,17 +85,6 @@ export function isSupported(browsersSupported, userAgent) {
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
-  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase();
-
-  console.info('Langauge Detected: ' + lang);
-  if (!supportedLanguages.includes(lang)) {
-    lang = lang.split('-', 1);
-  }
-  if (!supportedLanguages.includes(lang)) {
-    // fallback to 'en' if unsupported language after removing dialect
-    lang = 'en';
-  }
-  console.info('Langauge Assigned: ' + lang);
 
   if (!supported && agent.os.name !== 'Android') {
     // Detect anything based on chrome as if it were chrome
@@ -95,7 +103,9 @@ export function isSupported(browsersSupported, userAgent) {
   return supported;
 }
 
-if ($BROWSERS.length) {
+var lang = getUserLocale();
+
+if ($BROWSERS.length && lang) {
   // t('Browsercheck.Unsupported')
   // t('Browsercheck.Steam')
   var supported = isSupported($BROWSERS, navigator.userAgent);

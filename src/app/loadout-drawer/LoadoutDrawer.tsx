@@ -1,5 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -88,6 +89,10 @@ export default function LoadoutDrawer() {
     [items]
   );
 
+  const onApplySocketOverrides = useCallback((item: DimItem, socketOverrides: SocketOverrides) => {
+    stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
+  }, []);
+
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
 
@@ -155,6 +160,13 @@ export default function LoadoutDrawer() {
       return;
     }
 
+    if (loadoutToSave.name === t('Loadouts.FromEquipped')) {
+      loadoutToSave = {
+        ...loadoutToSave,
+        name: `${loadoutToSave.name} ${new Date().toLocaleString()}`,
+      };
+    }
+
     dispatch(updateLoadout(loadoutToSave));
     close();
   };
@@ -186,30 +198,16 @@ export default function LoadoutDrawer() {
   const savedMods = getModsFromLoadout(defs, loadout);
 
   /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) => {
-    const newLoadout = { ...loadout };
-
-    newLoadout.parameters = {
-      ...newLoadout.parameters,
-      mods: newMods.map((mod) => mod.hash),
-    };
-    stateDispatch({ type: 'update', loadout: newLoadout });
-  };
+  const onUpdateModHashes = (mods: number[]) => stateDispatch({ type: 'updateMods', mods });
+  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
+    onUpdateModHashes(newMods.map((mod) => mod.hash));
 
   /** Removes a single mod from the loadout with the supplied itemHash. */
-  const removeModByHash = (itemHash: number) => {
-    const newLoadout = { ...loadout };
-    const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
-    const index = newMods.indexOf(itemHash);
-    if (index !== -1) {
-      newMods.splice(index, 1);
-      newLoadout.parameters = {
-        ...newLoadout.parameters,
-        mods: newMods,
-      };
-      stateDispatch({ type: 'update', loadout: newLoadout });
-    }
-  };
+  const removeModByHash = (itemHash: number) =>
+    stateDispatch({ type: 'removeMod', hash: itemHash });
+
+  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
+    stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
   const header = (
     <div className="loadout-drawer-header">
@@ -226,7 +224,14 @@ export default function LoadoutDrawer() {
         deleteLoadout={onDeleteLoadout}
         calculateMinSheetHeight={calculateMinSheetHeight}
       />
-      <GeneratedLoadoutStats items={items} loadout={loadout} />
+      {loadout.notes !== undefined && (
+        <textarea
+          onChange={handleNotesChanged}
+          value={loadout.notes}
+          placeholder={t('Loadouts.NotesPlaceholder')}
+        />
+      )}
+      <GeneratedLoadoutStats items={items} loadout={loadout} savedMods={savedMods} />
     </div>
   );
 
@@ -262,10 +267,12 @@ export default function LoadoutDrawer() {
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
+                onUpdateMods={onUpdateModHashes}
                 onOpenModPicker={(query?: string) =>
                   stateDispatch({ type: 'openModPicker', query })
                 }
                 removeModByHash={removeModByHash}
+                onApplySocketOverrides={onApplySocketOverrides}
               />
             </div>
           </LoadoutDrawerDropTarget>

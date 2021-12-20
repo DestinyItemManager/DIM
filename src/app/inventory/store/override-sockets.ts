@@ -119,15 +119,19 @@ export function useSocketOverrides(): [
   return [socketOverrides, onPlugClicked, resetOverrides];
 }
 
+export type SocketOverridesForItems = { [itemId: string]: SocketOverrides };
+
 /**
  * A hook to manage socket overrides for multiple items.
  */
-export function useSocketOverridesForItems(): [
-  socketOverrides: { [itemId: string]: SocketOverrides },
+export function useSocketOverridesForItems(
+  initialOverrides: SocketOverridesForItems = {}
+): [
+  socketOverrides: SocketOverridesForItems,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
   resetSocketOverrides: () => void
 ] {
-  const [socketOverrides, setSocketOverrides] = useState<{ [itemId: string]: SocketOverrides }>({});
+  const [socketOverrides, setSocketOverrides] = useState<SocketOverridesForItems>(initialOverrides);
   const onPlugClicked = useCallback(
     ({ item, socket, plugHash }: { item: DimItem; socket: DimSocket; plugHash: number }) => {
       setSocketOverrides(

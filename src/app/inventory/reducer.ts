@@ -17,7 +17,7 @@ import { mergeCollectibles } from './d2-stores';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';
-import { makeItem, makeItemSingle } from './store/d2-item-factory';
+import { makeItem } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 
@@ -77,8 +77,8 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     }
 
     case getType(actions.awaItemChanged): {
-      const { changes, defs, buckets } = action.payload;
-      return produce(state, (draft) => awaItemChanged(draft, changes, defs, buckets));
+      const { changes, item, defs, buckets } = action.payload;
+      return produce(state, (draft) => awaItemChanged(draft, changes, item, defs, buckets));
     }
 
     case getType(actions.error):
@@ -409,16 +409,15 @@ function itemLockStateChanged(
 function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
+  item: DimItem | null,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets
 ) {
-  const { stores, profileResponse } = original(draft)!;
+  const { profileResponse } = original(draft)!;
 
   const mergedCollectibles = profileResponse
     ? mergeCollectibles(profileResponse.profileCollectibles, profileResponse.characterCollectibles)
     : {};
-
-  const item = makeItemSingle(defs, buckets, changes.item, stores, mergedCollectibles);
 
   // Replace item
   if (!item) {

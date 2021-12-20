@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
@@ -19,6 +20,8 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  notes,
+  params,
   canCompareLoadouts,
   halfTierMods,
   onLoadoutSet,
@@ -26,6 +29,8 @@ export default function GeneratedSetButtons({
 }: {
   store: DimStore;
   set: ArmorSet;
+  notes?: string;
+  params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   onLoadoutSet(loadout: Loadout): void;
@@ -35,12 +40,12 @@ export default function GeneratedSetButtons({
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set));
+    onLoadoutSet(createLoadout(store.classType, set, params, notes));
   };
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout = createLoadout(store.classType, set);
+    const loadout = createLoadout(store.classType, set, params, notes);
     return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
@@ -90,7 +95,12 @@ export default function GeneratedSetButtons({
 /**
  * Create a Loadout object, used for equipping or creating a new saved loadout
  */
-function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
+function createLoadout(
+  classType: DestinyClass,
+  set: ArmorSet,
+  params: LoadoutParameters,
+  notes?: string
+): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
@@ -99,5 +109,7 @@ function createLoadout(classType: DestinyClass, set: ArmorSet): Loadout {
     set.armor.map((items) => convertToLoadoutItem(items[0], true))
   );
   loadout.classType = classType;
+  loadout.notes = notes;
+  loadout.parameters = params;
   return loadout;
 }

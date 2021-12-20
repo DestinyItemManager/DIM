@@ -1199,13 +1199,17 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
   const equipped = items.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
   const unequipped = items.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
 
-  return {
+  const loadout: Loadout = {
     ...rest,
     name: name.trim(),
     clearSpace: clearSpace || false,
     equipped,
     unequipped,
   };
+  if (!loadout.notes) {
+    delete loadout.notes;
+  }
+  return loadout;
 }
 
 function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
@@ -1217,6 +1221,9 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   }
   if (item.amount > 1) {
     result.amount = item.amount;
+  }
+  if (item.socketOverrides) {
+    result.socketOverrides = item.socketOverrides;
   }
   return result;
 }

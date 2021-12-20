@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Please use the Destiny 2 Companion App to approve DIM to modify your items.",
     "ConfirmTitle": "Confirm Action",
-    "Error": "Error changing item",
+    "Error": "Error changing mods or perks",
+    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PS4",
+    "PlayStation": "PlayStation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Activities",
@@ -56,6 +57,8 @@
   },
   "BungieService": {
     "AppNotPermitted": "DIM does not have permission to perform this action.",
+    "DestinyCannotPerformActionAtThisLocation": "You cannot equip items or change mods while in an activity. Try heading to orbit or a social area. This is a limitation of the Bungie.net API, not DIM.",
+    "DestinyItemUnequippable": "You cannot equip this item. If this character's last activity locked their equipment, try logging into the character again.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",
@@ -111,7 +114,9 @@
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
   "EnergyMeter": {
-    "Energy": "Energy"
+    "Energy": "Energy",
+    "Unused": "Unused",
+    "Used": "Used"
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -237,8 +242,9 @@
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
-    "Stats": "Shows items based on a specific stat value. Supports stat addition by connecting multiple stat names with the + symbol.",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. Supports stat addition by connecting multiple stat names with the + symbol.",
+    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
+    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
@@ -481,6 +487,7 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Share Build Settings",
+    "ShareBuildWithNotes": "Share With Notes",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
@@ -491,12 +498,16 @@
     "UnlockItem": "Unpin Item"
   },
   "Loadouts": {
+    "Abilities": "Abilities",
     "AddEquippedItems": "Add Equipped",
+    "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
     "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "AppliedError": "None of the items in your loadout could be transferred.",
+    "AppliedModsWarn": "Only {{successful}} of {{total}} mods could be applied.",
+    "AppliedOverridesWarn": "Only {{successful}} of {{total}} subclass options could be updated.",
     "AppliedWarn": "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors.",
     "Apply": "Apply",
     "ApplySearch": "Transfer search \"{{query}}\"",
@@ -540,11 +551,15 @@
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModPlacement": "Mod Placement",
     "Mods": "Mods",
-    "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
+    "NotesPlaceholder": "Write some notes about this loadout",
     "NotificationMessage": "Sending loadout with 1 item to vault.",
+    "NotificationMessageMods": "This will apply 1 mod and remove all other mods from your equipped armor.",
+    "NotificationMessageMods_plural": "This will apply {{count}} mods and remove all other mods from your equipped armor.",
+    "NotificationMessageSubclass": "This will apply 1 option to the equipped subclass.",
+    "NotificationMessageSubclass_plural": "This will apply {{count}} options to the equipped subclass.",
     "NotificationMessage_female": "Applying loadout with 1 item to {{store}}",
     "NotificationMessage_female_plural": "Applying loadout with {{count}} items to {{store}}",
     "NotificationMessage_male": "Applying loadout with 1 item to {{store}}",
@@ -577,6 +592,8 @@
     "ShowModPlacement": "Show Mod Placement",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
+    "SubclassOptions": "{{subclass}} options",
+    "SubclassOptionsSearch": "Search {{subclass}} options",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
@@ -613,6 +630,12 @@
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
+    "FavoriteUnFavorite": {
+      "Favorite": "Favorite {{itemType}}",
+      "Favorited": "Favorited",
+      "Unfavorite": "Unfavorite {{itemType}}",
+      "Unfavorited": "Unfavorited"
+    },
     "Infuse": "Infuse",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
@@ -816,9 +839,12 @@
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insert Mod",
-    "InsertPlugError": "Couldn't insert mod",
+    "InsertOrnamentButton": "Apply Ornament",
+    "InsertShaderButton": "Apply Shader",
     "ListStyle": "Display perks as a list",
     "SelectModButton": "Select Mod",
+    "SelectOrnamentButton": "Select Ornament",
+    "SelectShaderButton": "Select Shader",
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {

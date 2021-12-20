@@ -1,4 +1,5 @@
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
@@ -110,7 +111,6 @@ export default function ItemDetails({
 
       <ApplyPerkSelection
         item={item}
-        socketOverrides={socketOverrides}
         setSocketOverride={onPlugClicked}
         onApplied={resetSocketOverrides}
       />
@@ -202,7 +202,7 @@ export default function ItemDetails({
           })}
         >
           {tip.displayStyle === 'seasonal-expiration' && <AppIcon icon={faClock} />}
-          {tip.displayString}
+          <RichDestinyText text={tip.displayString} ownerId={item.owner} />
         </div>
       ))}
     </div>

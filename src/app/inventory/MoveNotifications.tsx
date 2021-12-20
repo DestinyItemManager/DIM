@@ -42,6 +42,8 @@ export function moveItemNotification(
 export function loadoutNotification(
   loadout: Loadout,
   numApplicableItems: number,
+  numMods: number,
+  numSubclassOverrides: number,
   store: DimStore,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
@@ -54,11 +56,24 @@ export function loadoutNotification(
     duration: lingerMs,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
     trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
-    body: t('Loadouts.NotificationMessage', {
-      count: numApplicableItems,
-      store: store.name,
-      context: store.genderName,
-    }),
+    body:
+      t('Loadouts.NotificationMessage', {
+        count: numApplicableItems,
+        store: store.name,
+        context: store.genderName,
+      }) +
+      (numMods > 0
+        ? '\n\n' +
+          t('Loadouts.NotificationMessageMods', {
+            count: numMods,
+          })
+        : '') +
+      (numSubclassOverrides > 0
+        ? '\n\n' +
+          t('Loadouts.NotificationMessageSubclass', {
+            count: numSubclassOverrides,
+          })
+        : ''),
     onCancel: cancel,
   };
 }

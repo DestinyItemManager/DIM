@@ -1,45 +1,41 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
+import PressTip from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isModStatActive } from 'app/loadout-builder/process/mappers';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getArmorStats } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { RefObject, useMemo, useState } from 'react';
+import _ from 'lodash';
+import React, { RefObject, useCallback, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import { getCheapestModAssignments, getModRenderKey } from '../mod-utils';
+import { getCheapestModAssignments } from '../mod-assignment-utils';
+import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
-import { useEquippedLoadoutArmor } from './selectors';
+import { useEquippedLoadoutArmorAndSubclass } from './selectors';
 
 function Header({
   defs,
   loadout,
+  subclass,
   armor,
   mods,
 }: {
   defs: D2ManifestDefinitions;
   loadout: Loadout;
+  subclass: LoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
-  const stats = getArmorStats(defs, armor);
-
-  for (const mod of mods) {
-    for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(loadout.classType, mod.hash, stat, mods)) {
-        stats[stat.statTypeHash].value += stat.value;
-      }
-    }
-  }
+  const stats = getLoadoutStats(defs, loadout.classType, subclass, armor, mods);
 
   return (
     <div>
@@ -65,76 +61,123 @@ export default function ModAssignmentDrawer({
   minHeight?: number;
   /** A ref passed down to the sheets container. */
   sheetRef?: RefObject<HTMLDivElement>;
-  onUpdateMods(newMods: PluggableInventoryItemDefinition[]): void;
+  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
-  const defs = useD2Definitions();
-  const armor = useEquippedLoadoutArmor(loadout);
+  const defs = useD2Definitions()!;
+  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout);
+  const getModRenderKey = createGetModRenderKey();
 
-  const [{ itemModAssignments, unassignedMods }, mods] = useMemo(() => {
+  const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
     if (defs && loadout.parameters?.mods?.length) {
       mods = loadout.parameters?.mods
         .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
     }
+    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(armor, mods, defs);
 
-    return [getCheapestModAssignments(armor, mods, defs, UpgradeSpendTier.Nothing, true), mods];
+    return [itemModAssignments, unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);
 
-  const onSocketClick = (
-    plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist: number[]
-  ) => {
-    const { plugCategoryHash } = plugDef.plug;
+  const onSocketClick = useCallback(
+    (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
+      const { plugCategoryHash } = plugDef.plug;
 
-    if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
-      // Do nothing, it's an exotic plug
-    } else {
-      setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
-    }
-  };
+      if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
+        // Do nothing, it's an exotic plug
+      } else {
+        setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
+      }
+    },
+    []
+  );
 
-  const flatAssigned = Array.from(itemModAssignments.values()).flat();
+  const flatAssigned = _.compact(Object.values(itemModAssignments).flat());
 
   if (!defs) {
     return null;
   }
 
-  const modCounts = {};
+  // TODO: button to apply mods
+  // TODO: consider existing mods in assignment
 
   return (
     <>
       <Sheet
-        header={<Header defs={defs} loadout={loadout} armor={armor} mods={flatAssigned} />}
+        header={
+          <Header
+            defs={defs}
+            loadout={loadout}
+            subclass={subclass}
+            armor={armor}
+            mods={flatAssigned}
+          />
+        }
         ref={sheetRef}
         minHeight={minHeight}
         onClose={onClose}
       >
         <div className={styles.container}>
           <div className={styles.assigned}>
-            {armor.map((item) => (
-              <div key={item.id} className={styles.itemAndMods}>
-                <ConnectedInventoryItem item={item} />
-                <Sockets
-                  item={item}
-                  lockedMods={itemModAssignments.get(item.id)}
-                  onSocketClick={onSocketClick}
-                />
+            {armor.map((item) => {
+              const energyUsed = _.sumBy(
+                itemModAssignments[item.id],
+                (m) => m.plug.energyCost?.energyCost || 0
+              );
+              return (
+                <div key={item.id} className={styles.itemAndMods}>
+                  <div>
+                    <ConnectedInventoryItem item={item} />
+                    {item.energy && (
+                      <PressTip
+                        tooltip={
+                          <>
+                            {t('EnergyMeter.Energy')}
+                            <hr />
+                            {t('EnergyMeter.Used')}: {item.energy.energyUsed}
+                            <br />
+                            {t('EnergyMeter.Unused')}: {item.energy.energyUnused}
+                          </>
+                        }
+                        className={styles.energyMeter}
+                      >
+                        <EnergyIncrements
+                          energy={{
+                            energyType: item.energy.energyType,
+                            energyCapacity: item.energy.energyCapacity,
+                            energyUsed,
+                          }}
+                        />
+                      </PressTip>
+                    )}
+                  </div>
+
+                  <Sockets
+                    item={item}
+                    lockedMods={itemModAssignments[item.id]}
+                    onSocketClick={onUpdateMods ? onSocketClick : undefined}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          {unassignedMods.length > 0 && (
+            <>
+              <h3>{t('Loadouts.UnassignedMods')}</h3>
+              <div className={styles.unassigned}>
+                {unassignedMods.map((mod) => (
+                  <Mod key={getModRenderKey(mod)} plugDef={mod} />
+                ))}
               </div>
-            ))}
-          </div>
-          <h3>{t('Loadouts.UnassignedMods')}</h3>
-          <div className={styles.unassigned}>
-            {unassignedMods.map((mod) => (
-              <Mod key={getModRenderKey(mod, modCounts)} plugDef={mod} />
-            ))}
-          </div>
+            </>
+          )}
         </div>
       </Sheet>
-      {plugCategoryHashWhitelist &&
+      {onUpdateMods &&
+        plugCategoryHashWhitelist &&
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}

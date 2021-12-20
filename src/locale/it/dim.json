@@ -2,7 +2,8 @@
   "AWA": {
     "ConfirmDescription": "Si prega di utilizzare la Companion App di Destiny 2 per autorizzare DIM alla modifica degli oggetti.",
     "ConfirmTitle": "Conferma Azione",
-    "Error": "Errore cambio oggetto",
+    "Error": "Errore nel cambio di Modifiche o perk",
+    "ErrorMessage": "Non abbiamo potuto equipaggiare {{plug}} in {{item}}.\n\n{{error}}",
     "FailedToken": "Impossibile ottenere permesso per cambiare l'oggetto"
   },
   "Accounts": {
@@ -12,10 +13,10 @@
     "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
     "MissingTitle": "Account Non Trovato",
     "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
-    "PlayStation": "PS4",
+    "PlayStation": "Playstation",
     "Stadia": "Stadia",
     "Steam": "Steam",
-    "Xbox": "XB1"
+    "Xbox": "Xbox"
   },
   "Activities": {
     "Activities": "Attività",
@@ -111,7 +112,9 @@
     "WrongFields": "Il CSV deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
   "EnergyMeter": {
-    "Energy": "Energia"
+    "Energy": "Energia",
+    "Unused": "Inutilizzata",
+    "Used": "Utilizzata"
   },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
@@ -237,8 +240,9 @@
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità nel loro stack.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
     "StatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo.",
-    "Stats": "Mostra gli oggetti basandosi su uno specifico valore di statistica. Supporta l'aggiunta di statistiche multiple connettendo i nomi con il simbolo +.",
-    "StatsBase": "Filtra le armature considerando il valore di base delle statistiche, escludendo Modifiche installate e Prodigio. Supporta l'aggiunta di statistiche multiple connettendo i nomi con il simbolo +.",
+    "Stats": "Mostra gli oggetti basandosi su un valore di statistica specifico. $t(Filter.StatsExtras)",
+    "StatsBase": "Filtra le armature basandosi sul loro valore di statistiche di base, senza contare le modifiche inserite o Prodigio. $t(Filter.StatsExtras)",
+    "StatsExtras": "Supporta l'aggiunta di statistiche connettendo nomi di statistiche multipli con il simbolo \"+\" o \"&\". Ci sono anche parole chiave speciali \"highest\", \"secondhighest\", \"thirdhighest\" ecc con corrispondenza basata sul loro rango all'interno delle statistiche di un oggetto.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "Tags": {
@@ -481,6 +485,7 @@
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
     "ShareBuild": "Condividi le impostazioni della build",
+    "ShareBuildWithNotes": "Condividi con note",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
@@ -491,12 +496,16 @@
     "UnlockItem": "Sblocca oggetto"
   },
   "Loadouts": {
+    "Abilities": "Abilità",
     "AddEquippedItems": "Aggiungi Equipaggiati",
+    "AddNotes": "Aggiungi note",
     "AddUnequippedItems": "Aggiungi non equipaggiati",
     "AlreadyExistsClass": "Un loadout con questo nome esiste già per il tuo {{className}}.",
     "AlreadyExistsGlobal": "Un loadout globale con questo nome esiste già.",
     "Any": "Qualsiasi classe",
     "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
+    "AppliedModsWarn": "Solo {{successful}} di {{total}} modifiche possono essere applicate.",
+    "AppliedOverridesWarn": "Solo {{successful}} di {{total}} opzioni della sottoclasse possono essere aggiornate.",
     "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
     "Apply": "Applica",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
@@ -540,11 +549,15 @@
     "MissingItemsWarning": "Alcuni degli oggetti in questo loadout non sono più nel tuo inventario.",
     "ModPlacement": "Posizionamento Modifiche",
     "Mods": "Modifiche",
-    "ModsInfo": "DIM non può equipaggiare Modifiche, deve essere fatto all'interno del gioco.",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
     "NoExotics": "Non ci sono engrammi da trasferire.",
     "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
+    "NotesPlaceholder": "Scrivi alcune note riguardo questo loadout",
     "NotificationMessage": "Invio loadout di 1 oggetto al deposito.",
+    "NotificationMessageMods": "Questo applicherà 1 modifica e rimuoverà tutte le altre modifiche dalla tua armatura equipaggiata.",
+    "NotificationMessageMods_plural": "Questo applicherà {{count}} modifiche e rimuoverà tutte le altre modifiche dalla tua armatura equipaggiata.",
+    "NotificationMessageSubclass": "Questo applicherà 1 opzione alla sottoclasse equipaggiata.",
+    "NotificationMessageSubclass_plural": "Questo applicherà {{count}} opzioni alla sottoclasse equipaggiata.",
     "NotificationMessage_female": "Equipaggiamento loadout con 1 oggetto sulla {{store}}",
     "NotificationMessage_female_plural": "Equipaggiamento loadout con {{count}} oggetti sulla {{store}}",
     "NotificationMessage_male": "Equipaggiamento loadout con 1 oggetto sul {{store}}",
@@ -577,6 +590,8 @@
     "ShowModPlacement": "Mostra Posizionamento Modifiche",
     "SortByEditTime": "Ordina per ultima modifica",
     "SortByName": "Ordina per nome",
+    "SubclassOptions": "{{subclass}} opzioni",
+    "SubclassOptionsSearch": "Cerca {{subclass}} opzioni",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedMods": "Modifiche non assegnate",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",
@@ -613,6 +628,12 @@
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
+    "FavoriteUnFavorite": {
+      "Favorite": "Aggiungi a preferite {{itemType}}",
+      "Favorited": "Preferita",
+      "Unfavorite": "Elimina dalle preferite {{itemType}}",
+      "Unfavorited": "Non preferita"
+    },
     "Infuse": "Infondi",
     "LockUnlock": {
       "Lock": "Blocca {{itemType}}",
@@ -816,7 +837,6 @@
     "ApplyPerks": "Applica Perk",
     "GridStyle": "Mostra i perk come una griglia",
     "InsertModButton": "Inserisci Modifica",
-    "InsertPlugError": "Impossible inserire Modifica",
     "ListStyle": "Mostra i perk come una lista",
     "SelectModButton": "Seleziona Modifiche",
     "SelectWishlistPerks": "Anteprima dei perk della Lista Desideri"

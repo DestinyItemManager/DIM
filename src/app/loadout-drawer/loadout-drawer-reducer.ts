@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import produce from 'immer';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
@@ -32,10 +32,14 @@ export type Action =
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
   | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
+  /** Applies socket overrides to the supplied item */
+  | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
+  | { type: 'updateMods'; mods: number[] }
+  | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
   | { type: 'closeModPicker' };
 
@@ -90,23 +94,57 @@ export function stateReducer(state: State, action: Action): State {
     case 'removeItem': {
       const { loadout } = state;
       const { item, shift, items } = action;
-      return loadout
-        ? {
-            ...state,
-            loadout: removeItem(loadout, item, shift, items),
-          }
-        : state;
+      return loadout ? { ...state, loadout: removeItem(loadout, item, shift, items) } : state;
     }
 
     case 'equipItem': {
       const { loadout } = state;
       const { item, items } = action;
+      return loadout ? { ...state, loadout: equipItem(loadout, item, items) } : state;
+    }
+
+    case 'applySocketOverrides': {
+      const { loadout } = state;
+      const { item, socketOverrides } = action;
+      return loadout
+        ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
+        : state;
+    }
+
+    case 'updateMods': {
+      const { loadout } = state;
+      const { mods } = action;
       return loadout
         ? {
             ...state,
-            loadout: equipItem(loadout, item, items),
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                mods,
+              },
+            },
           }
         : state;
+    }
+
+    case 'removeMod': {
+      const { loadout } = state;
+      const { hash } = action;
+      if (loadout) {
+        const newLoadout = { ...loadout };
+        const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
+        const index = newMods.indexOf(hash);
+        if (index !== -1) {
+          newMods.splice(index, 1);
+          newLoadout.parameters = {
+            ...newLoadout.parameters,
+            mods: newMods,
+          };
+          return { ...state, loadout: newLoadout };
+        }
+      }
+      return state;
     }
 
     case 'openModPicker': {
@@ -178,13 +216,6 @@ function addItem(
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
       dupe.amount += increment;
       // TODO: handle stack splits
-    }
-
-    if (
-      draftLoadout.classType === DestinyClass.Unknown &&
-      item.classType !== DestinyClass.Unknown
-    ) {
-      draftLoadout.classType = item.classType;
     }
   });
 }
@@ -263,6 +294,19 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
 
         loadoutItem.equipped = true;
       }
+    }
+  });
+}
+
+function applySocketOverrides(
+  loadout: Readonly<Loadout>,
+  item: DimItem,
+  socketOverrides: SocketOverrides
+) {
+  return produce(loadout, (draftLoadout) => {
+    const loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    if (loadoutItem) {
+      loadoutItem.socketOverrides = socketOverrides;
     }
   });
 }

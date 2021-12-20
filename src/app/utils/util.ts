@@ -88,13 +88,7 @@ export function delay(ms: number) {
 
 /** Copy a string to the clipboard */
 export function copyString(str: string) {
-  function listener(e: ClipboardEvent) {
-    e.clipboardData?.setData('text/plain', str);
-    e.preventDefault();
-  }
-  document.addEventListener('copy', listener);
-  document.execCommand('copy');
-  document.removeEventListener('copy', listener);
+  navigator.clipboard.writeText(str);
 }
 
 /** Download a string as a file */

@@ -99,12 +99,13 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     return response.json();
   }
 
+  let responseData: { error: string; message: string } | undefined;
   try {
-    const responseData = await response.json();
-    if (responseData.error) {
-      throw new Error(`${responseData.error}: ${responseData.message}`);
-    }
+    responseData = await response.json();
   } catch {}
+  if (responseData?.error) {
+    throw new Error(`${responseData.error}: ${responseData.message}`);
+  }
 
   throw new Error('Failed to call DIM API: ' + response.status);
 }

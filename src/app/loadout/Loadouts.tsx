@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -7,31 +8,30 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { SocketDetailsMod } from 'app/item-popup/SocketDetails';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  convertToLoadoutItem,
-  extractArmorModHashes,
-  getArmorStats,
   getItemsFromLoadoutItems,
   getLight,
+  getLoadoutStats,
   getModsFromLoadout,
   newLoadout,
+  newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
-import { fromEquippedTypes } from 'app/loadout-drawer/LoadoutDrawerContents';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import {
@@ -45,15 +45,21 @@ import {
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { getSocketsByIndexes } from 'app/utils/socket-utils';
+import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PlugDef from './loadout-ui/PlugDef';
 import styles from './Loadouts.m.scss';
+import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
+import { createGetModRenderKey } from './mod-utils';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -82,7 +88,6 @@ function Loadouts() {
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allItems = useSelector(allItemsSelector);
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
@@ -101,28 +106,20 @@ function Loadouts() {
     [allLoadouts, classType, loadoutSort]
   );
 
-  // Hmm, I'd really like this to be selected per classtype not per character, but maybe people's brains don't think that way
+  const currentLoadout = useMemo(
+    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
+    [selectedStore]
+  );
 
-  const maxLoadout = maxLightLoadout(allItems, selectedStore);
-
-  const currentLoadout = useMemo(() => {
-    const items = selectedStore.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
-    );
-    const loadout = newLoadout(
-      t('Loadouts.FromEquipped'),
-      items.map((i) => convertToLoadoutItem(i, true)),
-      items.flatMap((i) => extractArmorModHashes(i))
-    );
-    loadout.classType = selectedStore.classType;
-    return loadout;
-  }, [selectedStore]);
-
-  const loadouts = _.compact([currentLoadout, maxLoadout, ...savedLoadouts]);
+  const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const handleNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
+  const handleNewLoadout = () => {
+    const loadout = newLoadout('', []);
+    loadout.classType = selectedStore.classType;
+    editLoadout(loadout, { isNew: true });
+  };
 
   const sortOptions = [
     {
@@ -178,6 +175,7 @@ function Loadouts() {
             loadout={loadout}
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
+            equippable={loadout !== currentLoadout}
           />
         ))}
       </PageWithMenu.Contents>
@@ -189,24 +187,28 @@ function LoadoutRow({
   loadout,
   store,
   saved,
+  equippable,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
+  equippable: boolean;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
+  const getModRenderKey = createGetModRenderKey();
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [items, subClass, warnitems] = useMemo(() => {
+  const [items, subclass, warnitems] = useMemo(() => {
     const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, allItems);
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
-    const subClass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
-    if (subClass) {
-      equippableItems = equippableItems.filter((i) => i !== subClass);
+    const subclass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
+    if (subclass) {
+      equippableItems = equippableItems.filter((i) => i !== subclass);
     }
-    return [equippableItems, subClass, warnitems];
+    return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, allItems, store]);
 
   const savedMods = getModsFromLoadout(defs, loadout);
@@ -227,6 +229,29 @@ function LoadoutRow({
     }
   };
 
+  const canShare = Boolean(loadout.parameters && !_.isEmpty(loadout.parameters));
+  const shareBuild = () => {
+    const p: Record<string, string> = {
+      class: loadout.classType.toString(),
+      p: JSON.stringify(loadout.parameters),
+    };
+    if (loadout.notes) {
+      p.n = loadout.notes;
+    }
+    const urlParams = new URLSearchParams(p);
+    const url = `${location.origin}/optimizer?${urlParams}`;
+    copyString(url);
+    showNotification({
+      type: 'success',
+      title: t('LoadoutBuilder.CopiedBuild'),
+    });
+  };
+
+  const handleApply = () =>
+    dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
+
+  const handleEdit = () => editLoadout(loadout, { isNew: !saved });
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -241,20 +266,19 @@ function LoadoutRow({
           )}
         </h2>
         <div className={styles.actions}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
-            {t('Loadouts.Apply')}
-          </button>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => editLoadout(loadout, { isNew: !saved })}
-          >
+          {equippable && (
+            <button type="button" className="dim-button" onClick={handleApply}>
+              {t('Loadouts.Apply')}
+            </button>
+          )}
+          <button type="button" className="dim-button" onClick={handleEdit}>
             {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
           </button>
+          {canShare && (
+            <button type="button" className="dim-button" onClick={shareBuild}>
+              {t('LoadoutBuilder.ShareBuild')}
+            </button>
+          )}
           {saved && (
             <button type="button" className="dim-button" onClick={() => handleDeleteClick(loadout)}>
               {t('Loadouts.Delete')}
@@ -262,47 +286,41 @@ function LoadoutRow({
           )}
         </div>
       </div>
+      {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subClass) && (
+        {(items.length > 0 || subclass || savedMods.length > 0) && (
           <>
-            <div className={styles.subClass}>
-              {subClass ? (
-                <ItemPopupTrigger item={subClass}>
-                  {(ref, onClick) => (
-                    <ConnectedInventoryItem
-                      innerRef={ref}
-                      onClick={onClick}
-                      item={subClass}
-                      ignoreSelectedPerks
-                    />
-                  )}
-                </ItemPopupTrigger>
-              ) : (
-                <EmptyClassItem />
-              )}
-              {power !== 0 && (
-                <div className={styles.power}>
-                  <AppIcon icon={powerActionIcon} />
-                  <span>{power}</span>
-                </div>
-              )}
+            <div>
+              <Subclass defs={defs} subclass={subclass} power={power} />
             </div>
             {['Weapons', 'Armor', 'General'].map((category) => (
               <ItemCategory
                 key={category}
                 category={category}
+                subclass={subclass}
                 items={categories[category]}
+                savedMods={savedMods}
                 equippedItemIds={equippedItemIds}
                 loadout={loadout}
               />
             ))}
             {savedMods.length > 0 ? (
               <div className={styles.mods}>
-                {savedMods.map((mod, index) => (
-                  <div key={index}>
-                    <SocketDetailsMod itemDef={mod} />
-                  </div>
-                ))}
+                <div className={styles.modsGrid}>
+                  {savedMods.map((mod) => (
+                    <div key={getModRenderKey(mod)}>
+                      <PlugDef plug={mod} />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className={clsx('dim-button', styles.showModPlacementButton)}
+                  type="button"
+                  title="Show mod placement"
+                  onClick={() => setShowModAssignmentDrawer(true)}
+                >
+                  {t('Loadouts.ShowModPlacement')}
+                </button>
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
@@ -310,18 +328,104 @@ function LoadoutRow({
           </>
         )}
       </div>
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
+    </div>
+  );
+}
+
+function Subclass({
+  defs,
+  subclass,
+  power,
+}: {
+  defs: D2ManifestDefinitions;
+  subclass?: DimLoadoutItem;
+  power: number;
+}) {
+  const getModRenderKey = createGetModRenderKey();
+  const plugs = useMemo(() => {
+    const plugs: PluggableInventoryItemDefinition[] = [];
+
+    if (subclass?.sockets?.categories) {
+      for (const category of subclass.sockets.categories) {
+        const showInitial =
+          category.category.hash !== SocketCategoryHashes.Aspects &&
+          category.category.hash !== SocketCategoryHashes.Fragments;
+        const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
+
+        for (const socket of sockets) {
+          const override = subclass.socketOverrides?.[socket.socketIndex];
+          const initial = socket.socketDefinition.singleInitialItemHash;
+          const hash = override || (showInitial && initial);
+          const plug = hash && defs.InventoryItem.get(hash);
+          if (plug && isPluggableItem(plug)) {
+            plugs.push(plug);
+          }
+        }
+      }
+    }
+
+    return plugs;
+  }, [subclass, defs]);
+
+  return (
+    <div className={styles.subclassContainer}>
+      <div className={styles.subclass}>
+        {subclass ? (
+          <ItemPopupTrigger item={subclass}>
+            {(ref, onClick) => (
+              <ConnectedInventoryItem
+                innerRef={ref}
+                // Disable the popup when plugs are available as we are showing
+                // plugs in the loadout and they may be different to the popup
+                onClick={plugs.length ? undefined : onClick}
+                item={subclass}
+                ignoreSelectedPerks
+              />
+            )}
+          </ItemPopupTrigger>
+        ) : (
+          <EmptyClassItem />
+        )}
+        {power !== 0 && (
+          <div className={styles.power}>
+            <AppIcon icon={powerActionIcon} />
+            <span>{power}</span>
+          </div>
+        )}
+      </div>
+      {plugs.length ? (
+        <div className={styles.subclassMods}>
+          {plugs?.map((plug) => (
+            <PlugDef key={getModRenderKey(plug)} plug={plug} />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
+      )}
     </div>
   );
 }
 
 function ItemCategory({
   category,
+  subclass,
   items,
+  savedMods,
   equippedItemIds,
   loadout,
 }: {
   category: string;
+  subclass?: DimLoadoutItem;
   items?: DimItem[];
+  savedMods: PluggableInventoryItemDefinition[];
   equippedItemIds: Set<string>;
   loadout: Loadout;
 }) {
@@ -359,7 +463,10 @@ function ItemCategory({
         <>
           {items.length === 5 && (
             <div className="stat-bars destiny2">
-              <LoadoutStats stats={getArmorStats(defs, items)} characterClass={loadout.classType} />
+              <LoadoutStats
+                stats={getLoadoutStats(defs, loadout.classType, subclass, items, savedMods)}
+                characterClass={loadout.classType}
+              />
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}

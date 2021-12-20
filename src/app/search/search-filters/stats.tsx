@@ -17,6 +17,7 @@ import { rangeStringToComparator } from './range-numeric';
 const statFilters: FilterDefinition[] = [
   {
     keywords: 'stat',
+    // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
     format: 'range',
     suggestions: allStatNames,
@@ -24,6 +25,7 @@ const statFilters: FilterDefinition[] = [
   },
   {
     keywords: 'basestat',
+    // t('Filter.StatsExtras')
     description: tl('Filter.StatsBase'),
     format: 'range',
     suggestions: searchableArmorStatNames,
@@ -157,20 +159,47 @@ function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') 
   // an array of arrays of stat hashes. inner arrays are averaged, then outer array totaled
   const nestedAddends = statString.split('+').map((addendString) => {
     const averagedHashes = addendString.split('&').map((statName) => {
+      // Support "highest&secondhighest"
+      if (statName in est) {
+        return (
+          statValuesByHash: NodeJS.Dict<number>,
+          sortStats: () => number[][],
+          item: DimItem
+        ) => {
+          if (!item.bucket.inArmor || !item.stats) {
+            return 0;
+          }
+          const sortedStats = sortStats();
+          const statHash = sortedStats[est[statName]][0];
+          if (!statHash) {
+            throw new Error(`invalid stat name: "${statName}"`);
+          }
+          return statValuesByHash[statHash] || 0;
+        };
+      }
+
       const statHash = statHashByName[statName];
       if (!statHash) {
         throw new Error(`invalid stat name: "${statName}"`);
       }
-      return statHash;
+      // would ideally be "?? 0" but polyfills are big and || works fine
+      return (statValuesByHash: NodeJS.Dict<number>) => statValuesByHash[statHash] || 0;
     });
     return averagedHashes;
   });
 
   return (item: DimItem) => {
     const statValuesByHash = getStatValuesByHash(item, byWhichValue);
+    // Computed lazily
+    const sortStats = _.once(() =>
+      (item.stats ?? [])
+        .filter((s) => armorAnyStatHashes.includes(s.statHash))
+        .map((s) => [s.statHash, s[byWhichValue]])
+        .sort((a, b) => b[1] - a[1])
+    );
+
     return _.sumBy(nestedAddends, (averageGroup) =>
-      // would ideally be "?? 0" but polyfills are big and || works fine
-      _.meanBy(averageGroup, (statHash) => statValuesByHash[statHash] || 0)
+      _.meanBy(averageGroup, (statFn) => statFn(statValuesByHash, sortStats, item))
     );
   };
 }
