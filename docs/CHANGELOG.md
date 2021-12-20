@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
+
 ## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
 
 * Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
@@ -84,10 +88,6 @@
 * Cryptolith Lure and Firewall Data Fragment have been moved from "Quests" to "Quest Items".
 * We've launched a new Loadouts page that makes it easy to browse through your loadouts. The Loadout Optimizer is accessible from that page. Also, loadouts are now by default sorted by when they were last edited, rather than their name. You can change this on the Loadouts page or in settings.
 * Some perks in the Armory view that showed as not rolling on the current version of an item now correctly show that they can roll.
-
-### Beta Only
-
-* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
 
 ## 6.92.1 <span class="changelog-date">(2021-11-23)</span>
 
