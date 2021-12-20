@@ -511,7 +511,7 @@ export function resetReusablePlugSetCache() {
  * We cache values so that any DimSocket referring to the same DestinyPlugSetDefinition,
  * will share the same DimPlugSet instance.
  */
-function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number) {
+function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number): DimPlugSet {
   const cachedValue = reusablePlugSetCache[plugSetHash];
   if (cachedValue) {
     return cachedValue;
