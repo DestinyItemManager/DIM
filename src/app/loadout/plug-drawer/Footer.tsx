@@ -7,7 +7,7 @@ import styles from './Footer.m.scss';
 
 interface Props {
   isPhonePortrait: boolean;
-  selected: PluggableInventoryItemDefinition[];
+  selected: { plug: PluggableInventoryItemDefinition; selectionType: 'multi' | 'single' }[];
   acceptButtonText: string;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   handlePlugSelected(plug: PluggableInventoryItemDefinition): void;
@@ -32,11 +32,11 @@ export default function Footer({
         </button>
       </div>
       <div className={styles.selectedPlugs}>
-        {selected.map((plug) => (
+        {selected.map((s) => (
           <PlugDef
-            key={getModRenderKey(plug)}
-            plug={plug}
-            onClose={() => handlePlugSelected(plug)}
+            key={getModRenderKey(s.plug)}
+            plug={s.plug}
+            onClose={s.selectionType === 'multi' ? () => handlePlugSelected(s.plug) : undefined}
           />
         ))}
       </div>
