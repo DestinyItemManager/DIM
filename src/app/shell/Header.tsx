@@ -105,7 +105,9 @@ export default function Header() {
 
   // Is this running as an installed app?
   const isStandalone =
-    window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    /.* STANDALONE$/.test(navigator.userAgent);
 
   const iosPwaAvailable =
     /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !isStandalone;

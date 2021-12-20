@@ -20,7 +20,9 @@ export default function Login() {
   const clientId = oauthClientId();
 
   const isStandalone =
-    window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    /.* STANDALONE$/.test(navigator.userAgent);
   // iOS versions before 12.2 don't support logging in via standalone mode.
   const isOldiOS =
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
