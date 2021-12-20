@@ -2,10 +2,14 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashesByName,
+  modsWithConditionalStats,
+} from 'app/search/d2-known-values';
 import {
   combatCompatiblePlugCategoryHashes,
   ModSocketMetadata,
+  modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
@@ -106,8 +110,13 @@ export function fitMostMods(
   const bucketSpecificAssignments: ModAssignments = {};
 
   // just an arbitrarily large number
-  let assignmentEnergyCost = 10000;
-  let assignmentUnassignedModCount = 10000;
+  // The total cost to assign all the mods to a set
+  // this includes energy used to upgrade and energy wasted on changing elements
+  let assignmentEnergyCost = Number.MAX_SAFE_INTEGER;
+  // The total number of mods that couldn't be assigned to the items
+  let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
+  // The total number of conditional mods that are activated in the assignment
+  let assignmentActiveConditionalMods = Number.MIN_SAFE_INTEGER;
 
   for (const item of items) {
     bucketSpecificAssignments[item.id] = { assigned: [], unassigned: [] };
@@ -231,21 +240,50 @@ export function fitMostMods(
         }
 
         // This is after the item loop
+        // Skip further checks if we have more unassigned mods in this assignment
+        if (unassignedModCount > assignmentUnassignedModCount) {
+          continue;
+        }
+
+        let totalActiveConditionalMods = 0;
+        const modsAssigned = Object.values(assignments).map((assignment) => assignment.assigned);
+        const allAssignedMods = modsAssigned.flat();
+        for (const assigned of modsAssigned) {
+          totalActiveConditionalMods += calculateTotalActivatedMods(assigned, allAssignedMods);
+        }
+
+        // Skip further checks if we have less active condition mods and we have an equal amount
+        // of unassigned mods. If we have less unassigned mods we should continue because its a better
+        // assignment
+        if (
+          unassignedModCount === assignmentUnassignedModCount &&
+          totalActiveConditionalMods < assignmentActiveConditionalMods
+        ) {
+          continue;
+        }
+
         let energyUsedAndWasted = 0;
         for (const [itemId, { assigned }] of Object.entries(assignments)) {
           energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
         }
 
-        // if the cost of the new assignment set is better than the old one
-        // we replace it and carry on until we have exhausted all permutations.
+        // One of the following three conditions needs to be true for the assignment to be better
         if (
+          // Less unassigned mods
           unassignedModCount < assignmentUnassignedModCount ||
-          (unassignedModCount <= assignmentUnassignedModCount &&
-            energyUsedAndWasted < assignmentEnergyCost)
+          // The same amount of unassigned mods and more active conditional mods
+          (unassignedModCount === assignmentUnassignedModCount &&
+            totalActiveConditionalMods > assignmentActiveConditionalMods) ||
+          // The same amount of unassigned and active mods but the assignment is cheaper
+          (unassignedModCount === assignmentUnassignedModCount &&
+            totalActiveConditionalMods === assignmentActiveConditionalMods &&
+            energyUsedAndWasted <= assignmentEnergyCost)
         ) {
+          // We save this assignment and its metadata because it is determined to be better
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
+          assignmentActiveConditionalMods = totalActiveConditionalMods;
         }
       }
     }
@@ -539,6 +577,15 @@ function isCombatModValid(
   );
 }
 
+/**
+ * Calculates the energy needed to be bought to assign the given mods.
+ *
+ * For example
+ * - if an item needs to be upgraded to fit the mod in, it will be the number of energy levels the user
+ * buys
+ * - if an items energy element needs to be changed, it will be the energy needed for the mods plus
+ * energy the item originally had (the energy wasted).
+ */
 function calculateEnergyChange(
   itemEnergy: ItemEnergy,
   assignedMods: PluggableInventoryItemDefinition[]
@@ -561,6 +608,53 @@ function calculateEnergyChange(
   return finalEnergy === itemEnergy.originalType || finalEnergy === DestinyEnergyType.Any
     ? energyInvested
     : energyUsedAndWasted;
+}
+
+/**
+ * Calculates the total number of active conditional mods on the item.
+ * Used to ensure mod assignments favor results that activate these mods.
+ */
+function calculateTotalActivatedMods(
+  assignedModsForItem: PluggableInventoryItemDefinition[],
+  allAssignedMods: PluggableInventoryItemDefinition[]
+) {
+  let activeMods = 0;
+
+  for (const mod of assignedModsForItem) {
+    if (isPlugActive(mod, assignedModsForItem, allAssignedMods)) {
+      activeMods++;
+    }
+  }
+
+  return activeMods;
+}
+
+/**
+ * Determines whether a conditional mod has had its requirements met by the other mods.
+ * Currently only used for radiant light and powerful friends
+ */
+function isPlugActive(
+  mod: PluggableInventoryItemDefinition,
+  modsForItem: PluggableInventoryItemDefinition[],
+  allMods: PluggableInventoryItemDefinition[]
+) {
+  if (
+    mod.hash === modsWithConditionalStats.powerfulFriends ||
+    mod.hash === modsWithConditionalStats.radiantLight
+  ) {
+    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
+    return Boolean(
+      modsForItem.some(
+        (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      ) ||
+        allMods?.some(
+          (plugDef) =>
+            plugDef !== mod &&
+            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        )
+    );
+  }
 }
 
 function buildItemEnergy(

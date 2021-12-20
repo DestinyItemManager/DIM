@@ -6,6 +6,7 @@
 * Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Improved the time taken to apply a loadout with mods.
 * Stasis subclass can also be applied in the Loadouts page.
+* Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
 * Fixed showing the amount of Dawning Spirit in the holiday oven popup.
 * Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 
