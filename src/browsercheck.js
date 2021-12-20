@@ -54,6 +54,11 @@ export function isSupported(browsersSupported, userAgent) {
     return false;
   }
 
+  if (navigator.standalone) {
+    // Assume support if we're installed as an iOS PWA.
+    return true;
+  }
+
   var agent = parser(userAgent);
 
   // Build a map from browser version to minimum supported version
