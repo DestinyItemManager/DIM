@@ -50,7 +50,7 @@ function mapStateToProps() {
       const unlockedPlugs = new Set<number>();
       const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
       for (const plugSetItem of plugSetItems) {
-        if (plugSetItem.enabled) {
+        if (plugSetItem.canInsert) {
           unlockedPlugs.add(plugSetItem.plugItemHash);
         }
       }

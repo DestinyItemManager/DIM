@@ -7,6 +7,7 @@
 * Improved the time taken to apply a loadout with mods.
 * Stasis subclass can also be applied in the Loadouts page.
 * Fixed showing the amount of Dawning Spirit in the holiday oven popup.
+* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 
