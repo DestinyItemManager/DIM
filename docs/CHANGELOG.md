@@ -1,5 +1,7 @@
 ## Next
 
+## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
+
 * Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
 * Equipping a generated loadout in the Loadout Optimizer will now apply the selected mods.
 * Improved the time taken to apply a loadout with mods.
