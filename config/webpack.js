@@ -394,14 +394,6 @@ module.exports = (env) => {
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(false),
-        // Show achievable stat ranges in LO
-        '$featureFlags.loStatRanges': JSON.stringify(true),
-        // Show mod assignment button in loadout drawer
-        '$featureFlags.loadoutModAssignments': JSON.stringify(!env.release),
-        // Top level loadouts page
-        '$featureFlags.loadoutsPage': JSON.stringify(true),
-        // Enable the subclass drawer in loadouts
-        '$featureFlags.loadoutSubclasses': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
