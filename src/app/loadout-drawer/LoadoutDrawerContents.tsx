@@ -163,7 +163,7 @@ export default function LoadoutDrawerContents(
       </div>
       <div className="loadout-added-items">
         {typesWithItems.map((bucket) =>
-          $featureFlags.loadoutSubclasses && bucket.type === 'Class' ? null : (
+          bucket.type === 'Class' ? null : (
             <LoadoutDrawerBucket
               key={bucket.type}
               bucket={bucket}

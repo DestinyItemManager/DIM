@@ -222,7 +222,7 @@ export default function Destiny() {
               )
             }
           />
-          {$featureFlags.loadoutsPage && account.destinyVersion === 2 && (
+          {account.destinyVersion === 2 && (
             <Route path="loadouts" element={<Loadouts account={account} />} />
           )}
           <Route path="organizer" element={<Organizer account={account} />} />

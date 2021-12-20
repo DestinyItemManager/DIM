@@ -92,9 +92,7 @@ function mapStateToProps() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        $featureFlags.loadoutsPage && loadoutSort === LoadoutSort.ByEditTime
-          ? (l) => -(l.lastUpdatedAt ?? 0)
-          : (l) => l.name
+        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
       )
   );
 
@@ -329,14 +327,12 @@ function LoadoutPopup({
           </li>
         )}
 
-        {$featureFlags.loadoutsPage && (
-          <li className={styles.menuItem}>
-            <Link to="../loadouts">
-              <AppIcon icon={faList} />
-              <span>{t('Loadouts.ManageLoadouts')}</span>
-            </Link>
-          </li>
-        )}
+        <li className={styles.menuItem}>
+          <Link to="../loadouts">
+            <AppIcon icon={faList} />
+            <span>{t('Loadouts.ManageLoadouts')}</span>
+          </Link>
+        </li>
 
         {loadouts.map((loadout) => (
           <li key={loadout.id} className={styles.menuItem}>
