@@ -507,9 +507,9 @@ export function resetReusablePlugSetCache() {
 }
 
 /**
- * This builds a DimPlugSet based off hash passed in, that links to a DestinyPlugSetDefinition.
- * We cache values so if a plug set is present on more than one item, all those items will share
- * the plug set instance.
+ * This builds a DimPlugSet based off the lookup hash for a DestinyPlugSetDefinition.
+ * We cache values so that any DimSocket referring to the same DestinyPlugSetDefinition,
+ * will share the same DimPlugSet instance.
  */
 function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number) {
   const cachedValue = reusablePlugSetCache[plugSetHash];
