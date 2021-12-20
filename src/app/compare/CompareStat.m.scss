@@ -10,6 +10,10 @@
 .stat {
   height: 16px;
   margin-right: calc(var(--item-size) + 16px);
+  // the goal width is 64px at normal item tile size (50px)
+  // but allow the stat bars to shrink to accout for bigger tiles,
+  // so this doesn't blow out the overall compare width
+  width: calc(114px - var(--item-size));
   position: relative;
 }
 
