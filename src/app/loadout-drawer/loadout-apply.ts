@@ -99,7 +99,6 @@ export function applyLoadout(
 
     const [cancelToken, cancel] = withCancel();
 
-    // TODO: initialize states from loadout & applicable items
     const [getLoadoutState, setLoadoutState, stateObservable] = makeLoadoutApplyState();
 
     // This will run after other moves/loadouts are done
@@ -118,7 +117,7 @@ export function applyLoadout(
     );
     loadingTracker.addPromise(loadoutPromise);
 
-    // TODO: change the notification stuff to allow custom error state component?
+    // TODO: set failed if any action didn't succeed, throw NotificationError with ApplyLoadoutProgressBody body
     const notificationPromise = loadoutPromise.then(() => {
       const loadoutState = getLoadoutState();
       const itemResults = Object.values(loadoutState.itemStates);
@@ -418,6 +417,7 @@ function doApplyLoadout(
           }
           const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
           if (updatedItem) {
+            errorLog('loadout', 'Failed to apply loadout item', updatedItem.name, e);
             setLoadoutState(
               produce((state) => {
                 // If it made it to the right store, the failure was in equipping, not moving

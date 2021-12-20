@@ -302,8 +302,7 @@ export function equip(account: DestinyAccount, item: DimItem): Promise<ServerRes
 }
 
 /**
- * Equip multiple items at once.
- * @returns a list of items that were successfully equipped
+ * Equip items in bulk. Returns a mapping from item ID to error code for each item
  */
 export async function equipItems(
   account: DestinyAccount,

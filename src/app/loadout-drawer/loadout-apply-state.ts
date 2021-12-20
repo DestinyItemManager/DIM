@@ -5,7 +5,7 @@ import { Observable } from 'app/utils/observable';
 import produce from 'immer';
 
 /**
- * What part of the loadout applicaton process are we currently in?
+ * What part of the loadout application process are we currently in?
  */
 export enum LoadoutApplyPhase {
   NotStarted,
@@ -15,7 +15,7 @@ export enum LoadoutApplyPhase {
   MoveItems,
   /** Equip any items marked as equip */
   EquipItems,
-  /** Apply perk/socket conigurations to specific items */
+  /** Apply perk/socket configurations to specific items */
   SocketOverrides,
   /** Assign mods to armor and apply them */
   ApplyMods,

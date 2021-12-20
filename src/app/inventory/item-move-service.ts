@@ -273,7 +273,6 @@ export function equipItems(
       })
     );
 
-    // TODO: handle individual errors?
     const extraItems = await Promise.all(extraItemsToEquip);
     items = items.concat(extraItems);
     if (items.length === 0) {
