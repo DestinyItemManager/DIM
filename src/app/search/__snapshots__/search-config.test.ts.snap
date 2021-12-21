@@ -121,6 +121,7 @@ Array [
   "specialorders",
   "stack",
   "stackable",
+  "stackfull",
   "stasis",
   "stat",
   "statlower",

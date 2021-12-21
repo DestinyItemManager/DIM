@@ -19,6 +19,7 @@ import {
 import _ from 'lodash';
 import {
   DimPlug,
+  DimPlugSet,
   DimSocket,
   DimSocketCategory,
   DimSockets,
@@ -221,7 +222,7 @@ function buildDefinedSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
@@ -244,7 +245,7 @@ function buildDefinedSocket(
         }
 
         for (const reusablePlug of Object.values(plugs)) {
-          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
             reusablePlugs.push(built);
@@ -253,7 +254,7 @@ function buildDefinedSocket(
       }
     } else if (socketDef.reusablePlugItems) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
+        const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
         if (built) {
           reusablePlugs.push(built);
         }
@@ -265,7 +266,7 @@ function buildDefinedSocket(
     socketDef.singleInitialItemHash &&
     !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
   ) {
-    const built = buildDefinedPlug(defs, socketDef.singleInitialItemHash);
+    const built = buildCachedDefinedPlug(defs, socketDef.singleInitialItemHash);
     if (built) {
       reusablePlugs.unshift(built);
     }
@@ -297,6 +298,9 @@ function buildDefinedSocket(
     socketIndex: index,
     plugged,
     plugOptions,
+    plugSet: socketDef.reusablePlugSetHash
+      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+      : undefined,
     curatedRoll: null,
     reusablePlugItems: [],
     hasRandomizedPlugItems:
@@ -456,7 +460,7 @@ function buildSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           addPlugOption(built, plugged, plugOptions);
         }
         curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
@@ -464,7 +468,7 @@ function buildSocket(
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
+        const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
         addPlugOption(built, plugged, plugOptions);
       }
       curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
@@ -479,10 +483,62 @@ function buildSocket(
     socketIndex: index,
     plugged,
     plugOptions,
+    plugSet: socketDef.reusablePlugSetHash
+      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+      : undefined,
     curatedRoll,
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
     socketDefinition: socketDef,
   };
+}
+
+// This cache is used to reuse DimPlugSets across items. If we didn't do this each
+// item would have their own instances of shaders, which is 100's of plugs.
+const reusablePlugSetCache: { [plugSetHash: number]: DimPlugSet | undefined } = {};
+
+// This cache is used to reuse DimPlugs across items. There are a lot of plugs so this
+// reduces the number of identical plugs we have in memory.
+const definedPlugCache: { [plugHash: number]: DimPlug | undefined | null } = {};
+
+/**
+ * This builds a DimPlugSet based off the lookup hash for a DestinyPlugSetDefinition.
+ * We cache values so that any DimSocket referring to the same DestinyPlugSetDefinition,
+ * will share the same DimPlugSet instance.
+ */
+function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number): DimPlugSet {
+  const cachedValue = reusablePlugSetCache[plugSetHash];
+  if (cachedValue) {
+    return cachedValue;
+  }
+
+  const plugs: DimPlug[] = [];
+  const defPlugSet = defs.PlugSet.get(plugSetHash);
+  for (const def of defPlugSet.reusablePlugItems) {
+    const plug = buildCachedDefinedPlug(defs, def.plugItemHash);
+    if (plug) {
+      plugs.push(plug);
+    }
+  }
+
+  const dimPlugSet = { plugs, hash: plugSetHash };
+  reusablePlugSetCache[plugSetHash] = dimPlugSet;
+
+  return dimPlugSet;
+}
+
+/**
+ * This builds DimPlugs and caches their values so we reduce the number of instances in memory.
+ */
+function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): DimPlug | null {
+  const cachedValue = definedPlugCache[plugHash];
+  // The result of buildDefinedPlug can be null, we still consider that a cached value.
+  if (cachedValue !== undefined) {
+    return cachedValue;
+  }
+
+  const plug = buildDefinedPlug(defs, plugHash);
+  definedPlugCache[plugHash] = plug;
+  return plug;
 }

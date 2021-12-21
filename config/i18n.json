@@ -250,6 +250,7 @@
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
+    "StackFull": "Show items which are at-capacity for their stack (Enhancement Cores, Strange Coins, Gunsmith Materials etc)",
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
