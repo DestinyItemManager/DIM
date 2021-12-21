@@ -8,6 +8,7 @@
 * Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
+* Added new filter "is:stackfull" to show items that are at max stack size.
 
 ## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
 
