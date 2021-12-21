@@ -1,3 +1,4 @@
+import { DimPlugSet } from 'app/inventory/item-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 
 /**
@@ -27,6 +28,21 @@ export function itemsForCharacterOrProfilePlugSet(
 ) {
   return (profileResponse.profilePlugSets.data?.plugs[plugSetHash] ?? []).concat(
     profileResponse.characterPlugSets.data?.[characterId]?.plugs[plugSetHash] ?? []
+  );
+}
+
+export function filterDimPlugsAvailableToCharacerOrProfile(
+  profileResponse: DestinyProfileResponse,
+  dimPlugSet: DimPlugSet,
+  characterId: string
+) {
+  const availablePlugs = itemsForCharacterOrProfilePlugSet(
+    profileResponse,
+    dimPlugSet.hash,
+    characterId
+  );
+  return dimPlugSet.plugs.filter((plug) =>
+    availablePlugs.some((available) => available.plugItemHash === plug.plugDef.hash)
   );
 }
 

@@ -369,6 +369,18 @@ export interface DimPlug {
   cannotCurrentlyRoll?: boolean;
 }
 
+export interface DimPlugSet {
+  /** The hash that links to a DestinyPlugSetDefinition. */
+  hash: number;
+  /**
+   * A list of built DimPlugs that are found in the plugSet.
+   * This plugs included encompass everything that can be plugged into the socket whether it
+   * is available to the character or not. You should filter this list down based on the plugs
+   * available to the profile/character.
+   */
+  plugs: DimPlug[];
+}
+
 export interface DimSocket {
   /** The index of this socket in the overall socket list, used for the AWA InsertPlug API. */
   socketIndex: number;
@@ -389,6 +401,13 @@ export interface DimSocket {
    * Look at TODO to figure out the full list of possible plugs for this socket.
    */
   plugOptions: DimPlug[];
+  /**
+   * A set of reusable plugs that can be placed in the socket.
+   * The list of plugs included encompass everything that can be plugged into the socket
+   * whether it is available to the character or not. You should filter this list down
+   * based on the plugs available to the profile/character.
+   */
+  plugSet?: DimPlugSet;
   /** Plug hashes in this item visible in the collections roll, if this is a perk */
   curatedRoll: number[] | null;
   /** Reusable plug items from runtime info, for the plug viewer. */
