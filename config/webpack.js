@@ -418,8 +418,12 @@ module.exports = (env) => {
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: `./src/android-config${env.release ? '' : '.beta'}.json`,
+            from: `./config/.well-known/android-config${env.release ? '' : '.beta'}.json`,
             to: '.well-known/assetlinks.json',
+          },
+          {
+            from: `./config/.well-known/apple-config.json`,
+            to: '.well-known/apple-app-site-association',
           },
         ],
       })
@@ -474,7 +478,7 @@ module.exports = (env) => {
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,
-          // Android manifest
+          // Android and iOS manifest
           /\.well-known/,
         ],
         swSrc: './src/service-worker.ts',
