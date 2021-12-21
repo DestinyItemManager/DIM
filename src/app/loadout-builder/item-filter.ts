@@ -126,7 +126,7 @@ function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryIt
 
   const socketsOrderedWithArtificerFirst = sockets
     // If a socket is not plugged (even with an empty socket) we consider it disabled
-    // This needs to be checked as the 30th anniversary armour has has the Artificer socket
+    // This needs to be checked as the 30th anniversary armour has the Artifice socket
     // but the API considers it to be disabled.
     .filter((socket) => socket.plugSet && socket.plugged)
     // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
