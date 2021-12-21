@@ -80,7 +80,10 @@ const lbStateInit = ({
   let loadoutParams = initialLoadoutParameters;
 
   if (stores.length && preloadedLoadout) {
-    const loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    const loadoutStore =
+      preloadedLoadout.classType === DestinyClass.Unknown
+        ? getCurrentStore(stores)
+        : stores.find((store) => store.classType === preloadedLoadout.classType);
     if (!loadoutStore) {
       warnMissingClass(preloadedLoadout.classType, defs);
     } else {
