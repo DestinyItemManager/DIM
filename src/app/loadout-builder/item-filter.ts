@@ -140,7 +140,7 @@ function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryIt
     if (socketIndex === -1) {
       return false;
     }
-    socketsOrderedWithArtificerFirst.splice(socketIndex, 1);
+    socketsOrderedWithArtificeFirst.splice(socketIndex, 1);
   }
 
   return true;
