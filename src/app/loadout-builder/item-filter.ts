@@ -124,7 +124,7 @@ function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryIt
 
   const sockets = getSocketsByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorMods);
 
-  const socketsOrderedWithArtificerFirst = sockets
+  const socketsOrderedWithArtificeFirst = sockets
     // If a socket is not plugged (even with an empty socket) we consider it disabled
     // This needs to be checked as the 30th anniversary armour has the Artifice socket
     // but the API considers it to be disabled.

@@ -35,8 +35,8 @@ export function energyUpgrade(
 
   const energyMods: DestinyInventoryItemDefinition[] = [];
   for (const dimPlug of tierSocket.plugSet.plugs) {
-    const capacity = dimPlug.plugDef.plug?.energyCapacity;
-    if (!dimPlug.plugDef.plug || !capacity) {
+    const capacity = dimPlug.plugDef.plug.energyCapacity;
+    if (!capacity) {
       continue;
     }
 
