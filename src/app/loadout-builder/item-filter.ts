@@ -134,7 +134,7 @@ function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryIt
     .sort(compareBy((socket) => socket.plugSet?.plugs.length));
 
   for (const mod of lockedMods) {
-    const socketIndex = socketsOrderedWithArtificerFirst.findIndex((socket) =>
+    const socketIndex = socketsOrderedWithArtificeFirst.findIndex((socket) =>
       socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === mod.hash)
     );
     if (socketIndex === -1) {
