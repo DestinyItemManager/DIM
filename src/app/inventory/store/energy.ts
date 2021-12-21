@@ -20,7 +20,6 @@ import { DimItem } from '../item-types';
  * TODO(ryan): I don't think old energy type and capacity are needed, they can be calculated from the item.
  */
 export function energyUpgrade(
-  defs: D2ManifestDefinitions,
   item: DimItem,
   oldEnergyType: DestinyEnergyType,
   oldEnergyCapacity: number,
@@ -30,22 +29,18 @@ export function energyUpgrade(
   const tierSocket =
     item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
 
-  if (!tierSocket?.socketDefinition.reusablePlugSetHash) {
+  if (!tierSocket?.plugSet) {
     return [];
   }
 
-  const plugSet = defs.PlugSet.get(tierSocket.socketDefinition.reusablePlugSetHash);
-
   const energyMods: DestinyInventoryItemDefinition[] = [];
-  for (const { plugItemHash } of plugSet.reusablePlugItems) {
-    const plugItem = defs.InventoryItem.get(plugItemHash);
-
-    const capacity = plugItem.plug?.energyCapacity;
-    if (!plugItem.plug || !capacity) {
+  for (const dimPlug of tierSocket.plugSet.plugs) {
+    const capacity = dimPlug.plugDef.plug?.energyCapacity;
+    if (!dimPlug.plugDef.plug || !capacity) {
       continue;
     }
 
-    const plugAvailability = plugItem.plug.plugAvailability;
+    const plugAvailability = dimPlug.plugDef.plug.plugAvailability;
     if (oldEnergyType === newEnergyType) {
       // We're looking for all the upgrade mods between here and there
       if (
@@ -54,7 +49,7 @@ export function energyUpgrade(
         capacity.capacityValue <= newEnergyCapacity &&
         plugAvailability === PlugAvailabilityMode.AvailableIfSocketContainsMatchingPlugCategory
       ) {
-        energyMods.push(plugItem);
+        energyMods.push(dimPlug.plugDef);
       }
     } else if (
       // We're looking for the exact capacity at a different energy type
@@ -62,7 +57,7 @@ export function energyUpgrade(
       capacity.capacityValue === newEnergyCapacity &&
       plugAvailability !== PlugAvailabilityMode.AvailableIfSocketContainsMatchingPlugCategory
     ) {
-      energyMods.push(plugItem);
+      energyMods.push(dimPlug.plugDef);
     }
   }
 

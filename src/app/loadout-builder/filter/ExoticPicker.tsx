@@ -4,7 +4,6 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
@@ -71,22 +70,14 @@ function findLockableExotics(
           socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
       )?.plugged?.plugDef;
 
-      const exoticModSetHash = item.sockets?.allSockets.find(
-        (socket) =>
-          socket.plugged?.plugDef.plug.plugCategoryHash ===
-          PlugCategoryHashes.EnhancementsExoticAeonCult
-      )?.socketDefinition.reusablePlugSetHash;
-
-      const exoticMods = exoticModSetHash
-        ? _.compact(
-            defs.PlugSet.get(exoticModSetHash).reusablePlugItems.map((item) => {
-              const modDef = defs.InventoryItem.get(item.plugItemHash);
-              if (isPluggableItem(modDef)) {
-                return modDef;
-              }
-            })
+      const exoticMods =
+        item.sockets?.allSockets
+          .find(
+            (socket) =>
+              socket.plugged?.plugDef.plug.plugCategoryHash ===
+              PlugCategoryHashes.EnhancementsExoticAeonCult
           )
-        : [];
+          ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
 
       rtn.push({
         def,

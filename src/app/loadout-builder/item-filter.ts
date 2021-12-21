@@ -80,7 +80,7 @@ export function filterItems(
             upgradeSpendTier,
             lockItemEnergyType
           ) &&
-          hasEnoughSocketsForMods(defs, item, lockedModsForPlugCategoryHash)
+          hasEnoughSocketsForMods(item, lockedModsForPlugCategoryHash)
       );
 
       const searchFilteredItems = excludedAndModsFilteredItems.filter(searchFilter);
@@ -117,40 +117,30 @@ function matchedLockedModEnergy(
  * 2. For each locked mod, if it can go into one of the sockets, remove that socket from the list.
  * 3. If we ever can't find a socket, we can't fit them all.
  */
-function hasEnoughSocketsForMods(
-  defs: D2ManifestDefinitions,
-  item: DimItem,
-  lockedMods: PluggableInventoryItemDefinition[]
-) {
+function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryItemDefinition[]) {
   if (!lockedMods?.length) {
     return true;
   }
 
   const sockets = getSocketsByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorMods);
 
-  // We get the plugSets for each item because they indicate which mods can go in which socket.
-  // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
-  // of the plugItems in the plugset so we use that first if possible.
-  const plugSets = _.compact(
-    sockets.map(
-      (socket) =>
-        socket.socketDefinition.reusablePlugSetHash &&
-        // If a socket is not plugged (even with an empty socket) we consider it disabled
-        // This needs to be checked as the 30th anniversary armour has has the Artificer socket
-        // but the API considers it to be disabled.
-        socket.plugged &&
-        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash).reusablePlugItems.map(
-          (plugItem) => plugItem.plugItemHash
-        )
-    )
-  ).sort(compareBy((plugHashes) => plugHashes.length));
+  const socketsOrderedWithArtificerFirst = sockets
+    // If a socket is not plugged (even with an empty socket) we consider it disabled
+    // This needs to be checked as the 30th anniversary armour has has the Artificer socket
+    // but the API considers it to be disabled.
+    .filter((socket) => socket.plugSet && socket.plugged)
+    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+    // of the plugItems in the plugset so we use that first if possible.
+    .sort(compareBy((socket) => socket.plugSet?.plugs.length));
 
   for (const mod of lockedMods) {
-    const plugSetIndex = plugSets.findIndex((set) => set.includes(mod.hash));
-    if (plugSetIndex === -1) {
+    const socketIndex = socketsOrderedWithArtificerFirst.findIndex((socket) =>
+      socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === mod.hash)
+    );
+    if (socketIndex === -1) {
       return false;
     }
-    plugSets.splice(plugSetIndex, 1);
+    socketsOrderedWithArtificerFirst.splice(socketIndex, 1);
   }
 
   return true;
