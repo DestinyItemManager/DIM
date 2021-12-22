@@ -9,6 +9,7 @@
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
+* The progress notification for applying a loadout now shows each item and mod as it's being applied.
 
 ### Beta Only
 
