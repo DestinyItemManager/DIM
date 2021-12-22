@@ -180,7 +180,7 @@ export default function Header() {
         to: `${path}/records`,
         text: t('Records.Title'),
       },
-      account.destinyVersion === 2 && $featureFlags.loadoutsPage
+      account.destinyVersion === 2
         ? { to: `${path}/loadouts`, text: t('Loadouts.Loadouts') }
         : {
             to: `${path}/optimizer`,

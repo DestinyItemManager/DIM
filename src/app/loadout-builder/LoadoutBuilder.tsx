@@ -7,9 +7,8 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutFromEquipped, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -415,15 +414,6 @@ function LoadoutBuilder({
         </AnimatePresence>
         <div className={styles.toolbar}>
           <UserGuideLink topic="Loadout_Optimizer" />
-          {!$featureFlags.loadoutsPage && (
-            <button
-              type="button"
-              className="dim-button"
-              onClick={() => editLoadout(newLoadout('', []), { showClass: true, isNew: true })}
-            >
-              {t('LoadoutBuilder.NewEmptyLoadout')}
-            </button>
-          )}
           <button
             type="button"
             className="dim-button"

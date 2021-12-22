@@ -239,6 +239,7 @@
     "SearchPrompt": "Search available filter commands",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
+    "StackFull": "Show items which are at-capacity for their stack (Enhancement Cores, Strange Coins, Gunsmith Materials etc)",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StatLower": "Shows armor whose stats are strictly lower than another of the same type of armor.",
@@ -463,7 +464,6 @@
     "MaxTier": "Max {{tier}}",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
-    "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFoundWithReasons": "No builds found. This is typically because DIM could not assign all selected mods to any armor set.",
     "NoComparableItems": "This loadout has no comparable items. Saving the Optimizer Set will add the items to this loadout.",
     "NoExotic": "No Exotic",
@@ -842,8 +842,12 @@
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
     "InsertModButton": "Insert Mod",
+    "InsertOrnamentButton": "Apply Ornament",
+    "InsertShaderButton": "Apply Shader",
     "ListStyle": "Display perks as a list",
     "SelectModButton": "Select Mod",
+    "SelectOrnamentButton": "Select Ornament",
+    "SelectShaderButton": "Select Shader",
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {

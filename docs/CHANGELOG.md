@@ -1,5 +1,19 @@
 ## Next
 
+* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
+* The option to view Mod Assignments for a loadout is now available outside of Beta.
+* The stat bars shown in Compare are more accurately sized, relative to each other.
+* Fix an issue where mods might get plugged in too fast and bump into the armor's max Energy.
+* Update some error messages for when equipping items fails.
+* Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
+* Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
+* Loadout notes now retain whitespace formatting.
+* Added new filter "is:stackfull" to show items that are at max stack size.
+
+### Beta Only
+
+* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
+
 ## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
 
 * Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
@@ -7,6 +21,8 @@
 * Improved the time taken to apply a loadout with mods.
 * Stasis subclass can also be applied in the Loadouts page.
 * Fixed showing the amount of Dawning Spirit in the holiday oven popup.
+* Add energy bar displays to the Mod Assignments view.
+* Fixed the 5th slot on Artifice Armor not showing up in Loadout Optimizer if no mod was plugged in.
 
 ## 6.95.1 <span class="changelog-date">(2021-12-14)</span>
 

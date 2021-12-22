@@ -71,6 +71,7 @@ export function processItems(
   }
 ): DimItem[] {
   const result: DimItem[] = [];
+
   for (const item of items) {
     let createdItem: DimItem | null = null;
     try {

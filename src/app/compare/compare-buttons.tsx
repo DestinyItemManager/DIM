@@ -156,7 +156,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
       query:
-        '(' + 
+        '(' +
         bucketToSearch[exampleItem.bucket.hash] +
         ' ' +
         (exampleItem.destinyVersion === 2 && intrinsic
