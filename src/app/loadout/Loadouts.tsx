@@ -20,9 +20,9 @@ import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  getItemsFromLoadoutItems,
   getLight,
   getLoadoutStats,
   getModsFromLoadout,

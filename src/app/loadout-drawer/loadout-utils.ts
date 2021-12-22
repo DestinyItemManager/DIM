@@ -2,16 +2,14 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { DimBucketType, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -20,7 +18,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: DimBucketType[] = [
@@ -320,7 +318,7 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
-function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
+export function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
   for (const item of allItems) {
     if (
       (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
@@ -340,45 +338,6 @@ export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
     }
   }
   return false;
-}
-
-/**
- * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
- * are returned as warnitems.
- */
-export function getItemsFromLoadoutItems(
-  loadoutItems: LoadoutItem[] | undefined,
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  allItems: DimItem[]
-): [DimLoadoutItem[], DimItem[]] {
-  if (!loadoutItems) {
-    return [emptyArray(), emptyArray()];
-  }
-
-  const items: DimLoadoutItem[] = [];
-  const warnitems: DimItem[] = [];
-  for (const loadoutItem of loadoutItems) {
-    const item = findItem(allItems, loadoutItem);
-    if (item) {
-      items.push({ ...item, ...loadoutItem });
-    } else {
-      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-      if (itemDef) {
-        const fakeItem =
-          (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
-          ({
-            ...loadoutItem,
-            icon: itemDef.displayProperties?.icon || itemDef.icon,
-            name: itemDef.displayProperties?.name || itemDef.itemName,
-          } as DimItem);
-        fakeItem.equipped = loadoutItem.equipped;
-        warnitems.push(fakeItem);
-      }
-    }
-  }
-
-  return [items, warnitems];
 }
 
 /**
