@@ -79,8 +79,8 @@ export default function LoadoutDrawer() {
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, allItems),
-    [defs, loadoutItems, allItems]
+    () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
+    [defs, buckets, loadoutItems, allItems]
   );
 
   const onAddItem = useCallback(

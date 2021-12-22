@@ -196,25 +196,26 @@ function LoadoutRow({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
-    const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, allItems);
+    const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, buckets, allItems);
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
     const subclass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
     if (subclass) {
       equippableItems = equippableItems.filter((i) => i !== subclass);
     }
     return [equippableItems, subclass, warnitems];
-  }, [loadout.items, defs, allItems, store]);
+  }, [loadout.items, defs, buckets, allItems, store]);
 
   const savedMods = getModsFromLoadout(defs, loadout);
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
-  const categories = _.groupBy(items, (i) => i.bucket.sort);
+  const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 
   const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
   const power = showPower
@@ -496,7 +497,9 @@ function ItemBucket({
     return <div className={styles.items} />;
   }
 
-  const [equipped, unequipped] = _.partition(items, (i) => equippedItemIds.has(i.id));
+  const [equipped, unequipped] = _.partition(items, (i) =>
+    i.id === '0' ? i.equipped : equippedItemIds.has(i.id)
+  );
 
   return (
     <div className={styles.itemBucket}>
@@ -509,7 +512,9 @@ function ItemBucket({
             {items.map((item) => (
               <ItemPopupTrigger item={item} key={item.id}>
                 {(ref, onClick) => (
-                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                  <div className={clsx({ [styles.missingItem]: item.id === '0' })}>
+                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                  </div>
                 )}
               </ItemPopupTrigger>
             ))}

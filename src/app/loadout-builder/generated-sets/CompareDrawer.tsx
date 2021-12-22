@@ -4,7 +4,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
@@ -91,6 +91,7 @@ export default function CompareDrawer({
 }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const buckets = useSelector(bucketsSelector)!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
   const getModRenderKey = createGetModRenderKey();
 
@@ -105,12 +106,12 @@ export default function CompareDrawer({
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
-    const [items] = getItemsFromLoadoutItems(equippedItems, defs, allItems);
+    const [items] = getItemsFromLoadoutItems(equippedItems, defs, buckets, allItems);
     return _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
-  }, [selectedLoadout, defs, allItems]);
+  }, [selectedLoadout, defs, buckets, allItems]);
 
   const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
     const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(

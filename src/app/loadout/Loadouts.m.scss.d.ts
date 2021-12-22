@@ -24,6 +24,7 @@ interface CssExports {
   'menu': string;
   'menuButton': string;
   'menuButtons': string;
+  'missingItem': string;
   'missingItems': string;
   'mods': string;
   'modsGrid': string;

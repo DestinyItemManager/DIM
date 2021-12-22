@@ -2,8 +2,9 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { DimBucketType } from 'app/inventory/inventory-buckets';
+import { DimBucketType, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
@@ -348,6 +349,7 @@ export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
 export function getItemsFromLoadoutItems(
   loadoutItems: LoadoutItem[] | undefined,
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  buckets: InventoryBuckets,
   allItems: DimItem[]
 ): [DimLoadoutItem[], DimItem[]] {
   if (!loadoutItems) {
@@ -363,12 +365,15 @@ export function getItemsFromLoadoutItems(
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {
-        // TODO: makeFakeItem
-        warnitems.push({
-          ...loadoutItem,
-          icon: itemDef.displayProperties?.icon || itemDef.icon,
-          name: itemDef.displayProperties?.name || itemDef.itemName,
-        } as DimItem);
+        const fakeItem =
+          (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
+          ({
+            ...loadoutItem,
+            icon: itemDef.displayProperties?.icon || itemDef.icon,
+            name: itemDef.displayProperties?.name || itemDef.itemName,
+          } as DimItem);
+        fakeItem.equipped = loadoutItem.equipped;
+        warnitems.push(fakeItem);
       }
     }
   }
