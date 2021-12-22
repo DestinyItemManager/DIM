@@ -9,6 +9,7 @@
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
+* If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
 
 ### Beta Only
 
