@@ -176,7 +176,11 @@ export function setSocketOverrideResult(
   equipNotPossible?: boolean
 ) {
   return produce<LoadoutApplyState>((state) => {
-    state.socketOverrideStates[item.index].results[socketIndex] = { state: socketState, error };
+    state.socketOverrideStates[item.index].results[socketIndex] = {
+      ...state.socketOverrideStates[item.index].results[socketIndex],
+      state: socketState,
+      error,
+    };
     state.equipNotPossible ||= equipNotPossible || false;
   });
 }
