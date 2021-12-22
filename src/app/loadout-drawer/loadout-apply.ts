@@ -48,6 +48,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import {
+  anyActionFailed,
   LoadoutApplyPhase,
   LoadoutItemState,
   LoadoutModState,
@@ -117,62 +118,16 @@ export function applyLoadout(
     );
     loadingTracker.addPromise(loadoutPromise);
 
-    // TODO: set failed if any action didn't succeed, throw NotificationError with ApplyLoadoutProgressBody body
-    const notificationPromise = loadoutPromise.then(() => {
-      const loadoutState = getLoadoutState();
-      const itemResults = Object.values(loadoutState.itemStates);
-      const failed = count(
-        itemResults,
-        (r) => r.state === LoadoutItemState.FailedEquip || r.state === LoadoutItemState.FailedMove
-      );
-      if (failed > 0) {
-        if (failed === itemResults.length) {
-          throw new DimError('Loadouts.AppliedError');
-        } else {
-          throw new DimError(
-            'Loadouts.AppliedWarn',
-            t('Loadouts.AppliedWarn', { failed: failed, total: itemResults.length })
-          );
-        }
-      }
-
-      const overrideResults = Object.values(loadoutState.socketOverrideStates).flatMap((r) =>
-        Object.values(r.results)
-      );
-      const successfulItemOverrides = count(
-        overrideResults,
-        (r) => r.state === LoadoutSocketOverrideState.Applied
-      );
-      if (successfulItemOverrides < overrideResults.length) {
-        throw new DimError(
-          'Loadouts.AppliedOverridesWarn',
-          t('Loadouts.AppliedOverridesWarn', {
-            successful: successfulItemOverrides,
-            total: overrideResults.length,
-          })
-        );
-      }
-
-      const modResults = loadoutState.modStates;
-      const successfulMods = count(modResults, (r) => r.state === LoadoutModState.Applied);
-      if (successfulMods < modResults.length) {
-        throw new DimError(
-          'Loadouts.AppliedModsWarn',
-          t('Loadouts.AppliedModsWarn', {
-            successful: successfulMods,
-            total: modResults.length,
-          })
-        );
-      }
-    });
-
     // Start a notification that will show as long as the loadout is equipping
-    showNotification(
-      loadoutNotification(loadout, stateObservable, store, notificationPromise, cancel)
-    );
+    showNotification(loadoutNotification(loadout, stateObservable, loadoutPromise, cancel));
 
-    await loadoutPromise;
-    stopTimer();
+    try {
+      await loadoutPromise;
+    } catch (e) {
+      errorLog('loadout', 'failed loadout', getLoadoutState(), e);
+    } finally {
+      stopTimer();
+    }
   };
 }
 
@@ -262,7 +217,8 @@ function doApplyLoadout(
             if (item) {
               state.socketOverrideStates[item.index] = {
                 item,
-                results: _.mapValues(loadoutItem.socketOverrides, () => ({
+                results: _.mapValues(loadoutItem.socketOverrides, (plugHash) => ({
+                  plugHash,
                   state: LoadoutSocketOverrideState.Pending,
                 })),
               };
@@ -405,7 +361,8 @@ function doApplyLoadout(
               produce((state) => {
                 state.itemStates[updatedItem.index].state =
                   // If we're doing a bulk equip later, set to MovedPendingEquip
-                  itemsToEquip.length > 1
+                  itemsToEquip.length > 1 &&
+                  itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
                     ? LoadoutItemState.MovedPendingEquip
                     : LoadoutItemState.Succeeded;
               })
@@ -538,7 +495,11 @@ function doApplyLoadout(
         );
       }
 
-      // TODO: throw errors based on whether we consider the loadout to be a failure
+      if (anyActionFailed(getLoadoutState())) {
+        setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.Failed));
+        // This message isn't used, it just triggers the failure state in the notification
+        throw new Error('loadout-failed');
+      }
       setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.Succeeded));
     } finally {
       // Update the characters to get the latest stats
@@ -940,6 +901,7 @@ function applyLoadoutMods(
         setModResult({
           modHash: mod.hash,
           state: LoadoutModState.Unassigned,
+          error: new DimError('Loadouts.UnassignedModError'),
         })
       );
     }

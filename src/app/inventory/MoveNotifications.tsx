@@ -1,4 +1,4 @@
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import {
   LoadoutApplyPhase,
   LoadoutApplyState,
@@ -7,16 +7,25 @@ import {
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { NotifyInput } from 'app/notifications/notifications';
-import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
+import { NotificationError, NotifyInput } from 'app/notifications/notifications';
+import {
+  AppIcon,
+  faCheckCircle,
+  faExclamationCircle,
+  faExclamationTriangle,
+  refreshIcon,
+} from 'app/shell/icons';
+import { DimError } from 'app/utils/dim-error';
 import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useSubscription } from 'use-subscription';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { DimItem } from './item-types';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
+import ItemIcon from './ItemIcon';
 import styles from './MoveNotifications.m.scss';
 import { DimStore } from './store-types';
 
@@ -34,7 +43,7 @@ export function moveItemNotification(
 ): NotifyInput {
   return {
     promise: movePromise,
-    duration: 0,
+    duration: lingerMs,
     title: item.name,
     icon: <ConnectedInventoryItem item={item} />,
     trailer: <MoveItemNotificationIcon completion={movePromise} />,
@@ -53,86 +62,165 @@ export function moveItemNotification(
 export function loadoutNotification(
   loadout: Loadout,
   stateObservable: Observable<LoadoutApplyState>,
-  store: DimStore,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
 ): NotifyInput {
-  // TODO: pass in a state updater that can communicate application state
-  // TODO: body! show all items, check 'em off
-
   return {
-    promise: loadoutPromise,
-    duration: lingerMs,
+    promise: loadoutPromise.catch((e) => {
+      throw new NotificationError(e.message, {
+        body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
+      });
+    }),
+    duration: 5_000,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
-    trailer: <MoveItemNotificationIcon completion={loadoutPromise} />,
-    body: <ApplyLoadoutProgressBody store={store} stateObservable={stateObservable} />,
+    body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
     onCancel: cancel,
   };
 }
 
+const messageByPhase: { [phase in LoadoutApplyPhase]: string } = {
+  [LoadoutApplyPhase.NotStarted]: tl('Loadouts.NotStarted'),
+  [LoadoutApplyPhase.Deequip]: tl('Loadouts.Deequip'),
+  [LoadoutApplyPhase.MoveItems]: tl('Loadouts.MoveItems'),
+  [LoadoutApplyPhase.EquipItems]: tl('Loadouts.EquipItems'),
+  [LoadoutApplyPhase.SocketOverrides]: tl('Loadouts.SocketOverrides'),
+  [LoadoutApplyPhase.ApplyMods]: tl('Loadouts.ApplyMods'),
+  [LoadoutApplyPhase.ClearSpace]: tl('Loadouts.ClearingSpace'),
+  [LoadoutApplyPhase.Succeeded]: tl('Loadouts.Succeeded'),
+  [LoadoutApplyPhase.Failed]: tl('Loadouts.Failed'),
+};
+
 function ApplyLoadoutProgressBody({
-  store,
   stateObservable,
 }: {
-  store: DimStore;
   stateObservable: Observable<LoadoutApplyState>;
 }) {
   // TODO: throttle subscription?
   const { phase, equipNotPossible, itemStates, socketOverrideStates, modStates } =
     useSubscription(stateObservable);
-  const numApplicableItems = _.size(itemStates);
-  const numSubclassOverrides = _.size(socketOverrideStates);
-  const numMods = modStates.length;
   const defs = useD2Definitions()!;
+
+  const progressIcon =
+    phase === LoadoutApplyPhase.Succeeded
+      ? faCheckCircle
+      : phase === LoadoutApplyPhase.Failed
+      ? faExclamationCircle
+      : refreshIcon;
+
+  const itemStatesList = Object.values(itemStates);
+  // TODO: when we have per-item socket overrides this'll probably need to be more subtle
+  const socketOverrideStatesList = Object.values(socketOverrideStates);
+
+  const groupedItemErrors = _.groupBy(
+    itemStatesList.filter(({ error }) => error),
+    ({ error }) =>
+      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+  );
+
+  const groupedModErrors = _.groupBy(
+    modStates.filter(({ error }) => error),
+    ({ error }) =>
+      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+  );
 
   return (
     <>
-      <div>{LoadoutApplyPhase[phase]}</div>
-      {equipNotPossible && <div>{t('BungieService.DestinyCannotPerformActionAtThisLocation')}</div>}
-      <div>
-        {Object.values(itemStates).map(({ item, state, error }) => (
-          <div key={item.index}>
-            Item: {item.name} {LoadoutItemState[state]} {error?.message}
-            {socketOverrideStates[item.index] && (
-              <div>
-                {Object.entries(socketOverrideStates[item.index].results).map(
-                  ([socketIndex, { state, error }]) => (
-                    <div key={socketIndex}>
-                      {socketIndex} {LoadoutSocketOverrideState[state]} {error?.message}
-                    </div>
-                  )
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+      <div className={clsx(styles.loadoutDetails)}>
+        <AppIcon icon={progressIcon} spinning={progressIcon === refreshIcon} />
+        {t(messageByPhase[phase])}
       </div>
-      <div>
-        {modStates.map(({ modHash, state }, i) => (
-          <div key={i}>
-            Mod: {defs.InventoryItem.get(modHash).displayProperties.name} {LoadoutModState[state]}
-          </div>
-        ))}
-      </div>
-      <div>
-        {t('Loadouts.NotificationMessage', {
-          count: numApplicableItems,
-          store: store.name,
-          context: store.genderName,
-        }) +
-          (numMods > 0
-            ? '\n\n' +
-              t('Loadouts.NotificationMessageMods', {
-                count: numMods,
-              })
-            : '') +
-          (numSubclassOverrides > 0
-            ? '\n\n' +
-              t('Loadouts.NotificationMessageSubclass', {
-                count: numSubclassOverrides,
-              })
-            : '')}
-      </div>
+      {equipNotPossible && (
+        <div className={styles.warning}>
+          <AppIcon className={styles.warningIcon} icon={faExclamationTriangle} />
+          {t('BungieService.DestinyCannotPerformActionAtThisLocation')}
+        </div>
+      )}
+      {itemStatesList.length > 0 && (
+        <div className={styles.iconList}>
+          {itemStatesList.map(({ item, state }) => (
+            <div
+              className={clsx('item', {
+                [styles.loadoutItemPending]:
+                  state === LoadoutItemState.Pending ||
+                  state === LoadoutItemState.DequippedPendingMove ||
+                  state === LoadoutItemState.MovedPendingEquip,
+                [styles.loadoutItemFailed]:
+                  state === LoadoutItemState.FailedDequip ||
+                  state === LoadoutItemState.FailedEquip ||
+                  state === LoadoutItemState.FailedMove,
+              })}
+              key={item.index}
+            >
+              <ItemIcon item={item} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!_.isEmpty(groupedItemErrors) && (
+        <div className={styles.errorList}>
+          {Object.values(groupedItemErrors).map((errorStates) => (
+            <div key={errorStates[0].item.index}>
+              <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
+              {errorStates[0].error instanceof DimError && errorStates[0].error.cause
+                ? errorStates[0].error.cause.message
+                : errorStates[0].error!.message}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {socketOverrideStatesList.length > 0 && (
+        <div className={styles.iconList}>
+          {socketOverrideStatesList.map(({ item, results }) => (
+            <div key={item.index} className={styles.iconList}>
+              {Object.entries(results).map(([socketIndex, { plugHash, state }]) => (
+                <div
+                  key={socketIndex}
+                  className={clsx('item', {
+                    [styles.loadoutItemPending]: state === LoadoutSocketOverrideState.Pending,
+                    [styles.loadoutItemFailed]: state === LoadoutSocketOverrideState.Failed,
+                  })}
+                >
+                  <PlugDef
+                    plug={defs.InventoryItem.get(plugHash) as PluggableInventoryItemDefinition}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {modStates.length > 0 && (
+        <div className={styles.iconList}>
+          {modStates.map(({ modHash, state }, i) => (
+            <div
+              key={i}
+              className={clsx('item', {
+                [styles.loadoutItemPending]: state === LoadoutModState.Pending,
+                [styles.loadoutItemFailed]:
+                  state === LoadoutModState.Unassigned || state === LoadoutModState.Failed,
+              })}
+            >
+              <PlugDef plug={defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!_.isEmpty(groupedModErrors) && (
+        <div className={styles.errorList}>
+          {Object.values(groupedModErrors).map((errorStates) => (
+            <div key={errorStates[0].modHash}>
+              <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
+              {errorStates[0].error instanceof DimError && errorStates[0].error.cause
+                ? errorStates[0].error.cause.message
+                : errorStates[0].error!.message}
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
