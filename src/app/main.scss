@@ -40,6 +40,10 @@
   // The height of the inventory store header section. Set by JS.
   --store-header-height: 62px;
 
+  // How many desktop mode sidebar trays are open
+  --expanded-sidebars: 0;
+  --sidebar-size: 260px;
+
   // prevents content shift with persistent scroll-y bar
   overflow-y: scroll;
 }

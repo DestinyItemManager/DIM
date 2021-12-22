@@ -10,6 +10,10 @@
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
 
+### Beta Only
+
+* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
+
 ## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
 
 * Loadouts now show correct stats for subclass, item, and mod selections. All mods are accounted for whether they actually will fit or not.
