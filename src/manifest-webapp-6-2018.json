@@ -38,7 +38,7 @@
   "theme_color": "black",
   "background_color": "black",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "natural",
   "categories": ["games", "entertainment", "productivity", "utilities"],
   "start_url": "/index.html?utm_source=homescreen"
 }
