@@ -84,8 +84,8 @@ const lbStateInit = ({
     if (preloadedLoadout.classType === DestinyClass.Unknown) {
       const includedClasses = new Set(
         preloadedLoadout.items
-          .map((i) => defs.InventoryItem.get(i.hash).classType)
-          .filter((c) => c !== DestinyClass.Unknown)
+          .map((i) => defs.InventoryItem.get(i.hash)?.classType)
+          .filter((c) => c !== undefined && c !== DestinyClass.Unknown)
       );
       if (includedClasses.size === 1) {
         const includedClassType = includedClasses.values().next().value;
