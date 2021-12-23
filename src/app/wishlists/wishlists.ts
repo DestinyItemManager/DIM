@@ -140,7 +140,8 @@ export function getInventoryWishListRoll(
     !wishListRolls ||
     !item ||
     item.destinyVersion === 1 ||
-    !item.sockets
+    !item.sockets ||
+    item.id === '0'
   ) {
     return undefined;
   }
