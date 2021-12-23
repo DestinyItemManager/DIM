@@ -23,7 +23,7 @@ function getUserLocale() {
   var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
   console.info('Language Detected: ' + lang);
   if (!supportedLanguages.includes(lang)) {
-    lang = lang.split('-', 1);
+    lang = lang.split('-', 1)[0];
   }
   if (!supportedLanguages.includes(lang)) {
     // fallback to 'en' if unsupported language after removing dialect
