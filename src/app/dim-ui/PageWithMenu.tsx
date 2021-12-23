@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
 import { scrollToHref } from './scroll';
 
@@ -7,21 +7,47 @@ function PageWithMenu({ children, className }: { children: React.ReactNode; clas
   return <div className={clsx(className, styles.page)}>{children}</div>;
 }
 
-PageWithMenu.Menu = function ({
+/** Detect the presence of scrollbars that take up space. This may only work in this particular case! */
+function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
+  const [hasScrollbars, setHasScrollbars] = useState(false);
+
+  const updateResize = useCallback(() => {
+    if (ref.current) {
+      setHasScrollbars(ref.current.clientWidth < ref.current.offsetWidth);
+    }
+  }, [ref]);
+
+  useEffect(() => {
+    updateResize();
+  });
+
+  useEffect(() => {
+    window.addEventListener('resize', updateResize);
+    return () => window.removeEventListener('resize', updateResize);
+  });
+  return hasScrollbars;
+}
+
+PageWithMenu.Menu = function Menu({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const hasScrollbars = useHasScrollbars(ref);
   return (
-    <div className={clsx(className, styles.menu)}>
+    <div
+      ref={ref}
+      className={clsx(className, styles.menu, { [styles.menuScrollbars]: hasScrollbars })}
+    >
       <div>{children}</div>
     </div>
   );
 };
 
-PageWithMenu.Contents = function ({
+PageWithMenu.Contents = function Contents({
   children,
   className,
 }: {
@@ -31,7 +57,7 @@ PageWithMenu.Contents = function ({
   return <div className={clsx(className, styles.contents)}>{children}</div>;
 };
 
-PageWithMenu.MenuHeader = function ({
+PageWithMenu.MenuHeader = function MenuHeader({
   children,
   className,
 }: {
@@ -41,7 +67,7 @@ PageWithMenu.MenuHeader = function ({
   return <div className={clsx(className, styles.menuHeader)}>{children}</div>;
 };
 
-PageWithMenu.MenuButton = function ({
+PageWithMenu.MenuButton = function MenuButton({
   children,
   className,
   anchor,
