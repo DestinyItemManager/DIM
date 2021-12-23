@@ -14,7 +14,11 @@ PageWithMenu.Menu = function ({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={clsx(className, styles.menu)}>{children}</div>;
+  return (
+    <div className={clsx(className, styles.menu)}>
+      <div>{children}</div>
+    </div>
+  );
 };
 
 PageWithMenu.Contents = function ({

@@ -44,16 +44,22 @@
   font-size: 14px;
   flex-shrink: 0;
   margin-right: 12px;
-  padding: 4px;
   margin-top: 8px;
   position: sticky;
   top: calc(var(--header-height) + 8px);
-  width: 230px;
+  width: 230px + 17px + 8px; // Windows scrollbars are 17px, then padding
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
+
+  // This div what the actual content lives in. The outer menu is 17px larger to create a "gutter" for scrollbars to show up in.
+  // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
+  > div {
+    width: 230px;
+    padding: 4px;
+  }
 
   @include phone-portrait {
     position: static;
