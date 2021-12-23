@@ -237,7 +237,7 @@ function doApplyLoadout(
         applicableLoadoutItems.filter((loadoutItem) => {
           const item = getLoadoutItem(loadoutItem, store, getStores());
           // Ignore any items that are already in the correct state
-          const notAlreadyThere =
+          const requiresAction =
             item &&
             // We need to move to another location - but exclude items that can't be transferred
             ((item.owner !== store.id && !item.notransfer) ||
@@ -249,8 +249,7 @@ function doApplyLoadout(
               // We always try to move consumable stacks because their logic is complicated
               (loadoutItem.amount && loadoutItem.amount > 1));
 
-          // TODO: hate the double negative
-          if (item && !notAlreadyThere) {
+          if (item && !requiresAction) {
             setLoadoutState(
               produce((state) => {
                 state.itemStates[item.index].state = LoadoutItemState.AlreadyThere;
@@ -258,12 +257,10 @@ function doApplyLoadout(
             );
           }
 
-          return notAlreadyThere;
+          return requiresAction;
         }),
         // Shallow copy all LoadoutItems so we can mutate the equipped flag later
-        (i) => ({
-          ...i,
-        })
+        (i) => ({ ...i })
       );
 
       // The vault can't equip items, so set equipped to false
