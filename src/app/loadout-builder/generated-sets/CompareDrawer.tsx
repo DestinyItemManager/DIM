@@ -54,6 +54,7 @@ function getItemStats(
 interface Props {
   set: ArmorSet;
   loadouts: Loadout[];
+  initialLoadoutId?: string;
   lockedMods: PluggableInventoryItemDefinition[];
   classType: DestinyClass;
   statOrder: number[];
@@ -65,10 +66,15 @@ interface Props {
   onClose(): void;
 }
 
-function chooseSimilarLoadout(
+function chooseInitialLoadout(
   setItems: DimItem[],
-  useableLoadouts: Loadout[]
+  useableLoadouts: Loadout[],
+  initialLoadoutId?: string
 ): Loadout | undefined {
+  const loadoutFromInitialId = useableLoadouts.find((lo) => lo.id === initialLoadoutId);
+  if (loadoutFromInitialId) {
+    return loadoutFromInitialId;
+  }
   const exotic = setItems.find((i) => i.isExotic);
   return (
     (exotic && useableLoadouts.find((l) => l.items.some((i) => i.hash === exotic.hash))) ||
@@ -78,6 +84,7 @@ function chooseSimilarLoadout(
 
 export default function CompareDrawer({
   loadouts,
+  initialLoadoutId,
   set,
   lockedMods,
   classType,
@@ -97,7 +104,7 @@ export default function CompareDrawer({
   const setItems = set.armor.map((items) => items[0]);
 
   const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
-    chooseSimilarLoadout(setItems, useableLoadouts)
+    chooseInitialLoadout(setItems, useableLoadouts, initialLoadoutId)
   );
 
   const allItems = useSelector(allItemsSelector);
