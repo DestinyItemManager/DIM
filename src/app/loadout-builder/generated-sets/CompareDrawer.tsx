@@ -103,7 +103,7 @@ export default function CompareDrawer({
 
   const setItems = set.armor.map((items) => items[0]);
 
-  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
+  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(() =>
     chooseInitialLoadout(setItems, useableLoadouts, initialLoadoutId)
   );
 
