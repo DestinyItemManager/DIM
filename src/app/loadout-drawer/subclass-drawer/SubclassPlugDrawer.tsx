@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
@@ -33,7 +32,6 @@ export default function SubclassPlugDrawer({
   onAccept(overrides: SocketOverrides): void;
   onClose(): void;
 }) {
-  const language = useSelector(languageSelector);
   const defs = useD2Definitions();
   const profileResponse = useSelector(profileResponseSelector);
 
@@ -136,7 +134,6 @@ export default function SubclassPlugDrawer({
       title={t('Loadouts.SubclassOptions', { subclass: subclass.name })}
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
-      language={language}
       plugSets={plugSets}
       displayedStatHashes={DISPLAYED_PLUG_STATS}
       onAccept={onAcceptInternal}
