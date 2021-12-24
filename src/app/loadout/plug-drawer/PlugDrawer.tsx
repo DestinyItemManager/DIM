@@ -29,7 +29,7 @@ interface Props {
    * discarded on accept.
    */
   initiallySelected: PluggableInventoryItemDefinition[];
-  /** A restricted list of stat hashes to display for each plug. If not specified, all stats will be shown. */
+  /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
   displayedStatHashes?: number[];
   /** Title of the sheet, displayed in the header. */
   title: string;
