@@ -7,6 +7,13 @@
 * Update some error messages for when equipping items fails.
 * Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
+* Loadout notes now retain whitespace formatting.
+* Added new filter "is:stackfull" to show items that are at max stack size.
+* When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
+
+### Beta Only
+
+* We're trying out a new tool for the desktop inventory screen called "Item Feed". Click the tab on the right to pop out a feed of your item drops with quick buttons to tag them. By default tagged items disappear from the view so you can focus on new stuff.
 
 ## 6.96.0 <span class="changelog-date">(2021-12-19)</span>
 

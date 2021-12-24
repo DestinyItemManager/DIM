@@ -24,6 +24,8 @@ declare const $featureFlags: {
   awa: boolean;
   /** Whether ability cooldowns are shown in stats tooltips */
   abilityCooldowns: boolean;
+  /** Item feed sidebar */
+  itemFeed: boolean;
 };
 
 declare function ga(...params: string[]);

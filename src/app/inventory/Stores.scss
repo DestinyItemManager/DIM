@@ -44,6 +44,7 @@
     // Vault takes the rest
     1fr;
   box-sizing: border-box;
+  padding-right: calc(var(--sidebar-size) * var(--expanded-sidebars));
 
   // Split evenly between character and vault
   .singleCharacter &.account-wide {
@@ -195,9 +196,6 @@
   }
 }
 
-.store-text {
-  padding-top: 5px;
-}
 .store-header {
   position: fixed;
   backface-visibility: hidden;

@@ -246,10 +246,15 @@ export function fitMostMods(
         }
 
         let totalActiveConditionalMods = 0;
-        const modsAssigned = Object.values(assignments).map((assignment) => assignment.assigned);
-        const allAssignedMods = modsAssigned.flat();
-        for (const assigned of modsAssigned) {
-          totalActiveConditionalMods += calculateTotalActivatedMods(assigned, allAssignedMods);
+        const allAssignedMods = Object.values(assignments).flatMap(
+          (assignment) => assignment.assigned
+        );
+        for (const item of items) {
+          totalActiveConditionalMods += calculateTotalActivatedMods(
+            bucketSpecificAssignments[item.id].assigned,
+            assignments[item.id].assigned,
+            allAssignedMods
+          );
         }
 
         // Skip further checks if we have less active condition mods and we have an equal amount
@@ -609,13 +614,21 @@ function calculateEnergyChange(
  * Used to ensure mod assignments favor results that activate these mods.
  */
 function calculateTotalActivatedMods(
-  assignedModsForItem: PluggableInventoryItemDefinition[],
+  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
+  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
   allAssignedMods: PluggableInventoryItemDefinition[]
 ) {
   let activeMods = 0;
 
-  for (const mod of assignedModsForItem) {
-    if (isPlugActive(mod, assignedModsForItem, allAssignedMods)) {
+  for (const mod of bucketIndependentAssignmentsForItem) {
+    if (
+      isPlugActive(
+        mod,
+        bucketSpecificAssignments,
+        bucketIndependentAssignmentsForItem,
+        allAssignedMods
+      )
+    ) {
       activeMods++;
     }
   }
@@ -629,7 +642,8 @@ function calculateTotalActivatedMods(
  */
 function isPlugActive(
   mod: PluggableInventoryItemDefinition,
-  modsForItem: PluggableInventoryItemDefinition[],
+  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
+  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
   allMods: PluggableInventoryItemDefinition[]
 ) {
   if (
@@ -638,9 +652,12 @@ function isPlugActive(
   ) {
     // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
     return Boolean(
-      modsForItem.some(
+      bucketSpecificAssignments.some(
         (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
       ) ||
+        bucketIndependentAssignmentsForItem.some(
+          (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        ) ||
         allMods?.some(
           (plugDef) =>
             plugDef !== mod &&

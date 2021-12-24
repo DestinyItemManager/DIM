@@ -50,6 +50,11 @@ const simpleFilters: FilterDefinition[] = [
     filter: () => (item) => item.maxStackSize > 1,
   },
   {
+    keywords: 'stackfull',
+    description: tl('Filter.StackFull'),
+    filter: () => (item) => item.maxStackSize > 1 && item.amount === item.maxStackSize,
+  },
+  {
     keywords: ['infusable', 'infuse'],
     description: tl('Filter.Infusable'),
     filter: () => (item) => item.infusable,
