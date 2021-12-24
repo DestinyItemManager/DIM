@@ -61,6 +61,7 @@ export default function LoadoutDrawerContents({
   onUpdateMods,
   onOpenModPicker,
   onShowItemPicker,
+  onOpenFashionDrawer,
   removeModByHash,
   onApplySocketOverrides,
 }: {
@@ -75,6 +76,7 @@ export default function LoadoutDrawerContents({
   onUpdateMods(mods: number[]): void;
   onOpenModPicker(): void;
   onShowItemPicker(shown: boolean): void;
+  onOpenFashionDrawer(): void;
   removeModByHash(itemHash: number): void;
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
@@ -160,6 +162,9 @@ export default function LoadoutDrawerContents({
           ))}
         <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
           <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
+        </a>
+        <a onClick={() => onOpenFashionDrawer()} className="dim-button loadout-add">
+          <AppIcon icon={addIcon} /> {t('Loadouts.Fashion')}
         </a>
       </div>
       <div className="loadout-added-items">

@@ -22,6 +22,7 @@ export interface State {
     /** An initial query to be passed to the mod picker, this will filter the mods shown. */
     query?: string;
   };
+  showFashionDrawer: boolean;
 }
 
 export type Action =
@@ -48,7 +49,8 @@ export type Action =
   | { type: 'updateMods'; mods: number[] }
   | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
-  | { type: 'closeModPicker' };
+  | { type: 'closeModPicker' }
+  | { type: 'toggleFashionDrawer'; show: boolean };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -63,6 +65,7 @@ export function stateReducer(state: State, action: Action): State {
         modPicker: {
           show: false,
         },
+        showFashionDrawer: false,
       };
 
     case 'editLoadout': {
@@ -163,6 +166,9 @@ export function stateReducer(state: State, action: Action): State {
     case 'closeModPicker': {
       return { ...state, modPicker: { show: false } };
     }
+
+    case 'toggleFashionDrawer':
+      return { ...state, showFashionDrawer: action.show };
   }
 }
 

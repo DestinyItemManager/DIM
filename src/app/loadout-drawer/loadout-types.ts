@@ -33,6 +33,7 @@ export interface DimLoadoutItem extends DimItem {
 
 /** represents a single mod, and where to place it (on a non-specific item) */
 export type Assignment = {
+  // TODO: just the hash?
   /** what item to plug */
   mod: PluggableInventoryItemDefinition;
   /** which socket to plug it into */
@@ -45,6 +46,7 @@ export type Assignment = {
  * and the delta between planned mods and current mods
  */
 export type PluggingAction = {
+  // TODO: just the hash?
   /** what item to plug */
   mod: PluggableInventoryItemDefinition;
   /** which socket to plug it into */

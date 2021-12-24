@@ -1,0 +1,34 @@
+@import '../../variables.scss';
+
+.items {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 10px;
+  justify-content: center;
+  @include horizontal-space-children(10px);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  @include vertical-space-children(4px);
+}
+
+.placeholder {
+  height: var(--item-size);
+  width: var(--item-size);
+  border: 1px solid white;
+}
+
+.sheet {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.socket {
+  img {
+    display: block;
+    height: var(--item-size);
+    width: var(--item-size);
+  }
+}
