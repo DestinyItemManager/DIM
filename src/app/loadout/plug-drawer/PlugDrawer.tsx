@@ -1,3 +1,4 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
@@ -10,6 +11,7 @@ import { emptyArray } from 'app/utils/empty';
 import { produce } from 'immer';
 import _ from 'lodash';
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
@@ -34,8 +36,6 @@ interface Props {
   title: string;
   /** The input placeholder for the search bar. */
   searchPlaceholder: string;
-  /** Language for the search filter. */
-  language: string;
   /** A query string that is passed to the filtering logic to prefilter the available plugs. */
   initialQuery?: string;
   /** Displayed on the accept button in the footer. */
@@ -66,7 +66,6 @@ export default function PlugDrawer({
   displayedStatHashes,
   title,
   searchPlaceholder,
-  language,
   initialQuery,
   acceptButtonText,
   sheetRef,
@@ -78,6 +77,7 @@ export default function PlugDrawer({
   onClose,
 }: Props) {
   const defs = useD2Definitions()!;
+  const language = useSelector(languageSelector);
   const [query, setQuery] = useState(initialQuery || '');
   const [selected, setSelected] = useState(() =>
     createInternalSelectedState(plugSets, initiallySelected)
