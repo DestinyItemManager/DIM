@@ -49,36 +49,33 @@ const loadoutTypes: DimBucketType[] = [
   'Horn',
 ];
 
-export default function LoadoutDrawerContents(
-  this: void,
-  {
-    loadout,
-    savedMods,
-    buckets,
-    items,
-    stores,
-    equip,
-    remove,
-    add,
-    onUpdateMods,
-    onOpenModPicker,
-    removeModByHash,
-    onApplySocketOverrides,
-  }: {
-    loadout: Loadout;
-    savedMods: PluggableInventoryItemDefinition[];
-    buckets: InventoryBuckets;
-    stores: DimStore[];
-    items: DimItem[];
-    equip(item: DimItem, e: React.MouseEvent): void;
-    remove(item: DimItem, e: React.MouseEvent): void;
-    add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
-    onUpdateMods(mods: number[]): void;
-    onOpenModPicker(): void;
-    removeModByHash(itemHash: number): void;
-    onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
-  }
-) {
+export default function LoadoutDrawerContents({
+  loadout,
+  savedMods,
+  buckets,
+  items,
+  stores,
+  equip,
+  remove,
+  add,
+  onUpdateMods,
+  onOpenModPicker,
+  removeModByHash,
+  onApplySocketOverrides,
+}: {
+  loadout: Loadout;
+  savedMods: PluggableInventoryItemDefinition[];
+  buckets: InventoryBuckets;
+  stores: DimStore[];
+  items: DimItem[];
+  equip(item: DimItem, e: React.MouseEvent): void;
+  remove(item: DimItem, e: React.MouseEvent): void;
+  add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+  onUpdateMods(mods: number[]): void;
+  onOpenModPicker(): void;
+  removeModByHash(itemHash: number): void;
+  onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
+}) {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {

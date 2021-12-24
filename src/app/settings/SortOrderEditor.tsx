@@ -33,16 +33,13 @@ const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => 
  * This is a "controlled component" - it fires an event when the order changes, and
  * must then be given back the new order by its parent.
  */
-export default function SortOrderEditor(
-  this: void,
-  {
-    order,
-    onSortOrderChanged,
-  }: {
-    order: SortProperty[];
-    onSortOrderChanged(order: SortProperty[]): void;
-  }
-) {
+export default function SortOrderEditor({
+  order,
+  onSortOrderChanged,
+}: {
+  order: SortProperty[];
+  onSortOrderChanged(order: SortProperty[]): void;
+}) {
   const moveItem = (oldIndex: number, newIndex: number, fromDrag = false) => {
     newIndex = _.clamp(newIndex, 0, order.length);
     const newOrder = reorder(order, oldIndex, newIndex);
