@@ -8,7 +8,7 @@ import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { ArmorStatHashes, ArmorStats } from '../types';
-import { statTierWithHalf } from '../utils';
+import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
@@ -117,7 +117,7 @@ function Stat({
     >
       <span
         className={clsx({
-          [styles.halfTierValue]: isActive && value % 10 >= 5,
+          [styles.halfTierValue]: isActive && remEuclid(value, 10) >= 5,
         })}
       >
         <b>

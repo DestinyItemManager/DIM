@@ -13,6 +13,7 @@
 * On the Loadouts page, missing items show up dimmed-out instead of not at all.
 * The Loadouts page can be filtered from the search bar in the header.
 * When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
+* Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
 
 ### Beta Only
 
