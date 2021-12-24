@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimPlugSet, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -86,7 +86,11 @@ export default function SubclassPlugDrawer({
       const newOverrides: SocketOverrides = {};
 
       for (const socket of subclass.sockets.allSockets) {
-        const dimPlugs = socket.plugSet?.plugs || [];
+        if (!socket.plugSet || !profileResponse) {
+          continue;
+        }
+
+        const dimPlugs = filterAvailablePlugsForProfile(profileResponse, socket.plugSet);
         for (const [index, plug] of remainingPlugs.entries()) {
           if (dimPlugs.some((dimPlug) => plug.hash === dimPlug.plugDef.hash)) {
             newOverrides[socket.socketIndex] = plug.hash;
@@ -97,7 +101,7 @@ export default function SubclassPlugDrawer({
       }
       onAccept(newOverrides);
     },
-    [onAccept, subclass.sockets]
+    [onAccept, profileResponse, subclass.sockets]
   );
 
   // Determines whether an ability, aspect or fragment is currently selectable
@@ -191,7 +195,10 @@ function getPlugsForSubclass(
 
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
           // but it should future proof things
-          for (const dimPlug of firstSocket.plugSet.plugs) {
+          for (const dimPlug of filterAvailablePlugsForProfile(
+            profileResponse,
+            firstSocket.plugSet
+          )) {
             const isAspect = category.category.hash === SocketCategoryHashes.Aspects;
             const isFragment = category.category.hash === SocketCategoryHashes.Fragments;
             const isEmptySocket =
@@ -214,4 +221,23 @@ function getPlugsForSubclass(
     }
   }
   return { plugSets, aspects, fragments };
+}
+
+// This function is a temporary solution until we can associate a character id with a loadout.
+// It takes a DimPlugSet and returns a list of plugs that are present in the profile response.
+function filterAvailablePlugsForProfile(
+  profileResponse: DestinyProfileResponse,
+  dimPlugSet: DimPlugSet
+) {
+  const availablePlugs = (
+    profileResponse.profilePlugSets.data?.plugs[dimPlugSet.hash] || []
+  ).concat(
+    Object.values(profileResponse.characterPlugSets.data || {})
+      .filter((d) => d.plugs?.[dimPlugSet.hash])
+      .flatMap((d) => d.plugs[dimPlugSet.hash])
+  );
+
+  return dimPlugSet.plugs.filter((plug) =>
+    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash)
+  );
 }
