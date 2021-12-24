@@ -21,6 +21,14 @@ export function statTierWithHalf(stat: number) {
   }`;
 }
 
+/**
+ * Calculates the remainder of euclidean division `dividend / divisor`,
+ * i.e. returns `rem` such that `dividend = divisor * n + rem` and
+ * `0 <= rem < |divisor|`.
+ * Remainder is always non-negative, behavior differs from `%` for
+ * negative dividends. Find comparisons at
+ * https://en.wikipedia.org/wiki/Modulo_operation#Variants_of_the_definition
+ */
 export function remEuclid(dividend: number, divisor: number) {
   return ((dividend % divisor) + divisor) % divisor;
 }
