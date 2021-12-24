@@ -116,12 +116,11 @@ export default function Header() {
     // as an alternative to installing,
     !isStandalone &&
     !installable &&
-    // offer desktop users the choice to relaunch in a no-tabs, less-UI window
-    window.name !== 'dim-solo-window' &&
+    // offer desktop users
     !isPhonePortrait;
-
+  // the choice to relaunch in a no-tabs, less-UI window
   const reLaunchDim = () => {
-    window.open(window.location.href, 'dim-solo-window', 'resizable,scrollbars,status');
+    window.open(window.location.href, '_blank', 'resizable,scrollbars,status');
   };
 
   // Search filter
