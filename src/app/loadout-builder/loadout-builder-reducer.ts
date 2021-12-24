@@ -21,7 +21,14 @@ import {
   statFiltersFromLoadoutParamaters,
   statOrderFromLoadoutParameters,
 } from './loadout-params';
-import { ArmorSet, ArmorStatHashes, ExcludedItems, PinnedItems, StatFilters } from './types';
+import {
+  ArmorSet,
+  ArmorStatHashes,
+  ExcludedItems,
+  LockableBucketHashes,
+  PinnedItems,
+  StatFilters,
+} from './types';
 
 export interface LoadoutBuilderState {
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -113,6 +120,21 @@ const lbStateInit = ({
       // Load all parameters from the loadout if we can
       if (preloadedLoadout.parameters) {
         loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
+      }
+
+      if (!loadoutParams.exoticArmorHash) {
+        const equippedExotic = preloadedLoadout.items
+          .filter((li) => li.equipped)
+          .map((li) => defs.InventoryItem.get(li.hash))
+          .find(
+            (i) =>
+              Boolean(i?.equippingBlock?.uniqueLabel) &&
+              LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
+          );
+
+        if (equippedExotic) {
+          loadoutParams = { ...loadoutParams, exoticArmorHash: equippedExotic.hash };
+        }
       }
     }
   }
