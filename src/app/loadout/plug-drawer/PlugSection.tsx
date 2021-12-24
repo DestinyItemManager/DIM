@@ -14,7 +14,7 @@ import SelectablePlug from './SelectablePlug';
 export interface PlugSet {
   /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
-  /** A list of plugs from this plugset. */
+  /** A list of plug items in this plugset. */
   plugs: PluggableInventoryItemDefinition[];
   /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
@@ -24,6 +24,7 @@ export interface PlugSet {
    * single: how abilities in subclasses are selected, selecting an option replaces the current one.
    */
   selectionType: 'multi' | 'single';
+  /** A bit of text to add on to the header. This is currently used to distinguish Artificer slot-specific sockets. */
   headerSuffix?: string;
 }
 

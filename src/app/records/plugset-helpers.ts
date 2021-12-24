@@ -15,19 +15,40 @@ export function itemsForCharacterOrProfilePlugSet(
   );
 }
 
-export function filterDimPlugsAvailableToCharacerOrProfile(
+/**
+ * The set of plug item hashes that are unlocked in the given plugset by the given character.
+ */
+export function unlockedItemsForCharacterOrProfilePlugSet(
+  profileResponse: DestinyProfileResponse,
+  plugSetHash: number,
+  characterId: string
+): Set<number> {
+  const unlockedPlugs = new Set<number>();
+  const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, characterId);
+  // TODO: would be great to precalculate/memoize this by character ID and profileResponse
+  for (const plugSetItem of plugSetItems) {
+    // Only items that can be inserted are unlocked
+    if (plugSetItem.canInsert) {
+      unlockedPlugs.add(plugSetItem.plugItemHash);
+    }
+  }
+  return unlockedPlugs;
+}
+
+/**
+ * Narrow down the passed in plugSet's plugs to only those that are unlocked by the given character.
+ */
+export function filterDimPlugsUnlockedOnCharacterOrProfile(
   profileResponse: DestinyProfileResponse,
   dimPlugSet: DimPlugSet,
   characterId: string
 ) {
-  const availablePlugs = itemsForCharacterOrProfilePlugSet(
+  const unlockedPlugs = unlockedItemsForCharacterOrProfilePlugSet(
     profileResponse,
     dimPlugSet.hash,
     characterId
   );
-  return dimPlugSet.plugs.filter((plug) =>
-    availablePlugs.some((available) => available.plugItemHash === plug.plugDef.hash)
-  );
+  return dimPlugSet.plugs.filter((plug) => unlockedPlugs.has(plug.plugDef.hash));
 }
 
 /**
