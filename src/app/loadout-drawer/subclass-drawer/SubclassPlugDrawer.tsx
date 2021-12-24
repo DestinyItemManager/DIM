@@ -20,6 +20,9 @@ const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
 
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
+/**
+ * A customized PlugDrawer for showing mod choices for mod-style subclasses (currently only Stasis).
+ */
 export default function SubclassPlugDrawer({
   subclass,
   socketOverrides,
@@ -31,13 +34,13 @@ export default function SubclassPlugDrawer({
   onAccept(overrides: SocketOverrides): void;
   onClose(): void;
 }) {
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector);
 
   const { initiallySelected, plugSets, aspects, fragments, sortPlugs, sortPlugGroups } =
     useMemo(() => {
       const initiallySelected = Object.values(socketOverrides)
-        .map((hash) => defs!.InventoryItem.get(hash))
+        .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
 
       const { plugSets, aspects, fragments } = getPlugsForSubclass(defs, profileResponse, subclass);
@@ -74,7 +77,7 @@ export default function SubclassPlugDrawer({
 
   // The handler when when a user accepts the selection in the plug picker
   // This will create a new set of socket overrides
-  const onAcceptInternal = useCallback(
+  const handleAccept = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
       if (!subclass.sockets) {
         return;
@@ -88,7 +91,10 @@ export default function SubclassPlugDrawer({
           continue;
         }
 
-        const dimPlugs = filterAvailablePlugsForProfile(profileResponse, socket.plugSet);
+        const dimPlugs = filterUnlockedPlugsForForProfileAndAllCharacters(
+          profileResponse,
+          socket.plugSet
+        );
         for (const [index, plug] of remainingPlugs.entries()) {
           if (dimPlugs.some((dimPlug) => plug.hash === dimPlug.plugDef.hash)) {
             newOverrides[socket.socketIndex] = plug.hash;
@@ -139,7 +145,7 @@ export default function SubclassPlugDrawer({
       acceptButtonText={t('Loadouts.Apply')}
       plugSets={plugSets}
       displayedStatHashes={DISPLAYED_PLUG_STATS}
-      onAccept={onAcceptInternal}
+      onAccept={handleAccept}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
       sortPlugs={sortPlugs}
@@ -192,7 +198,7 @@ function getPlugsForSubclass(
 
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
           // but it should future proof things
-          for (const dimPlug of filterAvailablePlugsForProfile(
+          for (const dimPlug of filterUnlockedPlugsForForProfileAndAllCharacters(
             profileResponse,
             firstSocket.plugSet
           )) {
@@ -220,9 +226,12 @@ function getPlugsForSubclass(
   return { plugSets, aspects, fragments };
 }
 
-// This function is a temporary solution until we can associate a character id with a loadout.
-// It takes a DimPlugSet and returns a list of plugs that are present in the profile response.
-function filterAvailablePlugsForProfile(
+/**
+ * This function is a temporary solution until we can associate a character id
+ * with a loadout. It takes a DimPlugSet and returns a list of plugs that are
+ * unlocked by any character in the profile response.
+ */
+function filterUnlockedPlugsForForProfileAndAllCharacters(
   profileResponse: DestinyProfileResponse,
   dimPlugSet: DimPlugSet
 ) {
@@ -235,6 +244,6 @@ function filterAvailablePlugsForProfile(
   );
 
   return dimPlugSet.plugs.filter((plug) =>
-    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash)
+    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash && p.canInsert)
   );
 }
