@@ -1,6 +1,3 @@
-import { getGlobalAlerts } from 'app/bungie-api/bungie-core-api';
-import { ThunkResult } from 'app/store/types';
-import { errorLog } from 'app/utils/log';
 import { GlobalAlert } from 'bungie-api-ts/core';
 import { createAction } from 'typesafe-actions';
 
@@ -32,21 +29,6 @@ export const toggleSearchResults = createAction(
  * Update the known list of Bungie.net alerts.
  */
 export const updateBungieAlerts = createAction('shell/BUNGIE_ALERTS')<GlobalAlert[]>();
-
-/**
- * Poll repeatedly for new Bungie alerts
- */
-export function pollForBungieAlerts(): ThunkResult {
-  return async (dispatch) => {
-    setInterval(async () => {
-      try {
-        dispatch(updateBungieAlerts(await getGlobalAlerts()));
-      } catch (e) {
-        errorLog('BungieAlerts', 'Unable to get Bungie.net alerts: ', e);
-      }
-    }, 10 * 60 * 1000);
-  };
-}
 
 /**
  * Signifies that there is a page-wide loading state, with a message.

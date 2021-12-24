@@ -172,10 +172,9 @@ function SocketDetails({
     }
   }
 
-  if (socket.socketDefinition.reusablePlugSetHash) {
-    for (const plugItem of defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash)
-      .reusablePlugItems) {
-      modHashes.add(plugItem.plugItemHash);
+  if (socket.plugSet?.plugs) {
+    for (const dimPlug of socket.plugSet.plugs) {
+      modHashes.add(dimPlug.plugDef.hash);
     }
   }
   if (socket.socketDefinition.randomizedPlugSetHash) {

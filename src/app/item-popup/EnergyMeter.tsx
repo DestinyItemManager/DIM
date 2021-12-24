@@ -89,7 +89,6 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     }
 
     const upgradeMods = energyUpgrade(
-      defs,
       item,
       item.energy.energyType,
       item.energy.energyCapacity,
@@ -208,7 +207,6 @@ function EnergyUpgradePreview({
   }
 
   const energyModHashes = energyUpgrade(
-    defs,
     item,
     item.energy.energyType,
     item.energy.energyCapacity,

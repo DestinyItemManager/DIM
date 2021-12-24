@@ -4,8 +4,9 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { updateLoadout } from 'app/loadout-drawer/actions';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
@@ -21,7 +22,6 @@ import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getItemsFromLoadoutItems } from '../../loadout-drawer/loadout-utils';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
 import { getPower } from '../utils';
@@ -54,6 +54,7 @@ function getItemStats(
 interface Props {
   set: ArmorSet;
   loadouts: Loadout[];
+  initialLoadoutId?: string;
   lockedMods: PluggableInventoryItemDefinition[];
   classType: DestinyClass;
   statOrder: number[];
@@ -65,10 +66,15 @@ interface Props {
   onClose(): void;
 }
 
-function chooseSimilarLoadout(
+function chooseInitialLoadout(
   setItems: DimItem[],
-  useableLoadouts: Loadout[]
+  useableLoadouts: Loadout[],
+  initialLoadoutId?: string
 ): Loadout | undefined {
+  const loadoutFromInitialId = useableLoadouts.find((lo) => lo.id === initialLoadoutId);
+  if (loadoutFromInitialId) {
+    return loadoutFromInitialId;
+  }
   const exotic = setItems.find((i) => i.isExotic);
   return (
     (exotic && useableLoadouts.find((l) => l.items.some((i) => i.hash === exotic.hash))) ||
@@ -78,6 +84,7 @@ function chooseSimilarLoadout(
 
 export default function CompareDrawer({
   loadouts,
+  initialLoadoutId,
   set,
   lockedMods,
   classType,
@@ -91,13 +98,14 @@ export default function CompareDrawer({
 }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const buckets = useSelector(bucketsSelector)!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
   const getModRenderKey = createGetModRenderKey();
 
   const setItems = set.armor.map((items) => items[0]);
 
-  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(
-    chooseSimilarLoadout(setItems, useableLoadouts)
+  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(() =>
+    chooseInitialLoadout(setItems, useableLoadouts, initialLoadoutId)
   );
 
   const allItems = useSelector(allItemsSelector);
@@ -105,12 +113,12 @@ export default function CompareDrawer({
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const loadoutItems = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
-    const [items] = getItemsFromLoadoutItems(equippedItems, defs, allItems);
+    const [items] = getItemsFromLoadoutItems(equippedItems, defs, buckets, allItems);
     return _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
-  }, [selectedLoadout, defs, allItems]);
+  }, [selectedLoadout, defs, buckets, allItems]);
 
   const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
     const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(

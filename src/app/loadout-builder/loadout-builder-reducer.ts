@@ -87,7 +87,22 @@ const lbStateInit = ({
   let loadoutParams = initialLoadoutParameters;
 
   if (stores.length && preloadedLoadout) {
-    const loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    let loadoutStore = getCurrentStore(stores);
+    if (preloadedLoadout.classType === DestinyClass.Unknown) {
+      const includedClasses = new Set(
+        preloadedLoadout.items
+          .map((i) => defs.InventoryItem.get(i.hash)?.classType)
+          .filter((c) => c !== undefined && c !== DestinyClass.Unknown)
+      );
+      if (includedClasses.size === 1) {
+        const includedClassType = includedClasses.values().next().value;
+        loadoutStore =
+          stores.find((store) => store.classType === includedClassType) ?? loadoutStore;
+      }
+    } else {
+      loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    }
+
     if (!loadoutStore) {
       warnMissingClass(preloadedLoadout.classType, defs);
     } else {

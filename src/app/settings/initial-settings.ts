@@ -25,6 +25,6 @@ export const initialSettingsState: Settings = {
   inventoryClearSpaces: 1,
   perkList: true,
   loadoutSort: LoadoutSort.ByEditTime,
-  itemFeedHideTagged: false,
+  itemFeedHideTagged: true,
   itemFeedExpanded: false,
 };
