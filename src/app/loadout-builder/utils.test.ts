@@ -3,6 +3,7 @@ import { statTierWithHalf } from './utils';
 describe('statTierWithHalf', () => {
   test('checks proper visual tier formatting', () => {
     expect(statTierWithHalf(-13)).toBe('-1.5');
+    expect(statTierWithHalf(-10)).toBe('-1');
     expect(statTierWithHalf(-7)).toBe('-1');
     expect(statTierWithHalf(-3)).toBe('-0.5');
     expect(statTierWithHalf(0)).toBe('0');
