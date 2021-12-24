@@ -24,8 +24,9 @@ import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
+import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout } from './loadout-types';
-import { getItemsFromLoadoutItems, getModsFromLoadout } from './loadout-utils';
+import { getModsFromLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
@@ -79,8 +80,8 @@ export default function LoadoutDrawer() {
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, allItems),
-    [defs, loadoutItems, allItems]
+    () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
+    [defs, buckets, loadoutItems, allItems]
   );
 
   const onAddItem = useCallback(

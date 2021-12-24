@@ -9,6 +9,7 @@
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
+* On the Loadouts page, missing items show up dimmed-out instead of not at all.
 * The Loadouts page can be filtered from the search bar in the header.
 * When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
 
