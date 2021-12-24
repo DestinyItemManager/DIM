@@ -496,6 +496,7 @@ function LoadoutBuilder({
             <CompareDrawer
               set={compareSet}
               loadouts={loadouts}
+              initialLoadoutId={preloadedLoadout?.id}
               lockedMods={lockedMods}
               classType={classType}
               statOrder={statOrder}
