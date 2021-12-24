@@ -67,7 +67,6 @@ export function upgradeSpendTierToMaxEnergy(
   // gets all possible energy upgrades for the item, including the current level
   // we need this to populate previous item in the loops below
   const availableEnergyUpgrades = energyUpgrade(
-    defs,
     item,
     item.energy.energyType,
     item.energy.energyCapacity - 1,
@@ -131,7 +130,6 @@ export function canSwapEnergyFromUpgradeSpendTier(
 
   // gets a single upgrade for swapping energy at the current level
   const availableEnergyUpgrades = energyUpgrade(
-    defs,
     item,
     item.energy.energyType,
     item.energy.energyCapacity,
