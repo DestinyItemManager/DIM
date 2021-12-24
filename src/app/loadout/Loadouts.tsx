@@ -1,6 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -32,6 +33,7 @@ import {
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import {
@@ -42,7 +44,7 @@ import {
   powerActionIcon,
   searchIcon,
 } from 'app/shell/icons';
-import { useIsPhonePortrait } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -91,6 +93,10 @@ function Loadouts() {
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
+  const query = useSelector(querySelector);
+  const language = useSelector(languageSelector);
+
+  const searchRegexp = startWordRegexp(query, language);
 
   const savedLoadouts = useMemo(
     () =>
@@ -111,7 +117,12 @@ function Loadouts() {
     [selectedStore]
   );
 
-  const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
+  const loadouts = [currentLoadout, ...savedLoadouts].filter(
+    (loadout) =>
+      !query ||
+      searchRegexp.test(loadout.name) ||
+      (loadout.notes && searchRegexp.test(loadout.notes))
+  );
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
@@ -178,6 +189,7 @@ function Loadouts() {
             equippable={loadout !== currentLoadout}
           />
         ))}
+        {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

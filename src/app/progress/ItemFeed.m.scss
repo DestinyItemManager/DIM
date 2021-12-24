@@ -4,7 +4,7 @@
   position: sticky;
   @include below-header;
   height: calc(var(--viewport-height) - var(--header-height));
-  z-index: 1000;
+  z-index: 10;
   box-sizing: border-box;
   width: 0;
 }

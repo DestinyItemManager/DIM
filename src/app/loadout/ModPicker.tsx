@@ -1,4 +1,3 @@
-import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
@@ -7,7 +6,7 @@ import {
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { filterDimPlugsAvailableToCharacerOrProfile } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -59,7 +58,6 @@ interface ProvidedProps {
 }
 
 interface StoreProps {
-  language: string;
   plugSets: PlugSet[];
 }
 
@@ -123,22 +121,21 @@ function mapStateToProps() {
           const plugSetHash = parseInt(hashAsString, 10);
           const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
 
-          const plugSetItems = itemsForCharacterOrProfilePlugSet(
+          const dimPlugs = filterDimPlugsAvailableToCharacerOrProfile(
             profileResponse,
-            plugSetHash,
+            sockets.find((socket) => socket.plugSet)!.plugSet!,
             // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
             owner ?? currentStore!.id
           );
 
           // Get the item plugs actually available to the profile
-          for (const itemPlug of plugSetItems) {
-            const plugDef = defs.InventoryItem.get(itemPlug.plugItemHash);
+          for (const dimPlug of dimPlugs) {
             if (
-              isInsertableArmor2Mod(plugDef) &&
+              isInsertableArmor2Mod(dimPlug.plugDef) &&
               (!plugCategoryHashWhitelist ||
-                plugCategoryHashWhitelist?.includes(plugDef.plug.plugCategoryHash))
+                plugCategoryHashWhitelist?.includes(dimPlug.plugDef.plug.plugCategoryHash))
             ) {
-              plugsWithDuplicates.push(plugDef);
+              plugsWithDuplicates.push(dimPlug.plugDef);
             }
           }
 
@@ -174,7 +171,6 @@ function mapStateToProps() {
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
-    language: languageSelector(state),
     plugSets: unlockedPlugSetsSelector(state, props),
   });
 }
@@ -182,15 +178,7 @@ function mapStateToProps() {
 /**
  * A sheet to pick mods that are required in the final loadout sets.
  */
-function ModPicker({
-  plugSets,
-  language,
-  lockedMods,
-  initialQuery,
-  minHeight,
-  onAccept,
-  onClose,
-}: Props) {
+function ModPicker({ plugSets, lockedMods, initialQuery, minHeight, onAccept, onClose }: Props) {
   const isModSelectable = useCallback(
     (mod: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
       const { plugCategoryHash } = mod.plug;
@@ -259,7 +247,6 @@ function ModPicker({
       title={t('LB.ChooseAMod')}
       searchPlaceholder={t('LB.SearchAMod')}
       acceptButtonText={t('LB.SelectMods')}
-      language={language}
       initialQuery={initialQuery}
       plugSets={plugSets}
       initiallySelected={visibleSelectedMods}
