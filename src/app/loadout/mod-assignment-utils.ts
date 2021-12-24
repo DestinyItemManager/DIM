@@ -303,7 +303,7 @@ export function fitMostMods(
 
   const unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
-    // accumulate all unassigneds
+    // accumulate all unassigned mods
     for (const collection of [
       bucketIndependentAssignments[item.id],
       bucketSpecificAssignments[item.id],
@@ -357,11 +357,7 @@ export function pickPlugPositions(
   const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []).sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
-    compareBy((socket) =>
-      socket.socketDefinition.reusablePlugSetHash
-        ? defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash).reusablePlugItems.length
-        : 999
-    )
+    compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
   );
 
   for (const modToInsert of modsToInsert) {
@@ -374,9 +370,7 @@ export function pickPlugPositions(
     // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
       destinationSocketIndex = existingModSockets.findIndex((socket) =>
-        defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash!).reusablePlugItems.some(
-          (plugItem) => plugItem.plugItemHash === modToInsert.hash
-        )
+        socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === modToInsert.hash)
       );
     }
 

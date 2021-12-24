@@ -6,7 +6,7 @@ import {
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { filterDimPlugsAvailableToCharacerOrProfile } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -121,22 +121,21 @@ function mapStateToProps() {
           const plugSetHash = parseInt(hashAsString, 10);
           const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
 
-          const plugSetItems = itemsForCharacterOrProfilePlugSet(
+          const dimPlugs = filterDimPlugsAvailableToCharacerOrProfile(
             profileResponse,
-            plugSetHash,
+            sockets.find((socket) => socket.plugSet)!.plugSet!,
             // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
             owner ?? currentStore!.id
           );
 
           // Get the item plugs actually available to the profile
-          for (const itemPlug of plugSetItems) {
-            const plugDef = defs.InventoryItem.get(itemPlug.plugItemHash);
+          for (const dimPlug of dimPlugs) {
             if (
-              isInsertableArmor2Mod(plugDef) &&
+              isInsertableArmor2Mod(dimPlug.plugDef) &&
               (!plugCategoryHashWhitelist ||
-                plugCategoryHashWhitelist?.includes(plugDef.plug.plugCategoryHash))
+                plugCategoryHashWhitelist?.includes(dimPlug.plugDef.plug.plugCategoryHash))
             ) {
-              plugsWithDuplicates.push(plugDef);
+              plugsWithDuplicates.push(dimPlug.plugDef);
             }
           }
 
