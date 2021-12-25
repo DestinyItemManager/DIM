@@ -13,7 +13,8 @@ import { createGetModRenderKey } from '../mod-utils';
 import PlugDef from './PlugDef';
 import styles from './Subclass.m.scss';
 
-export function Subclass({
+/** The subclass section used in the loadouts page and drawer */
+export default function Subclass({
   defs,
   subclass,
   power,

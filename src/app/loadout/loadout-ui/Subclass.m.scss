@@ -29,8 +29,16 @@
 }
 
 .subclassMods {
-  composes: modsGrid from '../Loadouts.m.scss';
+  --item-icon-size: calc(0.8 * var(--item-size));
   min-width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
 }
 
 .modsPlaceholder {

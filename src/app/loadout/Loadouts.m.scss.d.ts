@@ -2,29 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'actions': string;
-  'categoryArmor': string;
-  'categoryGeneral': string;
-  'categoryWeapons': string;
   'classIcon': string;
   'contents': string;
-  'empty': string;
-  'equipped': string;
-  'itemBucket': string;
-  'itemCategory': string;
-  'items': string;
-  'itemsInCategory': string;
-  'loExotic': string;
-  'loParams': string;
-  'loQuery': string;
-  'loSpendTier': string;
-  'loStat': string;
-  'loStats': string;
   'loadout': string;
   'loadoutNotes': string;
   'menu': string;
   'menuButton': string;
   'menuButtons': string;
-  'missingItem': string;
   'missingItems': string;
   'mods': string;
   'modsGrid': string;
@@ -33,7 +17,6 @@ interface CssExports {
   'placeholder': string;
   'showModPlacementButton': string;
   'title': string;
-  'unequipped': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

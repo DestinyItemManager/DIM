@@ -1,29 +1,21 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { languageSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
-import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   getLight,
-  getLoadoutStats,
   getModsFromLoadout,
   newLoadout,
   newLoadoutFromEquipped,
@@ -34,9 +26,8 @@ import { showNotification } from 'app/notifications/notifications';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
-import { addIcon, AppIcon, faCalculator, faExclamationTriangle, searchIcon } from 'app/shell/icons';
+import { addIcon, AppIcon, faCalculator, faExclamationTriangle } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { copyString } from 'app/utils/util';
@@ -48,17 +39,12 @@ import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import ItemCategorySection from './loadout-ui/ItemCategorySection';
 import PlugDef from './loadout-ui/PlugDef';
-import { Subclass } from './loadout-ui/Subclass';
+import Subclass from './loadout-ui/Subclass';
 import styles from './Loadouts.m.scss';
 import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
-
-const categoryStyles = {
-  Weapons: styles.categoryWeapons,
-  Armor: styles.categoryArmor,
-  General: styles.categoryGeneral,
-};
 
 /**
  * The Loadouts page is a toplevel page for loadout management. It also provides access to the Loadout Optimizer.
@@ -296,7 +282,7 @@ function LoadoutRow({
               <Subclass defs={defs} subclass={subclass} power={power} />
             </div>
             {['Weapons', 'Armor', 'General'].map((category) => (
-              <ItemCategory
+              <ItemCategorySection
                 key={category}
                 category={category}
                 subclass={subclass}
@@ -338,192 +324,6 @@ function LoadoutRow({
           />,
           document.body
         )}
-    </div>
-  );
-}
-
-function ItemCategory({
-  category,
-  subclass,
-  items,
-  savedMods,
-  equippedItemIds,
-  loadout,
-}: {
-  category: string;
-  subclass?: DimLoadoutItem;
-  items?: DimItem[];
-  savedMods: PluggableInventoryItemDefinition[];
-  equippedItemIds: Set<string>;
-  loadout: Loadout;
-}) {
-  const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.type);
-  const bucketOrder =
-    category === 'Weapons' || category === 'Armor'
-      ? buckets.byCategory[category].map((b) => b.type!)
-      : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
-          buckets.byCategory[category].findIndex((b) => b.type === bucketType)
-        );
-
-  return (
-    <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
-      {items ? (
-        <div className={styles.itemsInCategory}>
-          {bucketOrder.map((bucketType) => (
-            <ItemBucket
-              key={bucketType}
-              items={itemsByBucket[bucketType]}
-              equippedItemIds={equippedItemIds}
-            />
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className={clsx(styles.placeholder, `category-${category}`)}>
-            {t(`Bucket.${category}`)}
-          </div>
-          {category === 'Armor' && loadout.parameters && <OptimizerButton loadout={loadout} />}
-        </>
-      )}
-      {category === 'Armor' && items && (
-        <>
-          {items.length === 5 && (
-            <div className="stat-bars destiny2">
-              <LoadoutStats
-                stats={getLoadoutStats(defs, loadout.classType, subclass, items, savedMods)}
-                characterClass={loadout.classType}
-              />
-            </div>
-          )}
-          {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          <OptimizerButton loadout={loadout} />
-        </>
-      )}
-    </div>
-  );
-}
-
-function OptimizerButton({ loadout }: { loadout: Loadout }) {
-  return (
-    <Link className="dim-button" to="../optimizer" state={{ loadout }}>
-      <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
-    </Link>
-  );
-}
-
-function ItemBucket({
-  items,
-  equippedItemIds,
-}: {
-  items: DimItem[] | undefined;
-  equippedItemIds: Set<string>;
-}) {
-  if (!items) {
-    return <div className={styles.items} />;
-  }
-
-  const [equipped, unequipped] = _.partition(items, (i) =>
-    i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
-  );
-
-  return (
-    <div className={styles.itemBucket}>
-      {[equipped, unequipped].map((items, index) =>
-        items.length > 0 ? (
-          <div
-            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
-          >
-            {items.map((item) => (
-              <ItemPopupTrigger item={item} key={item.id}>
-                {(ref, onClick) => (
-                  <div className={clsx({ [styles.missingItem]: item.owner === 'unknown' })}>
-                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                  </div>
-                )}
-              </ItemPopupTrigger>
-            ))}
-          </div>
-        ) : (
-          index === 0 && (
-            <div
-              className={clsx(
-                styles.items,
-                styles.empty,
-                index === 0 ? styles.equipped : styles.unequipped
-              )}
-              key={index}
-            />
-          )
-        )
-      )}
-    </div>
-  );
-}
-
-function LoadoutParametersDisplay({ params }: { params: LoadoutParameters }) {
-  const defs = useD2Definitions()!;
-  const { query, exoticArmorHash, upgradeSpendTier, statConstraints, lockItemEnergyType } = params;
-  const show =
-    params.query ||
-    params.exoticArmorHash ||
-    params.upgradeSpendTier !== undefined ||
-    params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined);
-  if (!show) {
-    return null;
-  }
-
-  return (
-    <div className={styles.loParams}>
-      {query && (
-        <div className={styles.loQuery}>
-          <AppIcon icon={searchIcon} />
-          {query}
-        </div>
-      )}
-      {exoticArmorHash && (
-        <div className={styles.loExotic}>
-          <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
-        </div>
-      )}
-      {upgradeSpendTier !== undefined && (
-        <div className={styles.loSpendTier}>
-          <SelectedArmorUpgrade
-            defs={defs}
-            upgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType ?? false}
-          />
-        </div>
-      )}
-      {statConstraints && (
-        <div className={styles.loStats}>
-          {statConstraints.map((s) => (
-            <div key={s.statHash} className={styles.loStat}>
-              <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
-              {s.minTier !== undefined && s.minTier !== 0 ? (
-                <span>
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: s.minTier,
-                  })}
-                  {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
-                    ? '+'
-                    : s.maxTier !== undefined && s.maxTier !== s.minTier
-                    ? `-${s.maxTier}`
-                    : ''}
-                </span>
-              ) : s.maxTier !== undefined ? (
-                <span>T{s.maxTier}-</span>
-              ) : (
-                t('LoadoutBuilder.TierNumber', {
-                  tier: 10,
-                }) + '-'
-              )}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
