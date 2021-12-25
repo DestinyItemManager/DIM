@@ -22,7 +22,7 @@ function Mod({ plugDef, gridColumn, large, onClick }: Props) {
         [styles.largeItem]: large,
       })}
       style={gridColumn ? { gridColumn } : undefined}
-      title={plugDef.displayProperties.name}
+      title={`${plugDef.displayProperties.name}\n${plugDef.itemTypeDisplayName}`}
       tabIndex={0}
       onClick={onClick}
     >

@@ -26,12 +26,16 @@
   h2,
   h3 {
     background-color: #444;
-    margin: 0 0 4px 0;
+  }
+  h2 {
     font-size: 14px;
+    margin: 0 0 4px 0;
     @include destiny-header;
   }
   h3 {
     font-size: 12px;
+    margin: -4px 0 4px 0;
+    opacity: 0.5;
   }
 
   hr {

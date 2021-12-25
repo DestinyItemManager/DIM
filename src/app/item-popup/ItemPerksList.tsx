@@ -154,7 +154,12 @@ function PerkPlug({
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>
-          <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
+          <DimPlugTooltip
+            item={item}
+            plug={plug}
+            wishlistRoll={wishlistRoll}
+            hidePlugSubtype={true}
+          />
         </div>
       ) : (
         selected &&

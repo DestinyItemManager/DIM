@@ -5,7 +5,7 @@ import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
+import { isPlugStatActive } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -23,10 +23,12 @@ export function DimPlugTooltip({
   item,
   plug,
   wishlistRoll,
+  hidePlugSubtype,
 }: {
   item: DimItem;
   plug: DimPlug;
   wishlistRoll?: InventoryWishListRoll;
+  hidePlugSubtype?: boolean;
 }) {
   // TODO: show insertion costs
 
@@ -68,6 +70,7 @@ export function DimPlugTooltip({
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
+      hidePlugSubtype={hidePlugSubtype}
     />
   );
 }
@@ -89,6 +92,7 @@ export function PlugTooltip({
   enableFailReasons,
   cannotCurrentlyRoll,
   wishListTip,
+  hidePlugSubtype,
 }: {
   def: DestinyInventoryItemDefinition;
   perks?: DestinySandboxPerkDefinition[];
@@ -97,6 +101,7 @@ export function PlugTooltip({
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
+  hidePlugSubtype?: boolean;
 }) {
   const defs = useD2Definitions();
   const sourceString =
@@ -117,7 +122,7 @@ export function PlugTooltip({
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
-      {emptySpecialtySocketHashes.includes(def.hash) && <h3>{def.itemTypeDisplayName}</h3>}
+      {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
       {def.displayProperties.description ? (
         <div>
