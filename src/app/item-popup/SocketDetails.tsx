@@ -121,7 +121,7 @@ export const SocketDetailsMod = React.memo(
       <div
         role="button"
         className={clsx('item', className)}
-        title={itemDef.displayProperties.name}
+        title={`${itemDef.displayProperties.name}\n${itemDef.itemTypeDisplayName}`}
         onClick={onClickFn}
         tabIndex={0}
       >
