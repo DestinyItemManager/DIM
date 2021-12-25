@@ -5,7 +5,7 @@ import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
+import { isPlugStatActive } from 'app/utils/item-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -117,7 +117,7 @@ export function PlugTooltip({
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
-      {emptySpecialtySocketHashes.includes(def.hash) && <h3>{def.itemTypeDisplayName}</h3>}
+      {def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
       {def.displayProperties.description ? (
         <div>
