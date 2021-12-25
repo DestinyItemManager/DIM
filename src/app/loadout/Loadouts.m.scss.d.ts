@@ -31,11 +31,7 @@ interface CssExports {
   'modsPlaceholder': string;
   'page': string;
   'placeholder': string;
-  'power': string;
   'showModPlacementButton': string;
-  'subclass': string;
-  'subclassContainer': string;
-  'subclassMods': string;
   'title': string;
   'unequipped': string;
 }

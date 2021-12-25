@@ -1,0 +1,39 @@
+@import '../../variables';
+
+.subclassContainer {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  width: calc(var(--item-icon-size) + 3 * var(--item-icon-size) + 2 * var(--item-margin));
+}
+
+.subclass {
+  width: var(--item-size);
+  min-width: var(--item-size);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: var(--item-margin);
+  @include vertical-space-children(var(--item-margin));
+}
+
+.power {
+  display: inline;
+  color: $gold;
+  flex: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+  svg {
+    margin-right: 2px;
+    font-size: 10px;
+  }
+}
+
+.subclassMods {
+  composes: modsGrid from '../Loadouts.m.scss';
+  min-width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+}
+
+.modsPlaceholder {
+  composes: placeholder from '../Loadouts.m.scss';
+  flex: 1;
+}
