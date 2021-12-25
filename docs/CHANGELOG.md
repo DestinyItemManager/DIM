@@ -14,6 +14,7 @@
 * The Loadouts page can be filtered from the search bar in the header.
 * When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
 * Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
+* Searching by perk now works on languages that use accented characters.
 
 ### Beta Only
 
