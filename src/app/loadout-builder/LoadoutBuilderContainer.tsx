@@ -49,7 +49,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     }
   }
 
-  const preloadedLoadout = location.state?.loadout as Loadout | undefined;
+  const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
   }
