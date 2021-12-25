@@ -16,13 +16,13 @@ export function getItemsFromLoadoutItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   buckets: InventoryBuckets,
   allItems: DimItem[]
-): [DimLoadoutItem[], DimItem[]] {
+): [DimLoadoutItem[], DimLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
   const items: DimLoadoutItem[] = [];
-  const warnitems: DimItem[] = [];
+  const warnitems: DimLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
     const item = findItem(allItems, loadoutItem);
     if (item) {
@@ -30,14 +30,16 @@ export function getItemsFromLoadoutItems(
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {
-        const fakeItem =
+        const fakeItem: DimLoadoutItem =
           (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
           ({
             ...loadoutItem,
             icon: itemDef.displayProperties?.icon || itemDef.icon,
             name: itemDef.displayProperties?.name || itemDef.itemName,
-          } as DimItem);
+          } as DimLoadoutItem);
         fakeItem.equipped = loadoutItem.equipped;
+        fakeItem.socketOverrides = loadoutItem.socketOverrides;
+        fakeItem.id = loadoutItem.id;
         warnitems.push(fakeItem);
       }
     }

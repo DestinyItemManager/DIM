@@ -249,7 +249,7 @@ export default function LoadoutDrawer() {
                 </p>
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
-                    <div key={item.id} className="loadout-item">
+                    <div key={item.index} className="loadout-item">
                       <ClosableContainer onClose={() => onRemoveItem(item)}>
                         <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
                       </ClosableContainer>

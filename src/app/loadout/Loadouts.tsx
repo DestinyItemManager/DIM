@@ -234,8 +234,6 @@ function LoadoutRow({
     ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
     : 0;
 
-  // TODO: show the loadout builder params
-
   const handleDeleteClick = (loadout: Loadout) => {
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dispatch(deleteLoadout(loadout.id));
@@ -510,7 +508,7 @@ function ItemBucket({
   }
 
   const [equipped, unequipped] = _.partition(items, (i) =>
-    i.id === '0' ? i.equipped : equippedItemIds.has(i.id)
+    i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
   );
 
   return (
@@ -524,7 +522,7 @@ function ItemBucket({
             {items.map((item) => (
               <ItemPopupTrigger item={item} key={item.id}>
                 {(ref, onClick) => (
-                  <div className={clsx({ [styles.missingItem]: item.id === '0' })}>
+                  <div className={clsx({ [styles.missingItem]: item.owner === 'unknown' })}>
                     <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
                   </div>
                 )}
