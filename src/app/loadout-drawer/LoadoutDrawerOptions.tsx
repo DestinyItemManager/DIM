@@ -1,10 +1,13 @@
 import { t } from 'app/i18next-t';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
+import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
@@ -26,7 +29,7 @@ export default function LoadoutDrawerOptions({
   loadout,
   showClass,
   isNew,
-  onShowModAssignmentDrawer,
+  onUpdateMods,
   updateLoadout,
   saveLoadout,
   saveAsNew,
@@ -35,12 +38,13 @@ export default function LoadoutDrawerOptions({
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
-  onShowModAssignmentDrawer(): void;
+  onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
   updateLoadout(loadout: Loadout): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
 }) {
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
 
   const loadouts = useSelector(loadoutsSelector);
@@ -179,7 +183,7 @@ export default function LoadoutDrawerOptions({
               className="dim-button"
               type="button"
               title="Assign Mods"
-              onClick={onShowModAssignmentDrawer}
+              onClick={() => setShowModAssignmentDrawer(true)}
             >
               {t('Loadouts.ShowModPlacement')}
             </button>
@@ -206,6 +210,15 @@ export default function LoadoutDrawerOptions({
             : t('Loadouts.AlreadyExistsGlobal')}
         </div>
       )}
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            onUpdateMods={onUpdateMods}
+            onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
     </div>
   );
 }

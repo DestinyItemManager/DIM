@@ -26,7 +26,6 @@ export default React.memo(function ItemSocketsSubclass({
   updateSocketOverrides,
 }: Props) {
   const defs = useD2Definitions();
-  // TODO: propagate this state up to the top loadout drawer so we can set disabled state!
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   if (!subclass.sockets || !defs) {
