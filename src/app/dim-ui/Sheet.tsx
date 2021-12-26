@@ -11,27 +11,40 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { animated, config, useSpring } from 'react-spring';
+import { animated, config, SpringConfig, useSpring } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
+import styles from './Sheet.m.scss';
 import './Sheet.scss';
 
 export const SheetContext = createContext<MutableRefObject<HTMLDivElement | null> | null>(null);
 
+/**
+ * The contents of the header, footer, and body can be regular elements, or a function that
+ * takes an "onClose" function that can be used to close the sheet. Using onClose to close
+ * the sheet ensures that it will animate away rather than simply disappearing.
+ */
+type SheetContent = React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+
 interface Props {
-  header?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
-  footer?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
-  children?: React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+  header?: SheetContent;
+  footer?: SheetContent;
+  children?: SheetContent;
+  /** Disable the sheet (no clicking, dragging, or close-on-esc). Use when another sheet is shown on top. */
+  // TODO: it sorta works to do this manually, but it'd be better if we used Context to back-propagate information to "parent"
+  // sheets when "child" sheets are shown. We probably still need this since there are "global" sheets like item picker.
+  disabled?: boolean;
+  /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
   zIndex?: number;
   minHeight?: number;
+  /** A custom class name to add to the sheet container. */
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
-  allowClickThrough?: boolean;
   onClose(): void;
 }
 
-const spring = {
+const spring: SpringConfig = {
   ...config.stiff,
   clamp: true,
 };
@@ -56,11 +69,11 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
     footer,
     children,
     sheetClassName,
+    disabled,
     zIndex,
     minHeight,
     freezeInitialHeight,
-    allowClickThrough,
-    onClose: onCloseCallback,
+    onClose,
   },
   ref
 ) {
@@ -93,9 +106,9 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
   /** When the sheet stops animating, if we were closing, fire the close callback. */
   const onRest = useCallback(() => {
     if (closing.current) {
-      onCloseCallback();
+      onClose();
     }
-  }, [onCloseCallback]);
+  }, [onClose]);
 
   /** This spring is controlled via setSpring, which doesn't trigger re-render. */
   const [springProps, setSpring] = useSpring(() => ({
@@ -110,18 +123,21 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
    * Closing the sheet sets closing to true and starts an animation to close. We only fire the
    * outer callback when the animation is done.
    */
-  const onClose = useCallback(
+  const handleClose = useCallback(
     (e?) => {
+      if (disabled) {
+        return;
+      }
       e?.preventDefault();
       closing.current = true;
       // Animate offscreen
       setSpring({ to: { transform: `translateY(${height()}px)` } });
     },
-    [setSpring]
+    [setSpring, disabled]
   );
 
   // Handle global escape key
-  useGlobalEscapeKey(onClose);
+  useGlobalEscapeKey(handleClose);
 
   // This handles all drag interaction. The callback is called without re-render.
   const bindDrag = useDrag(({ event, active, movement, vxvy, last, cancel }) => {
@@ -140,7 +156,7 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
     // Detect if the gesture ended with a high velocity, or with the sheet more than
     // dismissAmount percent of the way down - if so, consider it a close gesture.
     if (last && (movement[1] > (height() || 0) * dismissAmount || vxvy[1] > dismissVelocity)) {
-      onClose();
+      handleClose();
     }
   });
 
@@ -171,19 +187,18 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
       <animated.div
         {...bindDrag()}
         style={{ ...springProps, touchAction: 'none', zIndex }}
-        className={clsx('sheet', sheetClassName)}
+        className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
         ref={sheet}
         role="dialog"
         aria-modal="false"
         onKeyDown={stopPropagation}
         onKeyUp={stopPropagation}
         onKeyPress={stopPropagation}
-        onClick={allowClickThrough ? undefined : stopPropagation}
       >
         <a
           href="#"
           className={clsx('sheet-close', { 'sheet-no-header': !header })}
-          onClick={onClose}
+          onClick={handleClose}
         >
           <AppIcon icon={disabledIcon} />
         </a>
@@ -199,7 +214,7 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
         >
           {header && (
             <div className="sheet-header" ref={dragHandle}>
-              {_.isFunction(header) ? header({ onClose }) : header}
+              {_.isFunction(header) ? header({ onClose: handleClose }) : header}
             </div>
           )}
 
@@ -210,15 +225,16 @@ export default forwardRef<HTMLDivElement, Props>(function Sheet(
             style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
             ref={sheetContentsRefFn}
           >
-            {_.isFunction(children) ? children({ onClose }) : children}
+            {_.isFunction(children) ? children({ onClose: handleClose }) : children}
           </div>
 
           {footer && (
             <div className="sheet-footer">
-              {_.isFunction(footer) ? footer({ onClose }) : footer}
+              {_.isFunction(footer) ? footer({ onClose: handleClose }) : footer}
             </div>
           )}
         </div>
+        <div className={styles.disabledScreen} />
       </animated.div>
     </SheetContext.Provider>
   );

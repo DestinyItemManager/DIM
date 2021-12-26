@@ -1,6 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -8,7 +9,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -50,6 +51,8 @@ export default function LoadoutDrawer() {
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+  const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
@@ -109,6 +112,8 @@ export default function LoadoutDrawer() {
 
   const close = () => {
     stateDispatch({ type: 'reset' });
+    setShowModAssignmentDrawer(false);
+    setShowingItemPicker(false);
   };
 
   // Close the sheet on navigation
@@ -131,6 +136,7 @@ export default function LoadoutDrawer() {
   const fixWarnItem = async (warnItem: DimItem) => {
     const loadoutClassType = loadout?.classType;
 
+    setShowingItemPicker(true);
     try {
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
@@ -149,7 +155,10 @@ export default function LoadoutDrawer() {
 
       onAddItem(item);
       onRemoveItem(warnItem);
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setShowingItemPicker(false);
+    }
   };
 
   const onSaveLoadout = (
@@ -217,13 +226,11 @@ export default function LoadoutDrawer() {
         loadout={loadout}
         showClass={showClass}
         isNew={isNew}
-        modAssignmentDrawerRef={modAssignmentDrawerRef}
+        onShowModAssignmentDrawer={() => setShowModAssignmentDrawer(true)}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        onUpdateMods={onUpdateMods}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         deleteLoadout={onDeleteLoadout}
-        calculateMinSheetHeight={calculateMinSheetHeight}
       />
       {loadout.notes !== undefined && (
         <textarea
@@ -237,7 +244,12 @@ export default function LoadoutDrawer() {
   );
 
   return (
-    <Sheet onClose={close} ref={loadoutSheetRef} header={header}>
+    <Sheet
+      onClose={close}
+      ref={loadoutSheetRef}
+      header={header}
+      disabled={modPicker.show || showModAssignmentDrawer || showingItemPicker}
+    >
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem}>
@@ -272,6 +284,7 @@ export default function LoadoutDrawer() {
                 onOpenModPicker={(query?: string) =>
                   stateDispatch({ type: 'openModPicker', query })
                 }
+                onShowItemPicker={setShowingItemPicker}
                 removeModByHash={removeModByHash}
                 onApplySocketOverrides={onApplySocketOverrides}
               />
@@ -289,6 +302,17 @@ export default function LoadoutDrawer() {
             minHeight={calculateMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
+          />,
+          document.body
+        )}
+      {showModAssignmentDrawer &&
+        ReactDOM.createPortal(
+          <ModAssignmentDrawer
+            loadout={loadout}
+            sheetRef={modAssignmentDrawerRef}
+            minHeight={calculateMinSheetHeight()}
+            onUpdateMods={onUpdateMods}
+            onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body
         )}

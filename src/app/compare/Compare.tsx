@@ -229,7 +229,7 @@ export default function Compare() {
   );
 
   return (
-    <Sheet onClose={cancel} allowClickThrough={true} header={header}>
+    <Sheet onClose={cancel} header={header}>
       <div className="loadout-drawer compare">
         <div className={styles.bucket} onMouseLeave={() => setHighlight(undefined)}>
           <div className={clsx('compare-item', styles.fixedLeft)}>

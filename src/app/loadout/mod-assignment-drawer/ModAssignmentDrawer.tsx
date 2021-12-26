@@ -116,8 +116,8 @@ export default function ModAssignmentDrawer({
             mods={flatAssigned}
           />
         }
+        disabled={Boolean(onUpdateMods && plugCategoryHashWhitelist)}
         ref={sheetRef}
-        minHeight={minHeight}
         onClose={onClose}
       >
         <div className={styles.container}>
