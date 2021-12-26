@@ -130,11 +130,11 @@ function LoadoutPopup({
     dimStore.destinyVersion === 2 ? pullablePostmasterItems(dimStore, stores).length : 0;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
-  const makeNewLoadout = () => editLoadout(newLoadout('', []), { isNew: true });
+  const makeNewLoadout = () => editLoadout(newLoadout('', []), dimStore.id, { isNew: true });
 
   const handleNewLoadoutFromEquipped = () => {
     const loadout = newLoadoutFromEquipped('', dimStore);
-    editLoadout(loadout, { isNew: true });
+    editLoadout(loadout, dimStore.id, { isNew: true });
   };
 
   const applySavedLoadout = (loadout: Loadout, { filterToEquipped = false } = {}) => {
@@ -350,7 +350,10 @@ function LoadoutPopup({
               <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               {loadout.name}
             </span>
-            <span title={t('Loadouts.Edit')} onClick={() => editLoadout(loadout, { isNew: false })}>
+            <span
+              title={t('Loadouts.Edit')}
+              onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
+            >
               <AppIcon icon={editIcon} />
             </span>
           </li>

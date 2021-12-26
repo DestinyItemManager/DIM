@@ -42,7 +42,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
   };
 
   const makeNewLoadout = (set: ArmorSet) => {
-    editLoadout(makeLoadoutFromSet(set), {
+    editLoadout(makeLoadoutFromSet(set), store.id, {
       showClass: false,
     });
   };

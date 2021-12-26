@@ -9,6 +9,12 @@ import { newLoadout } from './loadout-utils';
 
 export interface State {
   loadout?: Readonly<Loadout>;
+  /**
+   * The store that provides context to how this loadout is being edited from.
+   * The store this edit session was launched from. This is to help pick which
+   * mods are enabled, which subclass items to show, etc.
+   */
+  storeId?: string;
   showClass: boolean;
   isNew: boolean;
   modPicker: {
@@ -25,6 +31,7 @@ export type Action =
   | {
       type: 'editLoadout';
       loadout: Loadout;
+      storeId: string;
       isNew: boolean;
       showClass: boolean;
     }
@@ -59,11 +66,12 @@ export function stateReducer(state: State, action: Action): State {
       };
 
     case 'editLoadout': {
-      const { loadout, isNew, showClass } = action;
+      const { loadout, storeId, isNew, showClass } = action;
 
       return {
         ...state,
         loadout,
+        storeId: storeId === 'vault' ? undefined : storeId,
         isNew,
         showClass,
       };

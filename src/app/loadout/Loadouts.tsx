@@ -129,7 +129,7 @@ function Loadouts() {
   const handleNewLoadout = () => {
     const loadout = newLoadout('', []);
     loadout.classType = selectedStore.classType;
-    editLoadout(loadout, { isNew: true });
+    editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
   const sortOptions = [
@@ -261,7 +261,7 @@ function LoadoutRow({
   const handleApply = () =>
     dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
 
-  const handleEdit = () => editLoadout(loadout, { isNew: !saved });
+  const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
 
   return (
     <div className={styles.loadout} id={loadout.id}>
