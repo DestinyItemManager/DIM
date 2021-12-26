@@ -6,7 +6,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
-import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -37,7 +37,10 @@ interface StoreProps {
 }
 
 function mapStateToProps() {
-  /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+  /**
+   * Build a set of the inventory item hashes of all plug items in the socket's
+   * plug set that are unlocked by this character.
+   */
   const unlockedPlugsSelector = createSelector(
     profileResponseSelector,
     (_state: RootState, { item }: ProvidedProps) => item.owner,
@@ -47,29 +50,23 @@ function mapStateToProps() {
       if (!plugSetHash || !profileResponse) {
         return emptySet<number>();
       }
-      const unlockedPlugs = new Set<number>();
-      const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
-      for (const plugSetItem of plugSetItems) {
-        if (plugSetItem.canInsert) {
-          unlockedPlugs.add(plugSetItem.plugItemHash);
-        }
-      }
-      return unlockedPlugs;
+      return unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
     }
   );
 
+  /**
+   * Build a set of the inventory item hashes of all mods in inventory that
+   * could be plugged into this socket. This includes things like legacy mods
+   * and consumable mods.
+   */
   const inventoryPlugs = createSelector(
     allItemsSelector,
-    (_state: RootState, props: ProvidedProps) => props.socket,
+    (_state: RootState, props: ProvidedProps) => props.socket.socketDefinition.socketTypeHash,
+    (_state: RootState, props: ProvidedProps) => props.socket.socketDefinition.plugSources,
     d2ManifestSelector,
-    (allItems, socket, defs) => {
-      const socketType = defs!.SocketType.get(socket.socketDefinition.socketTypeHash);
-      if (
-        !(
-          socket.socketDefinition.plugSources & SocketPlugSources.InventorySourced &&
-          socketType.plugWhitelist
-        )
-      ) {
+    (allItems, socketTypeHash, plugSources, defs) => {
+      const socketType = defs!.SocketType.get(socketTypeHash);
+      if (!(plugSources & SocketPlugSources.InventorySourced && socketType.plugWhitelist)) {
         return emptySet<number>();
       }
 
@@ -121,7 +118,7 @@ export const SocketDetailsMod = React.memo(
       <div
         role="button"
         className={clsx('item', className)}
-        title={itemDef.displayProperties.name}
+        title={`${itemDef.displayProperties.name}\n${itemDef.itemTypeDisplayName}`}
         onClick={onClickFn}
         tabIndex={0}
       >
@@ -172,10 +169,9 @@ function SocketDetails({
     }
   }
 
-  if (socket.socketDefinition.reusablePlugSetHash) {
-    for (const plugItem of defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash)
-      .reusablePlugItems) {
-      modHashes.add(plugItem.plugItemHash);
+  if (socket.plugSet?.plugs) {
+    for (const dimPlug of socket.plugSet.plugs) {
+      modHashes.add(dimPlug.plugDef.hash);
     }
   }
   if (socket.socketDefinition.randomizedPlugSetHash) {

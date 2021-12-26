@@ -10,6 +10,12 @@
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
 * The progress notification for applying a loadout now shows each item and mod as it's being applied.
+* If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
+* On the Loadouts page, missing items show up dimmed-out instead of not at all.
+* The Loadouts page can be filtered from the search bar in the header.
+* When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
+* Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
+* Searching by perk now works on languages that use accented characters.
 
 ### Beta Only
 

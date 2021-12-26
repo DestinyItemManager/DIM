@@ -20,19 +20,16 @@ interface Props {
   onItemLocked(item: DimItem): void;
 }
 
-export default function LoadoutBuilderLockPerk(
-  this: void,
-  {
-    type,
-    lockeditem,
-    i18nItemNames,
-    activePerks,
-    lockedPerks,
-    onRemove,
-    onPerkLocked,
-    onItemLocked,
-  }: Props
-) {
+export default function LoadoutBuilderLockPerk({
+  type,
+  lockeditem,
+  i18nItemNames,
+  activePerks,
+  lockedPerks,
+  onRemove,
+  onPerkLocked,
+  onItemLocked,
+}: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const closeDialog = () => setDialogOpen(false);

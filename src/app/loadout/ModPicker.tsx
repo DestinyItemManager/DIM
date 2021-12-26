@@ -1,4 +1,3 @@
-import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
@@ -7,13 +6,14 @@ import {
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { itemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { filterDimPlugsUnlockedOnCharacterOrProfile } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { emptyArray } from 'app/utils/empty';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -34,13 +34,9 @@ const MAX_SLOT_INDEPENDENT_MODS = 5;
 const sortModPickerPlugGroups = (a: PlugSet, b: PlugSet) => sortModGroups(a.plugs, b.plugs);
 
 interface ProvidedProps {
-  /**
-   * An array of mods that are already locked.
-   */
+  /** An array of mods that are already selected by the user. */
   lockedMods: PluggableInventoryItemDefinition[];
-  /**
-   * The character we'll show unlocked mods for.
-   */
+  /** The character class we'll show unlocked mods for. */
   classType?: DestinyClass;
   /**
    * The store ID that we're picking mods for. Used to restrict mods to those unlocked by that store.
@@ -50,23 +46,25 @@ interface ProvidedProps {
   initialQuery?: string;
   /** The min height for the sheet. */
   minHeight?: number;
-  /** A list of plugs we are restricting the available mods to. */
+  /** Only show mods that are in these categories. No restriction if this is not provided. */
   plugCategoryHashWhitelist?: number[];
-  /** Called with the new lockedMods when the user accepts the new modset. */
+  /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
   onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new modset of closes the sheet. */
   onClose(): void;
 }
 
 interface StoreProps {
-  language: string;
   plugSets: PlugSet[];
 }
 
 type Props = ProvidedProps & StoreProps;
 
 function mapStateToProps() {
-  /** Build the hashes of all plug set item hashes that are unlocked by any character/profile. */
+  /**
+   * Build up a list of PlugSets used by armor in the user's inventory, and the
+   * plug items contained within them, restricted to an optional plugCategoryHashWhitelist
+   */
   const unlockedPlugSetsSelector = createSelector(
     profileResponseSelector,
     allItemsSelector,
@@ -84,23 +82,26 @@ function mapStateToProps() {
       plugCategoryHashWhitelist,
       currentStore
     ): PlugSet[] => {
-      const artificeString = defs?.InventoryItem.get(3727270518).displayProperties.name;
-
       const plugSets: { [plugSetHash: number]: PlugSet } = {};
       if (!profileResponse || !defs) {
-        return [];
+        return emptyArray();
       }
 
+      // We need the name of the Artifice armor perk to show in one of the headers
+      const artificeString = defs?.InventoryItem.get(3727270518)?.displayProperties.name;
+
+      // Look at every armor item and see what sockets it has
       for (const item of allItems) {
         if (
-          !item ||
-          !item.sockets ||
+          !item?.sockets ||
           // Makes sure it's an armour 2.0 item
           !isLoadoutBuilderItem(item) ||
           // If classType is passed in, only use items from said class,
           // otherwise use items from all characters.
           // Useful if in loadouts and only mods and guns
-          !(classType === DestinyClass.Unknown || item.classType === classType)
+          (classType !== DestinyClass.Unknown &&
+            classType !== undefined &&
+            item.classType !== classType)
         ) {
           continue;
         }
@@ -119,29 +120,30 @@ function mapStateToProps() {
           (socket) => socket.socketDefinition.reusablePlugSetHash
         );
 
+        // For each of the socket types on the item, figure out what plugs could go into it
+        // and the maximum number of those sockets that can appear on a single item.
         for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
           const plugSetHash = parseInt(hashAsString, 10);
-          const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
-
-          const plugSetItems = itemsForCharacterOrProfilePlugSet(
+          const dimPlugs = filterDimPlugsUnlockedOnCharacterOrProfile(
             profileResponse,
-            plugSetHash,
+            sockets[0].plugSet!,
             // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
             owner ?? currentStore!.id
           );
 
-          // Get the item plugs actually available to the profile
-          for (const itemPlug of plugSetItems) {
-            const plugDef = defs.InventoryItem.get(itemPlug.plugItemHash);
+          // Filter down to plugs that match the plugCategoryHashWhitelist
+          const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
+          for (const dimPlug of dimPlugs) {
             if (
-              isInsertableArmor2Mod(plugDef) &&
+              isInsertableArmor2Mod(dimPlug.plugDef) &&
               (!plugCategoryHashWhitelist ||
-                plugCategoryHashWhitelist?.includes(plugDef.plug.plugCategoryHash))
+                plugCategoryHashWhitelist.includes(dimPlug.plugDef.plug.plugCategoryHash))
             ) {
-              plugsWithDuplicates.push(plugDef);
+              plugsWithDuplicates.push(dimPlug.plugDef);
             }
           }
 
+          // TODO: Why would there be duplicates within a single plugset?
           const plugs = _.uniqBy(plugsWithDuplicates, (plug) => plug.hash);
 
           // Combat, general and raid mods are restricted across items so we need to manually
@@ -159,6 +161,8 @@ function mapStateToProps() {
               selectionType: 'multi',
               plugs,
             };
+
+            // Artificer armor has a single extra slot that can take slot-specific mods. Give it a special header
             if (
               maxSelectable === 1 &&
               armor2PlugCategoryHashes.includes(plugs[0].plug.plugCategoryHash)
@@ -174,71 +178,21 @@ function mapStateToProps() {
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
-    language: languageSelector(state),
     plugSets: unlockedPlugSetsSelector(state, props),
   });
 }
 
 /**
- * A sheet to pick mods that are required in the final loadout sets.
+ * A sheet to pick armor mods to be included in a loadout. This allows picking
+ * multiple mods before accepting the choice, and tries to show when you've
+ * chosen too many mods. It also can be filtered down to a specific set of mods
+ * using plugCategoryHashWhitelist.
  */
-function ModPicker({
-  plugSets,
-  language,
-  lockedMods,
-  initialQuery,
-  minHeight,
-  onAccept,
-  onClose,
-}: Props) {
-  const isModSelectable = useCallback(
-    (mod: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
-      const { plugCategoryHash } = mod.plug;
-      const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
-
-      let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
-
-      if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-        associatedLockedMods = selected.filter(
-          (mod) => mod.plug.plugCategoryHash === plugCategoryHash
-        );
-      } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
-        associatedLockedMods = selected.filter((mod) =>
-          raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
-        );
-      } else {
-        associatedLockedMods = selected.filter(
-          (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
-        );
-      }
-
-      // We only care about this for slot specific mods and it is used in isModSelectable. It is calculated here
-      // so it is only done once per render.
-      const lockedModCost = isSlotSpecificCategory
-        ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
-        : 0;
-
-      if (isSlotSpecificCategory) {
-        // Traction has no energy type so it's basically Any energy and 0 cost
-        const modCost = mod.plug.energyCost?.energyCost || 0;
-        const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-
-        return (
-          lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
-          (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
-            associatedLockedMods.some((l) => l.plug.energyCost?.energyType === modEnergyType) || // Matches some other energy
-            associatedLockedMods.every(
-              (l) =>
-                (l.plug.energyCost?.energyType || DestinyEnergyType.Any) === DestinyEnergyType.Any
-            )) // If every thing else is Any we are good
-        );
-      } else {
-        return associatedLockedMods.length < MAX_SLOT_INDEPENDENT_MODS;
-      }
-    },
-    []
-  );
-
+function ModPicker({ plugSets, lockedMods, initialQuery, minHeight, onAccept, onClose }: Props) {
+  // Partition the locked (selected) mods into ones that will be shown in this
+  // picker (based on plugCategoryHashWhitelist) and ones that will not. The
+  // ones that won't (hidden mods) are still part of the locked mods set and
+  // shouldn't be wiped out when the selection of visible mods changes!
   const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
     () =>
       _.partition(lockedMods, (mod) =>
@@ -249,6 +203,7 @@ function ModPicker({
 
   const onAcceptWithHiddenSelectedMods = useCallback(
     (newLockedMods: PluggableInventoryItemDefinition[]) => {
+      // Put back the mods that were filtered out of the display
       onAccept([...hiddenSelectedMods, ...newLockedMods]);
     },
     [hiddenSelectedMods, onAccept]
@@ -259,7 +214,6 @@ function ModPicker({
       title={t('LB.ChooseAMod')}
       searchPlaceholder={t('LB.SearchAMod')}
       acceptButtonText={t('LB.SelectMods')}
-      language={language}
       initialQuery={initialQuery}
       plugSets={plugSets}
       initiallySelected={visibleSelectedMods}
@@ -274,3 +228,62 @@ function ModPicker({
 }
 
 export default connect<StoreProps>(mapStateToProps)(ModPicker);
+
+/**
+ * Determine whether an armor mod can still be selected, given that the `selected` mods have already been selected.
+ * This doesn't take into account the actual armor that's in the loadout and what slots it has.
+ */
+function isModSelectable(
+  mod: PluggableInventoryItemDefinition,
+  selected: PluggableInventoryItemDefinition[]
+) {
+  const { plugCategoryHash, energyCost } = mod.plug;
+  const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
+
+  // Already selected mods that are in the same category as "mod"
+  let associatedLockedMods: PluggableInventoryItemDefinition[] = [];
+
+  if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+    // General and slot-specific mods just match to the same category hash
+    associatedLockedMods = selected.filter((mod) => mod.plug.plugCategoryHash === plugCategoryHash);
+  } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
+    // Raid mods match to any other raid mod, since a single armor piece can only have one raid mod slot
+    associatedLockedMods = selected.filter((mod) =>
+      raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+    );
+  } else {
+    // This is some unknown/unmapped mod slot, match all other unknown mod slots
+    associatedLockedMods = selected.filter(
+      (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+    );
+  }
+
+  // Slot-specific mods (e.g. chest mods) can slot 2 per piece, so make sure the sum of energy doesn't
+  // exceed the maximum and that energy all aligns. This doesn't check other mods that could be on the
+  // item because we haven't assigned those to specific pieces.
+  // TODO: This also doesn't check whether we add 5 1-cost chest mods?
+  if (isSlotSpecificCategory) {
+    const lockedModCost = isSlotSpecificCategory
+      ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
+      : 0;
+
+    // Traction has no energy type so it's basically Any energy and 0 cost
+    const modCost = energyCost?.energyCost || 0;
+    const modEnergyType = energyCost?.energyType || DestinyEnergyType.Any;
+
+    return (
+      lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
+      (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
+        associatedLockedMods.every(
+          (l) =>
+            // Matches energy
+            l.plug.energyCost?.energyType === modEnergyType ||
+            // or Any energy
+            (l.plug.energyCost?.energyType ?? DestinyEnergyType.Any) === DestinyEnergyType.Any
+        ))
+    );
+  } else {
+    // Just check that we haven't locked too many
+    return associatedLockedMods.length < MAX_SLOT_INDEPENDENT_MODS;
+  }
+}

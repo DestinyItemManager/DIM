@@ -38,6 +38,7 @@ export function SearchFilter(
   const onRecords = location.pathname.endsWith('records');
   const onProgress = location.pathname.endsWith('progress');
   const onOptimizer = location.pathname.endsWith('optimizer');
+  const onLoadouts = location.pathname.endsWith('loadouts');
 
   const placeholder = useMemo(
     () =>
@@ -47,10 +48,12 @@ export function SearchFilter(
         ? t('Header.FilterHelpProgress')
         : onOptimizer
         ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:combatstyle' })
+        : onLoadouts
+        ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait
         ? t('Header.FilterHelpBrief')
         : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait, onRecords, onProgress, onOptimizer]
+    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts]
   );
 
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);

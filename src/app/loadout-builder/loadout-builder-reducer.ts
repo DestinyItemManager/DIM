@@ -21,7 +21,14 @@ import {
   statFiltersFromLoadoutParamaters,
   statOrderFromLoadoutParameters,
 } from './loadout-params';
-import { ArmorSet, ArmorStatHashes, ExcludedItems, PinnedItems, StatFilters } from './types';
+import {
+  ArmorSet,
+  ArmorStatHashes,
+  ExcludedItems,
+  LockableBucketHashes,
+  PinnedItems,
+  StatFilters,
+} from './types';
 
 export interface LoadoutBuilderState {
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -80,7 +87,22 @@ const lbStateInit = ({
   let loadoutParams = initialLoadoutParameters;
 
   if (stores.length && preloadedLoadout) {
-    const loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    let loadoutStore = getCurrentStore(stores);
+    if (preloadedLoadout.classType === DestinyClass.Unknown) {
+      const includedClasses = new Set(
+        preloadedLoadout.items
+          .map((i) => defs.InventoryItem.get(i.hash)?.classType)
+          .filter((c) => c !== undefined && c !== DestinyClass.Unknown)
+      );
+      if (includedClasses.size === 1) {
+        const includedClassType = includedClasses.values().next().value;
+        loadoutStore =
+          stores.find((store) => store.classType === includedClassType) ?? loadoutStore;
+      }
+    } else {
+      loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
+    }
+
     if (!loadoutStore) {
       warnMissingClass(preloadedLoadout.classType, defs);
     } else {
@@ -98,6 +120,21 @@ const lbStateInit = ({
       // Load all parameters from the loadout if we can
       if (preloadedLoadout.parameters) {
         loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
+      }
+
+      if (!loadoutParams.exoticArmorHash) {
+        const equippedExotic = preloadedLoadout.items
+          .filter((li) => li.equipped)
+          .map((li) => defs.InventoryItem.get(li.hash))
+          .find(
+            (i) =>
+              Boolean(i?.equippingBlock?.uniqueLabel) &&
+              LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
+          );
+
+        if (equippedExotic) {
+          loadoutParams = { ...loadoutParams, exoticArmorHash: equippedExotic.hash };
+        }
       }
     }
   }

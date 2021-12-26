@@ -1,6 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -20,9 +21,9 @@ import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
-  getItemsFromLoadoutItems,
   getLight,
   getLoadoutStats,
   getModsFromLoadout,
@@ -32,6 +33,7 @@ import {
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import {
@@ -42,7 +44,7 @@ import {
   powerActionIcon,
   searchIcon,
 } from 'app/shell/icons';
-import { useIsPhonePortrait } from 'app/shell/selectors';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -91,6 +93,10 @@ function Loadouts() {
   const allLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
+  const query = useSelector(querySelector);
+  const language = useSelector(languageSelector);
+
+  const searchRegexp = startWordRegexp(query, language);
 
   const savedLoadouts = useMemo(
     () =>
@@ -111,7 +117,12 @@ function Loadouts() {
     [selectedStore]
   );
 
-  const loadouts = _.compact([currentLoadout, ...savedLoadouts]);
+  const loadouts = [currentLoadout, ...savedLoadouts].filter(
+    (loadout) =>
+      !query ||
+      searchRegexp.test(loadout.name) ||
+      (loadout.notes && searchRegexp.test(loadout.notes))
+  );
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
@@ -178,6 +189,7 @@ function Loadouts() {
             equippable={loadout !== currentLoadout}
           />
         ))}
+        {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
@@ -196,32 +208,31 @@ function LoadoutRow({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
-    const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, allItems);
+    const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, buckets, allItems);
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
     const subclass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
     if (subclass) {
       equippableItems = equippableItems.filter((i) => i !== subclass);
     }
     return [equippableItems, subclass, warnitems];
-  }, [loadout.items, defs, allItems, store]);
+  }, [loadout.items, defs, buckets, allItems, store]);
 
   const savedMods = getModsFromLoadout(defs, loadout);
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
-  const categories = _.groupBy(items, (i) => i.bucket.sort);
+  const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 
   const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
   const power = showPower
     ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
     : 0;
-
-  // TODO: show the loadout builder params
 
   const handleDeleteClick = (loadout: Loadout) => {
     if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
@@ -496,7 +507,9 @@ function ItemBucket({
     return <div className={styles.items} />;
   }
 
-  const [equipped, unequipped] = _.partition(items, (i) => equippedItemIds.has(i.id));
+  const [equipped, unequipped] = _.partition(items, (i) =>
+    i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
+  );
 
   return (
     <div className={styles.itemBucket}>
@@ -509,7 +522,9 @@ function ItemBucket({
             {items.map((item) => (
               <ItemPopupTrigger item={item} key={item.id}>
                 {(ref, onClick) => (
-                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                  <div className={clsx({ [styles.missingItem]: item.owner === 'unknown' })}>
+                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                  </div>
                 )}
               </ItemPopupTrigger>
             ))}

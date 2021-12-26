@@ -14,7 +14,7 @@ import SelectablePlug from './SelectablePlug';
 export interface PlugSet {
   /** The hash that links to the PlugSet definition. */
   plugSetHash: number;
-  /** A list of plugs from this plugset. */
+  /** A list of plug items in this plugset. */
   plugs: PluggableInventoryItemDefinition[];
   /** The maximum number of plugs a user can select from this plug set. */
   maxSelectable: number;
@@ -24,42 +24,49 @@ export interface PlugSet {
    * single: how abilities in subclasses are selected, selecting an option replaces the current one.
    */
   selectionType: 'multi' | 'single';
+  /** A bit of text to add on to the header. This is currently used to distinguish Artificer slot-specific sockets. */
   headerSuffix?: string;
 }
 
+/**
+ * A section of plugs in the PlugDrawer component, corresponding to a PlugSet. These will be further
+ * sub-grouped by mod type.
+ */
 export default function PlugSection({
   plugSet,
-  selected,
+  selectedPlugs,
   displayedStatHashes,
   isPlugSelectable,
-  handlePlugSelected,
-  handlePlugRemoved,
+  onPlugSelected,
+  onPlugRemoved,
   sortPlugs,
 }: {
   plugSet: PlugSet;
-  /** The current set of selected plugs. */
-  selected: PluggableInventoryItemDefinition[];
+  /** The current set of selected plugs for this particular PlugSet. */
+  selectedPlugs: PluggableInventoryItemDefinition[];
+  /** A restricted list of stat hashes to display for each plug. If not specified, all stats will be shown. */
   displayedStatHashes?: number[];
+  /** How to sort plugs within a group (PlugSet) */
+  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
+  /** A function to determine if a given plug is currently selectable. */
   isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
-  handlePlugSelected(
+  onPlugSelected(
     plugSetHash: number,
     mod: PluggableInventoryItemDefinition,
     selectionType: 'multi' | 'single'
   ): void;
-  handlePlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
-  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
+  onPlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
 }) {
   const { plugs, maxSelectable, plugSetHash, headerSuffix, selectionType } = plugSet;
 
-  const handlePlugSelectedInternal = useCallback(
-    (plug: PluggableInventoryItemDefinition) =>
-      handlePlugSelected(plugSetHash, plug, selectionType),
-    [handlePlugSelected, plugSetHash, selectionType]
+  const handlePlugSelected = useCallback(
+    (plug: PluggableInventoryItemDefinition) => onPlugSelected(plugSetHash, plug, selectionType),
+    [onPlugSelected, plugSetHash, selectionType]
   );
 
-  const handlePlugRemovedInternal = useCallback(
-    (plug: PluggableInventoryItemDefinition) => handlePlugRemoved(plugSetHash, plug),
-    [handlePlugRemoved, plugSetHash]
+  const handlePlugRemoved = useCallback(
+    (plug: PluggableInventoryItemDefinition) => onPlugRemoved(plugSetHash, plug),
+    [onPlugRemoved, plugSetHash]
   );
 
   if (!plugs.length) {
@@ -83,23 +90,26 @@ export default function PlugSection({
           <div key={header} className={styles.bucket}>
             <div className={styles.header}>{header}</div>
             <div className={styles.items}>
-              {plugs.map((plug) => (
-                <SelectablePlug
-                  key={plug.hash}
-                  selected={selected.some((s) => s.hash === plug.hash)}
-                  plug={plug}
-                  displayedStatHashes={displayedStatHashes}
-                  selectable={
-                    plugSet.selectionType === 'multi'
-                      ? maxSelectable > selected.length && isPlugSelectable(plug)
-                      : !selected.some((s) => s.hash === plug.hash) && isPlugSelectable(plug)
-                  }
-                  selectionType={plugSet.selectionType}
-                  removable={plugSet.selectionType === 'multi'}
-                  onPlugSelected={handlePlugSelectedInternal}
-                  onPlugRemoved={handlePlugRemovedInternal}
-                />
-              ))}
+              {plugs.map((plug) => {
+                const isSelected = selectedPlugs.some((s) => s.hash === plug.hash);
+                const multiSelect = selectionType === 'multi';
+                const selectable = multiSelect
+                  ? selectedPlugs.length < maxSelectable && isPlugSelectable(plug)
+                  : !isSelected && isPlugSelectable(plug);
+                return (
+                  <SelectablePlug
+                    key={plug.hash}
+                    selected={isSelected}
+                    plug={plug}
+                    displayedStatHashes={displayedStatHashes}
+                    selectable={selectable}
+                    selectionType={selectionType}
+                    removable={multiSelect}
+                    onPlugSelected={handlePlugSelected}
+                    onPlugRemoved={handlePlugRemoved}
+                  />
+                );
+              })}
             </div>
           </div>
         );

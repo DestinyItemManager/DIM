@@ -18905,21 +18905,6 @@
               "tooltipNotificationIndexes": []
             },
             {
-              "itemHash": 3735038502,
-              "itemInstanceId": "6917529362435260683",
-              "quantity": 1,
-              "bindStatus": 0,
-              "location": 1,
-              "bucketHash": 1345459588,
-              "transferStatus": 2,
-              "lockable": false,
-              "state": 0,
-              "dismantlePermission": 0,
-              "isWrapper": false,
-              "tooltipNotificationIndexes": [],
-              "itemValueVisibility": [true, true, true, true, true, true]
-            },
-            {
               "itemHash": 1441461394,
               "itemInstanceId": "6917529363281692498",
               "quantity": 1,

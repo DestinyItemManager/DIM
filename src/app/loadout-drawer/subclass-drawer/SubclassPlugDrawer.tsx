@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimPlugSet, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -9,7 +8,6 @@ import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/PlugSection';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemsForPlugSetEverywhere } from 'app/records/plugset-helpers';
 import { compareBy } from 'app/utils/comparators';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -22,6 +20,9 @@ const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
 
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
+/**
+ * A customized PlugDrawer for showing mod choices for mod-style subclasses (currently only Stasis).
+ */
 export default function SubclassPlugDrawer({
   subclass,
   socketOverrides,
@@ -33,14 +34,13 @@ export default function SubclassPlugDrawer({
   onAccept(overrides: SocketOverrides): void;
   onClose(): void;
 }) {
-  const language = useSelector(languageSelector);
-  const defs = useD2Definitions();
+  const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector);
 
   const { initiallySelected, plugSets, aspects, fragments, sortPlugs, sortPlugGroups } =
     useMemo(() => {
       const initiallySelected = Object.values(socketOverrides)
-        .map((hash) => defs!.InventoryItem.get(hash))
+        .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
 
       const { plugSets, aspects, fragments } = getPlugsForSubclass(defs, profileResponse, subclass);
@@ -77,7 +77,7 @@ export default function SubclassPlugDrawer({
 
   // The handler when when a user accepts the selection in the plug picker
   // This will create a new set of socket overrides
-  const onAcceptInternal = useCallback(
+  const handleAccept = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
       if (!subclass.sockets) {
         return;
@@ -87,9 +87,16 @@ export default function SubclassPlugDrawer({
       const newOverrides: SocketOverrides = {};
 
       for (const socket of subclass.sockets.allSockets) {
-        const socketPlugsetHashes = getPlugHashesForSocket(socket, profileResponse);
+        if (!socket.plugSet || !profileResponse) {
+          continue;
+        }
+
+        const dimPlugs = filterUnlockedPlugsForForProfileAndAllCharacters(
+          profileResponse,
+          socket.plugSet
+        );
         for (const [index, plug] of remainingPlugs.entries()) {
-          if (socketPlugsetHashes.some((hash) => hash === plug.hash)) {
+          if (dimPlugs.some((dimPlug) => plug.hash === dimPlug.plugDef.hash)) {
             newOverrides[socket.socketIndex] = plug.hash;
             remainingPlugs.splice(index, 1);
             break;
@@ -136,10 +143,9 @@ export default function SubclassPlugDrawer({
       title={t('Loadouts.SubclassOptions', { subclass: subclass.name })}
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
-      language={language}
       plugSets={plugSets}
       displayedStatHashes={DISPLAYED_PLUG_STATS}
-      onAccept={onAcceptInternal}
+      onAccept={handleAccept}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
       sortPlugs={sortPlugs}
@@ -178,40 +184,36 @@ function getPlugsForSubclass(
     for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
-        const plugSetHash = firstSocket.socketDefinition.reusablePlugSetHash;
         const defaultPlugHash = getDefaultPlugHash(firstSocket, defs);
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
-        if (plugSetHash && profileResponse && isPluggableItem(defaultPlug)) {
+        if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {
           const plugSet: PlugSetWithDefaultPlug = {
             plugs: [],
-            plugSetHash,
+            plugSetHash: firstSocket.plugSet.hash,
             maxSelectable: socketGroup.length,
             defaultPlug,
             selectionType:
               category.category.hash === SocketCategoryHashes.Abilities ? 'single' : 'multi',
           };
-          // Get all the availabe plugs for the given profile
+
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
           // but it should future proof things
-          const plugHashes = itemsForPlugSetEverywhere(profileResponse, plugSetHash).map(
-            (plug) => plug.plugItemHash
-          );
-
-          for (const hash of plugHashes) {
-            const plugDef = defs.InventoryItem.get(hash);
+          for (const dimPlug of filterUnlockedPlugsForForProfileAndAllCharacters(
+            profileResponse,
+            firstSocket.plugSet
+          )) {
             const isAspect = category.category.hash === SocketCategoryHashes.Aspects;
             const isFragment = category.category.hash === SocketCategoryHashes.Fragments;
             const isEmptySocket =
-              (isAspect || isFragment) &&
-              hash === firstSocket.socketDefinition.singleInitialItemHash;
+              (isAspect || isFragment) && dimPlug.plugDef.hash === defaultPlugHash;
 
-            if (!isEmptySocket && isPluggableItem(plugDef)) {
-              plugSet.plugs.push(plugDef);
+            if (!isEmptySocket) {
+              plugSet.plugs.push(dimPlug.plugDef);
 
               if (isAspect) {
-                aspects.add(plugDef);
+                aspects.add(dimPlug.plugDef);
               } else if (isFragment) {
-                fragments.add(plugDef);
+                fragments.add(dimPlug.plugDef);
               }
             }
           }
@@ -224,15 +226,24 @@ function getPlugsForSubclass(
   return { plugSets, aspects, fragments };
 }
 
-function getPlugHashesForSocket(
-  socket: DimSocket,
-  profileResponse: DestinyProfileResponse | undefined
+/**
+ * This function is a temporary solution until we can associate a character id
+ * with a loadout. It takes a DimPlugSet and returns a list of plugs that are
+ * unlocked by any character in the profile response.
+ */
+function filterUnlockedPlugsForForProfileAndAllCharacters(
+  profileResponse: DestinyProfileResponse,
+  dimPlugSet: DimPlugSet
 ) {
-  const plugSetHash = socket?.socketDefinition.reusablePlugSetHash;
+  const availablePlugs = (
+    profileResponse.profilePlugSets.data?.plugs[dimPlugSet.hash] || []
+  ).concat(
+    Object.values(profileResponse.characterPlugSets.data || {})
+      .filter((d) => d.plugs?.[dimPlugSet.hash])
+      .flatMap((d) => d.plugs[dimPlugSet.hash])
+  );
 
-  if (!plugSetHash || !profileResponse) {
-    return [];
-  }
-
-  return itemsForPlugSetEverywhere(profileResponse, plugSetHash).map((plug) => plug.plugItemHash);
+  return dimPlugSet.plugs.filter((plug) =>
+    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash && p.canInsert)
+  );
 }
