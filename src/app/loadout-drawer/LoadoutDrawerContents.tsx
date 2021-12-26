@@ -140,7 +140,9 @@ export default function LoadoutDrawerContents({
         {showSubclassButton && (
           <a
             key={subclassBucket.type}
-            onClick={() => pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add)}
+            onClick={() =>
+              pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add, onShowItemPicker)
+            }
             className="dim-button loadout-add"
           >
             <AppIcon icon={addIcon} /> {subclassBucket.name}
@@ -235,7 +237,8 @@ async function pickLoadoutSubclass(
   loadout: Loadout,
   subclassBucket: InventoryBucket,
   savedSubclasses: DimItem[],
-  add: (item: DimItem, e?: MouseEvent) => void
+  add: (item: DimItem, e?: MouseEvent) => void,
+  onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
   function loadoutHasItem(item: DimItem) {
@@ -247,6 +250,7 @@ async function pickLoadoutSubclass(
     );
   }
 
+  onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
@@ -267,7 +271,10 @@ async function pickLoadoutSubclass(
     });
 
     add(item);
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    onShowItemPicker(false);
+  }
 }
 
 function createSocketOverridesFromEquipped(
