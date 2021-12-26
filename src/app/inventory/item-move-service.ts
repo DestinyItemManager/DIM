@@ -224,7 +224,7 @@ function searchForSimilarItem(
 
 /**
  * Bulk equip items. Only use for multiple equips at once (just loadouts).
- * Returns a list of items that were successfully equipped, which can be less
+ * Returns a map of item ids to their success status (PlatformErrorCodes.Success if it succeeded), which can be less
  * that what was passed in or even more than what was passed in because
  * sometimes we have to de-equip an exotic to equip another exotic.
  */
