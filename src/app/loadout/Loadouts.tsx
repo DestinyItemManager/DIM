@@ -24,7 +24,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import LoadoutView from './Loadout';
@@ -176,7 +176,6 @@ function LoadoutRow({
       }
     };
 
-    const canShare = Boolean(loadout.parameters && !_.isEmpty(loadout.parameters));
     const shareBuild = () => {
       const p: Record<string, string> = {
         class: loadout.classType.toString(),
@@ -198,22 +197,32 @@ function LoadoutRow({
       dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
 
     const handleEdit = () => editLoadout(loadout, { isNew: !saved });
+    const actionButtons: ReactNode[] = [];
 
-    return [
-      equippable && (
+    if (equippable) {
+      actionButtons.push(
         <button key="apply" type="button" className="dim-button" onClick={handleApply}>
           {t('Loadouts.Apply')}
         </button>
-      ),
+      );
+    }
+
+    actionButtons.push(
       <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
         {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
-      </button>,
-      canShare && (
+      </button>
+    );
+
+    if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
+      actionButtons.push(
         <button key="share" type="button" className="dim-button" onClick={shareBuild}>
           {t('LoadoutBuilder.ShareBuild')}
         </button>
-      ),
-      saved && (
+      );
+    }
+
+    if (saved) {
+      actionButtons.push(
         <button
           key="save"
           type="button"
@@ -222,8 +231,10 @@ function LoadoutRow({
         >
           {t('Loadouts.Delete')}
         </button>
-      ),
-    ];
+      );
+    }
+
+    return actionButtons;
   }, [dispatch, equippable, loadout, saved, store]);
 
   return <LoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
