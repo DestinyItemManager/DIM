@@ -9,6 +9,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
@@ -20,6 +21,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -115,14 +117,18 @@ export default function CompareDrawer({
   const allItems = useSelector(allItemsSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
-  const loadoutItems = useMemo(() => {
+  const { loadoutItems, loadoutSubclass } = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
     const [items] = getItemsFromLoadoutItems(equippedItems, defs, buckets, allItems);
-    return _.sortBy(
+    const loadoutItems = _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
-  }, [selectedLoadout, defs, buckets, allItems]);
+    const loadoutSubclass = items.find(
+      (item) => item.bucket.hash === BucketHashes.Subclass && item.classType === classType
+    );
+    return { loadoutItems, loadoutSubclass };
+  }, [selectedLoadout?.items, defs, buckets, allItems, classType]);
 
   const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
     const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
@@ -189,20 +195,22 @@ export default function CompareDrawer({
 
     const loadoutToSave = produce(selectedLoadout, (draftLoadout) => {
       if (draftLoadout) {
-        const newItems: LoadoutItem[] = setItems.map(({ id, hash }) => ({
-          id,
-          hash,
-          amount: 1,
-          equipped: true,
-        }));
+        const newItems: LoadoutItem[] = setItems.map((item) => convertToLoadoutItem(item, true));
+
+        if (subclass) {
+          newItems.push(convertToLoadoutItem(subclass, true));
+        }
+
         for (const item of draftLoadout.items) {
           const dimItem = loadoutItems.find((i) => i.id === item.id);
           const hasBeenReplaced =
-            dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash);
+            (dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash)) ||
+            (subclass && item.id === loadoutSubclass?.id);
           if (!hasBeenReplaced) {
             newItems.push(item);
           }
         }
+
         draftLoadout.items = newItems;
         draftLoadout.parameters = params;
         draftLoadout.notes = notes || draftLoadout.notes;
