@@ -2,19 +2,16 @@ import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
-import Mod from 'app/loadout/loadout-ui/Mod';
-import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
-import { createGetModRenderKey } from 'app/loadout/mod-utils';
+import LoadoutView from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -28,9 +25,7 @@ import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getTotalModStatChanges } from '../process/mappers';
 import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
-import { getPower } from '../utils';
 import styles from './CompareDrawer.m.scss';
-import SetStats from './SetStats';
 
 function getItemStats(
   defs: D2ManifestDefinitions,
@@ -57,15 +52,13 @@ function getItemStats(
 
 interface Props {
   set: ArmorSet;
+  selectedStore: DimStore;
   loadouts: Loadout[];
   initialLoadoutId?: string;
   lockedMods: PluggableInventoryItemDefinition[];
   subclass: DimLoadoutItem | undefined;
   classType: DestinyClass;
-  statOrder: number[];
-  enabledStats: Set<number>;
   upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
   params: LoadoutParameters;
   notes?: string;
   onClose(): void;
@@ -87,17 +80,49 @@ function chooseInitialLoadout(
   );
 }
 
+function createLoadoutUsingLOItems(
+  setItems: DimItem[],
+  subclass: DimLoadoutItem | undefined,
+  loadout: Loadout | undefined,
+  loadoutItems: DimItem[],
+  loadoutSubclass: DimLoadoutItem | undefined,
+  params: LoadoutParameters,
+  notes: string | undefined
+) {
+  return produce(loadout, (draftLoadout) => {
+    if (draftLoadout) {
+      const newItems: LoadoutItem[] = setItems.map((item) => convertToLoadoutItem(item, true));
+
+      if (subclass) {
+        newItems.push(convertToLoadoutItem(subclass, true));
+      }
+
+      for (const item of draftLoadout.items) {
+        const dimItem = loadoutItems.find((i) => i.id === item.id);
+        const hasBeenReplaced =
+          (dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash)) ||
+          (subclass && item.id === loadoutSubclass?.id);
+        if (!hasBeenReplaced) {
+          newItems.push(item);
+        }
+      }
+
+      draftLoadout.items = newItems;
+      draftLoadout.parameters = params;
+      draftLoadout.notes = notes || draftLoadout.notes;
+    }
+  });
+}
+
 export default function CompareDrawer({
   loadouts,
+  selectedStore,
   initialLoadoutId,
   set,
   lockedMods,
   subclass,
   classType,
-  statOrder,
-  enabledStats,
   upgradeSpendTier,
-  lockItemEnergyType,
   params,
   notes,
   onClose,
@@ -106,7 +131,6 @@ export default function CompareDrawer({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
-  const getModRenderKey = createGetModRenderKey();
 
   const setItems = set.armor.map((items) => items[0]);
 
@@ -130,34 +154,10 @@ export default function CompareDrawer({
     return { loadoutItems, loadoutSubclass };
   }, [selectedLoadout?.items, defs, buckets, allItems, classType]);
 
-  const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
-    const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
-      setItems,
-      lockedMods,
-      defs,
-      upgradeSpendTier,
-      lockItemEnergyType
-    );
-    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
-      loadoutItems,
-      lockedMods,
-      defs,
-      upgradeSpendTier,
-      lockItemEnergyType
-    );
-
-    return {
-      loSetAssignedMods: loSetAssignedMods,
-      itemModAssignments: itemModAssignments,
-      unassignedMods,
-    };
-  }, [defs, loadoutItems, lockItemEnergyType, lockedMods, setItems, upgradeSpendTier]);
-
   if (!set) {
     return null;
   }
 
-  const loadoutMaxPower = _.sumBy(loadoutItems, (i) => i.power) / loadoutItems.length;
   const loadoutStats = armorStats.reduce((memo, statHash) => {
     memo[statHash] = 0;
     return memo;
@@ -183,6 +183,16 @@ export default function CompareDrawer({
     loadoutStats[statHash] += lockedModStats[statHash];
   }
 
+  const generatedLoadout = createLoadoutUsingLOItems(
+    setItems,
+    subclass,
+    selectedLoadout,
+    loadoutItems,
+    loadoutSubclass,
+    params,
+    notes
+  );
+
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -193,42 +203,18 @@ export default function CompareDrawer({
       return;
     }
 
-    const loadoutToSave = produce(selectedLoadout, (draftLoadout) => {
-      if (draftLoadout) {
-        const newItems: LoadoutItem[] = setItems.map((item) => convertToLoadoutItem(item, true));
-
-        if (subclass) {
-          newItems.push(convertToLoadoutItem(subclass, true));
-        }
-
-        for (const item of draftLoadout.items) {
-          const dimItem = loadoutItems.find((i) => i.id === item.id);
-          const hasBeenReplaced =
-            (dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash)) ||
-            (subclass && item.id === loadoutSubclass?.id);
-          if (!hasBeenReplaced) {
-            newItems.push(item);
-          }
-        }
-
-        draftLoadout.items = newItems;
-        draftLoadout.parameters = params;
-        draftLoadout.notes = notes || draftLoadout.notes;
-      }
-    });
-
-    if (!loadoutToSave) {
+    if (!generatedLoadout) {
       return;
     }
 
-    dispatch(updateLoadout(loadoutToSave));
+    dispatch(updateLoadout(generatedLoadout));
     onClose();
   };
 
   const header = <div className={styles.header}>{t('LoadoutBuilder.CompareLoadout')}</div>;
 
   // This is likely never to happen but since it is disconnected to the button its here for safety.
-  if (!selectedLoadout) {
+  if (!selectedLoadout || !generatedLoadout) {
     return (
       <Sheet onClose={onClose} header={header}>
         <div className={styles.noLoadouts}>{t('LoadoutBuilder.NoLoadoutsToCompare')}</div>
@@ -242,81 +228,44 @@ export default function CompareDrawer({
         <div>
           <div className={clsx(styles.fillRow, styles.setHeader)}>
             <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
-            <button className="dim-button" type="button" onClick={onSaveLoadout}>
-              {t('LoadoutBuilder.SaveAs')}{' '}
-              <span className={styles.loadoutName}>{selectedLoadout.name}</span>
-            </button>
           </div>
-          <SetStats
-            stats={set.stats}
-            maxPower={getPower(setItems)}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
-            className={styles.fillRow}
-            characterClass={classType}
+          <LoadoutView
+            loadout={generatedLoadout}
+            store={selectedStore}
+            hideOptimizeArmor={true}
+            actionButtons={[
+              <button key="save" className="dim-button" type="button" onClick={onSaveLoadout}>
+                {t('LoadoutBuilder.SaveAs')}{' '}
+                <span className={styles.loadoutName}>{selectedLoadout.name}</span>
+              </button>,
+            ]}
           />
-          <div className={clsx(styles.fillRow, styles.set)}>
-            {setItems.map((item) => (
-              <div key={item.bucket.hash} className={styles.item}>
-                <ConnectedInventoryItem item={item} />
-                <Sockets item={item} lockedMods={loSetAssignedMods[item.id]} size="small" />
-              </div>
-            ))}
-          </div>
         </div>
         <div>
           <div className={clsx(styles.fillRow, styles.setHeader)}>
             <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
-            <select
-              value={selectedLoadout.id}
-              onChange={(event) => {
-                const selected = useableLoadouts.find((l) => l.id === event.target.value);
-                setSelectedLoadout(selected);
-              }}
-            >
-              {useableLoadouts.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.name}
-                </option>
-              ))}
-            </select>
           </div>
-          {loadoutItems.length ? (
-            <>
-              <SetStats
-                stats={loadoutStats}
-                maxPower={loadoutMaxPower}
-                statOrder={statOrder}
-                enabledStats={enabledStats}
-                className={styles.fillRow}
-                characterClass={classType}
-              />
-              <div className={clsx(styles.fillRow, styles.set)}>
-                {loadoutItems.map((item) => (
-                  <div
-                    key={item.bucket.hash}
-                    className={styles.item}
-                    style={{ gridColumn: LockableBucketHashes.indexOf(item.bucket.hash) + 1 }}
-                  >
-                    <ConnectedInventoryItem item={item} />
-                    <Sockets item={item} lockedMods={itemModAssignments[item.id]} size="small" />
-                  </div>
+          <LoadoutView
+            loadout={selectedLoadout}
+            store={selectedStore}
+            hideOptimizeArmor={true}
+            actionButtons={[
+              <select
+                key="select-loadout"
+                value={selectedLoadout.id}
+                onChange={(event) => {
+                  const selected = useableLoadouts.find((l) => l.id === event.target.value);
+                  setSelectedLoadout(selected);
+                }}
+              >
+                {useableLoadouts.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                  </option>
                 ))}
-              </div>
-              {Boolean(unassignedMods.length) && (
-                <div className={styles.unassigned}>
-                  {t('LoadoutBuilder.TheseModsCouldNotBeAssigned')}
-                </div>
-              )}
-              <div className={styles.unassignedMods}>
-                {unassignedMods.map((unassigned) => (
-                  <Mod key={getModRenderKey(unassigned)} plugDef={unassigned} large={true} />
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className={styles.noLoadouts}>{t('LoadoutBuilder.NoComparableItems')}</div>
-          )}
+              </select>,
+            ]}
+          />
         </div>
       </div>
     </Sheet>

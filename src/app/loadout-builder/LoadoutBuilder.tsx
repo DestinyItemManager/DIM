@@ -499,15 +499,13 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <CompareDrawer
               set={compareSet}
+              selectedStore={selectedStore}
               loadouts={loadouts}
               initialLoadoutId={preloadedLoadout?.id}
               lockedMods={lockedMods}
               subclass={subclass}
               classType={classType}
-              statOrder={statOrder}
-              enabledStats={enabledStats}
               upgradeSpendTier={upgradeSpendTier}
-              lockItemEnergyType={lockItemEnergyType}
               params={params}
               notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
