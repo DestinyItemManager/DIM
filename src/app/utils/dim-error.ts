@@ -29,7 +29,11 @@ export class DimError extends Error {
    * If this error is a Bungie API error, return its platform code.
    */
   public bungieErrorCode(): PlatformErrorCodes | undefined {
-    return this.cause instanceof BungieError ? this.cause.code : undefined;
+    return this.cause instanceof BungieError
+      ? this.cause.code
+      : this.cause instanceof DimError
+      ? this.cause.bungieErrorCode()
+      : undefined;
   }
 
   // TODO: handle specially in exceptions.ts

@@ -17,6 +17,7 @@
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
+* The progress notification for applying a loadout now shows each item and mod as it's being applied.
 * If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
 * On the Loadouts page, missing items show up dimmed-out instead of not at all.
 * The Loadouts page can be filtered from the search bar in the header.

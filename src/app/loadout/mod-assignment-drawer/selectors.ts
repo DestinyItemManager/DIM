@@ -1,21 +1,13 @@
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-
-const bucketOrder = [
-  armorBuckets.helmet,
-  armorBuckets.gauntlets,
-  armorBuckets.chest,
-  armorBuckets.leg,
-  armorBuckets.classitem,
-];
 
 export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
   const stores = useSelector(sortedStoresSelector);
@@ -49,7 +41,7 @@ export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
       }
 
       const armor = _.compact(
-        bucketOrder.map(
+        LockableBucketHashes.map(
           (bucketHash) =>
             loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
             currentItems?.find((item) => item.bucket.hash === bucketHash)
