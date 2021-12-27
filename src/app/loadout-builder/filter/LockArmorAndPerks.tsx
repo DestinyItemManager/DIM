@@ -143,6 +143,8 @@ export default memo(function LockArmorAndPerks({
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
 
+  // This creates a list of socket override plugs for the subclass.
+  // We need to track whether it is a default ability as those cannot be deleted.
   const socketOverridePlugs: {
     plug: PluggableInventoryItemDefinition;
     isDefaultAbility: boolean;

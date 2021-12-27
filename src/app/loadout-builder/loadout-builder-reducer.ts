@@ -7,13 +7,15 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
@@ -117,6 +119,19 @@ const lbStateInit = ({
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
           } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
+            const abilitySockets = getSocketsByCategoryHash(
+              item.sockets,
+              SocketCategoryHashes.Abilities
+            );
+            const socketOverridesForLO = { ...loadoutItem.socketOverrides };
+
+            // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
+            for (const socket of abilitySockets) {
+              if (!socketOverridesForLO[socket.socketIndex]) {
+                socketOverridesForLO[socket.socketIndex] =
+                  socket.socketDefinition.singleInitialItemHash;
+              }
+            }
             subclass = { ...item, socketOverrides: loadoutItem.socketOverrides };
           }
         }
@@ -348,7 +363,15 @@ function lbStateReducer(
     }
     case 'updateSubclass': {
       const { item } = action;
-      return { ...state, subclass: { ...item, socketOverrides: undefined } };
+      const abilitySockets = getSocketsByCategoryHash(
+        item.sockets!,
+        SocketCategoryHashes.Abilities
+      );
+      const defaultAbilityOverrides: SocketOverrides = {};
+      for (const socket of abilitySockets) {
+        defaultAbilityOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
+      }
+      return { ...state, subclass: { ...item, socketOverrides: defaultAbilityOverrides } };
     }
     case 'removeSubclass': {
       return { ...state, subclass: undefined };
@@ -367,9 +390,14 @@ function lbStateReducer(
       }
 
       const { plug } = action;
+      const abilitySockets = getSocketsByCategoryHash(
+        state.subclass.sockets!,
+        SocketCategoryHashes.Abilities
+      );
       const newSocketOverrides = { ...state.subclass?.socketOverrides };
       let socketIndexToRemove: number | undefined;
 
+      // Find the socket index to remove the plug from.
       for (const socketIndexString of Object.keys(newSocketOverrides)) {
         const socketIndex = parseInt(socketIndexString, 10);
         const overridePlugHash = newSocketOverrides[socketIndex];
@@ -379,7 +407,18 @@ function lbStateReducer(
         }
       }
 
-      if (socketIndexToRemove !== undefined) {
+      // If we are removing from an ability socket, find the socket so we can
+      // show the default plug instead
+      const abilitySocketRemovingFrom = abilitySockets.find(
+        (socket) => socket.socketIndex === socketIndexToRemove
+      );
+
+      if (socketIndexToRemove !== undefined && abilitySocketRemovingFrom) {
+        // If this is an ability socket, replace with the default plug hash
+        newSocketOverrides[socketIndexToRemove] =
+          abilitySocketRemovingFrom.socketDefinition.singleInitialItemHash;
+      } else if (socketIndexToRemove) {
+        // If its not an ability we just remove it from the overrides
         delete newSocketOverrides[socketIndexToRemove];
       }
       return {
