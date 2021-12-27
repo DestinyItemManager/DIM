@@ -1,21 +1,16 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
-import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -23,42 +18,16 @@ import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getTotalModStatChanges } from '../process/mappers';
-import { ArmorSet, ArmorStats, LockableBucketHashes } from '../types';
+import { ArmorSet, LockableBucketHashes } from '../types';
 import styles from './CompareDrawer.m.scss';
-
-function getItemStats(
-  defs: D2ManifestDefinitions,
-  item: DimItem,
-  upgradeSpendTier: UpgradeSpendTier
-): ArmorStats {
-  const baseStats = armorStats.reduce((memo, statHash) => {
-    memo[statHash] = item.stats?.find((s) => s.statHash === statHash)?.base || 0;
-    return memo;
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
-  }, {} as ArmorStats);
-
-  if (
-    upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10 ||
-    item.energy?.energyCapacity === 10
-  ) {
-    for (const statHash of armorStats) {
-      baseStats[statHash] += 2;
-    }
-  }
-
-  return baseStats;
-}
 
 interface Props {
   set: ArmorSet;
   selectedStore: DimStore;
   loadouts: Loadout[];
   initialLoadoutId?: string;
-  lockedMods: PluggableInventoryItemDefinition[];
   subclass: DimLoadoutItem | undefined;
   classType: DestinyClass;
-  upgradeSpendTier: UpgradeSpendTier;
   params: LoadoutParameters;
   notes?: string;
   onClose(): void;
@@ -119,10 +88,8 @@ export default function CompareDrawer({
   selectedStore,
   initialLoadoutId,
   set,
-  lockedMods,
   subclass,
   classType,
-  upgradeSpendTier,
   params,
   notes,
   onClose,
@@ -156,31 +123,6 @@ export default function CompareDrawer({
 
   if (!set) {
     return null;
-  }
-
-  const loadoutStats = armorStats.reduce((memo, statHash) => {
-    memo[statHash] = 0;
-    return memo;
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
-  }, {} as ArmorStats);
-
-  for (const item of loadoutItems) {
-    const itemStats = getItemStats(defs, item, upgradeSpendTier);
-    for (const statHash of armorStats) {
-      loadoutStats[statHash] += itemStats[statHash];
-    }
-  }
-
-  const subclassPlugs = subclass?.socketOverrides
-    ? Object.values(subclass.socketOverrides)
-        .map((hash) => defs.InventoryItem.get(hash))
-        .filter(isPluggableItem)
-    : emptyArray<PluggableInventoryItemDefinition>();
-
-  const lockedModStats = getTotalModStatChanges(lockedMods, subclassPlugs, classType);
-
-  for (const statHash of armorStats) {
-    loadoutStats[statHash] += lockedModStats[statHash];
   }
 
   const generatedLoadout = createLoadoutUsingLOItems(

@@ -502,10 +502,8 @@ function LoadoutBuilder({
               selectedStore={selectedStore}
               loadouts={loadouts}
               initialLoadoutId={preloadedLoadout?.id}
-              lockedMods={lockedMods}
               subclass={subclass}
               classType={classType}
-              upgradeSpendTier={upgradeSpendTier}
               params={params}
               notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
