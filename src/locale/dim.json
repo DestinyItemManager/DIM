@@ -1014,8 +1014,6 @@
     "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
-    "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",
-    "ImportSuccess_plural": "Wish list loaded with information about {{count, number}} rolls.{{titleAndDescription}}",
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
