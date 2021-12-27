@@ -17,7 +17,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import styles from './ItemCategorySection.m.scss';
+import styles from './LoadoutItemCategorySection.m.scss';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -25,7 +25,7 @@ const categoryStyles = {
   General: styles.categoryGeneral,
 };
 
-export default function ItemCategorySection({
+export default function LoadoutItemCategorySection({
   category,
   subclass,
   items,

@@ -10,11 +10,11 @@ import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
+import styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
-import styles from './Subclass.m.scss';
 
 /** The subclass section used in the loadouts page and drawer */
-export default function Subclass({
+export default function LoadoutSubclassSection({
   defs,
   subclass,
   power,
