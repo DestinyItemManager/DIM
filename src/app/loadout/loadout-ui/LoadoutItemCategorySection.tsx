@@ -65,7 +65,7 @@ export default function LoadoutItemCategorySection({
       ) : (
         <>
           <div className={clsx(styles.placeholder, `category-${category}`)}>
-            {t(`Bucket.${category}`)}
+            {t(`Bucket.${category}`, { contextList: 'buckets' })}
           </div>
           {category === 'Armor' && loadout.parameters && <OptimizerButton loadout={loadout} />}
         </>

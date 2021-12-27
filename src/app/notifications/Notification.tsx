@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { CanceledError } from 'app/utils/cancel';
 import clsx from 'clsx';
 import { motion, MotionProps, Transition } from 'framer-motion';
@@ -44,7 +45,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
             onClose(notification);
           }
         },
-        error ? showErrorDuration : notification.duration
+        error ? Math.max(notification.duration, showErrorDuration) : notification.duration
       );
     } else {
       window.setTimeout(() => onClose(notification), 0);
@@ -122,7 +123,9 @@ export default function Notification({ notification, onClose, ...animation }: Pr
             <div className={styles.title}>{title}</div>
             {body && <div>{body}</div>}
             {!error && notification.onCancel && (
-              <NotificationButton onClick={notification.onCancel}>Cancel</NotificationButton>
+              <NotificationButton onClick={notification.onCancel}>
+                {success || error ? t('Notification.OK') : t('Notification.Cancel')}
+              </NotificationButton>
             )}
           </div>
           {trailer && <div className={styles.trailer}>{trailer}</div>}

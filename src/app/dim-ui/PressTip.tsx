@@ -1,10 +1,27 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  default as React,
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import ReactDOM from 'react-dom';
 import styles from './PressTip.m.scss';
-import { SheetContext } from './Sheet';
 import { usePopper } from './usePopper';
+
+/**
+ * The element where the PressTip should be added to. By default it's the body,
+ * but other elements (like Sheet) can use this to override the attachment point
+ * for PressTips below them in the tree.
+ */
+export const PressTipRoot = createContext<MutableRefObject<HTMLElement | null>>({
+  current: null,
+});
 
 interface Props {
   /**
@@ -55,7 +72,7 @@ function Control({
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
-  const sheetContext = useContext(SheetContext);
+  const pressTipRoot = useContext(PressTipRoot);
 
   usePopper({
     contents: tooltipContents,
@@ -84,7 +101,7 @@ function Control({
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
             <div className={styles.arrow} />
           </div>,
-          sheetContext?.current || document.body
+          pressTipRoot.current || document.body
         )}
     </Component>
   );

@@ -60,6 +60,7 @@ export default function LoadoutDrawerContents({
   add,
   onUpdateMods,
   onOpenModPicker,
+  onShowItemPicker,
   removeModByHash,
   onApplySocketOverrides,
 }: {
@@ -73,6 +74,7 @@ export default function LoadoutDrawerContents({
   add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
   onUpdateMods(mods: number[]): void;
   onOpenModPicker(): void;
+  onShowItemPicker(shown: boolean): void;
   removeModByHash(itemHash: number): void;
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
@@ -138,7 +140,9 @@ export default function LoadoutDrawerContents({
         {showSubclassButton && (
           <a
             key={subclassBucket.type}
-            onClick={() => pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add)}
+            onClick={() =>
+              pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add, onShowItemPicker)
+            }
             className="dim-button loadout-add"
           >
             <AppIcon icon={addIcon} /> {subclassBucket.name}
@@ -148,7 +152,7 @@ export default function LoadoutDrawerContents({
           typesWithoutItems.map((bucket) => (
             <a
               key={bucket.type}
-              onClick={() => pickLoadoutItem(loadout, bucket, add)}
+              onClick={() => pickLoadoutItem(loadout, bucket, add, onShowItemPicker)}
               className="dim-button loadout-add"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
@@ -166,7 +170,7 @@ export default function LoadoutDrawerContents({
               bucket={bucket}
               loadoutItems={loadout.items}
               items={itemsByBucket[bucket.hash] || []}
-              pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add)}
+              pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add, onShowItemPicker)}
               equip={equip}
               remove={remove}
             />
@@ -196,13 +200,15 @@ export default function LoadoutDrawerContents({
 async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
-  add: (item: DimItem, e?: MouseEvent) => void
+  add: (item: DimItem, e?: MouseEvent) => void,
+  onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
   function loadoutHasItem(item: DimItem) {
     return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
 
+  onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
@@ -221,14 +227,18 @@ async function pickLoadoutItem(
     });
 
     add(item);
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    onShowItemPicker(false);
+  }
 }
 
 async function pickLoadoutSubclass(
   loadout: Loadout,
   subclassBucket: InventoryBucket,
   savedSubclasses: DimItem[],
-  add: (item: DimItem, e?: MouseEvent) => void
+  add: (item: DimItem, e?: MouseEvent) => void,
+  onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
   function loadoutHasItem(item: DimItem) {
@@ -240,6 +250,7 @@ async function pickLoadoutSubclass(
     );
   }
 
+  onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
@@ -260,7 +271,10 @@ async function pickLoadoutSubclass(
     });
 
     add(item);
-  } catch (e) {}
+  } catch (e) {
+  } finally {
+    onShowItemPicker(false);
+  }
 }
 
 function createSocketOverridesFromEquipped(

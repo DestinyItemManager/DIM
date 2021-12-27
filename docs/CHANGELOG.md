@@ -1,6 +1,7 @@
 ## Next
 
 * Improved the press-to-view tooltips on mobile. It should now be much easier to select perks on mobile.
+* Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 
@@ -17,6 +18,7 @@
 * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
 * Loadout notes now retain whitespace formatting.
 * Added new filter "is:stackfull" to show items that are at max stack size.
+* The progress notification for applying a loadout now shows each item and mod as it's being applied.
 * If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
 * On the Loadouts page, missing items show up dimmed-out instead of not at all.
 * The Loadouts page can be filtered from the search bar in the header.
