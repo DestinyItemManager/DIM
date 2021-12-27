@@ -1,6 +1,5 @@
 ## Next
 
-* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 * The option to view Mod Assignments for a loadout is now available outside of Beta.
 * The stat bars shown in Compare are more accurately sized, relative to each other.
 * Fix an issue where mods might get plugged in too fast and bump into the armor's max Energy.
