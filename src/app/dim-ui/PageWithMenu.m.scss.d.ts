@@ -5,6 +5,7 @@ interface CssExports {
   'menu': string;
   'menuButton': string;
   'menuHeader': string;
+  'menuScrollbars': string;
   'page': string;
 }
 export const cssExports: CssExports;
