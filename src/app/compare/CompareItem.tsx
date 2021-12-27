@@ -20,6 +20,8 @@ import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
 
+const isTouch = 'ontouchstart' in window;
+
 export default function CompareItem({
   item,
   stats,
@@ -88,7 +90,7 @@ export default function CompareItem({
           key={stat.id}
           item={item}
           stat={stat}
-          setHighlight={setHighlight}
+          setHighlight={isTouch ? undefined : setHighlight}
           compareBaseStats={compareBaseStats}
         />
       ))}
