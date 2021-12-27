@@ -17,11 +17,18 @@ import { useSelector } from 'react-redux';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import PlugDef from './loadout-ui/PlugDef';
-import styles from './Loadout.m.scss';
+import styles from './LoadoutView.m.scss';
 import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
 
-export default function Loadout({
+/**
+ * A presentational component for a single loadout.
+ *
+ * The only functionality this provides outside of
+ * rendering is the ability to show the mod assignment drawer. If mods are present on the loadout a
+ * button will by present under the mods section to activate the drawer.
+ */
+export default function LoadoutView({
   loadout,
   store,
   actionButtons,

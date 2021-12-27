@@ -27,8 +27,8 @@ import _ from 'lodash';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import LoadoutView from './Loadout';
 import styles from './Loadouts.m.scss';
+import LoadoutView from './LoadoutView';
 
 /**
  * The Loadouts page is a toplevel page for loadout management. It also provides access to the Loadout Optimizer.
