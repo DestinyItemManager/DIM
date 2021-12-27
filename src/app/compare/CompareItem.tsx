@@ -20,8 +20,6 @@ import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
 
-const isTouch = 'ontouchstart' in window;
-
 export default function CompareItem({
   item,
   stats,
@@ -37,7 +35,7 @@ export default function CompareItem({
   compareBaseStats?: boolean;
   itemClick(item: DimItem): void;
   remove(item: DimItem): void;
-  setHighlight(value?: string | number): void;
+  setHighlight?(value?: string | number): void;
   onPlugClicked(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
   isInitialItem: boolean;
 }) {
@@ -90,7 +88,7 @@ export default function CompareItem({
           key={stat.id}
           item={item}
           stat={stat}
-          setHighlight={isTouch ? undefined : setHighlight}
+          setHighlight={setHighlight}
           compareBaseStats={compareBaseStats}
         />
       ))}
