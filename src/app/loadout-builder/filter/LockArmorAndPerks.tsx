@@ -9,7 +9,7 @@ import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
-import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
+import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -219,7 +219,7 @@ export default memo(function LockArmorAndPerks({
             className="dim-button"
             onClick={() => lbDispatch({ type: 'openModPicker' })}
           >
-            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
+            {t('LB.ModLockButton')}
           </button>
         </div>
       </div>
@@ -246,7 +246,7 @@ export default memo(function LockArmorAndPerks({
         )}
         <div className={styles.buttons}>
           <button type="button" className="dim-button" onClick={chooseSubclass}>
-            <AppIcon icon={addIcon} /> {t('LB.SelectSubclass')}
+            {t('LB.SelectSubclass')}
           </button>
           <button
             type="button"
@@ -254,7 +254,7 @@ export default memo(function LockArmorAndPerks({
             disabled={!subclass}
             onClick={() => setShowSubclassOptionsPicker(true)}
           >
-            <AppIcon icon={addIcon} /> {t('LB.SelectSubclassOptions')}
+            {t('LB.SelectSubclassOptions')}
           </button>
         </div>
       </div>

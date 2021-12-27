@@ -425,6 +425,8 @@
     "SearchAnExotic": "Search an exotic or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "SelectSubclass": "Select subclass",
+    "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
     "ShowGear": "{{class}} Armor",
