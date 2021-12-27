@@ -1,5 +1,7 @@
 ## Next
 
+* Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
+
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 
 * Transmog Ornaments menu once again *incorrectly* shows whether an ornament has been unlocked or not, but fixed a bug where an artifact mod, once slotted on your active gear, would show up as not unlocked.
