@@ -27,8 +27,8 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
   const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, characterId);
   // TODO: would be great to precalculate/memoize this by character ID and profileResponse
   for (const plugSetItem of plugSetItems) {
-    // Only items that can be inserted are unlocked
-    if (plugSetItem.canInsert) {
+    // TODO: https://github.com/DestinyItemManager/DIM/issues/7561
+    if (plugSetItem.enabled) {
       unlockedPlugs.add(plugSetItem.plugItemHash);
     }
   }
