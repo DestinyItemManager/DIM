@@ -1,5 +1,7 @@
 ## Next
 
+## 6.97.0 <span class="changelog-date">(2021-12-26)</span>
+
 * Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 * The option to view Mod Assignments for a loadout is now available outside of Beta.
 * The stat bars shown in Compare are more accurately sized, relative to each other.
