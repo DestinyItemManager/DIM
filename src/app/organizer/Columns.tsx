@@ -398,7 +398,7 @@ export function getColumns(
             plugged && (
               <PressTip
                 key={plugged.plugDef.hash}
-                tooltip={<DimPlugTooltip item={item} plug={plugged} />}
+                tooltip={() => <DimPlugTooltip item={item} plug={plugged} />}
               >
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
@@ -602,7 +602,7 @@ function PerksCell({
           })}
         >
           {socket.plugOptions.map((p) => (
-            <PressTip key={p.plugDef.hash} tooltip={<DimPlugTooltip item={item} plug={p} />}>
+            <PressTip key={p.plugDef.hash} tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
               <div
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:

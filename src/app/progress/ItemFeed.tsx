@@ -131,7 +131,7 @@ function Highlights({ item }: { item: DimItem }) {
             .flatMap((s) => s.plugOptions)
             .map((p) => (
               <div key={p.plugDef.hash}>
-                <PressTip tooltip={<DimPlugTooltip item={item} plug={p} />}>
+                <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
                   {p.plugDef.displayProperties.name}
                 </PressTip>

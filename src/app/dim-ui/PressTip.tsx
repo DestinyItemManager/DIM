@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -6,9 +7,15 @@ import { SheetContext } from './Sheet';
 import { usePopper } from './usePopper';
 
 interface Props {
-  tooltip: React.ReactNode;
+  /**
+   * The tooltip may be provided directly, or as a function which will defer
+   * constructing the tree until the tooltip is shown.
+   */
+  tooltip: React.ReactNode | (() => React.ReactNode);
+  /**
+   * The children of this component define the content that will trigger the tooltip.
+   */
   children?: React.ReactNode;
-  allowClickThrough?: boolean;
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ElementType;
   className?: string;
@@ -44,6 +51,7 @@ function Control({
   triggerRef,
   children,
   elementType: Component = 'div',
+  className,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
@@ -57,7 +65,7 @@ function Control({
   });
 
   if (!tooltip) {
-    const { className, style } = rest;
+    const { style } = rest;
     return (
       <Component className={className} style={style}>
         {children}
@@ -66,8 +74,9 @@ function Control({
   }
 
   // TODO: if we reuse a stable tooltip container instance we could animate between them
+  // TODO: or use framer motion layout animations?
   return (
-    <Component ref={triggerRef} {...rest}>
+    <Component ref={triggerRef} className={clsx(styles.control, className)} {...rest}>
       {children}
       {open &&
         ReactDOM.createPortal(
@@ -81,13 +90,15 @@ function Control({
   );
 }
 
+const isTouch = 'ontouchstart' in window;
+const hoverDelay = isTouch ? 300 : 100;
+
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
  *
  * Tooltop content can be any React element, and can be updated through React.
  *
- * PressTip stops event propagation, so mobile can hold down on an element in lieu of hovering.
- * `allowClickThrough` property suppresses this and lets click events propagate.
+ * Short taps on the element will fire a click event rather than showing the element.
  *
  * <PressTip /> wraps <PressTip.Control /> to give you a simpler API for rendering a basic tooltip.
  *
@@ -102,45 +113,49 @@ function Control({
  *   PressTip context element
  * </PressTip>
  */
-function PressTip({ allowClickThrough, ...rest }: Props) {
+function PressTip(props: Props) {
   const timer = useRef<number>(0);
+  const touchStartTime = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  const closeToolTip = (e: React.MouseEvent | React.TouchEvent) => {
-    allowClickThrough || e.preventDefault();
-    allowClickThrough || e.stopPropagation();
+  const closeToolTip = () => {
     setOpen(false);
     clearTimeout(timer.current);
+    timer.current = 0;
   };
 
-  const hover = () => {
+  const hover = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    clearTimeout(timer.current);
     timer.current = window.setTimeout(() => {
       setOpen(true);
-    }, 100);
-  };
-
-  const press = (e: React.MouseEvent | React.TouchEvent) => {
-    allowClickThrough || e.preventDefault();
-    allowClickThrough || e.stopPropagation();
-    setOpen(true);
+    }, hoverDelay);
+    touchStartTime.current = performance.now();
   };
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  return (
-    <Control
-      open={open}
-      triggerRef={ref}
-      onMouseEnter={hover}
-      onMouseDown={press}
-      onTouchStart={press}
-      onMouseUp={closeToolTip}
-      onMouseLeave={closeToolTip}
-      onTouchEnd={closeToolTip}
-      {...rest}
-    />
-  );
+  const absorbClick = (e: React.MouseEvent | React.TouchEvent) => {
+    if (timer.current && performance.now() - touchStartTime.current > hoverDelay) {
+      e.stopPropagation();
+    }
+  };
+
+  const events = isTouch
+    ? {
+        onTouchStart: hover,
+        onTouchEnd: closeToolTip,
+        onTouchCancel: closeToolTip,
+        onClick: absorbClick,
+      }
+    : {
+        onMouseEnter: hover,
+        onMouseUp: closeToolTip,
+        onMouseLeave: closeToolTip,
+      };
+
+  return <Control open={open} triggerRef={ref} {...events} {...props} />;
 }
 
 PressTip.Control = Control;

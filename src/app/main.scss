@@ -167,6 +167,7 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
+  user-select: none;
 }
 
 body {

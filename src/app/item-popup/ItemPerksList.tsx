@@ -139,7 +139,7 @@ function PerkPlug({
           <DefItemIcon itemDef={plug.plugDef} borderless={true} />
         ) : (
           <PressTip
-            tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}
+            tooltip={() => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}
           >
             <DefItemIcon itemDef={plug.plugDef} borderless={true} />
           </PressTip>

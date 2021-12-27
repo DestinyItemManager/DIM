@@ -69,7 +69,7 @@ export default function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip className={styles.itemAside} tooltip={itemNotes} allowClickThrough={true}>
+              <PressTip className={styles.itemAside} tooltip={itemNotes}>
                 <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>
