@@ -731,8 +731,8 @@ function applyLoadoutMods(
     const store = getStore(stores, storeId)!;
 
     // TODO: find cases where the loadout specified armor for a slot to be equipped and it's not equipped, bail if so
+    // Don't filter out items without energy here, the mod assignment algorithm expects 5 items.
     const armor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
-    //const loadoutArmor = loadout.items.filter((i) => i.equipped)
 
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 

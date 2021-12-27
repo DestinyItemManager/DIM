@@ -2,7 +2,6 @@ import { languageSelector } from 'app/dim-api/selectors';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
-import { SearchFilterRef } from 'app/search/SearchBar';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
@@ -19,28 +18,29 @@ import PlugSection, { PlugSet } from './PlugSection';
 
 interface Props {
   /**
-   * A list of plug items that come from a PlugSet, along with the maximum number of these plugs
-   * that can be chosen.
+   * A list of plug items that come from a PlugSet, along with the maximum
+   * number of plugs that can be chosen from each set. The plugs shown in this
+   * drawer are the union of plugs from these plug sets.
    */
   plugSets: PlugSet[];
   /**
-   * An array of plugs that are pre selected.
-   *
-   * These must be a subset of the plugs in plugSets otherwise unknown plugs
-   * will be discarded on accept.
+   * Plugs that have been selected or "locked" by the user already. These must
+   * be a subset of the plugs in plugSets otherwise unknown plugs will be
+   * discarded on accept.
    */
   initiallySelected: PluggableInventoryItemDefinition[];
-  /** A list of stat hashes that if present will be displayed for each plug. */
+  /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
   displayedStatHashes?: number[];
   /** Title of the sheet, displayed in the header. */
   title: string;
-  /** The input placeholder for the search bar. */
+  /** The placeholder text for the search bar. */
   searchPlaceholder: string;
-  /** A query string that is passed to the filtering logic to prefilter the available plugs. */
+  /** A query that will be prepopulated in the search bar. */
   initialQuery?: string;
-  /** Displayed on the accept button in the footer. */
+  /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
   /** A ref passed down to the sheets container. */
+  // TODO: Why?
   sheetRef?: RefObject<HTMLDivElement>;
   /** The min height for the sheet. */
   minHeight?: number;
@@ -49,16 +49,21 @@ interface Props {
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ): boolean;
+  /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
+  /** How to sort plugs within a group (PlugSet) */
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
-  /** Called with the new selected plugs when the user clicks the accept button. */
+  /** Called with the full list of selected plugs when the user clicks the accept button. */
   onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
   /** Called when the user accepts the new plugset or closes the sheet. */
   onClose(): void;
 }
 
 /**
- * A sheet to pick plugs.
+ * A sheet that allows picking some number of plugs (mods) from the union of
+ * several set of plugs. You can choose more than one plug before accepting the
+ * selection. This powers the mod selection in LO and the loadout drawer, and
+ * subclass configuration.
  */
 export default function PlugDrawer({
   plugSets,
@@ -80,14 +85,14 @@ export default function PlugDrawer({
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState(initialQuery || '');
   const [selected, setSelected] = useState(() =>
-    createInternalSelectedState(plugSets, initiallySelected)
+    assignPlugsToPlugSets(plugSets, initiallySelected)
   );
-  const filterInput = useRef<SearchFilterRef | null>(null);
+  const filterInput = useRef<HTMLInputElement>(null);
   const isPhonePortrait = useIsPhonePortrait();
 
   useEffect(() => {
     if (!isPhonePortrait && filterInput.current) {
-      filterInput.current.focusFilterInput();
+      filterInput.current.focus();
     }
   }, [isPhonePortrait, filterInput]);
 
@@ -115,8 +120,9 @@ export default function PlugDrawer({
   const handlePlugRemoved = useCallback(
     (plugSetHash: number, plug: PluggableInventoryItemDefinition) => {
       setSelected(
-        produce((draft) => {
-          const selectedPlugs = draft[plugSetHash];
+        produce((plugsByPlugSetHash) => {
+          // Since we know which plugset this plug was in, remove it from that set
+          const selectedPlugs = plugsByPlugSetHash[plugSetHash];
           if (selectedPlugs) {
             const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
             if (firstIndex >= 0) {
@@ -126,25 +132,23 @@ export default function PlugDrawer({
         })
       );
     },
-    [setSelected]
+    []
   );
 
-  const handlePlugRemovedFromFooter = useCallback(
-    (plug: PluggableInventoryItemDefinition) => {
-      setSelected(
-        produce((draft) => {
-          for (const selectedPlugs of _.compact(Object.values(draft))) {
-            const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
-            if (firstIndex >= 0) {
-              selectedPlugs?.splice(firstIndex, 1);
-              return;
-            }
+  const handlePlugRemovedFromFooter = useCallback((plug: PluggableInventoryItemDefinition) => {
+    setSelected(
+      produce((plugsByPlugSetHash) => {
+        // Remove the first plug matching this hash that we find in any plug set
+        for (const selectedPlugs of _.compact(Object.values(plugsByPlugSetHash))) {
+          const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
+          if (firstIndex >= 0) {
+            selectedPlugs?.splice(firstIndex, 1);
+            return;
           }
-        })
-      );
-    },
-    [setSelected]
-  );
+        }
+      })
+    );
+  }, []);
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
@@ -152,10 +156,13 @@ export default function PlugDrawer({
     onClose();
   };
 
+  /** Filter the plugs from each plugSet based on the query. This can leave plugSets with zero plugs */
   const queryFilteredPlugSets = useMemo(() => {
-    const regexp = startWordRegexp(query, language);
-    const rtn: PlugSet[] = [];
+    if (!query.length) {
+      return plugSets;
+    }
 
+    const regexp = startWordRegexp(query, language);
     const searchFilter = (plug: PluggableInventoryItemDefinition) =>
       regexp.test(plug.displayProperties.name) ||
       regexp.test(plug.displayProperties.description) ||
@@ -170,14 +177,10 @@ export default function PlugDrawer({
         );
       });
 
-    for (const plugSet of plugSets) {
-      rtn.push({
-        ...plugSet,
-        plugs: query.length ? plugSet.plugs.filter(searchFilter) : plugSet.plugs,
-      });
-    }
-
-    return rtn;
+    return plugSets.map((plugSet) => ({
+      ...plugSet,
+      plugs: plugSet.plugs.filter(searchFilter),
+    }));
   }, [query, plugSets, defs.SandboxPerk, language]);
 
   if (sortPlugGroups) {
@@ -186,25 +189,24 @@ export default function PlugDrawer({
 
   const autoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  // Flatten our the plugs and sort so the footer has a predictable order
+  // Flatten out the plugs and sort so the footer has a predictable order
   const flatSelectedPlugs = _.compact(Object.values(selected).flat());
   if (sortPlugs) {
     flatSelectedPlugs.sort(sortPlugs);
   }
 
-  const footerPlugs = useMemo(() => {
-    const rtn: { plug: PluggableInventoryItemDefinition; selectionType: 'multi' | 'single' }[] = [];
-    // We decorate each plug with its selection type so we can handle removal appropriately in the footer
-    // This allows us to preserve the sort order
-    for (const plug of flatSelectedPlugs) {
-      const selectionType =
-        plugSets.find((set) => set.plugs.some((p) => p.hash === plug.hash))?.selectionType ||
-        'multi';
-      rtn.push({ plug, selectionType });
-    }
-
-    return rtn;
-  }, [flatSelectedPlugs, plugSets]);
+  const footerPlugs = useMemo(
+    () =>
+      flatSelectedPlugs.map((plug) => ({
+        plug,
+        // We decorate each plug with its selection type so we can handle removal appropriately in the footer
+        // This allows us to preserve the sort order
+        selectionType:
+          plugSets.find((set) => set.plugs.some((p) => p.hash === plug.hash))?.selectionType ||
+          'multi',
+      })),
+    [flatSelectedPlugs, plugSets]
+  );
 
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
@@ -216,33 +218,36 @@ export default function PlugDrawer({
     />
   );
 
+  const header = (
+    <div>
+      <h1>{title}</h1>
+      <div className="item-picker-search">
+        <div className="search-filter" role="search">
+          <AppIcon icon={searchIcon} className="search-bar-icon" />
+          <input
+            ref={filterInput}
+            className="filter-input"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            autoFocus={autoFocus}
+            placeholder={searchPlaceholder}
+            type="text"
+            name="filter"
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <Sheet
       ref={sheetRef}
       minHeight={minHeight}
       onClose={onClose}
-      header={
-        <div>
-          <h1>{title}</h1>
-          <div className="item-picker-search">
-            <div className="search-filter" role="search">
-              <AppIcon icon={searchIcon} className="search-bar-icon" />
-              <input
-                className="filter-input"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                autoFocus={autoFocus}
-                placeholder={searchPlaceholder}
-                type="text"
-                name="filter"
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            </div>
-          </div>
-        </div>
-      }
+      header={header}
       footer={footer}
       sheetClassName="item-picker"
       freezeInitialHeight={true}
@@ -251,11 +256,11 @@ export default function PlugDrawer({
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
-          selected={selected[plugSet.plugSetHash] ?? emptyArray()}
+          selectedPlugs={selected[plugSet.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
           isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedPlugs)}
-          handlePlugSelected={handlePlugSelected}
-          handlePlugRemoved={handlePlugRemoved}
+          onPlugSelected={handlePlugSelected}
+          onPlugRemoved={handlePlugRemoved}
           sortPlugs={sortPlugs}
         />
       ))}
@@ -266,7 +271,7 @@ export default function PlugDrawer({
 /**
  * A map of plugSetHashes to the selected plugs for that plugSetHash.
  */
-type InternalSelectedState = {
+type PlugsByPlugSetHash = {
   [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined;
 };
 
@@ -281,11 +286,11 @@ type InternalSelectedState = {
  * a user selects a plug from the artificer set, it won't appear to the user that a plug was
  * selected from the bucket specific set.
  */
-function createInternalSelectedState(
+function assignPlugsToPlugSets(
   plugSets: PlugSet[],
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
-  const rtn: InternalSelectedState = {};
+  const plugsByPlugSetHash: PlugsByPlugSetHash = {};
 
   for (const plug of initiallySelected) {
     // Find all the possible sets this plug could go in and sort them so the set with the
@@ -297,14 +302,14 @@ function createInternalSelectedState(
       .sort(compareBy((set) => set.plugs.length));
 
     for (const set of possibleSets) {
-      const selectedForPlugSet = rtn[set.plugSetHash] || [];
+      const selectedForPlugSet = plugsByPlugSetHash[set.plugSetHash] || [];
       if (selectedForPlugSet.length < set.maxSelectable) {
         selectedForPlugSet.push(plug);
-        rtn[set.plugSetHash] = selectedForPlugSet;
+        plugsByPlugSetHash[set.plugSetHash] = selectedForPlugSet;
         break;
       }
     }
   }
 
-  return rtn;
+  return plugsByPlugSetHash;
 }

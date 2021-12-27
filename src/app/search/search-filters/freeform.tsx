@@ -119,7 +119,7 @@ const freeformFilters: FilterDefinition[] = [
     description: tl('Filter.Perk'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
-      const startWord = startWordRegexp(filterValue, language);
+      const startWord = startWordRegexp(plainString(filterValue, language), language);
       return (item) => {
         // TODO: this definitely does too many array allocations to be performant
         const strings = [
@@ -151,7 +151,7 @@ const freeformFilters: FilterDefinition[] = [
       }
     },
     filter: ({ filterValue, language }) => {
-      const startWord = startWordRegexp(filterValue, language);
+      const startWord = startWordRegexp(plainString(filterValue, language), language);
       return (item) => {
         // TODO: this may do too many array allocations to be performant.
         const strings = [

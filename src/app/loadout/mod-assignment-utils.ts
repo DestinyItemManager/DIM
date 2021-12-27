@@ -12,6 +12,7 @@ import {
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -439,6 +440,10 @@ export function createPluggingStrategy(
   // stuff we MAY apply, if we need more energy freed up
   const optionalRegains: PluggingAction[] = [];
 
+  if (!item.energy) {
+    return emptyArray();
+  }
+
   for (const assignment of assignments) {
     const destinationSocket = getSocketByIndex(item.sockets!, assignment.socketIndex)!;
     const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
@@ -467,8 +472,8 @@ export function createPluggingStrategy(
 
   const operationSet: PluggingAction[] = [];
 
-  const itemTotalEnergy = item.energy!.energyCapacity;
-  let itemCurrentUsedEnergy = item.energy!.energyUsed;
+  const itemTotalEnergy = item.energy.energyCapacity;
+  let itemCurrentUsedEnergy = item.energy.energyUsed;
 
   // apply all required regains first
   for (const regainOperation of requiredRegains) {
