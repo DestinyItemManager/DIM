@@ -6,6 +6,10 @@ export interface LoadoutItem {
   hash: number;
   amount: number;
   equipped: boolean;
+  /**
+   * A map of socketIndex's to item hashes for plugs that override the current items plugs in
+   * the loadout.
+   */
   socketOverrides?: { [socketIndex: number]: number };
 }
 
@@ -15,7 +19,17 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
   items: LoadoutItem[];
 };
 
-export type DimLoadoutItem = DimItem & LoadoutItem;
+/**
+ * This merges data from DimItem and LoadoutItem so we don't need to pass both objects around as
+ * a pair.
+ */
+export interface DimLoadoutItem extends DimItem {
+  /**
+   * A map of socketIndex's to item hashes for plugs that override the current items plugs in
+   * the loadout.
+   */
+  socketOverrides?: { [socketIndex: number]: number };
+}
 
 /** represents a single mod, and where to place it (on a non-specific item) */
 export type Assignment = {
