@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './PressTip.m.scss';
 import { SheetContext } from './Sheet';
@@ -119,32 +119,46 @@ function PressTip(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  const closeToolTip = () => {
+  const closeToolTip = useCallback(() => {
     setOpen(false);
     clearTimeout(timer.current);
     timer.current = 0;
-  };
+  }, []);
 
-  const hover = (e: React.MouseEvent | React.TouchEvent) => {
+  const hover = useCallback((e: React.MouseEvent | React.TouchEvent | TouchEvent) => {
     e.preventDefault();
     clearTimeout(timer.current);
     timer.current = window.setTimeout(() => {
       setOpen(true);
     }, hoverDelay);
     touchStartTime.current = performance.now();
-  };
+  }, []);
 
+  // Stop the hover timer when the component unmounts
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const absorbClick = (e: React.MouseEvent | React.TouchEvent) => {
+  // Prevent clicks if the tooltip has been pressed long enough to show a tip
+  const absorbClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (timer.current && performance.now() - touchStartTime.current > hoverDelay) {
       e.stopPropagation();
     }
-  };
+  }, []);
+
+  // A combination of React's global event handling strategy and a Safari bug in touch handling
+  // means that relying on binding onTouchStart directly will fail to fire touchstart if this
+  // element has been scrolled within a position: fixed element - like we frequently do in Sheets.
+  useEffect(() => {
+    // It's important that this be a passive event handler
+    if (isTouch && ref.current) {
+      const triggerElement = ref.current;
+      triggerElement.addEventListener('touchstart', hover, { passive: true });
+      return () => triggerElement.removeEventListener('touchstart', hover);
+    }
+  }, [hover]);
 
   const events = isTouch
     ? {
-        onTouchStart: hover,
+        // onTouchStart is handled specially above
         onTouchEnd: closeToolTip,
         onTouchCancel: closeToolTip,
         onClick: absorbClick,
@@ -157,7 +171,5 @@ function PressTip(props: Props) {
 
   return <Control open={open} triggerRef={ref} {...events} {...props} />;
 }
-
-PressTip.Control = Control;
 
 export default PressTip;

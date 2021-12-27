@@ -66,7 +66,7 @@ export default function Plug({
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >
-      {!(hasMenu && isPhonePortrait) ? <PressTip tooltip={tooltip}>{contents}</PressTip> : contents}
+      <PressTip tooltip={tooltip}>{contents}</PressTip>
       {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
       )}
