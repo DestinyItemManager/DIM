@@ -3,15 +3,20 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { createGetModRenderKey } from 'app/loadout/mod-utils';
+import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
+import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { addIcon, AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { emptyArray, emptyObject } from 'app/utils/empty';
+import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { Dispatch, memo, useCallback, useState } from 'react';
+import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
 import { isLoadoutBuilderItem } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -30,6 +35,7 @@ interface Props {
   lockedMods: PluggableInventoryItemDefinition[];
   upgradeSpendTier: UpgradeSpendTier;
   lockItemEnergyType: boolean;
+  subclass?: DimLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -45,12 +51,14 @@ export default memo(function LockArmorAndPerks({
   lockedMods,
   upgradeSpendTier,
   lockItemEnergyType,
+  subclass,
   lockedExoticHash,
   searchFilter,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
   const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
+  const [showSubclassOptionsPicker, setShowSubclassOptionsPicker] = useState(false);
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -83,6 +91,27 @@ export default memo(function LockArmorAndPerks({
       } catch (e) {}
     };
 
+  const chooseSubclass = async () => {
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item: DimItem) =>
+          item.bucket.type === 'Class' &&
+          item.sockets !== null &&
+          selectedStore.items.includes(item) &&
+          itemCanBeInLoadout(item),
+        // We can only sort so that the classes are grouped and stasis comes first
+        sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
+        prompt: t('Loadouts.ChooseItem', { name: 'Subclass' }),
+
+        // don't show information related to selected perks so we don't give the impression
+        // that we will update perk selections when applying the loadout
+        ignoreSelectedPerks: true,
+      });
+
+      lbDispatch({ type: 'updateSubclass', item });
+    } catch (e) {}
+  };
+
   const onModClicked = (mod: PluggableInventoryItemDefinition) =>
     lbDispatch({
       type: 'removeLockedMod',
@@ -114,6 +143,40 @@ export default memo(function LockArmorAndPerks({
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
 
+  const socketOverridePlugs: {
+    plug: PluggableInventoryItemDefinition;
+    isDefaultAbility: boolean;
+  }[] = useMemo(() => {
+    if (!subclass?.socketOverrides || !subclass.sockets) {
+      return emptyArray();
+    }
+
+    const rtn: { plug: PluggableInventoryItemDefinition; isDefaultAbility: boolean }[] = [];
+
+    for (const socketIndexString of Object.keys(subclass?.socketOverrides)) {
+      const socketIndex = parseInt(socketIndexString, 10);
+      const socket = getSocketByIndex(subclass.sockets, socketIndex);
+      const abilitySockets = getSocketsByCategoryHash(
+        subclass.sockets,
+        SocketCategoryHashes.Abilities
+      );
+
+      const overridePlug = defs.InventoryItem.get(
+        subclass.socketOverrides[socketIndex]
+      ) as PluggableInventoryItemDefinition;
+
+      const isDefaultAbility = Boolean(
+        socket &&
+          getDefaultPlugHash(socket, defs) === overridePlug.hash &&
+          abilitySockets.includes(socket)
+      );
+
+      rtn.push({ plug: overridePlug, isDefaultAbility });
+    }
+
+    return rtn;
+  }, [defs, subclass?.socketOverrides, subclass?.sockets]);
+
   return (
     <>
       {isPhonePortrait && (
@@ -123,6 +186,7 @@ export default memo(function LockArmorAndPerks({
           </ol>
         </div>
       )}
+      {/* Locked exotic */}
       <div className={styles.area}>
         {lockedExoticHash && (
           <div className={styles.notItemGrid}>
@@ -138,6 +202,7 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
+      {/* Mods */}
       <div className={styles.area}>
         {Boolean(lockedMods.length) && (
           <div className={styles.itemGrid}>
@@ -156,6 +221,42 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
+      {/* Subclass */}
+      <div className={styles.area}>
+        {subclass && (
+          <div className={styles.itemGrid}>
+            <LockedItem
+              lockedItem={subclass}
+              onRemove={() => lbDispatch({ type: 'removeSubclass' })}
+            />
+            {socketOverridePlugs.map(({ plug, isDefaultAbility }) => (
+              <PlugDef
+                key={getModRenderKey(plug)}
+                plug={plug}
+                onClose={
+                  isDefaultAbility
+                    ? undefined
+                    : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
+                }
+              />
+            ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button type="button" className="dim-button" onClick={chooseSubclass}>
+            <AppIcon icon={addIcon} /> {t('LB.SelectSubclass')}
+          </button>
+          <button
+            type="button"
+            className="dim-button"
+            disabled={!subclass}
+            onClick={() => setShowSubclassOptionsPicker(true)}
+          >
+            <AppIcon icon={addIcon} /> {t('LB.SelectSubclassOptions')}
+          </button>
+        </div>
+      </div>
+      {/* Armor Upgrades */}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={3}>
@@ -179,6 +280,7 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
+      {/* Pinned items */}
       <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         {Boolean(allPinnedItems.length) && (
           <div className={styles.itemGrid}>
@@ -196,6 +298,7 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </LoadoutBucketDropTarget>
+      {/* Excluded items */}
       <LoadoutBucketDropTarget className={styles.area} onItemLocked={excludeItem}>
         {Boolean(allExcludedItems.length) && (
           <div className={styles.itemGrid}>
@@ -232,6 +335,19 @@ export default memo(function LockArmorAndPerks({
               lbDispatch({ type: 'upgradeSpendTierChanged', upgradeSpendTier })
             }
             onClose={() => setShowArmorUpgradePicker(false)}
+          />,
+          document.body
+        )}
+      {showSubclassOptionsPicker &&
+        subclass &&
+        ReactDom.createPortal(
+          <SubclassPlugDrawer
+            subclass={subclass}
+            socketOverrides={subclass.socketOverrides || emptyObject()}
+            onAccept={(socketOverrides) =>
+              lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides })
+            }
+            onClose={() => setShowSubclassOptionsPicker(false)}
           />,
           document.body
         )}

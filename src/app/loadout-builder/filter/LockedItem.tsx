@@ -13,10 +13,13 @@ export default function LockedItem({
   onRemove,
 }: {
   lockedItem: DimItem;
-  onRemove(item: DimItem): void;
+  onRemove?(item: DimItem): void;
 }) {
   return (
-    <ClosableContainer onClose={() => onRemove(lockedItem)} key={lockedItem.id}>
+    <ClosableContainer
+      onClose={onRemove ? () => onRemove(lockedItem) : undefined}
+      key={lockedItem.id}
+    >
       <DraggableInventoryItem item={lockedItem}>
         <ItemPopupTrigger item={lockedItem}>
           {(ref, onClick) => (

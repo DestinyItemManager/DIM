@@ -8,11 +8,12 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
@@ -39,6 +40,7 @@ export interface LoadoutBuilderState {
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash?: number;
   selectedStoreId?: string;
+  subclass?: DimLoadoutItem;
   statFilters: Readonly<StatFilters>;
   modPicker: {
     open: boolean;
@@ -85,6 +87,7 @@ const lbStateInit = ({
   let selectedStoreId = (matchingClass ?? getCurrentStore(stores)!).id;
 
   let loadoutParams = initialLoadoutParameters;
+  let subclass: DimLoadoutItem | undefined;
 
   if (stores.length && preloadedLoadout) {
     let loadoutStore = getCurrentStore(stores);
@@ -113,6 +116,8 @@ const lbStateInit = ({
           const item = getItemAcrossStores(stores, loadoutItem);
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
+          } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
+            subclass = { ...item, socketOverrides: loadoutItem.socketOverrides };
           }
         }
       }
@@ -159,6 +164,7 @@ const lbStateInit = ({
     statFilters,
     lockedMods,
     lockedExoticHash,
+    subclass,
     selectedStoreId,
     modPicker: {
       open: false,
@@ -186,6 +192,10 @@ export type LoadoutBuilderAction =
     }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
+  | { type: 'updateSubclass'; item: DimItem }
+  | { type: 'removeSubclass' }
+  | { type: 'updateSubclassSocketOverrides'; socketOverrides: { [socketIndex: number]: number } }
+  | { type: 'removeSingleSubclassSocketOverride'; plug: PluggableInventoryItemDefinition }
   | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
@@ -334,6 +344,50 @@ function lbStateReducer(
       return {
         ...state,
         lockedMods: newMods,
+      };
+    }
+    case 'updateSubclass': {
+      const { item } = action;
+      return { ...state, subclass: { ...item, socketOverrides: undefined } };
+    }
+    case 'removeSubclass': {
+      return { ...state, subclass: undefined };
+    }
+    case 'updateSubclassSocketOverrides': {
+      if (!state.subclass) {
+        return state;
+      }
+
+      const { socketOverrides } = action;
+      return { ...state, subclass: { ...state.subclass, socketOverrides } };
+    }
+    case 'removeSingleSubclassSocketOverride': {
+      if (!state.subclass) {
+        return state;
+      }
+
+      const { plug } = action;
+      const newSocketOverrides = { ...state.subclass?.socketOverrides };
+      let socketIndexToRemove: number | undefined;
+
+      for (const socketIndexString of Object.keys(newSocketOverrides)) {
+        const socketIndex = parseInt(socketIndexString, 10);
+        const overridePlugHash = newSocketOverrides[socketIndex];
+        if (overridePlugHash === plug.hash) {
+          socketIndexToRemove = socketIndex;
+          break;
+        }
+      }
+
+      if (socketIndexToRemove !== undefined) {
+        delete newSocketOverrides[socketIndexToRemove];
+      }
+      return {
+        ...state,
+        subclass: {
+          ...state.subclass,
+          socketOverrides: Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined,
+        },
       };
     }
     case 'lockExotic': {

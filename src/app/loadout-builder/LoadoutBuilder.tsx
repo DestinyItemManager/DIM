@@ -181,6 +181,7 @@ function LoadoutBuilder({
       pinnedItems,
       excludedItems,
       lockedMods,
+      subclass,
       lockedExoticHash,
       selectedStoreId,
       statFilters,
@@ -360,6 +361,7 @@ function LoadoutBuilder({
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
+        subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
