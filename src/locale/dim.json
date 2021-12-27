@@ -842,23 +842,27 @@
   "Sockets": {
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
-    "InsertAbility": "Equip Ability",
-    "InsertAspect": "Insert Aspect",
-    "InsertFragment": "Insert Fragment",
-    "InsertMod": "Insert Mod",
-    "InsertOrnament": "Apply Ornament",
-    "InsertProjection": "Apply Ghost Projection",
-    "InsertShader": "Apply Shader",
-    "InsertTransmat": "Apply Transmat Effect",
+    "Insert": {
+      "Ability": "Equip Ability",
+      "Aspect": "Insert Aspect",
+      "Fragment": "Insert Fragment",
+      "Mod": "Insert Mod",
+      "Ornament": "Apply Ornament",
+      "Projection": "Apply Ghost Projection",
+      "Shader": "Apply Shader",
+      "Transmat": "Apply Transmat Effect"
+    },
     "ListStyle": "Display perks as a list",
-    "SelectAbility": "Select Ability",
-    "SelectAspect": "Select Aspect",
-    "SelectFragment": "Select Fragment",
-    "SelectMod": "Select Mod",
-    "SelectOrnament": "Select Ornament",
-    "SelectProjection": "Select Ghost Projection",
-    "SelectShader": "Select Shader",
-    "SelectTransmat": "Select Transmat Effect",
+    "Select": {
+      "Ability": "Select Ability",
+      "Aspect": "Select Aspect",
+      "Fragment": "Select Fragment",
+      "Mod": "Select Mod",
+      "Ornament": "Select Ornament",
+      "Projection": "Select Ghost Projection",
+      "Shader": "Select Shader",
+      "Transmat": "Select Transmat Effect"
+    },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {

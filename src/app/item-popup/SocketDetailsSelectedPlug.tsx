@@ -152,12 +152,10 @@ export default function SocketDetailsSelectedPlug({
   const canDoAWA =
     itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
-  // t(`Sockets.Insert`, { contextList: 'sockets' })
-  // t(`Sockets.Select`, { contextList: 'sockets' })
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
   const insertName = canDoAWA
-    ? t(`Sockets.Insert${kind}`, { contextList: 'sockets' })
-    : t(`Sockets.Select${kind}`, { contextList: 'sockets' });
+    ? t(`Sockets.Insert.${kind}`, { contextList: 'sockets' })
+    : t(`Sockets.Select.${kind}`, { contextList: 'sockets' });
 
   const [insertInProgress, setInsertInProgress] = useState(false);
   const onInsertPlug = async () => {
