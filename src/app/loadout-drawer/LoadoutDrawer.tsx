@@ -8,7 +8,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -44,12 +44,11 @@ export let loadoutDialogOpen = false;
 export default function LoadoutDrawer() {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
-  const loadoutSheetRef = useRef<HTMLDivElement>(null);
-  const modAssignmentDrawerRef = useRef<HTMLDivElement>(null);
 
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
+  const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
   const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
@@ -109,28 +108,18 @@ export default function LoadoutDrawer() {
 
   const close = () => {
     stateDispatch({ type: 'reset' });
+    setShowingItemPicker(false);
   };
 
   // Close the sheet on navigation
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
-  // This calculates the largest height of the currently open sheets.This is so we can open new
-  // sheets with a minHeight that will match the open sheets. A bunch of sheets that are almost
-  // the same height.
-  const calculateMinSheetHeight = useCallback(() => {
-    if (loadoutSheetRef.current) {
-      return Math.max(
-        loadoutSheetRef.current.clientHeight,
-        modAssignmentDrawerRef.current?.clientHeight || 0
-      );
-    }
-  }, []);
-
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {
     const loadoutClassType = loadout?.classType;
 
+    setShowingItemPicker(true);
     try {
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
@@ -149,7 +138,10 @@ export default function LoadoutDrawer() {
 
       onAddItem(item);
       onRemoveItem(warnItem);
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setShowingItemPicker(false);
+    }
   };
 
   const onSaveLoadout = (
@@ -217,13 +209,11 @@ export default function LoadoutDrawer() {
         loadout={loadout}
         showClass={showClass}
         isNew={isNew}
-        modAssignmentDrawerRef={modAssignmentDrawerRef}
-        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
         onUpdateMods={onUpdateMods}
+        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
         saveLoadout={onSaveLoadout}
         saveAsNew={saveAsNew}
         deleteLoadout={onDeleteLoadout}
-        calculateMinSheetHeight={calculateMinSheetHeight}
       />
       {loadout.notes !== undefined && (
         <textarea
@@ -237,7 +227,7 @@ export default function LoadoutDrawer() {
   );
 
   return (
-    <Sheet onClose={close} ref={loadoutSheetRef} header={header}>
+    <Sheet onClose={close} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem}>
@@ -272,6 +262,7 @@ export default function LoadoutDrawer() {
                 onOpenModPicker={(query?: string) =>
                   stateDispatch({ type: 'openModPicker', query })
                 }
+                onShowItemPicker={setShowingItemPicker}
                 removeModByHash={removeModByHash}
                 onApplySocketOverrides={onApplySocketOverrides}
               />
@@ -286,7 +277,6 @@ export default function LoadoutDrawer() {
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}
-            minHeight={calculateMinSheetHeight()}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
           />,

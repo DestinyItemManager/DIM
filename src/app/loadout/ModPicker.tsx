@@ -44,8 +44,6 @@ interface ProvidedProps {
   owner?: string;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
-  /** The min height for the sheet. */
-  minHeight?: number;
   /** Only show mods that are in these categories. No restriction if this is not provided. */
   plugCategoryHashWhitelist?: number[];
   /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
@@ -188,7 +186,7 @@ function mapStateToProps() {
  * chosen too many mods. It also can be filtered down to a specific set of mods
  * using plugCategoryHashWhitelist.
  */
-function ModPicker({ plugSets, lockedMods, initialQuery, minHeight, onAccept, onClose }: Props) {
+function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Props) {
   // Partition the locked (selected) mods into ones that will be shown in this
   // picker (based on plugCategoryHashWhitelist) and ones that will not. The
   // ones that won't (hidden mods) are still part of the locked mods set and
@@ -217,7 +215,6 @@ function ModPicker({ plugSets, lockedMods, initialQuery, minHeight, onAccept, on
       initialQuery={initialQuery}
       plugSets={plugSets}
       initiallySelected={visibleSelectedMods}
-      minHeight={minHeight}
       isPlugSelectable={isModSelectable}
       sortPlugGroups={sortModPickerPlugGroups}
       sortPlugs={sortMods}

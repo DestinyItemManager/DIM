@@ -6,7 +6,7 @@ import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignment
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { RefObject, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -29,24 +29,20 @@ export default function LoadoutDrawerOptions({
   loadout,
   showClass,
   isNew,
-  modAssignmentDrawerRef,
-  updateLoadout,
   onUpdateMods,
+  updateLoadout,
   saveLoadout,
   saveAsNew,
   deleteLoadout,
-  calculateMinSheetHeight,
 }: {
   loadout?: Readonly<Loadout>;
   showClass: boolean;
   isNew: boolean;
-  modAssignmentDrawerRef: RefObject<HTMLDivElement>;
-  updateLoadout(loadout: Loadout): void;
   onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
+  updateLoadout(loadout: Loadout): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(e: React.MouseEvent): void;
-  calculateMinSheetHeight(): number | undefined;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
@@ -218,8 +214,6 @@ export default function LoadoutDrawerOptions({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
-            sheetRef={modAssignmentDrawerRef}
-            minHeight={calculateMinSheetHeight()}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
