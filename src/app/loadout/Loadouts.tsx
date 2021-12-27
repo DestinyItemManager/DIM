@@ -39,9 +39,9 @@ import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ItemCategorySection from './loadout-ui/ItemCategorySection';
+import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
+import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import PlugDef from './loadout-ui/PlugDef';
-import Subclass from './loadout-ui/Subclass';
 import styles from './Loadouts.m.scss';
 import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from './mod-utils';
@@ -279,10 +279,10 @@ function LoadoutRow({
         {(items.length > 0 || subclass || savedMods.length > 0) && (
           <>
             <div>
-              <Subclass defs={defs} subclass={subclass} power={power} />
+              <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
             </div>
             {['Weapons', 'Armor', 'General'].map((category) => (
-              <ItemCategorySection
+              <LoadoutItemCategorySection
                 key={category}
                 category={category}
                 subclass={subclass}
