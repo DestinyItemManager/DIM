@@ -259,18 +259,19 @@ function LoadoutBuilder({
     ]
   );
 
-  const { result, processing, remainingTime } = useProcess(
+  const { result, processing, remainingTime } = useProcess({
     defs,
     selectedStore,
     filteredItems,
     lockedMods,
+    subclass,
     upgradeSpendTier,
     lockItemEnergyType,
     statOrder,
     statFilters,
-    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
-    disabledDueToMaintenance
-  );
+    anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    disabledDueToMaintenance,
+  });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
   // TODO: replace some of these individual params with this object
@@ -500,6 +501,7 @@ function LoadoutBuilder({
               loadouts={loadouts}
               initialLoadoutId={preloadedLoadout?.id}
               lockedMods={lockedMods}
+              subclass={subclass}
               classType={classType}
               statOrder={statOrder}
               enabledStats={enabledStats}

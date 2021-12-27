@@ -5,9 +5,10 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
@@ -16,6 +17,7 @@ import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import produce from 'immer';
@@ -56,6 +58,7 @@ interface Props {
   loadouts: Loadout[];
   initialLoadoutId?: string;
   lockedMods: PluggableInventoryItemDefinition[];
+  subclass: DimLoadoutItem | undefined;
   classType: DestinyClass;
   statOrder: number[];
   enabledStats: Set<number>;
@@ -87,6 +90,7 @@ export default function CompareDrawer({
   initialLoadoutId,
   set,
   lockedMods,
+  subclass,
   classType,
   statOrder,
   enabledStats,
@@ -161,7 +165,13 @@ export default function CompareDrawer({
     }
   }
 
-  const lockedModStats = getTotalModStatChanges(lockedMods, classType);
+  const subclassPlugs = subclass?.socketOverrides
+    ? Object.values(subclass.socketOverrides)
+        .map((hash) => defs.InventoryItem.get(hash))
+        .filter(isPluggableItem)
+    : emptyArray<PluggableInventoryItemDefinition>();
+
+  const lockedModStats = getTotalModStatChanges(lockedMods, subclassPlugs, classType);
 
   for (const statHash of armorStats) {
     loadoutStats[statHash] += lockedModStats[statHash];
