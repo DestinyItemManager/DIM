@@ -463,6 +463,7 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
+            subclass={subclass}
             lockedMods={processing ? emptyArray() : lockedMods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}

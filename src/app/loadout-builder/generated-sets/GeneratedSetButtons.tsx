@@ -2,7 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
@@ -20,6 +20,7 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  subclass,
   notes,
   params,
   canCompareLoadouts,
@@ -29,6 +30,7 @@ export default function GeneratedSetButtons({
 }: {
   store: DimStore;
   set: ArmorSet;
+  subclass: DimLoadoutItem | undefined;
   notes?: string;
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
@@ -40,12 +42,12 @@ export default function GeneratedSetButtons({
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, params, notes));
+    onLoadoutSet(createLoadout(store.classType, set, subclass, params, notes));
   };
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, params, notes);
+    const loadout = createLoadout(store.classType, set, subclass, params, notes);
     return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
@@ -98,16 +100,20 @@ export default function GeneratedSetButtons({
 function createLoadout(
   classType: DestinyClass,
   set: ArmorSet,
+  subclass: DimLoadoutItem | undefined,
   params: LoadoutParameters,
   notes?: string
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
-  const loadout = newLoadout(
-    t('Loadouts.Generated', data),
-    set.armor.map((items) => convertToLoadoutItem(items[0], true))
-  );
+  const items = set.armor.map((items) => convertToLoadoutItem(items[0], true));
+
+  if (subclass) {
+    items.push(convertToLoadoutItem(subclass, true));
+  }
+
+  const loadout = newLoadout(t('Loadouts.Generated', data), items);
   loadout.classType = classType;
   loadout.notes = notes;
   loadout.parameters = params;
