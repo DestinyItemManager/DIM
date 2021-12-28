@@ -82,8 +82,7 @@ const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
  *
  * The params generalModPermutations, combatModPermutations, activityModPermutations are assumed to be the results
  * from processUtils.ts#generateModPermutations, i.e. all permutations of general, combat or activity mods.
- *
- * assignments is mutated by this function to store any mods assignments that were made.
+ * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
  */
 export function canTakeSlotIndependentMods(
   generalModPermutations: (ProcessMod | null)[][],
@@ -92,6 +91,8 @@ export function canTakeSlotIndependentMods(
   items: ProcessItem[]
 ) {
   // Sort the items like the mods are to try and get a greedy result
+  // Theory here is that aligning energy types between items and mods and assigning the mods with the
+  // highest cost to the items with the highest amount of energy available will find results faster
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
   const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
@@ -104,7 +105,7 @@ export function canTakeSlotIndependentMods(
   const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
     getEnergyCounts(activityModPermutations[0]);
 
-  // A quick check to see if we have enough of each energy type for the mods
+  // A quick check to see if we have enough of each energy type for the mods so we can exit early if not
   if (
     voidItems + anyItems < voidGeneralMods ||
     voidItems + anyItems < voidCombatMods ||
@@ -123,6 +124,8 @@ export function canTakeSlotIndependentMods(
   }
 
   // An early check to ensure we have enough activity mod combos
+  // It works by creating an index of tags to totals of said tag
+  // we can then ensure we have enough items with said tags.
   if (activityModPermutations[0].length) {
     const tagCounts: { [tag: string]: number } = {};
 
@@ -145,6 +148,11 @@ export function canTakeSlotIndependentMods(
     }
   }
 
+  // Now we begin looping over all the mod permutations, we have chosen activity mods because they
+  // are the most selective. This is a similar principle to DB query theory where you want to run
+  // the most selective part of your query first to narrow results down as early as possible. In
+  // this case we can use it to skip large branches of the triple nested mod loop because not all
+  // armour will have activity slots.
   activityModLoop: for (const activityPermutation of activityModPermutations) {
     activityItemLoop: for (let i = 0; i < sortedItems.length; i++) {
       const activityMod = activityPermutation[i];
@@ -158,6 +166,9 @@ export function canTakeSlotIndependentMods(
       const tag = activityMod.tag!;
       const activityEnergy = activityMod.energy || defaultModEnergy;
 
+      // Energy is valid when the item has enough energy capacity and the items energy type
+      // accommodates the mods energy. When we allow energy changes the item can have the Any
+      // energy type
       const activityEnergyIsValid =
         item.energy &&
         item.energy.val + activityEnergy.val <= item.energy.capacity &&
@@ -185,6 +196,9 @@ export function canTakeSlotIndependentMods(
         const tag = combatMod.tag!;
         const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
 
+        // Energy is valid when the item has enough energy capacity for the activity and combat
+        // mods, the items energy type accommodates the mods energy, and if an activity mod is
+        // present the energy types of each mod are compatible, eg incompatible could be arc + void.
         const combatEnergyIsValid =
           item.energy &&
           item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity &&
@@ -215,6 +229,9 @@ export function canTakeSlotIndependentMods(
           const combatEnergy = combatPermutation[i]?.energy || defaultModEnergy;
           const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
 
+          // Energy is valid when the item has enough energy capacity for the activity, combat
+          // and genreal mods, the items energy type accommodates the mods energy, and if activity
+          // and combat mods are present the energy types of each mod are compatible
           const generalEnergyIsValid =
             item.energy &&
             item.energy.val + generalEnergy.val + combatEnergy.val + activityEnergy.val <=
@@ -234,6 +251,16 @@ export function canTakeSlotIndependentMods(
             continue generalModLoop;
           }
         }
+
+        // TODO For auto mods we will want to figure out what mods we can auto assign at this point.
+        // This will mean looking at what is assigned to each item and assigning the most desirable
+        // stat mod that will fit with the given energy use. For example, if intellect is the first
+        // stat in our ordered stats but we only have 3 energy, we will probably need to decide on
+        // using a +5 intellect or mobility (or whatever 3 cost stat mod is highest).
+        // The hit on performance is going to be that we need to remove the `return true` following
+        // this comment. Instead we will want to iterate over all mod combinations and find the best
+        // auto assignment of mods and return said assignment. There may be an early exit for this
+        // but I haven't quite figured that out in my head yet.
 
         // To hit this point we need to have found a valid set of activity mods
         // if none is found the continues will skip this.
