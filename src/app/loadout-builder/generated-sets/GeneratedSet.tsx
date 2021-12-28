@@ -59,7 +59,7 @@ function GeneratedSet({
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
-    editLoadout(loadout, {
+    editLoadout(loadout, selectedStore.id, {
       showClass: false,
     });
   };

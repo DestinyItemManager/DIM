@@ -6,6 +6,7 @@ export const editLoadout$ = new EventBus<{
   loadout: Loadout;
   showClass?: boolean;
   isNew?: boolean;
+  storeId: string;
 }>();
 export const addItem$ = new EventBus<{
   item: DimItem;
@@ -15,8 +16,13 @@ export const addItem$ = new EventBus<{
 /**
  * Start editing a loadout.
  */
-export function editLoadout(loadout: Loadout, { showClass = true, isNew = true } = {}) {
+export function editLoadout(
+  loadout: Loadout,
+  storeId: string,
+  { showClass = true, isNew = true }: { showClass?: boolean; isNew?: boolean } = {}
+) {
   editLoadout$.next({
+    storeId,
     loadout,
     showClass,
     isNew,

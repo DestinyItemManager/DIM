@@ -51,13 +51,16 @@ export default function LoadoutDrawer() {
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, isNew, modPicker }, stateDispatch] = useReducer(stateReducer, {
-    showClass: true,
-    isNew: false,
-    modPicker: {
-      show: false,
-    },
-  });
+  const [{ loadout, showClass, storeId, isNew, modPicker }, stateDispatch] = useReducer(
+    stateReducer,
+    {
+      showClass: true,
+      isNew: false,
+      modPicker: {
+        show: false,
+      },
+    }
+  );
 
   // Sync this global variable with our actual state. TODO: move to redux
   loadoutDialogOpen = Boolean(loadout);
@@ -65,10 +68,11 @@ export default function LoadoutDrawer() {
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
     editLoadout$,
-    useCallback(({ loadout, showClass, isNew }) => {
+    useCallback(({ loadout, storeId, showClass, isNew }) => {
       stateDispatch({
         type: 'editLoadout',
         loadout,
+        storeId,
         showClass: Boolean(showClass),
         isNew: Boolean(isNew),
       });
@@ -274,6 +278,7 @@ export default function LoadoutDrawer() {
         defs.isDestiny2() &&
         ReactDOM.createPortal(
           <ModPicker
+            owner={storeId}
             classType={loadout.classType}
             lockedMods={savedMods}
             initialQuery={modPicker.query}

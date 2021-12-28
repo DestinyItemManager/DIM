@@ -119,7 +119,11 @@ export function ItemTriage({ item }: { item: DimItem }) {
               <a
                 className={styles.lowKeyButton}
                 title={t('Loadouts.Edit')}
-                onClick={() => editLoadout(l, { isNew: false })}
+                onClick={() =>
+                  editLoadout(l, item.owner, {
+                    isNew: false,
+                  })
+                }
               >
                 <AppIcon icon={editIcon} />
               </a>
