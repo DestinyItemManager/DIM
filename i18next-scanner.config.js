@@ -56,6 +56,20 @@ module.exports = {
         fallback: false,
         separator: false,
       },
+      sockets: {
+        list: [
+          'Mod',
+          'Ability',
+          'Shader',
+          'Ornament',
+          'Fragment',
+          'Aspect',
+          'Projection',
+          'Transmat',
+        ],
+        fallback: false,
+        separator: false,
+      },
     },
   },
 };
