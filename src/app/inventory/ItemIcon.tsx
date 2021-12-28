@@ -83,10 +83,11 @@ export function DefItemIcon({
   className?: string;
   borderless?: boolean;
 }) {
+  const defs = useD2Definitions();
   if (!itemDef) {
     errorLog('temp-deficon', new Error('DefItemIcon was called with a missing def'));
+    return null;
   }
-  const defs = useD2Definitions();
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
