@@ -225,6 +225,7 @@ export default function Sheet({
           onKeyDown={stopPropagation}
           onKeyUp={stopPropagation}
           onKeyPress={stopPropagation}
+          onClick={stopPropagation}
         >
           <a
             href="#"
