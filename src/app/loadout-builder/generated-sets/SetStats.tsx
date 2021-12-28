@@ -75,7 +75,7 @@ function SetStats({
         {statOrder.map((statHash) => (
           <PressTip
             key={statHash}
-            tooltip={
+            tooltip={() => (
               <StatTooltip
                 stat={{
                   hash: statHash,
@@ -85,8 +85,7 @@ function SetStats({
                 }}
                 characterClass={characterClass}
               />
-            }
-            allowClickThrough={true}
+            )}
           >
             <Stat
               isActive={enabledStats.has(statHash)}

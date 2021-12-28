@@ -25,3 +25,49 @@
 .failed {
   background-color: $red;
 }
+
+.loadoutDetails {
+  font-weight: bold;
+  display: block;
+  margin: 4px 0;
+  :global(.app-icon) {
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+}
+
+.iconList {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 8px 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  --item-size: 32px;
+
+  > * {
+    margin: 0 4px 4px 0;
+  }
+}
+
+.loadoutItemPending {
+  opacity: 0.3;
+  transform: scale(0.8);
+}
+
+.loadoutItemFailed {
+  outline: 2px solid $red;
+}
+
+.errorList {
+  @include vertical-space-children(4px);
+}
+
+.warning {
+  margin: 8px 0;
+}
+
+.warningIcon {
+  color: yellow;
+  margin-right: 4px;
+}

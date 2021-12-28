@@ -38,6 +38,7 @@ const rankProgressionToStreakProgression = {
   3008065600: 2939151659, // Infamy
   457612306: 600547406, // Vanguard
   2755675426: 70699614, // Trials
+  527867935: 1999336308, // Strange Favor (Dares of Eternity)
 };
 
 /**

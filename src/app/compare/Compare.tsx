@@ -53,6 +53,8 @@ export interface StatInfo {
 export type MinimalStat = { statHash: number; value: number; base?: number };
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
+const isTouch = 'ontouchstart' in window;
+
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
@@ -186,7 +188,7 @@ export default function Compare() {
             stats={allStats}
             itemClick={locateItem}
             remove={remove}
-            setHighlight={setHighlight}
+            setHighlight={isTouch ? undefined : setHighlight}
             onPlugClicked={onPlugClicked}
             compareBaseStats={doCompareBaseStats}
             isInitialItem={session?.initialItemId === item.id}
@@ -229,9 +231,12 @@ export default function Compare() {
   );
 
   return (
-    <Sheet onClose={cancel} allowClickThrough={true} header={header}>
+    <Sheet onClose={cancel} header={header}>
       <div className="loadout-drawer compare">
-        <div className={styles.bucket} onMouseLeave={() => setHighlight(undefined)}>
+        <div
+          className={styles.bucket}
+          onMouseLeave={isTouch ? undefined : () => setHighlight(undefined)}
+        >
           <div className={clsx('compare-item', styles.fixedLeft)}>
             <div className={styles.spacer} />
             {allStats.map((stat) => (
@@ -240,7 +245,7 @@ export default function Compare() {
                 className={clsx(styles.statLabel, {
                   [styles.sorted]: stat.id === sortedHash,
                 })}
-                onMouseOver={() => setHighlight(stat.id)}
+                onMouseOver={isTouch ? undefined : () => setHighlight(stat.id)}
                 onClick={() => changeSort(stat.id)}
               >
                 {stat.displayProperties.hasIcon && (

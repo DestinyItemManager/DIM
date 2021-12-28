@@ -26,6 +26,7 @@ import { recoilValue } from 'app/item-popup/RecoilStat';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
+import { quoteFilterString } from 'app/search/search-filters/freeform';
 import { getColor, percent } from 'app/shell/filters';
 import {
   AppIcon,
@@ -238,7 +239,7 @@ export function getColumns(
       id: 'name',
       header: t('Organizer.Columns.Name'),
       value: (i) => i.name,
-      filter: (name) => `name:"${name}"`,
+      filter: (name: string) => `name:${quoteFilterString(name)}`,
     },
     !isGhost && {
       id: 'power',
@@ -397,7 +398,7 @@ export function getColumns(
             plugged && (
               <PressTip
                 key={plugged.plugDef.hash}
-                tooltip={<DimPlugTooltip item={item} plug={plugged} />}
+                tooltip={() => <DimPlugTooltip item={item} plug={plugged} />}
               >
                 <div className={styles.modPerk}>
                   <div className={styles.miniPerkContainer}>
@@ -409,7 +410,7 @@ export function getColumns(
             )
           );
         },
-        filter: (value) => `perkname:"${value}"`,
+        filter: (value: string) => `perkname:${quoteFilterString(value)}`,
       },
     (destinyVersion === 2 || isWeapon) && {
       id: 'breaker',
@@ -437,7 +438,8 @@ export function getColumns(
         ),
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
-      filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
+      filter: (value) =>
+        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
     },
     destinyVersion === 2 &&
       isWeapon && {
@@ -449,7 +451,8 @@ export function getColumns(
         ),
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
-        filter: (value) => (value !== 0 ? `perkname:"${value}"` : undefined),
+        filter: (value) =>
+          typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
       },
     ...statColumns,
     ...baseStatColumns,
@@ -533,7 +536,7 @@ export function getColumns(
       value: (item) => getNotes(item, itemInfos),
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
-      filter: (value) => `notes:"${value}"`,
+      filter: (value: string) => `notes:${quoteFilterString(value)}`,
     },
     isWeapon &&
       hasWishList && {
@@ -541,7 +544,7 @@ export function getColumns(
         header: t('Organizer.Columns.WishListNotes'),
         value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
-        filter: (value) => `wishlistnotes:"${value}"`,
+        filter: (value: string) => `wishlistnotes:${quoteFilterString(value)}`,
       },
   ]);
 
@@ -599,7 +602,7 @@ function PerksCell({
           })}
         >
           {socket.plugOptions.map((p) => (
-            <PressTip key={p.plugDef.hash} tooltip={<DimPlugTooltip item={item} plug={p} />}>
+            <PressTip key={p.plugDef.hash} tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
               <div
                 className={clsx(styles.modPerk, {
                   [styles.perkSelected]:

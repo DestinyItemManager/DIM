@@ -1,5 +1,15 @@
 ## Next
 
+* Improved the press-to-view tooltips on mobile. It should now be much easier to select perks on mobile.
+* Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
+* The progress notification for applying a loadout now shows each item and mod as it's being applied.
+
+## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
+
+* Transmog Ornaments menu once again *incorrectly* shows whether an ornament has been unlocked or not, but fixed a bug where an artifact mod, once slotted on your active gear, would show up as not unlocked.
+
+## 6.97.0 <span class="changelog-date">(2021-12-26)</span>
+
 * Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 * The option to view Mod Assignments for a loadout is now available outside of Beta.
 * The stat bars shown in Compare are more accurately sized, relative to each other.
@@ -14,6 +24,7 @@
 * The Loadouts page can be filtered from the search bar in the header.
 * When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
 * Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
+* Searching by perk now works on languages that use accented characters.
 
 ### Beta Only
 

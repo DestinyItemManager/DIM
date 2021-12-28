@@ -26,7 +26,7 @@ export function getItemsFromLoadoutItems(
   for (const loadoutItem of loadoutItems) {
     const item = findItem(allItems, loadoutItem);
     if (item) {
-      items.push({ ...item, ...loadoutItem });
+      items.push({ ...item, socketOverrides: loadoutItem.socketOverrides });
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {

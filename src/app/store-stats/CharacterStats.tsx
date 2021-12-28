@@ -29,7 +29,7 @@ function CharacterStat({ stats, storeId, className }: CharacterStatProps) {
         const isMaxGearPower = stat.hash === -3 && storeId;
 
         return (
-          <PressTip key={stat.hash} tooltip={tooltip} allowClickThrough={true}>
+          <PressTip key={stat.hash} tooltip={tooltip}>
             <div
               className={clsx('stat', { pointerCursor: isMaxGearPower })}
               aria-label={`${stat.name} ${stat.value}`}

@@ -9,7 +9,6 @@ import {
   BungieMembershipType,
   DestinyCharacterResponse,
   DestinyComponentType,
-  DestinyEquipItemResults,
   DestinyItemResponse,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
@@ -25,6 +24,7 @@ import {
   getProfile as getProfileApi,
   getVendor as getVendorApi,
   getVendors as getVendorsApi,
+  PlatformErrorCodes,
   pullFromPostmaster,
   ServerResponse,
   setItemLockState,
@@ -302,14 +302,13 @@ export function equip(account: DestinyAccount, item: DimItem): Promise<ServerRes
 }
 
 /**
- * Equip multiple items at once.
- * @returns a list of items that were successfully equipped
+ * Equip items in bulk. Returns a mapping from item ID to error code for each item
  */
 export async function equipItems(
   account: DestinyAccount,
   store: DimStore,
   items: DimItem[]
-): Promise<DimItem[]> {
+): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
@@ -319,11 +318,9 @@ export async function equipItems(
     membershipType: account.originalPlatformType,
     itemIds: items.map((i) => i.id),
   });
-  const data: DestinyEquipItemResults = response.Response;
-  return items.filter((i) => {
-    const item = data.equipResults.find((r) => r.itemInstanceId === i.id);
-    return item?.equipStatus === 1;
-  });
+  return Object.fromEntries(
+    response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus])
+  );
 }
 
 /**

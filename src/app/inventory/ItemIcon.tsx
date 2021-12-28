@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
@@ -83,6 +84,10 @@ export function DefItemIcon({
   borderless?: boolean;
 }) {
   const defs = useD2Definitions();
+  if (!itemDef) {
+    errorLog('temp-deficon', new Error('DefItemIcon was called with a missing def'));
+    return null;
+  }
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||

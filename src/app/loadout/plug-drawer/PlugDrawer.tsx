@@ -9,7 +9,7 @@ import { Comparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
@@ -39,11 +39,6 @@ interface Props {
   initialQuery?: string;
   /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
-  /** A ref passed down to the sheets container. */
-  // TODO: Why?
-  sheetRef?: RefObject<HTMLDivElement>;
-  /** The min height for the sheet. */
-  minHeight?: number;
   /** A function to determine if a given plug is currently selectable. */
   isPlugSelectable(
     plug: PluggableInventoryItemDefinition,
@@ -73,8 +68,6 @@ export default function PlugDrawer({
   searchPlaceholder,
   initialQuery,
   acceptButtonText,
-  sheetRef,
-  minHeight,
   isPlugSelectable,
   sortPlugGroups,
   sortPlugs,
@@ -244,8 +237,6 @@ export default function PlugDrawer({
 
   return (
     <Sheet
-      ref={sheetRef}
-      minHeight={minHeight}
       onClose={onClose}
       header={header}
       footer={footer}

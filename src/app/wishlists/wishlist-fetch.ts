@@ -7,7 +7,6 @@ import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { get } from 'idb-keyval';
-import _ from 'lodash';
 import { loadWishLists, touchWishLists } from './actions';
 import type { WishListsState } from './reducer';
 import { wishListsSelector } from './selectors';
@@ -127,20 +126,6 @@ export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): Thu
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
       dispatch(loadWishLists({ wishListAndInfo }));
-
-      const titleAndDescription = _.compact([
-        wishListAndInfo.title,
-        wishListAndInfo.description,
-      ]).join('\n');
-
-      showNotification({
-        type: 'success',
-        title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportSuccess', {
-          count: wishListAndInfo.wishListRolls.length,
-          titleAndDescription,
-        }),
-      });
     } else {
       showNotification({
         type: 'warning',
