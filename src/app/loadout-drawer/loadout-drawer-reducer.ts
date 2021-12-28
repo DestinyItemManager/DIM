@@ -1,9 +1,11 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import produce from 'immer';
+import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
 
@@ -42,6 +44,7 @@ export type Action =
   | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
+  | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -119,6 +122,23 @@ export function stateReducer(state: State, action: Action): State {
       const { item, socketOverrides } = action;
       return loadout
         ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
+        : state;
+    }
+
+    case 'updateModsByBucket': {
+      const { loadout } = state;
+      const { modsByBucket } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+              },
+            },
+          }
         : state;
     }
 

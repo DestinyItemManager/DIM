@@ -296,6 +296,9 @@ export default function LoadoutDrawer() {
           <FashionDrawer
             loadout={loadout}
             items={items}
+            onModsByBucketUpdated={(modsByBucket) =>
+              stateDispatch({ type: 'updateModsByBucket', modsByBucket })
+            }
             onClose={() => stateDispatch({ type: 'toggleFashionDrawer', show: false })}
           />,
           document.body

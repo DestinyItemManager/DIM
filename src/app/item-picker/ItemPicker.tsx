@@ -84,6 +84,8 @@ function ItemPicker({
     return items;
   }, [allItems, filter, itemSortOrder, sortBy]);
 
+  // TODO: have compact and "list" views
+  // TODO: long press for item popup
   return (
     <Sheet
       onClose={onSheetClosedFn}

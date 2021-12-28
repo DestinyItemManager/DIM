@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
+import { canInsertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
@@ -82,6 +82,7 @@ export default function SocketDetailsSelectedPlug({
   item,
   currentPlug,
   equippable,
+  allowInsertPlug,
   closeMenu,
   onPlugSelected,
 }: {
@@ -90,6 +91,7 @@ export default function SocketDetailsSelectedPlug({
   item: DimItem;
   currentPlug: DimPlug | null;
   equippable: boolean;
+  allowInsertPlug: boolean;
   closeMenu(): void;
   /** If this is set, instead of offering to slot the mod, we just notify above */
   onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
@@ -150,7 +152,9 @@ export default function SocketDetailsSelectedPlug({
 
   // Can we actually insert this mod instead of just previewing it?
   const canDoAWA =
-    itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
+    allowInsertPlug &&
+    itemIsInstanced(item) &&
+    canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
   const insertName = canDoAWA
@@ -158,6 +162,8 @@ export default function SocketDetailsSelectedPlug({
     : t(`Sockets.Select.${kind}`, { contextList: 'sockets' });
 
   const [insertInProgress, setInsertInProgress] = useState(false);
+
+  // TODO: Push the insertPlug stuff all the way up and out of SocketDetails
   const onInsertPlug = async () => {
     if (canDoAWA) {
       setInsertInProgress(true);

@@ -14,10 +14,21 @@
   @include vertical-space-children(4px);
 }
 
-.placeholder {
+.rowButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   height: var(--item-size);
-  width: var(--item-size);
-  border: 1px solid white;
+  &:first-child {
+    height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+  }
+  &.right {
+    justify-content: flex-start;
+  }
+}
+
+.placeholder {
+  opacity: 0.3;
 }
 
 .sheet {
@@ -28,7 +39,9 @@
 .socket {
   img {
     display: block;
-    height: var(--item-size);
     width: var(--item-size);
+    height: var(--item-size);
+    box-sizing: border-box;
+    border: $item-border-width solid #ddd;
   }
 }

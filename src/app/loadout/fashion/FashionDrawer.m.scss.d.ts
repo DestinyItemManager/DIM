@@ -4,6 +4,8 @@ interface CssExports {
   'item': string;
   'items': string;
   'placeholder': string;
+  'right': string;
+  'rowButton': string;
   'sheet': string;
   'socket': string;
 }
