@@ -88,7 +88,7 @@ export default function LoadoutRequirementModifier({
     ),
   }));
 
-  const description = (
+  const description = () => (
     <>
       {modifier.displayProperties.description.split('\n')[0]}
       <br />

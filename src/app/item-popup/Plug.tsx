@@ -4,7 +4,6 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -30,7 +29,6 @@ export default function Plug({
   onClick?(plug: DimPlug): void;
 }) {
   const defs = useD2Definitions()!;
-  const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugDef.hash);
@@ -66,7 +64,7 @@ export default function Plug({
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >
-      {!(hasMenu && isPhonePortrait) ? <PressTip tooltip={tooltip}>{contents}</PressTip> : contents}
+      <PressTip tooltip={tooltip}>{contents}</PressTip>
       {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
       )}

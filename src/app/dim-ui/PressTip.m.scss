@@ -8,6 +8,12 @@
   border-color: #444;
 }
 
+.control {
+  user-select: none;
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
 .tooltip {
   position: absolute;
   background-color: #444;

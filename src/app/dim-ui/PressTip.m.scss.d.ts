@@ -3,6 +3,7 @@
 interface CssExports {
   'arrow': string;
   'content': string;
+  'control': string;
   'tooltip': string;
 }
 export const cssExports: CssExports;
