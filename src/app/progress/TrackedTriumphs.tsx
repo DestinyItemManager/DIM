@@ -8,6 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './TrackedTriumphs.m.scss';
+import { DestinyRecordDefinition, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
 
 export function TrackedTriumphs({
   searchQuery,
@@ -31,6 +32,25 @@ export function TrackedTriumphs({
       searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
     );
   }
+
+  // determine absolute path of record for sorting purpose
+  const record_path = (r: DestinyRecordDefinition) => {
+    const path: string[] = [];
+    let parent: (DestinyRecordDefinition | DestinyPresentationNodeDefinition) = r;
+
+    while(parent?.parentNodeHashes?.length > 0) {
+      path.unshift(parent.displayProperties.name)
+      parent = defs.PresentationNode.get(parent.parentNodeHashes[0]);
+    }
+    return path;
+  };
+
+  // sort by parent node groups (alphabetically)
+  records = records.sort((a,b) => {
+    const pathA = record_path(a.recordDef).join("/")
+    const pathB = record_path(b.recordDef).join("/")
+    return pathA.localeCompare(pathB);
+  })
 
   if (!records.length) {
     return (
