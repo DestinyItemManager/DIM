@@ -18,7 +18,7 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
-import { isLoadoutBuilderItem } from '../../loadout/item-utils';
+import { isLoadoutBuilderItem, pickSubclass } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
@@ -92,24 +92,14 @@ export default memo(function LockArmorAndPerks({
     };
 
   const chooseSubclass = async () => {
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item: DimItem) =>
-          item.bucket.type === 'Class' &&
-          item.sockets !== null &&
-          selectedStore.items.includes(item) &&
-          itemCanBeInLoadout(item),
-        // We can only sort so that the classes are grouped and stasis comes first
-        sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
-        prompt: t('Loadouts.ChooseItem', { name: 'Subclass' }),
+    const subclassItemFilter = (item: DimItem) =>
+      item.sockets !== null && selectedStore.items.includes(item) && itemCanBeInLoadout(item);
 
-        // don't show information related to selected perks so we don't give the impression
-        // that we will update perk selections when applying the loadout
-        ignoreSelectedPerks: true,
-      });
+    const item = await pickSubclass(subclassItemFilter);
 
+    if (item) {
       lbDispatch({ type: 'updateSubclass', item });
-    } catch (e) {}
+    }
   };
 
   const onModClicked = (mod: PluggableInventoryItemDefinition) =>
