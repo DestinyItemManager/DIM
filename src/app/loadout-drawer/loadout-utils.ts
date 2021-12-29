@@ -11,7 +11,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
+import { getFirstSocketByCategoryHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -100,6 +100,25 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   if (mods.length) {
     loadout.parameters = {
       mods,
+    };
+  }
+  const modsByBucket = {};
+  for (const item of items.filter((i) => i.bucket.inArmor)) {
+    const plugs = item.sockets
+      ? _.compact(
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+            (s) => s.plugged?.plugDef.hash
+          )
+        )
+      : [];
+    if (plugs.length) {
+      modsByBucket[item.bucket.hash] = plugs;
+    }
+  }
+  if (!_.isEmpty(modsByBucket)) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      modsByBucket,
     };
   }
   loadout.classType = dimStore.classType;

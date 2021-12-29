@@ -59,6 +59,8 @@ export default function LoadoutItemCategorySection({
           Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
           (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
         );
+  const equippedItems =
+    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
 
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
@@ -84,10 +86,10 @@ export default function LoadoutItemCategorySection({
       )}
       {category === 'Armor' && items && (
         <>
-          {items.length === 5 && (
+          {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
               <LoadoutStats
-                stats={getLoadoutStats(defs, loadout.classType, subclass, items, savedMods)}
+                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
                 characterClass={loadout.classType}
               />
             </div>
@@ -181,6 +183,8 @@ function FashionMods({ item, modsForBucket }: { item?: DimItem; modsForBucket: n
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
 
+  // TODO: dim out the mod if it's really unselected - differentiate between "I chose no mod"
+
   // TODO: dim out the mod if it's not unlocked or doesn't fit on the selected item
   //const cosmeticSockets = item?.sockets ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics) : []
   //const shaderEnabled = shader && cosmeticSockets.some(())
@@ -190,8 +194,14 @@ function FashionMods({ item, modsForBucket }: { item?: DimItem; modsForBucket: n
 
   return (
     <div className={clsx(styles.items, styles.fashion, styles.unequipped)}>
-      <PlugDef plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition} />
-      <PlugDef plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition} />
+      <PlugDef
+        className={clsx({ [styles.missingItem]: !shader })}
+        plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
+      />
+      <PlugDef
+        className={clsx({ [styles.missingItem]: !ornament })}
+        plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
+      />
     </div>
   );
 }
