@@ -41,6 +41,13 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
+      if (socket.socketDefinition.socketTypeHash === 2218962841 && socket.plugSet) {
+        // Filter out unpluggable MW plugs
+        socket.plugSet.plugs = socket.plugSet.plugs.filter(
+          (plug) =>
+            plug.plugDef.plug.plugCategoryHash === socket.plugged?.plugDef.plug.plugCategoryHash
+        );
+      }
       setSocketInMenu(socket);
     } else {
       onPlugClicked?.({
