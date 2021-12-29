@@ -176,11 +176,15 @@ export function setSocketOverrideResult(
   equipNotPossible?: boolean
 ) {
   return produce<LoadoutApplyState>((state) => {
-    state.socketOverrideStates[item.index].results[socketIndex] = {
-      ...state.socketOverrideStates[item.index].results[socketIndex],
-      state: socketState,
-      error,
-    };
+    const thisSocketResult = state.socketOverrideStates[item.index].results[socketIndex];
+
+    // don't insert a state or error for anything that wasn't given an initial tracking state
+    if (!thisSocketResult) {
+      return;
+    }
+
+    thisSocketResult.state = socketState;
+    thisSocketResult.error = error;
     state.equipNotPossible ||= equipNotPossible || false;
   });
 }
