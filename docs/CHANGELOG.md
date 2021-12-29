@@ -5,7 +5,7 @@
 * The progress notification for applying a loadout now shows each item and mod as it's being applied.
 * Mod picker now correctly names inserted thing (e.g Fragment, Shader).
 * Dares of Eternity now shows streak information under Progress > Ranks
-* Ignore outdated/removed artifact mods.
+* Ignore outdated/removed artifact mods still attached to armor.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 
