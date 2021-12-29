@@ -61,6 +61,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    touch-action: none;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
