@@ -344,6 +344,7 @@ function fillLoadoutFromEquipped(
         mods,
       };
     }
+    // Save "fashion" mods for equipped items
     const modsByBucket = {};
     for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
       const plugs = item.sockets

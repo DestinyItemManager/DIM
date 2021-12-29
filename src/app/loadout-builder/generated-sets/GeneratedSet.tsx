@@ -2,7 +2,7 @@ import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
+import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
@@ -79,7 +79,7 @@ function GeneratedSet({
   }
 
   const itemModAssignments = useMemo(() => {
-    const { itemModAssignments } = getCheapestModAssignments(
+    const { itemModAssignments } = fitMostMods(
       displayedItems,
       lockedMods,
       defs,

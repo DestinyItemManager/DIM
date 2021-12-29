@@ -11,7 +11,7 @@ import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import Mod from 'app/loadout/loadout-ui/Mod';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { getCheapestModAssignments } from 'app/loadout/mod-assignment-utils';
+import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -121,14 +121,14 @@ export default function CompareDrawer({
   }, [selectedLoadout, defs, buckets, allItems]);
 
   const { loSetAssignedMods, itemModAssignments, unassignedMods } = useMemo(() => {
-    const { itemModAssignments: loSetAssignedMods } = getCheapestModAssignments(
+    const { itemModAssignments: loSetAssignedMods } = fitMostMods(
       setItems,
       lockedMods,
       defs,
       upgradeSpendTier,
       lockItemEnergyType
     );
-    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(
+    const { itemModAssignments, unassignedMods } = fitMostMods(
       loadoutItems,
       lockedMods,
       defs,

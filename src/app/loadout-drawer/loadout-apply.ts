@@ -200,6 +200,21 @@ function doApplyLoadout(
         // Filter out mods that no longer exist
         defs.InventoryItem.get(h)
       );
+      // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
+      const modsByBucketToApply: {
+        [bucketHash: number]: number[];
+      } = {};
+      if (!store.isVault && loadout.parameters?.modsByBucket) {
+        for (const [bucketHash, mods] of Object.entries(loadout.parameters.modsByBucket)) {
+          const filteredMods = mods.filter((h) =>
+            // Filter out mods that no longer exist
+            defs.InventoryItem.get(h)
+          );
+          if (filteredMods.length) {
+            modsByBucketToApply[parseInt(bucketHash, 10)] = filteredMods;
+          }
+        }
+      }
 
       // Initialize items/mods/etc in the LoadoutApplyState, for the notification
       setLoadoutState(
@@ -233,6 +248,14 @@ function doApplyLoadout(
             modHash,
             state: LoadoutModState.Pending,
           }));
+          state.modStates.push(
+            ...Object.values(modsByBucketToApply)
+              .flat()
+              .map((modHash) => ({
+                modHash,
+                state: LoadoutModState.Pending,
+              }))
+          );
         })
       );
 
@@ -312,7 +335,9 @@ function doApplyLoadout(
             )
           );
           try {
-            const result = await dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
+            const result = await dispatch(
+              equipItems(getStore(getStores(), owner)!, itemsToEquip, cancelToken)
+            );
             // Bulk equip can partially fail
             setLoadoutState(
               produce((state) => {
@@ -411,7 +436,7 @@ function doApplyLoadout(
           itemsToEquip.map((i) => getLoadoutItem(i, store, stores))
         );
         try {
-          const result = await dispatch(equipItems(store, realItemsToEquip));
+          const result = await dispatch(equipItems(store, realItemsToEquip, cancelToken));
           // Bulk equip can partially fail
           setLoadoutState(
             produce((state) => {
@@ -451,7 +476,7 @@ function doApplyLoadout(
 
         // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState));
+        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState, cancelToken));
         const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
           Object.values(r.results)
         );
@@ -468,11 +493,18 @@ function doApplyLoadout(
       }
 
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
-      if (modsToApply.length) {
+      if (modsToApply.length || !_.isEmpty(modsByBucketToApply)) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
-          applyLoadoutMods(applicableLoadoutItems, store.id, modsToApply, setLoadoutState)
+          applyLoadoutMods(
+            applicableLoadoutItems,
+            store.id,
+            modsToApply,
+            modsByBucketToApply,
+            setLoadoutState,
+            cancelToken
+          )
         );
         const { modStates } = getLoadoutState();
         infoLog(
@@ -774,7 +806,8 @@ export function clearItemsOffCharacter(
 // TODO: Leave unmentioned sockets alone!
 function applySocketOverrides(
   itemsWithOverrides: LoadoutItem[],
-  setLoadoutState: LoadoutStateUpdater
+  setLoadoutState: LoadoutStateUpdater,
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -828,7 +861,9 @@ function applySocketOverrides(
             )
           );
 
-        await dispatch(equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, true));
+        await dispatch(
+          equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+        );
       }
     }
   };
@@ -846,7 +881,12 @@ function applyLoadoutMods(
   storeId: string,
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
+  /** Extra mods to apply that are specifically per bucket */
+  modsByBucket: {
+    [bucketHash: number]: number[];
+  },
   setLoadoutState: LoadoutStateUpdater,
+  cancelToken: CancelToken,
   /** if an item would be wiped to default in all sockets, don't do anything to that item */
   skipArmorsWithNoAssignments = true,
   /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
@@ -881,14 +921,16 @@ function applyLoadoutMods(
       )
     );
 
+    const allModHashes = modHashes.concat(Object.values(modsByBucket).flat());
+
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // Early exit - if all the mods are already there, nothing to do
-    if (allModsAreAlreadyApplied(armor, modHashes)) {
+    if (allModsAreAlreadyApplied(armor, allModHashes)) {
       infoLog('loadout mods', 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,
-        modStates: modHashes.map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
+        modStates: allModHashes.map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
       }));
       return;
     }
@@ -905,6 +947,29 @@ function applyLoadoutMods(
           error: new DimError('Loadouts.UnassignedModError'),
         })
       );
+    }
+
+    // Patch in assignments for mods by bucket (shaders/ornaments)
+    for (const [bucketHashStr, modsForBucket] of Object.entries(modsByBucket)) {
+      const bucketHash = parseInt(bucketHashStr, 10);
+      const item = armor.find((i) => i.bucket.hash === bucketHash);
+      if (item) {
+        itemModAssignments[item.id] = [
+          ...itemModAssignments[item.id],
+          ...modsForBucket.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem),
+        ];
+      } else {
+        for (const modHash of modsForBucket) {
+          // I guess technically these are unassigned
+          setLoadoutState(
+            setModResult({
+              modHash: modHash,
+              state: LoadoutModState.Unassigned,
+              error: new DimError('Loadouts.UnassignedModError'),
+            })
+          );
+        }
+      }
     }
 
     const applyModsPromises: Promise<void>[] = [];
@@ -943,7 +1008,9 @@ function applyLoadoutMods(
         }
 
         applyModsPromises.push(
-          dispatch(equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure))
+          dispatch(
+            equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure, cancelToken)
+          )
         );
       }
     }
@@ -994,6 +1061,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
+  cancelToken: CancelToken,
   includeAssignToDefault = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -1035,6 +1103,7 @@ function equipModsToItem(
         );
 
         // TODO: short circuit if equipping is not possible
+        cancelToken.checkCanceled();
         const result = await dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs));
         if (result) {
           if (result.success) {

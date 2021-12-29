@@ -28,7 +28,7 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
   // TODO: would be great to precalculate/memoize this by character ID and profileResponse
   for (const plugSetItem of plugSetItems) {
     // TODO: https://github.com/DestinyItemManager/DIM/issues/7561
-    if (plugSetItem.enabled) {
+    if (plugSetItem.canInsert) {
       unlockedPlugs.add(plugSetItem.plugItemHash);
     }
   }

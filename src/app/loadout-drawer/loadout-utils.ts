@@ -102,6 +102,7 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
       mods,
     };
   }
+  // Save "fashion" mods for equipped items
   const modsByBucket = {};
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
