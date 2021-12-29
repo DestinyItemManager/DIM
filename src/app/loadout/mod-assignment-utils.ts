@@ -307,7 +307,7 @@ export function fitMostMods(
           (unassignedModCount === assignmentUnassignedModCount &&
             totalActiveConditionalMods === assignmentActiveConditionalMods &&
             energyUsedAndWasted < assignmentEnergyCost) ||
-          // The assignment costs the same but we are changing less mods
+          // The assignment costs the same but we are changing fewer mods
           (unassignedModCount === assignmentUnassignedModCount &&
             totalActiveConditionalMods === assignmentActiveConditionalMods &&
             energyUsedAndWasted === assignmentEnergyCost &&
