@@ -32,6 +32,7 @@ export default function LoadoutItemCategorySection({
   savedMods,
   equippedItemIds,
   loadout,
+  hideOptimizeArmor,
 }: {
   category: string;
   subclass?: DimLoadoutItem;
@@ -39,6 +40,7 @@ export default function LoadoutItemCategorySection({
   savedMods: PluggableInventoryItemDefinition[];
   equippedItemIds: Set<string>;
   loadout: Loadout;
+  hideOptimizeArmor?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -81,7 +83,7 @@ export default function LoadoutItemCategorySection({
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          <OptimizerButton loadout={loadout} />
+          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} />}
         </>
       )}
     </div>
