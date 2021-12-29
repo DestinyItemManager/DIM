@@ -67,8 +67,15 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const loadoutable = !(!itemCanBeInLoadout(item) || !itemOwner);
 
   const inPostmaster = item.location.type === 'LostItems';
+  // The Account-wide bucket (consumables) exists only for the active character, so check that bucket.
+  // Otherwise, check the owner's bucket.
   const pullFromPostmaster = Boolean(
-    itemOwner && inPostmaster && canBePulledFromPostmaster(item, itemOwner, stores)
+    inPostmaster &&
+      (item.bucket.accountWide
+        ? stores
+            .filter((store) => store.current)
+            .some((store) => canBePulledFromPostmaster(item, store, stores))
+        : itemOwner && canBePulledFromPostmaster(item, itemOwner, stores))
   );
 
   const canVault = Boolean(itemOwner && canTransferToVault(itemOwner, item));

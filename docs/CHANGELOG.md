@@ -1,5 +1,7 @@
 ## Next
 
+* Consumables can now be pulled from postmasters other than the active character's.
+
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 
 * Fixed an issue for some users where Stasis Aspects were not shown when selecting Stasis subclass options.

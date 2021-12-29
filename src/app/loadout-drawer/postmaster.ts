@@ -5,6 +5,7 @@ import {
   capacityForItem,
   findItemsByBucket,
   getVault,
+  potentialSpaceLeftForItem,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
@@ -96,11 +97,13 @@ export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
  * Can the given item be pulled from postmaster into a store?
  */
 export function canBePulledFromPostmaster(i: DimItem, store: DimStore, stores: DimStore[]) {
-  return (
-    i.canPullFromPostmaster && // Can be pulled
-    // Either has space, or is going to a bucket we can make room in
-    ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
-  );
+  if (!i.canPullFromPostmaster) {
+    // can't be pulled
+    return false;
+  }
+  const potentialSpace = potentialSpaceLeftForItem(store, i, stores);
+  // Either has space, or we have determined there could be a way to make space.
+  return potentialSpace.guaranteed > 0 || potentialSpace.couldMakeSpace;
 }
 
 // We should load this from the manifest but it's hard to get it in here
