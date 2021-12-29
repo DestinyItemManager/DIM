@@ -45,7 +45,8 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
         // Filter out unpluggable MW plugs
         socket.plugSet.plugs = socket.plugSet.plugs.filter(
           (plug) =>
-            plug.plugDef.plug.plugCategoryHash === socket.plugged?.plugDef.plug.plugCategoryHash
+            plug.plugDef.plug.plugCategoryHash === socket.plugged?.plugDef.plug.plugCategoryHash &&
+            plug.plugDef.investmentStats[0].value > socket.plugged?.plugDef.investmentStats[0].value
         );
       }
       setSocketInMenu(socket);
