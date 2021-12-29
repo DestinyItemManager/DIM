@@ -7,17 +7,22 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
+import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faCalculator, searchIcon } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './LoadoutItemCategorySection.m.scss';
+import PlugDef from './PlugDef';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -30,6 +35,7 @@ export default function LoadoutItemCategorySection({
   subclass,
   items,
   savedMods,
+  modsByBucket,
   equippedItemIds,
   loadout,
 }: {
@@ -37,28 +43,34 @@ export default function LoadoutItemCategorySection({
   subclass?: DimLoadoutItem;
   items?: DimItem[];
   savedMods: PluggableInventoryItemDefinition[];
+  modsByBucket: {
+    [bucketHash: number]: number[];
+  };
   equippedItemIds: Set<string>;
   loadout: Loadout;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.type);
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
-      ? buckets.byCategory[category].map((b) => b.type!)
-      : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
-          buckets.byCategory[category].findIndex((b) => b.type === bucketType)
+      ? buckets.byCategory[category]
+      : _.sortBy(
+          Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
+          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
         );
 
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
       {items ? (
         <div className={styles.itemsInCategory}>
-          {bucketOrder.map((bucketType) => (
+          {bucketOrder.map((bucket) => (
             <ItemBucket
-              key={bucketType}
-              items={itemsByBucket[bucketType]}
+              key={bucket.hash}
+              bucketHash={bucket.hash}
+              items={itemsByBucket[bucket.hash]}
               equippedItemIds={equippedItemIds}
+              modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             />
           ))}
         </div>
@@ -97,19 +109,21 @@ function OptimizerButton({ loadout }: { loadout: Loadout }) {
 }
 
 function ItemBucket({
+  bucketHash,
   items,
   equippedItemIds,
+  modsForBucket,
 }: {
-  items: DimItem[] | undefined;
+  bucketHash: number;
+  items: DimItem[];
   equippedItemIds: Set<string>;
+  modsForBucket: number[];
 }) {
-  if (!items) {
-    return <div className={styles.items} />;
-  }
-
   const [equipped, unequipped] = _.partition(items, (i) =>
     i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
   );
+
+  const showFashion = LockableBucketHashes.includes(bucketHash);
 
   return (
     <div className={styles.itemBucket}>
@@ -122,12 +136,19 @@ function ItemBucket({
             {items.map((item) => (
               <ItemPopupTrigger item={item} key={item.id}>
                 {(ref, onClick) => (
-                  <div className={clsx({ [styles.missingItem]: item.owner === 'unknown' })}>
+                  <div
+                    className={clsx({
+                      [styles.missingItem]: item.owner === 'unknown',
+                    })}
+                  >
                     <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
                   </div>
                 )}
               </ItemPopupTrigger>
             ))}
+            {index === 0 && showFashion && (
+              <FashionMods item={items[0]} modsForBucket={modsForBucket} />
+            )}
           </div>
         ) : (
           index === 0 && (
@@ -138,10 +159,39 @@ function ItemBucket({
                 index === 0 ? styles.equipped : styles.unequipped
               )}
               key={index}
-            />
+            >
+              {/* TODO: show empty placeholder for bucket type? */}
+              {showFashion && <FashionMods modsForBucket={modsForBucket} />}
+            </div>
           )
         )
       )}
+    </div>
+  );
+}
+
+// TODO: Consolidate with the one in FashionDrawer
+function FashionMods({ item, modsForBucket }: { item?: DimItem; modsForBucket: number[] }) {
+  const defs = useD2Definitions()!;
+  const isShader = (m: number) =>
+    defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
+  const shader = modsForBucket.find(isShader);
+  const ornament = modsForBucket.find((m) => !isShader(m));
+
+  const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
+  const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
+
+  // TODO: dim out the mod if it's not unlocked or doesn't fit on the selected item
+  //const cosmeticSockets = item?.sockets ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics) : []
+  //const shaderEnabled = shader && cosmeticSockets.some(())
+
+  const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
+  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
+
+  return (
+    <div className={clsx(styles.items, styles.fashion, styles.unequipped)}>
+      <PlugDef plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition} />
+      <PlugDef plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition} />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
@@ -236,6 +237,7 @@ export default function FashionDrawer({
         {LockableBucketHashes.map((bucketHash) => (
           <FashionItem
             key={bucketHash}
+            classType={loadout.classType}
             bucketHash={bucketHash}
             item={armorItemsByBucketHash[bucketHash]}
             mods={modsByBucket[bucketHash]}
@@ -292,11 +294,13 @@ export default function FashionDrawer({
 
 function FashionItem({
   item,
+  classType,
   bucketHash,
   mods,
   onPickPlug,
 }: {
   item?: DimLoadoutItem;
+  classType: DestinyClass;
   bucketHash: number;
   mods?: number[];
   onPickPlug(params: PickPlugState): void;
@@ -309,7 +313,14 @@ function FashionItem({
 
   // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
   const exampleItem =
-    item ?? allItems.find((i) => i.bucket.hash === bucketHash && i.tier === 'Legendary')!;
+    item ??
+    allItems.find(
+      (i) => i.bucket.hash === bucketHash && i.tier === 'Legendary' && i.classType === classType
+    );
+
+  if (!exampleItem) {
+    return null;
+  }
 
   const cosmeticSockets = getSocketsByCategoryHash(
     exampleItem.sockets!,

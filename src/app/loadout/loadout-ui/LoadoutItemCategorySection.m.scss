@@ -32,6 +32,16 @@
   gap: 2px;
   grid-template-columns: 1fr 1fr;
   min-height: unset !important;
+
+  :global(.item) {
+    height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+  }
+
+  &.fashion {
+    :global(.item) {
+      height: unset;
+    }
+  }
 }
 
 .empty {
@@ -53,6 +63,7 @@
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
+  grid-template-columns: 1fr;
 }
 
 .unequipped {

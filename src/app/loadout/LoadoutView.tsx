@@ -54,7 +54,10 @@ export default function LoadoutView({
     return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, buckets, allItems, store]);
 
+  // TODO: dim unusable mods
   const savedMods = getModsFromLoadout(defs, loadout);
+  // TODO: filter down by usable mods?
+  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
@@ -93,6 +96,7 @@ export default function LoadoutView({
                 subclass={subclass}
                 items={categories[category]}
                 savedMods={savedMods}
+                modsByBucket={modsByBucket}
                 equippedItemIds={equippedItemIds}
                 loadout={loadout}
               />
@@ -101,9 +105,7 @@ export default function LoadoutView({
               <div className={styles.mods}>
                 <div className={styles.modsGrid}>
                   {savedMods.map((mod) => (
-                    <div key={getModRenderKey(mod)}>
-                      <PlugDef plug={mod} />
-                    </div>
+                    <PlugDef key={getModRenderKey(mod)} plug={mod} />
                   ))}
                 </div>
                 <button
