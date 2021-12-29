@@ -33,7 +33,7 @@ export default function ItemMoveLocations({
   const stores = useSelector(sortedStoresSelector);
   const vault = getVault(stores)!;
   // barring a user selection, default to moving the whole stack of this item
-  const [amount, setAmount] = useState(actionsModel.maximumMoveAmount);
+  const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch();
 
