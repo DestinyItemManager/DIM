@@ -33,7 +33,7 @@ export default function ItemMoveLocations({
   const stores = useSelector(sortedStoresSelector);
   const vault = getVault(stores)!;
   // barring a user selection, default to moving the whole stack of this item
-  const [amount, setAmount] = useState(item.amount);
+  const [amount, setAmount] = useState(actionsModel.maximumMoveAmount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useDispatch();
 
@@ -206,6 +206,19 @@ function PullButtons({
             {...sharedButtonProps}
           >
             <StoreIcon store={itemOwner} useBackground={true} label="1" />
+          </div>
+        )}
+        {showAmounts && actionsModel.maximumMoveAmount !== 1 && (
+          <div
+            className={styles.move}
+            onClick={() => submitMoveTo(itemOwner, false, actionsModel.maximumMoveAmount)}
+            {...sharedButtonProps}
+          >
+            <StoreIcon
+              store={itemOwner}
+              useBackground={true}
+              label={actionsModel.maximumMoveAmount.toString()}
+            />
           </div>
         )}
         <div
