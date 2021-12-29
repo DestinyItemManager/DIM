@@ -7,6 +7,7 @@
 .inventory-content {
   margin: 0 auto;
   width: 100%;
+  margin-top: var(--store-header-height);
 
   .title {
     top: 124px;
@@ -26,10 +27,6 @@
     min-width: auto;
     // Give room for the category selector strip (height 53px)
     padding-bottom: calc(#{53px + 10px} + env(safe-area-inset-bottom));
-  }
-
-  .body-scroll-lock & {
-    margin-top: var(--store-header-height);
   }
 }
 
@@ -213,12 +210,6 @@
 
   &:focus {
     outline: none;
-  }
-  @supports (position: sticky) {
-    position: sticky;
-  }
-  .body-scroll-lock & {
-    position: fixed;
   }
   &.sticky {
     box-shadow: 0 1px 4px 0 black;
