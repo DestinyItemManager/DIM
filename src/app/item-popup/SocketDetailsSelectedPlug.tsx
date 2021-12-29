@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { canInsertPlug } from 'app/inventory/advanced-write-actions';
+import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,

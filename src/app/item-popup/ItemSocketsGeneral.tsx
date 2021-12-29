@@ -117,6 +117,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             key={socketInMenu.socketIndex}
             item={item}
             socket={socketInMenu}
+            allowInsertPlug
             onClose={() => setSocketInMenu(null)}
             onPlugSelected={onPlugClicked}
           />,
