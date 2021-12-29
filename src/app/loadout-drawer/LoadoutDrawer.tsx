@@ -88,8 +88,25 @@ export default function LoadoutDrawer() {
   );
 
   const onAddItem = useCallback(
-    (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
-      stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
+    ({
+      item,
+      e,
+      equip,
+      socketOverrides,
+    }: {
+      item: DimItem;
+      e?: MouseEvent | React.MouseEvent;
+      equip?: boolean;
+      socketOverrides?: SocketOverrides;
+    }) =>
+      stateDispatch({
+        type: 'addItem',
+        item,
+        shift: Boolean(e?.shiftKey),
+        items,
+        equip,
+        socketOverrides,
+      }),
     [items]
   );
 
@@ -107,7 +124,7 @@ export default function LoadoutDrawer() {
    */
   useEventBusListener(
     addItem$,
-    useCallback(({ item, clickEvent }) => onAddItem(item, clickEvent), [onAddItem])
+    useCallback(({ item, clickEvent }) => onAddItem({ item, e: clickEvent }), [onAddItem])
   );
 
   const close = () => {
@@ -140,7 +157,7 @@ export default function LoadoutDrawer() {
         ignoreSelectedPerks: true,
       });
 
-      onAddItem(item);
+      onAddItem({ item });
       onRemoveItem(warnItem);
     } catch (e) {
     } finally {
@@ -180,6 +197,8 @@ export default function LoadoutDrawer() {
     };
     onSaveLoadout(e, newLoadout);
   };
+
+  const onDroppedItem = useCallback((item) => onAddItem({ item }), [onAddItem]);
 
   if (!loadout) {
     return null;
@@ -234,7 +253,7 @@ export default function LoadoutDrawer() {
     <Sheet onClose={close} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget onDroppedItem={onAddItem}>
+          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>

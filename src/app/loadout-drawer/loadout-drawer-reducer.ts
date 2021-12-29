@@ -38,7 +38,14 @@ export type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
+  | {
+      type: 'addItem';
+      item: DimItem;
+      shift: boolean;
+      items: DimItem[];
+      equip?: boolean;
+      socketOverrides?: SocketOverrides;
+    }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   /** Remove an item from the loadout */
@@ -85,16 +92,25 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip } = action;
+      const { item, shift, items, equip, socketOverrides } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
 
+      const draftLoadout = addItem(
+        loadout || newLoadout('', []),
+        item,
+        shift,
+        items,
+        equip,
+        socketOverrides
+      );
+
       return {
         ...state,
-        loadout: addItem(loadout || newLoadout('', []), item, shift, items, equip),
+        loadout: draftLoadout,
         isNew: !loadout,
       };
     }
@@ -174,7 +190,8 @@ function addItem(
   item: DimItem,
   shift: boolean,
   items: DimItem[],
-  equip?: boolean
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -211,6 +228,10 @@ function addItem(
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
           }
           loadoutItem.equipped = true;
+        }
+
+        if (socketOverrides) {
+          loadoutItem.socketOverrides = socketOverrides;
         }
 
         draftLoadout.items.push(loadoutItem);
