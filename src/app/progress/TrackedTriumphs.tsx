@@ -34,7 +34,7 @@ export function TrackedTriumphs({
   }
 
   // determine absolute path of record for sorting purpose
-  const record_path = (r: DestinyRecordDefinition) => {
+  const recordPath = (r: DestinyRecordDefinition) => {
     const path: string[] = [];
     let parent: (DestinyRecordDefinition | DestinyPresentationNodeDefinition) = r;
 
@@ -46,11 +46,7 @@ export function TrackedTriumphs({
   };
 
   // sort by parent node groups (alphabetically)
-  records = records.sort((a,b) => {
-    const pathA = record_path(a.recordDef).join("/")
-    const pathB = record_path(b.recordDef).join("/")
-    return pathA.localeCompare(pathB);
-  })
+  records = _.sortBy(records, (record) => recordPath(record.recordDef).join("/"))
 
   if (!records.length) {
     return (
