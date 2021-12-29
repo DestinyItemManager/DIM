@@ -470,6 +470,8 @@
     "Season": "Season",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "SelectSubclass": "Select subclass",
+    "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
     "ShowGear": "{{class}} Armor",
@@ -919,12 +921,26 @@
   "Sockets": {
     "ApplyPerks": "Apply Perks",
     "SelectWishlistPerks": "Preview Wishlist Perks",
-    "InsertModButton": "Insert Mod",
-    "SelectModButton": "Select Mod",
-    "InsertShaderButton": "Apply Shader",
-    "SelectShaderButton": "Select Shader",
-    "InsertOrnamentButton": "Apply Ornament",
-    "SelectOrnamentButton": "Select Ornament",
+    "Insert": {
+      "Mod": "Insert Mod",
+      "Shader": "Apply Shader",
+      "Ornament": "Apply Ornament",
+      "Ability": "Equip Ability",
+      "Fragment": "Insert Fragment",
+      "Aspect": "Insert Aspect",
+      "Transmat": "Apply Transmat Effect",
+      "Projection": "Apply Ghost Projection"
+    },
+    "Select": {
+      "Mod": "Select Mod",
+      "Shader": "Select Shader",
+      "Ornament": "Select Ornament",
+      "Ability": "Select Ability",
+      "Fragment": "Select Fragment",
+      "Aspect": "Select Aspect",
+      "Transmat": "Select Transmat Effect",
+      "Projection": "Select Ghost Projection"
+    },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"
   },

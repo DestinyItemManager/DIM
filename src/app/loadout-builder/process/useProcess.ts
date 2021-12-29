@@ -2,7 +2,9 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { keyByStatHash } from 'app/inventory/store/stats';
+import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   canSwapEnergyFromUpgradeSpendTier,
   upgradeSpendTierToMaxEnergy,
@@ -11,6 +13,7 @@ import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout/
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import {
   getInterestingSocketMetadatas,
   getModTypeTagByPlugCategoryHash,
@@ -45,19 +48,31 @@ interface ProcessState {
 /**
  * Hook to process all the stat groups for LO in a web worker.
  */
-// TODO: introduce params object
-export function useProcess(
-  defs: D2ManifestDefinitions,
-  selectedStore: DimStore,
-  filteredItems: ItemsByBucket,
-  lockedMods: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean,
-  statOrder: number[],
-  statFilters: StatFilters,
-  anyExotic: boolean,
-  disabledDueToMaintenance: boolean
-) {
+export function useProcess({
+  defs,
+  selectedStore,
+  filteredItems,
+  lockedMods,
+  subclass,
+  upgradeSpendTier,
+  lockItemEnergyType,
+  statOrder,
+  statFilters,
+  anyExotic,
+  disabledDueToMaintenance,
+}: {
+  defs: D2ManifestDefinitions;
+  selectedStore: DimStore;
+  filteredItems: ItemsByBucket;
+  lockedMods: PluggableInventoryItemDefinition[];
+  subclass: DimLoadoutItem | undefined;
+  upgradeSpendTier: UpgradeSpendTier;
+  lockItemEnergyType: boolean;
+  statOrder: number[];
+  statFilters: StatFilters;
+  anyExotic: boolean;
+  disabledDueToMaintenance: boolean;
+}) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
@@ -155,12 +170,18 @@ export function useProcess(
       mods.map(mapArmor2ModToProcessMod)
     );
 
+    const subclassPlugs = subclass?.socketOverrides
+      ? Object.values(subclass.socketOverrides)
+          .map((hash) => defs.InventoryItem.get(hash))
+          .filter(isPluggableItem)
+      : emptyArray<PluggableInventoryItemDefinition>();
+
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
     const workerStart = performance.now();
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedMods, selectedStore.classType),
+        getTotalModStatChanges(lockedMods, subclassPlugs, selectedStore.classType),
         lockedProcessMods,
         statOrder,
         statFilters,
@@ -204,6 +225,7 @@ export function useProcess(
     upgradeSpendTier,
     anyExotic,
     disabledDueToMaintenance,
+    subclass?.socketOverrides,
   ]);
 
   return { result, processing, remainingTime };

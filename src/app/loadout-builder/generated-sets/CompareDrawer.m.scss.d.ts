@@ -4,14 +4,10 @@ interface CssExports {
   'content': string;
   'fillRow': string;
   'header': string;
-  'item': string;
   'loadoutName': string;
   'noLoadouts': string;
-  'set': string;
   'setHeader': string;
   'setTitle': string;
-  'unassigned': string;
-  'unassignedMods': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

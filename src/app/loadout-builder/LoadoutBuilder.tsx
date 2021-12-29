@@ -181,6 +181,7 @@ function LoadoutBuilder({
       pinnedItems,
       excludedItems,
       lockedMods,
+      subclass,
       lockedExoticHash,
       selectedStoreId,
       statFilters,
@@ -258,18 +259,19 @@ function LoadoutBuilder({
     ]
   );
 
-  const { result, processing, remainingTime } = useProcess(
+  const { result, processing, remainingTime } = useProcess({
     defs,
     selectedStore,
     filteredItems,
     lockedMods,
+    subclass,
     upgradeSpendTier,
     lockItemEnergyType,
     statOrder,
     statFilters,
-    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
-    disabledDueToMaintenance
-  );
+    anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    disabledDueToMaintenance,
+  });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
   // TODO: replace some of these individual params with this object
@@ -360,6 +362,7 @@ function LoadoutBuilder({
         lockedMods={lockedMods}
         upgradeSpendTier={upgradeSpendTier}
         lockItemEnergyType={lockItemEnergyType}
+        subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
@@ -460,6 +463,7 @@ function LoadoutBuilder({
         {filteredSets && (
           <GeneratedSets
             sets={filteredSets}
+            subclass={subclass}
             lockedMods={processing ? emptyArray() : lockedMods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
@@ -495,14 +499,11 @@ function LoadoutBuilder({
           ReactDOM.createPortal(
             <CompareDrawer
               set={compareSet}
+              selectedStore={selectedStore}
               loadouts={loadouts}
               initialLoadoutId={preloadedLoadout?.id}
-              lockedMods={lockedMods}
+              subclass={subclass}
               classType={classType}
-              statOrder={statOrder}
-              enabledStats={enabledStats}
-              upgradeSpendTier={upgradeSpendTier}
-              lockItemEnergyType={lockItemEnergyType}
               params={params}
               notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}

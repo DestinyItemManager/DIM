@@ -146,6 +146,7 @@ function doApplyLoadout(
   allowUndo = false
 ): ThunkResult {
   return async (dispatch, getState) => {
+    const defs = d2ManifestSelector(getState())!;
     // Stop farming mode while we're applying the loadout
     dispatch(interruptFarming());
 
@@ -195,7 +196,10 @@ function doApplyLoadout(
       });
 
       // Don't apply mods when moving to the vault
-      const modsToApply = (!store.isVault && loadout.parameters?.mods) || [];
+      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter((h) =>
+        // Filter out mods that no longer exist
+        defs.InventoryItem.get(h)
+      );
 
       // Initialize items/mods/etc in the LoadoutApplyState, for the notification
       setLoadoutState(

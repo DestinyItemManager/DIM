@@ -1,7 +1,7 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, {
@@ -67,6 +67,7 @@ function getMeasureSet(sets: readonly ArmorSet[]) {
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
+  subclass: DimLoadoutItem | undefined;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];
@@ -88,6 +89,7 @@ export default memo(function GeneratedSets({
   pinnedItems,
   selectedStore,
   sets,
+  subclass,
   statOrder,
   enabledStats,
   loadouts,
@@ -137,6 +139,7 @@ export default memo(function GeneratedSets({
           ref={measureSetRef}
           style={{}}
           set={measureSet}
+          subclass={subclass}
           selectedStore={selectedStore}
           lockedMods={lockedMods}
           pinnedItems={pinnedItems}
@@ -167,6 +170,7 @@ export default memo(function GeneratedSets({
                   key={key}
                   style={style}
                   set={sets[index]}
+                  subclass={subclass}
                   selectedStore={selectedStore}
                   lockedMods={lockedMods}
                   pinnedItems={pinnedItems}
