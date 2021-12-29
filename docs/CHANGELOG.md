@@ -6,6 +6,7 @@
 * Mod picker now correctly names inserted thing (e.g Fragment, Shader).
 * Dares of Eternity now shows streak information under Progress > Ranks
 * Ignore outdated/removed artifact mods still attached to armor.
+* You can now select Stasis subclasses in the Loadout Optimizer and use the stat effects from fragments.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 
