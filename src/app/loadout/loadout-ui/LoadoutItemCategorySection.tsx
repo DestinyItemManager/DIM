@@ -150,9 +150,7 @@ function ItemBucket({
                 )}
               </ItemPopupTrigger>
             ))}
-            {index === 0 && showFashion && (
-              <FashionMods item={items[0]} modsForBucket={modsForBucket} />
-            )}
+            {index === 0 && showFashion && <FashionMods modsForBucket={modsForBucket} />}
           </div>
         ) : (
           index === 0 && (
@@ -175,7 +173,7 @@ function ItemBucket({
 }
 
 // TODO: Consolidate with the one in FashionDrawer
-function FashionMods({ item, modsForBucket }: { item?: DimItem; modsForBucket: number[] }) {
+function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
   const defs = useD2Definitions()!;
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
@@ -184,8 +182,6 @@ function FashionMods({ item, modsForBucket }: { item?: DimItem; modsForBucket: n
 
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
-
-  // TODO: dim out the mod if it's really unselected - differentiate between "I chose no mod"
 
   // TODO: dim out the mod if it's not unlocked or doesn't fit on the selected item
   //const cosmeticSockets = item?.sockets ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics) : []

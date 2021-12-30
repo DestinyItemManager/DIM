@@ -45,19 +45,16 @@ export default function FashionDrawer({
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
 
-  console.log({ loadout });
-
   const equippedIds = new Set([...loadout.items.filter((i) => i.equipped).map((i) => i.id)]);
-
-  const armorItemsByBucketHash: { [bucketHash: number]: DimItem } = _.mapValues(
-    _.groupBy(
-      items.filter((i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)),
-      (i) => i.bucket.hash
-    ),
-    (items) => items[0]
+  const armor = items.filter(
+    (i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)
   );
 
-  // TODO: categorize by shader, ornament
+  const armorItemsByBucketHash: { [bucketHash: number]: DimItem } = _.keyBy(
+    armor,
+    (i) => i.bucket.hash
+  );
+
   const [modsByBucket, setModsByBucket] = useState(loadout.parameters?.modsByBucket ?? {});
   const isShader = (h: number) =>
     defs.InventoryItem.get(h)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
@@ -66,12 +63,6 @@ export default function FashionDrawer({
   const ornaments = modHashes.filter((h) => !isShader(h));
 
   // TODO: if they add an armor piece that can't slot the selected mods (ornaments), clear them
-  // TODO: pick mods based on what's unlocked (ModPicker may not be correct? SocketDetails?)
-  // TODO: fill out fashion when adding equipped?
-  // TODO: reset/clear all from top level
-  // TODO: footer with an accept/cancel button? Put the other buttons there?
-
-  console.log({ modsByBucket });
 
   const header = (
     <>
@@ -167,13 +158,9 @@ export default function FashionDrawer({
       return;
     }
 
-    console.log({ ornaments, groupedOrnaments, mostCommonOrnamentSet });
-
     const set = defs.PresentationNode.get(
       parseInt(mostCommonOrnamentSet[0], 10)
     ).children.collectibles.map((c) => defs.Collectible.get(c.collectibleHash).itemHash);
-
-    console.log({ set });
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
@@ -273,6 +260,15 @@ export default function FashionDrawer({
     </>
   );
 
+  // TODO: We should plumb down the store that this loadout is being edited for here, to determine class type
+  const classType =
+    loadout.classType !== DestinyClass.Unknown
+      ? loadout.classType
+      : armor.length > 0
+      ? armor[0].classType
+      : // This is a failure, it won't display right
+        DestinyClass.Unknown;
+
   return (
     <Sheet onClose={onClose} header={header} footer={footer} sheetClassName={styles.sheet}>
       <div className={styles.items}>
@@ -280,7 +276,7 @@ export default function FashionDrawer({
         {LockableBucketHashes.map((bucketHash) => (
           <FashionItem
             key={bucketHash}
-            classType={loadout.classType}
+            classType={classType}
             bucketHash={bucketHash}
             item={armorItemsByBucketHash[bucketHash]}
             mods={modsByBucket[bucketHash]}
