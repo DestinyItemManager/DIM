@@ -7,6 +7,9 @@
 * Dares of Eternity now shows streak information under Progress > Ranks
 * Ignore outdated/removed artifact mods still attached to armor.
 * You can now select Stasis subclasses in the Loadout Optimizer and use the stat effects from fragments.
+* When determining mod assignments, DIM will now consider in game mod placement and attempt to use the same position if possible.
+* Tracked Triumphs are now grouped together with similar records.
+* Starting the Compare view from a single armor piece now includes other elements in initial comparison.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 

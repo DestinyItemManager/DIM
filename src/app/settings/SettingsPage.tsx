@@ -171,6 +171,7 @@ export default function SettingsPage() {
     season: t('Settings.SortBySeason'),
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
+    element: t('Organizer.Columns.Element'),
     masterworked: t('Settings.Masterworked'),
     // archetype: 'Archetype'
   };
