@@ -122,6 +122,9 @@ async function awaInsertSocketPlugFree(
   socket: DimSocket,
   plugItemHash: number
 ) {
+  if (item.hash === plugItemHash) {
+    throw new DimError('You cannot plug an item into itself!');
+  }
   return insertSocketPlugFree(authenticatedHttpClient, {
     itemId: item.id,
     plug: {
