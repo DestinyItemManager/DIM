@@ -194,6 +194,10 @@ function PullButtons({
 }) {
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
   const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
+  const moveMaxLabel =
+    item.amount === actionsModel.maximumMoveAmount
+      ? moveAllLabel
+      : `${actionsModel.maximumMoveAmount}`;
 
   return (
     <div className={clsx(styles.moveLocations, styles.moveLocationPadding)}>
@@ -208,26 +212,25 @@ function PullButtons({
             <StoreIcon store={itemOwner} useBackground={true} label="1" />
           </div>
         )}
-        {showAmounts && actionsModel.maximumMoveAmount !== 1 && (
+        {showAmounts ? (
+          actionsModel.maximumMoveAmount !== 1 && (
+            <div
+              className={styles.move}
+              onClick={() => submitMoveTo(itemOwner, false, actionsModel.maximumMoveAmount)}
+              {...sharedButtonProps}
+            >
+              <StoreIcon store={itemOwner} useBackground={true} label={moveMaxLabel} />
+            </div>
+          )
+        ) : (
           <div
             className={styles.move}
-            onClick={() => submitMoveTo(itemOwner, false, actionsModel.maximumMoveAmount)}
+            onClick={() => submitMoveTo(itemOwner, false, item.amount)}
             {...sharedButtonProps}
           >
-            <StoreIcon
-              store={itemOwner}
-              useBackground={true}
-              label={actionsModel.maximumMoveAmount.toString()}
-            />
+            <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
           </div>
         )}
-        <div
-          className={styles.move}
-          onClick={() => submitMoveTo(itemOwner, false, item.amount)}
-          {...sharedButtonProps}
-        >
-          <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
-        </div>
 
         {actionsModel.canVault && (
           <div

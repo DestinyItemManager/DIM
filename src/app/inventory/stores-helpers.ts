@@ -172,8 +172,8 @@ export function potentialSpaceLeftForItem(
         ? { guaranteed: item.maxStackSize, couldMakeSpace: !item.notransfer }
         : { guaranteed: 0, couldMakeSpace: Boolean(item.bucket.vaultBucket) };
     } else {
-      // We have a stack, so we can fill that stack up, and may be able to store by moving the items
-      // themselves to a different bucket.
+      // We have a stack, so we can fill that stack up, and may be able to store even more
+      // by moving the items themselves to a different bucket.
       return {
         guaranteed: Math.max(item.maxStackSize - existingAmount, 0),
         couldMakeSpace: !item.notransfer,
