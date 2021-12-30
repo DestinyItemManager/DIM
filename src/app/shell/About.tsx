@@ -37,7 +37,12 @@ const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki';
 
 export default function About() {
+  const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
+
   useEffect(() => {
+    if (iOSApp) {
+      return;
+    }
     const script = document.createElement('script');
 
     script.src = 'https://opencollective.com/dim/banner.js?style={"h2":{"color":"white"}}';
@@ -48,7 +53,7 @@ export default function About() {
     return () => {
       delete window.OC;
     };
-  }, []);
+  }, [iOSApp]);
 
   const token = getToken();
   return (
@@ -87,30 +92,34 @@ export default function About() {
         )}
       </ul>
       <div className={styles.social}>
-        <div>
-          <h2>
-            <ExternalLink href={openCollectiveLinkDirect}>
-              <AppIcon icon={heartIcon} /> {t('Views.Support.Support')}
-            </ExternalLink>
-          </h2>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
-            }}
-          />
-        </div>
-        <div>
-          <h2>
-            <ExternalLink href={storeLinkDirect}>
-              <AppIcon icon={faTshirt} /> {t('Header.Shop')}
-            </ExternalLink>
-          </h2>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('Views.Support.Store', { link: storeLink }),
-            }}
-          />
-        </div>
+        {!iOSApp && (
+          <div>
+            <h2>
+              <ExternalLink href={openCollectiveLinkDirect}>
+                <AppIcon icon={heartIcon} /> {t('Views.Support.Support')}
+              </ExternalLink>
+            </h2>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
+              }}
+            />
+          </div>
+        )}
+        {!iOSApp && (
+          <div>
+            <h2>
+              <ExternalLink href={storeLinkDirect}>
+                <AppIcon icon={faTshirt} /> {t('Header.Shop')}
+              </ExternalLink>
+            </h2>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: t('Views.Support.Store', { link: storeLink }),
+              }}
+            />
+          </div>
+        )}
         <div>
           <h2>
             <ExternalLink href={twitterLink}>
@@ -207,17 +216,21 @@ export default function About() {
         <dd>{t('Views.About.FAQAccessAnswer')}</dd>
       </dl>
 
-      <h1>{t('Views.Support.Support')}</h1>
-      <p>{t('Views.Support.FreeToDownload')}</p>
-      <p>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
-          }}
-        />{' '}
-        {t('Views.Support.BackersDetail')}
-      </p>
-      <div id="opencollective" />
+      {!iOSApp && (
+        <>
+          <h1>{t('Views.Support.Support')}</h1>
+          <p>{t('Views.Support.FreeToDownload')}</p>
+          <p>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
+              }}
+            />{' '}
+            {t('Views.Support.BackersDetail')}
+          </p>
+          <div id="opencollective" />
+        </>
+      )}
     </StaticPage>
   );
 }
