@@ -82,6 +82,8 @@ export function fitMostMods(
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
   // The total number of conditional mods that are activated in the assignment
   let assignmentActiveConditionalMods = Number.MIN_SAFE_INTEGER;
+  // The total number of bucket independent mods that are changed in the assignment
+  let assignmentModChangeCount = Number.MAX_SAFE_INTEGER;
 
   for (const item of items) {
     bucketSpecificAssignments[item.id] = { assigned: [], unassigned: [] };
@@ -237,6 +239,23 @@ export function fitMostMods(
           energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
         }
 
+        // Skip further checks if we are spending more energy that we were previously.
+        if (
+          unassignedModCount === assignmentUnassignedModCount &&
+          totalActiveConditionalMods === assignmentActiveConditionalMods &&
+          energyUsedAndWasted > assignmentEnergyCost
+        ) {
+          continue;
+        }
+
+        let modChangeCount = 0;
+        for (const item of items) {
+          modChangeCount += countBucketIndependentModChangesForItem(
+            item,
+            assignments[item.id].assigned
+          );
+        }
+
         // One of the following three conditions needs to be true for the assignment to be better
         if (
           // Less unassigned mods
@@ -247,13 +266,19 @@ export function fitMostMods(
           // The same amount of unassigned and active mods but the assignment is cheaper
           (unassignedModCount === assignmentUnassignedModCount &&
             totalActiveConditionalMods === assignmentActiveConditionalMods &&
-            energyUsedAndWasted <= assignmentEnergyCost)
+            energyUsedAndWasted < assignmentEnergyCost) ||
+          // The assignment costs the same but we are changing fewer mods
+          (unassignedModCount === assignmentUnassignedModCount &&
+            totalActiveConditionalMods === assignmentActiveConditionalMods &&
+            energyUsedAndWasted === assignmentEnergyCost &&
+            modChangeCount < assignmentModChangeCount)
         ) {
           // We save this assignment and its metadata because it is determined to be better
           bucketIndependentAssignments = assignments;
           assignmentEnergyCost = energyUsedAndWasted;
           assignmentUnassignedModCount = unassignedModCount;
           assignmentActiveConditionalMods = totalActiveConditionalMods;
+          assignmentModChangeCount = modChangeCount;
         }
       }
     }
@@ -696,4 +721,32 @@ export function isAssigningToDefault(
     );
   }
   return socket && assignment.mod.hash === getDefaultPlugHash(socket, defs);
+}
+
+/**
+ * This counts the number of bucket independent mods that are already plugged into an item.
+ *
+ * Because there is only a single, general, combat, and activity mod socket on each item
+ * it is sufficient to just check that each mod is socketed somewhere within the armor mod
+ * sockets.
+ */
+function countBucketIndependentModChangesForItem(
+  item: DimItem,
+  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[]
+) {
+  let count = 0;
+
+  for (const mod of bucketIndependentAssignmentsForItem) {
+    const socketsThatWillFitMod = getSocketsByCategoryHash(
+      item.sockets!,
+      SocketCategoryHashes.ArmorMods
+    );
+    if (socketsThatWillFitMod.some((socket) => socket.plugged?.plugDef.hash === mod.hash)) {
+      continue;
+    } else {
+      count += 1;
+    }
+  }
+
+  return count;
 }

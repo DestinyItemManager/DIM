@@ -32,10 +32,12 @@ export default function LoadoutView({
   loadout,
   store,
   actionButtons,
+  hideOptimizeArmor,
 }: {
   loadout: Loadout;
   store: DimStore;
   actionButtons: ReactNode[];
+  hideOptimizeArmor?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -99,6 +101,7 @@ export default function LoadoutView({
                 modsByBucket={modsByBucket}
                 equippedItemIds={equippedItemIds}
                 loadout={loadout}
+                hideOptimizeArmor={hideOptimizeArmor}
               />
             ))}
             {savedMods.length > 0 ? (

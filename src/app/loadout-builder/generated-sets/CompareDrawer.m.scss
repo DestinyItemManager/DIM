@@ -35,51 +35,6 @@
   margin-bottom: 4px;
 }
 
-.set {
-  display: flex;
-  flex-flow: row nowrap;
-  padding: 0;
-
-  @include phone-portrait {
-    flex-direction: column;
-  }
-}
-
-.item {
-  display: grid;
-  grid-template-areas:
-    'item sockets'
-    'button sockets';
-  gap: 6px;
-  width: min-content;
-  align-items: start;
-  justify-content: start;
-  margin: 7px 0 14px 0;
-
-  @include phone-portrait {
-    grid-template-columns: min-content min-content 1fr;
-    grid-template-areas: 'item sockets button';
-    width: 100%;
-  }
-
-  > *:first-child {
-    grid-area: item;
-  }
-
-  > :last-child {
-    margin-right: 0;
-  }
-}
-
-.unassigned {
-  margin-bottom: 8px;
-}
-
-.unassignedMods {
-  display: flex;
-  flex-direction: row;
-}
-
 .noLoadouts {
   margin: 16px;
   font-size: 14px;

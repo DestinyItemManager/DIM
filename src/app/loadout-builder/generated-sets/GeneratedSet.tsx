@@ -1,7 +1,7 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
@@ -18,6 +18,7 @@ import SetStats from './SetStats';
 
 interface Props {
   set: ArmorSet;
+  subclass: DimLoadoutItem | undefined;
   notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
@@ -40,6 +41,7 @@ interface Props {
  */
 function GeneratedSet({
   set,
+  subclass,
   notes,
   selectedStore,
   lockedMods,
@@ -127,6 +129,7 @@ function GeneratedSet({
       </div>
       <GeneratedSetButtons
         set={set}
+        subclass={subclass}
         store={selectedStore}
         canCompareLoadouts={canCompareLoadouts}
         halfTierMods={halfTierMods}

@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { pickSubclass } from 'app/loadout/item-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -147,9 +148,7 @@ export default function LoadoutDrawerContents({
         {showSubclassButton && (
           <a
             key={subclassBucket.type}
-            onClick={() =>
-              pickLoadoutSubclass(loadout, subclassBucket, subclassItems, add, onShowItemPicker)
-            }
+            onClick={() => pickLoadoutSubclass(loadout, subclassItems, add, onShowItemPicker)}
             className="dim-button loadout-add"
           >
             <AppIcon icon={addIcon} /> {subclassBucket.name}
@@ -245,46 +244,32 @@ async function pickLoadoutItem(
 
 async function pickLoadoutSubclass(
   loadout: Loadout,
-  subclassBucket: InventoryBucket,
   savedSubclasses: DimItem[],
   add: (item: DimItem, e?: MouseEvent) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
-  function loadoutHasItem(item: DimItem) {
-    return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
-  }
-  function loadoutHasSubclassForClass(item: DimItem) {
-    return savedSubclasses.some(
-      (s) => item.bucket.type === 'Class' && s.classType === item.classType
-    );
-  }
+  const loadoutHasItem = (item: DimItem) =>
+    loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
+
+  const loadoutHasSubclassForClass = (item: DimItem) =>
+    savedSubclasses.some((s) => item.bucket.type === 'Class' && s.classType === item.classType);
+
+  const subclassItemFilter = (item: DimItem) =>
+    item.bucket.type === 'Class' &&
+    (!loadout ||
+      loadout.classType === DestinyClass.Unknown ||
+      item.classType === loadoutClassType) &&
+    itemCanBeInLoadout(item) &&
+    !loadoutHasSubclassForClass(item) &&
+    !loadoutHasItem(item);
 
   onShowItemPicker(true);
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.type === 'Class' &&
-        (!loadout ||
-          loadout.classType === DestinyClass.Unknown ||
-          item.classType === loadoutClassType) &&
-        itemCanBeInLoadout(item) &&
-        !loadoutHasSubclassForClass(item) &&
-        !loadoutHasItem(item),
-      // We can only sort so that the classes are grouped and stasis comes first
-      sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
-      prompt: t('Loadouts.ChooseItem', { name: subclassBucket.name }),
-
-      // don't show information related to selected perks so we don't give the impression
-      // that we will update perk selections when applying the loadout
-      ignoreSelectedPerks: true,
-    });
-
+  const item = await pickSubclass(subclassItemFilter);
+  if (item) {
     add(item);
-  } catch (e) {
-  } finally {
-    onShowItemPicker(false);
   }
+  onShowItemPicker(false);
 }
 
 function createSocketOverridesFromEquipped(item: DimItem) {

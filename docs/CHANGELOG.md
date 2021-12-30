@@ -4,6 +4,12 @@
 * Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
 * The progress notification for applying a loadout now shows each item and mod as it's being applied.
 * Mod picker now correctly names inserted thing (e.g Fragment, Shader).
+* Dares of Eternity now shows streak information under Progress > Ranks
+* Ignore outdated/removed artifact mods still attached to armor.
+* You can now select Stasis subclasses in the Loadout Optimizer and use the stat effects from fragments.
+* When determining mod assignments, DIM will now consider in game mod placement and attempt to use the same position if possible.
+* Tracked Triumphs are now grouped together with similar records.
+* Starting the Compare view from a single armor piece now includes other elements in initial comparison.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 
@@ -12,20 +18,25 @@
 ## 6.97.0 <span class="changelog-date">(2021-12-26)</span>
 
 * Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
-* The option to view Mod Assignments for a loadout is now available outside of Beta.
 * The stat bars shown in Compare are more accurately sized, relative to each other.
 * Fix an issue where mods might get plugged in too fast and bump into the armor's max Energy.
 * Update some error messages for when equipping items fails.
-* Radiant Light and Powerful Friends will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
-* Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
-* Loadout notes now retain whitespace formatting.
-* Added new filter "is:stackfull" to show items that are at max stack size.
-* If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
-* On the Loadouts page, missing items show up dimmed-out instead of not at all.
-* The Loadouts page can be filtered from the search bar in the header.
-* When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
-* Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
+* Added new filter `is:stackfull` to show items that are at max stack size.
 * Searching by perk now works on languages that use accented characters.
+* Tooltips for Mods, Fragments, Aspects, etc. now show information about their type.
+* Fix Subclasses sometimes showing a progress badge on their icon.
+* Fix cases where an item might inappropriately show with a wishlist thumbs-up.
+* Loadouts/Loadout Optimizer
+  * When re-Optimizing a loadout, the Loadout Optimizer's Compare button will now initially select the original loadout from the loadout page.
+  * If you open an existing loadout in Loadout Optimizer and the loadout has an exotic equipped, that exotic will be pre-selected in the LO settings.
+  * Armor set stats in Loadout Optimizer or Loadout Details will now show stat tiers exceeding T10 or going below T0.
+  * Radiant Light and Powerful Friends' activation conditions will now be accounted for when showing mod placements and applying mods to a loadout. If possible they will be assigned to an item so that their conditional perks are active.
+  * The option to view Mod Assignments for a loadout is now available outside of Beta.
+  * Loadout notes now retain whitespace formatting.
+  * On the Loadouts page, missing items show up dimmed-out instead of not at all.
+  * The Loadouts page can be filtered from the search bar in the header.
+  * Selecting toggleable subclass abilities like jumps and grenades now works more smoothly.
+  * Fixed an error when applying mod loadouts to armor too old to have mod energy.
 
 ### Beta Only
 

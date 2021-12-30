@@ -130,16 +130,23 @@ const getRpm = (i: DimItem) => {
 };
 
 /**
+ * Strips the (Timelost) or (Adept) suffixes for the user's language
+ * in order to include adept items in non-adept comparisons and vice versa.
+ */
+export const stripAdept = (name: string) =>
+  name
+    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
+    .trim()
+    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
+    .trim();
+
+/**
  * Generate possible comparisons for weapons, given a reference item.
  */
 export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
-  const adeptStripped = exampleItem.name
-    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .trim()
-    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
-    .trim();
+  const adeptStripped = stripAdept(exampleItem.name);
 
   let comparisonSets: CompareButton[] = _.compact([
     // same weapon type

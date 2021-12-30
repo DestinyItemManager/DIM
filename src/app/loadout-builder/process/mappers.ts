@@ -87,6 +87,7 @@ export function isModStatActive(
  */
 export function getTotalModStatChanges(
   lockedMods: PluggableInventoryItemDefinition[],
+  subclassPlugs: PluggableInventoryItemDefinition[],
   characterClass: DestinyClass
 ) {
   const totals: ArmorStats = {
@@ -104,6 +105,16 @@ export function getTotalModStatChanges(
         stat.statTypeHash in totals &&
         isModStatActive(characterClass, mod.hash, stat, lockedMods)
       ) {
+        totals[stat.statTypeHash] += stat.value;
+      }
+    }
+  }
+
+  // Purposely handling stats of subclasses differently as they currently don't have conditionals
+  // that I am aware of.
+  for (const plug of subclassPlugs) {
+    for (const stat of plug.investmentStats) {
+      if (stat.statTypeHash in totals) {
         totals[stat.statTypeHash] += stat.value;
       }
     }

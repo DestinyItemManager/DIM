@@ -11,8 +11,8 @@ import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import SubclassPlugDrawer from '../../loadout/SubclassPlugDrawer';
 import styles from './ItemSocketsSubclass.m.scss';
-import SubclassPlugDrawer from './SubclassPlugDrawer';
 
 interface Props {
   subclass: DimItem;
