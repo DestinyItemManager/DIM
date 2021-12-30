@@ -11,6 +11,7 @@ import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -41,6 +42,7 @@ export default function FashionDrawer({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
 
   console.log({ loadout });
@@ -87,7 +89,7 @@ export default function FashionDrawer({
           onClose();
         }}
       >
-        Choose Fashion
+        {t('FashionDrawer.Accept')}
       </button>
     </>
   );
@@ -199,41 +201,82 @@ export default function FashionDrawer({
     );
   };
 
+  const leftButtons = (
+    <>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={handleUseEquipped}
+          disabled={_.isEmpty(armorItemsByBucketHash)}
+        >
+          {t('FashionDrawer.UseEquipped')}
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={handleSyncShader}
+          disabled={shaders.length === 0}
+        >
+          {isPhonePortrait ? t('FashionDrawer.SyncShaders') : t('FashionDrawer.Sync')}{' '}
+          <AppIcon icon={rightArrowIcon} />
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={handleSyncOrnament}
+          disabled={ornaments.length === 0}
+        >
+          {isPhonePortrait ? t('FashionDrawer.SyncOrnaments') : t('FashionDrawer.Sync')}{' '}
+          <AppIcon icon={rightArrowIcon} />
+        </button>
+      </div>
+    </>
+  );
+
+  const rightButtons = (
+    <>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => setModsByBucket({})}
+          disabled={_.isEmpty(modsByBucket)}
+        >
+          {t('FashionDrawer.Reset')}
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => handleClearType(true)}
+          disabled={shaders.length === 0}
+        >
+          <AppIcon icon={clearIcon} /> {isPhonePortrait && t('FashionDrawer.ClearShaders')}
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => handleClearType(false)}
+          disabled={ornaments.length === 0}
+        >
+          <AppIcon icon={clearIcon} /> {isPhonePortrait && t('FashionDrawer.ClearOrnaments')}
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <Sheet onClose={onClose} header={header} footer={footer} sheetClassName={styles.sheet}>
       <div className={styles.items}>
-        <div className={styles.item}>
-          <div className={styles.rowButton}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={handleUseEquipped}
-              disabled={_.isEmpty(armorItemsByBucketHash)}
-            >
-              Use Equipped
-            </button>
-          </div>
-          <div className={styles.rowButton}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={handleSyncShader}
-              disabled={shaders.length === 0}
-            >
-              Sync <AppIcon icon={rightArrowIcon} />
-            </button>
-          </div>
-          <div className={styles.rowButton}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={handleSyncOrnament}
-              disabled={ornaments.length === 0}
-            >
-              Sync <AppIcon icon={rightArrowIcon} />
-            </button>
-          </div>
-        </div>
+        {!isPhonePortrait && <div className={styles.verticalButtons}>{leftButtons}</div>}
         {LockableBucketHashes.map((bucketHash) => (
           <FashionItem
             key={bucketHash}
@@ -244,39 +287,16 @@ export default function FashionDrawer({
             onPickPlug={setPickPlug}
           />
         ))}
-        <div className={styles.item}>
-          <div className={clsx(styles.rowButton, styles.right)}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={() => setModsByBucket({})}
-              disabled={_.isEmpty(modsByBucket)}
-            >
-              Reset All
-            </button>
-          </div>
-          <div className={clsx(styles.rowButton, styles.right)}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={() => handleClearType(true)}
-              disabled={shaders.length === 0}
-            >
-              <AppIcon icon={clearIcon} />
-            </button>
-          </div>
-          <div className={clsx(styles.rowButton, styles.right)}>
-            <button
-              type="button"
-              className="dim-button"
-              onClick={() => handleClearType(false)}
-              disabled={ornaments.length === 0}
-            >
-              <AppIcon icon={clearIcon} />
-            </button>
-          </div>
-        </div>
+        {!isPhonePortrait && (
+          <div className={clsx(styles.verticalButtons, styles.right)}>{rightButtons}</div>
+        )}
       </div>
+      {isPhonePortrait && (
+        <div className={styles.buttons}>
+          {leftButtons}
+          {rightButtons}
+        </div>
+      )}
       {pickPlug &&
         ReactDOM.createPortal(
           <SocketDetails

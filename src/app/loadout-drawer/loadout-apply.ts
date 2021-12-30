@@ -195,6 +195,9 @@ function doApplyLoadout(
         );
       });
 
+      // TODO: build a memoized selector set of all unlocked plug hashes for each character, and use that
+      // to fast-fail mods that are specified but not unlocked!
+
       // Don't apply mods when moving to the vault
       const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter((h) =>
         // Filter out mods that no longer exist

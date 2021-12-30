@@ -25,10 +25,11 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
 ): Set<number> {
   const unlockedPlugs = new Set<number>();
   const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, characterId);
+  const useCanInsert = plugSetHash === 2733810650 || plugSetHash === 3841308088;
   // TODO: would be great to precalculate/memoize this by character ID and profileResponse
   for (const plugSetItem of plugSetItems) {
     // TODO: https://github.com/DestinyItemManager/DIM/issues/7561
-    if (plugSetItem.canInsert) {
+    if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
       unlockedPlugs.add(plugSetItem.plugItemHash);
     }
   }

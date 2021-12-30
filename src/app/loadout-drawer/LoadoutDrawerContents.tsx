@@ -19,7 +19,7 @@ import type {
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
-import { addIcon, AppIcon } from '../shell/icons';
+import { addIcon, AppIcon, faTshirt } from '../shell/icons';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { extractArmorModHashes, fromEquippedTypes } from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
@@ -169,7 +169,7 @@ export default function LoadoutDrawerContents({
           <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
         </a>
         <a onClick={() => onOpenFashionDrawer()} className="dim-button loadout-add">
-          <AppIcon icon={addIcon} /> {t('Loadouts.Fashion')}
+          <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
         </a>
       </div>
       <div className="loadout-added-items">

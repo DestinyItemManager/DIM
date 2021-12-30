@@ -25,6 +25,7 @@
 
 .actions {
   composes: flexRow from '../dim-ui/common.m.scss';
+  flex-flow: row wrap;
   @include horizontal-space-children(4px);
   @include phone-portrait {
     margin-top: 16px;

@@ -29,6 +29,7 @@ import {
   itemIsInstanced,
 } from 'app/utils/item-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
@@ -204,7 +205,7 @@ export default function SocketDetailsSelectedPlug({
   });
 
   return (
-    <div className={styles.selectedPlug}>
+    <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
       </div>
@@ -222,14 +223,18 @@ export default function SocketDetailsSelectedPlug({
         )}
         {sourceString && <div>{sourceString}</div>}
       </div>
-      <div className={styles.modStats}>
-        {stats.map((stat) => (
-          <div className="plug-stats" key={stat.dimStat.statHash}>
-            <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
-          </div>
-        ))}
-      </div>
-      <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      {stats.length > 0 && (
+        <div className={styles.modStats}>
+          {stats.map((stat) => (
+            <div className="plug-stats" key={stat.dimStat.statHash}>
+              <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
+            </div>
+          ))}
+        </div>
+      )}
+      {stats.length > 0 && (
+        <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      )}
       {(canDoAWA || onPlugSelected) && (
         <motion.button
           layout
@@ -243,7 +248,7 @@ export default function SocketDetailsSelectedPlug({
               <AppIcon icon={refreshIcon} spinning={true} />
             </motion.span>
           )}
-          <motion.span layout>
+          <motion.span layout className={styles.insertLabel}>
             <motion.span layout>{insertName}</motion.span>
             <motion.span layout>{costs}</motion.span>
           </motion.span>
