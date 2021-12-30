@@ -40,12 +40,10 @@ export default function About() {
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
 
   useEffect(() => {
-    if (iOSApp) {
-      return;
-    }
     const script = document.createElement('script');
 
-    script.src = 'https://opencollective.com/dim/banner.js?style={"h2":{"color":"white"}}';
+    script.src =
+      'https://opencollective.com/dim/banner.js?style={"a":{"display":"none"}, "h2":{"color":"white"}}';
     script.async = true;
 
     document.getElementById('opencollective')!.appendChild(script);
@@ -226,11 +224,11 @@ export default function About() {
                 __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
               }}
             />{' '}
-            {t('Views.Support.BackersDetail')}
           </p>
-          <div id="opencollective" />
+          {t('Views.Support.BackersDetail')}
         </>
       )}
+      <div id="opencollective" />
     </StaticPage>
   );
 }
