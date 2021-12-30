@@ -1,5 +1,6 @@
 ## Next
 
+* You can now add Fashion (shaders and ornaments) to loadouts. Creating a loadout from equipped automatically adds in the current shaders and ornaments, and you can edit them manually from the Loadouts editor.
 * Improved the press-to-view tooltips on mobile. It should now be much easier to select perks on mobile.
 * Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
 * The progress notification for applying a loadout now shows each item and mod as it's being applied.
