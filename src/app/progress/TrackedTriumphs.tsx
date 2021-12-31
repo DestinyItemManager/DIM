@@ -4,11 +4,11 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
 import Record from 'app/records/Record';
+import { DestinyPresentationNodeDefinition, DestinyRecordDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './TrackedTriumphs.m.scss';
-import { DestinyRecordDefinition, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
 
 export function TrackedTriumphs({
   searchQuery,
@@ -36,17 +36,17 @@ export function TrackedTriumphs({
   // determine absolute path of record for sorting purpose
   const recordPath = (r: DestinyRecordDefinition) => {
     const path: string[] = [];
-    let parent: (DestinyRecordDefinition | DestinyPresentationNodeDefinition) = r;
+    let parent: DestinyRecordDefinition | DestinyPresentationNodeDefinition = r;
 
-    while(parent?.parentNodeHashes?.length > 0) {
-      path.unshift(parent.displayProperties.name)
+    while (parent?.parentNodeHashes?.length > 0) {
+      path.unshift(parent.displayProperties.name);
       parent = defs.PresentationNode.get(parent.parentNodeHashes[0]);
     }
     return path;
   };
 
   // sort by parent node groups (alphabetically)
-  records = _.sortBy(records, (record) => recordPath(record.recordDef).join("/"))
+  records = _.sortBy(records, (record) => recordPath(record.recordDef).join('/'));
 
   if (!records.length) {
     return (
