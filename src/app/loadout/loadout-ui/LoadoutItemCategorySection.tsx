@@ -44,12 +44,13 @@ export default function LoadoutItemCategorySection({
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.type);
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
-      ? buckets.byCategory[category].map((b) => b.type!)
-      : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
-          buckets.byCategory[category].findIndex((b) => b.type === bucketType)
+      ? buckets.byCategory[category]
+      : _.sortBy(
+          Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
+          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
         );
   const equippedItems =
     items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
@@ -58,10 +59,10 @@ export default function LoadoutItemCategorySection({
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
       {items ? (
         <div className={styles.itemsInCategory}>
-          {bucketOrder.map((bucketType) => (
+          {bucketOrder.map((bucket) => (
             <ItemBucket
-              key={bucketType}
-              items={itemsByBucket[bucketType]}
+              key={bucket.hash}
+              items={itemsByBucket[bucket.hash]}
               equippedItemIds={equippedItemIds}
             />
           ))}
