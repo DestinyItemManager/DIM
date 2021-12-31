@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed an issue for some users where Stasis Aspects were not shown when selecting Stasis subclass options.
+  * This works around a Bungie API issue, and will allow users to select and try equipping Stasis Aspects they have not unlocked, which may result in failures applying loadouts, if the aspects are not unlocked.
+
 ## 6.97.2 <span class="changelog-date">(2021-12-30)</span>
 
 * Improved the press-to-view tooltips on mobile. It should now be much easier to select perks on mobile.
