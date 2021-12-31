@@ -815,10 +815,13 @@ function applySocketOverrides(
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
-    for (const item of itemsWithOverrides) {
-      if (item.socketOverrides) {
-        const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
+    for (const loadoutItem of itemsWithOverrides) {
+      const dimItem = getItemAcrossStores(storesSelector(getState()), { id: loadoutItem.id })!;
+      if (!dimItem) {
+        continue;
+      }
 
+      if (loadoutItem.socketOverrides) {
         // We build up an array of mods to socket in order
         const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
         const categories = dimItem.sockets?.categories || [];
@@ -828,7 +831,7 @@ function applySocketOverrides(
 
           for (const socket of sockets) {
             const socketIndex = socket.socketIndex;
-            let modHash: number | undefined = item.socketOverrides[socketIndex];
+            let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
 
             // So far only subclass abilities are known to be able to socket the initial item
             // aspects and fragments return a 500
@@ -865,7 +868,7 @@ function applySocketOverrides(
           );
 
         await dispatch(
-          equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
         );
       }
     }

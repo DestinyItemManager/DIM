@@ -49,6 +49,7 @@ function ItemPicker({
   filters,
   itemSortOrder,
   sortBy,
+  uniqueBy,
   ignoreSelectedPerks,
   onItemSelected,
   onCancel,
@@ -81,8 +82,11 @@ function ItemPicker({
     if (sortBy) {
       items = _.sortBy(items, sortBy);
     }
+    if (uniqueBy) {
+      items = _.uniqBy(items, uniqueBy);
+    }
     return items;
-  }, [allItems, filter, itemSortOrder, sortBy]);
+  }, [allItems, filter, itemSortOrder, sortBy, uniqueBy]);
 
   // TODO: have compact and "list" views
   // TODO: long press for item popup

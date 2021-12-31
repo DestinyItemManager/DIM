@@ -5,6 +5,7 @@ import {
   capacityForItem,
   findItemsByBucket,
   getVault,
+  potentialSpaceLeftForItem,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { ThunkResult } from 'app/store/types';
@@ -87,20 +88,30 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 
 // D2 only
 export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
-  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter((i) =>
-    canBePulledFromPostmaster(i, store, stores)
+  return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter(
+    (i) => pullFromPostmasterAmount(i, store, stores) > 0
   );
 }
 
 /**
- * Can the given item be pulled from postmaster into a store?
+ * How many of the given item's stack can be pulled from postmaster into a store?
  */
-export function canBePulledFromPostmaster(i: DimItem, store: DimStore, stores: DimStore[]) {
-  return (
-    i.canPullFromPostmaster && // Can be pulled
-    // Either has space, or is going to a bucket we can make room in
-    ((i.bucket.vaultBucket && !i.notransfer) || spaceLeftForItem(store, i, stores) > 0)
-  );
+export function pullFromPostmasterAmount(i: DimItem, store: DimStore, stores: DimStore[]) {
+  if (!i.canPullFromPostmaster) {
+    // can't be pulled
+    return 0;
+  }
+  const potentialSpace = potentialSpaceLeftForItem(store, i, stores);
+  if (potentialSpace.guaranteed) {
+    // We have space for this many items, but can only pull as many as we have in this stack
+    return Math.min(potentialSpace.guaranteed, i.amount);
+  } else if (potentialSpace.couldMakeSpace) {
+    // We could make space, so assume the whole stack can be transferred
+    return i.amount;
+  } else {
+    // No space
+    return 0;
+  }
 }
 
 // We should load this from the manifest but it's hard to get it in here

@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { amountOfItem, getStore } from 'app/inventory/stores-helpers';
-import { canBePulledFromPostmaster } from 'app/loadout-drawer/postmaster';
+import { amountOfItem, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { pullFromPostmasterAmount } from 'app/loadout-drawer/postmaster';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 
@@ -67,17 +67,26 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const loadoutable = !(!itemCanBeInLoadout(item) || !itemOwner);
 
   const inPostmaster = item.location.type === 'LostItems';
-  const pullFromPostmaster = Boolean(
-    itemOwner && inPostmaster && canBePulledFromPostmaster(item, itemOwner, stores)
-  );
+  // The Account-wide bucket (consumables) exists only for the active character, so check that bucket.
+  // Otherwise, check the owner's bucket.
+  const postmasterCheckStore = inPostmaster
+    ? item.bucket.accountWide
+      ? getCurrentStore(stores)
+      : itemOwner
+    : undefined;
+  const pullAmount = postmasterCheckStore
+    ? pullFromPostmasterAmount(item, postmasterCheckStore, stores)
+    : 0;
+  const pullFromPostmaster = pullAmount > 0;
 
   const canVault = Boolean(itemOwner && canTransferToVault(itemOwner, item));
 
-  const maximumMoveAmount =
-    !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-      ? 1
-      : amountOfItem(itemOwner, item);
-  const showAmounts = maximumMoveAmount > 1;
+  const maximumMoveAmount = inPostmaster
+    ? pullAmount
+    : !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
+    ? 1
+    : amountOfItem(itemOwner, item);
+  const showAmounts = !inPostmaster && maximumMoveAmount > 1;
   const canEquip = itemOwner ? stores.filter((store) => itemCanBeEquippedBy(item, store)) : [];
   const canStore = itemOwner ? stores.filter((store) => canShowStore(store, itemOwner, item)) : [];
   const disableEquip = (store: DimStore) => item.owner === store.id && item.equipped;

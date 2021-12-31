@@ -214,7 +214,7 @@ export default function LoadoutDrawer() {
         isNew={isNew}
         onUpdateMods={onUpdateMods}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        saveLoadout={onSaveLoadout}
+        saveLoadout={isNew ? saveAsNew : onSaveLoadout}
         saveAsNew={saveAsNew}
         deleteLoadout={onDeleteLoadout}
       />
