@@ -451,7 +451,7 @@ function doApplyLoadout(
 
         // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState));
+        await dispatch(applySocketOverrides(itemsWithOverrides, store, stores, setLoadoutState));
         const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
           Object.values(r.results)
         );
@@ -774,13 +774,20 @@ export function clearItemsOffCharacter(
 // TODO: Leave unmentioned sockets alone!
 function applySocketOverrides(
   itemsWithOverrides: LoadoutItem[],
+  store: DimStore,
+  stores: DimStore[],
   setLoadoutState: LoadoutStateUpdater
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
-    for (const item of itemsWithOverrides) {
-      if (item.socketOverrides) {
+    for (const loadoutItem of itemsWithOverrides) {
+      const item = getLoadoutItem(loadoutItem, store, stores);
+      if (!item) {
+        continue;
+      }
+
+      if (loadoutItem.socketOverrides) {
         const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
 
         // We build up an array of mods to socket in order
@@ -792,7 +799,7 @@ function applySocketOverrides(
 
           for (const socket of sockets) {
             const socketIndex = socket.socketIndex;
-            let modHash: number | undefined = item.socketOverrides[socketIndex];
+            let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
 
             // So far only subclass abilities are known to be able to socket the initial item
             // aspects and fragments return a 500
