@@ -4,18 +4,29 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   min-height: calc(var(--item-size) + 20px);
   display: grid;
-  grid-template-columns: var(--item-size) 1fr 1fr;
-  grid-template-areas:
-    'mod desc stat button'
-    'mod modstat stat button';
+  grid-template-columns: var(--item-size) 1fr;
+  grid-template-areas: 'mod desc button';
+  &.hasStats {
+    grid-template-columns: var(--item-size) 1fr 1fr;
+    grid-template-areas:
+      'mod desc stat button'
+      'mod modstat stat button';
+  }
+
   gap: 0 8px;
   @include phone-portrait {
     grid-template-columns: var(--item-size) 1fr;
     grid-template-areas:
       'mod desc'
-      'mod modstat'
-      'mod stat'
       'mod button';
+    &.hasStats {
+      grid-template-columns: var(--item-size) 1fr;
+      grid-template-areas:
+        'mod desc'
+        'mod modstat'
+        'mod stat'
+        'mod button';
+    }
     gap: 8px 8px;
   }
 }
@@ -72,5 +83,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include phone-portrait {
+      flex-direction: row;
+      justify-content: space-between;
+    }
   }
+}
+
+.insertLabel {
+  width: 100%;
 }

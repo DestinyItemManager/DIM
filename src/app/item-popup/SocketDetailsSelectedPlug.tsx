@@ -29,6 +29,7 @@ import {
   itemIsInstanced,
 } from 'app/utils/item-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
@@ -82,6 +83,7 @@ export default function SocketDetailsSelectedPlug({
   item,
   currentPlug,
   equippable,
+  allowInsertPlug,
   closeMenu,
   onPlugSelected,
 }: {
@@ -90,6 +92,7 @@ export default function SocketDetailsSelectedPlug({
   item: DimItem;
   currentPlug: DimPlug | null;
   equippable: boolean;
+  allowInsertPlug: boolean;
   closeMenu(): void;
   /** If this is set, instead of offering to slot the mod, we just notify above */
   onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
@@ -150,7 +153,9 @@ export default function SocketDetailsSelectedPlug({
 
   // Can we actually insert this mod instead of just previewing it?
   const canDoAWA =
-    itemIsInstanced(item) && canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
+    allowInsertPlug &&
+    itemIsInstanced(item) &&
+    canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
   const insertName = canDoAWA
@@ -158,6 +163,8 @@ export default function SocketDetailsSelectedPlug({
     : t(`Sockets.Select.${kind}`, { contextList: 'sockets' });
 
   const [insertInProgress, setInsertInProgress] = useState(false);
+
+  // TODO: Push the insertPlug stuff all the way up and out of SocketDetails
   const onInsertPlug = async () => {
     if (canDoAWA) {
       setInsertInProgress(true);
@@ -198,7 +205,7 @@ export default function SocketDetailsSelectedPlug({
   });
 
   return (
-    <div className={styles.selectedPlug}>
+    <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
       </div>
@@ -216,14 +223,18 @@ export default function SocketDetailsSelectedPlug({
         )}
         {sourceString && <div>{sourceString}</div>}
       </div>
-      <div className={styles.modStats}>
-        {stats.map((stat) => (
-          <div className="plug-stats" key={stat.dimStat.statHash}>
-            <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
-          </div>
-        ))}
-      </div>
-      <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      {stats.length > 0 && (
+        <div className={styles.modStats}>
+          {stats.map((stat) => (
+            <div className="plug-stats" key={stat.dimStat.statHash}>
+              <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
+            </div>
+          ))}
+        </div>
+      )}
+      {stats.length > 0 && (
+        <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+      )}
       {(canDoAWA || onPlugSelected) && (
         <motion.button
           layout
@@ -237,7 +248,7 @@ export default function SocketDetailsSelectedPlug({
               <AppIcon icon={refreshIcon} spinning={true} />
             </motion.span>
           )}
-          <motion.span layout>
+          <motion.span layout className={styles.insertLabel}>
             <motion.span layout>{insertName}</motion.span>
             <motion.span layout>{costs}</motion.span>
           </motion.span>
