@@ -1,4 +1,5 @@
 import { DimPlugSet } from 'app/inventory/item-types';
+import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 
 /**
@@ -25,7 +26,7 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
 ): Set<number> {
   const unlockedPlugs = new Set<number>();
   const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, characterId);
-  const useCanInsert = plugSetHash === 2733810650 || plugSetHash === 3841308088;
+  const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
   // TODO: would be great to precalculate/memoize this by character ID and profileResponse
   for (const plugSetItem of plugSetItems) {
     // TODO: https://github.com/DestinyItemManager/DIM/issues/7561
