@@ -1085,9 +1085,24 @@ function equipModsToItem(
     // if you need to remove a mod before applying another.
 
     for (const assignment of modsToApply) {
-      const { socketIndex, mod } = assignment;
+      const { socketIndex } = assignment;
+      let { mod } = assignment;
       // Use this socket
       const socket = getSocketByIndex(item.sockets, socketIndex)!;
+
+      // This is a special case for transmog ornaments - you can't apply a
+      // transmog ornament to the same item it was created with. So instead we
+      // swap at the last minute to applying the default ornament which should
+      // match the appearance that the user wanted. We'll still report as if we
+      // applied the ornament.
+      if (mod.hash === item.hash) {
+        const defaultPlugHash = getDefaultPlugHash(socket, defs);
+        if (defaultPlugHash) {
+          mod = (defs.InventoryItem.get(defaultPlugHash) ??
+            mod) as PluggableInventoryItemDefinition;
+        }
+      }
+
       // If the plug is already inserted we can skip this
       if (socket.plugged?.plugDef.hash === mod.hash) {
         // Don't count removing mods as applying a mod successfully
