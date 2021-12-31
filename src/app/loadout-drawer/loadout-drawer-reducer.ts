@@ -92,10 +92,14 @@ export function stateReducer(state: State, action: Action): State {
         return state;
       }
 
+      // Check whether this addItem happened without a loadout being edited,
+      // which can happen from item popup action buttons.
+      const [addToLoadout, isNew] = loadout ? [loadout, state.isNew] : [newLoadout('', []), true];
+
       return {
         ...state,
-        loadout: addItem(loadout || newLoadout('', []), item, shift, items, equip),
-        isNew: !loadout,
+        loadout: addItem(addToLoadout, item, shift, items, equip),
+        isNew,
       };
     }
 
