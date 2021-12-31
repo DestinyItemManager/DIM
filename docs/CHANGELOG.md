@@ -1,6 +1,6 @@
 ## Next
 
-* Fixed issue for some users where stasis aspects were not being shown when selecting stasis subclass options. This is a workaround for a bungie API issue and will allow users that have not unlocked aspects to try and equip them, resulting in failures with applying loadouts if the aspects are not unlocked.
+* Fixed issue for some users where stasis aspects were not being shown when selecting stasis subclass options. This is a workaround for a Bungie API issue and will allow users that have not unlocked aspects to try and equip them, resulting in failures with applying loadouts if the aspects are not unlocked.
 
 ## 6.97.2 <span class="changelog-date">(2021-12-30)</span>
 
