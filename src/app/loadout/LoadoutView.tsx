@@ -108,9 +108,7 @@ export default function LoadoutView({
               <div className={styles.mods}>
                 <div className={styles.modsGrid}>
                   {savedMods.map((mod) => (
-                    <div key={getModRenderKey(mod)}>
-                      <PlugDef plug={mod} />
-                    </div>
+                    <PlugDef key={getModRenderKey(mod)} plug={mod} />
                   ))}
                 </div>
                 <button
