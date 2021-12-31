@@ -368,7 +368,9 @@ export function pickPlugPositions(
   singleItemModAssignments: {
     bucketSpecific: PluggableInventoryItemDefinition[];
     bucketIndependent: PluggableInventoryItemDefinition[];
-  }
+  },
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
+  clearUnassignedSocketsPerItem = false
 ): Assignment[] {
   const assignments: Assignment[] = [];
   const modsToInsert = [
@@ -417,6 +419,7 @@ export function pickPlugPositions(
     assignments.push({
       socketIndex: destinationSocket.socketIndex,
       mod: modToInsert,
+      required: true,
     });
 
     // remove this existing socket from consideration
@@ -438,6 +441,8 @@ export function pickPlugPositions(
       assignments.push({
         socketIndex,
         mod,
+        // If the user wants to clear out all items, this is required. Otherwise it's optional.
+        required: clearUnassignedSocketsPerItem,
       });
     }
   }
@@ -480,16 +485,13 @@ export function createPluggingStrategy(
     const energySpend = plannedModCost - existingModCost;
 
     const pluggingAction = {
-      socketIndex: destinationSocket.socketIndex,
-      mod: assignment.mod,
+      ...assignment,
       energySpend,
-      required: true,
     };
 
     if (pluggingAction.energySpend > 0) {
       requiredSpends.push(pluggingAction);
-    } else if (isAssigningToDefault(item, assignment, defs)) {
-      pluggingAction.required = false;
+    } else if (!pluggingAction.required && isAssigningToDefault(item, assignment, defs)) {
       optionalRegains.push(pluggingAction);
     } else {
       requiredRegains.push(pluggingAction);

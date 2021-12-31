@@ -32,28 +32,25 @@ export interface DimLoadoutItem extends DimItem {
 }
 
 /** represents a single mod, and where to place it (on a non-specific item) */
-export type Assignment = {
+export interface Assignment {
   /** what item to plug */
   mod: PluggableInventoryItemDefinition;
   /** which socket to plug it into */
   socketIndex: number;
-};
+  /**
+   * If required, this assignment must be completed. The user wants this mod plugged, even if it's the default plug.
+   * If not, this is an optional action which clears out other mod slots.
+   * This also controls whether we show the status of this assignment in the loadout progress notification.
+   */
+  required: boolean;
+}
 
 /**
- * represents an Assignment which has been properly
+ * Represents an Assignment which has been properly
  * ordered and given metadata, based on a specific item
  * and the delta between planned mods and current mods
  */
-export type PluggingAction = {
-  /** what item to plug */
-  mod: PluggableInventoryItemDefinition;
-  /** which socket to plug it into */
-  socketIndex: number;
+export interface PluggingAction extends Assignment {
   /** This will be negative if we are recovering used energy back by swapping in a cheaper mod */
   energySpend: number;
-  /**
-   * if required, this instruction must be completed. the user wants this mod plugged.
-   * if not, this is an optional action which clears out other mod slots
-   */
-  required: boolean;
-};
+}
