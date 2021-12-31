@@ -51,6 +51,8 @@ export default function LoadoutItemCategorySection({
       : _.sortBy(Object.keys(itemsByBucket), (bucketType) =>
           buckets.byCategory[category].findIndex((b) => b.type === bucketType)
         );
+  const equippedItems =
+    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
 
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
@@ -74,10 +76,10 @@ export default function LoadoutItemCategorySection({
       )}
       {category === 'Armor' && items && (
         <>
-          {items.length === 5 && (
+          {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
               <LoadoutStats
-                stats={getLoadoutStats(defs, loadout.classType, subclass, items, savedMods)}
+                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
                 characterClass={loadout.classType}
               />
             </div>
