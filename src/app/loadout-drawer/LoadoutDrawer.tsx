@@ -295,6 +295,7 @@ export default function LoadoutDrawer() {
           <FashionDrawer
             loadout={loadout}
             items={items}
+            storeId={storeId}
             onModsByBucketUpdated={(modsByBucket) =>
               stateDispatch({ type: 'updateModsByBucket', modsByBucket })
             }

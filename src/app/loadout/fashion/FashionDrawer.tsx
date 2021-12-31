@@ -4,7 +4,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -12,6 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -32,16 +33,21 @@ interface PickPlugState {
 /** An editor for "Fashion" (shaders and ornaments) in a loadout */
 export default function FashionDrawer({
   loadout,
+  storeId,
   items,
   onModsByBucketUpdated,
   onClose,
 }: {
   loadout: Loadout;
+  storeId?: string;
   items: DimLoadoutItem[];
   onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  const unlockedPlugs = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, storeId)
+  );
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
 
@@ -164,10 +170,15 @@ export default function FashionDrawer({
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
-        LockableBucketHashes.map((bucketHash, i) => [
-          bucketHash,
-          [...(modsByBucket[bucketHash] ?? []).filter((h) => isShader(h)), set[i]],
-        ])
+        LockableBucketHashes.map((bucketHash, i) => {
+          const ornament = set[i];
+          if (unlockedPlugs.has(ornament)) {
+            const modsWithoutShaders = (modsByBucket[bucketHash] ?? []).filter((h) => isShader(h));
+            const mods = [...modsWithoutShaders, ornament];
+            return [bucketHash, mods];
+          }
+          return [bucketHash, modsByBucket[bucketHash]];
+        })
       )
     );
   };

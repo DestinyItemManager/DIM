@@ -1,6 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
+import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -125,6 +126,40 @@ export const ownedItemsSelector = createSelector(
       }
     }
     return ownedItemHashes;
+  }
+);
+
+/** A set containing all the hashes of unlocked PlugSet items (mods, shaders, ornaments, etc) for the given character. */
+export const unlockedPlugSetItemsSelector = createSelector(
+  (_state: RootState, characterId?: string) => characterId,
+  profileResponseSelector,
+  (characterId, profileResponse) => {
+    const unlockedPlugs = new Set<number>();
+    if (profileResponse?.profilePlugSets.data?.plugs) {
+      for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
+        const plugSetHash = parseInt(plugSetHashStr, 10);
+        const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
+        for (const plugSetItem of plugs) {
+          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+            unlockedPlugs.add(plugSetItem.plugItemHash);
+          }
+        }
+      }
+    }
+    if (characterId && profileResponse?.characterPlugSets.data?.[characterId].plugs) {
+      for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
+        const plugSetHash = parseInt(plugSetHashStr, 10);
+        const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
+        for (const plugSetItem of plugs) {
+          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+            unlockedPlugs.add(plugSetItem.plugItemHash);
+          }
+        }
+      }
+    }
+    return unlockedPlugs;
   }
 );
 
