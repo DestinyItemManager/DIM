@@ -95,7 +95,7 @@ export default function FashionDrawer({
     plugHash: number;
   }) => {
     setModsByBucket((modsByBucket) => {
-      // Start by removing any mods that belong to the same socket as this
+      // Clear out existing selections for this socket.
       const existingMods = (modsByBucket[item.bucket.hash] ?? []).filter(
         (mod) => !socket.plugSet?.plugs.some((p) => p.plugDef.hash === mod)
       );
