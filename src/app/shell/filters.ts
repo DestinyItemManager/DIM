@@ -147,6 +147,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     return tag === 'archive';
   }),
   acquisitionRecency: acquisitionRecencyComparator,
+  element: compareBy((item: DimItem) => item.element?.enumValue ?? Number.MAX_SAFE_INTEGER),
   masterworked: compareBy((item: DimItem) => (item.masterwork ? 0 : 1)),
   default: () => 0,
 };
