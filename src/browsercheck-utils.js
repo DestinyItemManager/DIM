@@ -27,7 +27,7 @@ export const unsupported = {
   pl: 'Zespół DIM nie obsługuje tej przeglądarki. Niektóre lub wszystkie funkcje DIM mogą nie działać.',
   'pt-br':
     'A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar.',
-  ru: 'Команда DIM не поддерживает использование этого браузера. Некоторые или все функции DIM могуть не работать.',
+  ru: 'Команда DIM не поддерживает использование этого браузера. Некоторые или все функции DIM могут не работать.',
   'zh-chs': 'DIM 团队不支持使用此浏览器。DIM 可能部分或完全不可用。',
   'zh-cht':
     'The DIM team does not support using this browser. Some or all DIM features may not work.',
