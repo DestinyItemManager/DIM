@@ -55,7 +55,7 @@ export default function LoadoutView({
     );
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
     if (subclass) {
-      equippableItems = equippableItems.filter((i) => i !== subclass);
+      equippableItems = equippableItems.filter((i) => i.hash !== subclass.hash);
     }
     return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, buckets, allItems, store]);
