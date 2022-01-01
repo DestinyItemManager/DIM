@@ -237,5 +237,12 @@ function LoadoutRow({
     return actionButtons;
   }, [dispatch, equippable, loadout, saved, store]);
 
-  return <LoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
+  return (
+    <LoadoutView
+      loadout={loadout}
+      store={store}
+      actionButtons={actionButtons}
+      hideShowModPlacements={!equippable}
+    />
+  );
 }

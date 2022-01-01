@@ -33,11 +33,13 @@ export default function LoadoutView({
   store,
   actionButtons,
   hideOptimizeArmor,
+  hideShowModPlacements,
 }: {
   loadout: Loadout;
   store: DimStore;
   actionButtons: ReactNode[];
   hideOptimizeArmor?: boolean;
+  hideShowModPlacements?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -111,14 +113,16 @@ export default function LoadoutView({
                     <PlugDef key={getModRenderKey(mod)} plug={mod} />
                   ))}
                 </div>
-                <button
-                  className={clsx('dim-button', styles.showModPlacementButton)}
-                  type="button"
-                  title="Show mod placement"
-                  onClick={() => setShowModAssignmentDrawer(true)}
-                >
-                  {t('Loadouts.ShowModPlacement')}
-                </button>
+                {!hideShowModPlacements && (
+                  <button
+                    className={clsx('dim-button', styles.showModPlacementButton)}
+                    type="button"
+                    title="Show mod placement"
+                    onClick={() => setShowModAssignmentDrawer(true)}
+                  >
+                    {t('Loadouts.ShowModPlacement')}
+                  </button>
+                )}
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
