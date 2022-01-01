@@ -312,7 +312,9 @@ function doApplyLoadout(
             )
           );
           try {
-            const result = await dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
+            const result = await dispatch(
+              equipItems(getStore(getStores(), owner)!, itemsToEquip, cancelToken)
+            );
             // Bulk equip can partially fail
             setLoadoutState(
               produce((state) => {
@@ -411,7 +413,7 @@ function doApplyLoadout(
           itemsToEquip.map((i) => getLoadoutItem(i, store, stores))
         );
         try {
-          const result = await dispatch(equipItems(store, realItemsToEquip));
+          const result = await dispatch(equipItems(store, realItemsToEquip, cancelToken));
           // Bulk equip can partially fail
           setLoadoutState(
             produce((state) => {
@@ -451,7 +453,7 @@ function doApplyLoadout(
 
         // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-        await dispatch(applySocketOverrides(itemsWithOverrides, store, stores, setLoadoutState));
+        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState, cancelToken));
         const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
           Object.values(r.results)
         );
@@ -472,7 +474,13 @@ function doApplyLoadout(
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
-          applyLoadoutMods(applicableLoadoutItems, store.id, modsToApply, setLoadoutState)
+          applyLoadoutMods(
+            applicableLoadoutItems,
+            store.id,
+            modsToApply,
+            setLoadoutState,
+            cancelToken
+          )
         );
         const { modStates } = getLoadoutState();
         infoLog(
@@ -774,22 +782,19 @@ export function clearItemsOffCharacter(
 // TODO: Leave unmentioned sockets alone!
 function applySocketOverrides(
   itemsWithOverrides: LoadoutItem[],
-  store: DimStore,
-  stores: DimStore[],
-  setLoadoutState: LoadoutStateUpdater
+  setLoadoutState: LoadoutStateUpdater,
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
     for (const loadoutItem of itemsWithOverrides) {
-      const item = getLoadoutItem(loadoutItem, store, stores);
-      if (!item) {
+      const dimItem = getItemAcrossStores(storesSelector(getState()), { id: loadoutItem.id })!;
+      if (!dimItem) {
         continue;
       }
 
       if (loadoutItem.socketOverrides) {
-        const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
-
         // We build up an array of mods to socket in order
         const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
         const categories = dimItem.sockets?.categories || [];
@@ -835,7 +840,9 @@ function applySocketOverrides(
             )
           );
 
-        await dispatch(equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, true));
+        await dispatch(
+          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+        );
       }
     }
   };
@@ -854,6 +861,7 @@ function applyLoadoutMods(
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
   setLoadoutState: LoadoutStateUpdater,
+  cancelToken: CancelToken,
   /** if an item would be wiped to default in all sockets, don't do anything to that item */
   skipArmorsWithNoAssignments = true,
   /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
@@ -950,7 +958,9 @@ function applyLoadoutMods(
         }
 
         applyModsPromises.push(
-          dispatch(equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure))
+          dispatch(
+            equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure, cancelToken)
+          )
         );
       }
     }
@@ -1001,6 +1011,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
+  cancelToken: CancelToken,
   includeAssignToDefault = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -1042,6 +1053,7 @@ function equipModsToItem(
         );
 
         // TODO: short circuit if equipping is not possible
+        cancelToken.checkCanceled();
         const result = await dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs));
         if (result) {
           if (result.success) {
