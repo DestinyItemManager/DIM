@@ -1,5 +1,14 @@
 ## Next
 
+* Consumables can now be pulled from postmasters other than the active character's.
+
+## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
+
+* Fixed an issue for some users where Stasis Aspects were not shown when selecting Stasis subclass options.
+  * This works around a Bungie API issue, and will allow users to select and try equipping Stasis Aspects they have not unlocked, which may result in failures applying loadouts, if the aspects are not unlocked.
+
+## 6.97.2 <span class="changelog-date">(2021-12-30)</span>
+
 * Improved the press-to-view tooltips on mobile. It should now be much easier to select perks on mobile.
 * Removed notification when loading/updating a wish list. Go to the wish list section of the settings menu if you want to see details.
 * The progress notification for applying a loadout now shows each item and mod as it's being applied.
@@ -7,6 +16,11 @@
 * Dares of Eternity now shows streak information under Progress > Ranks
 * Ignore outdated/removed artifact mods still attached to armor.
 * You can now select Stasis subclasses in the Loadout Optimizer and use the stat effects from fragments.
+* When determining mod assignments, DIM will now consider in game mod placement and attempt to use the same position if possible.
+* Tracked Triumphs are now grouped together with similar records.
+* Starting the Compare view from a single armor piece now includes other elements in initial comparison.
+* Inventory items can now be sorted by Element.
+* Prevent plugging some invalid ornaments.
 
 ## 6.97.1 <span class="changelog-date">(2021-12-26)</span>
 

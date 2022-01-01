@@ -167,7 +167,9 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
-  user-select: none;
+  @include phone-portrait {
+    user-select: none;
+  }
 }
 
 body {

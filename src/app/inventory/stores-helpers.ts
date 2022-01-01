@@ -112,6 +112,21 @@ export function capacityForItem(store: DimStore, item: DimItem) {
  * terms of individual pieces.
  */
 export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStore[]) {
+  return potentialSpaceLeftForItem(store, item, stores).guaranteed;
+}
+
+export interface SpaceLeft {
+  // The space definitely available.
+  guaranteed: number;
+  // Whether there's maybe a way space could be made for more than the guaranteed.
+  couldMakeSpace: boolean;
+}
+
+export function potentialSpaceLeftForItem(
+  store: DimStore,
+  item: DimItem,
+  stores: DimStore[]
+): SpaceLeft {
   if (!item.type) {
     throw new Error("item needs a 'type' field");
   }
@@ -121,7 +136,7 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
   let occupiedStacks = 0;
   if (store.isVault) {
     if (!item.bucket.vaultBucket) {
-      return 0;
+      return { guaranteed: 0, couldMakeSpace: false };
     }
     const vaultBucket = item.bucket.vaultBucket;
     occupiedStacks = item.bucket.vaultBucket
@@ -129,11 +144,11 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
       : 0;
   } else {
     if (!item.bucket) {
-      return 0;
+      return { guaranteed: 0, couldMakeSpace: false };
     }
     // Account-wide buckets (mods, etc) are only on the first character
     if (item.bucket.accountWide && !store.current) {
-      return 0;
+      return { guaranteed: 0, couldMakeSpace: false };
     }
     occupiedStacks = findItemsByBucket(store, item.bucket.hash).length;
   }
@@ -147,26 +162,23 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     // If the item lives in an account-wide bucket (like modulus reports)
     // we need to check out how much space is left in that bucket, which is
     // only on the current store.
-    if (item.bucket.accountWide && !store.isVault) {
-      const existingAmount = amountOfItem(getCurrentStore(stores)!, item);
-
-      if (existingAmount === 0) {
-        // if this would be the first stack, make sure there's room for a stack
-        return openStacks > 0 ? item.maxStackSize : 0;
-      } else {
-        // return how much can be added to the existing stack
-        return Math.max(item.maxStackSize - existingAmount, 0);
-      }
+    const checkStore = item.bucket.accountWide && !store.isVault ? getCurrentStore(stores)! : store;
+    const existingAmount = amountOfItem(checkStore, item);
+    if (existingAmount === 0) {
+      // This is the first stack. If we have no open stacks, we don't have space, but could make more space
+      // by moving other items from that bucket to the vault. Otherwise, the only way to circumvent
+      // the uniqueStack rule is to move the items themselves to a different bucket.
+      return openStacks > 0
+        ? { guaranteed: item.maxStackSize, couldMakeSpace: !item.notransfer }
+        : { guaranteed: 0, couldMakeSpace: Boolean(item.bucket.vaultBucket) };
+    } else {
+      // We have a stack, so we can fill that stack up, and may be able to store even more
+      // by moving the items themselves to a different bucket.
+      return {
+        guaranteed: Math.max(item.maxStackSize - existingAmount, 0),
+        couldMakeSpace: !item.notransfer,
+      };
     }
-
-    // If there's some already there, we can add enough to fill a stack. Otherwise
-    // we can only add if there's an open stack.
-    const existingAmount = amountOfItem(store, item);
-    return existingAmount > 0
-      ? Math.max(item.maxStackSize - amountOfItem(store, item), 0)
-      : openStacks > 0
-      ? item.maxStackSize
-      : 0;
   }
 
   // Convert back from stacks to individual items, keeping in mind that we may
@@ -174,7 +186,7 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
   const maxStackSize = item.maxStackSize || 1;
   if (maxStackSize === 1) {
     // Stacks and individual items are the same, no conversion required
-    return openStacks;
+    return { guaranteed: openStacks, couldMakeSpace: Boolean(item.bucket.vaultBucket) };
   } else {
     // Get the existing amount in individual pieces, not stacks
     let existingAmount = amountOfItem(store, item);
@@ -184,7 +196,10 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
     while (existingAmount > 0) {
       existingAmount -= maxStackSize;
     }
-    return Math.max(openStacks * maxStackSize - existingAmount, 0);
+    return {
+      guaranteed: Math.max(openStacks * maxStackSize - existingAmount, 0),
+      couldMakeSpace: Boolean(item.bucket.vaultBucket),
+    };
   }
 }
 

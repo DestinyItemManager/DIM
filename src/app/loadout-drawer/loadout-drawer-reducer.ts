@@ -99,19 +99,16 @@ export function stateReducer(state: State, action: Action): State {
         return state;
       }
 
-      const draftLoadout = addItem(
-        loadout || newLoadout('', []),
-        item,
-        shift,
-        items,
-        equip,
-        socketOverrides
-      );
+      // Check whether this addItem happened without a loadout being edited,
+      // which can happen from item popup action buttons.
+      const [addToLoadout, isNew] = loadout ? [loadout, state.isNew] : [newLoadout('', []), true];
+
+      const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
 
       return {
         ...state,
         loadout: draftLoadout,
-        isNew: !loadout,
+        isNew,
       };
     }
 

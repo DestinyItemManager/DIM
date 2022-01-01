@@ -2,9 +2,9 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
-import { getItemDamageShortName } from 'app/utils/item-utils';
 import { ActionType, getType, Reducer } from 'typesafe-actions';
 import * as actions from './actions';
+import { stripAdept } from './compare-buttons';
 
 export interface CompareSession {
   /**
@@ -121,9 +121,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
     const itemNameQuery = item.bucket.inWeapons
-      ? `name:"${item.name.replace(new RegExp(t('Filter.Adept'), 'gi'), '').trim()}"`
-      : item.element
-      ? `(name:"${item.name}" is:${getItemDamageShortName(item)})`
+      ? `name:"${stripAdept(item.name)}"`
       : `name:"${item.name}"`;
 
     return {

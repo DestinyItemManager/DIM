@@ -243,7 +243,9 @@ function filterUnlockedPlugsForForProfileAndAllCharacters(
       .flatMap((d) => d.plugs[dimPlugSet.hash])
   );
 
+  // Some users are seeing canInsert be false even when they have unlocked all aspects.
+  // https://github.com/Bungie-net/api/issues/1572
   return dimPlugSet.plugs.filter((plug) =>
-    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash && p.canInsert)
+    availablePlugs.some((p) => p.plugItemHash === plug.plugDef.hash)
   );
 }

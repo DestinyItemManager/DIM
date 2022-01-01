@@ -2,7 +2,10 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
-import produce from 'immer';
+import produce, { setAutoFreeze } from 'immer';
+
+// Immer's auto-freeze can get us in trouble because we do sometimes modify the produced item.
+setAutoFreeze(false);
 
 /**
  * What part of the loadout application process are we currently in?
@@ -176,11 +179,15 @@ export function setSocketOverrideResult(
   equipNotPossible?: boolean
 ) {
   return produce<LoadoutApplyState>((state) => {
-    state.socketOverrideStates[item.index].results[socketIndex] = {
-      ...state.socketOverrideStates[item.index].results[socketIndex],
-      state: socketState,
-      error,
-    };
+    const thisSocketResult = state.socketOverrideStates[item.index].results[socketIndex];
+
+    // don't insert a state or error for anything that wasn't given an initial tracking state
+    if (!thisSocketResult) {
+      return;
+    }
+
+    thisSocketResult.state = socketState;
+    thisSocketResult.error = error;
     state.equipNotPossible ||= equipNotPossible || false;
   });
 }

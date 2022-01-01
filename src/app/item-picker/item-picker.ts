@@ -10,6 +10,7 @@ export interface ItemPickerOptions {
   filterItems?(item: DimItem): boolean;
   /** An extra sort function that items will be sorted by (beyond the default sort chosen by the user)  */
   sortBy?(item: DimItem): unknown;
+  uniqueBy?(item: DimItem): unknown;
 }
 
 interface ItemSelectResult {

@@ -48,10 +48,14 @@ export default function LoadoutView({
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
     const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, buckets, allItems);
+    const subclass = store.items.find(
+      (item) =>
+        item.bucket.hash === BucketHashes.Subclass &&
+        items.some((loadoutItem) => item.hash === loadoutItem.hash)
+    );
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
-    const subclass = equippableItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
     if (subclass) {
-      equippableItems = equippableItems.filter((i) => i !== subclass);
+      equippableItems = equippableItems.filter((i) => i.hash !== subclass.hash);
     }
     return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, buckets, allItems, store]);
@@ -104,9 +108,7 @@ export default function LoadoutView({
               <div className={styles.mods}>
                 <div className={styles.modsGrid}>
                   {savedMods.map((mod) => (
-                    <div key={getModRenderKey(mod)}>
-                      <PlugDef plug={mod} />
-                    </div>
+                    <PlugDef key={getModRenderKey(mod)} plug={mod} />
                   ))}
                 </div>
                 <button
