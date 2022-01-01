@@ -1,6 +1,7 @@
 ## Next
 
 * Consumables can now be pulled from postmasters other than the active character's.
+* Fixes for display on iPhones with rounded corners and a notch.
 
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 
