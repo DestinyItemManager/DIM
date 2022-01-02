@@ -167,7 +167,9 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
-  user-select: none;
+  @include phone-portrait {
+    user-select: none;
+  }
 }
 
 body {
@@ -305,8 +307,8 @@ select {
     &:hover,
     &:active,
     &.selected {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white;
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      color: white !important;
       img {
         filter: drop-shadow(0 0 1px black);
       }

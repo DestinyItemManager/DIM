@@ -176,6 +176,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
             key={socketInMenu.socketIndex}
             item={item}
             socket={socketInMenu}
+            allowInsertPlug
             onClose={() => setSocketInMenu(null)}
             onPlugSelected={onPlugClicked}
           />,

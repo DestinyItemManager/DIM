@@ -5,7 +5,8 @@
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Couldn't get permission to change item",
-    "NotSupported": "We cannot change this type of mod or perk"
+    "NotSupported": "We cannot change this type of mod or perk",
+    "SelfInsertion": "You cannot plug an item into itself!"
   },
   "Accounts": {
     "Blizzard": "PC",
