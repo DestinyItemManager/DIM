@@ -3,7 +3,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { emptyArray } from 'app/utils/empty';
-import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimLoadoutItem, LoadoutItem } from './loadout-types';
 import { findItem } from './loadout-utils';
@@ -27,8 +26,7 @@ export function getItemsFromLoadoutItems(
   for (const loadoutItem of loadoutItems) {
     const item = findItem(allItems, loadoutItem);
     if (item) {
-      const copiedDimItem = _.cloneDeep(item);
-      items.push({ ...copiedDimItem, socketOverrides: loadoutItem.socketOverrides });
+      items.push({ ...item, socketOverrides: loadoutItem.socketOverrides });
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {
