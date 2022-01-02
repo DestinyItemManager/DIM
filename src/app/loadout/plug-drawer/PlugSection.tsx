@@ -92,10 +92,10 @@ export default function PlugSection({
             <div className={styles.items}>
               {plugs.map((plug) => {
                 const isSelected = selectedPlugs.some((s) => s.hash === plug.hash);
-                const multiSelect = selectionType === 'multi';
-                const selectable = multiSelect
-                  ? selectedPlugs.length < maxSelectable && isPlugSelectable(plug)
-                  : !isSelected && isPlugSelectable(plug);
+                const selectable =
+                  selectionType === 'multi'
+                    ? selectedPlugs.length < maxSelectable && isPlugSelectable(plug)
+                    : !isSelected && isPlugSelectable(plug);
                 return (
                   <SelectablePlug
                     key={plug.hash}
@@ -104,7 +104,6 @@ export default function PlugSection({
                     displayedStatHashes={displayedStatHashes}
                     selectable={selectable}
                     selectionType={selectionType}
-                    removable={multiSelect}
                     onPlugSelected={handlePlugSelected}
                     onPlugRemoved={handlePlugRemoved}
                   />

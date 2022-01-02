@@ -21,18 +21,10 @@ export function Subclass({
 }) {
   const defs = useD2Definitions();
 
-  const subclassWithOverrides = useMemo(() => {
-    const socketOverridesWithDefaultPlugs: SocketOverrides = { ...socketOverrides };
-
-    for (const socket of subclass.sockets?.allSockets || []) {
-      if (!socketOverridesWithDefaultPlugs[socket.socketIndex]) {
-        socketOverridesWithDefaultPlugs[socket.socketIndex] =
-          socket.socketDefinition.singleInitialItemHash;
-      }
-    }
-
-    return applySocketOverrides(defs!, subclass, socketOverridesWithDefaultPlugs);
-  }, [defs, socketOverrides, subclass]);
+  const subclassWithOverrides = useMemo(
+    () => applySocketOverrides(defs!, subclass, socketOverrides),
+    [defs, socketOverrides, subclass]
+  );
 
   const updateSocketOverrides = useCallback(
     (overrides: SocketOverrides) => {
