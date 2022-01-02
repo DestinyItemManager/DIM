@@ -4,6 +4,7 @@
 * Vendors page now correctly recognizes owned bounties per character and is more accurate about mods ownership.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
 * Fixes for display on iPhones with rounded corners and a notch.
+* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 
