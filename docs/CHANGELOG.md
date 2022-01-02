@@ -1,6 +1,8 @@
 ## Next
 
 * Consumables can now be pulled from postmasters other than the active character's.
+* Fixed an issue that could make moving searches containing stacks of items to fail.
+* Fixes for display on iPhones with rounded corners and a notch.
 
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 

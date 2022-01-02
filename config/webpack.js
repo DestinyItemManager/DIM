@@ -396,6 +396,8 @@ module.exports = (env) => {
         '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(!env.release),
+        // Loadout edit drawer v2
+        '$featureFlags.loadoutDrawerV2': JSON.stringify(false),
       }),
 
       new LodashModuleReplacementPlugin({

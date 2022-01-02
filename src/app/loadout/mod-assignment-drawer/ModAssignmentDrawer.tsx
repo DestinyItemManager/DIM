@@ -16,7 +16,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import { getCheapestModAssignments } from '../mod-assignment-utils';
+import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
@@ -72,7 +72,7 @@ export default function ModAssignmentDrawer({
         .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
     }
-    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(armor, mods, defs);
+    const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods, defs);
 
     return [itemModAssignments, unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);

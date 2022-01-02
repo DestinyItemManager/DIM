@@ -114,13 +114,15 @@ function ApplyLoadoutProgressBody({
   const groupedItemErrors = _.groupBy(
     itemStatesList.filter(({ error }) => error),
     ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
+      error?.message
   );
 
   const groupedModErrors = _.groupBy(
     modStates.filter(({ error }) => error),
     ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
+      error?.message
   );
 
   return (
