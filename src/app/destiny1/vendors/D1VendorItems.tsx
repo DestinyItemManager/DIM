@@ -49,7 +49,7 @@ export default function D1VendorItems({
                 <D1VendorItem
                   key={item.index}
                   saleItem={item}
-                  owned={ownedItemHashes.has(item.item.hash)}
+                  owned={ownedItemHashes.accountWideOwned.has(item.item.hash)}
                   totalCoins={totalCoins}
                 />
               ))}

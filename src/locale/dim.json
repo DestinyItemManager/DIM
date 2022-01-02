@@ -624,7 +624,7 @@
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
-    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AcquiredMod": "This mod is unlocked in collections.",
     "AddNote": "Add a note",
     "AddToLoadout": "Loadout",
     "All": "All",

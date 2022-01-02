@@ -1,6 +1,7 @@
 ## Next
 
 * Consumables can now be pulled from postmasters other than the active character's.
+* Vendors page now correctly recognizes owned bounties per character and is more accurate about mods ownership.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
 * Fixes for display on iPhones with rounded corners and a notch.
 

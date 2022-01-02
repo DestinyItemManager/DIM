@@ -46,19 +46,22 @@ export default function VendorItemComponent({
     item.item.collectibleState !== undefined &&
     !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
 
-  const unavailable =
-    !item.canPurchase ||
-    !item.canBeSold ||
-    (owned &&
-      item.item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties) &&
+  // Can't buy more copies of emblems or bounties other than repeatables.
+  const ownershipRule =
+    item.item?.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) ||
+    (item.item?.itemCategoryHashes.includes(ItemCategoryHashes.Bounties) &&
       !item.item.itemCategoryHashes.includes(ItemCategoryHashes.RepeatableBounties));
+
+  const mod = item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod);
+
+  const unavailable = !item.canPurchase || !item.canBeSold || (owned && ownershipRule);
   return (
     <VendorItemDisplay
       item={item.item}
       unavailable={unavailable}
       owned={owned}
       acquired={acquired}
-      extraData={{ failureStrings: item.failureStrings, owned, acquired }}
+      extraData={{ failureStrings: item.failureStrings, owned, acquired, mod }}
     >
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
