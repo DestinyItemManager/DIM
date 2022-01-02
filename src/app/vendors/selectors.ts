@@ -2,6 +2,8 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { mergeCollectibles } from 'app/inventory/d2-stores';
 import {
   bucketsSelector,
+  ownedItemsSelector,
+  ownedUncollectiblePlugsSelector,
   profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
@@ -52,4 +54,17 @@ export const vendorGroupsForCharacterSelector = createSelector(
         )
       : emptyArray<D2VendorGroup>();
   }
+);
+
+export const ownedVendorItemsSelector = createSelector(
+  ownedItemsSelector,
+  ownedUncollectiblePlugsSelector,
+  (_: any, storeId?: string) => storeId,
+  (ownedItems, ownedPlugs, storeId) =>
+    new Set([
+      ...ownedItems.accountWideOwned,
+      ...ownedPlugs.accountWideOwned,
+      ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
+      ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
+    ])
 );

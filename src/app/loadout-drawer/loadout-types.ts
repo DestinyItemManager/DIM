@@ -33,7 +33,6 @@ export interface DimLoadoutItem extends DimItem {
 
 /** represents a single mod, and where to place it (on a non-specific item) */
 export interface Assignment {
-  // TODO: just the hash?
   /** what item to plug */
   mod: PluggableInventoryItemDefinition;
   /** which socket to plug it into */
@@ -41,7 +40,7 @@ export interface Assignment {
   /**
    * If required, this assignment must be completed. The user wants this mod plugged, even if it's the default plug.
    * If not, this is an optional action which clears out other mod slots.
-   * This also controls whether we show the status of this assigment in the loadout progress notification.
+   * This also controls whether we show the status of this assignment in the loadout progress notification.
    */
   required: boolean;
 }

@@ -12,6 +12,7 @@ import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
+import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -251,7 +252,7 @@ export default function Destiny() {
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
       </div>
-      <LoadoutDrawer />
+      {$featureFlags.loadoutDrawerV2 ? <LoadoutDrawer2 /> : <LoadoutDrawer />}
       <Compare />
       <Farming />
       <InfusionFinder />
