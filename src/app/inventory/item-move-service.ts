@@ -566,7 +566,7 @@ function chooseMoveAsideItem(
     throw new DimError(
       'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
-    );
+    ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
   // Find any stackable that could be combined with another stack
@@ -685,7 +685,7 @@ function chooseMoveAsideItem(
     throw new DimError(
       'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
-    );
+    ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
   return moveAsideCandidate;
