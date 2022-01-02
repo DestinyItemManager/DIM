@@ -58,6 +58,7 @@ import {
   LoadoutStateGetter,
   LoadoutStateUpdater,
   makeLoadoutApplyState,
+  PartialItemResultUpdate,
   setLoadoutApplyPhase,
   setModResult,
   setSocketOverrideResult,
@@ -265,7 +266,7 @@ function doApplyLoadout(
               (loadoutItem.amount && loadoutItem.amount > 1));
 
           if (item && !requiresAction) {
-            setLoadoutState(updateItemResult(item, { state: LoadoutItemState.AlreadyThere }));
+            setLoadoutState(updateItemResult(item.index, { state: LoadoutItemState.AlreadyThere }));
           }
 
           return requiresAction;
@@ -379,7 +380,7 @@ function doApplyLoadout(
           const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
           if (updatedItem) {
             setLoadoutState(
-              updateItemResult(updatedItem, {
+              updateItemResult(updatedItem.index, {
                 state:
                   // If we're doing a bulk equip later, set to MovedPendingEquip
                   itemsToEquip.length > 1 &&
@@ -407,7 +408,7 @@ function doApplyLoadout(
 
             setLoadoutState(
               updateItemResult(
-                updatedItem,
+                updatedItem.index,
                 {
                   state: itemState,
                   error: e,
@@ -437,8 +438,7 @@ function doApplyLoadout(
         );
         try {
           const result = await dispatch(equipItems(store, realItemsToEquip, cancelToken));
-          const itemStateUpdates: { item: DimItem; partialResult: Partial<LoadoutItemResult> }[] =
-            [];
+          const itemStateUpdates: PartialItemResultUpdate[] = [];
           let equipNotPossible = false;
 
           for (const item of realItemsToEquip) {
@@ -449,7 +449,7 @@ function doApplyLoadout(
                   ? LoadoutItemState.Succeeded
                   : LoadoutItemState.FailedEquip,
             };
-            itemStateUpdates.push({ item, partialResult });
+            itemStateUpdates.push({ itemIndex: item.index, partialResult });
 
             // TODO how to set the error code here?
             // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
@@ -464,11 +464,10 @@ function doApplyLoadout(
             throw e;
           }
           errorLog('loadout equip', 'Failed to equip items', e);
-          const itemStateUpdates: { item: DimItem; partialResult: Partial<LoadoutItemResult> }[] =
-            [];
+          const itemStateUpdates: PartialItemResultUpdate[] = [];
           for (const item of realItemsToEquip) {
             const partialResult = { state: LoadoutItemState.FailedEquip, error: e };
-            itemStateUpdates.push({ item, partialResult });
+            itemStateUpdates.push({ itemIndex: item.index, partialResult });
           }
           setLoadoutState(updateResultForItems(itemStateUpdates));
         }

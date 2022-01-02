@@ -206,8 +206,9 @@ export function setSocketOverrideResult(
   };
 }
 
+/** Updates the item state for a single item for the given `DimItem.index`. */
 export function updateItemResult(
-  item: DimItem,
+  itemIndex: string,
   partialResult: Partial<LoadoutItemResult>,
   equipNotPossible?: boolean
 ) {
@@ -216,25 +217,31 @@ export function updateItemResult(
     equipNotPossible: equipNotPossible || state.equipNotPossible,
     itemStates: {
       ...state.itemStates,
-      [item.index]: {
-        ...state.itemStates[item.index],
+      [itemIndex]: {
+        ...state.itemStates[itemIndex],
         ...partialResult,
       },
     },
   });
 }
 
+export interface PartialItemResultUpdate {
+  itemIndex: string;
+  partialResult: Partial<LoadoutItemResult>;
+}
+
+/** Updates the item state for multiple items based of the `DimItem.index`. */
 export function updateResultForItems(
-  itemsWithResults: { item: DimItem; partialResult: Partial<LoadoutItemResult> }[],
+  itemsWithResults: PartialItemResultUpdate[],
   equipNotPossible?: boolean
 ) {
   return (state: LoadoutApplyState): LoadoutApplyState => {
     const updatedItemStates: { [itemIndex: number]: LoadoutItemResult } = {};
 
-    for (const { item, partialResult } of itemsWithResults) {
-      if (state.itemStates[item.index]) {
-        updatedItemStates[item.index] = {
-          ...state.itemStates[item.index],
+    for (const { itemIndex, partialResult } of itemsWithResults) {
+      if (state.itemStates[itemIndex]) {
+        updatedItemStates[itemIndex] = {
+          ...state.itemStates[itemIndex],
           ...partialResult,
         };
       }
