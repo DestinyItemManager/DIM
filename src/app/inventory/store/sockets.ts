@@ -547,5 +547,5 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
 
   // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
   // TODO (ryan) lets fine a way around this
-  return plug ? { ...plug } : plug;
+  return plug ? { ...plug } : null;
 }
