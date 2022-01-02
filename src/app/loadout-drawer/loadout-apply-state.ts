@@ -2,10 +2,6 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
-import { setAutoFreeze } from 'immer';
-
-// Immer's auto-freeze can get us in trouble because we do sometimes modify the produced item.
-setAutoFreeze(false);
 
 /**
  * What part of the loadout application process are we currently in?
