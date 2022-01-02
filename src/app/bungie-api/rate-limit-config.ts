@@ -34,7 +34,7 @@ export default function setupRateLimiter() {
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlugFree/,
       2,
-      1100
+      2100
     )
   );
 }
