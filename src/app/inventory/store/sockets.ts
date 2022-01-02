@@ -539,7 +539,7 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
     // We also run DimItems through immer in the store, which means these get frozen. This essentially
     // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
     // TODO (ryan) lets fine a way around this
-    return cachedValue ? { ...cachedValue } : cachedValue;
+    return cachedValue ? { ...cachedValue } : null;
   }
 
   const plug = buildDefinedPlug(defs, plugHash);
