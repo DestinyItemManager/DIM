@@ -293,13 +293,15 @@ function doApplyLoadout(
 
       // Dequip items from the loadout off of other characters so they can be moved.
       // TODO: break out into its own action
+      const stores = getStores();
       const itemsToDequip = loadoutItemsToMove.filter((loadoutItem) => {
-        const item = getItemAcrossStores(getStores(), loadoutItem);
+        const item = getLoadoutItem(loadoutItem, store, stores);
         return item?.equipped && item.owner !== store.id;
       });
 
-      const stores = getStores();
-      const realItemsToDequip = _.compact(itemsToDequip.map((i) => getItemAcrossStores(stores, i)));
+      const realItemsToDequip = _.compact(
+        itemsToDequip.map((i) => getLoadoutItem(i, store, stores))
+      );
       // Group dequips per character
       const dequips = _.map(
         _.groupBy(realItemsToDequip, (i) => i.owner),
@@ -374,13 +376,14 @@ function doApplyLoadout(
         // TODO: try parallelizing these too?
         // TODO: respect flag for equip not allowed
         try {
+          const initialItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores())!;
           await dispatch(
             applyLoadoutItem(store.id, loadoutItem, applicableLoadoutItems, cancelToken)
           );
-          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          const updatedItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores());
           if (updatedItem) {
             setLoadoutState(
-              updateItemResult(updatedItem.index, {
+              updateItemResult(initialItem.index, {
                 state:
                   // If we're doing a bulk equip later, set to MovedPendingEquip
                   itemsToEquip.length > 1 &&
@@ -394,7 +397,7 @@ function doApplyLoadout(
           if (e instanceof CanceledError) {
             throw e;
           }
-          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          const updatedItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores());
           if (updatedItem) {
             errorLog('loadout', 'Failed to apply loadout item', updatedItem.name, e);
             const isOnCorrectStore = updatedItem.owner === store.id;

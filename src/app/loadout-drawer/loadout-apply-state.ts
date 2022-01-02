@@ -212,17 +212,20 @@ export function updateItemResult(
   partialResult: Partial<LoadoutItemResult>,
   equipNotPossible?: boolean
 ) {
-  return (state: LoadoutApplyState): LoadoutApplyState => ({
-    ...state,
-    equipNotPossible: equipNotPossible || state.equipNotPossible,
-    itemStates: {
-      ...state.itemStates,
-      [itemIndex]: {
-        ...state.itemStates[itemIndex],
-        ...partialResult,
-      },
-    },
-  });
+  return (state: LoadoutApplyState): LoadoutApplyState =>
+    state.itemStates[itemIndex]
+      ? {
+          ...state,
+          equipNotPossible: equipNotPossible || state.equipNotPossible,
+          itemStates: {
+            ...state.itemStates,
+            [itemIndex]: {
+              ...state.itemStates[itemIndex],
+              ...partialResult,
+            },
+          },
+        }
+      : state;
 }
 
 export interface PartialItemResultUpdate {
