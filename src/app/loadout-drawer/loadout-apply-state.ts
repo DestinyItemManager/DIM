@@ -2,10 +2,6 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
-import produce, { setAutoFreeze } from 'immer';
-
-// Immer's auto-freeze can get us in trouble because we do sometimes modify the produced item.
-setAutoFreeze(false);
 
 /**
  * What part of the loadout application process are we currently in?
@@ -157,18 +153,26 @@ export function setLoadoutApplyPhase(phase: LoadoutApplyPhase) {
 }
 
 export function setModResult(result: LoadoutModResult, equipNotPossible?: boolean) {
-  return produce<LoadoutApplyState>((state) => {
-    const mod = state.modStates.find(
+  return (state: LoadoutApplyState): LoadoutApplyState => {
+    const modIndex = state.modStates.findIndex(
       (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending
     );
-    if (mod) {
-      mod.state = result.state;
-      mod.error = result.error;
+    const updatedModStates = [...state.modStates];
+    if (modIndex !== -1) {
+      const updatedModState = { ...state.modStates[modIndex] };
+      updatedModState.state = result.state;
+      updatedModState.error = result.error;
+      updatedModStates[modIndex] = updatedModState;
     } else {
-      state.modStates.push(result);
+      updatedModStates.push(result);
     }
-    state.equipNotPossible ||= equipNotPossible || false;
-  });
+
+    return {
+      ...state,
+      equipNotPossible: state.equipNotPossible || equipNotPossible || false,
+      modStates: updatedModStates,
+    };
+  };
 }
 
 export function setSocketOverrideResult(
@@ -178,18 +182,80 @@ export function setSocketOverrideResult(
   error?: Error,
   equipNotPossible?: boolean
 ) {
-  return produce<LoadoutApplyState>((state) => {
-    const thisSocketResult = state.socketOverrideStates[item.index].results[socketIndex];
+  return (state: LoadoutApplyState): LoadoutApplyState => {
+    const socketOverridesForItem = { ...state.socketOverrideStates[item.index] };
+    const thisSocketResult = { ...socketOverridesForItem.results[socketIndex] };
 
     // don't insert a state or error for anything that wasn't given an initial tracking state
     if (!thisSocketResult) {
-      return;
+      return state;
     }
 
     thisSocketResult.state = socketState;
     thisSocketResult.error = error;
-    state.equipNotPossible ||= equipNotPossible || false;
+    socketOverridesForItem.results = {
+      ...socketOverridesForItem.results,
+      [socketIndex]: thisSocketResult,
+    };
+
+    return {
+      ...state,
+      equipNotPossible: state.equipNotPossible || equipNotPossible || false,
+      socketOverrideStates: { ...state.socketOverrideStates, [item.index]: socketOverridesForItem },
+    };
+  };
+}
+
+/** Updates the item state for a single item for the given `DimItem.index`. */
+export function updateItemResult(
+  itemIndex: string,
+  partialResult: Partial<LoadoutItemResult>,
+  equipNotPossible?: boolean
+) {
+  return (state: LoadoutApplyState): LoadoutApplyState => ({
+    ...state,
+    equipNotPossible: equipNotPossible || state.equipNotPossible,
+    itemStates: {
+      ...state.itemStates,
+      [itemIndex]: {
+        ...state.itemStates[itemIndex],
+        ...partialResult,
+      },
+    },
   });
+}
+
+export interface PartialItemResultUpdate {
+  itemIndex: string;
+  partialResult: Partial<LoadoutItemResult>;
+}
+
+/** Updates the item state for multiple items based of the `DimItem.index`. */
+export function updateResultForItems(
+  itemsWithResults: PartialItemResultUpdate[],
+  equipNotPossible?: boolean
+) {
+  return (state: LoadoutApplyState): LoadoutApplyState => {
+    const updatedItemStates: { [itemIndex: number]: LoadoutItemResult } = {};
+
+    for (const { itemIndex, partialResult } of itemsWithResults) {
+      if (state.itemStates[itemIndex]) {
+        updatedItemStates[itemIndex] = {
+          ...state.itemStates[itemIndex],
+          ...partialResult,
+        };
+      }
+    }
+
+    return {
+      ...state,
+      equipNotPossible: equipNotPossible || state.equipNotPossible,
+      itemStates: {
+        ...state.itemStates,
+        ...updatedItemStates,
+      },
+    };
+  };
 }
 
 /**
