@@ -535,10 +535,10 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
   const cachedValue = definedPlugCache[plugHash];
   // The result of buildDefinedPlug can be null, we still consider that a cached value.
   if (cachedValue !== undefined) {
-    return cachedValue;
+    return cachedValue ? { ...cachedValue } : cachedValue;
   }
 
   const plug = buildDefinedPlug(defs, plugHash);
   definedPlugCache[plugHash] = plug;
-  return plug;
+  return plug ? { ...plug } : plug;
 }
