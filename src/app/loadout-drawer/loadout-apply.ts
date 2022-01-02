@@ -383,7 +383,7 @@ function doApplyLoadout(
           const updatedItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores());
           if (updatedItem) {
             setLoadoutState(
-              updateItemResult(updatedItem.index, {
+              updateItemResult(initialItem.index, {
                 state:
                   // If we're doing a bulk equip later, set to MovedPendingEquip
                   itemsToEquip.length > 1 &&
