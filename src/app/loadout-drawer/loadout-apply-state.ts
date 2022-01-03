@@ -2,6 +2,7 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
+import produce from 'immer';
 
 /**
  * What part of the loadout application process are we currently in?
@@ -153,26 +154,18 @@ export function setLoadoutApplyPhase(phase: LoadoutApplyPhase) {
 }
 
 export function setModResult(result: LoadoutModResult, equipNotPossible?: boolean) {
-  return (state: LoadoutApplyState): LoadoutApplyState => {
-    const modIndex = state.modStates.findIndex(
+  return produce<LoadoutApplyState>((state) => {
+    const mod = state.modStates.find(
       (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending
     );
-    const updatedModStates = [...state.modStates];
-    if (modIndex !== -1) {
-      const updatedModState = { ...state.modStates[modIndex] };
-      updatedModState.state = result.state;
-      updatedModState.error = result.error;
-      updatedModStates[modIndex] = updatedModState;
+    if (mod) {
+      mod.state = result.state;
+      mod.error = result.error;
     } else {
-      updatedModStates.push(result);
+      state.modStates.push(result);
     }
-
-    return {
-      ...state,
-      equipNotPossible: state.equipNotPossible || equipNotPossible || false,
-      modStates: updatedModStates,
-    };
-  };
+    state.equipNotPossible ||= equipNotPossible || false;
+  });
 }
 
 export function setSocketOverrideResult(
@@ -182,83 +175,18 @@ export function setSocketOverrideResult(
   error?: Error,
   equipNotPossible?: boolean
 ) {
-  return (state: LoadoutApplyState): LoadoutApplyState => {
-    const socketOverridesForItem = { ...state.socketOverrideStates[item.index] };
-    const thisSocketResult = { ...socketOverridesForItem.results[socketIndex] };
+  return produce<LoadoutApplyState>((state) => {
+    const thisSocketResult = state.socketOverrideStates[item.index].results[socketIndex];
 
     // don't insert a state or error for anything that wasn't given an initial tracking state
     if (!thisSocketResult) {
-      return state;
+      return;
     }
 
     thisSocketResult.state = socketState;
     thisSocketResult.error = error;
-    socketOverridesForItem.results = {
-      ...socketOverridesForItem.results,
-      [socketIndex]: thisSocketResult,
-    };
-
-    return {
-      ...state,
-      equipNotPossible: state.equipNotPossible || equipNotPossible || false,
-      socketOverrideStates: { ...state.socketOverrideStates, [item.index]: socketOverridesForItem },
-    };
-  };
-}
-
-/** Updates the item state for a single item for the given `DimItem.index`. */
-export function updateItemResult(
-  itemIndex: string,
-  partialResult: Partial<LoadoutItemResult>,
-  equipNotPossible?: boolean
-) {
-  return (state: LoadoutApplyState): LoadoutApplyState =>
-    state.itemStates[itemIndex]
-      ? {
-          ...state,
-          equipNotPossible: equipNotPossible || state.equipNotPossible,
-          itemStates: {
-            ...state.itemStates,
-            [itemIndex]: {
-              ...state.itemStates[itemIndex],
-              ...partialResult,
-            },
-          },
-        }
-      : state;
-}
-
-export interface PartialItemResultUpdate {
-  itemIndex: string;
-  partialResult: Partial<LoadoutItemResult>;
-}
-
-/** Updates the item state for multiple items based of the `DimItem.index`. */
-export function updateResultForItems(
-  itemsWithResults: PartialItemResultUpdate[],
-  equipNotPossible?: boolean
-) {
-  return (state: LoadoutApplyState): LoadoutApplyState => {
-    const updatedItemStates: { [itemIndex: number]: LoadoutItemResult } = {};
-
-    for (const { itemIndex, partialResult } of itemsWithResults) {
-      if (state.itemStates[itemIndex]) {
-        updatedItemStates[itemIndex] = {
-          ...state.itemStates[itemIndex],
-          ...partialResult,
-        };
-      }
-    }
-
-    return {
-      ...state,
-      equipNotPossible: equipNotPossible || state.equipNotPossible,
-      itemStates: {
-        ...state.itemStates,
-        ...updatedItemStates,
-      },
-    };
-  };
+    state.equipNotPossible ||= equipNotPossible || false;
+  });
 }
 
 /**

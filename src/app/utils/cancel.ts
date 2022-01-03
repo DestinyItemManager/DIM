@@ -23,21 +23,19 @@ export class CanceledError extends Error {
  * to see whether it has been canceled. The function can be called to cancel the token.
  */
 export function withCancel(): [CancelToken, () => void] {
-  const innerToken = {
-    canceled: false,
-  };
+  let isCanceled = false;
   return [
     {
       get canceled() {
-        return innerToken.canceled;
+        return isCanceled;
       },
       checkCanceled() {
-        if (this.canceled) {
+        if (isCanceled) {
           throw new CanceledError();
         }
       },
     },
-    () => (innerToken.canceled = true),
+    () => (isCanceled = true),
   ];
 }
 

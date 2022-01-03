@@ -311,8 +311,6 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
         if (mobile) {
-          document.body.classList.add('body-scroll-lock');
-          enableBodyScroll(sheetContents.current);
           disableBodyScroll(sheetContents.current);
         }
       }
@@ -323,9 +321,6 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   useLayoutEffect(
     () => () => {
       if (sheetContents.current) {
-        setTimeout(() => {
-          document.body.classList.remove('body-scroll-lock');
-        }, 0);
         sheetContents.current.removeEventListener('touchstart', blockEvents);
         if (mobile) {
           enableBodyScroll(sheetContents.current);

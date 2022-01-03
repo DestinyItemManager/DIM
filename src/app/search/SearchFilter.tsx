@@ -31,7 +31,10 @@ export function SearchFilter(
   const location = useLocation();
 
   const dispatch = useThunkDispatch();
-  const onQueryChanged = (query: string) => dispatch(setSearchQuery(query, false));
+  const onQueryChanged = useCallback(
+    (query: string) => dispatch(setSearchQuery(query, false)),
+    [dispatch]
+  );
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
