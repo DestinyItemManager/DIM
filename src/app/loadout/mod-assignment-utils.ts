@@ -364,7 +364,7 @@ export function pickPlugPositions(
     assignments.push({
       socketIndex: destinationSocket.socketIndex,
       mod: modToInsert,
-      required: true,
+      requested: true,
     });
 
     // remove this existing socket from consideration
@@ -386,8 +386,8 @@ export function pickPlugPositions(
       assignments.push({
         socketIndex,
         mod,
-        // If the user wants to clear out all items, this is required. Otherwise it's optional.
-        required: clearUnassignedSocketsPerItem,
+        // If the user wants to clear out all items, this is requested. Otherwise it's optional.
+        requested: clearUnassignedSocketsPerItem,
       });
     }
   }
@@ -432,6 +432,7 @@ export function createPluggingStrategy(
     const pluggingAction = {
       ...assignment,
       energySpend,
+      required: assignment.requested,
     };
 
     if (pluggingAction.energySpend > 0) {
