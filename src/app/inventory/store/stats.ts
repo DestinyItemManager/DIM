@@ -410,10 +410,9 @@ function attachPlugStats(
       activePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
-    socket.plugged = { ...activePlug, stats: activePlugStats };
+    activePlug.stats = activePlugStats;
   }
 
-  const plugOptionsWithStats: DimPlug[] = [];
   for (const plug of socket.plugOptions) {
     // We already did this plug above and activePlug should be a reference to plug.
     if (plug === activePlug) {
@@ -458,10 +457,8 @@ function attachPlugStats(
       inactivePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
-    plugOptionsWithStats.push({ ...plug, stats: inactivePlugStats });
+    plug.stats = inactivePlugStats;
   }
-
-  socket.plugOptions = plugOptionsWithStats;
 }
 
 function totalStat(stats: DimStat[]): DimStat {
