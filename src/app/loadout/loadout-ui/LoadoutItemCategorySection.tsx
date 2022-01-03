@@ -77,9 +77,12 @@ export default function LoadoutItemCategorySection({
   const equippedItems =
     items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
 
+  const isArmor = category === 'Armor';
+  const hasFashion = isArmor && !_.isEmpty(modsByBucket);
+
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
-      {items ? (
+      {items || hasFashion ? (
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucket) => (
             <ItemBucket
@@ -96,10 +99,9 @@ export default function LoadoutItemCategorySection({
           <div className={clsx(styles.placeholder, `category-${category}`)}>
             {t(`Bucket.${category}`, { contextList: 'buckets' })}
           </div>
-          {category === 'Armor' && loadout.parameters && <OptimizerButton loadout={loadout} />}
         </>
       )}
-      {category === 'Armor' && items && (
+      {items && isArmor && (
         <>
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
@@ -168,19 +170,17 @@ function ItemBucket({
         ) : (
           index === 0 && (
             <div
-              className={clsx(
-                styles.items,
-                styles.empty,
-                index === 0 ? styles.equipped : styles.unequipped
-              )}
+              className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
               key={index}
             >
-              {bucketHashToItemCategoryHash[bucketHash] && (
-                <img
-                  className={styles.placeholderArmorType}
-                  src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}
-                />
-              )}
+              <div className={styles.empty}>
+                {bucketHashToItemCategoryHash[bucketHash] && (
+                  <img
+                    className={styles.placeholderArmorType}
+                    src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}
+                  />
+                )}
+              </div>
               {/* TODO: show empty placeholder for bucket type? */}
               {showFashion && <FashionMods modsForBucket={modsForBucket} />}
             </div>

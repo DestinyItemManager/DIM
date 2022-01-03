@@ -97,7 +97,7 @@ export default function LoadoutView({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || savedMods.length > 0) && (
+        {(items.length > 0 || subclass || savedMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             <div>
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
