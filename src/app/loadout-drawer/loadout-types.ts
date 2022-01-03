@@ -37,12 +37,8 @@ export interface Assignment {
   mod: PluggableInventoryItemDefinition;
   /** which socket to plug it into */
   socketIndex: number;
-  /**
-   * If required, this assignment must be completed. The user wants this mod plugged, even if it's the default plug.
-   * If not, this is an optional action which clears out other mod slots.
-   * This also controls whether we show the status of this assignment in the loadout progress notification.
-   */
-  required: boolean;
+  /** Was this assignment requested by the user (and should thus be reported in the progress popup)? */
+  requested: boolean;
 }
 
 /**
@@ -53,4 +49,9 @@ export interface Assignment {
 export interface PluggingAction extends Assignment {
   /** This will be negative if we are recovering used energy back by swapping in a cheaper mod */
   energySpend: number;
+  /**
+   * If required, this assignment must be completed.
+   * If not, this is an optional action which clears out other mod slots.
+   */
+  required: boolean;
 }

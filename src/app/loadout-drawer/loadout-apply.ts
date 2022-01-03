@@ -873,23 +873,23 @@ function applySocketOverrides(
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
               // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
-              modsForItem.push({ socketIndex, mod, required: true });
+              modsForItem.push({ socketIndex, mod, requested: true });
             }
           }
         }
 
-        const handleSuccess = ({ socketIndex, required }: Assignment) => {
-          required &&
+        const handleSuccess = ({ socketIndex, requested }: Assignment) => {
+          requested &&
             setLoadoutState(
               setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
             );
         };
         const handleFailure = (
-          { socketIndex, required }: Assignment,
+          { socketIndex, requested }: Assignment,
           error?: Error,
           equipNotPossible?: boolean
         ) =>
-          required
+          requested
             ? setLoadoutState(
                 setSocketOverrideResult(
                   dimItem,
@@ -1015,15 +1015,15 @@ function applyLoadoutMods(
 
     const applyModsPromises: Promise<void>[] = [];
 
-    const handleSuccess = ({ mod, required }: Assignment) =>
-      required &&
+    const handleSuccess = ({ mod, requested }: Assignment) =>
+      requested &&
       setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
     const handleFailure = (
-      { mod, required }: Assignment,
+      { mod, requested }: Assignment,
       error?: Error,
       equipNotPossible?: boolean
     ) =>
-      required
+      requested
         ? setLoadoutState(
             setModResult(
               { modHash: mod.hash, state: LoadoutModState.Failed, error },
