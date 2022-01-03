@@ -7,7 +7,6 @@ import {
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import {
@@ -24,8 +23,8 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useSubscription } from 'use-subscription';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from './item-types';
-import ItemIcon from './ItemIcon';
+import { DimItem } from './item-types';
+import ItemIcon, { DefItemIcon } from './ItemIcon';
 import styles from './MoveNotifications.m.scss';
 import { DimStore } from './store-types';
 
@@ -184,9 +183,7 @@ function ApplyLoadoutProgressBody({
                     [styles.loadoutItemFailed]: state === LoadoutSocketOverrideState.Failed,
                   })}
                 >
-                  <PlugDef
-                    plug={defs.InventoryItem.get(plugHash) as PluggableInventoryItemDefinition}
-                  />
+                  <DefItemIcon itemDef={defs.InventoryItem.get(plugHash)} />
                 </div>
               ))}
             </div>
@@ -205,7 +202,7 @@ function ApplyLoadoutProgressBody({
                   state === LoadoutModState.Unassigned || state === LoadoutModState.Failed,
               })}
             >
-              <PlugDef plug={defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition} />
+              <DefItemIcon itemDef={defs.InventoryItem.get(modHash)} />
             </div>
           ))}
         </div>
