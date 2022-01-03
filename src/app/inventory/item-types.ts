@@ -352,33 +352,33 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
  */
 export interface DimPlug {
   /** The InventoryItem definition associated with this plug. */
-  plugDef: PluggableInventoryItemDefinition;
+  readonly plugDef: PluggableInventoryItemDefinition;
   /** Perks associated with the use of this plug. TODO: load on demand? */
-  perks: DestinySandboxPerkDefinition[];
+  readonly perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
-  plugObjectives: DestinyObjectiveProgress[];
+  readonly plugObjectives: DestinyObjectiveProgress[];
   /** Is the plug enabled? For example, some perks only activate on certain planets. */
-  enabled: boolean;
+  readonly enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
-  enableFailReasons: string;
+  readonly enableFailReasons: string;
   /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
-  stats: {
+  readonly stats: {
     [statHash: number]: number;
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
-  cannotCurrentlyRoll?: boolean;
+  readonly cannotCurrentlyRoll?: boolean;
 }
 
 export interface DimPlugSet {
   /** The hash that links to a DestinyPlugSetDefinition. */
-  hash: number;
+  readonly hash: number;
   /**
    * A list of built DimPlugs that are found in the plugSet.
    * This plugs included encompass everything that can be plugged into the socket whether it
    * is available to the character or not. You should filter this list down based on the plugs
    * available to the profile/character.
    */
-  plugs: DimPlug[];
+  readonly plugs: DimPlug[];
 }
 
 export interface DimSocket {
