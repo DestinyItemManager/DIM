@@ -11,12 +11,13 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faCalculator, searchIcon } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -28,6 +29,18 @@ const categoryStyles = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,
+};
+
+const bucketHashToItemCategoryHash = {
+  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
+  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
+  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
+  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
+  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
+  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
+  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
+  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
+  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
 };
 
 export default function LoadoutItemCategorySection({
@@ -162,6 +175,12 @@ function ItemBucket({
               )}
               key={index}
             >
+              {bucketHashToItemCategoryHash[bucketHash] && (
+                <img
+                  className={styles.placeholderArmorType}
+                  src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}
+                />
+              )}
               {/* TODO: show empty placeholder for bucket type? */}
               {showFashion && <FashionMods modsForBucket={modsForBucket} />}
             </div>

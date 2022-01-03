@@ -23,7 +23,7 @@ import { upgradeSpendTierToMaxEnergy } from './armor-upgrade-utils';
 import { generateModPermutations } from './mod-permutations';
 import {
   activityModPlugCategoryHashes,
-  bucketsToCategories,
+  bucketHashToPlugCategoryHash,
   getDefaultPlugHash,
   getItemEnergyType,
 } from './mod-utils';
@@ -114,7 +114,8 @@ export function fitMostMods(
     } else {
       // possible target for plugging this mod
       const targetItem = items.find(
-        (item) => plannedMod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
+        (item) =>
+          plannedMod.plug.plugCategoryHash === bucketHashToPlugCategoryHash[item.bucket.hash]
       );
 
       if (targetItem) {

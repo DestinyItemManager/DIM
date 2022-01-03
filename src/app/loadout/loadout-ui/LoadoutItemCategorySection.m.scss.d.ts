@@ -19,6 +19,7 @@ interface CssExports {
   'loStats': string;
   'missingItem': string;
   'placeholder': string;
+  'placeholderArmorType': string;
   'unequipped': string;
 }
 export const cssExports: CssExports;
