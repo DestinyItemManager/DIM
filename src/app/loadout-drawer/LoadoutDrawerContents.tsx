@@ -21,7 +21,11 @@ import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { extractArmorModHashes, fromEquippedTypes } from './loadout-utils';
+import {
+  createSocketOverridesFromEquipped,
+  extractArmorModHashes,
+  fromEquippedTypes,
+} from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
 import { Subclass } from './subclass-drawer/Subclass';
@@ -264,24 +268,6 @@ async function pickLoadoutSubclass(
     add(item);
   }
   onShowItemPicker(false);
-}
-
-function createSocketOverridesFromEquipped(item: DimItem) {
-  const socketOverrides: SocketOverrides = {};
-  for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
-      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
-    }
-  }
-  if (Object.keys(socketOverrides).length) {
-    return socketOverrides;
-  }
-  return undefined;
 }
 
 function fillLoadoutFromEquipped(

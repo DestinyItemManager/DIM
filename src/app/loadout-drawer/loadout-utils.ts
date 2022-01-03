@@ -17,7 +17,7 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem, DimSockets, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
@@ -49,6 +49,17 @@ const gearSlotOrder: DimItem['type'][] = [
 ];
 
 /**
+ * Subclasses 2.0 have sockets for the super, class ability, jump, melee,
+ * and grenade abilities. These sockets have a singleInitialItemHash, but
+ * their default isn't in any way special (compared to other sockets with
+ * an explicit empty plug).
+ */
+const socketCategoriesToAlwaysOverride = [
+  SocketCategoryHashes.Abilities,
+  SocketCategoryHashes.Super,
+];
+
+/**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
 export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
@@ -64,19 +75,33 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
 /**
  * Create a socket overrides structure from the item's currently plugged sockets.
  */
-function createSocketOverridesFromEquipped(item: DimItem) {
+export function createSocketOverridesFromEquipped(item: DimItem) {
   const socketOverrides: SocketOverrides = {};
   for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
+    // If the socket is plugged and the plug isn't the default empty plug,
+    // we apply the overrides to the loadout.
     if (
       socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
+      (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
+        alwaysRecordOverrideForSocket(item.sockets!, socket.socketIndex))
     ) {
       socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
     }
   }
-  return socketOverrides;
+  if (Object.keys(socketOverrides).length) {
+    return socketOverrides;
+  }
+  return undefined;
+}
+
+/**
+ * Checks if a socketOverride should always be recorded for this socket,
+ * even if it's the default plug.
+ */
+function alwaysRecordOverrideForSocket(sockets: DimSockets, socketIndex: number) {
+  const catHash = sockets.categories.find((cat) => cat.socketIndexes.includes(socketIndex))
+    ?.category.hash;
+  return catHash && socketCategoriesToAlwaysOverride.includes(catHash);
 }
 
 /**
