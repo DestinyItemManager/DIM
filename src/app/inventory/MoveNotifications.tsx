@@ -17,11 +17,11 @@ import {
   refreshIcon,
 } from 'app/shell/icons';
 import { DimError } from 'app/utils/dim-error';
+import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useSubscription } from 'use-subscription';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { DimItem } from './item-types';
 import ItemIcon, { DefItemIcon } from './ItemIcon';
@@ -96,7 +96,7 @@ function ApplyLoadoutProgressBody({
 }) {
   // TODO: throttle subscription?
   const { phase, equipNotPossible, itemStates, socketOverrideStates, modStates } =
-    useSubscription(stateObservable);
+    useThrottledSubscription(stateObservable, 100);
   const defs = useD2Definitions()!;
 
   const progressIcon =
