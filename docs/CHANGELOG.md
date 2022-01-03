@@ -1,5 +1,6 @@
 ## Next
-* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements. 
+* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements.
+* Creating a loadout from current equipment with a Stasis subclass now always includes all subclass abilities.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
