@@ -1,4 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -14,7 +15,11 @@ import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyCollectibleDefinition,
+  DestinyInventoryItemDefinition,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
@@ -151,9 +156,12 @@ export default function FashionDrawer({
     const ornaments = Object.values(modsByBucket)
       .flat()
       .filter((h) => !isShader(h));
-
     const groupedOrnaments = _.groupBy(ornaments, (h) => {
-      const collectibleHash = defs.InventoryItem.get(h)?.collectibleHash;
+      const collectibleHash =
+        defs.InventoryItem.get(h)?.collectibleHash ??
+        // if the item has no collectible hash, try to find an "identical" item with one
+        findOtherCopies(defs, h).find((i) => i.collectibleHash)?.collectibleHash;
+
       return collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0];
     });
     delete groupedOrnaments['undefined'];
@@ -167,18 +175,33 @@ export default function FashionDrawer({
 
     const set = defs.PresentationNode.get(
       parseInt(mostCommonOrnamentSet[0], 10)
-    ).children.collectibles.map((c) => defs.Collectible.get(c.collectibleHash).itemHash);
+    ).children.collectibles.map(
+      (c) =>
+        defs.Collectible.get(c.collectibleHash).itemHash ??
+        manuallyFindItemForCollectible(defs, c.collectibleHash)
+    );
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
         LockableBucketHashes.map((bucketHash, i) => {
-          const ornament = set[i];
-          if (unlockedPlugs.has(ornament)) {
+          let ornamentHash = set[i];
+
+          // if we picked a parent node that doesn't point to ornaments,
+          // try to find an "identical" item that *is* an unlocked plug
+          if (!unlockedPlugs.has(ornamentHash)) {
+            const ornamentVersion = findOtherCopies(defs, ornamentHash).find((i) =>
+              unlockedPlugs.has(i.hash)
+            );
+            ornamentHash = ornamentVersion?.hash ?? ornamentHash;
+          }
+
+          if (unlockedPlugs.has(ornamentHash)) {
             const modsWithoutShaders = (modsByBucket[bucketHash] ?? []).filter((h) => isShader(h));
-            const mods = [...modsWithoutShaders, ornament];
+            const mods = [...modsWithoutShaders, ornamentHash];
             return [bucketHash, mods];
           }
-          return [bucketHash, modsByBucket[bucketHash]];
+
+          return [bucketHash, modsByBucket[bucketHash] ?? []];
         })
       )
     );
@@ -429,5 +452,27 @@ function FashionItem({
         />
       </ClosableContainer>
     </div>
+  );
+}
+
+function findOtherCopies(
+  defs: D2ManifestDefinitions,
+  item: DestinyInventoryItemDefinition | DimItem | number
+) {
+  const itemDef = defs.InventoryItem.get(typeof item === 'number' ? item : item.hash);
+  return Object.values(defs.InventoryItem.getAll()).filter(
+    (i) =>
+      i.displayProperties.name === itemDef.displayProperties.name &&
+      i.displayProperties.icon === itemDef.displayProperties.icon
+  );
+}
+
+function manuallyFindItemForCollectible(
+  defs: D2ManifestDefinitions,
+  collectible: DestinyCollectibleDefinition | number
+) {
+  const collectibleHash = typeof collectible === 'number' ? collectible : collectible.hash;
+  return Object.values(defs.InventoryItem.getAll()).find(
+    (i) => i.collectibleHash === collectibleHash
   );
 }
