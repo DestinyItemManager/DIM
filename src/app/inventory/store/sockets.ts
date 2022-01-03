@@ -538,6 +538,5 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
 
   const plug = buildDefinedPlug(defs, plugHash);
   definedPlugCache[plugHash] = plug;
-
   return plug;
 }
