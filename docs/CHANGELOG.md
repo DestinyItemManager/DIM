@@ -1,6 +1,9 @@
 ## Next
 
 * You can now add Fashion (shaders and ornaments) to loadouts. Creating a loadout from equipped automatically adds in the current shaders and ornaments, and you can edit them manually from the Loadouts editor.
+
+## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
+
 * Consumables can now be pulled from postmasters other than the active character's.
 * Vendors page now correctly recognizes owned bounties per character and is more accurate about mods ownership.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
