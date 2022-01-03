@@ -4,8 +4,7 @@
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "Couldn't get permission to change item",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
@@ -1042,7 +1041,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
-  "You cannot plug an item into itself!": "",
   "no-space": "",
   "wrong-level": ""
 }
