@@ -173,13 +173,17 @@ export default function FashionDrawer({
       return;
     }
 
-    const set = defs.PresentationNode.get(
-      parseInt(mostCommonOrnamentSet[0], 10)
-    ).children.collectibles.map(
-      (c) =>
-        defs.Collectible.get(c.collectibleHash).itemHash ??
-        manuallyFindItemForCollectible(defs, c.collectibleHash)
+    const set = _.compact(
+      defs.PresentationNode.get(parseInt(mostCommonOrnamentSet[0], 10)).children.collectibles.map(
+        (c) =>
+          defs.Collectible.get(c.collectibleHash).itemHash ??
+          manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
+      )
     );
+
+    if (set.length !== 5) {
+      return;
+    }
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
