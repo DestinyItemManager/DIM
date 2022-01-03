@@ -1,5 +1,7 @@
 ## Next
 
+## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
+
 * Consumables can now be pulled from postmasters other than the active character's.
 * Vendors page now correctly recognizes owned bounties per character and is more accurate about mods ownership.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
