@@ -69,8 +69,6 @@ export default function FashionDrawer({
   const shaders = modHashes.filter(isShader);
   const ornaments = modHashes.filter((h) => !isShader(h));
 
-  // TODO: if they add an armor piece that can't slot the selected mods (ornaments), clear them
-
   const header = (
     <>
       <h1>{t('FashionDrawer.Title')}</h1>
@@ -104,7 +102,9 @@ export default function FashionDrawer({
     setModsByBucket((modsByBucket) => {
       // Clear out existing selections for this socket.
       const existingMods = (modsByBucket[item.bucket.hash] ?? []).filter(
-        (mod) => !socket.plugSet?.plugs.some((p) => p.plugDef.hash === mod)
+        (mod) =>
+          mod !== socket.socketDefinition.singleInitialItemHash &&
+          !socket.plugSet?.plugs.some((p) => p.plugDef.hash === mod)
       );
 
       return {

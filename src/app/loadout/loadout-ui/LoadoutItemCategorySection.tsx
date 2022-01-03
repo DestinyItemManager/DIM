@@ -130,7 +130,7 @@ function ItemBucket({
   const showFashion = LockableBucketHashes.includes(bucketHash);
 
   return (
-    <div className={styles.itemBucket}>
+    <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
       {[equipped, unequipped].map((items, index) =>
         items.length > 0 ? (
           <div
@@ -191,7 +191,7 @@ function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
     (DEFAULT_ORNAMENTS.includes(ornament) || unlockedPlugSetItems.has(ornament));
 
   return (
-    <div className={clsx(styles.items, styles.unequipped)}>
+    <div className={clsx(styles.items, styles.unequipped, styles.fashion)}>
       <PlugDef
         className={clsx({ [styles.missingItem]: !canSlotShader })}
         plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
