@@ -5,12 +5,14 @@ interface CssExports {
   'categoryGeneral': string;
   'categoryWeapons': string;
   'equipped': string;
+  'fashion': string;
   'itemBucket': string;
   'itemCategory': string;
   'items': string;
   'itemsInCategory': string;
   'missingItem': string;
   'placeholder': string;
+  'showFashion': string;
   'unequipped': string;
 }
 export const cssExports: CssExports;
