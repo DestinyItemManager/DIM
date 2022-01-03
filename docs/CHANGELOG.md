@@ -1,4 +1,5 @@
 ## Next
+* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements. 
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 

@@ -128,7 +128,7 @@
 .collectibles {
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
-  grid-template-rows: repeat(auto-fill, var(--item-size));
+  grid-template-rows: min-content;
   gap: 4px;
   margin: 6px 10px 8px;
   /* margin exception because plugset doesn't have an always-expanded parent */
