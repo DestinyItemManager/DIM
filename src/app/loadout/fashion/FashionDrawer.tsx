@@ -1,5 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import BungieImage from 'app/dim-ui/BungieImage';
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -9,7 +9,7 @@ import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DEFAULT_SHADER } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -22,7 +22,8 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { getDefaultPlugHash } from '../mod-utils';
+import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
+import PlugDef from '../loadout-ui/PlugDef';
 import styles from './FashionDrawer.m.scss';
 
 interface PickPlugState {
@@ -199,6 +200,13 @@ export default function FashionDrawer({
     );
   };
 
+  const handleRemovePlug = (bucketHash: number, plugHash: number) => {
+    setModsByBucket((modsByBucket) => ({
+      ...modsByBucket,
+      [bucketHash]: modsByBucket[bucketHash].filter((m) => m !== plugHash),
+    }));
+  };
+
   const leftButtons = (
     <>
       <div>
@@ -292,6 +300,7 @@ export default function FashionDrawer({
             item={armorItemsByBucketHash[bucketHash]}
             mods={modsByBucket[bucketHash]}
             onPickPlug={setPickPlug}
+            onRemovePlug={handleRemovePlug}
           />
         ))}
         {!isPhonePortrait && (
@@ -323,85 +332,100 @@ function FashionItem({
   item,
   classType,
   bucketHash,
-  mods,
+  mods = [],
   onPickPlug,
+  onRemovePlug,
 }: {
   item?: DimLoadoutItem;
   classType: DestinyClass;
   bucketHash: number;
   mods?: number[];
   onPickPlug(params: PickPlugState): void;
+  onRemovePlug(bucketHash: number, modHash: number): void;
 }) {
   const defs = useD2Definitions()!;
-  const allItems = useSelector(allItemsSelector);
+  const isShader = (m: number) =>
+    defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
+  const shader = mods.find(isShader);
+  const ornament = mods.find((m) => !isShader(m));
 
-  // TODO: categorize mods by what socket they'd fit into?
-  // TODO: replace default plug w/ selected plug?
+  const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
+  const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
+
+  const allItems = useSelector(allItemsSelector);
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
 
   // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
   const exampleItem =
     item ??
     allItems.find(
-      (i) => i.bucket.hash === bucketHash && i.tier === 'Legendary' && i.classType === classType
+      (i) =>
+        i.bucket.hash === bucketHash &&
+        i.power &&
+        i.tier === 'Legendary' &&
+        i.classType === classType
+    ) ??
+    allItems.find(
+      (i) =>
+        i.bucket.hash === bucketHash && i.power && i.tier !== 'Exotic' && i.classType === classType
     );
 
   if (!exampleItem) {
     return null;
   }
 
+  const isShaderSocket = (s: DimSocket) =>
+    defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
+      (pw) => pw.categoryHash === PlugCategoryHashes.Shader
+    );
   const cosmeticSockets = getSocketsByCategoryHash(
-    exampleItem.sockets!,
+    exampleItem.sockets,
     SocketCategoryHashes.ArmorCosmetics
   );
+  const shaderSocket = cosmeticSockets.find(isShaderSocket);
+  const ornamentSocket = cosmeticSockets.find((s) => !isShaderSocket(s));
 
-  // TODO: maybe instead, partition by shader/ornament and just grey out if it won't work?
+  const canSlotShader =
+    shader !== undefined &&
+    unlockedPlugSetItems.has(shader) &&
+    shaderSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === shader);
+  const canSlotOrnament =
+    ornament !== undefined &&
+    unlockedPlugSetItems.has(ornament) &&
+    ornamentSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === ornament);
 
-  const plugsBySocketIndex: {
-    [socketIndex: number]: PluggableInventoryItemDefinition | undefined;
-  } = {};
-  for (const socket of cosmeticSockets) {
-    const matchingMod = mods?.find((mod) =>
-      socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === mod)
-    );
-    if (matchingMod) {
-      plugsBySocketIndex[socket.socketIndex] = defs.InventoryItem.get(
-        matchingMod
-      ) as PluggableInventoryItemDefinition;
-    } else {
-      const defaultHash = defs.SocketType.get(
-        socket.socketDefinition.socketTypeHash
-      ).plugWhitelist.some((pw) => pw.categoryHash === PlugCategoryHashes.Shader)
-        ? DEFAULT_SHADER
-        : getDefaultPlugHash(socket, defs);
-      if (defaultHash) {
-        plugsBySocketIndex[socket.socketIndex] = defs.InventoryItem.get(
-          defaultHash
-        ) as PluggableInventoryItemDefinition;
-      }
-    }
-  }
-
-  // TODO: placeholder should have bucket-specific icon
+  const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
+  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
 
   return (
     <div className={styles.item}>
-      <div className={clsx({ [styles.placeholder]: !item })}>
+      {item ? (
         <ConnectedInventoryItem item={exampleItem} />
-      </div>
-      {cosmeticSockets.map((socket) => {
-        const plug = plugsBySocketIndex[socket.socketIndex];
-        return (
-          plug && (
-            <div
-              key={socket.socketIndex}
-              className={styles.socket}
-              onClick={() => onPickPlug({ item: exampleItem, socket })}
-            >
-              <BungieImage src={plug.displayProperties.icon} />
-            </div>
-          )
-        );
-      })}
+      ) : (
+        <BucketPlaceholder bucketHash={bucketHash} />
+      )}
+      <ClosableContainer
+        onClose={shader ? () => onRemovePlug(bucketHash, shader) : undefined}
+        showCloseIconOnHover
+      >
+        <PlugDef
+          onClick={shaderSocket && (() => onPickPlug({ item: exampleItem, socket: shaderSocket }))}
+          className={clsx({ [styles.missingItem]: !canSlotShader })}
+          plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
+        />
+      </ClosableContainer>
+      <ClosableContainer
+        onClose={ornament ? () => onRemovePlug(bucketHash, ornament) : undefined}
+        showCloseIconOnHover
+      >
+        <PlugDef
+          onClick={
+            ornamentSocket && (() => onPickPlug({ item: exampleItem, socket: ornamentSocket }))
+          }
+          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
+          plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
+        />
+      </ClosableContainer>
     </div>
   );
 }

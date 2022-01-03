@@ -4,10 +4,9 @@ interface CssExports {
   'buttons': string;
   'item': string;
   'items': string;
-  'placeholder': string;
+  'missingItem': string;
   'right': string;
   'sheet': string;
-  'socket': string;
   'verticalButtons': string;
 }
 export const cssExports: CssExports;

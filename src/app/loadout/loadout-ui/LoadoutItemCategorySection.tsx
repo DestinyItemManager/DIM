@@ -1,46 +1,31 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { bucketsSelector } from 'app/inventory/selectors';
-import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
-import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
+import { bucketsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
-import { AppIcon, faCalculator, searchIcon } from 'app/shell/icons';
+import { AppIcon, faCalculator } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { BucketPlaceholder } from './BucketPlaceholder';
 import styles from './LoadoutItemCategorySection.m.scss';
+import LoadoutParametersDisplay from './LoadoutParametersDisplay';
 import PlugDef from './PlugDef';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,
-};
-
-const bucketHashToItemCategoryHash = {
-  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
-  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
-  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
-  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
-  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
-  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
-  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
-  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
-  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
 };
 
 export default function LoadoutItemCategorySection({
@@ -173,14 +158,7 @@ function ItemBucket({
               className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
               key={index}
             >
-              <div className={styles.empty}>
-                {bucketHashToItemCategoryHash[bucketHash] && (
-                  <img
-                    className={styles.placeholderArmorType}
-                    src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}
-                  />
-                )}
-              </div>
+              <BucketPlaceholder bucketHash={bucketHash} />
               {/* TODO: show empty placeholder for bucket type? */}
               {showFashion && <FashionMods modsForBucket={modsForBucket} />}
             </div>
@@ -194,6 +172,7 @@ function ItemBucket({
 // TODO: Consolidate with the one in FashionDrawer
 function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
   const defs = useD2Definitions()!;
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
   const shader = modsForBucket.find(isShader);
@@ -202,88 +181,22 @@ function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
 
-  // TODO: dim out the mod if it's not unlocked or doesn't fit on the selected item
-  //const cosmeticSockets = item?.sockets ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics) : []
-  //const shaderEnabled = shader && cosmeticSockets.some(())
+  const canSlotShader = shader !== undefined && unlockedPlugSetItems.has(shader);
+  const canSlotOrnament = ornament !== undefined && unlockedPlugSetItems.has(ornament);
 
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
   const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
 
   return (
-    <div className={clsx(styles.items, styles.fashion, styles.unequipped)}>
+    <div className={clsx(styles.items, styles.unequipped)}>
       <PlugDef
-        className={clsx({ [styles.missingItem]: !shader })}
+        className={clsx({ [styles.missingItem]: !canSlotShader })}
         plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
       />
       <PlugDef
-        className={clsx({ [styles.missingItem]: !ornament })}
+        className={clsx({ [styles.missingItem]: !canSlotOrnament })}
         plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
       />
-    </div>
-  );
-}
-
-function LoadoutParametersDisplay({ params }: { params: LoadoutParameters }) {
-  const defs = useD2Definitions()!;
-  const { query, exoticArmorHash, upgradeSpendTier, statConstraints, lockItemEnergyType } = params;
-  const show =
-    params.query ||
-    params.exoticArmorHash ||
-    params.upgradeSpendTier !== undefined ||
-    params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined);
-  if (!show) {
-    return null;
-  }
-
-  return (
-    <div className={styles.loParams}>
-      {query && (
-        <div className={styles.loQuery}>
-          <AppIcon icon={searchIcon} />
-          {query}
-        </div>
-      )}
-      {exoticArmorHash && (
-        <div className={styles.loExotic}>
-          <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
-        </div>
-      )}
-      {upgradeSpendTier !== undefined && (
-        <div className={styles.loSpendTier}>
-          <SelectedArmorUpgrade
-            defs={defs}
-            upgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType ?? false}
-          />
-        </div>
-      )}
-      {statConstraints && (
-        <div className={styles.loStats}>
-          {statConstraints.map((s) => (
-            <div key={s.statHash} className={styles.loStat}>
-              <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
-              {s.minTier !== undefined && s.minTier !== 0 ? (
-                <span>
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: s.minTier,
-                  })}
-                  {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
-                    ? '+'
-                    : s.maxTier !== undefined && s.maxTier !== s.minTier
-                    ? `-${s.maxTier}`
-                    : ''}
-                </span>
-              ) : s.maxTier !== undefined ? (
-                <span>T{s.maxTier}-</span>
-              ) : (
-                t('LoadoutBuilder.TierNumber', {
-                  tier: 10,
-                }) + '-'
-              )}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

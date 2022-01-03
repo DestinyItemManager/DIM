@@ -6,6 +6,7 @@ interface CssExports {
   'contents': string;
   'loadout': string;
   'loadoutNotes': string;
+  'missingItem': string;
   'missingItems': string;
   'mods': string;
   'modsGrid': string;

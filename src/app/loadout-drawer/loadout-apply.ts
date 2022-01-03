@@ -11,7 +11,7 @@ import {
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import {
@@ -199,24 +199,20 @@ function doApplyLoadout(
         );
       });
 
-      // TODO: build a memoized selector set of all unlocked plug hashes for each character, and use that
-      // to fast-fail mods that are specified but not unlocked!
+      // Filter out mods that no longer exist or that aren't unlocked on this character
+      const unlockedPlugSetItems = unlockedPlugSetItemsSelector(getState(), store.id);
+      const checkMod = (h: number) =>
+        Boolean(defs.InventoryItem.get(h)) && unlockedPlugSetItems.has(h);
 
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter((h) =>
-        // Filter out mods that no longer exist
-        defs.InventoryItem.get(h)
-      );
+      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter(checkMod);
       // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
       const modsByBucketToApply: {
         [bucketHash: number]: number[];
       } = {};
       if (!store.isVault && loadout.parameters?.modsByBucket) {
         for (const [bucketHash, mods] of Object.entries(loadout.parameters.modsByBucket)) {
-          const filteredMods = mods.filter((h) =>
-            // Filter out mods that no longer exist
-            defs.InventoryItem.get(h)
-          );
+          const filteredMods = mods.filter(checkMod);
           if (filteredMods.length) {
             modsByBucketToApply[parseInt(bucketHash, 10)] = filteredMods;
           }

@@ -78,9 +78,12 @@ export function getSocketByIndex(sockets: DimSockets, socketIndex: number) {
 }
 
 /** Find all sockets on the item that belong to the given category hash */
-export function getSocketsByCategoryHash(sockets: DimSockets, categoryHash: SocketCategoryHashes) {
+export function getSocketsByCategoryHash(
+  sockets: DimSockets | null,
+  categoryHash: SocketCategoryHashes
+) {
   const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
-  if (!category) {
+  if (!category || !sockets) {
     return [];
   }
   return getSocketsByIndexes(sockets, category.socketIndexes);

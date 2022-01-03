@@ -4,22 +4,13 @@ interface CssExports {
   'categoryArmor': string;
   'categoryGeneral': string;
   'categoryWeapons': string;
-  'empty': string;
   'equipped': string;
-  'fashion': string;
   'itemBucket': string;
   'itemCategory': string;
   'items': string;
   'itemsInCategory': string;
-  'loExotic': string;
-  'loParams': string;
-  'loQuery': string;
-  'loSpendTier': string;
-  'loStat': string;
-  'loStats': string;
   'missingItem': string;
   'placeholder': string;
-  'placeholderArmorType': string;
   'unequipped': string;
 }
 export const cssExports: CssExports;

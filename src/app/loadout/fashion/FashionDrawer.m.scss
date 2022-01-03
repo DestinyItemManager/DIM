@@ -35,21 +35,11 @@
   }
 }
 
-.placeholder {
-  opacity: 0.3;
-}
-
 .sheet {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.socket {
-  img {
-    display: block;
-    width: var(--item-size);
-    height: var(--item-size);
-    box-sizing: border-box;
-    border: $item-border-width solid #ddd;
-  }
+.missingItem {
+  opacity: 0.3;
 }
