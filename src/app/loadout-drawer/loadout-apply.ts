@@ -38,6 +38,7 @@ import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -960,16 +961,16 @@ function applyLoadoutMods(
       )
     );
 
-    const allModHashes = modHashes.concat(Object.values(modsByBucket).flat());
-
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // Early exit - if all the mods are already there, nothing to do
-    if (allModsAreAlreadyApplied(armor, allModHashes)) {
+    if (allModsAreAlreadyApplied(armor, modHashes, modsByBucket)) {
       infoLog('loadout mods', 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,
-        modStates: allModHashes.map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
+        modStates: modHashes
+          .concat(Object.values(modsByBucket).flat())
+          .map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
       }));
       return;
     }
@@ -1059,17 +1060,36 @@ function applyLoadoutMods(
 /**
  * Check whether all the mods in modHashes are already applied to the items in armor.
  */
-function allModsAreAlreadyApplied(armor: DimItem[], modHashes: number[]) {
+function allModsAreAlreadyApplied(
+  armor: DimItem[],
+  modHashes: number[],
+  modsByBucket: {
+    [bucketHash: number]: number[];
+  }
+) {
+  // Copy this - we'll be deleting from it
+  modsByBucket = { ...modsByBucket };
+
   // What mods are already on the equipped armor set?
   const existingMods: number[] = [];
   for (const item of armor) {
     if (item.sockets) {
+      let modsForBucket: readonly number[] = modsByBucket[item.bucket.hash] ?? emptyArray();
       for (const socket of item.sockets.allSockets) {
         if (socket.plugged) {
-          existingMods.push(socket.plugged.plugDef.hash);
+          const pluggedHash = socket.plugged.plugDef.hash;
+          existingMods.push(pluggedHash);
+          modsForBucket = modsForBucket.filter((h) => h !== pluggedHash);
         }
       }
+      if (modsForBucket.length === 0) {
+        delete modsByBucket[item.bucket.hash];
+      }
     }
+  }
+
+  if (!_.isEmpty(modsByBucket)) {
+    return false;
   }
 
   // Early exit - if all the mods are already there, nothing to do
