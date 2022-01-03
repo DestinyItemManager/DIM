@@ -115,11 +115,27 @@ export function buildStats(
   const statDisplaysByStatHash = keyByStatHash(statGroup.scaledStats);
 
   // We only use the raw "investment" stats to calculate all item stats.
-  const investmentStats =
+  let investmentStats =
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
   // Include the contributions from perks and mods
-  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
+  investmentStats = applyPlugsToStats(
+    itemDef,
+    investmentStats,
+    createdItem,
+    defs,
+    statGroup,
+    statDisplaysByStatHash
+  );
+
+  // We sort the sockets by length so that we count contributions from plugs with fewer options first.
+  // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
+  // stats in first.
+  const sortedSockets = _.sortBy(createdItem.sockets?.allSockets, (s) => s.plugOptions.length);
+  const investmentStatsByHash = keyByStatHash(investmentStats);
+  for (const socket of sortedSockets) {
+    attachPlugStats(socket, investmentStatsByHash, statDisplaysByStatHash);
+  }
 
   if (createdItem.bucket.inArmor) {
     // one last check for missing stats on armor
@@ -270,17 +286,18 @@ function buildStat(
  */
 function applyPlugsToStats(
   itemDef: DestinyInventoryItemDefinition,
-  existingStats: DimStat[], // mutated
+  existingStats: DimStat[],
   createdItem: DimItem,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
   statDisplaysByStatHash: StatDisplayLookup
 ) {
   if (!createdItem.sockets?.allSockets.length) {
-    return;
+    return existingStats;
   }
 
-  const existingStatsByHash = keyByStatHash(existingStats);
+  // Create a shallow copy of stats to return
+  const newStatsByHash = keyByStatHash(existingStats.map((stat) => ({ ...stat })));
 
   // intrinsic plugs aren't "enhancements", they define the basic stats of armor
   // we do those first and include them in the stat's base value
@@ -309,9 +326,9 @@ function applyPlugsToStats(
           continue;
         }
 
-        let existingStat = existingStatsByHash[affectedStatHash];
+        let stat = newStatsByHash[affectedStatHash];
         // in case this stat should appear but hasn't been built yet, create and attach it first
-        if (!existingStat) {
+        if (!stat) {
           const statDef = defs.Stat.get(affectedStatHash);
           const newStat = buildStat(
             { ...pluggedInvestmentStat, value: 0 },
@@ -320,9 +337,8 @@ function applyPlugsToStats(
             statDisplaysByStatHash
           );
           // add the newly generated stat to our temporary dict, and to the item's stats
-          existingStatsByHash[affectedStatHash] = newStat;
-          existingStats.push(newStat);
-          existingStat = newStat;
+          newStatsByHash[affectedStatHash] = newStat;
+          stat = newStat;
         }
 
         // check special conditionals
@@ -338,28 +354,22 @@ function applyPlugsToStats(
         }
 
         // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
-        existingStat.investmentValue += pluggedInvestmentStat.value;
+        stat.investmentValue += pluggedInvestmentStat.value;
 
         // finally, re-interpolate the stat value
         const statDisplay = statDisplaysByStatHash[affectedStatHash];
         const newStatValue = statDisplay
-          ? interpolateStatValue(existingStat.investmentValue, statDisplay)
-          : Math.min(existingStat.investmentValue, existingStat.maximumValue);
+          ? interpolateStatValue(stat.investmentValue, statDisplay)
+          : Math.min(stat.investmentValue, stat.maximumValue);
         if (affectsBase) {
-          existingStat.base = newStatValue;
+          stat.base = newStatValue;
         }
-        existingStat.value = newStatValue;
+        stat.value = newStatValue;
       }
     }
   }
 
-  // We sort the sockets by length so that we count contributions from plugs with fewer options first.
-  // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
-  // stats in first.
-  const sortedSockets = _.sortBy(createdItem.sockets.allSockets, (s) => s.plugOptions.length);
-  for (const socket of sortedSockets) {
-    attachPlugStats(socket, existingStatsByHash, statDisplaysByStatHash);
-  }
+  return _.compact(Object.values(newStatsByHash));
 }
 
 /**
