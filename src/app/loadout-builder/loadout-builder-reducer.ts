@@ -363,10 +363,7 @@ function lbStateReducer(
     }
     case 'updateSubclass': {
       const { item } = action;
-      const abilitySockets = getSocketsByCategoryHash(
-        item.sockets!,
-        SocketCategoryHashes.Abilities
-      );
+      const abilitySockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Abilities);
       const defaultAbilityOverrides: SocketOverrides = {};
       for (const socket of abilitySockets) {
         defaultAbilityOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
@@ -391,7 +388,7 @@ function lbStateReducer(
 
       const { plug } = action;
       const abilitySockets = getSocketsByCategoryHash(
-        state.subclass.sockets!,
+        state.subclass.sockets,
         SocketCategoryHashes.Abilities
       );
       const newSocketOverrides = { ...state.subclass?.socketOverrides };

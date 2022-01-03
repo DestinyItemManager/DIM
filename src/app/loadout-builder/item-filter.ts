@@ -122,7 +122,7 @@ function hasEnoughSocketsForMods(item: DimItem, lockedMods: PluggableInventoryIt
     return true;
   }
 
-  const sockets = getSocketsByCategoryHash(item.sockets!, SocketCategoryHashes.ArmorMods);
+  const sockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods);
 
   const socketsOrderedWithArtificeFirst = sockets
     // If a socket is not plugged (even with an empty socket) we consider it disabled

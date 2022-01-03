@@ -385,17 +385,19 @@ function FashionItem({
   const shaderSocket = cosmeticSockets.find(isShaderSocket);
   const ornamentSocket = cosmeticSockets.find((s) => !isShaderSocket(s));
 
-  const canSlotShader =
-    shader !== undefined &&
-    unlockedPlugSetItems.has(shader) &&
-    shaderSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === shader);
-  const canSlotOrnament =
-    ornament !== undefined &&
-    unlockedPlugSetItems.has(ornament) &&
-    ornamentSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === ornament);
-
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
   const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
+
+  const canSlotShader =
+    shader !== undefined &&
+    (shader === shaderSocket?.socketDefinition.singleInitialItemHash ||
+      (unlockedPlugSetItems.has(shader) &&
+        shaderSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === shader)));
+  const canSlotOrnament =
+    ornament !== undefined &&
+    (ornament === ornamentSocket?.socketDefinition.singleInitialItemHash ||
+      (unlockedPlugSetItems.has(ornament) &&
+        ornamentSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === ornament)));
 
   return (
     <div className={styles.item}>

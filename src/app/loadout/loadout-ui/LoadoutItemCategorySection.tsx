@@ -181,11 +181,14 @@ function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
 
-  const canSlotShader = shader !== undefined && unlockedPlugSetItems.has(shader);
-  const canSlotOrnament = ornament !== undefined && unlockedPlugSetItems.has(ornament);
-
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
   const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
+
+  const canSlotShader =
+    shader !== undefined && (shader === DEFAULT_SHADER || unlockedPlugSetItems.has(shader));
+  const canSlotOrnament =
+    ornament !== undefined &&
+    (DEFAULT_ORNAMENTS.includes(ornament) || unlockedPlugSetItems.has(ornament));
 
   return (
     <div className={clsx(styles.items, styles.unequipped)}>

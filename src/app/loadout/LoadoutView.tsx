@@ -10,6 +10,7 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -128,7 +129,11 @@ export default function LoadoutView({
                   {savedMods.map((mod) => (
                     <PlugDef
                       className={clsx({
-                        [styles.missingItem]: !unlockedPlugSetItems.has(mod.hash),
+                        [styles.missingItem]: !(
+                          unlockedPlugSetItems.has(mod.hash) ||
+                          mod.hash === DEFAULT_SHADER ||
+                          DEFAULT_ORNAMENTS.includes(mod.hash)
+                        ),
                       })}
                       key={getModRenderKey(mod)}
                       plug={mod}
