@@ -5,8 +5,9 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
@@ -75,7 +76,7 @@ export default function LoadoutDrawerContents({
   items: DimItem[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
-  add(item: DimItem, e?: MouseEvent, equip?: boolean): void;
+  add(params: { item: DimItem; equip?: boolean; socketOverrides?: SocketOverrides }): void;
   onUpdateLoadout(loadout: Loadout): void;
   onOpenModPicker(): void;
   onShowItemPicker(shown: boolean): void;
@@ -203,7 +204,7 @@ export default function LoadoutDrawerContents({
 async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
-  add: (item: DimItem, e?: MouseEvent) => void,
+  add: (params: { item: DimItem }) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
@@ -229,7 +230,7 @@ async function pickLoadoutItem(
       ignoreSelectedPerks: true,
     });
 
-    add(item);
+    add({ item });
   } catch (e) {
   } finally {
     onShowItemPicker(false);
@@ -239,7 +240,7 @@ async function pickLoadoutItem(
 async function pickLoadoutSubclass(
   loadout: Loadout,
   savedSubclasses: DimItem[],
-  add: (item: DimItem, e?: MouseEvent) => void,
+  add: (params: { item: DimItem; socketOverrides?: SocketOverrides }) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
@@ -261,7 +262,16 @@ async function pickLoadoutSubclass(
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    add(item);
+    const abilitySockets =
+      item.sockets && getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Abilities);
+    let socketOverrides: SocketOverrides | undefined;
+    if (abilitySockets) {
+      socketOverrides = {};
+      for (const socket of abilitySockets) {
+        socketOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
+      }
+    }
+    add({ item, socketOverrides });
   }
   onShowItemPicker(false);
 }
@@ -269,12 +279,7 @@ async function pickLoadoutSubclass(
 function createSocketOverridesFromEquipped(item: DimItem) {
   const socketOverrides: SocketOverrides = {};
   for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
+    if (socket.plugged) {
       socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
     }
   }
@@ -331,7 +336,7 @@ function fillLoadoutFromEquipped(
 async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
-  add: (item: DimItem, e?: MouseEvent, equip?: boolean) => void
+  add: (params: { item: DimItem; equip?: boolean }) => void
 ) {
   if (!loadout) {
     return;
@@ -347,6 +352,6 @@ async function fillLoadoutFromUnequipped(
   );
 
   for (const item of items) {
-    add(item, undefined, false);
+    add({ item, equip: false });
   }
 }
