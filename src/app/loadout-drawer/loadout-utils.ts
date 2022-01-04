@@ -1,7 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
 import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -67,12 +66,7 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
 function createSocketOverridesFromEquipped(item: DimItem) {
   const socketOverrides: SocketOverrides = {};
   for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
+    if (socket.plugged) {
       socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
     }
   }
@@ -338,22 +332,6 @@ export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
     }
   }
   return false;
-}
-
-/**
- * Returns a Loadout object containing currently equipped items
- * @deprecated
- */
-export function loadoutFromEquipped(store: DimStore): Loadout {
-  const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));
-
-  const loadout = newLoadout(
-    t('Loadouts.CurrentlyEquipped'),
-    items.map((i) => convertToLoadoutItem(i, true))
-  );
-  loadout.classType = store.classType;
-
-  return loadout;
 }
 
 /** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */
