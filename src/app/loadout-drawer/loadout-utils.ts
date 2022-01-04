@@ -10,7 +10,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
+import { getFirstSocketByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -62,15 +62,28 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
 
 /**
  * Create a socket overrides structure from the item's currently plugged sockets.
+ * This will ignore all default plugs except for abilities where the default values
+ * will be included.
  */
-function createSocketOverridesFromEquipped(item: DimItem) {
-  const socketOverrides: SocketOverrides = {};
-  for (const socket of item.sockets?.allSockets || []) {
-    if (socket.plugged) {
-      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+export function createSocketOverridesFromEquipped(item: DimItem) {
+  if (item.sockets) {
+    const socketOverrides: SocketOverrides = {};
+    for (const category of item.sockets.categories) {
+      const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
+      for (const socket of sockets) {
+        // Add currently plugged, if it is an ability we include the initial item
+        // otherwise we ignore them, this stops us showing/saving empty socket plugs
+        if (
+          socket.plugged &&
+          (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
+            category.category.hash === SocketCategoryHashes.Abilities)
+        ) {
+          socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+        }
+      }
     }
+    return socketOverrides;
   }
-  return socketOverrides;
 }
 
 /**
