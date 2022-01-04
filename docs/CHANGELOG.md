@@ -5,6 +5,7 @@
 * Fixed an issue that could make moving searches containing stacks of items to fail.
 * Added Spoils of Conquest to the currencies hover menu.
 * Fixed an issue where the Loadout Optimizer would let you pin items from other classes.
+* Shader picker now hides unavailable, unobtainable shaders.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
