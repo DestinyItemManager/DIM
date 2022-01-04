@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -285,13 +284,15 @@ function doApplyLoadout(
 
       // Dequip items from the loadout off of other characters so they can be moved.
       // TODO: break out into its own action
+      const stores = getStores();
       const itemsToDequip = loadoutItemsToMove.filter((loadoutItem) => {
-        const item = getItemAcrossStores(getStores(), loadoutItem);
+        const item = getLoadoutItem(loadoutItem, store, stores);
         return item?.equipped && item.owner !== store.id;
       });
 
-      const stores = getStores();
-      const realItemsToDequip = _.compact(itemsToDequip.map((i) => getItemAcrossStores(stores, i)));
+      const realItemsToDequip = _.compact(
+        itemsToDequip.map((i) => getLoadoutItem(i, store, stores))
+      );
       // Group dequips per character
       const dequips = _.map(
         _.groupBy(realItemsToDequip, (i) => i.owner),
@@ -312,7 +313,9 @@ function doApplyLoadout(
             )
           );
           try {
-            const result = await dispatch(equipItems(getStore(getStores(), owner)!, itemsToEquip));
+            const result = await dispatch(
+              equipItems(getStore(getStores(), owner)!, itemsToEquip, cancelToken)
+            );
             // Bulk equip can partially fail
             setLoadoutState(
               produce((state) => {
@@ -356,7 +359,7 @@ function doApplyLoadout(
           await dispatch(
             applyLoadoutItem(store.id, loadoutItem, applicableLoadoutItems, cancelToken)
           );
-          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          const updatedItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores());
           if (updatedItem) {
             setLoadoutState(
               produce((state) => {
@@ -373,7 +376,7 @@ function doApplyLoadout(
           if (e instanceof CanceledError) {
             throw e;
           }
-          const updatedItem = getItemAcrossStores(getStores(), loadoutItem);
+          const updatedItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores());
           if (updatedItem) {
             errorLog('loadout', 'Failed to apply loadout item', updatedItem.name, e);
             setLoadoutState(
@@ -387,7 +390,7 @@ function doApplyLoadout(
                 state.equipNotPossible ||=
                   isOnCorrectStore &&
                   e instanceof DimError &&
-                  checkequipNotPossible(e.bungieErrorCode());
+                  checkEquipNotPossible(e.bungieErrorCode());
               })
             );
           }
@@ -411,7 +414,7 @@ function doApplyLoadout(
           itemsToEquip.map((i) => getLoadoutItem(i, store, stores))
         );
         try {
-          const result = await dispatch(equipItems(store, realItemsToEquip));
+          const result = await dispatch(equipItems(store, realItemsToEquip, cancelToken));
           // Bulk equip can partially fail
           setLoadoutState(
             produce((state) => {
@@ -425,7 +428,7 @@ function doApplyLoadout(
                 // TODO how to set the error code here?
                 // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
 
-                state.equipNotPossible ||= checkequipNotPossible(errorCode);
+                state.equipNotPossible ||= checkEquipNotPossible(errorCode);
               }
             })
           );
@@ -451,7 +454,7 @@ function doApplyLoadout(
 
         // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
-        await dispatch(applySocketOverrides(itemsWithOverrides, store, stores, setLoadoutState));
+        await dispatch(applySocketOverrides(itemsWithOverrides, setLoadoutState, cancelToken));
         const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
           Object.values(r.results)
         );
@@ -472,7 +475,13 @@ function doApplyLoadout(
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
-          applyLoadoutMods(applicableLoadoutItems, store.id, modsToApply, setLoadoutState)
+          applyLoadoutMods(
+            applicableLoadoutItems,
+            store.id,
+            modsToApply,
+            setLoadoutState,
+            cancelToken
+          )
         );
         const { modStates } = getLoadoutState();
         infoLog(
@@ -774,24 +783,21 @@ export function clearItemsOffCharacter(
 // TODO: Leave unmentioned sockets alone!
 function applySocketOverrides(
   itemsWithOverrides: LoadoutItem[],
-  store: DimStore,
-  stores: DimStore[],
-  setLoadoutState: LoadoutStateUpdater
+  setLoadoutState: LoadoutStateUpdater,
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
 
     for (const loadoutItem of itemsWithOverrides) {
-      const item = getLoadoutItem(loadoutItem, store, stores);
-      if (!item) {
+      const dimItem = getItemAcrossStores(storesSelector(getState()), { id: loadoutItem.id })!;
+      if (!dimItem) {
         continue;
       }
 
       if (loadoutItem.socketOverrides) {
-        const dimItem = getItemAcrossStores(storesSelector(getState()), { id: item.id })!;
-
         // We build up an array of mods to socket in order
-        const modsForItem: { socketIndex: number; mod: PluggableInventoryItemDefinition }[] = [];
+        const modsForItem: Assignment[] = [];
         const categories = dimItem.sockets?.categories || [];
 
         for (const category of categories) {
@@ -811,31 +817,41 @@ function applySocketOverrides(
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-              modsForItem.push({ socketIndex, mod });
+              // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
+              modsForItem.push({ socketIndex, mod, requested: true });
             }
           }
         }
 
-        const handleSuccess = ({ socketIndex }: Assignment) =>
-          setLoadoutState(
-            setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
-          );
+        const handleSuccess = ({ socketIndex, requested }: Assignment) => {
+          requested &&
+            setLoadoutState(
+              setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
+            );
+        };
         const handleFailure = (
-          { socketIndex }: Assignment,
+          { socketIndex, requested }: Assignment,
           error?: Error,
           equipNotPossible?: boolean
         ) =>
-          setLoadoutState(
-            setSocketOverrideResult(
-              dimItem,
-              socketIndex,
-              LoadoutSocketOverrideState.Failed,
-              error,
-              equipNotPossible
-            )
-          );
+          requested
+            ? setLoadoutState(
+                setSocketOverrideResult(
+                  dimItem,
+                  socketIndex,
+                  LoadoutSocketOverrideState.Failed,
+                  error,
+                  equipNotPossible
+                )
+              )
+            : setLoadoutState((state) => ({
+                ...state,
+                equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
+              }));
 
-        await dispatch(equipModsToItem(item.id, modsForItem, handleSuccess, handleFailure, true));
+        await dispatch(
+          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+        );
       }
     }
   };
@@ -854,9 +870,8 @@ function applyLoadoutMods(
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
   setLoadoutState: LoadoutStateUpdater,
-  /** if an item would be wiped to default in all sockets, don't do anything to that item */
-  skipArmorsWithNoAssignments = true,
-  /** if an item has mods applied, this will "clear" all other sockets to empty/their default*/
+  cancelToken: CancelToken,
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
   clearUnassignedSocketsPerItem = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -916,41 +931,41 @@ function applyLoadoutMods(
 
     const applyModsPromises: Promise<void>[] = [];
 
-    const handleSuccess = ({ mod }: Assignment) =>
+    const handleSuccess = ({ mod, requested }: Assignment) =>
+      requested &&
       setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
-    const handleFailure = ({ mod }: Assignment, error?: Error, equipNotPossible?: boolean) =>
-      setLoadoutState(
-        setModResult({ modHash: mod.hash, state: LoadoutModState.Failed, error }, equipNotPossible)
-      );
+    const handleFailure = (
+      { mod, requested }: Assignment,
+      error?: Error,
+      equipNotPossible?: boolean
+    ) =>
+      requested
+        ? setLoadoutState(
+            setModResult(
+              { modHash: mod.hash, state: LoadoutModState.Failed, error },
+              equipNotPossible
+            )
+          )
+        : setLoadoutState((state) => ({
+            ...state,
+            equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
+          }));
 
     for (const item of armor) {
-      const assignments = pickPlugPositions(defs, item, itemModAssignments[item.id]);
-      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
-      const assignmentSequence = pluggingSteps.filter(
-        (assignment) =>
-          // keep all assignments if we want to wipe unassigned sockets
-          clearUnassignedSocketsPerItem ||
-          // otherwise, rely on requiredness
-          assignment.required
+      const assignments = pickPlugPositions(
+        defs,
+        item,
+        itemModAssignments[item.id],
+        clearUnassignedSocketsPerItem
       );
+      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
+      const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
-        if (
-          skipArmorsWithNoAssignments &&
-          // if this assignmentSequence would return all sockets to their default
-          assignmentSequence.every((assignment) => isAssigningToDefault(item, assignment, defs))
-        ) {
-          infoLog(
-            'loadout mods',
-            'Skipping applying',
-            ...assignmentSequence.map((m) => m.mod.hash),
-            'because it would reset all sockets to default'
-          );
-          continue;
-        }
-
         applyModsPromises.push(
-          dispatch(equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure))
+          dispatch(
+            equipModsToItem(item.id, assignmentSequence, handleSuccess, handleFailure, cancelToken)
+          )
         );
       }
     }
@@ -1001,6 +1016,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
+  cancelToken: CancelToken,
   includeAssignToDefault = false
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -1042,13 +1058,14 @@ function equipModsToItem(
         );
 
         // TODO: short circuit if equipping is not possible
-        const result = await dispatch(applyMod(item, socket, mod, includeAssignToDefault, defs));
-        if (result) {
-          if (result.success) {
-            onSuccess(assignment);
-          } else {
-            onFailure(assignment, result.error, result.equipNotPossible);
-          }
+        cancelToken.checkCanceled();
+        try {
+          await dispatch(applyMod(item, socket, mod));
+          onSuccess(assignment);
+        } catch (e) {
+          const equipNotPossible =
+            e instanceof DimError && checkEquipNotPossible(e.bungieErrorCode());
+          onFailure(assignment, e, equipNotPossible);
         }
       } else {
         warnLog(
@@ -1071,20 +1088,11 @@ function equipModsToItem(
 function applyMod(
   item: DimItem,
   socket: DimSocket,
-  mod: PluggableInventoryItemDefinition,
-  includeAssignToDefault: boolean,
-  defs: D2ManifestDefinitions
-): ThunkResult<{ success: boolean; error?: Error; equipNotPossible?: boolean } | undefined> {
+  mod: PluggableInventoryItemDefinition
+): ThunkResult {
   return async (dispatch) => {
     try {
       await dispatch(insertPlug(item, socket, mod.hash));
-      // Don't count removing mods as applying a mod successfully
-      if (
-        includeAssignToDefault ||
-        !isAssigningToDefault(item, { socketIndex: socket.socketIndex, mod }, defs)
-      ) {
-        return { success: true };
-      }
     } catch (e) {
       errorLog(
         'loadout mods',
@@ -1097,7 +1105,7 @@ function applyMod(
         e
       );
       const plugName = mod.displayProperties.name ?? 'Unknown Plug';
-      const error = new DimError(
+      throw new DimError(
         'AWA.ErrorMessage',
         t('AWA.ErrorMessage', {
           error: e.message,
@@ -1105,12 +1113,6 @@ function applyMod(
           plug: plugName,
         })
       ).withError(e);
-      return {
-        success: false,
-        error,
-        equipNotPossible:
-          (e instanceof DimError && checkequipNotPossible(e.bungieErrorCode())) || false,
-      };
     }
   };
 }
@@ -1119,7 +1121,7 @@ function applyMod(
  * Check error code to see if it indicates one of the known conditions where no
  * equips or mod changes will succeed for the active character.
  */
-function checkequipNotPossible(errorCode?: PlatformErrorCodes) {
+function checkEquipNotPossible(errorCode?: PlatformErrorCodes) {
   return (
     // Player is in an activity
     errorCode === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||

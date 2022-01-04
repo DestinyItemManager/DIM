@@ -27,6 +27,8 @@ import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 interface ProvidedProps {
   item: DimItem;
   socket: DimSocket;
+  /** Set to true if you want to insert the plug when it's selected, rather than returning it. */
+  allowInsertPlug: boolean;
   onClose(): void;
   onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
 }
@@ -133,6 +135,7 @@ function SocketDetails({
   socket,
   unlockedPlugs,
   inventoryPlugs,
+  allowInsertPlug,
   onClose,
   onPlugSelected,
 }: Props) {
@@ -232,8 +235,6 @@ function SocketDetails({
     </h1>
   );
 
-  // TODO: maybe show them like the perk browser, as a tile with names!
-
   const modListRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (modListRef.current) {
@@ -252,11 +253,13 @@ function SocketDetails({
         socket={socket}
         currentPlug={socket.plugged}
         equippable={unlocked(selectedPlug)}
+        allowInsertPlug={allowInsertPlug}
         onPlugSelected={onPlugSelected}
         closeMenu={onClose}
       />
     ));
 
+  // TODO: have compact and "list" views
   return (
     <Sheet
       onClose={onClose}

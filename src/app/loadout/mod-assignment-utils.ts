@@ -15,11 +15,7 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
-import {
-  getSocketByIndex,
-  getSocketsByCategoryHash,
-  getSocketsByIndexes,
-} from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -31,39 +27,6 @@ import {
   getDefaultPlugHash,
   getItemEnergyType,
 } from './mod-utils';
-
-/** long run let's get rid of this. it just juggles data into a format that some functions want */
-export function getCheapestModAssignments(
-  /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
-  items: DimItem[],
-  /** mods we are trying to place on the items */
-  plannedMods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions,
-  upgradeSpendTier = UpgradeSpendTier.Nothing,
-  lockItemEnergyType = true
-) {
-  const { itemModAssignments: modArmorSlotAssignments, unassignedMods } = fitMostMods(
-    items,
-    plannedMods,
-    defs,
-    upgradeSpendTier,
-    lockItemEnergyType
-  );
-
-  const itemModAssignments: {
-    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
-  } = {};
-
-  for (const itemId in modArmorSlotAssignments) {
-    const assignmentsForItem = modArmorSlotAssignments[itemId];
-    itemModAssignments[itemId] = [
-      ...assignmentsForItem.bucketIndependent,
-      ...assignmentsForItem.bucketSpecific,
-    ];
-  }
-
-  return { itemModAssignments, unassignedMods };
-}
 
 /**
  * a temporary structure, keyed by item ID,
@@ -104,10 +67,7 @@ export function fitMostMods(
   lockItemEnergyType = true
 ): {
   itemModAssignments: {
-    [itemInstanceId: string]: {
-      bucketSpecific: PluggableInventoryItemDefinition[];
-      bucketIndependent: PluggableInventoryItemDefinition[];
-    };
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   };
   unassignedMods: PluggableInventoryItemDefinition[];
 } {
@@ -325,10 +285,7 @@ export function fitMostMods(
   }
 
   const itemModAssignments: {
-    [itemInstanceId: string]: {
-      bucketSpecific: PluggableInventoryItemDefinition[];
-      bucketIndependent: PluggableInventoryItemDefinition[];
-    };
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   } = {};
 
   const unassignedMods: PluggableInventoryItemDefinition[] = [];
@@ -344,10 +301,7 @@ export function fitMostMods(
     }
     const bucketIndependent = bucketIndependentAssignments[item.id].assigned;
     const bucketSpecific = bucketSpecificAssignments[item.id].assigned;
-    itemModAssignments[item.id] = {
-      bucketIndependent,
-      bucketSpecific,
-    };
+    itemModAssignments[item.id] = [...bucketIndependent, ...bucketSpecific];
   }
 
   return { itemModAssignments, unassignedMods };
@@ -365,26 +319,19 @@ export function fitMostMods(
 export function pickPlugPositions(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  singleItemModAssignments: {
-    bucketSpecific: PluggableInventoryItemDefinition[];
-    bucketIndependent: PluggableInventoryItemDefinition[];
-  }
+  modsToInsert: PluggableInventoryItemDefinition[],
+  /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
+  clearUnassignedSocketsPerItem = false
 ): Assignment[] {
   const assignments: Assignment[] = [];
-  const modsToInsert = [
-    ...singleItemModAssignments.bucketIndependent,
-    ...singleItemModAssignments.bucketSpecific,
-  ];
 
-  // collect a list of socketdefs for only the sockets we can assign to
-  const armorModIndexes = item.sockets?.categories.find(
-    ({ category }) => category.hash === SocketCategoryHashes.ArmorMods
-  )?.socketIndexes;
-
-  // YES, we address this by index.
-  // but only because we are find()ing through it and seeking a DimSocket object.
-  // at the end, we will properly extract that DimSocket's socketIndex
-  const existingModSockets = getSocketsByIndexes(item.sockets!, armorModIndexes || []).sort(
+  if (!item.sockets) {
+    return assignments;
+  }
+  const existingModSockets = [
+    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods),
+    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+  ].sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
     compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
@@ -417,6 +364,7 @@ export function pickPlugPositions(
     assignments.push({
       socketIndex: destinationSocket.socketIndex,
       mod: modToInsert,
+      requested: true,
     });
 
     // remove this existing socket from consideration
@@ -438,6 +386,8 @@ export function pickPlugPositions(
       assignments.push({
         socketIndex,
         mod,
+        // If the user wants to clear out all items, this is requested. Otherwise it's optional.
+        requested: clearUnassignedSocketsPerItem,
       });
     }
   }
@@ -480,16 +430,14 @@ export function createPluggingStrategy(
     const energySpend = plannedModCost - existingModCost;
 
     const pluggingAction = {
-      socketIndex: destinationSocket.socketIndex,
-      mod: assignment.mod,
+      ...assignment,
       energySpend,
-      required: true,
+      required: assignment.requested,
     };
 
     if (pluggingAction.energySpend > 0) {
       requiredSpends.push(pluggingAction);
-    } else if (isAssigningToDefault(item, assignment, defs)) {
-      pluggingAction.required = false;
+    } else if (!pluggingAction.required && isAssigningToDefault(item, assignment, defs)) {
       optionalRegains.push(pluggingAction);
     } else {
       requiredRegains.push(pluggingAction);

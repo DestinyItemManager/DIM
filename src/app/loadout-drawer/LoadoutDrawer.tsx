@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
+import { allItemsSelector, bucketsSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import { showItemPicker } from '../item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from './actions';
@@ -45,7 +45,6 @@ export default function LoadoutDrawer() {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
-  const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
@@ -273,15 +272,15 @@ export default function LoadoutDrawer() {
             )}
             <div className="loadout-contents">
               <LoadoutDrawerContents
+                storeId={storeId}
                 loadout={loadout}
                 savedMods={savedMods}
                 items={items}
                 buckets={buckets}
-                stores={stores}
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
-                onUpdateMods={onUpdateModHashes}
+                onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
                 onOpenModPicker={(query?: string) =>
                   stateDispatch({ type: 'openModPicker', query })
                 }

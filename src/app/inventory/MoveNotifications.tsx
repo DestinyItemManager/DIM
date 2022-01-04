@@ -7,7 +7,6 @@ import {
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import {
@@ -18,14 +17,14 @@ import {
   refreshIcon,
 } from 'app/shell/icons';
 import { DimError } from 'app/utils/dim-error';
+import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useSubscription } from 'use-subscription';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from './item-types';
-import ItemIcon from './ItemIcon';
+import { DimItem } from './item-types';
+import ItemIcon, { DefItemIcon } from './ItemIcon';
 import styles from './MoveNotifications.m.scss';
 import { DimStore } from './store-types';
 
@@ -97,7 +96,7 @@ function ApplyLoadoutProgressBody({
 }) {
   // TODO: throttle subscription?
   const { phase, equipNotPossible, itemStates, socketOverrideStates, modStates } =
-    useSubscription(stateObservable);
+    useThrottledSubscription(stateObservable, 100);
   const defs = useD2Definitions()!;
 
   const progressIcon =
@@ -114,13 +113,15 @@ function ApplyLoadoutProgressBody({
   const groupedItemErrors = _.groupBy(
     itemStatesList.filter(({ error }) => error),
     ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
+      error?.message
   );
 
   const groupedModErrors = _.groupBy(
     modStates.filter(({ error }) => error),
     ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() : undefined) ?? error?.message
+      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
+      error?.message
   );
 
   return (
@@ -182,9 +183,7 @@ function ApplyLoadoutProgressBody({
                     [styles.loadoutItemFailed]: state === LoadoutSocketOverrideState.Failed,
                   })}
                 >
-                  <PlugDef
-                    plug={defs.InventoryItem.get(plugHash) as PluggableInventoryItemDefinition}
-                  />
+                  <DefItemIcon itemDef={defs.InventoryItem.get(plugHash)} />
                 </div>
               ))}
             </div>
@@ -203,7 +202,7 @@ function ApplyLoadoutProgressBody({
                   state === LoadoutModState.Unassigned || state === LoadoutModState.Failed,
               })}
             >
-              <PlugDef plug={defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition} />
+              <DefItemIcon itemDef={defs.InventoryItem.get(modHash)} />
             </div>
           ))}
         </div>

@@ -1205,6 +1205,7 @@ function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
     clearSpace: clearSpace || false,
     equipped,
     unequipped,
+    lastUpdatedAt: Date.now(),
   };
   if (!loadout.notes) {
     delete loadout.notes;

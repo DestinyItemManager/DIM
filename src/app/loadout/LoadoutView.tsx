@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -33,11 +33,13 @@ export default function LoadoutView({
   store,
   actionButtons,
   hideOptimizeArmor,
+  hideShowModPlacements,
 }: {
   loadout: Loadout;
   store: DimStore;
   actionButtons: ReactNode[];
   hideOptimizeArmor?: boolean;
+  hideShowModPlacements?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -48,14 +50,19 @@ export default function LoadoutView({
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
     const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, buckets, allItems);
-    const subclass = store.items.find(
-      (item) =>
-        item.bucket.hash === BucketHashes.Subclass &&
-        items.some((loadoutItem) => item.hash === loadoutItem.hash)
-    );
+    let subclass: DimLoadoutItem | undefined;
+    for (const storeItem of items) {
+      if (storeItem.bucket.hash === BucketHashes.Subclass) {
+        const loadoutItem = items.find((loadoutItem) => loadoutItem.hash === storeItem.hash);
+        if (loadoutItem) {
+          subclass = { ...storeItem, socketOverrides: loadoutItem.socketOverrides };
+          break;
+        }
+      }
+    }
     let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
     if (subclass) {
-      equippableItems = equippableItems.filter((i) => i.hash !== subclass.hash);
+      equippableItems = equippableItems.filter((i) => i.hash !== subclass!.hash);
     }
     return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, buckets, allItems, store]);
@@ -111,14 +118,16 @@ export default function LoadoutView({
                     <PlugDef key={getModRenderKey(mod)} plug={mod} />
                   ))}
                 </div>
-                <button
-                  className={clsx('dim-button', styles.showModPlacementButton)}
-                  type="button"
-                  title="Show mod placement"
-                  onClick={() => setShowModAssignmentDrawer(true)}
-                >
-                  {t('Loadouts.ShowModPlacement')}
-                </button>
+                {!hideShowModPlacements && (
+                  <button
+                    className={clsx('dim-button', styles.showModPlacementButton)}
+                    type="button"
+                    title="Show mod placement"
+                    onClick={() => setShowModAssignmentDrawer(true)}
+                  >
+                    {t('Loadouts.ShowModPlacement')}
+                  </button>
+                )}
               </div>
             ) : (
               <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>

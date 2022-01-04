@@ -21,11 +21,12 @@ $header-height: 44px;
 // The actual header contents - the header element is just a container
 .header {
   width: 100%;
-  box-sizing: content-box;
+  box-sizing: border-box;
   padding-left: env(safe-area-inset-left, 2px);
   padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
   height: $header-height;
+  height: calc(#{$header-height} + env(safe-area-inset-top));
   display: flex;
   flex-direction: row;
   align-items: center;

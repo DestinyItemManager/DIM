@@ -1,14 +1,17 @@
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
 import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import type {
   DimBucketType,
   InventoryBucket,
@@ -18,7 +21,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon } from '../shell/icons';
-import { Loadout } from './loadout-types';
+import { Loadout, LoadoutItem } from './loadout-types';
 import { extractArmorModHashes, fromEquippedTypes } from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
@@ -52,50 +55,51 @@ const loadoutTypes: DimBucketType[] = [
 ];
 
 export default function LoadoutDrawerContents({
+  storeId,
   loadout,
   savedMods,
   buckets,
   items,
-  stores,
   equip,
   remove,
   add,
-  onUpdateMods,
+  onUpdateLoadout,
   onOpenModPicker,
   onShowItemPicker,
   removeModByHash,
   onApplySocketOverrides,
 }: {
+  storeId?: string;
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   buckets: InventoryBuckets;
-  stores: DimStore[];
   items: DimItem[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
   add(params: { item: DimItem; equip?: boolean; socketOverrides?: SocketOverrides }): void;
-  onUpdateMods(mods: number[]): void;
+  onUpdateLoadout(loadout: Loadout): void;
   onOpenModPicker(): void;
   onShowItemPicker(shown: boolean): void;
   removeModByHash(itemHash: number): void;
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
+  const stores = useSelector(storesSelector);
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+
+  // The store to use for "fill from equipped/unequipped"
+  const dimStore = storeId
+    ? getStore(stores, storeId)!
+    : (loadout.classType !== DestinyClass.Unknown &&
+        stores.find((s) => s.classType === loadout.classType)) ||
+      getCurrentStore(stores)!;
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutFromEquipped(
-      loadout,
-      itemsByBucket,
-      stores,
-      add,
-      onUpdateMods,
-      onApplySocketOverrides
-    );
+    fillLoadoutFromEquipped(loadout, itemsByBucket, dimStore, onUpdateLoadout);
   }
   function doFillLoadOutFromUnequipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutFromUnequipped(loadout, stores, add);
+    fillLoadoutFromUnequipped(loadout, dimStore, add);
   }
 
   const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
@@ -272,10 +276,7 @@ async function pickLoadoutSubclass(
   onShowItemPicker(false);
 }
 
-function createSocketOverridesFromEquipped(
-  item: DimItem,
-  onApplySocketOverrides: (item: DimItem, socketOverrides: SocketOverrides) => void
-) {
+function createSocketOverridesFromEquipped(item: DimItem) {
   const socketOverrides: SocketOverrides = {};
   for (const socket of item.sockets?.allSockets || []) {
     if (socket.plugged) {
@@ -283,64 +284,63 @@ function createSocketOverridesFromEquipped(
     }
   }
   if (Object.keys(socketOverrides).length) {
-    onApplySocketOverrides(item, socketOverrides);
+    return socketOverrides;
   }
+  return undefined;
 }
 
 function fillLoadoutFromEquipped(
   loadout: Loadout,
   itemsByBucket: { [bucketId: string]: DimItem[] },
-  stores: DimStore[],
-  add: (params: { item: DimItem; equip?: boolean }) => void,
-  onUpdateMods: (mods: number[]) => void,
-  onApplySocketOverrides: (item: DimItem, socketOverrides: SocketOverrides) => void
+  dimStore: DimStore,
+  onUpdateLoadout: (loadout: Loadout) => void
 ) {
   if (!loadout) {
     return;
   }
 
-  // TODO: need to know which character "launched" the builder
-  const dimStore =
-    (loadout.classType !== DestinyClass.Unknown &&
-      stores.find((s) => s.classType === loadout.classType)) ||
-    getCurrentStore(stores)!;
-
-  const items = dimStore.items.filter(
+  const newEquippedItems = dimStore.items.filter(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
 
-  const mods: number[] = [];
-  for (const item of items) {
-    if (
-      !itemsByBucket[item.bucket.hash] ||
-      !itemsByBucket[item.bucket.hash].some((i) => i.equipped)
-    ) {
-      add({ item, equip: true });
-      if (item.bucket.hash === BucketHashes.Subclass) {
-        createSocketOverridesFromEquipped(item, onApplySocketOverrides);
+  const newLoadout = produce(loadout, (draftLoadout) => {
+    const mods: number[] = [];
+    for (const item of newEquippedItems) {
+      if (!itemsByBucket[item.bucket.hash]?.some((i) => i.equipped)) {
+        const loadoutItem: LoadoutItem = {
+          id: item.id,
+          hash: item.hash,
+          equipped: true,
+          amount: 1,
+        };
+        if (item.bucket.hash === BucketHashes.Subclass) {
+          loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
+        }
+        draftLoadout.items.push(loadoutItem);
+        mods.push(...extractArmorModHashes(item));
+      } else {
+        infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
       }
-      mods.push(...extractArmorModHashes(item));
-    } else {
-      infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
     }
-  }
-  if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
-    onUpdateMods(mods);
-  }
+    if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
+      draftLoadout.parameters = {
+        ...draftLoadout.parameters,
+        mods,
+      };
+    }
+  });
+
+  onUpdateLoadout(newLoadout);
 }
 
 async function fillLoadoutFromUnequipped(
   loadout: Loadout,
-  stores: DimStore[],
+  dimStore: DimStore,
   add: (params: { item: DimItem; equip?: boolean }) => void
 ) {
   if (!loadout) {
     return;
   }
-  const dimStore =
-    (loadout.classType !== DestinyClass.Unknown &&
-      stores.find((s) => s.classType === loadout.classType)) ||
-    getCurrentStore(stores)!;
 
   const items = dimStore.items.filter(
     (item) =>

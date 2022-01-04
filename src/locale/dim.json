@@ -362,6 +362,7 @@
     "Deequip": "Cannot find another item to equip in order to deequip {{itemname}}",
     "ExoticError": "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
     "NotEnoughRoom": "There's nothing we can move out of {{store}} to make room for {{itemname}}",
+    "NotEnoughRoomGeneral": "There's not enough room to move this item.",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
     "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
@@ -623,7 +624,7 @@
   },
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
-    "AcquiredMod": "This mod is currently applied to an item in your inventory.",
+    "AcquiredMod": "This mod is unlocked in collections.",
     "AddNote": "Add a note",
     "AddToLoadout": "Loadout",
     "All": "All",
@@ -1041,6 +1042,7 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
+  "You cannot plug an item into itself!": "",
   "no-space": "",
   "wrong-level": ""
 }
