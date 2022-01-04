@@ -1,5 +1,6 @@
 ## Next
 * Fixed an issue where the progress bar for exotic weapons were clipping into other page elements. 
+* Fixed an issue that could make moving searches containing stacks of items to fail.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
@@ -9,7 +10,6 @@
 * Fixes for display on iPhones with rounded corners and a notch.
 * Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
 * Happy New Year
-* Fixed an issue that could make moving searches containing stacks of items to fail.
 
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 
