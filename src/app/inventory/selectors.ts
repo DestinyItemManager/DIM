@@ -103,7 +103,8 @@ export const materialsSelector = (state: RootState) =>
   allItemsSelector(state).filter(
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
-      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens)
+      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
+      i.hash === 3702027555 // Spoils of Conquest do not have item category hashes
   );
 
 /** The actual raw profile response from the Bungie.net profile API */
