@@ -1,6 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
@@ -88,13 +89,19 @@ function canInsertForFree(
 export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
+    const defs = d2ManifestSelector(getState())!;
+    const coreSettings = getState().manifest.destiny2CoreSettings!;
 
-    const free = canInsertForFree(
-      socket,
-      plugItemHash,
-      getState().manifest.destiny2CoreSettings!,
-      d2ManifestSelector(getState())!
-    );
+    // This is a special case for transmog ornaments - you can't apply a
+    // transmog ornament to the same item it was created with. So instead we
+    // swap at the last minute to applying the default ornament which should
+    // match the appearance that the user wanted.
+    if (plugItemHash === item.hash) {
+      const defaultPlugHash = getDefaultPlugHash(socket, defs);
+      plugItemHash = defaultPlugHash ?? plugItemHash;
+    }
+
+    const free = canInsertForFree(socket, plugItemHash, coreSettings, defs);
 
     // TODO: if applying to the vault, choose a character that has the mod unlocked rather than current store
     // look at all plugsets on all characters to find one that's unlocked?
@@ -122,9 +129,6 @@ async function awaInsertSocketPlugFree(
   socket: DimSocket,
   plugItemHash: number
 ) {
-  if (item.hash === plugItemHash) {
-    throw new DimError('AWA.SelfInsertion');
-  }
   return insertSocketPlugFree(authenticatedHttpClient, {
     itemId: item.id,
     plug: {
