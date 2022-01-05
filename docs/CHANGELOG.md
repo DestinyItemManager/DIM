@@ -1,6 +1,7 @@
 ## Next
 * Fixed an issue where the progress bar for exotic weapons were clipping into other page elements. 
 * Fixed an issue that could make moving searches containing stacks of items to fail.
+* Added Spoils of Conquest to the currencies hover menu.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
