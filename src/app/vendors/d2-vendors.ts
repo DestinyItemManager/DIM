@@ -40,7 +40,7 @@ const vendorOrder = [
   VENDORS.BENEDICT,
   VENDORS.BANSHEE,
   VENDORS.DRIFTER,
-  VENDORS.ADA,
+  VENDORS.ADA_FORGE,
 ];
 
 export function toVendorGroups(

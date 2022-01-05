@@ -150,12 +150,6 @@ export class VendorItem {
       this.previewVendorHash = inventoryItem.preview.previewVendorHash;
     }
 
-    // Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
-    // changes their sort to match the game
-    if (itemHash === 3675595381 || itemHash === 171866827) {
-      this.key = itemHash === 3675595381 ? 1 : 4;
-    }
-
     this.item = makeFakeItem(
       defs,
       buckets,
