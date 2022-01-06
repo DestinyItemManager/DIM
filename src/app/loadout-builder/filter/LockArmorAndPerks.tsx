@@ -2,7 +2,7 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
@@ -16,7 +16,7 @@ import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react';
+import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
 import { isLoadoutBuilderItem, pickSubclass } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -62,6 +62,7 @@ export default memo(function LockArmorAndPerks({
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
+  useEffect(() => hideItemPicker(), [selectedStore]);
 
   /**
    * Lock currently equipped items on a character
