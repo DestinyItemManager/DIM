@@ -1,3 +1,4 @@
+import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -65,9 +66,6 @@ const spring: SpringConfig = {
 // or dragged down more than dismissAmount times the height of the sheet.
 const dismissVelocity = 0.8;
 const dismissAmount = 0.5;
-
-// Disable body scroll on mobile
-const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
 
@@ -310,7 +308,8 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       sheetContents.current = contents;
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
-        if (mobile) {
+        if (isiOSBrowser()) {
+          // as-is, scroll body lock does not work on on Anrdoid
           document.body.classList.add('body-scroll-lock');
           enableBodyScroll(sheetContents.current);
           disableBodyScroll(sheetContents.current);
@@ -323,11 +322,11 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   useLayoutEffect(
     () => () => {
       if (sheetContents.current) {
-        setTimeout(() => {
-          document.body.classList.remove('body-scroll-lock');
-        }, 0);
         sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (mobile) {
+        if (isiOSBrowser()) {
+          setTimeout(() => {
+            document.body.classList.remove('body-scroll-lock');
+          }, 0);
           enableBodyScroll(sheetContents.current);
         }
       }
