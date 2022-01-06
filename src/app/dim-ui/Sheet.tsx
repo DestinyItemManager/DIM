@@ -309,7 +309,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
         if (isiOSBrowser()) {
-          // as-is, scroll body lock does not work on on Anrdoid
+          // as-is, body-scroll-lock does not work on on Android #5615
           document.body.classList.add('body-scroll-lock');
           enableBodyScroll(sheetContents.current);
           disableBodyScroll(sheetContents.current);
