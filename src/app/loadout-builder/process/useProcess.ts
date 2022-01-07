@@ -9,7 +9,7 @@ import {
   canSwapEnergyFromUpgradeSpendTier,
   upgradeSpendTierToMaxEnergy,
 } from 'app/loadout/armor-upgrade-utils';
-import { activityModPlugCategoryHashes, bucketsToCategories } from 'app/loadout/mod-utils';
+import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
@@ -158,7 +158,7 @@ export function useProcess({
               item,
               upgradeSpendTier,
               lockItemEnergyType,
-              lockedModMap[bucketsToCategories[item.bucket.hash]]
+              lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]]
             )
           );
           itemsById.set(item.id, group);

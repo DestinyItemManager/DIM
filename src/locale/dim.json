@@ -151,6 +151,17 @@
     "Stop": "Stop",
     "Vault": "It will move items to the vault to make room."
   },
+  "FashionDrawer": {
+    "Accept": "Use this fashion",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "Reset": "Reset all",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncShaders": "Sync Shaders",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use Equipped"
+  },
   "FileUpload": {
     "Instructions": "Click or drag files"
   },
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Failed": "Loadout failed to apply completely",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",

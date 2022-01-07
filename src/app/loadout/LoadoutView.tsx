@@ -1,12 +1,18 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  unlockedPlugSetItemsSelector,
+} from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -67,7 +73,12 @@ export default function LoadoutView({
     return [equippableItems, subclass, warnitems];
   }, [loadout.items, defs, buckets, allItems, store]);
 
+  const unlockedPlugSetItems = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, store.id)
+  );
   const savedMods = getModsFromLoadout(defs, loadout);
+  // TODO: filter down by usable mods?
+  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
@@ -94,7 +105,7 @@ export default function LoadoutView({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || savedMods.length > 0) && (
+        {(items.length > 0 || subclass || savedMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             <div>
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
@@ -106,6 +117,7 @@ export default function LoadoutView({
                 subclass={subclass}
                 items={categories[category]}
                 savedMods={savedMods}
+                modsByBucket={modsByBucket}
                 equippedItemIds={equippedItemIds}
                 loadout={loadout}
                 hideOptimizeArmor={hideOptimizeArmor}
@@ -115,7 +127,17 @@ export default function LoadoutView({
               <div className={styles.mods}>
                 <div className={styles.modsGrid}>
                   {savedMods.map((mod) => (
-                    <PlugDef key={getModRenderKey(mod)} plug={mod} />
+                    <PlugDef
+                      className={clsx({
+                        [styles.missingItem]: !(
+                          unlockedPlugSetItems.has(mod.hash) ||
+                          mod.hash === DEFAULT_SHADER ||
+                          DEFAULT_ORNAMENTS.includes(mod.hash)
+                        ),
+                      })}
+                      key={getModRenderKey(mod)}
+                      plug={mod}
+                    />
                   ))}
                 </div>
                 {!hideShowModPlacements && (

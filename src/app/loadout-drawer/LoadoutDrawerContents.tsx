@@ -20,7 +20,7 @@ import type {
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
-import { addIcon, AppIcon } from '../shell/icons';
+import { addIcon, AppIcon, faTshirt } from '../shell/icons';
 import { Loadout, LoadoutItem } from './loadout-types';
 import {
   createSocketOverridesFromEquipped,
@@ -70,6 +70,7 @@ export default function LoadoutDrawerContents({
   onUpdateLoadout,
   onOpenModPicker,
   onShowItemPicker,
+  onOpenFashionDrawer,
   removeModByHash,
   onApplySocketOverrides,
 }: {
@@ -84,6 +85,7 @@ export default function LoadoutDrawerContents({
   onUpdateLoadout(loadout: Loadout): void;
   onOpenModPicker(): void;
   onShowItemPicker(shown: boolean): void;
+  onOpenFashionDrawer(): void;
   removeModByHash(itemHash: number): void;
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
@@ -168,6 +170,9 @@ export default function LoadoutDrawerContents({
           ))}
         <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
           <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
+        </a>
+        <a onClick={() => onOpenFashionDrawer()} className="dim-button loadout-add">
+          <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
         </a>
       </div>
       <div className="loadout-added-items">
@@ -317,6 +322,26 @@ function fillLoadoutFromEquipped(
       draftLoadout.parameters = {
         ...draftLoadout.parameters,
         mods,
+      };
+    }
+    // Save "fashion" mods for equipped items
+    const modsByBucket = {};
+    for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
+      const plugs = item.sockets
+        ? _.compact(
+            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+              (s) => s.plugged?.plugDef.hash
+            )
+          )
+        : [];
+      if (plugs.length) {
+        modsByBucket[item.bucket.hash] = plugs;
+      }
+    }
+    if (!_.isEmpty(modsByBucket)) {
+      draftLoadout.parameters = {
+        ...draftLoadout.parameters,
+        modsByBucket,
       };
     }
   });

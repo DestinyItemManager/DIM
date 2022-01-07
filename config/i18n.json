@@ -158,6 +158,17 @@
     "OutOfRoomTitle": "Out of Room",
     "Stop": "Stop"
   },
+  "FashionDrawer": {
+    "Title": "Choose shaders and ornaments",
+    "Accept": "Use this fashion",
+    "Reset": "Reset all",
+    "Sync": "Sync",
+    "UseEquipped": "Use Equipped",
+    "SyncShaders": "Sync Shaders",
+    "SyncOrnaments": "Sync Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "ClearOrnaments": "Clear Ornaments"
+  },
   "FileUpload": {
     "Instructions": "Click or drag files"
   },
@@ -591,6 +602,7 @@
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",

@@ -1,0 +1,45 @@
+@import '../../variables.scss';
+
+.items {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 10px;
+  justify-content: center;
+  @include horizontal-space-children(10px);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  @include vertical-space-children(4px);
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.verticalButtons {
+  composes: item;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: var(--item-size);
+    &:first-child {
+      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+    }
+  }
+  &.right > div {
+    justify-content: flex-start;
+  }
+}
+
+.sheet {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.missingItem {
+  opacity: 0.3;
+}

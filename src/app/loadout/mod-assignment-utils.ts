@@ -23,7 +23,7 @@ import { upgradeSpendTierToMaxEnergy } from './armor-upgrade-utils';
 import { generateModPermutations } from './mod-permutations';
 import {
   activityModPlugCategoryHashes,
-  bucketsToCategories,
+  bucketHashToPlugCategoryHash,
   getDefaultPlugHash,
   getItemEnergyType,
 } from './mod-utils';
@@ -114,7 +114,8 @@ export function fitMostMods(
     } else {
       // possible target for plugging this mod
       const targetItem = items.find(
-        (item) => plannedMod.plug.plugCategoryHash === bucketsToCategories[item.bucket.hash]
+        (item) =>
+          plannedMod.plug.plugCategoryHash === bucketHashToPlugCategoryHash[item.bucket.hash]
       );
 
       if (targetItem) {
@@ -346,8 +347,10 @@ export function pickPlugPositions(
     // If it wasn't found already plugged, find the first socket with a matching PCH
     // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex((socket) =>
-        socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === modToInsert.hash)
+      destinationSocketIndex = existingModSockets.findIndex(
+        (socket) =>
+          socket.socketDefinition.singleInitialItemHash === modToInsert.hash ||
+          socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === modToInsert.hash)
       );
     }
 
@@ -741,7 +744,7 @@ function countBucketIndependentModChangesForItem(
 
   for (const mod of bucketIndependentAssignmentsForItem) {
     const socketsThatWillFitMod = getSocketsByCategoryHash(
-      item.sockets!,
+      item.sockets,
       SocketCategoryHashes.ArmorMods
     );
     if (socketsThatWillFitMod.some((socket) => socket.plugged?.plugDef.hash === mod.hash)) {

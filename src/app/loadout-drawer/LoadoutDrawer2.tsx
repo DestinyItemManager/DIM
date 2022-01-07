@@ -47,6 +47,7 @@ export default function LoadoutDrawer2() {
     modPicker: {
       show: false,
     },
+    showFashionDrawer: false,
   });
 
   // Sync this global variable with our actual state. TODO: move to redux

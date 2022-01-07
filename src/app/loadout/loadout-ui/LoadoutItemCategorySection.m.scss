@@ -34,25 +34,11 @@
   min-height: unset !important;
 }
 
-.empty {
-  height: calc(var(--item-size) + #{$badge-height} - #{3 * $item-border-width});
-  border: 1px solid white;
-}
-
-.categoryWeapons {
-  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
-}
-.categoryArmor {
-  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
-}
-.categoryGeneral {
-  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
-}
-
 .equipped {
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
+  grid-template-columns: 1fr;
 }
 
 .unequipped {
@@ -65,58 +51,28 @@
   }
 }
 
-.loParams {
-  max-width: 100%;
-  @include vertical-space-children(4px);
-}
-
-.loStats {
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  align-items: center;
-  width: 100%;
-  @include horizontal-space-children(8px);
-}
-
-.loStat {
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  align-items: center;
-  font-weight: bold;
-  font-size: 11px;
-
-  img {
-    height: 14px;
-    width: 14px;
-    margin-right: 2px;
+.fashion {
+  :global(.item) {
+    height: unset !important;
   }
 }
 
-.loExotic {
-  --item-size: 17px;
-  span {
-    margin-left: 4px;
+.showFashion {
+  .equipped {
+    :global(.item) {
+      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+    }
   }
 }
 
-.loSpendTier {
-  > div {
-    padding: 0;
-    margin: 0;
-  }
+.categoryWeapons {
+  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
 }
-
-.loQuery {
-  overflow: hidden;
-  max-width: 100%;
-  max-height: 4em;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-
-  :global(.app-icon) {
-    margin-left: 3px;
-    margin-right: 6px;
-  }
+.categoryArmor {
+  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+}
+.categoryGeneral {
+  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
 }
 
 .missingItem {

@@ -1,6 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import FashionDrawer from 'app/loadout/fashion/FashionDrawer';
 import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -50,16 +51,15 @@ export default function LoadoutDrawer() {
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, storeId, isNew, modPicker }, stateDispatch] = useReducer(
-    stateReducer,
-    {
+  const [{ loadout, showClass, storeId, isNew, modPicker, showFashionDrawer }, stateDispatch] =
+    useReducer(stateReducer, {
       showClass: true,
       isNew: false,
       modPicker: {
         show: false,
       },
-    }
-  );
+      showFashionDrawer: false,
+    });
 
   // Sync this global variable with our actual state. TODO: move to redux
   loadoutDialogOpen = Boolean(loadout);
@@ -285,6 +285,9 @@ export default function LoadoutDrawer() {
                   stateDispatch({ type: 'openModPicker', query })
                 }
                 onShowItemPicker={setShowingItemPicker}
+                onOpenFashionDrawer={() =>
+                  stateDispatch({ type: 'toggleFashionDrawer', show: true })
+                }
                 removeModByHash={removeModByHash}
                 onApplySocketOverrides={onApplySocketOverrides}
               />
@@ -302,6 +305,20 @@ export default function LoadoutDrawer() {
             initialQuery={modPicker.query}
             onAccept={onUpdateMods}
             onClose={() => stateDispatch({ type: 'closeModPicker' })}
+          />,
+          document.body
+        )}
+      {showFashionDrawer &&
+        defs.isDestiny2() &&
+        ReactDOM.createPortal(
+          <FashionDrawer
+            loadout={loadout}
+            items={items}
+            storeId={storeId}
+            onModsByBucketUpdated={(modsByBucket) =>
+              stateDispatch({ type: 'updateModsByBucket', modsByBucket })
+            }
+            onClose={() => stateDispatch({ type: 'toggleFashionDrawer', show: false })}
           />,
           document.body
         )}

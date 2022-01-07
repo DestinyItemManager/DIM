@@ -25,6 +25,7 @@ interface Props {
   onSocketClick?(
     plugDef: PluggableInventoryItemDefinition,
     /** An allow-list of plug category hashes that can be inserted into this socket */
+    // TODO: why not just pass the socketType hash or socket definition?
     plugCategoryHashWhitelist: number[]
   ): void;
 }
