@@ -19,9 +19,6 @@
 
 .stats {
   margin: 4px 0 0 0;
-  :global(.stat-row) {
-    margin-bottom: 8px;
-  }
   :global(.stat) {
     line-height: 8px;
   }

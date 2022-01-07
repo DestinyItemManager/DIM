@@ -1,5 +1,4 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
-import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
@@ -17,7 +16,6 @@ import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
-import { DimItemTooltip } from './ItemTooltip';
 
 type ProvidedProps = ItemPickerState & {
   onSheetClosed(): void;
@@ -103,13 +101,12 @@ function ItemPicker({
         <div className="sub-bucket">
           {items.map((item) => (
             <div key={item.index} className="item-picker-item">
-              <PressTip tooltip={() => <DimItemTooltip item={item} />}>
-                <ConnectedInventoryItem
-                  item={item}
-                  onClick={() => onItemSelectedFn(item, onClose)}
-                  ignoreSelectedPerks={ignoreSelectedPerks}
-                />
-              </PressTip>
+              <ConnectedInventoryItem
+                item={item}
+                onClick={() => onItemSelectedFn(item, onClose)}
+                includeTooltip
+                ignoreSelectedPerks={ignoreSelectedPerks}
+              />
               {item.type === 'Class' && (
                 <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
               )}

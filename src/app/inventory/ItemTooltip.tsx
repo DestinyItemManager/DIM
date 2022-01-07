@@ -18,7 +18,7 @@ export function DimItemTooltip({ item }: { item: DimItem }) {
       const perk = s.plugged?.plugDef;
       return perk ? [perk] : [];
     });
-    const contents = (
+    const contents = perks.length ? (
       <div className={clsx(styles.perks)}>
         {perks.map((perk, index) => (
           <div key={index}>
@@ -26,9 +26,9 @@ export function DimItemTooltip({ item }: { item: DimItem }) {
           </div>
         ))}
       </div>
-    );
+    ) : undefined;
     return <Tooltip def={itemDef} contents={contents} />;
-  } else if (item.bucket.sort === 'Armor' && item.stats) {
+  } else if (item.bucket.sort === 'Armor' && item.stats?.length) {
     const renderStat = (stat: DimStat) => (
       <div key={stat.statHash} className="stat">
         {stat.displayProperties.hasIcon ? (
@@ -49,7 +49,7 @@ export function DimItemTooltip({ item }: { item: DimItem }) {
     );
     return <Tooltip def={itemDef} contents={contents} />;
   } else {
-    return <Tooltip def={itemDef} contents={<></>} />;
+    return <Tooltip def={itemDef} contents={undefined} />;
   }
 }
 
