@@ -17,19 +17,12 @@ export const collectionsVisibleShadersSelector = createSelector(
 
     const getVisibleCollectibles = (node: DestinyPresentationNodeDefinition): number[] => {
       const visibleCollectibles: number[] = node.children.collectibles
-        .map((c) => {
-          const collectibleDef = defs.Collectible.get(c.collectibleHash);
-          const state = getCollectibleState(collectibleDef, profileResponse);
-          if (
-            state === undefined ||
-            state & DestinyCollectibleState.Invisible ||
-            collectibleDef.redacted
-          ) {
-            return undefined;
-          }
-          return collectibleDef.itemHash;
+        .map((c) => defs.Collectible.get(c.collectibleHash))
+        .filter((c) => {
+          const state = getCollectibleState(c, profileResponse);
+          return state !== undefined && !(state & DestinyCollectibleState.Invisible) && !c.redacted;
         })
-        .filter((i: number | undefined): i is number => Boolean(i));
+        .map((c) => c.itemHash);
       const visibleChildCollectibles = node.children.presentationNodes.flatMap((childNode) =>
         getVisibleCollectibles(defs.PresentationNode.get(childNode.presentationNodeHash))
       );
