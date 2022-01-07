@@ -4,7 +4,7 @@
   height: 1px;
   box-shadow: 0 1px 4px 0 black;
   width: 100%;
-  position: fixed;
+  position: sticky;
   left: 0;
   top: calc(var(--store-header-height) + var(--header-height) - 1px);
   z-index: 9;

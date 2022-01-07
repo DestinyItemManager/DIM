@@ -1,7 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
 import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -11,7 +10,11 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  getFirstSocketByCategoryHash,
+  getSocketsByCategoryHash,
+  getSocketsByIndexes,
+} from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -63,20 +66,28 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
 
 /**
  * Create a socket overrides structure from the item's currently plugged sockets.
+ * This will ignore all default plugs except for abilities where the default values
+ * will be included.
  */
-function createSocketOverridesFromEquipped(item: DimItem) {
-  const socketOverrides: SocketOverrides = {};
-  for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
-      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+export function createSocketOverridesFromEquipped(item: DimItem) {
+  if (item.sockets) {
+    const socketOverrides: SocketOverrides = {};
+    for (const category of item.sockets.categories) {
+      const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
+      for (const socket of sockets) {
+        // Add currently plugged, if it is an ability we include the initial item
+        // otherwise we ignore them, this stops us showing/saving empty socket plugs
+        if (
+          socket.plugged &&
+          (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
+            category.category.hash === SocketCategoryHashes.Abilities)
+        ) {
+          socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+        }
+      }
     }
+    return socketOverrides;
   }
-  return socketOverrides;
 }
 
 /**
@@ -358,22 +369,6 @@ export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
     }
   }
   return false;
-}
-
-/**
- * Returns a Loadout object containing currently equipped items
- * @deprecated
- */
-export function loadoutFromEquipped(store: DimStore): Loadout {
-  const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));
-
-  const loadout = newLoadout(
-    t('Loadouts.CurrentlyEquipped'),
-    items.map((i) => convertToLoadoutItem(i, true))
-  );
-  loadout.classType = store.classType;
-
-  return loadout;
 }
 
 /** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */

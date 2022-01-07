@@ -8,7 +8,7 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -226,7 +226,10 @@ function LoadoutBuilder({
   const characterItems = items[classType];
 
   loadouts = useMemo(() => {
-    const equippedLoadout: Loadout | undefined = loadoutFromEquipped(selectedStore);
+    const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
+      t('Loadouts.CurrentlyEquipped'),
+      selectedStore
+    );
     const classLoadouts = loadouts.filter(
       (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown
     );

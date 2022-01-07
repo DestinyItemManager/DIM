@@ -382,6 +382,7 @@ function doApplyLoadout(
         // TODO: try parallelizing these too?
         // TODO: respect flag for equip not allowed
         try {
+          const initialItem = getLoadoutItem(loadoutItem, getTargetStore(), getStores())!;
           await dispatch(
             applyLoadoutItem(store.id, loadoutItem, applicableLoadoutItems, cancelToken)
           );
@@ -389,12 +390,15 @@ function doApplyLoadout(
           if (updatedItem) {
             setLoadoutState(
               produce((state) => {
-                state.itemStates[updatedItem.index].state =
-                  // If we're doing a bulk equip later, set to MovedPendingEquip
-                  itemsToEquip.length > 1 &&
-                  itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
-                    ? LoadoutItemState.MovedPendingEquip
-                    : LoadoutItemState.Succeeded;
+                // TODO: doing things based on item index is kind of tough for consumables!
+                if (state.itemStates[initialItem.index]) {
+                  state.itemStates[initialItem.index].state =
+                    // If we're doing a bulk equip later, set to MovedPendingEquip
+                    itemsToEquip.length > 1 &&
+                    itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
+                      ? LoadoutItemState.MovedPendingEquip
+                      : LoadoutItemState.Succeeded;
+                }
               })
             );
           }

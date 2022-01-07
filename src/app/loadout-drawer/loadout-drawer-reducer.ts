@@ -43,7 +43,14 @@ export type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
+  | {
+      type: 'addItem';
+      item: DimItem;
+      shift: boolean;
+      items: DimItem[];
+      equip?: boolean;
+      socketOverrides?: SocketOverrides;
+    }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
@@ -93,7 +100,7 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip } = action;
+      const { item, shift, items, equip, socketOverrides } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -104,9 +111,11 @@ export function stateReducer(state: State, action: Action): State {
       // which can happen from item popup action buttons.
       const [addToLoadout, isNew] = loadout ? [loadout, state.isNew] : [newLoadout('', []), true];
 
+      const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
+
       return {
         ...state,
-        loadout: addItem(addToLoadout, item, shift, items, equip),
+        loadout: draftLoadout,
         isNew,
       };
     }
@@ -206,7 +215,8 @@ function addItem(
   item: DimItem,
   shift: boolean,
   items: DimItem[],
-  equip?: boolean
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -243,6 +253,10 @@ function addItem(
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
           }
           loadoutItem.equipped = true;
+        }
+
+        if (socketOverrides) {
+          loadoutItem.socketOverrides = socketOverrides;
         }
 
         draftLoadout.items.push(loadoutItem);
