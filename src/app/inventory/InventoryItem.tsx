@@ -134,9 +134,9 @@ export default function InventoryItem({
     </div>
   );
 
-  if (tooltip) {
-    return <PressTip tooltip={() => <DimItemTooltip item={item} />}>{inner}</PressTip>;
-  } else {
-    return inner;
-  }
+  return (
+    <PressTip disabled={!tooltip} tooltip={() => <DimItemTooltip item={item} />}>
+      {inner}
+    </PressTip>
+  );
 }
