@@ -62,7 +62,7 @@ export default memo(function LockArmorAndPerks({
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
-  useEffect(() => hideItemPicker(), [selectedStore]);
+  useEffect(() => hideItemPicker(), [selectedStore.classType]);
 
   /**
    * Lock currently equipped items on a character
