@@ -8,6 +8,7 @@
 * Fixed an issue where the universal ornament picker would show too many ornaments as unlocked.
 * Shader picker now hides unavailable, unobtainable shaders.
 * "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
+* You can once again click within the Compare sheet to close an item popup.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
