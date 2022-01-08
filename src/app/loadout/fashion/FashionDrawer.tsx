@@ -150,12 +150,23 @@ export default function FashionDrawer({
   };
 
   const handleUseEquipped = () => {
-    const newModsByBucket = _.mapValues(exampleItemsByBucketHash, (item) => {
-      const cosmeticSockets = item.sockets
-        ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
-        : [];
-      return _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash));
-    });
+    const newModsByBucket = Object.fromEntries(
+      LockableBucketHashes.map((bucketHash) => {
+        // Either the item that's in the loadout, or whatever's equipped
+        const item =
+          armorItemsByBucketHash[bucketHash] ??
+          allItems.find(
+            (i) =>
+              i.bucket.hash === bucketHash &&
+              i.equipped &&
+              (storeId ? i.owner === storeId : i.classType === classType)
+          );
+        const cosmeticSockets = item.sockets
+          ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
+          : [];
+        return [bucketHash, _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash))];
+      })
+    );
 
     setModsByBucket(newModsByBucket);
   };
@@ -281,12 +292,7 @@ export default function FashionDrawer({
   const leftButtons = (
     <>
       <div>
-        <button
-          type="button"
-          className="dim-button"
-          onClick={handleUseEquipped}
-          disabled={_.isEmpty(armorItemsByBucketHash)}
-        >
+        <button type="button" className="dim-button" onClick={handleUseEquipped}>
           {t('FashionDrawer.UseEquipped')}
         </button>
       </div>

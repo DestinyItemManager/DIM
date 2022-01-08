@@ -152,7 +152,7 @@
     "Vault": "It will move items to the vault to make room."
   },
   "FashionDrawer": {
-    "Accept": "Save this fashion",
+    "Accept": "Save fashion",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",

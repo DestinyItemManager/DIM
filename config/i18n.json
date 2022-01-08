@@ -160,7 +160,7 @@
   },
   "FashionDrawer": {
     "Title": "Choose shaders and ornaments",
-    "Accept": "Save this fashion",
+    "Accept": "Save fashion",
     "Reset": "Clear fashion",
     "Sync": "Sync",
     "UseEquipped": "Use equipped fashion",
