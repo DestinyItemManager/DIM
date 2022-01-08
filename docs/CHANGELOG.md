@@ -5,6 +5,7 @@
 * Fixed an issue that could make moving searches containing stacks of items to fail.
 * Added Spoils of Conquest to the currencies hover menu.
 * Fixed an issue where the Loadout Optimizer would let you pin items from other classes.
+* Fixed an issue where the universal ornament picker would show too many ornaments as unlocked.
 * Shader picker now hides unavailable, unobtainable shaders.
 * "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
 

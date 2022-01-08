@@ -19,6 +19,7 @@ import {
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -96,7 +97,11 @@ function mapStateToProps() {
       const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
       for (const item of allItems) {
         const itemDef = defs!.InventoryItem.get(item.hash);
-        if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
+        if (
+          itemDef.plug &&
+          plugAllowList.has(itemDef.plug.plugCategoryHash) &&
+          item.location.hash === BucketHashes.Modifications
+        ) {
           modHashes.add(item.hash);
         }
       }
