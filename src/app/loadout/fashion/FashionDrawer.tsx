@@ -252,6 +252,7 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={handleSyncShader}
           disabled={shaders.length === 0}
+          title={t('FashionDrawer.SyncShadersTitle')}
         >
           {isPhonePortrait ? t('FashionDrawer.SyncShaders') : t('FashionDrawer.Sync')}{' '}
           <AppIcon icon={rightArrowIcon} />
@@ -263,6 +264,7 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={handleSyncOrnament}
           disabled={ornaments.length === 0}
+          title={t('FashionDrawer.SyncOrnamentsTitle')}
         >
           {isPhonePortrait ? t('FashionDrawer.SyncOrnaments') : t('FashionDrawer.Sync')}{' '}
           <AppIcon icon={rightArrowIcon} />

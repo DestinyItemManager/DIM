@@ -152,15 +152,19 @@
     "Vault": "It will move items to the vault to make room."
   },
   "FashionDrawer": {
-    "Accept": "Use this fashion",
+    "Accept": "Save this fashion",
     "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",
-    "Reset": "Reset all",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "Reset": "Clear fashion",
     "Sync": "Sync",
     "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
     "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
     "Title": "Choose shaders and ornaments",
-    "UseEquipped": "Use Equipped"
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
