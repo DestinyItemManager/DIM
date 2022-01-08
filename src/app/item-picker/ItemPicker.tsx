@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { RootState } from 'app/store/types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -106,7 +107,7 @@ function ItemPicker({
                 onClick={() => onItemSelectedFn(item, onClose)}
                 ignoreSelectedPerks={ignoreSelectedPerks}
               />
-              {item.type === 'Class' && (
+              {item.bucket.hash === BucketHashes.Subclass && (
                 <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
               )}
             </div>

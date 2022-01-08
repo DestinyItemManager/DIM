@@ -244,7 +244,7 @@ export function equipItems(
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
-          if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
+          if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
             const similarItem = getSimilarItem(getStores(), otherExotic, {
               excludeExotic: true,
               exclusions,
@@ -724,7 +724,11 @@ function canMoveToStore(
         left -= reservations[s.id][i.type];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
+      if (
+        s.id === item.owner &&
+        i.bucket.hash === item.bucket.hash &&
+        !item.location.inPostmaster
+      ) {
         left--;
       }
       return Math.max(0, left);
@@ -1046,7 +1050,7 @@ export function sortMoveAsideCandidatesForStore(
       // Try our hardest never to unequip something
       compareBy((i) => !i.equipped),
       // prefer same type over everything
-      compareBy((i) => item && i.type === item.type),
+      compareBy((i) => item && i.bucket.hash === item.bucket.hash),
       // or at least same category
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is

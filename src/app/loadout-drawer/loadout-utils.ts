@@ -7,6 +7,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
@@ -23,7 +24,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import { Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
-export const fromEquippedTypes: BucketHashes[] = [
+export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Subclass,
   BucketHashes.KineticWeapons,
   BucketHashes.EnergyWeapons,
@@ -33,7 +34,7 @@ export const fromEquippedTypes: BucketHashes[] = [
   BucketHashes.ChestArmor,
   BucketHashes.LegArmor,
   BucketHashes.ClassArmor,
-  434908299, // D1 artifact
+  D1BucketHashes.Artifact,
   BucketHashes.Ghost,
   BucketHashes.Ships,
   BucketHashes.Vehicle,
@@ -150,7 +151,9 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 
     const itemWeightDenominator = items.reduce(
       (memo, item) =>
-        memo + (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 0),
+        memo +
+        (itemWeight[item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!] ||
+          0),
       0
     );
 
@@ -158,7 +161,10 @@ export function getLight(store: DimStore, items: DimItem[]): number {
       items.reduce(
         (memo, item) =>
           memo +
-          item.power * (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+          item.power *
+            (itemWeight[
+              item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
+            ] || 1),
         0
       ) / itemWeightDenominator;
 
@@ -228,7 +234,7 @@ export function optimalItemSet(
   applicableItems: DimItem[],
   bestItemFn: (item: DimItem) => number
 ): Record<'equippable' | 'unrestricted', DimItem[]> {
-  const itemsByType = _.groupBy(applicableItems, (i) => i.type);
+  const itemsByType = _.groupBy(applicableItems, (i) => i.bucket.hash);
 
   // Pick the best item
   let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
@@ -237,7 +243,7 @@ export function optimalItemSet(
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
-  const overlaps = _.groupBy(Object.values(items).filter(getLabel), getLabel);
+  const overlaps = _.groupBy(unrestricted.filter(getLabel), getLabel);
   _.forIn(overlaps, (overlappingItems) => {
     if (overlappingItems.length <= 1) {
       return;
@@ -253,9 +259,9 @@ export function optimalItemSet(
       for (const otherItem of otherItems) {
         // Note: we could look for items that just don't have the *same* equippingLabel but
         // that may fail if there are ever mutual-exclusion items beyond exotics.
-        const nonExotics = itemsByType[otherItem.type].filter((i) => !i.equippingLabel);
+        const nonExotics = itemsByType[otherItem.bucket.hash].filter((i) => !i.equippingLabel);
         if (nonExotics.length) {
-          option[otherItem.type] = _.maxBy(nonExotics, bestItemFn)!;
+          option[otherItem.bucket.hash] = _.maxBy(nonExotics, bestItemFn)!;
         } else {
           // this option isn't usable because we couldn't swap this exotic for any non-exotic
           optionValid = false;

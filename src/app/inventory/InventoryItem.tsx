@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { percent } from '../shell/filters';
@@ -103,7 +104,7 @@ export default function InventoryItem({
             {item.locked && (
               <AppIcon
                 className={styles.icon}
-                icon={item.type !== 'Finishers' ? lockIcon : starIcon}
+                icon={item.bucket.hash !== BucketHashes.Finishers ? lockIcon : starIcon}
               />
             )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}

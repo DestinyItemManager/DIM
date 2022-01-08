@@ -127,10 +127,6 @@ export function potentialSpaceLeftForItem(
   item: DimItem,
   stores: DimStore[]
 ): SpaceLeft {
-  if (!item.type) {
-    throw new Error("item needs a 'type' field");
-  }
-
   // Calculate how many full stacks (slots, where multiple items in a stack
   // count as 1) are occupied in the bucket this item would go into.
   let occupiedStacks = 0;

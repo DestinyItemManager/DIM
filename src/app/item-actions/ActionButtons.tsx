@@ -13,6 +13,7 @@ import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
@@ -54,10 +55,10 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
   const title =
     type === 'lock'
       ? item.locked
-        ? item.type === 'Finishers'
+        ? item.bucket.hash === BucketHashes.Finishers
           ? t('MovePopup.FavoriteUnFavorite.Favorited')
           : t('MovePopup.LockUnlock.Locked')
-        : item.type === 'Finishers'
+        : item.bucket.hash === BucketHashes.Finishers
         ? t('MovePopup.FavoriteUnFavorite.Unfavorited')
         : t('MovePopup.LockUnlock.Unlocked')
       : item.tracked

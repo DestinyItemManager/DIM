@@ -1,3 +1,4 @@
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -16,27 +17,27 @@ const bucketToTypeRaw = {
   [BucketHashes.LegArmor]: 'Leg',
   [BucketHashes.LostItems]: 'LostItems',
   [BucketHashes.Ships]: 'Ship',
-  375726501: 'Missions', // Engrams in D2??
-  434908299: 'Artifact',
+  [BucketHashes.Engrams]: 'Missions', // Yes, engrams (D1) and missions (D1) have the same hash
+  [D1BucketHashes.Artifact]: 'Artifact',
   [BucketHashes.PowerWeapons]: 'Heavy',
   [BucketHashes.SpecialOrders]: 'SpecialOrders',
   [BucketHashes.Consumables]: 'Consumable',
   [BucketHashes.KineticWeapons]: 'Primary',
   [BucketHashes.ClassArmor]: 'ClassItem',
-  2987185182: 'RecordBook',
-  549485690: 'RecordBookLegacy',
-  1801258597: 'Quests',
+  [D1BucketHashes.RecordBook]: 'RecordBook',
+  [D1BucketHashes.RecordBookLegacy]: 'RecordBookLegacy',
+  [D1BucketHashes.Quests]: 'Quests',
   [BucketHashes.Vehicle]: 'Vehicle',
-  2197472680: 'Bounties',
+  [D1BucketHashes.Bounties]: 'Bounties',
   [BucketHashes.EnergyWeapons]: 'Special',
-  2973005342: 'Shader',
+  [D1BucketHashes.Shader]: 'Shader',
   [BucketHashes.Modifications]: 'Ornaments',
   [BucketHashes.Emotes_Equippable]: 'Emote',
   [BucketHashes.Messages]: 'Messages',
   [BucketHashes.Subclass]: 'Class',
   [BucketHashes.Helmet]: 'Helmet',
   [BucketHashes.Gauntlets]: 'Gauntlets',
-  3796357825: 'Horn',
+  [D1BucketHashes.Horn]: 'Horn',
   [BucketHashes.Materials]: 'Material',
   [BucketHashes.Ghost]: 'Ghost',
   [BucketHashes.Emblems]: 'Emblem',

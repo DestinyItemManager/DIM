@@ -27,7 +27,7 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -202,9 +202,9 @@ export function itemCanBeInLoadout(item: DimItem): boolean {
   return (
     item.equipment ||
     (item.destinyVersion === 1 &&
-      (item.type === 'Consumables' ||
+      (item.bucket.hash === BucketHashes.Consumables ||
         // D1 had a "Material" type
-        item.type === 'Material'))
+        item.bucket.hash === BucketHashes.Materials))
   );
 }
 

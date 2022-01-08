@@ -16,7 +16,7 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import reduxStore from '../../store/store';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -145,7 +145,8 @@ export function buildStats(
     const tStat = totalStat(investmentStats);
     investmentStats.push(tStat);
     const cStat =
-      createdItem.type !== 'ClassItem' && customStat(investmentStats, createdItem.classType);
+      createdItem.bucket.hash !== BucketHashes.ClassArmor &&
+      customStat(investmentStats, createdItem.classType);
     if (cStat) {
       investmentStats.push(cStat);
     }

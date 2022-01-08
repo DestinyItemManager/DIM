@@ -313,7 +313,7 @@ export function buildStores(
   const hasClassified = allItems.some(
     (i) =>
       i.classified &&
-      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   );
 
   for (const s of stores) {

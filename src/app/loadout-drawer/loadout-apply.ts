@@ -31,6 +31,7 @@ import {
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -647,7 +648,17 @@ function getLoadoutItem(
   if (!item) {
     return null;
   }
-  if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
+  if (
+    [
+      BucketHashes.Subclass,
+      BucketHashes.Shaders,
+      BucketHashes.Emblems,
+      BucketHashes.Emotes_Invisible,
+      BucketHashes.Emotes_Equippable,
+      BucketHashes.Ships,
+      D1BucketHashes.Horn,
+    ].includes(item.bucket.hash)
+  ) {
     // Same character first
     item =
       store.items.find((i) => i.hash === loadoutItem.hash) ||

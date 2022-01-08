@@ -11,7 +11,7 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
-import { supplies } from 'app/search/d1-known-values';
+import { D1BucketHashes, supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh-events';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
@@ -38,7 +38,7 @@ const makeRoomTypes = [
   BucketHashes.ChestArmor,
   BucketHashes.LegArmor,
   BucketHashes.ClassArmor,
-  434908299, // Artifact
+  D1BucketHashes.Artifact,
   BucketHashes.Ghost,
   BucketHashes.Consumables,
   BucketHashes.Materials,

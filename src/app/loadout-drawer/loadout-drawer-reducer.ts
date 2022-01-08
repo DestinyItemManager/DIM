@@ -5,7 +5,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
@@ -228,7 +228,7 @@ function addItem(
   };
 
   // Other items of the same type (as DimItem)
-  const typeInventory = items.filter((i) => i.type === item.type);
+  const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
   const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
   const maxSlots = item.bucket.capacity;
 
@@ -247,9 +247,9 @@ function addItem(
         }
 
         // Only allow one subclass to be present per class (to allow for making a loadout that specifies a subclass for each class)
-        if (item.type === 'Class') {
+        if (item.bucket.hash === BucketHashes.Subclass) {
           const conflictingItem = items.find(
-            (i) => i.type === item.type && i.classType === item.classType
+            (i) => i.bucket.hash === item.bucket.hash && i.classType === item.classType
           );
           if (conflictingItem) {
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
@@ -317,7 +317,7 @@ function removeItem(
     }
 
     if (loadoutItem.equipped) {
-      const typeInventory = items.filter((i) => i.type === item.type);
+      const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
       const nextInLine =
         typeInventory.length > 0 &&
         draftLoadout.items.find(
@@ -339,7 +339,7 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
       draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
 
     // Classes are always equipped
-    if (item.type === 'Class') {
+    if (item.bucket.hash === BucketHashes.Subclass) {
       return;
     }
 
@@ -354,7 +354,7 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
           .filter(
             (i) =>
               // Others in this slot
-              i.type === item.type ||
+              i.bucket.hash === item.bucket.hash ||
               // Other exotics
               (item.equippingLabel && i.equippingLabel === item.equippingLabel)
           )

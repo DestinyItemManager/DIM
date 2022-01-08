@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { D1_StatHashes } from 'app/search/d1-known-values';
+import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -225,6 +225,8 @@ function makeItem(
         case 138197802:
           currentBucket = buckets.byType.Artifact;
           break;
+        default:
+          break;
       }
     } else {
       currentBucket = normalBucket;
@@ -295,7 +297,8 @@ function makeItem(
         item.lockable),
     trackable: Boolean(
       currentBucket.inProgress &&
-        (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)
+        (currentBucket.hash === D1BucketHashes.Bounties ||
+          currentBucket.hash === D1BucketHashes.Quests)
     ),
     tracked: item.state === 2,
     locked: item.locked,
