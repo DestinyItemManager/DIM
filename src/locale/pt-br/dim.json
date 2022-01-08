@@ -4,8 +4,7 @@
     "ConfirmTitle": "Confirmar Ação",
     "Error": "Erro ao modificar mods ou perks",
     "ErrorMessage": "Não foi possível equipar {{plug}} em {{item}}.\n\n{{error}}",
-    "FailedToken": "Não foi possível obter a permissão para alterar o item",
-    "SelfInsertion": "Você não pode anexar um item nele mesmo!"
+    "FailedToken": "Não foi possível obter a permissão para alterar o item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Sem espaço",
     "Stop": "Parar",
     "Vault": "Itens serão movidos para o Cofre para liberar espaço."
+  },
+  "FashionDrawer": {
+    "Accept": "Usar este estilo",
+    "ClearOrnaments": "Limpar ornamentos",
+    "ClearShaders": "Limpar tonalizadores",
+    "Reset": "Redefinir",
+    "Sync": "Sincronizar",
+    "SyncOrnaments": "Sincronizar ornamentos",
+    "SyncShaders": "Sincronizar tonalizadores",
+    "Title": "Escolher tonalizadores e ornamentos",
+    "UseEquipped": "Usar equipados"
   },
   "FileUpload": {
     "Instructions": "Clique ou arraste arquivos"
@@ -362,6 +372,7 @@
     "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {{itemname}}",
     "ExoticError": "'{{itemname}}' não pode ser equipado porque o exótico no slot de {{slot}} não pode ser removido. ({{error}})",
     "NotEnoughRoom": "Não há nada que possamos mover do {{store}} para abrir espaço para {{itemname}}",
+    "NotEnoughRoomGeneral": "Não há espaço suficiente para mover este item.",
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
     "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Múltiplos itens exóticos foram usados para calcular seu Poder Máximo. Então o número mostrado pode não ser alcançável ao equipar seus itens no jogo.",
     "EquippableDifferent2": "O poder máximo não considera a regra de \"um exótico\" ao determinar o poder dos seus itens comuns, poderosos ou pináculos.",
     "Failed": "Ocorreu uma falha ao aplicar o set completamente",
+    "Fashion": "Escolher estilo",
     "FilteredItems": "Itens filtrados",
     "FindAnother": "Encontrar outro {{name}}",
     "FromEquipped": "Equipado",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Este item está desbloqueado em coleções.",
-    "AcquiredMod": "Este mod está aplicado a um item no seu inventário.",
+    "AcquiredMod": "Este mod está desbloqueado nas coleções.",
     "AddNote": "Adicionar anotação",
     "AddToLoadout": "Set",
     "All": "Tudo",

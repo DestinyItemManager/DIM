@@ -4,8 +4,7 @@
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
-    "FailedToken": "无权限更换物品",
-    "SelfInsertion": "你不能把物品插入它自身！"
+    "FailedToken": "无权限更换物品"
   },
   "Accounts": {
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "空间不足",
     "Stop": "停止",
     "Vault": "会将物品移到保险库来腾出空间。"
+  },
+  "FashionDrawer": {
+    "Accept": "使用此外貌",
+    "ClearOrnaments": "清除皮肤",
+    "ClearShaders": "清除着色器",
+    "Reset": "全部重置",
+    "Sync": "同步",
+    "SyncOrnaments": "同步皮肤",
+    "SyncShaders": "同步着色器",
+    "Title": "选择着色器和皮肤",
+    "UseEquipped": "使用已装备的"
   },
   "FileUpload": {
     "Instructions": "选择或拖拽档案"
@@ -362,6 +372,7 @@
     "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
+    "NotEnoughRoomGeneral": "没有足够的空间来移动此物品。",
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
     "PostmasterAlmostFull": "接近全满了!({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "计算你的最大能量等级时使用了多件异域装备，所以在游戏内配装时可能达不到这个数值。",
     "EquippableDifferent2": "在计算你的掉落、强力、巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
     "Failed": "配装未能完全应用",
+    "Fashion": "选择外貌",
     "FilteredItems": "已过滤的物品",
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
-    "AcquiredMod": "该模组已被应用于您物品栏中的一个物品。",
+    "AcquiredMod": "此模组已在收藏中解锁。",
     "AddNote": "添加备注",
     "AddToLoadout": "配装",
     "All": "全部",

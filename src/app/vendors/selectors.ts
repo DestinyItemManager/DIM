@@ -11,6 +11,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
+import { currySelector } from 'app/utils/redux-utils';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -30,41 +31,45 @@ export const mergedCollectiblesSelector = createSelector(
 /**
  * returns a character's vendors and their sale items
  */
-export const vendorGroupsForCharacterSelector = createSelector(
-  d2ManifestSelector,
-  vendorsByCharacterSelector,
-  mergedCollectiblesSelector,
-  bucketsSelector,
-  currentAccountSelector,
-  // get character ID from props not state
-  (state: any, characterId: string | undefined) =>
-    characterId || getCurrentStore(sortedStoresSelector(state))?.id,
-  (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
-    const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
-    const vendorsResponse = vendorData?.vendorsResponse;
+export const vendorGroupsForCharacterSelector = currySelector(
+  createSelector(
+    d2ManifestSelector,
+    vendorsByCharacterSelector,
+    mergedCollectiblesSelector,
+    bucketsSelector,
+    currentAccountSelector,
+    // get character ID from props not state
+    (state: any, characterId: string | undefined) =>
+      characterId || getCurrentStore(sortedStoresSelector(state))?.id,
+    (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
+      const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
+      const vendorsResponse = vendorData?.vendorsResponse;
 
-    return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
-      ? toVendorGroups(
-          vendorsResponse,
-          defs,
-          buckets,
-          currentAccount,
-          selectedStoreId,
-          mergedCollectibles
-        )
-      : emptyArray<D2VendorGroup>();
-  }
+      return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
+        ? toVendorGroups(
+            vendorsResponse,
+            defs,
+            buckets,
+            currentAccount,
+            selectedStoreId,
+            mergedCollectibles
+          )
+        : emptyArray<D2VendorGroup>();
+    }
+  )
 );
 
-export const ownedVendorItemsSelector = createSelector(
-  ownedItemsSelector,
-  ownedUncollectiblePlugsSelector,
-  (_: any, storeId?: string) => storeId,
-  (ownedItems, ownedPlugs, storeId) =>
-    new Set([
-      ...ownedItems.accountWideOwned,
-      ...ownedPlugs.accountWideOwned,
-      ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
-      ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
-    ])
+export const ownedVendorItemsSelector = currySelector(
+  createSelector(
+    ownedItemsSelector,
+    ownedUncollectiblePlugsSelector,
+    (_: any, storeId?: string) => storeId,
+    (ownedItems, ownedPlugs, storeId) =>
+      new Set([
+        ...ownedItems.accountWideOwned,
+        ...ownedPlugs.accountWideOwned,
+        ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
+        ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
+      ])
+  )
 );

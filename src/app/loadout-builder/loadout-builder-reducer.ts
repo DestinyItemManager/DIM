@@ -220,6 +220,7 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
             ...state.loadoutParameters,
             exoticArmorHash: undefined,
           },
+          subclass: undefined,
         };
       case 'statFiltersChanged':
         return { ...state, statFilters: action.statFilters };

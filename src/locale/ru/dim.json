@@ -4,8 +4,7 @@
     "ConfirmTitle": "Подтверждение",
     "Error": "Ошибка при изменении модов или перков",
     "ErrorMessage": "Мы не смогли экипировать {{plug}} в {{item}}.\n\n{{error}}",
-    "FailedToken": "Не удалось получить разрешение на изменение предмета",
-    "SelfInsertion": "Нельзя вставить предмет в себя!"
+    "FailedToken": "Не удалось получить разрешение на изменение предмета"
   },
   "Accounts": {
     "ErrorLoadInventory": "Невозможно загрузить персонажей и инвентарь Destiny {{version}}",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Недостаточно свободного места",
     "Stop": "Остановить",
     "Vault": "Оно переместит предметы в хранилище, чтобы освободить место."
+  },
+  "FashionDrawer": {
+    "Accept": "Use this fashion",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "Reset": "Reset all",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncShaders": "Sync Shaders",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use Equipped"
   },
   "FileUpload": {
     "Instructions": "Выберите или перетащите файлы"
@@ -362,6 +372,7 @@
     "Deequip": "Нечего надеть взамен {{itemname}}",
     "ExoticError": "Экзот в {{slot}} слоте не позволяет надеть {{itemname}}. ({{error}})",
     "NotEnoughRoom": "Больше нет предметов, которые мы можем убрать из {{store}}, чтобы освободить место для {{itemname}}",
+    "NotEnoughRoomGeneral": "Недостаточно места для перемещения этого предмета.",
     "OnlyEquippedClassLevel": "Это может быть надето только на персонаже класса {{class}} с уровнем {{level}} или выше.",
     "OnlyEquippedLevel": "Это может быть надето только на персонаже с уровнем {{level}} или выше.",
     "PostmasterAlmostFull": "У почтмейстера заканчивается место для вашего барахла! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Несколько предметов экзот было использовано при подсчете максимальной Силы, потому отображаемое число может быть не достижимо при экипировании ваших предметов в игре.",
     "EquippableDifferent2": "Максимальная Сила не ограничена правилом \"Один Экзот\" при определении силы ваших падений, мощных и сверхмощных наград.",
     "Failed": "Не удалось применить набор полностью",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Отфильтрованные предметы",
     "FindAnother": "Найти следующий {{name}}",
     "FromEquipped": "Из экипированных",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
-    "AcquiredMod": "Этот мод на данный момент уже применен к какому-то предмету в вашем инвентаре.",
+    "AcquiredMod": "Этот мод разблокирован в коллекции.",
     "AddNote": "Добавить заметку",
     "AddToLoadout": "В наборе",
     "All": "Все",

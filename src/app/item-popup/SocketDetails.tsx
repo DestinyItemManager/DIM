@@ -7,6 +7,8 @@ import { allItemsSelector, profileResponseSelector } from 'app/inventory/selecto
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { collectionsVisibleShadersSelector } from 'app/records/selectors';
+import { DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -17,6 +19,7 @@ import {
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -36,6 +39,8 @@ interface ProvidedProps {
 interface StoreProps {
   inventoryPlugs: Set<number>;
   unlockedPlugs: Set<number>;
+  /** if not undefined, hide locked plugs not in this set */
+  shownLockedPlugs?: Set<number>;
 }
 
 function mapStateToProps() {
@@ -53,6 +58,21 @@ function mapStateToProps() {
         return emptySet<number>();
       }
       return unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
+    }
+  );
+
+  /** Build a set of items that should be shown even if locked. If undefined, show all.
+   * This is a heuristic only, which is why the defensive approach is to never hide unlocked
+   * plugs.
+   */
+  const shownLockedPlugsSelector = createSelector(
+    collectionsVisibleShadersSelector,
+    (_state: RootState, { socket }: ProvidedProps) => socket.socketDefinition,
+    (visibleShaders, socketDef) => {
+      if (socketDef.singleInitialItemHash === DEFAULT_SHADER) {
+        return visibleShaders;
+      }
+      return undefined;
     }
   );
 
@@ -77,7 +97,11 @@ function mapStateToProps() {
       const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
       for (const item of allItems) {
         const itemDef = defs!.InventoryItem.get(item.hash);
-        if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
+        if (
+          itemDef.plug &&
+          plugAllowList.has(itemDef.plug.plugCategoryHash) &&
+          item.location.hash === BucketHashes.Modifications
+        ) {
           modHashes.add(item.hash);
         }
       }
@@ -89,6 +113,7 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     inventoryPlugs: inventoryPlugs(state, props),
     unlockedPlugs: unlockedPlugsSelector(state, props),
+    shownLockedPlugs: shownLockedPlugsSelector(state, props),
   });
 }
 
@@ -135,6 +160,7 @@ function SocketDetails({
   socket,
   unlockedPlugs,
   inventoryPlugs,
+  shownLockedPlugs,
   allowInsertPlug,
   onClose,
   onPlugSelected,
@@ -200,6 +226,7 @@ function SocketDetails({
         i.plug.energyCost.energyType === DestinyEnergyType.Any
     )
     .filter(isPluggableItem)
+    .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
     .sort(
       chainComparator(
         compareBy((i) => i.hash !== initialPlugHash),

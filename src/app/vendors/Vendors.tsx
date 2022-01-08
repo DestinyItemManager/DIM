@@ -71,12 +71,8 @@ function Vendors({ stores, searchQuery, filterItems, vendors, dispatch, account 
   // each render without a user selection, retry getting a character ID to use
   const storeId = userSelectedStoreId || getCurrentStore(stores)?.id;
 
-  let vendorGroups = useSelector((state: RootState) =>
-    vendorGroupsForCharacterSelector(state, storeId)
-  );
-  const ownedItemHashes = useSelector((state: RootState) =>
-    ownedVendorItemsSelector(state, storeId)
-  );
+  let vendorGroups = useSelector(vendorGroupsForCharacterSelector(storeId));
+  const ownedItemHashes = useSelector(ownedVendorItemsSelector(storeId));
 
   useLoadStores(account);
 

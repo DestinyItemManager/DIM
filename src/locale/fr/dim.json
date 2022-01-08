@@ -4,8 +4,7 @@
     "ConfirmTitle": "Confirmer L'Action",
     "Error": "Erreur lors du changement des mods ou des attributs",
     "ErrorMessage": "Nous n'avons pas pu équiper {{plug}} dans {{item}}.\n\n{{error}}",
-    "FailedToken": "Impossible d'obtenir la permission de modifier l'objet",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "Impossible d'obtenir la permission de modifier l'objet"
   },
   "Accounts": {
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Plus de Place",
     "Stop": "Stop",
     "Vault": "Il déplacera des objets vers le coffre pour faire de la place."
+  },
+  "FashionDrawer": {
+    "Accept": "Utiliser ce style",
+    "ClearOrnaments": "Retirer les ornements",
+    "ClearShaders": "Retirer les revêtements",
+    "Reset": "Retirer tout",
+    "Sync": "Synchroniser",
+    "SyncOrnaments": "Synchroniser les ornements",
+    "SyncShaders": "Synchroniser les revêtements",
+    "Title": "Choisir les revêtements et ornements",
+    "UseEquipped": "Utiliser ceux équipés"
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -362,6 +372,7 @@
     "Deequip": "Aucun autre objet à équiper n'a été trouvé pour pouvoir déséquiper {{itemname}}",
     "ExoticError": "'{{itemname}}' ne peut pas être équipé car l'exotique dans le {{slot}} ne peut pas être déséquipé. ({{error}})",
     "NotEnoughRoom": "Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place pour {{itemname}}",
+    "NotEnoughRoomGeneral": "Il n'y a pas assez de place pour déplacer cet objet.",
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
     "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
     "EquippableDifferent2": "La puissance maximale n'est pas limité par la règle de \"Un seul exotique\" lors du calcul de la puissance de vos récompenses puissantes et de prestige.",
     "Failed": "L'arsenal n'a pas pu être appliqué complétement",
+    "Fashion": "Choisir le style",
     "FilteredItems": "Objets filtrés",
     "FindAnother": "Trouver un autre {{name}}",
     "FromEquipped": "Équipé",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Cet élément est déverrouillé dans les collections.",
-    "AcquiredMod": "Ce mod est actuellement appliqué à un objet de votre inventaire.",
+    "AcquiredMod": "Ce mod est débloqué dans les collections.",
     "AddNote": "Ajouter une note",
     "AddToLoadout": "Arsenal",
     "All": "Tous",
