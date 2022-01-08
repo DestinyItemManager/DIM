@@ -1,7 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -24,24 +23,21 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import { Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
-export const fromEquippedTypes: DimBucketType[] = [
-  'Class',
-  'KineticSlot',
-  'Energy',
-  'Power',
-  'Primary',
-  'Special',
-  'Heavy',
-  'Helmet',
-  'Gauntlets',
-  'Chest',
-  'Leg',
-  'ClassItem',
-  'Artifact',
-  'Ghost',
-  'Ships',
-  'Vehicle',
-  'Emblems',
+export const fromEquippedTypes: BucketHashes[] = [
+  BucketHashes.Subclass,
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+  434908299, // D1 artifact
+  BucketHashes.Ghost,
+  BucketHashes.Ships,
+  BucketHashes.Vehicle,
+  BucketHashes.Emblems,
 ];
 
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
@@ -95,7 +91,8 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
  */
 export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   const items = dimStore.items.filter(
-    (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+    (item) =>
+      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
   );
   const loadoutItems = items.map((i) => {
     const item = convertToLoadoutItem(i, true);

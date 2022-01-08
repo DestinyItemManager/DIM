@@ -66,7 +66,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const infusable = !(!item.infusionFuel || !itemOwner);
   const loadoutable = !(!itemCanBeInLoadout(item) || !itemOwner);
 
-  const inPostmaster = item.location.type === 'LostItems';
+  const inPostmaster = item.location.hash === BucketHashes.LostItems;
   // The Account-wide bucket (consumables) exists only for the active character, so check that bucket.
   // Otherwise, check the owner's bucket.
   const postmasterCheckStore = inPostmaster
@@ -151,7 +151,7 @@ function storeButtonEnabled(
 ): boolean {
   const store = itemOwnerStore;
 
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
+  if (item.location.inPostmaster && item.location.hash !== BucketHashes.Engrams) {
     return item.canPullFromPostmaster;
   } else if (item.notransfer) {
     // Can store an equipped item in same itemStore
@@ -184,7 +184,7 @@ function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
   }
 
   // Can pull items from the postmaster.
-  if (item.location.inPostmaster && item.location.type !== 'Engrams') {
+  if (item.location.inPostmaster && item.location.hash !== BucketHashes.Engrams) {
     return item.canPullFromPostmaster;
   } else if (item.notransfer) {
     // Can store an equipped item in same itemStore

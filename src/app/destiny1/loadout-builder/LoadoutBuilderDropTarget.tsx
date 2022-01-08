@@ -1,10 +1,11 @@
+import { DimBucketType } from 'app/inventory/inventory-buckets';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
 
 interface Props {
-  bucketType: string;
+  bucketType: DimBucketType;
   children?: React.ReactNode;
   onItemLocked(lockedItem: DimItem): void;
 }

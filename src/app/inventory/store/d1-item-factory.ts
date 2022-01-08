@@ -11,6 +11,7 @@ import {
   DestinyDisplayPropertiesDefinition,
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
@@ -288,7 +289,7 @@ function makeItem(
     ammoType: getAmmoType(itemType),
     sourceHashes: itemDef.sourceHashes,
     lockable:
-      normalBucket.type !== 'Class' &&
+      normalBucket.hash !== BucketHashes.Subclass &&
       ((currentBucket.inPostmaster && item.isEquipment) ||
         currentBucket.inWeapons ||
         item.lockable),

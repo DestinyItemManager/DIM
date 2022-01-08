@@ -1,4 +1,5 @@
 import { BucketCategory } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import type {
   D1BucketCategory,
@@ -11,36 +12,37 @@ import type { D1ManifestDefinitions } from './d1-definitions';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToTypeRaw = {
-  14239492: 'Chest',
-  20886954: 'Leg',
-  215593132: 'LostItems',
-  284967655: 'Ship',
-  375726501: 'Missions',
+  [BucketHashes.ChestArmor]: 'Chest',
+  [BucketHashes.LegArmor]: 'Leg',
+  [BucketHashes.LostItems]: 'LostItems',
+  [BucketHashes.Ships]: 'Ship',
+  375726501: 'Missions', // Engrams in D2??
   434908299: 'Artifact',
-  953998645: 'Heavy',
-  1367666825: 'SpecialOrders',
-  1469714392: 'Consumable',
-  1498876634: 'Primary',
-  1585787867: 'ClassItem',
+  [BucketHashes.PowerWeapons]: 'Heavy',
+  [BucketHashes.SpecialOrders]: 'SpecialOrders',
+  [BucketHashes.Consumables]: 'Consumable',
+  [BucketHashes.KineticWeapons]: 'Primary',
+  [BucketHashes.ClassArmor]: 'ClassItem',
   2987185182: 'RecordBook',
   549485690: 'RecordBookLegacy',
   1801258597: 'Quests',
-  2025709351: 'Vehicle',
+  [BucketHashes.Vehicle]: 'Vehicle',
   2197472680: 'Bounties',
-  2465295065: 'Special',
+  [BucketHashes.EnergyWeapons]: 'Special',
   2973005342: 'Shader',
-  3313201758: 'Ornaments',
-  3054419239: 'Emote',
-  3161908920: 'Messages',
-  3284755031: 'Class',
-  3448274439: 'Helmet',
-  3551918588: 'Gauntlets',
+  [BucketHashes.Modifications]: 'Ornaments',
+  [BucketHashes.Emotes_Equippable]: 'Emote',
+  [BucketHashes.Messages]: 'Messages',
+  [BucketHashes.Subclass]: 'Class',
+  [BucketHashes.Helmet]: 'Helmet',
+  [BucketHashes.Gauntlets]: 'Gauntlets',
   3796357825: 'Horn',
-  3865314626: 'Material',
-  4023194814: 'Ghost',
-  4274335291: 'Emblem',
+  [BucketHashes.Materials]: 'Material',
+  [BucketHashes.Ghost]: 'Ghost',
+  [BucketHashes.Emblems]: 'Emblem',
 } as const;
 
+/** @deprecated */
 export type D1BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
 
 // A mapping from the bucket hash to DIM item types

@@ -43,7 +43,7 @@ import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
@@ -676,7 +676,7 @@ function clearSpaceAfterLoadout(
 
   for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
     // Exclude a handful of buckets from being cleared out
-    if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
+    if ([BucketHashes.Consumables, BucketHashes.Materials].includes(loadoutItems[0].bucket.hash)) {
       continue;
     }
     let numUnequippedLoadoutItems = 0;
