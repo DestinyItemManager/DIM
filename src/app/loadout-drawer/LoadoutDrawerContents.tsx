@@ -171,9 +171,11 @@ export default function LoadoutDrawerContents({
         <a onClick={() => onOpenModPicker()} className="dim-button loadout-add">
           <AppIcon icon={addIcon} /> {t('Loadouts.ArmorMods')}
         </a>
-        <a onClick={() => onOpenFashionDrawer()} className="dim-button loadout-add">
-          <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
-        </a>
+        {loadout.classType !== DestinyClass.Unknown && (
+          <a onClick={() => onOpenFashionDrawer()} className="dim-button loadout-add">
+            <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
+          </a>
+        )}
       </div>
       <div className="loadout-added-items">
         {typesWithItems.map((bucket) =>

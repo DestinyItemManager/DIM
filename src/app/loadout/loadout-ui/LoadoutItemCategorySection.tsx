@@ -182,7 +182,7 @@ function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
 
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
-  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
+  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[2]);
 
   const canSlotShader =
     shader !== undefined && (shader === DEFAULT_SHADER || unlockedPlugSetItems.has(shader));
