@@ -7,7 +7,6 @@ import { allItemsSelector, profileResponseSelector } from 'app/inventory/selecto
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
-import { armorBuckets } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -18,6 +17,7 @@ import {
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -81,13 +81,7 @@ function mapStateToProps() {
         if (
           itemDef.plug &&
           plugAllowList.has(itemDef.plug.plugCategoryHash) &&
-          // Filter out items that reside in armor buckets (e.g. regular
-          // instanced armor whose inventory item def double-functions
-          // as a universal ornament plug). This might not be the proper
-          // way to do this. Maybe check API responses after Companion App
-          // gets universal ornaments right?
-          (!itemDef.inventory ||
-            !Object.values(armorBuckets).includes(itemDef.inventory?.bucketTypeHash))
+          item.location.hash === BucketHashes.Modifications
         ) {
           modHashes.add(item.hash);
         }
