@@ -224,7 +224,7 @@ export const unlockedPlugSetItemsSelector = createSelector(
         }
       }
     }
-    if (characterId && profileResponse?.characterPlugSets.data?.[characterId].plugs) {
+    if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
       for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
         const plugSetHash = parseInt(plugSetHashStr, 10);
         const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];

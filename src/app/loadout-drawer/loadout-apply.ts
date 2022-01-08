@@ -197,10 +197,10 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = unlockedPlugSetItemsSelector(getState(), store.id);
+      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
       const checkMod = (h: number) =>
         Boolean(defs.InventoryItem.get(h)) &&
-        (unlockedPlugSetItems.has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
+        (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
 
       // Don't apply mods when moving to the vault
       const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter(checkMod);
