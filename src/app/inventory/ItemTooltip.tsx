@@ -81,7 +81,7 @@ function Tooltip({
       {def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
       {notes && (
         <div className={clsx(styles.notes)}>
-          <AppIcon className={styles.noteIcon} icon={stickyNoteIcon} />
+          <AppIcon icon={stickyNoteIcon} />
           <span className={clsx(styles.note)}>{notes}</span>
         </div>
       )}

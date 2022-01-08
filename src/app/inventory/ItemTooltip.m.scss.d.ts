@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'note': string;
-  'noteIcon': string;
   'notes': string;
   'perkSelected': string;
   'perks': string;

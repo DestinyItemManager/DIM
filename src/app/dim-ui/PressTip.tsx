@@ -30,7 +30,7 @@ interface Props {
    */
   tooltip: React.ReactNode | (() => React.ReactNode);
   /**
-   * Whether the presstip should be shown or not.
+   * Whether the presstip should react to events or not.
    */
   disabled?: boolean;
   /**
@@ -153,12 +153,14 @@ function PressTip(props: Props) {
 
   const hover = useCallback(
     (e: React.MouseEvent | React.TouchEvent | TouchEvent) => {
-      e.preventDefault();
-      clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => {
-        setOpen(!props.disabled);
-      }, hoverDelay);
-      touchStartTime.current = performance.now();
+      if (!props.disabled) {
+        e.preventDefault();
+        clearTimeout(timer.current);
+        timer.current = window.setTimeout(() => {
+          setOpen(true);
+        }, hoverDelay);
+        touchStartTime.current = performance.now();
+      }
     },
     [props.disabled]
   );

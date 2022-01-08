@@ -30,7 +30,7 @@ interface Props {
   wishlistRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
-  /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
+  /** Show a tooltip summarizing the item for when a click on the item has other effects than bringing up item popup */
   includeTooltip?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
