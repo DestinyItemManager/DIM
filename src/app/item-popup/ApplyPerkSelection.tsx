@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, refreshIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { wishListSelector } from 'app/wishlists/selectors';
@@ -66,7 +67,18 @@ export default function ApplyPerkSelection({
     setInsertInProgress(true);
     try {
       for (const { socket, plugHash } of plugOverridesToSave) {
-        await dispatch(insertPlug(item, socket, plugHash));
+        try {
+          await dispatch(insertPlug(item, socket, plugHash));
+        } catch (e) {
+          const plugName =
+            defs.InventoryItem.get(plugHash)?.displayProperties.name ?? 'Unknown Plug';
+          showNotification({
+            type: 'error',
+            title: t('AWA.Error'),
+            body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+          });
+          return; // bail out without calling onApplied
+        }
       }
       onApplied();
     } finally {
