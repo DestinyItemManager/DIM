@@ -6,6 +6,7 @@
 * Added Spoils of Conquest to the currencies hover menu.
 * Fixed an issue where the Loadout Optimizer would let you pin items from other classes.
 * Shader picker now hides unavailable, unobtainable shaders.
+* "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
