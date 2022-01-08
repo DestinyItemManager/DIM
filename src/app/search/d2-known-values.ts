@@ -211,6 +211,7 @@ export const armorBuckets = {
 //
 
 export const RAID_NODE = 4025982223;
+export const SHADER_NODE = 1516796296;
 
 //
 // MISC KNOWN HASHES / ENUMS

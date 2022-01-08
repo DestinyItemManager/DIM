@@ -4,8 +4,7 @@
     "ConfirmTitle": "Conferma Azione",
     "Error": "Errore nel cambio di Modifiche o perk",
     "ErrorMessage": "Non abbiamo potuto equipaggiare {{plug}} in {{item}}.\n\n{{error}}",
-    "FailedToken": "Impossibile ottenere permesso per cambiare l'oggetto",
-    "SelfInsertion": "Non puoi inserire un oggetto dentro se stesso!"
+    "FailedToken": "Impossibile ottenere permesso per cambiare l'oggetto"
   },
   "Accounts": {
     "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Spazio esaurito",
     "Stop": "Stop",
     "Vault": "Sposterà gli oggetti nel Deposito per fare spazio."
+  },
+  "FashionDrawer": {
+    "Accept": "Usa questo stile",
+    "ClearOrnaments": "Cancella Decori",
+    "ClearShaders": "Cancella Shader",
+    "Reset": "Resetta tutto",
+    "Sync": "Sincronizza",
+    "SyncOrnaments": "Sincronizza Decori",
+    "SyncShaders": "Sincronizza Shader",
+    "Title": "Scegli shader e decori",
+    "UseEquipped": "Usa Equipaggiati"
   },
   "FileUpload": {
     "Instructions": "Clicca o trascina i files"
@@ -362,6 +372,7 @@
     "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
     "ExoticError": "'{{itemname}}' non può essere equipaggiato, poiché l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
     "NotEnoughRoom": "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
+    "NotEnoughRoomGeneral": "Non c'è abbastanza spazio per spostare questo oggetto.",
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
     "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
     "EquippableDifferent2": "Il Potere massimo non è limitato alla regola del \"una sola esotica\" quando viene determinato il Potere dei tuoi drop/potenti/ricompense di punta.",
     "Failed": "Loadout non applicato completamente",
+    "Fashion": "Scegli lo stile",
     "FilteredItems": "Oggetti Filtrati",
     "FindAnother": "Trova un altro {{name}}",
     "FromEquipped": "Da equipaggiato",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
-    "AcquiredMod": "Questa Modifica è attualmente applicata ad un oggetto nel tuo inventario.",
+    "AcquiredMod": "Questa Modifica è sbloccata nelle collezioni.",
     "AddNote": "Aggiungi una nota",
     "AddToLoadout": "Loadout",
     "All": "Tutto",

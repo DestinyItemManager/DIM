@@ -26,7 +26,6 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
-  isAssigningToDefault,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
@@ -197,10 +196,10 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = unlockedPlugSetItemsSelector(getState(), store.id);
+      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
       const checkMod = (h: number) =>
         Boolean(defs.InventoryItem.get(h)) &&
-        (unlockedPlugSetItems.has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
+        (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
 
       // Don't apply mods when moving to the vault
       const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter(checkMod);
@@ -881,7 +880,7 @@ function applySocketOverrides(
               }));
 
         await dispatch(
-          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken)
         );
       }
     }
@@ -1095,8 +1094,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
-  cancelToken: CancelToken,
-  includeAssignToDefault = false
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -1133,10 +1131,7 @@ function equipModsToItem(
 
       // If the plug is already inserted we can skip this
       if (socket.plugged?.plugDef.hash === mod.hash) {
-        // Don't count removing mods as applying a mod successfully
-        if (includeAssignToDefault || !isAssigningToDefault(item, assignment, defs)) {
-          onSuccess(assignment);
-        }
+        onSuccess(assignment);
         continue;
       }
       if (canInsertPlug(socket, mod.hash, destiny2CoreSettings, defs)) {

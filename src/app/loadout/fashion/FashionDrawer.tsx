@@ -16,7 +16,6 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import {
-  DestinyClass,
   DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
@@ -56,15 +55,45 @@ export default function FashionDrawer({
   );
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
+  const allItems = useSelector(allItemsSelector);
 
   const equippedIds = new Set([...loadout.items.filter((i) => i.equipped).map((i) => i.id)]);
   const armor = items.filter(
     (i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)
   );
 
+  const classType = loadout.classType;
+
   const armorItemsByBucketHash: { [bucketHash: number]: DimItem } = _.keyBy(
     armor,
     (i) => i.bucket.hash
+  );
+
+  // The items we'll use to determine what sockets are available on each item. Either the equipped item from
+  // the loadout, or a suitable "example" item from inventory.
+  const exampleItemsByBucketHash = Object.fromEntries(
+    LockableBucketHashes.map((bucketHash) => {
+      // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
+      const exampleItem =
+        armorItemsByBucketHash[bucketHash] ??
+        // Try to find a legendary example
+        allItems.find(
+          (i) =>
+            i.bucket.hash === bucketHash &&
+            i.power &&
+            i.tier === 'Legendary' &&
+            i.classType === classType
+        ) ??
+        // Fall back to a non-legendary one
+        allItems.find(
+          (i) =>
+            i.bucket.hash === bucketHash &&
+            i.power &&
+            i.tier !== 'Exotic' &&
+            i.classType === classType
+        );
+      return [bucketHash, exampleItem];
+    })
   );
 
   const [modsByBucket, setModsByBucket] = useState(loadout.parameters?.modsByBucket ?? {});
@@ -121,12 +150,23 @@ export default function FashionDrawer({
   };
 
   const handleUseEquipped = () => {
-    const newModsByBucket = _.mapValues(armorItemsByBucketHash, (item) => {
-      const cosmeticSockets = item.sockets
-        ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
-        : [];
-      return _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash));
-    });
+    const newModsByBucket = Object.fromEntries(
+      LockableBucketHashes.map((bucketHash) => {
+        // Either the item that's in the loadout, or whatever's equipped
+        const item =
+          armorItemsByBucketHash[bucketHash] ??
+          allItems.find(
+            (i) =>
+              i.bucket.hash === bucketHash &&
+              i.equipped &&
+              (storeId ? i.owner === storeId : i.classType === classType)
+          );
+        const cosmeticSockets = item.sockets
+          ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
+          : [];
+        return [bucketHash, _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash))];
+      })
+    );
 
     setModsByBucket(newModsByBucket);
   };
@@ -156,6 +196,20 @@ export default function FashionDrawer({
     const ornaments = Object.values(modsByBucket)
       .flat()
       .filter((h) => !isShader(h));
+
+    // Make it easy to spread default ornament
+    if (ornaments.every((h) => DEFAULT_ORNAMENTS.includes(h))) {
+      setModsByBucket((modsByBucket) =>
+        Object.fromEntries(
+          LockableBucketHashes.map((bucketHash) => [
+            bucketHash,
+            [...(modsByBucket[bucketHash] ?? []).filter((h) => isShader(h)), ornaments[0]],
+          ])
+        )
+      );
+      return;
+    }
+
     const groupedOrnaments = _.groupBy(ornaments, (h) => {
       const collectibleHash =
         defs.InventoryItem.get(h)?.collectibleHash ??
@@ -173,8 +227,9 @@ export default function FashionDrawer({
       return;
     }
 
+    const mostCommon = parseInt(mostCommonOrnamentSet[0], 10);
     const set = _.compact(
-      defs.PresentationNode.get(parseInt(mostCommonOrnamentSet[0], 10)).children.collectibles.map(
+      defs.PresentationNode.get(mostCommon).children.collectibles.map(
         (c) =>
           defs.Collectible.get(c.collectibleHash).itemHash ??
           manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
@@ -237,12 +292,7 @@ export default function FashionDrawer({
   const leftButtons = (
     <>
       <div>
-        <button
-          type="button"
-          className="dim-button"
-          onClick={handleUseEquipped}
-          disabled={_.isEmpty(armorItemsByBucketHash)}
-        >
+        <button type="button" className="dim-button" onClick={handleUseEquipped}>
           {t('FashionDrawer.UseEquipped')}
         </button>
       </div>
@@ -252,6 +302,7 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={handleSyncShader}
           disabled={shaders.length === 0}
+          title={t('FashionDrawer.SyncShadersTitle')}
         >
           {isPhonePortrait ? t('FashionDrawer.SyncShaders') : t('FashionDrawer.Sync')}{' '}
           <AppIcon icon={rightArrowIcon} />
@@ -263,6 +314,7 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={handleSyncOrnament}
           disabled={ornaments.length === 0}
+          title={t('FashionDrawer.SyncOrnamentsTitle')}
         >
           {isPhonePortrait ? t('FashionDrawer.SyncOrnaments') : t('FashionDrawer.Sync')}{' '}
           <AppIcon icon={rightArrowIcon} />
@@ -289,6 +341,7 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={() => handleClearType(true)}
           disabled={shaders.length === 0}
+          title={t('FashionDrawer.ClearShadersTitle')}
         >
           <AppIcon icon={clearIcon} /> {isPhonePortrait && t('FashionDrawer.ClearShaders')}
         </button>
@@ -299,21 +352,13 @@ export default function FashionDrawer({
           className="dim-button"
           onClick={() => handleClearType(false)}
           disabled={ornaments.length === 0}
+          title={t('FashionDrawer.ClearOrnamentsTitle')}
         >
           <AppIcon icon={clearIcon} /> {isPhonePortrait && t('FashionDrawer.ClearOrnaments')}
         </button>
       </div>
     </>
   );
-
-  // TODO: We should plumb down the store that this loadout is being edited for here, to determine class type
-  const classType =
-    loadout.classType !== DestinyClass.Unknown
-      ? loadout.classType
-      : armor.length > 0
-      ? armor[0].classType
-      : // This is a failure, it won't display right
-        DestinyClass.Unknown;
 
   return (
     <Sheet onClose={onClose} header={header} footer={footer} sheetClassName={styles.sheet}>
@@ -322,9 +367,9 @@ export default function FashionDrawer({
         {LockableBucketHashes.map((bucketHash) => (
           <FashionItem
             key={bucketHash}
-            classType={classType}
             bucketHash={bucketHash}
             item={armorItemsByBucketHash[bucketHash]}
+            exampleItem={exampleItemsByBucketHash[bucketHash]}
             mods={modsByBucket[bucketHash]}
             onPickPlug={setPickPlug}
             onRemovePlug={handleRemovePlug}
@@ -357,14 +402,14 @@ export default function FashionDrawer({
 
 function FashionItem({
   item,
-  classType,
+  exampleItem,
   bucketHash,
   mods = [],
   onPickPlug,
   onRemovePlug,
 }: {
   item?: DimLoadoutItem;
-  classType: DestinyClass;
+  exampleItem?: DimItem;
   bucketHash: number;
   mods?: number[];
   onPickPlug(params: PickPlugState): void;
@@ -378,24 +423,7 @@ function FashionItem({
 
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
-
-  const allItems = useSelector(allItemsSelector);
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
-
-  // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
-  const exampleItem =
-    item ??
-    allItems.find(
-      (i) =>
-        i.bucket.hash === bucketHash &&
-        i.power &&
-        i.tier === 'Legendary' &&
-        i.classType === classType
-    ) ??
-    allItems.find(
-      (i) =>
-        i.bucket.hash === bucketHash && i.power && i.tier !== 'Exotic' && i.classType === classType
-    );
 
   if (!exampleItem) {
     return null;
@@ -413,7 +441,7 @@ function FashionItem({
   const ornamentSocket = cosmeticSockets.find((s) => !isShaderSocket(s));
 
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
-  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[0]);
+  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[2]);
 
   const canSlotShader =
     shader !== undefined &&

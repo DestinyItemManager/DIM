@@ -4,8 +4,7 @@
     "ConfirmTitle": "確認操作",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "無權限更換物品",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "無權限更換物品"
   },
   "Accounts": {
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "空間不足",
     "Stop": "停止",
     "Vault": "會將物品移到保險庫來騰出空間。"
+  },
+  "FashionDrawer": {
+    "Accept": "Use this fashion",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "Reset": "Reset all",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncShaders": "Sync Shaders",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use Equipped"
   },
   "FileUpload": {
     "Instructions": "選擇或拖拽檔案"
@@ -362,6 +372,7 @@
     "Deequip": "無法找到另一個物品來卸下{{itemname}}",
     "ExoticError": "無法裝備“{{itemname}}”，因為在{{slot}} 欄位中無法裝備異域物品。（{{error}}）",
     "NotEnoughRoom": "我們無法在{{store}} 上移動物品, 來為{{itemname}} 騰出空間",
+    "NotEnoughRoomGeneral": "There's not enough room to move this item.",
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
     "OnlyEquippedLevel": "該物品僅可以裝備在至少{{level}} 級的角色上。",
     "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
@@ -490,7 +501,7 @@
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "ShareBuild": "分享配裝設置",
-    "ShareBuildWithNotes": "Share With Notes",
+    "ShareBuildWithNotes": "帶備註分享",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
@@ -502,7 +513,7 @@
   "Loadouts": {
     "Abilities": "Abilities",
     "AddEquippedItems": "添加已裝備",
-    "AddNotes": "Add Notes",
+    "AddNotes": "添加備註",
     "AddUnequippedItems": "添加未裝備的",
     "AlreadyExistsClass": "{{className}} 下同名配裝已經存在",
     "AlreadyExistsGlobal": "同名全域配裝已經存在",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "計算你的最大能量等級時使用了多件異域裝備，所以在遊戲內配裝時可能達不到這個數值。",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Failed": "Loadout failed to apply completely",
+    "Fashion": "Choose fashion",
     "FilteredItems": "已過濾的物品",
     "FindAnother": "查找另一個 {{name}}",
     "FromEquipped": "當前裝備",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
-    "AcquiredMod": "該模組已被應用於您物品欄中的一個物品。",
+    "AcquiredMod": "This mod is unlocked in collections.",
     "AddNote": "添加備註",
     "AddToLoadout": "配裝",
     "All": "全部",

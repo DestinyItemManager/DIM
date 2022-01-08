@@ -160,14 +160,18 @@
   },
   "FashionDrawer": {
     "Title": "Choose shaders and ornaments",
-    "Accept": "Use this fashion",
-    "Reset": "Reset all",
+    "Accept": "Save fashion",
+    "Reset": "Clear fashion",
     "Sync": "Sync",
-    "UseEquipped": "Use Equipped",
+    "UseEquipped": "Use equipped fashion",
     "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
     "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
     "ClearShaders": "Clear Shaders",
-    "ClearOrnaments": "Clear Ornaments"
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\""
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
