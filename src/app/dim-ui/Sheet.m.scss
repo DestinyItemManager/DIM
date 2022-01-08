@@ -2,7 +2,9 @@
   transform-origin: center bottom;
   // TODO: would be better to do with Framer Motion, once we switch over to it
   transform: scale(0.98) !important;
-  transition: transform 300ms linear;
+  left: -1% !important;
+  right: -1% !important;
+  transition: transform 300ms linear, right 300ms linear, left 300ms linear;
 }
 .disabledScreen {
   background-color: black;
