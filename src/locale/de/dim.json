@@ -4,8 +4,7 @@
     "ConfirmTitle": "Aktion bestätigen",
     "Error": "Fehler beim Ändern von Mods oder Perks",
     "ErrorMessage": "Wir konnten {{plug}} nicht auf {{item}} ausrüsten.\n\n{{error}}",
-    "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten"
   },
   "Accounts": {
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
@@ -42,7 +41,7 @@
   },
   "Bucket": {
     "Armor": "Rüstung",
-    "Class": "Subclass",
+    "Class": "Fokus",
     "General": "Allgemein",
     "Ghost": "Geist",
     "Inventory": "Inventar",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Kein Platz mehr",
     "Stop": "Halt",
     "Vault": "Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen."
+  },
+  "FashionDrawer": {
+    "Accept": "Diese Mode verwenden",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "Reset": "Alle zurücksetzen",
+    "Sync": "Synchronisieren",
+    "SyncOrnaments": "Ornamente synchronisieren",
+    "SyncShaders": "Shader synchronisieren",
+    "Title": "Shader und Ornamente auswählen",
+    "UseEquipped": "Ausgerüstetes verwenden"
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -362,6 +372,7 @@
     "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden, um {{itemname}} abzulegen",
     "ExoticError": "'{{itemname}}' kann nicht ausgerüstet werden, da der exotische Gegenstand im {{slot}} Slot nicht abgelegt werden kann. ({{error}})",
     "NotEnoughRoom": "Es gibt nichts, was wir vom {{store}} wegbewegen könnten, um Platz für {{itemname}} zu schaffen",
+    "NotEnoughRoomGeneral": "Es ist nicht genug Platz vorhanden, um diesen Gegenstand zu verschieben.",
     "OnlyEquippedClassLevel": "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden.",
     "PostmasterAlmostFull": "Fast voll! ({{number}}/{{postmasterSize}})",
@@ -427,8 +438,8 @@
     "SearchAnExotic": "Suche ein Exotic oder Beschreibung",
     "SelectExotic": "Wähle Exotic",
     "SelectMods": "Mods auswählen",
-    "SelectSubclass": "Select subclass",
-    "SelectSubclassOptions": "Customize subclass",
+    "SelectSubclass": "Fokus wählen",
+    "SelectSubclassOptions": "Fokus anpassen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
     "ShowGear": "{{class}}-Rüstung",
@@ -520,7 +531,7 @@
     "ConfirmDelete": "'{{name}}' wirklich löschen?",
     "Create": "Ausrüstung erstellen",
     "CurrentlyEquipped": "Zurzeit ausgerüstet",
-    "Deequip": "De-equipping items from other characters",
+    "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
     "Edit": "Ausrüstung bearbeiten",
     "EditBrief": "Bearbeiten",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Mehrere Exotische Gegenstände wurden verwendet, um dein maximales Powerlevel zu berechnen, so dass die angezeigte Anzahl bei der Ausrüstung deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
     "EquippableDifferent2": "Das maximale Powerlevel ist nicht durch die Regel \"Ein exotischer Gegenstand\" begrenzt, wenn die Höhe deiner Drops/Mächtiger Loot/Pinnacle-Belohnungen berechnet wird.",
     "Failed": "Ausrüstung konnte nicht komplett angewendet werden",
+    "Fashion": "Mode wählen",
     "FilteredItems": "Gefilterte Gegenstände",
     "FindAnother": "Finde andere(s) {{name}}",
     "FromEquipped": "Ausgerüstet",
@@ -589,12 +601,12 @@
     "SaveAsNew": "Speichern als",
     "SaveLoadout": "Ausrüstung speichern",
     "ShowModPlacement": "Mod-Platzierung anzeigen",
-    "SocketOverrides": "Changing subclass options",
+    "SocketOverrides": "Ändere Fokus-Optionen",
     "SortByEditTime": "Nach Änderungsdatum sortieren",
     "SortByName": "Nach Namen sortieren",
     "SubclassOptions": "{{subclass}}-Optionen",
     "SubclassOptionsSearch": "{{subclass}}-Optionen suchen",
-    "Succeeded": "Loadout succeeded",
+    "Succeeded": "Ausrüstung erfolgreich",
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber deine Ausrüstung verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "UnassignedMods": "Nicht zugewiesene Mods",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Dieser Gegenstand ist in der Sammlung freigeschaltet.",
-    "AcquiredMod": "Diese Mod ist im Moment auf einem Gegenstand im Inventar angewendet.",
+    "AcquiredMod": "Dieser Mod ist in der Sammlung freigeschaltet.",
     "AddNote": "Notiz hinzufügen",
     "AddToLoadout": "Ausrüstung",
     "All": "Alle",
@@ -678,7 +690,7 @@
   },
   "Notification": {
     "Cancel": "Abbrechen",
-    "OK": "Verwerfen"
+    "OK": "Schließen"
   },
   "Objectives": {
     "Complete": "Vollständig",
@@ -845,25 +857,25 @@
     "ApplyPerks": "Perks anwenden",
     "GridStyle": "Perks als Raster anzeigen",
     "Insert": {
-      "Ability": "Equip Ability",
-      "Aspect": "Insert Aspect",
-      "Fragment": "Insert Fragment",
-      "Mod": "Insert Mod",
-      "Ornament": "Apply Ornament",
-      "Projection": "Apply Ghost Projection",
-      "Shader": "Apply Shader",
-      "Transmat": "Apply Transmat Effect"
+      "Ability": "Fähigkeit ausrüsten",
+      "Aspect": "Aspekt einfügen",
+      "Fragment": "Fragment einfügen",
+      "Mod": "Mod einfügen",
+      "Ornament": "Ornament anwenden",
+      "Projection": "Geist-Projektion anwenden",
+      "Shader": "Shader anwenden",
+      "Transmat": "Teleporteffekt anwenden"
     },
     "ListStyle": "Perks als Liste anzeigen",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Fähigkeit auswählen",
+      "Aspect": "Aspekt auswählen",
+      "Fragment": "Fragment auswählen",
+      "Mod": "Mod auswählen",
+      "Ornament": "Ornament auswählen",
+      "Projection": "Geist-Projektion auswählen",
+      "Shader": "Shader auswählen",
+      "Transmat": "Teleporteffekt auswählen"
     },
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },

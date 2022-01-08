@@ -4,8 +4,7 @@
     "ConfirmTitle": "Potwierdź działanie",
     "Error": "Błąd podczas zmiany modyfikacji lub perków",
     "ErrorMessage": "Nie mogliśmy włożyć {{plug}} w {{item}}.\n\n{{error}}",
-    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu"
   },
   "Accounts": {
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Brak wolnego miejsca",
     "Stop": "Zatrzymaj",
     "Vault": "Przeniesie przedmioty do schowka aby zrobić miejsce."
+  },
+  "FashionDrawer": {
+    "Accept": "Use this fashion",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearShaders": "Clear Shaders",
+    "Reset": "Reset all",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncShaders": "Sync Shaders",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use Equipped"
   },
   "FileUpload": {
     "Instructions": "Kliknij lub przeciągnij pliki"
@@ -362,6 +372,7 @@
     "Deequip": "Nie można odnaleźć innego przedmiotu do założenia aby zdjąć {{itemname}}",
     "ExoticError": "'{{itemname}}' nie może być założony, ponieważ egzotyczny przedmiot w gnieździe {{slot}} nie może być zdjęty. ({{error}})",
     "NotEnoughRoom": "Nie ma niczego do wyniesienia z {{store}} aby zrobić miejsce dla {{itemname}}",
+    "NotEnoughRoomGeneral": "There's not enough room to move this item.",
     "OnlyEquippedClassLevel": "To może być założone tylko na {{class}} na lub powyżej poziomu {{level}}.",
     "OnlyEquippedLevel": "To może być założone tylko na postaciach na lub powyżej poziomu {{level}}.",
     "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
     "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów, potężnych, oraz szczytowych nagród.",
     "Failed": "Loadout failed to apply completely",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Filtrowane Przedmioty",
     "FindAnother": "Znajdź następny {{name}}",
     "FromEquipped": "Założone",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
-    "AcquiredMod": "Ten mod jest obecnie zastosowany do przedmiotu w ekwipunku.",
+    "AcquiredMod": "This mod is unlocked in collections.",
     "AddNote": "Dodaj notatkę",
     "AddToLoadout": "Uzbrojenie",
     "All": "Wszystkie",
