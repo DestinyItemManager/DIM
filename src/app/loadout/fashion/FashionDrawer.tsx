@@ -185,6 +185,20 @@ export default function FashionDrawer({
     const ornaments = Object.values(modsByBucket)
       .flat()
       .filter((h) => !isShader(h));
+
+    // Make it easy to spread default ornament
+    if (ornaments.every((h) => DEFAULT_ORNAMENTS.includes(h))) {
+      setModsByBucket((modsByBucket) =>
+        Object.fromEntries(
+          LockableBucketHashes.map((bucketHash) => [
+            bucketHash,
+            [...(modsByBucket[bucketHash] ?? []).filter((h) => isShader(h)), ornaments[0]],
+          ])
+        )
+      );
+      return;
+    }
+
     const groupedOrnaments = _.groupBy(ornaments, (h) => {
       const collectibleHash =
         defs.InventoryItem.get(h)?.collectibleHash ??
@@ -202,8 +216,9 @@ export default function FashionDrawer({
       return;
     }
 
+    const mostCommon = parseInt(mostCommonOrnamentSet[0], 10);
     const set = _.compact(
-      defs.PresentationNode.get(parseInt(mostCommonOrnamentSet[0], 10)).children.collectibles.map(
+      defs.PresentationNode.get(mostCommon).children.collectibles.map(
         (c) =>
           defs.Collectible.get(c.collectibleHash).itemHash ??
           manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
