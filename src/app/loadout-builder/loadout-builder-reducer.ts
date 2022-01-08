@@ -231,6 +231,7 @@ function lbStateReducer(
         pinnedItems: {},
         excludedItems: {},
         lockedExoticHash: undefined,
+        subclass: undefined,
       };
     case 'statFiltersChanged':
       return { ...state, statFilters: action.statFilters };
