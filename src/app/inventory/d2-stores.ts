@@ -11,6 +11,7 @@ import { getCharacterProgressions } from 'app/progress/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
+import { download } from 'app/utils/util';
 import {
   DestinyCharacterComponent,
   DestinyCharacterProgressionComponent,
@@ -132,7 +133,8 @@ export function mergeCollectibles(
  */
 
 export function loadStores(
-  components?: DestinyComponentType[]
+  components?: DestinyComponentType[],
+  saveProfile?: boolean
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     let account = currentAccountSelector(getState());
@@ -145,7 +147,9 @@ export function loadStores(
       }
     }
 
-    const stores = await dispatch(loadStoresData(account, isFirstLoad ? components : undefined));
+    const stores = await dispatch(
+      loadStoresData(account, isFirstLoad ? components : undefined, saveProfile)
+    );
 
     if (isFirstLoad) {
       isFirstLoad = false;
@@ -161,7 +165,8 @@ export function loadStores(
 
 function loadStoresData(
   account: DestinyAccount,
-  components?: DestinyComponentType[]
+  components?: DestinyComponentType[],
+  saveProfile?: boolean
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -184,6 +189,14 @@ function loadStoresData(
           dispatch(loadNewItems(account)),
           getStores(account, components),
         ]);
+
+        if (saveProfile) {
+          download(
+            JSON.stringify(profileInfo, null, '\t'),
+            'profile-data.json',
+            'application/json'
+          );
+        }
 
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {

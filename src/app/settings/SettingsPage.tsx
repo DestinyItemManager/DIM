@@ -5,6 +5,7 @@ import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
+import { loadStores } from 'app/inventory/d2-stores';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -143,6 +144,8 @@ export default function SettingsPage() {
     window.location.reload();
     return false;
   };
+
+  const saveProfileResponse = () => dispatch(loadStores(undefined, true));
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
@@ -491,6 +494,16 @@ export default function SettingsPage() {
           </ErrorBoundary>
 
           <Spreadsheets />
+
+          {$DIM_FLAVOR !== 'release' && (
+            <section id="troubleshooting">
+              <div className="setting">
+                <button type="button" className="dim-button" onClick={saveProfileResponse}>
+                  {t('Settings.ExportProfile')}
+                </button>
+              </div>
+            </section>
+          )}
         </form>
       </PageWithMenu.Contents>
     </PageWithMenu>
