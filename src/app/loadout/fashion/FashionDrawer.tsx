@@ -15,7 +15,7 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import {
   DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
@@ -137,9 +137,7 @@ export default function FashionDrawer({
     setModsByBucket((modsByBucket) => {
       // Clear out existing selections for this socket.
       const existingMods = (modsByBucket[item.bucket.hash] ?? []).filter(
-        (mod) =>
-          mod !== socket.socketDefinition.singleInitialItemHash &&
-          !socket.plugSet?.plugs.some((p) => p.plugDef.hash === mod)
+        (mod) => !plugFitsIntoSocket(socket, mod)
       );
 
       return {
