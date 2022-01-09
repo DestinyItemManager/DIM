@@ -157,6 +157,7 @@
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",
     "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
     "Reset": "Clear fashion",
     "Sync": "Sync",
     "SyncOrnaments": "Sync Ornaments",
