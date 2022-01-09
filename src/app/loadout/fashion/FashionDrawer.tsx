@@ -5,6 +5,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
@@ -423,7 +424,6 @@ function FashionItem({
 
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
-  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
 
   if (!exampleItem) {
     return null;
@@ -443,17 +443,6 @@ function FashionItem({
   const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
   const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[2]);
 
-  const canSlotShader =
-    shader !== undefined &&
-    (shader === shaderSocket?.socketDefinition.singleInitialItemHash ||
-      (unlockedPlugSetItems.has(shader) &&
-        shaderSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === shader)));
-  const canSlotOrnament =
-    ornament !== undefined &&
-    (ornament === ornamentSocket?.socketDefinition.singleInitialItemHash ||
-      (unlockedPlugSetItems.has(ornament) &&
-        ornamentSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === ornament)));
-
   return (
     <div className={styles.item}>
       {item ? (
@@ -461,29 +450,80 @@ function FashionItem({
       ) : (
         <BucketPlaceholder bucketHash={bucketHash} />
       )}
-      <ClosableContainer
-        onClose={shader ? () => onRemovePlug(bucketHash, shader) : undefined}
-        showCloseIconOnHover
-      >
-        <PlugDef
-          onClick={shaderSocket && (() => onPickPlug({ item: exampleItem, socket: shaderSocket }))}
-          className={clsx({ [styles.missingItem]: !canSlotShader })}
-          plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
-        />
-      </ClosableContainer>
-      <ClosableContainer
-        onClose={ornament ? () => onRemovePlug(bucketHash, ornament) : undefined}
-        showCloseIconOnHover
-      >
-        <PlugDef
-          onClick={
-            ornamentSocket && (() => onPickPlug({ item: exampleItem, socket: ornamentSocket }))
-          }
-          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-          plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
-        />
-      </ClosableContainer>
+      <FashionSocket
+        bucketHash={bucketHash}
+        plugHash={shader}
+        socket={shaderSocket}
+        plug={shaderItem}
+        exampleItem={exampleItem}
+        defaultPlug={defaultShader}
+        onPickPlug={onPickPlug}
+        onRemovePlug={onRemovePlug}
+      />
+      <FashionSocket
+        bucketHash={bucketHash}
+        plugHash={ornament}
+        socket={ornamentSocket}
+        plug={ornamentItem}
+        exampleItem={exampleItem}
+        defaultPlug={defaultOrnament}
+        onPickPlug={onPickPlug}
+        onRemovePlug={onRemovePlug}
+      />
     </div>
+  );
+}
+
+function FashionSocket({
+  bucketHash,
+  plugHash,
+  socket,
+  plug,
+  exampleItem,
+  defaultPlug,
+  onPickPlug,
+  onRemovePlug,
+}: {
+  bucketHash: number;
+  plugHash: number | undefined;
+  socket: DimSocket | undefined;
+  plug: DestinyInventoryItemDefinition | undefined;
+  exampleItem: DimItem;
+  defaultPlug: DestinyInventoryItemDefinition;
+  onPickPlug(params: PickPlugState): void;
+  onRemovePlug(bucketHash: number, modHash: number): void;
+}) {
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
+  const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
+  const canSlotOrnament =
+    plugHash !== undefined &&
+    (plugHash === socket?.socketDefinition.singleInitialItemHash ||
+      (unlockedPlugSetItems.has(plugHash) &&
+        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)));
+
+  return (
+    <ClosableContainer
+      onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
+      showCloseIconOnHover
+    >
+      {plug ? (
+        <PlugDef
+          onClick={handleOrnamentClick}
+          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
+          plug={(plug ?? defaultPlug) as PluggableInventoryItemDefinition}
+        />
+      ) : (
+        <div
+          role="button"
+          className={clsx('item', { [styles.missingItem]: !canSlotOrnament })}
+          onClick={handleOrnamentClick}
+          tabIndex={0}
+          title={t('FashionDrawer.NoPreference')}
+        >
+          <DefItemIcon itemDef={defaultPlug} />
+        </div>
+      )}
+    </ClosableContainer>
   );
 }
 

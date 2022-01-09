@@ -54,10 +54,10 @@ const gearSlotOrder: DimItem['type'][] = [
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: DestinyClass.Unknown,
+    classType: classType ?? DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -97,16 +97,14 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   const items = dimStore.items.filter(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
-  const loadout = newLoadout(
-    name,
-    items.map((i) => {
-      const item = convertToLoadoutItem(i, true);
-      if (i.bucket.hash === BucketHashes.Subclass) {
-        item.socketOverrides = createSocketOverridesFromEquipped(i);
-      }
-      return item;
-    })
-  );
+  const loadoutItems = items.map((i) => {
+    const item = convertToLoadoutItem(i, true);
+    if (i.bucket.hash === BucketHashes.Subclass) {
+      item.socketOverrides = createSocketOverridesFromEquipped(i);
+    }
+    return item;
+  });
+  const loadout = newLoadout(name, loadoutItems, dimStore.classType);
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
@@ -133,7 +131,6 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
       modsByBucket,
     };
   }
-  loadout.classType = dimStore.classType;
   return loadout;
 }
 

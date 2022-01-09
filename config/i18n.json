@@ -171,7 +171,8 @@
     "ClearShaders": "Clear Shaders",
     "ClearShadersTitle": "Reset all shaders to \"no preference\"",
     "ClearOrnaments": "Clear Ornaments",
-    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\""
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"

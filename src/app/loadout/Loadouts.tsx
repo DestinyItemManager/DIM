@@ -88,8 +88,7 @@ function Loadouts() {
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const handleNewLoadout = () => {
-    const loadout = newLoadout('', []);
-    loadout.classType = selectedStore.classType;
+    const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 

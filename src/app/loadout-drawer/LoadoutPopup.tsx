@@ -130,7 +130,8 @@ function LoadoutPopup({
     dimStore.destinyVersion === 2 ? pullablePostmasterItems(dimStore, stores).length : 0;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
 
-  const makeNewLoadout = () => editLoadout(newLoadout('', []), dimStore.id, { isNew: true });
+  const makeNewLoadout = () =>
+    editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
 
   const handleNewLoadoutFromEquipped = () => {
     const loadout = newLoadoutFromEquipped('', dimStore);
