@@ -950,14 +950,14 @@
       "Projection": "Apply Ghost Projection"
     },
     "Select": {
-      "Mod": "Select Mod",
-      "Shader": "Select Shader",
-      "Ornament": "Select Ornament",
-      "Ability": "Select Ability",
-      "Fragment": "Select Fragment",
-      "Aspect": "Select Aspect",
-      "Transmat": "Select Transmat Effect",
-      "Projection": "Select Ghost Projection"
+      "Mod": "Preview Mod",
+      "Shader": "Preview Shader",
+      "Ornament": "Preview Ornament",
+      "Ability": "Preview Ability",
+      "Fragment": "Preview Fragment",
+      "Aspect": "Preview Aspect",
+      "Transmat": "Preview Transmat Effect",
+      "Projection": "Preview Ghost Projection"
     },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"

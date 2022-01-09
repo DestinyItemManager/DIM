@@ -873,14 +873,14 @@
     },
     "ListStyle": "Display perks as a list",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Preview Ability",
+      "Aspect": "Preview Aspect",
+      "Fragment": "Preview Fragment",
+      "Mod": "Preview Mod",
+      "Ornament": "Preview Ornament",
+      "Projection": "Preview Ghost Projection",
+      "Shader": "Preview Shader",
+      "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
