@@ -15,7 +15,11 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  getSocketByIndex,
+  getSocketsByCategoryHash,
+  plugFitsIntoSocket,
+} from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -347,10 +351,8 @@ export function pickPlugPositions(
     // If it wasn't found already plugged, find the first socket with a matching PCH
     // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex(
-        (socket) =>
-          socket.socketDefinition.singleInitialItemHash === modToInsert.hash ||
-          socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === modToInsert.hash)
+      destinationSocketIndex = existingModSockets.findIndex((socket) =>
+        plugFitsIntoSocket(socket, modToInsert.hash)
       );
     }
 

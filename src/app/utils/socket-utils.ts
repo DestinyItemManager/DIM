@@ -148,3 +148,17 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
 export function socketContainsIntrinsicPlug(socket: DimSocket) {
   return socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics;
 }
+
+/**
+ * Is this one of the plugs that could possibly fit into this socket? This does not
+ * check whether the plug is enabled or unlocked - only that it appears in the list of
+ * possible plugs.
+ */
+export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
+  return (
+    socket.socketDefinition.singleInitialItemHash === plugHash ||
+    (socket.plugSet
+      ? socket.plugSet.plugs.some((dimPlug) => dimPlug.plugDef.hash === plugHash)
+      : socket.plugOptions.some((p) => p.plugDef.hash === plugHash))
+  );
+}

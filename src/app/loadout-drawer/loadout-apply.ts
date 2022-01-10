@@ -40,7 +40,7 @@ import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -970,10 +970,24 @@ function applyLoadoutMods(
       const bucketHash = parseInt(bucketHashStr, 10);
       const item = armor.find((i) => i.bucket.hash === bucketHash);
       if (item) {
-        itemModAssignments[item.id] = [
-          ...itemModAssignments[item.id],
-          ...modsForBucket.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem),
-        ];
+        for (const modHash of modsForBucket) {
+          const modDef = defs.InventoryItem.get(modHash);
+          if (
+            isPluggableItem(modDef) &&
+            item.sockets?.allSockets.some((s) => plugFitsIntoSocket(s, modHash))
+          ) {
+            (itemModAssignments[item.id] ??= []).push(modDef);
+          } else {
+            // I guess technically these are unassigned
+            setLoadoutState(
+              setModResult({
+                modHash: modHash,
+                state: LoadoutModState.Unassigned,
+                error: new DimError('Loadouts.UnassignedModError'),
+              })
+            );
+          }
+        }
       } else {
         for (const modHash of modsForBucket) {
           // I guess technically these are unassigned
