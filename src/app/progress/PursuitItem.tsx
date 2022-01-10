@@ -30,7 +30,8 @@ function PursuitItem(
     return numBooleans > 1 || objectives.length !== numBooleans;
   };
 
-  const isFlawedTrialsPassage = isTrialsPassage(item) && !isFlawlessPassage(item.objectives, defs);
+  const isFlawedTrialsPassage =
+    isTrialsPassage(item, defs) && !isFlawlessPassage(item.objectives, defs);
 
   const showProgressBar =
     item.objectives &&

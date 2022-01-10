@@ -136,7 +136,7 @@ export default function ItemDetails({
             <Objective
               objective={objective}
               key={objective.objectiveHash}
-              isTrialsPassage={isTrialsPassage(item)}
+              isTrialsPassage={isTrialsPassage(item, defs)}
             />
           ))}
         </div>
