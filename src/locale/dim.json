@@ -91,6 +91,7 @@
       "Unmatched": "This item doesn't match the type of items being compared."
     },
     "InitialItem": "This is the item the Compare tool was launched from",
+    "IsVendorItem": "This item is in a vendor's inventory:",
     "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {

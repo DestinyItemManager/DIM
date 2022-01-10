@@ -29,13 +29,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  cursor: pointer;
   margin-top: 2px;
   margin-bottom: 2px;
   :global(.app-icon) {
     font-size: 8px;
     margin-right: 2px;
     vertical-align: initial;
+  }
+  &.isFindable {
+    cursor: pointer;
   }
 }
 

@@ -93,6 +93,7 @@
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
     "InitialItem": "This is the item the Compare tool was launched from",
+    "IsVendorItem": "This item is in a vendor's inventory:",
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
