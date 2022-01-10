@@ -1,5 +1,7 @@
 ## Next
 
+## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
+
 * The Loadouts page is a bit cleaner and more compact in the mobile view.
 * You can once again click within the Compare sheet to close an item popup.
 * Loadouts don't fail when they contain an ornament that can't be slotted into the current armor.
