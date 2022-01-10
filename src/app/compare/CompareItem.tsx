@@ -125,7 +125,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
           <>
             {t('Compare.IsVendorItem')}
             <br />
-            {vendorName}
+            {t('Compare.SoldBy')} {vendorName}
           </>
         );
       }}

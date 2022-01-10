@@ -24,12 +24,16 @@ const compareVendorItemsSelector = createSelector(
   (state: RootState) => state,
   (state: RootState) => state.compare.session?.vendorCharacterId,
   vendorGroupsForCharacterSelector,
-  (state, vendorCharacterId) =>
-    _.compact(
+  (state, vendorCharacterId) => {
+    if (!vendorCharacterId) {
+      return emptyArray<DimItem>();
+    }
+    return _.compact(
       vendorGroupsForCharacterSelector(vendorCharacterId)(state).flatMap((vg) =>
         vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item))
       )
-    )
+    );
+  }
 );
 
 /**
