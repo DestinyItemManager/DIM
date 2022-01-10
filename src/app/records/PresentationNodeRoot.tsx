@@ -1,7 +1,7 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import { itemsForProfilePlugSet } from './plugset-helpers';
@@ -57,7 +57,11 @@ export default function PresentationNodeRoot({
     fullNodePath.unshift(presentationNodeHash);
   }
 
-  const nodeTree = toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash);
+  const nodeTree = useMemo(
+    () => toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash),
+    [defs, buckets, profileResponse, presentationNodeHash]
+  );
+
   if (!nodeTree) {
     return null;
   }
