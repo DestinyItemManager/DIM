@@ -67,7 +67,8 @@ export default function Objective({
   const showAsCounter =
     isTrialsPassage &&
     objectiveDef.allowOvercompletion &&
-    objectiveDef.progressDescription === 'Rounds Won';
+    !objectiveDef.allowNegativeValue &&
+    !objectiveDef.allowValueChangeWhenCompleted;
   const passageFlawed =
     isTrialsPassage && isFlawlessObjective(objective, objectiveDef) && !objective.complete;
 

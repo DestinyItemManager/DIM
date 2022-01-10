@@ -7,6 +7,7 @@ import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
+import { DimItem } from '../item-types';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
@@ -60,6 +61,18 @@ export function isBooleanObjective(
     (completionValue === 1 &&
       (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
   );
+}
+
+export function isTrialsPassage(item: DimItem, defs: D2ManifestDefinitions) {
+  if (item.objectives?.length === 3 && item.isExotic) {
+    for (const objective of item.objectives) {
+      const objectiveDef = defs.Objective.get(objective.objectiveHash);
+      if (isFlawlessObjective(objective, objectiveDef)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 export function isFlawlessPassage(

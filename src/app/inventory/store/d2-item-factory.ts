@@ -1,6 +1,9 @@
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { t } from 'app/i18next-t';
-import { isFlawlessObjective, isWinsObjective } from 'app/inventory/store/objectives';
+import {
+  isFlawlessObjective,
+  isTrialsPassage,
+  isWinsObjective,
+} from 'app/inventory/store/objectives';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -673,20 +676,6 @@ export function makeItem(
   }
 
   return createdItem;
-}
-export function isTrialsPassage(
-  item: DimItem,
-  defs: D2ManifestDefinitions | D1ManifestDefinitions
-) {
-  if (item.objectives?.length === 3 && item.tier === 'Exotic') {
-    for (const objective of item.objectives) {
-      const objectiveDef = defs.Objective.get(objective.objectiveHash);
-      if (isFlawlessObjective(objective, objectiveDef)) {
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 function isLegendaryOrBetter(item: DimItem) {

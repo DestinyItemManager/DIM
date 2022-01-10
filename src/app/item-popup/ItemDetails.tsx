@@ -2,7 +2,7 @@ import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
-import { isTrialsPassage } from 'app/inventory/store/d2-item-factory';
+import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -136,7 +136,7 @@ export default function ItemDetails({
             <Objective
               objective={objective}
               key={objective.objectiveHash}
-              isTrialsPassage={isTrialsPassage(item, defs)}
+              isTrialsPassage={defs.isDestiny2() && isTrialsPassage(item, defs)}
             />
           ))}
         </div>
