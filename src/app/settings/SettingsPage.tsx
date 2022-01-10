@@ -1,11 +1,11 @@
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
+import { getStores } from 'app/bungie-api/destiny2-api';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
-import { loadStores } from 'app/inventory/d2-stores';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -16,6 +16,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
+import { download } from 'app/utils/util';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
@@ -145,7 +146,15 @@ export default function SettingsPage() {
     return false;
   };
 
-  const saveProfileResponse = () => dispatch(loadStores(undefined, true));
+  const saveProfileResponse = async () => {
+    if (currentAccount) {
+      download(
+        JSON.stringify(await getStores(currentAccount), null, '\t'),
+        'profile-data.json',
+        'application/json'
+      );
+    }
+  };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
@@ -495,7 +504,7 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
-          {$DIM_FLAVOR !== 'release' && (
+          {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <section id="troubleshooting">
               <div className="setting">
                 <button type="button" className="dim-button" onClick={saveProfileResponse}>
