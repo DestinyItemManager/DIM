@@ -1,5 +1,7 @@
 ## Next
 
+## 6.99.0 <span class="changelog-date">(2022-01-09)</span>
+
 * You can now add Fashion (shaders and ornaments) to loadouts. Creating a loadout from equipped automatically adds in the current shaders and ornaments, and you can edit them manually from the Loadouts editor.
 * Fixed an issue where the progress bar for exotic weapons were clipping into other page elements.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
