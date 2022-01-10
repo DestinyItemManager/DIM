@@ -32,6 +32,7 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
       onClose={onClose}
       header={header}
       sheetClassName={clsx('item-picker', styles.searchResults)}
+      allowClickThrough={true}
     >
       <ClickOutsideRoot>
         <div className={clsx('sub-bucket', styles.contents)}>
