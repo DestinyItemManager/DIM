@@ -5,7 +5,9 @@ import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { vendorGroupsForCharacterSelector } from 'app/vendors/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 
 /**
@@ -16,16 +18,32 @@ export const compareSessionSelector = (state: RootState) => state.compare.sessio
 export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
 
 /**
+ * Returns vendor items for comparison
+ */
+const compareVendorItemsSelector = createSelector(
+  (state: RootState) => state,
+  (state: RootState) => state.compare.session?.vendorCharacterId,
+  vendorGroupsForCharacterSelector,
+  (state, vendorCharacterId) =>
+    _.compact(
+      vendorGroupsForCharacterSelector(vendorCharacterId)(state).flatMap((vg) =>
+        vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item))
+      )
+    )
+);
+
+/**
  * Returns all the items matching the item category of the current compare session.
  */
 export const compareCategoryItemsSelector = createSelector(
   (state: RootState) => state.compare.session?.itemCategoryHashes,
   allItemsSelector,
-  (itemCategoryHashes, allItems) => {
+  compareVendorItemsSelector,
+  (itemCategoryHashes, allItems, vendorItems) => {
     if (!itemCategoryHashes) {
       return emptyArray<DimItem>();
     }
-    return allItems.filter((i) =>
+    return [...allItems, ...vendorItems].filter((i) =>
       itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h))
     );
   }

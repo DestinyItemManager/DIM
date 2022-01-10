@@ -171,6 +171,9 @@ export class VendorItem {
       // if this is sold by a vendor, add vendor information
       if (saleItem && characterId) {
         this.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId };
+        if (this.item.equipment) {
+          this.item.comparable = true;
+        }
       }
     }
 
