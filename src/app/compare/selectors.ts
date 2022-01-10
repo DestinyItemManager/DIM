@@ -5,7 +5,8 @@ import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { vendorGroupsForCharacterSelector } from 'app/vendors/selectors';
+import { currySelector } from 'app/utils/redux-utils';
+import { nonCurriedVendorGroupsForCharacterSelector } from 'app/vendors/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -21,17 +22,14 @@ export const compareOpenSelector = (state: RootState) => Boolean(compareSessionS
  * Returns vendor items for comparison
  */
 const compareVendorItemsSelector = createSelector(
-  (state: RootState) => state,
-  (state: RootState) => state.compare.session?.vendorCharacterId,
-  vendorGroupsForCharacterSelector,
-  (state, vendorCharacterId) => {
+  (_state: RootState, vendorCharacterId?: string) => vendorCharacterId,
+  nonCurriedVendorGroupsForCharacterSelector,
+  (vendorCharacterId, vendorGroups) => {
     if (!vendorCharacterId) {
       return emptyArray<DimItem>();
     }
     return _.compact(
-      vendorGroupsForCharacterSelector(vendorCharacterId)(state).flatMap((vg) =>
-        vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item))
-      )
+      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item)))
     );
   }
 );
@@ -56,17 +54,19 @@ export const compareCategoryItemsSelector = createSelector(
 /**
  * Returns all the items being compared.
  */
-export const compareItemsSelector = createSelector(
-  compareSessionSelector,
-  compareCategoryItemsSelector,
-  filterFactorySelector,
-  (session, categoryItems, filterFactory) => {
-    if (!session) {
-      return emptyArray<DimItem>();
+export const compareItemsSelector = currySelector(
+  createSelector(
+    compareSessionSelector,
+    compareCategoryItemsSelector,
+    filterFactorySelector,
+    (session, categoryItems, filterFactory) => {
+      if (!session) {
+        return emptyArray<DimItem>();
+      }
+      const filterFunction = filterFactory(session.query);
+      return categoryItems.filter(filterFunction);
     }
-    const filterFunction = filterFactory(session.query);
-    return categoryItems.filter(filterFunction);
-  }
+  )
 );
 
 const organizerTypes = [
