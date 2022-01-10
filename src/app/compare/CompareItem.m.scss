@@ -5,6 +5,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  height: 32px;
+  > div {
+    min-width: 32px;
+  }
   // pull & lock buttons
   > div:nth-child(1),
   > div:nth-child(2) {
