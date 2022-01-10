@@ -9,6 +9,7 @@ import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faCalculator } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
@@ -52,6 +53,7 @@ export default function LoadoutItemCategorySection({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
@@ -64,6 +66,10 @@ export default function LoadoutItemCategorySection({
 
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
+
+  if (isPhonePortrait && !items && !hasFashion) {
+    return null;
+  }
 
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>

@@ -36,8 +36,7 @@
 }
 
 .unassigned {
-  display: flex;
-  flex-direction: row;
+  composes: sub-bucket from global;
 }
 
 .headerInfo {

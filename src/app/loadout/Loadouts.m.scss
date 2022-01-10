@@ -2,10 +2,6 @@
 
 .page {
   margin-top: 10px;
-  @include phone-portrait {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
 }
 
 .menu {
