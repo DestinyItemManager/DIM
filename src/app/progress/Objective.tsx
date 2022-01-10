@@ -1,6 +1,6 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { isBooleanObjective, isFlawlessObjective } from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
@@ -17,9 +17,11 @@ import ObjectiveDescription from './ObjectiveDescription';
 export default function Objective({
   objective,
   suppressObjectiveDescription,
+  isTrialsPassage,
 }: {
   objective: DestinyObjectiveProgress;
   suppressObjectiveDescription?: boolean;
+  isTrialsPassage?: boolean;
 }) {
   const defs = useDefinitions()!;
   const objectiveDef = defs.Objective.get(objective.objectiveHash) as DestinyObjectiveDefinition;
@@ -62,10 +64,17 @@ export default function Objective({
   }
 
   const isBoolean = isBooleanObjective(objectiveDef, completionValue);
+  const showAsCounter =
+    isTrialsPassage &&
+    objectiveDef.allowOvercompletion &&
+    objectiveDef.progressDescription === 'Rounds Won';
+  const passageFlawed =
+    isTrialsPassage && isFlawlessObjective(objective, objectiveDef) && !objective.complete;
 
   const classes = clsx('objective-row', {
-    'objective-complete': complete,
+    'objective-complete': complete && !showAsCounter,
     'objective-boolean': isBoolean,
+    'passage-flawed': passageFlawed,
   });
 
   const progressBarStyle = {
@@ -76,7 +85,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      <div className="objective-checkbox" />
+      {!showAsCounter && <div className="objective-checkbox" />}
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">
@@ -92,6 +101,7 @@ export default function Objective({
           </div>
         )}
       </div>
+      {showAsCounter && <div className="objective-counter">{progress}</div>}
     </div>
   );
 }

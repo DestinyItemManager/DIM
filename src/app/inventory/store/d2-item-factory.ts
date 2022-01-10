@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { isFlawlessObjective, isWinsObjective } from 'app/inventory/store/objectives';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -554,10 +555,24 @@ export function makeItem(
   if (createdItem.objectives) {
     const length = createdItem.objectives.length;
     if (length > 0) {
+      const checkTrialsPassage = isTrialsPassage(createdItem);
       createdItem.complete = createdItem.objectives.every((o) => o.complete);
       createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
-          return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
+          //Exclude trials flawless objective from counting towards completion
+          if (checkTrialsPassage) {
+            const objectiveDef = defs.Objective.get(objective.objectiveHash);
+            if (
+              !isWinsObjective(objective, objectiveDef) ||
+              isFlawlessObjective(objective, objectiveDef)
+            ) {
+              return 0;
+            }
+          }
+          return (
+            Math.min(1, (objective.progress || 0) / objective.completionValue) /
+            (checkTrialsPassage ? 1 : length)
+          );
         } else {
           return 0;
         }
@@ -657,6 +672,9 @@ export function makeItem(
   }
 
   return createdItem;
+}
+export function isTrialsPassage(item: DimItem) {
+  return item.objectives?.length === 3 && item.typeName === 'Trials Passage';
 }
 
 function isLegendaryOrBetter(item: DimItem) {

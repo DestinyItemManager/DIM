@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import { isTrialsPassage } from 'app/inventory/store/d2-item-factory';
+import { isBooleanObjective, isFlawlessPassage } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/filters';
 import { count } from 'app/utils/util';
@@ -29,6 +30,8 @@ function PursuitItem(
     return numBooleans > 1 || objectives.length !== numBooleans;
   };
 
+  const isFlawedTrialsPassage = isTrialsPassage(item) && !isFlawlessPassage(item.objectives, defs);
+
   const showProgressBar =
     item.objectives &&
     item.objectives.length > 0 &&
@@ -42,6 +45,7 @@ function PursuitItem(
   const itemImageStyles = {
     [styles.tracked]: trackedInGame,
     [styles.tracked]: trackedInDim,
+    [styles.flawedPassage]: isFlawedTrialsPassage,
   };
   return (
     <div

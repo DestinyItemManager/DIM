@@ -61,3 +61,41 @@ export function isBooleanObjective(
       (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
   );
 }
+
+export function isFlawlessPassage(
+  objectives: DestinyObjectiveProgress[] | null,
+  defs: D2ManifestDefinitions
+) {
+  if (objectives && objectives.length === 3) {
+    for (const objective of objectives) {
+      if (isFlawlessObjective(objective, defs.Objective.get(objective.objectiveHash))) {
+        return objective.complete;
+      }
+    }
+    return false;
+  }
+  return false;
+}
+
+// Assumes that the item related to the objective is a trials passage
+export function isFlawlessObjective(
+  objective: DestinyObjectiveProgress,
+  objectiveDef: DestinyObjectiveDefinition
+) {
+  return (
+    objective.completionValue === 1 &&
+    objectiveDef.allowValueChangeWhenCompleted &&
+    !objectiveDef.allowOvercompletion
+  );
+}
+
+export function isWinsObjective(
+  objective: DestinyObjectiveProgress,
+  objectiveDef: DestinyObjectiveDefinition
+) {
+  return (
+    objective.completionValue === 7 &&
+    !objectiveDef.allowValueChangeWhenCompleted &&
+    !objectiveDef.allowOvercompletion
+  );
+}
