@@ -1,6 +1,9 @@
 ## Next
 
 * The Loadouts page is a bit cleaner and more compact in the mobile view.
+* You can once again click within the Compare sheet to close an item popup.
+* Loadouts don't fail when they contain an ornament that can't be slotted into the current armor.
+* Sharing loadout builds includes fashion.
 
 ## 6.99.0 <span class="changelog-date">(2022-01-09)</span>
 
@@ -12,7 +15,6 @@
 * Fixed an issue where the universal ornament picker would show too many ornaments as unlocked.
 * Shader picker now hides unavailable, unobtainable shaders.
 * "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
-* You can once again click within the Compare sheet to close an item popup.
 * Creating a loadout now defaults the class to whichever character you had selected.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
