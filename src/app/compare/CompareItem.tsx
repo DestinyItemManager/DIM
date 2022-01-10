@@ -65,8 +65,8 @@ export default function CompareItem({
               <AppIcon icon={faArrowCircleDown} />
             </ActionButton>
           )}
-          <LockActionButton item={item} />
-          <TagActionButton item={item} label={false} hideKeys={true} />
+          {item.lockable ? <LockActionButton item={item} /> : <div />}
+          {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>
         <div
