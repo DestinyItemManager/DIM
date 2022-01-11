@@ -320,6 +320,8 @@ export function fitMostMods(
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
  * "which/how many mods will fit" is `fitMostMods`'s job, and this consumes its output
+ *
+ * This also only works on armor mods, not cosmetics/fashion
  */
 export function pickPlugPositions(
   defs: D2ManifestDefinitions,
@@ -333,13 +335,10 @@ export function pickPlugPositions(
   if (!item.sockets) {
     return assignments;
   }
-  const armorModSockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods);
-  const fashionModSockets = getSocketsByCategoryHash(
+  const existingModSockets = getSocketsByCategoryHash(
     item.sockets,
-    SocketCategoryHashes.ArmorCosmetics
-  );
-
-  const existingModSockets = [...armorModSockets, ...fashionModSockets].sort(
+    SocketCategoryHashes.ArmorMods
+  ).sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
     compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
@@ -381,8 +380,7 @@ export function pickPlugPositions(
 
   // For each remaining armor mod socket that won't have mods assigned,
   // allow it to be returned to its default (usually "Empty Mod Socket").
-  // We only do this for armor mods - fashion mods shouldn't ever be reset.
-  for (const socket of armorModSockets) {
+  for (const socket of existingModSockets) {
     const defaultModHash = getDefaultPlugHash(socket, defs);
     const mod =
       defaultModHash &&
@@ -451,8 +449,11 @@ export function createPluggingStrategy(
     }
   }
 
-  // sort lower gains first
-  optionalRegains.sort(compareBy((res) => -res.energySpend));
+  // sort lower gains first, but put zero gains at the end. Otherwise the zero
+  // gains will be used as part of "adding up" to make the energy needed
+  optionalRegains.sort(
+    compareBy((res) => (res.energySpend < 0 ? -res.energySpend : Number.MAX_VALUE))
+  );
 
   const operationSet: PluggingAction[] = [];
 
@@ -498,9 +499,7 @@ export function createPluggingStrategy(
   }
 
   // append any "reset to default"s that we didn't consume
-  for (const regainOperation of optionalRegains) {
-    operationSet.push(regainOperation);
-  }
+  operationSet.push(...optionalRegains);
   return operationSet;
 }
 /** given conditions and assigned mods, can this mod be placed on this armor item? */

@@ -964,43 +964,6 @@ function applyLoadoutMods(
       );
     }
 
-    // Patch in assignments for mods by bucket (shaders/ornaments)
-    for (const [bucketHashStr, modsForBucket] of Object.entries(modsByBucket)) {
-      const bucketHash = parseInt(bucketHashStr, 10);
-      const item = armor.find((i) => i.bucket.hash === bucketHash);
-      if (item) {
-        for (const modHash of modsForBucket) {
-          const modDef = defs.InventoryItem.get(modHash);
-          if (
-            isPluggableItem(modDef) &&
-            item.sockets?.allSockets.some((s) => plugFitsIntoSocket(s, modHash))
-          ) {
-            (itemModAssignments[item.id] ??= []).push(modDef);
-          } else {
-            // I guess technically these are unassigned
-            setLoadoutState(
-              setModResult({
-                modHash: modHash,
-                state: LoadoutModState.Unassigned,
-                error: new DimError('Loadouts.UnassignedModError'),
-              })
-            );
-          }
-        }
-      } else {
-        for (const modHash of modsForBucket) {
-          // I guess technically these are unassigned
-          setLoadoutState(
-            setModResult({
-              modHash: modHash,
-              state: LoadoutModState.Unassigned,
-              error: new DimError('Loadouts.UnassignedModError'),
-            })
-          );
-        }
-      }
-    }
-
     const applyModsPromises: Promise<void>[] = [];
 
     const handleSuccess = ({ mod, requested }: Assignment) =>
@@ -1030,6 +993,25 @@ function applyLoadoutMods(
         itemModAssignments[item.id],
         clearUnassignedSocketsPerItem
       );
+
+      // Patch in assignments for mods by bucket (shaders/ornaments)
+      for (const modHash of modsByBucket[item.bucket.hash] ?? []) {
+        const modDef = defs.InventoryItem.get(modHash);
+        const socket = item.sockets?.allSockets.find((s) => plugFitsIntoSocket(s, modHash));
+        if (socket && isPluggableItem(modDef)) {
+          assignments.push({ mod: modDef, socketIndex: socket.socketIndex, requested: true });
+        } else {
+          // I guess technically these are unassigned
+          setLoadoutState(
+            setModResult({
+              modHash: modHash,
+              state: LoadoutModState.Unassigned,
+              error: new DimError('Loadouts.UnassignedModError'),
+            })
+          );
+        }
+      }
+
       const pluggingSteps = createPluggingStrategy(item, assignments, defs);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
