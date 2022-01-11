@@ -18,7 +18,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
-import { addIcon, AppIcon, faCalculator } from 'app/shell/icons';
+import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { copyString } from 'app/utils/util';
@@ -88,8 +88,7 @@ function Loadouts() {
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const handleNewLoadout = () => {
-    const loadout = newLoadout('', []);
-    loadout.classType = selectedStore.classType;
+    const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
@@ -229,7 +228,7 @@ function LoadoutRow({
           className="dim-button"
           onClick={() => handleDeleteClick(loadout)}
         >
-          {t('Loadouts.Delete')}
+          <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
         </button>
       );
     }

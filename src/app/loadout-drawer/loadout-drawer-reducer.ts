@@ -1,9 +1,13 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
+import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
 
@@ -22,6 +26,7 @@ export interface State {
     /** An initial query to be passed to the mod picker, this will filter the mods shown. */
     query?: string;
   };
+  showFashionDrawer: boolean;
 }
 
 export type Action =
@@ -48,6 +53,7 @@ export type Action =
     }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
+  | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
@@ -55,7 +61,8 @@ export type Action =
   | { type: 'updateMods'; mods: number[] }
   | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
-  | { type: 'closeModPicker' };
+  | { type: 'closeModPicker' }
+  | { type: 'toggleFashionDrawer'; show: boolean };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -70,6 +77,7 @@ export function stateReducer(state: State, action: Action): State {
         modPicker: {
           show: false,
         },
+        showFashionDrawer: false,
       };
 
     case 'editLoadout': {
@@ -101,7 +109,9 @@ export function stateReducer(state: State, action: Action): State {
 
       // Check whether this addItem happened without a loadout being edited,
       // which can happen from item popup action buttons.
-      const [addToLoadout, isNew] = loadout ? [loadout, state.isNew] : [newLoadout('', []), true];
+      const [addToLoadout, isNew] = loadout
+        ? [loadout, state.isNew]
+        : [newLoadout('', [], item.classType), true];
 
       const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
 
@@ -129,6 +139,23 @@ export function stateReducer(state: State, action: Action): State {
       const { item, socketOverrides } = action;
       return loadout
         ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
+        : state;
+    }
+
+    case 'updateModsByBucket': {
+      const { loadout } = state;
+      const { modsByBucket } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+              },
+            },
+          }
         : state;
     }
 
@@ -176,6 +203,9 @@ export function stateReducer(state: State, action: Action): State {
     case 'closeModPicker': {
       return { ...state, modPicker: { show: false } };
     }
+
+    case 'toggleFashionDrawer':
+      return { ...state, showFashionDrawer: action.show };
   }
 }
 
@@ -232,6 +262,22 @@ function addItem(
         }
 
         draftLoadout.items.push(loadoutItem);
+
+        // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
+        if (
+          item.bucket.inArmor &&
+          loadoutItem.equipped &&
+          draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
+        ) {
+          const cosmeticSockets = getSocketsByCategoryHash(
+            item.sockets,
+            SocketCategoryHashes.ArmorCosmetics
+          );
+          draftLoadout.parameters.modsByBucket[item.bucket.hash] =
+            draftLoadout.parameters.modsByBucket[item.bucket.hash].filter((plugHash) =>
+              cosmeticSockets.some((s) => s.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash))
+            );
+        }
       } else {
         showNotification({
           type: 'warning',
@@ -241,7 +287,6 @@ function addItem(
     } else if (item.maxStackSize > 1) {
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
       dupe.amount += increment;
-      // TODO: handle stack splits
     }
   });
 }

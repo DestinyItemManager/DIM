@@ -1,7 +1,7 @@
 import { useEventBusListener } from 'app/utils/hooks';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { ItemPickerState, showItemPicker$ } from './item-picker';
+import { hideItemPicker$, ItemPickerState, showItemPicker$ } from './item-picker';
 import ItemPicker from './ItemPicker';
 
 // TODO: nest components to make redux happier?
@@ -25,6 +25,13 @@ function ItemPickerContainer() {
         return newOptions;
       });
       setGeneration((gen) => gen + 1);
+    }, [])
+  );
+
+  useEventBusListener(
+    hideItemPicker$,
+    useCallback(() => {
+      setOptions(() => undefined);
     }, [])
   );
 

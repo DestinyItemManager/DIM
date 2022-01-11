@@ -1,0 +1,17 @@
+@import '../../variables.scss';
+
+.empty {
+  width: var(--item-size);
+  height: calc(var(--item-size) + #{$badge-height} - #{3 * $item-border-width});
+  border: 1px solid #ddd;
+}
+
+.placeholder {
+  composes: item from global;
+  filter: invert(1);
+  opacity: 0.3;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+}

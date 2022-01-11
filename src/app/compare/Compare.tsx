@@ -231,7 +231,7 @@ export default function Compare() {
   );
 
   return (
-    <Sheet onClose={cancel} header={header}>
+    <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className="loadout-drawer compare">
         <div
           className={styles.bucket}

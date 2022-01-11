@@ -4,8 +4,7 @@
     "ConfirmTitle": "Confirmar Acción",
     "Error": "Error cambiando mods o perks",
     "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
-    "FailedToken": "No se pudo obtener permiso para cambiar el objeto",
-    "SelfInsertion": "¡No puedes insertar un objeto en sí mismo!"
+    "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
   },
   "Accounts": {
     "ErrorLoadInventory": "No se pueden cargar tus personajes e inventario de Destiny {{version}}",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "Sin espacio",
     "Stop": "Detener",
     "Vault": "Moverá objetos al Depósito para hacer espacio."
+  },
+  "FashionDrawer": {
+    "Accept": "Usar estos cosméticos",
+    "ClearOrnaments": "Limpiar Diseños",
+    "ClearShaders": "Limpiar Shaders",
+    "Reset": "Reiniciar todo",
+    "Sync": "Sincronizar",
+    "SyncOrnaments": "Sincronizar Diseños",
+    "SyncShaders": "Sincronizar Shaders",
+    "Title": "Elegir shaders y diseños",
+    "UseEquipped": "Usar Equipados"
   },
   "FileUpload": {
     "Instructions": "Haga click o arrastre archivos"
@@ -362,6 +372,7 @@
     "Deequip": "No se pudo encontrar otro objeto para equipar con el fin de desequipar {{itemname}}",
     "ExoticError": "'{{itemname}}' no puede ser equipado porque el objeto exótico en el espacio {{slot}} no puede ser desequipado. ({{error}})",
     "NotEnoughRoom": "No hay nada que podamos sacar fuera de {{store}} para hacerle espacio a {{itemname}}",
+    "NotEnoughRoomGeneral": "No hay suficiente espacio para mover este objeto.",
     "OnlyEquippedClassLevel": "Esto sólo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
     "PostmasterAlmostFull": "¡Casi lleno! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "Múltiples objetos Exóticos fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
     "EquippableDifferent2": "El Poder Máximo no está limitado por la regla del \"Exótico Único\" cuando se determina el Poder de tus recompensas de botines/poderosos/pináculo.",
     "Failed": "La equipación falló por completo al aplicar",
+    "Fashion": "Elegir cosméticos",
     "FilteredItems": "Objetos filtrados",
     "FindAnother": "Encontrar otro {{name}}",
     "FromEquipped": "Equipado",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "Este objeto está desbloqueado en colecciones.",
-    "AcquiredMod": "Este modificador está aplicado a un objeto en tu inventario en estos momentos.",
+    "AcquiredMod": "Este mod está desbloqueado en colecciones.",
     "AddNote": "Agregar una nota",
     "AddToLoadout": "Equipación",
     "All": "Todo",

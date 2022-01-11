@@ -5,8 +5,7 @@
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
     "FailedToken": "Couldn't get permission to change item",
-    "NotSupported": "We cannot change this type of mod or perk",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "NotSupported": "We cannot change this type of mod or perk"
   },
   "Accounts": {
     "Blizzard": "PC",
@@ -158,6 +157,22 @@
     "OutOfRoom": "You're out of space to move items off of {{character}}. Time to clear out the trash!",
     "OutOfRoomTitle": "Out of Room",
     "Stop": "Stop"
+  },
+  "FashionDrawer": {
+    "Title": "Choose shaders and ornaments",
+    "Accept": "Save fashion",
+    "Reset": "Clear fashion",
+    "Sync": "Sync",
+    "UseEquipped": "Use equipped fashion",
+    "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
+    "ClearShaders": "Clear Shaders",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
@@ -316,6 +331,7 @@
     "FilterMatchCount_plural": "{{count}} items",
     "Filters": "Filters",
     "FilterHelpMenuItem": "Filters Help...",
+    "LaunchDIMAlone": "Separate Window",
     "InstallDIM": "Install as an App",
     "InstallDIMBanner": "Install DIM as an app on your home screen",
     "Inventory": "Inventory",
@@ -592,6 +608,7 @@
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
@@ -877,6 +894,7 @@
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
+    "ExportProfile": "Export API profile response",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
@@ -934,14 +952,14 @@
       "Projection": "Apply Ghost Projection"
     },
     "Select": {
-      "Mod": "Select Mod",
-      "Shader": "Select Shader",
-      "Ornament": "Select Ornament",
-      "Ability": "Select Ability",
-      "Fragment": "Select Fragment",
-      "Aspect": "Select Aspect",
-      "Transmat": "Select Transmat Effect",
-      "Projection": "Select Ghost Projection"
+      "Mod": "Preview Mod",
+      "Shader": "Preview Shader",
+      "Ornament": "Preview Ornament",
+      "Ability": "Preview Ability",
+      "Fragment": "Preview Fragment",
+      "Aspect": "Preview Aspect",
+      "Transmat": "Preview Transmat Effect",
+      "Projection": "Preview Ghost Projection"
     },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"

@@ -1,3 +1,4 @@
+import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -44,7 +45,7 @@ interface Props {
    * Disable the sheet (no clicking, dragging, or close-on-esc). The sheet will
    * automatically disable itself if another sheet is shown as a child, so no
    * need to set this explicitly most of the time - pretty much just if you need
-   * to communciate that some "global" sheet like the item picker is up.
+   * to communicate that some "global" sheet like the item picker is up.
    */
   disabled?: boolean;
   /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
@@ -53,6 +54,13 @@ interface Props {
   sheetClassName?: string;
   /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
   freezeInitialHeight?: boolean;
+  /**
+   * Allow clicks to escape this sheet. This allows for things like the popups
+   * in the Compare sheet being closed by clicking in the Compare sheet. By
+   * default we block clicks so that clicks in sheets spawned from within an
+   * item popup don't close the popup they were spawned from!
+   */
+  allowClickThrough?: boolean;
   onClose(): void;
 }
 
@@ -65,9 +73,6 @@ const spring: SpringConfig = {
 // or dragged down more than dismissAmount times the height of the sheet.
 const dismissVelocity = 0.8;
 const dismissAmount = 0.5;
-
-// Disable body scroll on mobile
-const mobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
 
@@ -103,6 +108,7 @@ export default function Sheet({
   disabled: forceDisabled,
   zIndex,
   freezeInitialHeight,
+  allowClickThrough,
   onClose,
 }: Props) {
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
@@ -225,7 +231,7 @@ export default function Sheet({
           onKeyDown={stopPropagation}
           onKeyUp={stopPropagation}
           onKeyPress={stopPropagation}
-          onClick={stopPropagation}
+          onClick={allowClickThrough ? undefined : stopPropagation}
         >
           <a
             href="#"
@@ -310,7 +316,10 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       sheetContents.current = contents;
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
-        if (mobile) {
+        if (isiOSBrowser()) {
+          // as-is, body-scroll-lock does not work on on Android #5615
+          document.body.classList.add('body-scroll-lock');
+          enableBodyScroll(sheetContents.current);
           disableBodyScroll(sheetContents.current);
         }
       }
@@ -322,7 +331,10 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     () => () => {
       if (sheetContents.current) {
         sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (mobile) {
+        if (isiOSBrowser()) {
+          setTimeout(() => {
+            document.body.classList.remove('body-scroll-lock');
+          }, 0);
           enableBodyScroll(sheetContents.current);
         }
       }

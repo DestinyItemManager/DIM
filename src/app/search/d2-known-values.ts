@@ -211,6 +211,7 @@ export const armorBuckets = {
 //
 
 export const RAID_NODE = 4025982223;
+export const SHADER_NODE = 1516796296;
 
 //
 // MISC KNOWN HASHES / ENUMS
@@ -234,7 +235,8 @@ export const VENDORS = {
   BENEDICT: 1265988377,
   BANSHEE: 672118013,
   DRIFTER: 248695599,
-  ADA: 2917531897,
+  ADA_FORGE: 2917531897,
+  ADA_TRANSMOG: 350061650,
   /** rahool. we override how his vendor FakeItems are displayed */
   RAHOOL: 2255782930,
   VAULT: 1037843411,

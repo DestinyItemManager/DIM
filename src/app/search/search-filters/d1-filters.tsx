@@ -55,13 +55,13 @@ const d1Filters: FilterDefinition[] = [
   },
 
   {
-    keywords: ['ascended', 'assended', 'asscended'],
+    keywords: ['ascended'],
     description: tl('Filter.Ascended'),
     destinyVersion: 1,
     filter: () => (item: D1Item) => item.talentGrid?.hasAscendNode && item.talentGrid.ascended,
   },
   {
-    keywords: ['unascended', 'unassended', 'unasscended'],
+    keywords: ['unascended'],
     description: tl('Filter.Unascended'),
     destinyVersion: 1,
     filter: () => (item: D1Item) => item.talentGrid?.hasAscendNode && !item.talentGrid.ascended,

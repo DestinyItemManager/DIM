@@ -34,14 +34,7 @@ export interface D2Vendor {
   currencies: DestinyInventoryItemDefinition[];
 }
 
-const vendorOrder = [
-  VENDORS.SPIDER,
-  VENDORS.EVERVERSE,
-  VENDORS.BENEDICT,
-  VENDORS.BANSHEE,
-  VENDORS.DRIFTER,
-  VENDORS.ADA,
-];
+const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
 
 export function toVendorGroups(
   vendorsResponse: DestinyVendorsResponse,

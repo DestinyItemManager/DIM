@@ -4,8 +4,7 @@
     "ConfirmTitle": "작업 확인",
     "Error": "개조 부품이나 특성 교체 실패",
     "ErrorMessage": "{{item}}에 {{plug}}을(를) 장착할 수 없습니다.\n\n{{error}}",
-    "FailedToken": "아이템을 변경할 권한이 없음",
-    "SelfInsertion": "아이템을 자기 자신에게 넣을 수 없습니다!"
+    "FailedToken": "아이템을 변경할 권한이 없음"
   },
   "Accounts": {
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "공간 부족",
     "Stop": "중지",
     "Vault": "공간 확보를 위해 아이템을 금고로 옮깁니다."
+  },
+  "FashionDrawer": {
+    "Accept": "이 패션 사용",
+    "ClearOrnaments": "장식 초기화",
+    "ClearShaders": "안료 초기화",
+    "Reset": "모두 초기화",
+    "Sync": "동기화",
+    "SyncOrnaments": "장식 동기화",
+    "SyncShaders": "안료 동기화",
+    "Title": "안료와 장식 선택",
+    "UseEquipped": "장착된 패션 사용"
   },
   "FileUpload": {
     "Instructions": "클릭 또는 파일 끌어서 놓기"
@@ -362,6 +372,7 @@
     "Deequip": "{{itemname}} 대신 장착할 다른 아이템을 찾을 수 없음",
     "ExoticError": "{{slot}} 슬롯에 있는 경의 등급의 아이템이 장착 해제 될 수 없어 {{itemname}}을(를) 장착하실 수 없습니다. {{error}}",
     "NotEnoughRoom": "{{store}}에서 {{itemname}}을(를) 옮길 공간을 만들기 위해 움직일 수 있는 아이템이 없습니다.",
+    "NotEnoughRoomGeneral": "이 아이템을 이동할 공간이 없습니다.",
     "OnlyEquippedClassLevel": "이 아이템은 {{class}}이고 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "OnlyEquippedLevel": "이 아이템은 {{level}}레벨 이상인 캐릭터만 장착할 수 있습니다.",
     "PostmasterAlmostFull": "거의 꽉 찼습니다! ({{number}}/{{postmasterSize}})",
@@ -501,7 +512,7 @@
   },
   "Loadouts": {
     "Abilities": "능력",
-    "AddEquippedItems": "장착한 아이템 추가",
+    "AddEquippedItems": "장착된 아이템 추가",
     "AddNotes": "메모 추가",
     "AddUnequippedItems": "장착하지 않은 아이템 추가",
     "AlreadyExistsClass": "동일한 이름을 가진 로드아웃이 {{className}} 직업에 존재합니다.",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
     "EquippableDifferent2": "최대 전투력은 획득하는 아이템, 강력한 장비, 최고조 보상의 전투력을 결정할 때 \"하나의 경이\" 규칙에 의해 제한되지 않습니다.",
     "Failed": "로드아웃이 완전히 적용되지 않음",
+    "Fashion": "패션 선택",
     "FilteredItems": "필터링된 아이템",
     "FindAnother": "다른 {{name}} 검색",
     "FromEquipped": "현재 장비",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "이 아이템은 수집품에서 잠금 해제되었습니다.",
-    "AcquiredMod": "이 개조 부품은 소지품의 아이템에 적용되어 있습니다.",
+    "AcquiredMod": "이 개조 부품은 수집품에서 잠금 해제되었습니다.",
     "AddNote": "메모 추가",
     "AddToLoadout": "로드아웃",
     "All": "전체",

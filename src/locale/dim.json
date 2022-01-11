@@ -4,8 +4,7 @@
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "Couldn't get permission to change item",
-    "SelfInsertion": "You cannot plug an item into itself!"
+    "FailedToken": "Couldn't get permission to change item"
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
@@ -152,6 +151,22 @@
     "Stop": "Stop",
     "Vault": "It will move items to the vault to make room."
   },
+  "FashionDrawer": {
+    "Accept": "Save fashion",
+    "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
+    "ClearShaders": "Clear Shaders",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
+    "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use equipped fashion"
+  },
   "FileUpload": {
     "Instructions": "Click or drag files"
   },
@@ -295,6 +310,7 @@
     "Inventory": "Inventory",
     "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Keyboard Shortcuts",
+    "LaunchDIMAlone": "Separate Window",
     "Menu": "Menu",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
@@ -529,6 +545,7 @@
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Failed": "Loadout failed to apply completely",
+    "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
@@ -802,6 +819,7 @@
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExpandSingleCharacter": "Show all characters",
+    "ExportProfile": "Export API profile response",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
@@ -857,14 +875,14 @@
     },
     "ListStyle": "Display perks as a list",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Preview Ability",
+      "Aspect": "Preview Aspect",
+      "Fragment": "Preview Fragment",
+      "Mod": "Preview Mod",
+      "Ornament": "Preview Ornament",
+      "Projection": "Preview Ghost Projection",
+      "Shader": "Preview Shader",
+      "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
@@ -1042,7 +1060,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
-  "You cannot plug an item into itself!": "",
   "no-space": "",
   "wrong-level": ""
 }

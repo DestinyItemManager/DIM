@@ -11,7 +11,7 @@ import {
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import { loadoutNotification } from 'app/inventory/MoveNotifications';
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import {
@@ -26,20 +26,21 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
-  isAssigningToDefault,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -194,11 +195,26 @@ function doApplyLoadout(
         );
       });
 
+      // Filter out mods that no longer exist or that aren't unlocked on this character
+      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
+      const checkMod = (h: number) =>
+        Boolean(defs.InventoryItem.get(h)) &&
+        (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
+
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter((h) =>
-        // Filter out mods that no longer exist
-        defs.InventoryItem.get(h)
-      );
+      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter(checkMod);
+      // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
+      const modsByBucketToApply: {
+        [bucketHash: number]: number[];
+      } = {};
+      if (!store.isVault && loadout.parameters?.modsByBucket) {
+        for (const [bucketHash, mods] of Object.entries(loadout.parameters.modsByBucket)) {
+          const filteredMods = mods.filter(checkMod);
+          if (filteredMods.length) {
+            modsByBucketToApply[parseInt(bucketHash, 10)] = filteredMods;
+          }
+        }
+      }
 
       // Initialize items/mods/etc in the LoadoutApplyState, for the notification
       setLoadoutState(
@@ -228,10 +244,19 @@ function doApplyLoadout(
             }
           }
           // Fill out pending state for all mods
-          state.modStates = modsToApply.map((modHash) => ({
-            modHash,
-            state: LoadoutModState.Pending,
-          }));
+          state.modStates = modsToApply
+            .map((modHash) => ({
+              modHash,
+              state: LoadoutModState.Pending,
+            }))
+            .concat(
+              Object.values(modsByBucketToApply)
+                .flat()
+                .map((modHash) => ({
+                  modHash,
+                  state: LoadoutModState.Pending,
+                }))
+            );
         })
       );
 
@@ -475,7 +500,7 @@ function doApplyLoadout(
       }
 
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
-      if (modsToApply.length) {
+      if (modsToApply.length || !_.isEmpty(modsByBucketToApply)) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
@@ -483,6 +508,7 @@ function doApplyLoadout(
             applicableLoadoutItems,
             store.id,
             modsToApply,
+            modsByBucketToApply,
             setLoadoutState,
             cancelToken
           )
@@ -854,7 +880,7 @@ function applySocketOverrides(
               }));
 
         await dispatch(
-          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken, true)
+          equipModsToItem(dimItem.id, modsForItem, handleSuccess, handleFailure, cancelToken)
         );
       }
     }
@@ -873,6 +899,10 @@ function applyLoadoutMods(
   storeId: string,
   /** A list of inventory item hashes for plugs */
   modHashes: number[],
+  /** Extra mods to apply that are specifically per bucket */
+  modsByBucket: {
+    [bucketHash: number]: number[];
+  },
   setLoadoutState: LoadoutStateUpdater,
   cancelToken: CancelToken,
   /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
@@ -910,11 +940,13 @@ function applyLoadoutMods(
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // Early exit - if all the mods are already there, nothing to do
-    if (allModsAreAlreadyApplied(armor, modHashes)) {
+    if (allModsAreAlreadyApplied(armor, modHashes, modsByBucket)) {
       infoLog('loadout mods', 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,
-        modStates: modHashes.map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
+        modStates: modHashes
+          .concat(Object.values(modsByBucket).flat())
+          .map((modHash) => ({ modHash, state: LoadoutModState.Applied })),
       }));
       return;
     }
@@ -931,6 +963,43 @@ function applyLoadoutMods(
           error: new DimError('Loadouts.UnassignedModError'),
         })
       );
+    }
+
+    // Patch in assignments for mods by bucket (shaders/ornaments)
+    for (const [bucketHashStr, modsForBucket] of Object.entries(modsByBucket)) {
+      const bucketHash = parseInt(bucketHashStr, 10);
+      const item = armor.find((i) => i.bucket.hash === bucketHash);
+      if (item) {
+        for (const modHash of modsForBucket) {
+          const modDef = defs.InventoryItem.get(modHash);
+          if (
+            isPluggableItem(modDef) &&
+            item.sockets?.allSockets.some((s) => plugFitsIntoSocket(s, modHash))
+          ) {
+            (itemModAssignments[item.id] ??= []).push(modDef);
+          } else {
+            // I guess technically these are unassigned
+            setLoadoutState(
+              setModResult({
+                modHash: modHash,
+                state: LoadoutModState.Unassigned,
+                error: new DimError('Loadouts.UnassignedModError'),
+              })
+            );
+          }
+        }
+      } else {
+        for (const modHash of modsForBucket) {
+          // I guess technically these are unassigned
+          setLoadoutState(
+            setModResult({
+              modHash: modHash,
+              state: LoadoutModState.Unassigned,
+              error: new DimError('Loadouts.UnassignedModError'),
+            })
+          );
+        }
+      }
     }
 
     const applyModsPromises: Promise<void>[] = [];
@@ -981,17 +1050,36 @@ function applyLoadoutMods(
 /**
  * Check whether all the mods in modHashes are already applied to the items in armor.
  */
-function allModsAreAlreadyApplied(armor: DimItem[], modHashes: number[]) {
+function allModsAreAlreadyApplied(
+  armor: DimItem[],
+  modHashes: number[],
+  modsByBucket: {
+    [bucketHash: number]: number[];
+  }
+) {
+  // Copy this - we'll be deleting from it
+  modsByBucket = { ...modsByBucket };
+
   // What mods are already on the equipped armor set?
   const existingMods: number[] = [];
   for (const item of armor) {
     if (item.sockets) {
+      let modsForBucket: readonly number[] = modsByBucket[item.bucket.hash] ?? emptyArray();
       for (const socket of item.sockets.allSockets) {
         if (socket.plugged) {
-          existingMods.push(socket.plugged.plugDef.hash);
+          const pluggedHash = socket.plugged.plugDef.hash;
+          existingMods.push(pluggedHash);
+          modsForBucket = modsForBucket.filter((h) => h !== pluggedHash);
         }
       }
+      if (modsForBucket.length === 0) {
+        delete modsByBucket[item.bucket.hash];
+      }
     }
+  }
+
+  if (!_.isEmpty(modsByBucket)) {
+    return false;
   }
 
   // Early exit - if all the mods are already there, nothing to do
@@ -1020,8 +1108,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
-  cancelToken: CancelToken,
-  includeAssignToDefault = false
+  cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -1038,15 +1125,27 @@ function equipModsToItem(
     // if you need to remove a mod before applying another.
 
     for (const assignment of modsToApply) {
-      const { socketIndex, mod } = assignment;
+      const { socketIndex } = assignment;
+      let { mod } = assignment;
       // Use this socket
       const socket = getSocketByIndex(item.sockets, socketIndex)!;
+
+      // This is a special case for transmog ornaments - you can't apply a
+      // transmog ornament to the same item it was created with. So instead we
+      // swap at the last minute to applying the default ornament which should
+      // match the appearance that the user wanted. We'll still report as if we
+      // applied the ornament.
+      if (mod.hash === item.hash) {
+        const defaultPlugHash = getDefaultPlugHash(socket, defs);
+        if (defaultPlugHash) {
+          mod = (defs.InventoryItem.get(defaultPlugHash) ??
+            mod) as PluggableInventoryItemDefinition;
+        }
+      }
+
       // If the plug is already inserted we can skip this
       if (socket.plugged?.plugDef.hash === mod.hash) {
-        // Don't count removing mods as applying a mod successfully
-        if (includeAssignToDefault || !isAssigningToDefault(item, assignment, defs)) {
-          onSuccess(assignment);
-        }
+        onSuccess(assignment);
         continue;
       }
       if (canInsertPlug(socket, mod.hash, destiny2CoreSettings, defs)) {

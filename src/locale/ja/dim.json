@@ -4,8 +4,7 @@
     "ConfirmTitle": "操作を確認",
     "Error": "Modまたはパークの変更でエラーが発生しました",
     "ErrorMessage": "{{item}} に {{plug}} を装備できませんでした。\n\n{{error}}",
-    "FailedToken": "アイテムを変更する権限を取得できません",
-    "SelfInsertion": "アイテムをアイテム自身に装入するのはできません。"
+    "FailedToken": "アイテムを変更する権限を取得できません"
   },
   "Accounts": {
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
@@ -151,6 +150,17 @@
     "OutOfRoomTitle": "スペースありません。",
     "Stop": "停止",
     "Vault": "アイテムを保管庫に移動してスペースを確保します。"
+  },
+  "FashionDrawer": {
+    "Accept": "このファッションを選択",
+    "ClearOrnaments": "装備品をクリア",
+    "ClearShaders": "シェーダーをクリア",
+    "Reset": "すべてをリセット",
+    "Sync": "同期",
+    "SyncOrnaments": "装備品を同期",
+    "SyncShaders": "シェーダーを同期",
+    "Title": "シェーダーと装備品を選択",
+    "UseEquipped": "装備を使用"
   },
   "FileUpload": {
     "Instructions": "クリックするか、ファイルをドラッグします。"
@@ -362,6 +372,7 @@
     "Deequip": "{{itemname}} を取り除くために装備するアイテムが見つかりません",
     "ExoticError": "'{{itemname}}' は装備できません。なぜなら{{slot}} エキゾチックなものは装備できないからです。({{error}})",
     "NotEnoughRoom": "{{itemname}} のスペースを確保するために{{store}} から移動することはできません。",
+    "NotEnoughRoomGeneral": "スペースが不足しているためアイテムを移動できません",
     "OnlyEquippedClassLevel": "これは、レベル{{level}} 以上の{{class}} にしか装備できません。",
     "OnlyEquippedLevel": "レベル {{level}} 以上のキャラクターのみ装備が可能です。",
     "PostmasterAlmostFull": "殆どいっぱい! ({{number}}/{{postmasterSize}})",
@@ -528,6 +539,7 @@
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
     "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは通称「1つのエキゾチック」ルールによって制限されません。",
     "Failed": "ロードアウトを完全に適用できませんでした",
+    "Fashion": "ファッションを選択",
     "FilteredItems": "フィルタ処理された項目",
     "FindAnother": "別の {{name}} を検索する",
     "FromEquipped": "装備中",
@@ -623,7 +635,7 @@
   },
   "MovePopup": {
     "Acquired": "このアイテムはコレクションでアンロックされています。",
-    "AcquiredMod": "現在、このmodはインベントリ内のアイテムに適用されています。",
+    "AcquiredMod": "このModはコレクションでアンロックされています。",
     "AddNote": "メモを追加",
     "AddToLoadout": "ロードアウト",
     "All": "全て",

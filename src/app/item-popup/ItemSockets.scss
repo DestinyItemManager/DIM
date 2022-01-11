@@ -68,7 +68,7 @@
 .plug-stats {
   display: grid;
   grid-template: auto / auto 1fr;
-  grid-column-gap: 4px;
+  column-gap: 4px;
   margin-top: 4px;
   > div {
     &:nth-child(2n + 1) {

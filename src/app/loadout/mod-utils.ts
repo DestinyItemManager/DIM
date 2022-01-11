@@ -18,7 +18,7 @@ export const activityModPlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonMaverick,
 ];
 
-export const bucketsToCategories = {
+export const bucketHashToPlugCategoryHash = {
   [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
   [armorBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
   [armorBuckets.chest]: armor2PlugCategoryHashesByName.chest,

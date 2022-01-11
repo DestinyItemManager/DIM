@@ -92,9 +92,7 @@ function SingleVendor({
     throw new Error('no characters chosen or found to use for vendor API call');
   }
 
-  const ownedItemHashes = useSelector((state: RootState) =>
-    ownedVendorItemsSelector(state, characterId)
-  );
+  const ownedItemHashes = useSelector(ownedVendorItemsSelector(characterId));
 
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;

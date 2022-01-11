@@ -10,7 +10,11 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
+import {
+  getFirstSocketByCategoryHash,
+  getSocketsByCategoryHash,
+  getSocketsByIndexes,
+} from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -50,10 +54,10 @@ const gearSlotOrder: DimItem['type'][] = [
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: DestinyClass.Unknown,
+    classType: classType ?? DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -93,23 +97,40 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   const items = dimStore.items.filter(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
-  const loadout = newLoadout(
-    name,
-    items.map((i) => {
-      const item = convertToLoadoutItem(i, true);
-      if (i.bucket.hash === BucketHashes.Subclass) {
-        item.socketOverrides = createSocketOverridesFromEquipped(i);
-      }
-      return item;
-    })
-  );
+  const loadoutItems = items.map((i) => {
+    const item = convertToLoadoutItem(i, true);
+    if (i.bucket.hash === BucketHashes.Subclass) {
+      item.socketOverrides = createSocketOverridesFromEquipped(i);
+    }
+    return item;
+  });
+  const loadout = newLoadout(name, loadoutItems, dimStore.classType);
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
       mods,
     };
   }
-  loadout.classType = dimStore.classType;
+  // Save "fashion" mods for equipped items
+  const modsByBucket = {};
+  for (const item of items.filter((i) => i.bucket.inArmor)) {
+    const plugs = item.sockets
+      ? _.compact(
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+            (s) => s.plugged?.plugDef.hash
+          )
+        )
+      : [];
+    if (plugs.length) {
+      modsByBucket[item.bucket.hash] = plugs;
+    }
+  }
+  if (!_.isEmpty(modsByBucket)) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      modsByBucket,
+    };
+  }
   return loadout;
 }
 

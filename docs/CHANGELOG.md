@@ -1,6 +1,23 @@
 ## Next
-* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements. 
+
+## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
+
+* The Loadouts page is a bit cleaner and more compact in the mobile view.
+* You can once again click within the Compare sheet to close an item popup.
+* Loadouts don't fail when they contain an ornament that can't be slotted into the current armor.
+* Sharing loadout builds includes fashion.
+
+## 6.99.0 <span class="changelog-date">(2022-01-09)</span>
+
+* You can now add Fashion (shaders and ornaments) to loadouts. Creating a loadout from equipped automatically adds in the current shaders and ornaments, and you can edit them manually from the Loadouts editor.
+* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements.
 * Fixed an issue that could make moving searches containing stacks of items to fail.
+* Added Spoils of Conquest to the currencies hover menu.
+* Fixed an issue where the Loadout Optimizer would let you pin items from other classes.
+* Fixed an issue where the universal ornament picker would show too many ornaments as unlocked.
+* Shader picker now hides unavailable, unobtainable shaders.
+* "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
+* Creating a loadout now defaults the class to whichever character you had selected.
 
 ## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
 
