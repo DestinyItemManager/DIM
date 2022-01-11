@@ -4,9 +4,6 @@ module.exports = function (api) {
   const plugins = [
     'lodash',
     'babel-plugin-optimize-clsx',
-    '@babel/plugin-syntax-dynamic-import',
-    ['@babel/plugin-proposal-optional-chaining', { loose: true }],
-    ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -46,11 +43,7 @@ module.exports = function (api) {
     }
 
     // In dev, compile TS with babel
-    plugins.push(
-      ['@babel/proposal-class-properties', { loose: true }],
-      '@babel/proposal-object-rest-spread',
-      ['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]
-    );
+    plugins.push(['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]);
   }
 
   const presetEnvOptions = {
@@ -73,5 +66,12 @@ module.exports = function (api) {
       ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3 }],
     ],
     plugins,
+    // https://babeljs.io/docs/en/assumptions
+    assumptions: {
+      noDocumentAll: true,
+      noClassCalls: true,
+      setPublicClassFields: true,
+      setSpreadProperties: true,
+    },
   };
 };
