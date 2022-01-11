@@ -333,10 +333,13 @@ export function pickPlugPositions(
   if (!item.sockets) {
     return assignments;
   }
-  const existingModSockets = [
-    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods),
-    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
-  ].sort(
+  const armorModSockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods);
+  const fashionModSockets = getSocketsByCategoryHash(
+    item.sockets,
+    SocketCategoryHashes.ArmorCosmetics
+  );
+
+  const existingModSockets = [...armorModSockets, ...fashionModSockets].sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
     compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
@@ -376,11 +379,10 @@ export function pickPlugPositions(
     existingModSockets.splice(destinationSocketIndex, 1);
   }
 
-  // For each remaining socket that won't have mods assigned,
-  // return it to its default (usually "Empty Mod Socket")
-
-  // so we fall back to the first item in its reusable PlugSet
-  for (const socket of existingModSockets) {
+  // For each remaining armor mod socket that won't have mods assigned,
+  // allow it to be returned to its default (usually "Empty Mod Socket").
+  // We only do this for armor mods - fashion mods shouldn't ever be reset.
+  for (const socket of armorModSockets) {
     const defaultModHash = getDefaultPlugHash(socket, defs);
     const mod =
       defaultModHash &&
