@@ -140,7 +140,7 @@ export default function ItemDetails({
       {item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
           <Link
-            to={`../vendors/${item.previewVendor}${
+            to={`vendors/${item.previewVendor}${
               ownerStore && !ownerStore.isVault ? `?characterId=${ownerStore.id}` : ''
             }`}
           >
