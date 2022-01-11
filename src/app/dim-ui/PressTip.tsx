@@ -78,7 +78,9 @@ function Control({
     contents: tooltipContents,
     reference: triggerRef,
     arrowClassName: styles.arrow,
+    boundaryElement: pressTipRoot.current || undefined,
     placement: 'top',
+    fallbackPlacements: ['auto'],
   });
 
   if (!tooltip) {

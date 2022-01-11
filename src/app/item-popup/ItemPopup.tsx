@@ -57,7 +57,7 @@ export default function ItemPopup({
     placement: 'right',
     contents: popupRef,
     reference: { current: element || null },
-    boundarySelector,
+    boundaryElement: (boundarySelector && document.querySelector(boundarySelector)) || undefined,
     arrowClassName: styles.arrow,
   });
 
