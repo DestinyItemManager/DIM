@@ -1,5 +1,7 @@
 ## Next
 
+* Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
+
 ## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
 
 * The Loadouts page is a bit cleaner and more compact in the mobile view.
