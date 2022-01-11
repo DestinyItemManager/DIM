@@ -34,7 +34,7 @@ const createPopper = popperGenerator({
 
 const popperOptions = (
   placement: Placement = 'auto',
-  fallbackPlacements: Placement[] = [],
+  fallbackPlacements: Placement[] = ['top', 'bottom', 'right', 'left'],
   arrowClassName?: string,
   boundaryElement?: Element,
   offset = arrowClassName ? 5 : 0,

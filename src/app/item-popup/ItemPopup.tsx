@@ -55,6 +55,7 @@ export default function ItemPopup({
   const popupRef = useRef<HTMLDivElement>(null);
   usePopper({
     placement: 'right',
+    fallbackPlacements: ['left', 'top', 'bottom'],
     contents: popupRef,
     reference: { current: element || null },
     boundaryElement: (boundarySelector && document.querySelector(boundarySelector)) || undefined,
