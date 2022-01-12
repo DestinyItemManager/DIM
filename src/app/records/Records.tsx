@@ -88,11 +88,10 @@ export default function Records({ account }: Props) {
     ? Object.keys(destiny2CoreSettings)
         .filter((k) => k.includes('RootNode'))
         .map((k) => destiny2CoreSettings[k] as number)
-        .filter((n) => !profileHashes.includes(n))
     : [];
 
   // We put the hashes we know about from profile first
-  const nodeHashes = [...profileHashes, ...otherHashes];
+  const nodeHashes = _.uniq([...profileHashes, ...otherHashes]);
 
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
