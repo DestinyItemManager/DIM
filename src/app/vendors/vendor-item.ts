@@ -126,7 +126,7 @@ export class VendorItem {
     vendorHash: number,
     vendorItemDef?: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
-    // TODO: this'll be useful for showing the move-popup details
+    // TODO: this will be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;

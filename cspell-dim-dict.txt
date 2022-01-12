@@ -106,6 +106,7 @@ Português
 Rahool
 rbpage
 reacquirable
+React's
 reauth
 recalc
 recents
@@ -120,6 +121,7 @@ Scroller
 Shaxx
 shouldnt
 showxp
+Spawnfx
 stackable
 SVGs
 swappable
@@ -138,6 +140,7 @@ UniFFFD
 uninstanced
 unly
 unmount
+unmounts
 unparse
 Uncollectible
 unselectable
