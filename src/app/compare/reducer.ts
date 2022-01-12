@@ -22,6 +22,11 @@ export interface CompareSession {
    */
   readonly initialItemId?: string;
 
+  /**
+   * The ID of the character (if any) whose vendor response we should intermingle with owned items
+   */
+  readonly vendorCharacterId?: string;
+
   // TODO: Query history to offer back/forward navigation within compare sessions?
 }
 
@@ -124,12 +129,15 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
       ? `name:"${stripAdept(item.name)}"`
       : `name:"${item.name}"`;
 
+    const vendorCharacterId = item.vendor?.characterId;
+
     return {
       ...state,
       session: {
         query: itemNameQuery,
         itemCategoryHashes,
         initialItemId: item.id,
+        vendorCharacterId,
       },
     };
   }
