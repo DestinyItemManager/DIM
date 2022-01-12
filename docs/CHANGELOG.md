@@ -1,6 +1,7 @@
 ## Next
 
 * Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
+* The shader picker now filters invalid shaders more consistently and won't call shaders "mods".
 
 ## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
 
