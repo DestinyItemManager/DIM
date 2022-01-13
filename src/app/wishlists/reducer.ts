@@ -13,7 +13,7 @@ export type WishListAction = ActionType<typeof actions>;
 
 const initialState: WishListsState = {
   loaded: false,
-  wishListAndInfo: { title: undefined, description: undefined, wishListRolls: [] },
+  wishListAndInfo: { infos: [], wishListRolls: [] },
   lastFetched: undefined,
 };
 
@@ -33,8 +33,7 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
       return {
         ...state,
         wishListAndInfo: {
-          title: undefined,
-          description: undefined,
+          infos: [],
           wishListRolls: [],
           source: '',
         },
