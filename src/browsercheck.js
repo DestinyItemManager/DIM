@@ -22,6 +22,9 @@ function getBrowserName(agent) {
 function getUserLocale() {
   var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
   console.info('Language Detected: ' + lang);
+  if (lang.startsWith('zh-') && lang.length === 5) {
+    lang = lang === 'zh-cn' ? 'zh-chs' : 'zh-cht';
+  }
   if (!supportedLanguages.includes(lang)) {
     lang = lang.split('-', 1)[0];
   }
