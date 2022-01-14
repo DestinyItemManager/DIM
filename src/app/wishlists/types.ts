@@ -42,8 +42,14 @@ export interface WishListRoll {
 
 export interface WishListAndInfo {
   wishListRolls: WishListRoll[];
+  /** The URL(s) we fetched the wish list(s) from */
+  source?: string;
+  infos: WishListInfo[];
+}
+
+export interface WishListInfo {
   title?: string;
   description?: string;
-  /** The URL we fetched the wish list from */
-  source?: string;
+  /** The number of rolls from this wish list that actually made it in. */
+  numRolls: number;
 }
