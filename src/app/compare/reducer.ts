@@ -13,7 +13,9 @@ export interface CompareSession {
    */
   readonly itemCategoryHashes: number[];
   /**
-   * The query further filters the items to be shown.
+   * The query further filters the items to be shown. Since this query is modified
+   * when adding or removing items, external queries must be parenthesized first
+   * to avoid modifications binding to single filters within the original query.
    */
   readonly query: string;
 
@@ -68,7 +70,7 @@ export const compare: Reducer<CompareState, CompareAction> = (
         ...state,
         session: {
           ...state.session,
-          query: action.payload,
+          query: `(${action.payload})`,
         },
       };
     }
@@ -99,7 +101,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
       return state;
     }
 
-    const itemQuery = `or id:${item.id}`;
+    const itemQuery = `id:${item.id} or`;
     const query = state.session?.query || '';
 
     // Don't just keep adding them
@@ -108,10 +110,12 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     }
     const removeQuery = `-id:${item.id}`;
 
+    // Add `or` item filter to the left to avoid mixing it with
+    // `implicit_and` filters from item removal (see `removeCompareItem`).
     const newQuery = (
       query.includes(removeQuery)
         ? query.replace(removeQuery, '')
-        : `${query} ${itemQuery}`.replace(/\s+/, ' ')
+        : `${itemQuery} ${query}`.replace(/\s+/, ' ')
     ).trim();
 
     return {
@@ -134,7 +138,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     return {
       ...state,
       session: {
-        query: itemNameQuery,
+        query: `(${itemNameQuery})`,
         itemCategoryHashes,
         initialItemId: item.id,
         vendorCharacterId,
@@ -148,7 +152,9 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
     throw new Error("Programmer error: Can't remove item with no session");
   }
 
-  const addedQuery = `or id:${item.id}`;
+  // Add `-id` filter to the right to avoid mixing it with
+  // `or` filters from item addition (see `addCompareItem`).
+  const addedQuery = `id:${item.id} or`;
   const newQuery = (
     state.session.query.includes(addedQuery)
       ? state.session.query.replace(addedQuery, '')
