@@ -91,6 +91,8 @@
       "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
     },
     "InitialItem": "비교 도구가 실행된 아이템입니다.",
+    "IsVendorItem": "이 아이템을 소유하고 있지 않습니다. 상인의 소지품에 있으며 판매 중일 수 있습니다.",
+    "SoldBy": "판매자: {{vendorName}}",
     "SwipeAdvice": "두 손가락을 사용하여 스크롤"
   },
   "Cooldown": {
@@ -152,13 +154,18 @@
     "Vault": "공간 확보를 위해 아이템을 금고로 옮깁니다."
   },
   "FashionDrawer": {
-    "Accept": "이 패션 사용",
+    "Accept": "패션 저장",
     "ClearOrnaments": "장식 초기화",
+    "ClearOrnamentsTitle": "모든 장식을 \"선택 안 함\"으로 초기화",
     "ClearShaders": "안료 초기화",
-    "Reset": "모두 초기화",
+    "ClearShadersTitle": "모든 안료를 \"선택 안 함\"으로 초기화",
+    "NoPreference": "선택 안 함 - 이 소켓은 변경되지 않습니다",
+    "Reset": "패션 초기화",
     "Sync": "동기화",
     "SyncOrnaments": "장식 동기화",
+    "SyncOrnamentsTitle": "잠금 해제된 경우 모든 아이템에 동일한 세트의 장식을 사용합니다.",
     "SyncShaders": "안료 동기화",
+    "SyncShadersTitle": "모든 아이템에 동일한 안료 사용",
     "Title": "안료와 장식 선택",
     "UseEquipped": "장착된 패션 사용"
   },
@@ -305,6 +312,7 @@
     "Inventory": "소지품",
     "IosPwaPrompt": "사파리에서는 공유 아이콘(하단 중앙 버튼)을 누르고 \"홈 화면에 추가\"를 선택하세요.",
     "KeyboardShortcuts": "키보드 단축키",
+    "LaunchDIMAlone": "다른 창",
     "Menu": "메뉴",
     "Refresh": "데스티니 데이터 새로고침 [R]",
     "ReloadApp": "앱 새로고침",
@@ -324,7 +332,7 @@
   "Hotkey": {
     "CheatSheetTitle": "키보드 단축키:",
     "ClearDialog": "대화 상자 숨기기",
-    "ClearNewItems": "새 아이템 지우기",
+    "ClearNewItems": "새 아이템 초기화",
     "Enter": "엔터",
     "LockUnlock": "아이템 잠금 또는 잠금 해제",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
@@ -346,6 +354,10 @@
     "NoTransfer": "주입 재료 이동\n{{target}}을(를) 옮길 수 없습니다.",
     "SwitchDirection": "전환",
     "TransferItems": "이동"
+  },
+  "ItemFeed": {
+    "Description": "최근 아이템",
+    "HideTagged": "태그된 아이템 숨기기"
   },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "중복된 아이템을 빠르게 찾기 위해 is:dupe를 검색할 수 있으며, 비교 도구나 정리 도구를 사용하여 유사한 아이템을 비교 평가할 수 있습니다.",
     "EnableAdvancedStats": "(데스티니 1) 방어구 스탯 품질 표시",
     "ExpandSingleCharacter": "모든 캐릭터 표시",
+    "ExportProfile": "API 프로필 응답 내보내기",
     "ExportSS": "소지품 스프레드시트",
     "ExportSSHelp": "당신이 고른 스프레드시트 프로그램에서 쉽게 볼 수 있도록 CSV 리스트를 다운 받아 주세요",
     "ExportSSNoStores": "이 버튼을 클릭하기 전에 소지품을 한 번 불러와야 합니다.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "특성을 목록으로 표시",
     "Select": {
-      "Ability": "능력 선택",
-      "Aspect": "상 선택",
-      "Fragment": "조각 선택",
-      "Mod": "개조 부품 선택",
-      "Ornament": "장식 선택",
-      "Projection": "고스트 투영 선택",
-      "Shader": "안료 선택",
-      "Transmat": "전송 효과 선택"
+      "Ability": "능력 미리보기",
+      "Aspect": "상 미리보기",
+      "Fragment": "조각 미리보기",
+      "Mod": "개조 부품 미리보기",
+      "Ornament": "장식 미리보기",
+      "Projection": "고스트 투영 미리보기",
+      "Shader": "안료 미리보기",
+      "Transmat": "전송 효과 미리보기"
     },
     "SelectWishlistPerks": "희망 아이템 목록 특성 미리보기"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "마지막 업데이트: {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "{{num, number}}개의 희망 아이템 목록",
     "PreMadeFiles": "미리 작성된 희망 아이템 목록 사용",
+    "Untitled": "제목 없는 희망 아이템 목록",
     "UpdateExternalSource": "희망 아이템 목록 업데이트",
     "Voltron": "voltron (기본값)",
     "VoltronDescription": "voltron은 Mercules904와 pandapaxxy가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",

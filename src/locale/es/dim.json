@@ -91,6 +91,8 @@
       "Unmatched": "Este artículo no coincide con el tipo de objetos siendo comparados."
     },
     "InitialItem": "Este es el objeto por el cual la herramienta de comparación fue lanzada",
+    "IsVendorItem": "Este objeto no te pertenece. Está en el inventario de un vendedor y podría estar en venta.",
+    "SoldBy": "Vendido por: {{vendorName}}",
     "SwipeAdvice": "Usa dos dedos para desplazarte"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Moverá objetos al depósito para hacer espacio."
   },
   "FashionDrawer": {
-    "Accept": "Usar estos cosméticos",
+    "Accept": "Guardar cosméticos",
     "ClearOrnaments": "Limpiar Diseños",
+    "ClearOrnamentsTitle": "Reiniciar todos los diseños a \"sin preferencia\"",
     "ClearShaders": "Limpiar Shaders",
-    "Reset": "Reiniciar todo",
+    "ClearShadersTitle": "Reiniciar todos los shaders a \"sin preferencia\"",
+    "NoPreference": "Sin preferencia - este espacio no será cambiado",
+    "Reset": "Limpiar cosméticos",
     "Sync": "Sincronizar",
     "SyncOrnaments": "Sincronizar Diseños",
+    "SyncOrnamentsTitle": "Usar diseños del mismo conjunto en todos los objetos, si están desbloqueados",
     "SyncShaders": "Sincronizar Shaders",
+    "SyncShadersTitle": "Usar el mismo shader en todos los objetos",
     "Title": "Elegir shaders y diseños",
-    "UseEquipped": "Usar Equipados"
+    "UseEquipped": "Usar cosméticos equipados"
   },
   "FileUpload": {
     "Instructions": "Haga click o arrastre archivos"
@@ -305,6 +312,7 @@
     "Inventory": "Inventario",
     "IosPwaPrompt": "En Safari, haga click en el icono compartir (botón central en la parte abajo) y selecciona \"Añadir a la Pantalla de Inicio\".",
     "KeyboardShortcuts": "Atajos de Teclado",
+    "LaunchDIMAlone": "Separar Ventana",
     "Menu": "Menú",
     "Refresh": "Actualizar Datos de Destiny [R]",
     "ReloadApp": "Recargar App",
@@ -346,6 +354,10 @@
     "NoTransfer": "El material de infusión para transferir {{target}} no se pudo mover.",
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
+  },
+  "ItemFeed": {
+    "Description": "Objetos Recientes",
+    "HideTagged": "Ocultar etiquetados"
   },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
@@ -811,8 +823,9 @@
     "Data": "Hojas de cálculo",
     "DefaultItemSizeNote": "Un objeto de 50px de tamaño parecerá lo más nítido, sin desdibujar la imagen o el texto del objeto.",
     "DontForgetDupes": "No te olvides de que puedes buscar is:dupe para buscar rápidamente objetos duplicados, y que puedes usar la herramienta de comparación o el organizador para evaluar objetos relacionados.",
-    "EnableAdvancedStats": "Mostrar la calificación de la calidad de las estadísticas en la armadura (D1)",
+    "EnableAdvancedStats": "Mostrar la valoración de la calidad de las estadísticas en la armadura (D1)",
     "ExpandSingleCharacter": "Mostrar todos los personajes",
+    "ExportProfile": "Exportar respuesta de perfil de la API",
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que pueden ser vistos fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
     "ExportSSNoStores": "Necesitas cargar tu inventario una vez antes de pulsar este botón.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Mostrar ventajas como lista",
     "Select": {
-      "Ability": "Seleccionar Habilidad",
-      "Aspect": "Seleccionar Aspecto",
-      "Fragment": "Seleccionar Fragmento",
-      "Mod": "Seleccionar Modificador",
-      "Ornament": "Seleccionar Diseño",
-      "Projection": "Seleccionar Proyección de Espectro",
-      "Shader": "Seleccionar Shader",
-      "Transmat": "Seleccionar Efecto de Teletransporte"
+      "Ability": "Previsualizar Habilidad",
+      "Aspect": "Previsualizar Aspecto",
+      "Fragment": "Previsualizar Fragmento",
+      "Mod": "Previsualizar Modificador",
+      "Ornament": "Previsualizar Diseño",
+      "Projection": "Previsualizar Proyección de Espectro",
+      "Shader": "Previsualizar Shader",
+      "Transmat": "Previsualizar Efecto de Teletransporte"
     },
     "SelectWishlistPerks": "Previsualizar Ventajas de Lista de Deseos"
   },
@@ -1036,7 +1049,7 @@
     "BestRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de deseos.",
     "BestRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma de tu lista de deseos.",
     "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
+    "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de JcE y JcJ de tiradas de listas de deseos de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
     "Clear": "Limpiar Lista de Deseos",
     "ExternalSource": "Opcionalmente, proporcione la(s) URL(s) para una lista de deseos (tubería | separado)",
     "Header": "Lista de Deseos",
@@ -1048,9 +1061,10 @@
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "PreMadeFiles": "Usar Una Lista de Deseos Prehecha",
+    "Untitled": "Lista de Deseos sin nombre",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "Voltron": "voltron (por defecto)",
-    "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
+    "VoltronDescription": "voltron es una colección autoactualizada de JcE y JcJ de tiradas de listas de deseos de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
   },
   "no-space": "",
