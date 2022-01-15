@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
@@ -66,8 +65,8 @@ export function fitMostMods(
   items: DimItem[],
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions,
-  upgradeSpendTier = UpgradeSpendTier.Nothing,
+  assumedItemEnergy = 1,
+  assumedExoticEnergy = 1,
   lockItemEnergyType = true
 ): {
   itemModAssignments: {
@@ -125,8 +124,8 @@ export function fitMostMods(
       if (targetItem) {
         if (
           isBucketSpecificModValid(
-            defs,
-            upgradeSpendTier,
+            assumedItemEnergy,
+            assumedExoticEnergy,
             lockItemEnergyType,
             targetItem,
             plannedMod,
@@ -148,10 +147,10 @@ export function fitMostMods(
     _.keyBy(items, (item) => item.id),
     (item) =>
       buildItemEnergy(
-        defs,
         item,
         bucketSpecificAssignments[item.id].assigned,
-        upgradeSpendTier,
+        assumedItemEnergy,
+        assumedExoticEnergy,
         lockItemEnergyType
       )
   );
@@ -504,8 +503,8 @@ export function createPluggingStrategy(
 }
 /** given conditions and assigned mods, can this mod be placed on this armor item? */
 function isBucketSpecificModValid(
-  defs: D2ManifestDefinitions,
-  upgradeSpendTier: UpgradeSpendTier,
+  assumedItemEnergy: number,
+  assumedExoticEnergy: number,
   lockItemEnergyType: boolean,
   item: DimItem,
   mod: PluggableInventoryItemDefinition,
@@ -513,15 +512,12 @@ function isBucketSpecificModValid(
   assignedMods: PluggableInventoryItemDefinition[]
 ) {
   // given spending rules, what we can assume this item's energy is
-  const itemEnergyCapacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item);
-  // given spending/element rules & current assignments, what element is this armor?
-  const itemEnergyType = getItemEnergyType(
-    defs,
-    item,
-    upgradeSpendTier,
-    lockItemEnergyType,
-    assignedMods
+  const itemEnergyCapacity = Math.max(
+    item.energy?.energyCapacity || 1,
+    item.isExotic ? assumedExoticEnergy : assumedItemEnergy
   );
+  // given spending/element rules & current assignments, what element is this armor?
+  const itemEnergyType = getItemEnergyType(item, lockItemEnergyType, assignedMods);
 
   // how many armor energy points are already used
   const energyUsed = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
@@ -657,18 +653,18 @@ function isPlugActive(
 }
 
 function buildItemEnergy(
-  defs: D2ManifestDefinitions,
   item: DimItem,
   assignedMods: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTier,
+  assumedItemEnergy: number,
+  assumedExoticEnergy: number,
   lockItemEnergyType: boolean
 ): ItemEnergy {
   return {
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
-    derivedCapacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
+    derivedCapacity: upgradeSpendTierToMaxEnergy(item, assumedItemEnergy, assumedExoticEnergy),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(defs, item, upgradeSpendTier, lockItemEnergyType, assignedMods),
+    derivedType: getItemEnergyType(item, lockItemEnergyType, assignedMods),
   };
 }
 

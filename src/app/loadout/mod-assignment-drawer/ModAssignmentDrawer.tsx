@@ -72,7 +72,7 @@ export default function ModAssignmentDrawer({
         .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
     }
-    const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods, defs);
+    const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods);
 
     return [itemModAssignments, unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);

@@ -1,4 +1,4 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -76,7 +76,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
+  assumedItemEnergy?: number;
+  assumedExoticEnergy?: number;
   lockItemEnergyType: boolean;
   notes?: string;
 }
@@ -96,7 +97,8 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
+  assumedItemEnergy,
+  assumedExoticEnergy,
   lockItemEnergyType,
   notes,
 }: Props) {
@@ -149,7 +151,8 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          upgradeSpendTier={upgradeSpendTier}
+          assumedItemEnergy={assumedItemEnergy}
+          assumedExoticEnergy={assumedExoticEnergy}
           lockItemEnergyType={lockItemEnergyType}
           notes={notes}
         />
@@ -180,7 +183,8 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  upgradeSpendTier={upgradeSpendTier}
+                  assumedItemEnergy={assumedItemEnergy}
+                  assumedExoticEnergy={assumedExoticEnergy}
                   lockItemEnergyType={lockItemEnergyType}
                   notes={notes}
                 />

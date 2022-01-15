@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -9,7 +8,6 @@ import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import { canSwapEnergyFromUpgradeSpendTier } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
 /** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
@@ -107,9 +105,7 @@ export function createGetModRenderKey() {
  * It can return the Any energy type if armour upgrade options allow energy changes.
  */
 export function getItemEnergyType(
-  defs: D2ManifestDefinitions,
   item: DimItem,
-  upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
   bucketSpecificMods?: PluggableInventoryItemDefinition[]
 ) {
@@ -126,9 +122,7 @@ export function getItemEnergyType(
     return bucketSpecificModType;
   }
 
-  return canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
-    ? DestinyEnergyType.Any
-    : item.energy.energyType;
+  return lockItemEnergyType ? item.energy.energyType : DestinyEnergyType.Any;
 }
 
 // this exists because singleInitialItemHash may be absent,

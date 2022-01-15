@@ -952,7 +952,7 @@ function applyLoadoutMods(
     }
 
     // TODO: prefer equipping to armor that *is* part of the loadout
-    const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods, defs);
+    const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods);
 
     for (const mod of unassignedMods) {
       setLoadoutState(

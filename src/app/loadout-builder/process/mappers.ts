@@ -1,9 +1,4 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import {
-  canSwapEnergyFromUpgradeSpendTier,
-  upgradeSpendTierToMaxEnergy,
-} from 'app/loadout/armor-upgrade-utils';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -124,16 +119,16 @@ export function getTotalModStatChanges(
 }
 
 export function mapDimItemToProcessItem(
-  defs: D2ManifestDefinitions,
   dimItem: DimItem,
-  upgradeSpendTier: UpgradeSpendTier,
+  assumedItemEnergy: number,
+  assumedExoticEnergy: number,
   lockItemEnergyType: boolean,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
   const { bucket, id, hash, type, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
-  const capacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem);
+  const capacity = upgradeSpendTierToMaxEnergy(dimItem, assumedItemEnergy, assumedExoticEnergy);
 
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
@@ -155,10 +150,7 @@ export function mapDimItemToProcessItem(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyType;
 
-  if (
-    !energyType &&
-    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem, lockItemEnergyType)
-  ) {
+  if (!energyType && !lockItemEnergyType) {
     energyType = DestinyEnergyType.Any;
   }
 

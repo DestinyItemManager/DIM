@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
@@ -27,7 +26,6 @@ export function filterItems(
   excludedItems: ExcludedItems,
   lockedMods: PluggableInventoryItemDefinition[],
   lockedExoticHash: number | undefined,
-  upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean,
   searchFilter: ItemFilter
 ): ItemsByBucket {
@@ -73,13 +71,7 @@ export function filterItems(
       const excludedAndModsFilteredItems = firstPassFilteredItems.filter(
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
-          matchedLockedModEnergy(
-            defs,
-            item,
-            lockedModsForPlugCategoryHash,
-            upgradeSpendTier,
-            lockItemEnergyType
-          ) &&
+          matchedLockedModEnergy(item, lockedModsForPlugCategoryHash, lockItemEnergyType) &&
           hasEnoughSocketsForMods(item, lockedModsForPlugCategoryHash)
       );
 
@@ -95,18 +87,14 @@ export function filterItems(
 }
 
 function matchedLockedModEnergy(
-  defs: D2ManifestDefinitions,
   item: DimItem,
   lockedMods: PluggableInventoryItemDefinition[] | undefined,
-  upgradeSpendTier: UpgradeSpendTier,
   lockItemEnergyType: boolean
 ) {
   if (!lockedMods) {
     return true;
   }
-  return lockedMods.every((mod) =>
-    doEnergiesMatch(defs, mod, item, upgradeSpendTier, lockItemEnergyType)
-  );
+  return lockedMods.every((mod) => doEnergiesMatch(mod, item, lockItemEnergyType));
 }
 
 /**

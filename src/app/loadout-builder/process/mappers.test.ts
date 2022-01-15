@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -36,13 +35,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.AscendantShards,
-      false,
-      [perpetuationMod]
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, [perpetuationMod]);
 
     // Use specific energy as we care about that more then the specific mod
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Void);
@@ -53,13 +46,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.AscendantShards,
-      false,
-      []
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, []);
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
   });
@@ -69,13 +56,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.AscendantShards,
-      true,
-      []
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, true, []);
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
   });
@@ -85,13 +66,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.AscendantShards,
-      false,
-      [distributionMod]
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, [distributionMod]);
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
   });
@@ -101,13 +76,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.Nothing,
-      false,
-      []
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 1, 1, false, []);
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
   });
@@ -118,13 +87,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.Nothing,
-      false,
-      []
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 1, 1, false, []);
 
     expect(mappedItem.energy?.capacity).toBe(energyCapacity);
   });
@@ -135,13 +98,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity },
     };
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      modifiedItem,
-      UpgradeSpendTier.EnhancementPrisms,
-      false,
-      []
-    );
+    const mappedItem = mapDimItemToProcessItem(modifiedItem, 8, 8, false, []);
 
     expect(mappedItem.energy?.capacity).toBe(9);
   });
@@ -156,13 +113,7 @@ describe('lo process mappers', () => {
       },
     };
     const mods = [modifiedMod, modifiedMod];
-    const mappedItem = mapDimItemToProcessItem(
-      defs,
-      classItem,
-      UpgradeSpendTier.EnhancementPrisms,
-      false,
-      mods
-    );
+    const mappedItem = mapDimItemToProcessItem(classItem, 8, 8, false, mods);
 
     expect(mappedItem.energy?.val).toBe(energyCost * mods.length);
   });

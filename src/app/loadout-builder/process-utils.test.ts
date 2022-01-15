@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
@@ -96,44 +95,19 @@ describe('process-utils', () => {
     for (const store of stores) {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
-          helmet = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          helmet = mapDimItemToProcessItem(storeItem, 9, 9, false);
         }
         if (!arms && isArmor2Arms(storeItem)) {
-          arms = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          arms = mapDimItemToProcessItem(storeItem, 9, 9, false);
         }
         if (!chest && isArmor2Chest(storeItem)) {
-          chest = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          chest = mapDimItemToProcessItem(storeItem, 9, 9, false);
         }
         if (!legs && isArmor2Legs(storeItem)) {
-          legs = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          legs = mapDimItemToProcessItem(storeItem, 9, 9, false);
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
-          classItem = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          classItem = mapDimItemToProcessItem(storeItem, 9, 9, false);
         }
 
         if (helmet && arms && chest && legs && classItem) {

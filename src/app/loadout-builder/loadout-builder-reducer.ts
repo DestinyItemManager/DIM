@@ -1,8 +1,4 @@
-import {
-  defaultLoadoutParameters,
-  LoadoutParameters,
-  UpgradeSpendTier,
-} from '@destinyitemmanager/dim-api-types';
+import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -30,7 +26,10 @@ import {
 } from './types';
 
 export interface LoadoutBuilderState {
-  loadoutParameters: LoadoutParameters;
+  loadoutParameters: LoadoutParameters & {
+    assumedItemEnergy?: number;
+    assumedExoticEnergy?: number;
+  };
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   statFilters: Readonly<StatFilters>;
@@ -155,11 +154,6 @@ const lbStateInit = ({
 
   const statOrder = statOrderFromLoadoutParameters(loadoutParams);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
-  // We need to handle the deprecated case
-  loadoutParams.upgradeSpendTier =
-    loadoutParams.upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType
-      ? UpgradeSpendTier.Nothing
-      : loadoutParams.upgradeSpendTier!;
 
   return {
     loadoutParameters: loadoutParams,
@@ -183,7 +177,8 @@ export type LoadoutBuilderAction =
       type: 'lockItemEnergyTypeChanged';
       lockItemEnergyType: boolean;
     }
-  | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: UpgradeSpendTier }
+  | { type: 'assumeItemEnergyChanged'; energy: number }
+  | { type: 'assumeExoticEnergyChanged'; energy: number }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
@@ -311,13 +306,16 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
-      case 'upgradeSpendTierChanged': {
+      case 'assumeItemEnergyChanged': {
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            upgradeSpendTier: action.upgradeSpendTier,
-          },
+          loadoutParameters: { ...state.loadoutParameters, assumedItemEnergy: action.energy },
+        };
+      }
+      case 'assumeExoticEnergyChanged': {
+        return {
+          ...state,
+          loadoutParameters: { ...state.loadoutParameters, assumedExoticEnergy: action.energy },
         };
       }
       case 'addGeneralMods': {

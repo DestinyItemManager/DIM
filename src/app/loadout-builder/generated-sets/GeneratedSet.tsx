@@ -1,9 +1,8 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
@@ -31,7 +30,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
+  assumedItemEnergy?: number;
+  assumedExoticEnergy?: number;
   lockItemEnergyType: boolean;
 }
 
@@ -54,10 +54,10 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
+  assumedItemEnergy,
+  assumedExoticEnergy,
   lockItemEnergyType,
 }: Props) {
-  const defs = useD2Definitions()!;
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
@@ -84,12 +84,12 @@ function GeneratedSet({
     const { itemModAssignments } = fitMostMods(
       displayedItems,
       lockedMods,
-      defs,
-      upgradeSpendTier,
+      assumedItemEnergy,
+      assumedExoticEnergy,
       lockItemEnergyType
     );
     return itemModAssignments;
-  }, [defs, displayedItems, lockItemEnergyType, lockedMods, upgradeSpendTier]);
+  }, [displayedItems, lockItemEnergyType, lockedMods, assumedItemEnergy, assumedExoticEnergy]);
 
   if (set.armor.some((items) => !items.length)) {
     errorLog('loadout optimizer', 'No valid sets!');

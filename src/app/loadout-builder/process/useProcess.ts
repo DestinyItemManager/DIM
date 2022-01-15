@@ -1,14 +1,10 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { keyByStatHash } from 'app/inventory/store/stats';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import {
-  canSwapEnergyFromUpgradeSpendTier,
-  upgradeSpendTierToMaxEnergy,
-} from 'app/loadout/armor-upgrade-utils';
+import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
 import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -54,7 +50,8 @@ export function useProcess({
   filteredItems,
   lockedMods,
   subclass,
-  upgradeSpendTier,
+  assumedItemEnergy,
+  assumedExoticEnergy,
   lockItemEnergyType,
   statOrder,
   statFilters,
@@ -66,7 +63,8 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedMods: PluggableInventoryItemDefinition[];
   subclass: DimLoadoutItem | undefined;
-  upgradeSpendTier: UpgradeSpendTier;
+  assumedItemEnergy: number;
+  assumedExoticEnergy: number;
   lockItemEnergyType: boolean;
   statOrder: number[];
   statFilters: StatFilters;
@@ -141,7 +139,8 @@ export function useProcess({
         defs,
         items,
         statOrder,
-        upgradeSpendTier,
+        assumedItemEnergy,
+        assumedExoticEnergy,
         lockItemEnergyType,
         generalMods,
         combatMods,
@@ -154,9 +153,9 @@ export function useProcess({
         if (item && defs) {
           processItems[bucketHash].push(
             mapDimItemToProcessItem(
-              defs,
               item,
-              upgradeSpendTier,
+              assumedItemEnergy,
+              assumedExoticEnergy,
               lockItemEnergyType,
               lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]]
             )
@@ -222,10 +221,11 @@ export function useProcess({
     selectedStore.id,
     statFilters,
     statOrder,
-    upgradeSpendTier,
     anyExotic,
     disabledDueToMaintenance,
     subclass?.socketOverrides,
+    assumedItemEnergy,
+    assumedExoticEnergy,
   ]);
 
   return { result, processing, remainingTime };
@@ -269,7 +269,8 @@ function groupItems(
   defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
-  upgradeSpendTier: UpgradeSpendTier,
+  assumedItemEnergy: number,
+  assumedExoticEnergy: number,
   lockItemEnergyType: boolean,
   generalMods: PluggableInventoryItemDefinition[],
   combatMods: PluggableInventoryItemDefinition[],
@@ -320,7 +321,7 @@ function groupItems(
         item.energy &&
         requiredEnergyTypes.has(item.energy.energyType) &&
         // If we can swap to another energy type, there's no need to group by current energy type
-        !canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, item, lockItemEnergyType)
+        lockItemEnergyType
           ? item.energy.energyType
           : DestinyEnergyType.Any;
     }
@@ -338,7 +339,10 @@ function groupItems(
       for (const statHash of statOrder) {
         let value = statsByHash[statHash]!.base;
         // Add in masterwork stat bonus if we're assuming masterwork stats
-        if (defs && upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item) === 10) {
+        if (
+          defs &&
+          upgradeSpendTierToMaxEnergy(item, assumedItemEnergy, assumedExoticEnergy) === 10
+        ) {
           value += 2;
         }
         statValues.push(value);
