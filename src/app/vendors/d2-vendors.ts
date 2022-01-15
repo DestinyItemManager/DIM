@@ -57,19 +57,21 @@ export function toVendorGroups(
         def: groupDef,
         vendors: _.sortBy(
           _.compact(
-            group.vendorHashes.map((vendorHash) =>
-              toVendor(
-                vendorHash,
-                defs,
-                buckets,
-                vendorsResponse.vendors.data?.[vendorHash],
-                account,
-                characterId,
-                vendorsResponse.itemComponents[vendorHash],
-                vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-                mergedCollectibles
+            group.vendorHashes
+              .map((vendorHash) =>
+                toVendor(
+                  vendorHash,
+                  defs,
+                  buckets,
+                  vendorsResponse.vendors.data?.[vendorHash],
+                  account,
+                  characterId,
+                  vendorsResponse.itemComponents[vendorHash],
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+                  mergedCollectibles
+                )
               )
-            )
+              .filter((vendor) => vendor?.items.length)
           ),
           (v) => {
             const index = vendorOrder.indexOf(v.def.hash);
@@ -113,9 +115,6 @@ export function toVendor(
     sales,
     mergedCollectibles
   );
-  if (!vendorItems.length) {
-    return undefined;
-  }
 
   const destinationDef = vendor?.vendorLocationIndex
     ? defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash)

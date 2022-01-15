@@ -77,6 +77,11 @@ export default function VendorItems({
   characterId: string;
 }) {
   const defs = useD2Definitions()!;
+
+  if (!vendor.items.length) {
+    return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
+  }
+
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
