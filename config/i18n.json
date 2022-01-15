@@ -1077,6 +1077,7 @@
     "Collections": "Collections",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
+    "NoItems": "This Vendor is currently not offering any items.",
     "Vendors": "Vendors",
     "Year2Mods": "Year 2 Mods"
   },
