@@ -65,8 +65,8 @@ export default function Compare() {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
-  const rawCompareItems = useSelector(compareItemsSelector);
   const session = useSelector(compareSessionSelector);
+  const rawCompareItems = useSelector(compareItemsSelector(session?.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
   const isPhonePortrait = useIsPhonePortrait();
 

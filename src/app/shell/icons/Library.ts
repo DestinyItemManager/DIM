@@ -48,6 +48,7 @@ const faSignInAlt = 'fas fa-sign-in-alt';
 const faSignOutAlt = 'fas fa-sign-out-alt';
 const faChevronDown = 'fas fa-chevron-down';
 const faChevronUp = 'fas fa-chevron-up';
+const faShoppingCart = 'fas fa-shopping-cart';
 const faStar = 'fas fa-star';
 const faStarHalfAlt = 'fas fa-star-half-alt';
 const faStarOutline = 'far fa-star';
@@ -123,6 +124,7 @@ export {
   faCheckCircleRegular as unselectedCheckIcon,
   faChevronCircleDown as openDropdownIcon,
   faChevronCircleUp,
+  faShoppingCart as shoppingCart,
   faCircleRegular as uncompletedIcon,
   faCog as settingsIcon,
   faCopy as copyIcon,

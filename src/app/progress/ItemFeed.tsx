@@ -2,6 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import CheckButton from 'app/dim-ui/CheckButton';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import PressTip from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { setItemTag } from 'app/inventory/actions';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { getTag, tagConfig, TagValue } from 'app/inventory/dim-item-info';
@@ -69,12 +70,12 @@ export default function ItemFeed() {
   return (
     <div className={clsx(styles.trayContainer, { [styles.expanded]: expanded })}>
       <button className={styles.trayButton} type="button" onClick={handleToggle}>
-        Item Feed <AppIcon icon={expanded ? collapseIcon : faCaretUp} />
+        {t('ItemFeed.Description')} <AppIcon icon={expanded ? collapseIcon : faCaretUp} />
       </button>
       {expanded && (
         <div className={styles.sideTray}>
           <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
-            Hide Tagged
+            {t('ItemFeed.HideTagged')}
           </CheckButton>
           <AnimatePresence initial={false}>
             {items.map((item) => (

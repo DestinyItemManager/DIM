@@ -27,28 +27,11 @@ export const DEFAULT_SHADER = 4248210736; // InventoryItem "Default Shader"
 /** the default glow InventoryItem in every empty glow slot */
 export const DEFAULT_GLOW = 3807544519; // InventoryItem "Remove Armor Glow"
 
-/** the default empty ghost projection in ghost projection slots */
-export const DEFAULT_PROJECTION = 2426387438;
-
-/** the default transmat effect in ship transmat effect slots */
-export const DEFAULT_TRANSMAT = 1390587439;
-
 /** An array of default ornament hashes */
 export const DEFAULT_ORNAMENTS: number[] = [
   2931483505, // InventoryItem "Default Ornament"
   1959648454, // InventoryItem "Default Ornament"
   702981643, // InventoryItem "Default Ornament"
-];
-
-/** the default empty fragment for Subclasses 2.0 */
-export const DEFAULT_FRAGMENT = 3251563851;
-
-// TODO: Is there a way to recognize these without hardcoding every 2.0 subclass?
-/** the default empty aspects for Subclasses 2.0 */
-export const DEFAULT_ASPECTS: number[] = [
-  321296654, // Stasis Titan
-  3819991001, // Stasis Warlock
-  1715180370, // Stasis Hunter
 ];
 
 /** if a socket contains these, consider it empty */

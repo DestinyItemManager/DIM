@@ -107,7 +107,7 @@ function ApplyLoadoutProgressBody({
       : refreshIcon;
 
   const itemStatesList = Object.values(itemStates);
-  // TODO: when we have per-item socket overrides this'll probably need to be more subtle
+  // TODO: when we have per-item socket overrides this will probably need to be more subtle
   const socketOverrideStatesList = Object.values(socketOverrideStates);
 
   const groupedItemErrors = _.groupBy(

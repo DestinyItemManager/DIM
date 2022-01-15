@@ -1,5 +1,11 @@
 ## Next
 
+* Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
+* The shader picker now filters invalid shaders more consistently and won't call shaders "mods".
+* Fixed Records page sometimes duplicating Triumphs or Seals section while missing Collections.
+* When provided multiple wish lists, Settings page now shows info about all loaded wish lists, not just the first one.
+* Compare Drawer should no longer refuse valid requests to add an item to comparison.
+
 ## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
 
 * The Loadouts page is a bit cleaner and more compact in the mobile view.

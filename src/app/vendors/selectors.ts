@@ -31,32 +31,36 @@ export const mergedCollectiblesSelector = createSelector(
 /**
  * returns a character's vendors and their sale items
  */
-export const vendorGroupsForCharacterSelector = currySelector(
-  createSelector(
-    d2ManifestSelector,
-    vendorsByCharacterSelector,
-    mergedCollectiblesSelector,
-    bucketsSelector,
-    currentAccountSelector,
-    // get character ID from props not state
-    (state: any, characterId: string | undefined) =>
-      characterId || getCurrentStore(sortedStoresSelector(state))?.id,
-    (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
-      const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
-      const vendorsResponse = vendorData?.vendorsResponse;
+export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
+  d2ManifestSelector,
+  vendorsByCharacterSelector,
+  mergedCollectiblesSelector,
+  bucketsSelector,
+  currentAccountSelector,
+  // get character ID from props not state
+  (state: any, characterId: string | undefined) =>
+    characterId || getCurrentStore(sortedStoresSelector(state))?.id,
+  (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
+    const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
+    const vendorsResponse = vendorData?.vendorsResponse;
 
-      return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
-        ? toVendorGroups(
-            vendorsResponse,
-            defs,
-            buckets,
-            currentAccount,
-            selectedStoreId,
-            mergedCollectibles
-          )
-        : emptyArray<D2VendorGroup>();
-    }
-  )
+    return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
+      ? toVendorGroups(
+          vendorsResponse,
+          defs,
+          buckets,
+          currentAccount,
+          selectedStoreId,
+          mergedCollectibles
+        )
+      : emptyArray<D2VendorGroup>();
+  }
+);
+/**
+ * returns a character's vendors and their sale items
+ */
+export const vendorGroupsForCharacterSelector = currySelector(
+  nonCurriedVendorGroupsForCharacterSelector
 );
 
 export const ownedVendorItemsSelector = currySelector(
