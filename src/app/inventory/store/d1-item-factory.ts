@@ -4,6 +4,7 @@ import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
+  BucketCategory,
   DestinyAmmunitionType,
   DestinyClass,
   DestinyDamageTypeDefinition,
@@ -48,6 +49,16 @@ export function processItems(
     if (createdItem !== null) {
       createdItem.owner = owner.id;
       result.push(createdItem);
+    } else {
+      // the item failed to be created for some reason. 3 things can currently cause this:
+      // an exception occurred, the item lacks a definition, or it lacks a name
+      // not all of these should cause the store to consider itself hadErrors.
+      // dummies and invisible items are not a big deal
+      const bucketDef = defs.InventoryBucket[item.bucketHash];
+      // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
+      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.displayProperties.name) {
+        owner.hadErrors = true;
+      }
     }
   }
   return result;
