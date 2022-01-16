@@ -19,16 +19,27 @@ import {
 /**
  * Filter the items map down given the locking and filtering configs.
  */
-export function filterItems(
-  defs: D2ManifestDefinitions | undefined,
-  items: ItemsByBucket | undefined,
-  pinnedItems: PinnedItems,
-  excludedItems: ExcludedItems,
-  lockedMods: PluggableInventoryItemDefinition[],
-  lockedExoticHash: number | undefined,
-  lockItemEnergyType: boolean,
-  searchFilter: ItemFilter
-): ItemsByBucket {
+export function filterItems({
+  defs,
+  items,
+  pinnedItems,
+  excludedItems,
+  lockedMods,
+  lockedExoticHash,
+  lockItemEnergyType,
+  lockMasterworkItemEnergyType,
+  searchFilter,
+}: {
+  defs: D2ManifestDefinitions | undefined;
+  items: ItemsByBucket | undefined;
+  pinnedItems: PinnedItems;
+  excludedItems: ExcludedItems;
+  lockedMods: PluggableInventoryItemDefinition[];
+  lockedExoticHash: number | undefined;
+  lockItemEnergyType: boolean;
+  lockMasterworkItemEnergyType: boolean;
+  searchFilter: ItemFilter;
+}): ItemsByBucket {
   const filteredItems: {
     [bucketHash in LockableBucketHash]: readonly DimItem[];
   } = {
@@ -71,7 +82,12 @@ export function filterItems(
       const excludedAndModsFilteredItems = firstPassFilteredItems.filter(
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
-          matchedLockedModEnergy(item, lockedModsForPlugCategoryHash, lockItemEnergyType) &&
+          matchedLockedModEnergy(
+            item,
+            lockedModsForPlugCategoryHash,
+            lockItemEnergyType,
+            lockMasterworkItemEnergyType
+          ) &&
           hasEnoughSocketsForMods(item, lockedModsForPlugCategoryHash)
       );
 
@@ -89,12 +105,15 @@ export function filterItems(
 function matchedLockedModEnergy(
   item: DimItem,
   lockedMods: PluggableInventoryItemDefinition[] | undefined,
-  lockItemEnergyType: boolean
+  lockItemEnergyType: boolean,
+  lockMasterworkItemEnergyType: boolean
 ) {
   if (!lockedMods) {
     return true;
   }
-  return lockedMods.every((mod) => doEnergiesMatch(mod, item, lockItemEnergyType));
+  return lockedMods.every((mod) =>
+    doEnergiesMatch({ mod, item, lockItemEnergyType, lockMasterworkItemEnergyType })
+  );
 }
 
 /**

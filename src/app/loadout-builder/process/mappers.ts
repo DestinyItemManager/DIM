@@ -1,4 +1,4 @@
-import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -16,7 +16,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, ArmorStats } from '../types';
+import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -118,17 +118,30 @@ export function getTotalModStatChanges(
   return totals;
 }
 
-export function mapDimItemToProcessItem(
-  dimItem: DimItem,
-  assumedItemEnergy: number,
-  assumedExoticEnergy: number,
-  lockItemEnergyType: boolean,
-  modsForSlot?: PluggableInventoryItemDefinition[]
-): ProcessItem {
+export function mapDimItemToProcessItem({
+  dimItem,
+  assumeLegendaryMasterwork,
+  assumeExoticMasterwork,
+  lockItemEnergyType,
+  lockMasterworkItemEnergyType,
+  modsForSlot,
+}: {
+  dimItem: DimItem;
+  assumeLegendaryMasterwork: boolean;
+  assumeExoticMasterwork: boolean;
+  lockItemEnergyType: boolean;
+  lockMasterworkItemEnergyType: boolean;
+  modsForSlot?: PluggableInventoryItemDefinition[];
+}): ProcessItem {
   const { bucket, id, hash, type, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
-  const capacity = upgradeSpendTierToMaxEnergy(dimItem, assumedItemEnergy, assumedExoticEnergy);
+  const capacity = calculateAssumedItemEnergy(
+    dimItem,
+    assumeLegendaryMasterwork,
+    assumeExoticMasterwork,
+    MIN_LO_ITEM_ENERGY
+  );
 
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
@@ -150,7 +163,10 @@ export function mapDimItemToProcessItem(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyType;
 
-  if (!energyType && !lockItemEnergyType) {
+  if (
+    !energyType &&
+    !isArmorEnergyLocked({ item: dimItem, lockItemEnergyType, lockMasterworkItemEnergyType })
+  ) {
     energyType = DestinyEnergyType.Any;
   }
 

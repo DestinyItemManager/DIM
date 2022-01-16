@@ -76,9 +76,10 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumedItemEnergy?: number;
-  assumedExoticEnergy?: number;
+  assumeLegendaryMasterwork: boolean;
+  assumeExoticMasterwork: boolean;
   lockItemEnergyType: boolean;
+  lockMasterworkItemEnergyType: boolean;
   notes?: string;
 }
 
@@ -97,9 +98,10 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  assumedItemEnergy,
-  assumedExoticEnergy,
+  assumeLegendaryMasterwork,
+  assumeExoticMasterwork,
   lockItemEnergyType,
+  lockMasterworkItemEnergyType,
   notes,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
@@ -151,9 +153,10 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          assumedItemEnergy={assumedItemEnergy}
-          assumedExoticEnergy={assumedExoticEnergy}
+          assumeLegendaryMasterwork={assumeLegendaryMasterwork}
+          assumeExoticMasterwork={assumeExoticMasterwork}
           lockItemEnergyType={lockItemEnergyType}
+          lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
           notes={notes}
         />
       ) : sets.length > 0 ? (
@@ -183,9 +186,10 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  assumedItemEnergy={assumedItemEnergy}
-                  assumedExoticEnergy={assumedExoticEnergy}
+                  assumeLegendaryMasterwork={assumeLegendaryMasterwork}
+                  assumeExoticMasterwork={assumeExoticMasterwork}
                   lockItemEnergyType={lockItemEnergyType}
+                  lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
                   notes={notes}
                 />
               )}

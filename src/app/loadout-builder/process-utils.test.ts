@@ -95,19 +95,49 @@ describe('process-utils', () => {
     for (const store of stores) {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
-          helmet = mapDimItemToProcessItem(storeItem, 9, 9, false);
+          helmet = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeLegendaryMasterwork: false,
+            assumeExoticMasterwork: false,
+            lockItemEnergyType: false,
+            lockMasterworkItemEnergyType: false,
+          });
         }
         if (!arms && isArmor2Arms(storeItem)) {
-          arms = mapDimItemToProcessItem(storeItem, 9, 9, false);
+          arms = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeLegendaryMasterwork: false,
+            assumeExoticMasterwork: false,
+            lockItemEnergyType: false,
+            lockMasterworkItemEnergyType: false,
+          });
         }
         if (!chest && isArmor2Chest(storeItem)) {
-          chest = mapDimItemToProcessItem(storeItem, 9, 9, false);
+          chest = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeLegendaryMasterwork: false,
+            assumeExoticMasterwork: false,
+            lockItemEnergyType: false,
+            lockMasterworkItemEnergyType: false,
+          });
         }
         if (!legs && isArmor2Legs(storeItem)) {
-          legs = mapDimItemToProcessItem(storeItem, 9, 9, false);
+          legs = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeLegendaryMasterwork: false,
+            assumeExoticMasterwork: false,
+            lockItemEnergyType: false,
+            lockMasterworkItemEnergyType: false,
+          });
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
-          classItem = mapDimItemToProcessItem(storeItem, 9, 9, false);
+          classItem = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeLegendaryMasterwork: false,
+            assumeExoticMasterwork: false,
+            lockItemEnergyType: false,
+            lockMasterworkItemEnergyType: false,
+          });
         }
 
         if (helmet && arms && chest && legs && classItem) {

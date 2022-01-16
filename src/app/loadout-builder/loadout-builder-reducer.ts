@@ -27,8 +27,9 @@ import {
 
 export interface LoadoutBuilderState {
   loadoutParameters: LoadoutParameters & {
-    assumedItemEnergy?: number;
-    assumedExoticEnergy?: number;
+    lockMasterworkItemEnergyType?: boolean;
+    assumeLegendaryMasterwork?: boolean;
+    assumeExoticMasterwork?: boolean;
   };
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -173,21 +174,16 @@ export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
-  | {
-      type: 'lockItemEnergyTypeChanged';
-      lockItemEnergyType: boolean;
-    }
-  | { type: 'assumeItemEnergyChanged'; energy: number }
-  | { type: 'assumeExoticEnergyChanged'; energy: number }
+  | { type: 'lockItemEnergyTypeChanged'; lockItemEnergyType: boolean }
+  | { type: 'lockMasterworkItemEnergyTypeChanged'; lockMasterworkItemEnergyType: boolean }
+  | { type: 'assumeLegendaryMasterworkChanged'; assumeLegendaryMasterwork: boolean }
+  | { type: 'assumeExoticMasterworkChanged'; assumeExoticMasterwork: boolean }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
-  | {
-      type: 'lockedModsChanged';
-      lockedMods: PluggableInventoryItemDefinition[];
-    }
+  | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
@@ -306,16 +302,27 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
-      case 'assumeItemEnergyChanged': {
+      case 'lockMasterworkItemEnergyTypeChanged': {
         return {
           ...state,
-          loadoutParameters: { ...state.loadoutParameters, assumedItemEnergy: action.energy },
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            lockMasterworkItemEnergyType: action.lockMasterworkItemEnergyType,
+          },
         };
       }
-      case 'assumeExoticEnergyChanged': {
+      case 'assumeLegendaryMasterworkChanged': {
+        const { assumeLegendaryMasterwork } = action;
         return {
           ...state,
-          loadoutParameters: { ...state.loadoutParameters, assumedExoticEnergy: action.energy },
+          loadoutParameters: { ...state.loadoutParameters, assumeLegendaryMasterwork },
+        };
+      }
+      case 'assumeExoticMasterworkChanged': {
+        const { assumeExoticMasterwork } = action;
+        return {
+          ...state,
+          loadoutParameters: { ...state.loadoutParameters, assumeExoticMasterwork },
         };
       }
       case 'addGeneralMods': {

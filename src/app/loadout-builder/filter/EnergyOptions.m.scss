@@ -1,8 +1,10 @@
 .energyOptions {
-  margin-bottom: 4px;
+  margin: 8px 0;
 }
 
-.lockEnergyType {
+.option {
   background-color: black;
-  margin-bottom: 4px;
+  &:not(:first-child) {
+    margin-top: 4px;
+  }
 }

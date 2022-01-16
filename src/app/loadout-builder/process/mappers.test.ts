@@ -35,7 +35,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, [perpetuationMod]);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: true,
+      assumeExoticMasterwork: true,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [perpetuationMod],
+    });
 
     // Use specific energy as we care about that more then the specific mod
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Void);
@@ -46,7 +53,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, []);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: true,
+      assumeExoticMasterwork: true,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [],
+    });
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
   });
@@ -56,7 +70,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, true, []);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: true,
+      assumeExoticMasterwork: true,
+      lockItemEnergyType: true,
+      lockMasterworkItemEnergyType: true,
+      modsForSlot: [],
+    });
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
   });
@@ -66,7 +87,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 10, 10, false, [distributionMod]);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: true,
+      assumeExoticMasterwork: true,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [distributionMod],
+    });
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
   });
@@ -76,7 +104,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 1, 1, false, []);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: false,
+      assumeExoticMasterwork: false,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [],
+    });
 
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
   });
@@ -87,7 +122,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 1, 1, false, []);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: false,
+      assumeExoticMasterwork: false,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [],
+    });
 
     expect(mappedItem.energy?.capacity).toBe(energyCapacity);
   });
@@ -98,7 +140,14 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity },
     };
-    const mappedItem = mapDimItemToProcessItem(modifiedItem, 8, 8, false, []);
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: modifiedItem,
+      assumeLegendaryMasterwork: false,
+      assumeExoticMasterwork: false,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot: [],
+    });
 
     expect(mappedItem.energy?.capacity).toBe(9);
   });
@@ -112,9 +161,16 @@ describe('lo process mappers', () => {
         energyCost: { ...perpetuationMod.plug.energyCost!, energyCost },
       },
     };
-    const mods = [modifiedMod, modifiedMod];
-    const mappedItem = mapDimItemToProcessItem(classItem, 8, 8, false, mods);
+    const modsForSlot = [modifiedMod, modifiedMod];
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: classItem,
+      assumeLegendaryMasterwork: false,
+      assumeExoticMasterwork: false,
+      lockItemEnergyType: false,
+      lockMasterworkItemEnergyType: false,
+      modsForSlot,
+    });
 
-    expect(mappedItem.energy?.val).toBe(energyCost * mods.length);
+    expect(mappedItem.energy?.val).toBe(energyCost * modsForSlot.length);
   });
 });

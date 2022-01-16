@@ -4,7 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { keyByStatHash } from 'app/inventory/store/stats';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { upgradeSpendTierToMaxEnergy } from 'app/loadout/armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { StatsSet } from '../process-worker/stats-set';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import { ArmorSet, ItemsByBucket, StatFilters, StatRanges } from '../types';
+import { ArmorSet, ItemsByBucket, MIN_LO_ITEM_ENERGY, StatFilters, StatRanges } from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -50,9 +50,10 @@ export function useProcess({
   filteredItems,
   lockedMods,
   subclass,
-  assumedItemEnergy,
-  assumedExoticEnergy,
+  assumeLegendaryMasterwork,
+  assumeExoticMasterwork,
   lockItemEnergyType,
+  lockMasterworkItemEnergyType,
   statOrder,
   statFilters,
   anyExotic,
@@ -63,9 +64,10 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedMods: PluggableInventoryItemDefinition[];
   subclass: DimLoadoutItem | undefined;
-  assumedItemEnergy: number;
-  assumedExoticEnergy: number;
+  assumeLegendaryMasterwork: boolean;
+  assumeExoticMasterwork: boolean;
   lockItemEnergyType: boolean;
+  lockMasterworkItemEnergyType: boolean;
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
@@ -139,9 +141,10 @@ export function useProcess({
         defs,
         items,
         statOrder,
-        assumedItemEnergy,
-        assumedExoticEnergy,
+        assumeLegendaryMasterwork,
+        assumeExoticMasterwork,
         lockItemEnergyType,
+        lockMasterworkItemEnergyType,
         generalMods,
         combatMods,
         activityMods
@@ -152,13 +155,14 @@ export function useProcess({
 
         if (item && defs) {
           processItems[bucketHash].push(
-            mapDimItemToProcessItem(
-              item,
-              assumedItemEnergy,
-              assumedExoticEnergy,
+            mapDimItemToProcessItem({
+              dimItem: item,
+              assumeLegendaryMasterwork,
+              assumeExoticMasterwork,
               lockItemEnergyType,
-              lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]]
-            )
+              lockMasterworkItemEnergyType,
+              modsForSlot: lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]],
+            })
           );
           itemsById.set(item.id, group);
         }
@@ -224,8 +228,9 @@ export function useProcess({
     anyExotic,
     disabledDueToMaintenance,
     subclass?.socketOverrides,
-    assumedItemEnergy,
-    assumedExoticEnergy,
+    assumeLegendaryMasterwork,
+    assumeExoticMasterwork,
+    lockMasterworkItemEnergyType,
   ]);
 
   return { result, processing, remainingTime };
@@ -269,9 +274,10 @@ function groupItems(
   defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
-  assumedItemEnergy: number,
-  assumedExoticEnergy: number,
+  assumeLegendaryMasterwork: boolean,
+  assumeExoticMasterwork: boolean,
   lockItemEnergyType: boolean,
+  lockMasterworkItemEnergyType: boolean,
   generalMods: PluggableInventoryItemDefinition[],
   combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[]
@@ -321,7 +327,7 @@ function groupItems(
         item.energy &&
         requiredEnergyTypes.has(item.energy.energyType) &&
         // If we can swap to another energy type, there's no need to group by current energy type
-        lockItemEnergyType
+        isArmorEnergyLocked({ item, lockItemEnergyType, lockMasterworkItemEnergyType })
           ? item.energy.energyType
           : DestinyEnergyType.Any;
     }
@@ -341,7 +347,12 @@ function groupItems(
         // Add in masterwork stat bonus if we're assuming masterwork stats
         if (
           defs &&
-          upgradeSpendTierToMaxEnergy(item, assumedItemEnergy, assumedExoticEnergy) === 10
+          calculateAssumedItemEnergy(
+            item,
+            assumeLegendaryMasterwork,
+            assumeExoticMasterwork,
+            MIN_LO_ITEM_ENERGY
+          ) === 10
         ) {
           value += 2;
         }

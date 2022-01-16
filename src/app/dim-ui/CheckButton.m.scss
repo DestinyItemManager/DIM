@@ -15,6 +15,7 @@
   }
   > *:last-child {
     margin-left: 6px;
+    flex-shrink: 0;
   }
 
   @include phone-portrait {

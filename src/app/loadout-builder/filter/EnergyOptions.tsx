@@ -1,43 +1,69 @@
 import CheckButton from 'app/dim-ui/CheckButton';
-import { t } from 'app/i18next-t';
 import React, { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import EnergyBar from './EnergyBar';
 import styles from './EnergyOptions.m.scss';
 
 export default function EnergyOptions({
-  assumedItemEnergy,
-  assumedExoticEnergy,
+  assumeLegendaryMasterwork,
+  assumeExoticMasterwork,
   lockItemEnergyType,
+  lockMasterworkItemEnergyType,
   lbDispatch,
 }: {
-  assumedItemEnergy?: number;
-  assumedExoticEnergy?: number;
+  assumeLegendaryMasterwork: boolean;
+  assumeExoticMasterwork: boolean;
   lockItemEnergyType: boolean;
+  lockMasterworkItemEnergyType: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   return (
     <div className={styles.energyOptions}>
       <CheckButton
         name="lo-lock-item-energy-type"
-        className={styles.lockEnergyType}
+        className={styles.option}
         checked={lockItemEnergyType}
         onChange={(checked) =>
           lbDispatch({ type: 'lockItemEnergyTypeChanged', lockItemEnergyType: checked })
         }
       >
-        {t('LoadoutBuilder.LockElement')}
+        Lock Non-Masterworked Item Element
       </CheckButton>
-      <EnergyBar
-        title="Assumed item energy"
-        assumedEnergy={assumedItemEnergy}
-        onSegmentClick={(value) => lbDispatch({ type: 'assumeItemEnergyChanged', energy: value })}
-      />
-      <EnergyBar
-        title="Assumed exotic energy"
-        assumedEnergy={assumedExoticEnergy}
-        onSegmentClick={(value) => lbDispatch({ type: 'assumeExoticEnergyChanged', energy: value })}
-      />
+      <CheckButton
+        name="lo-lock-masterwork-item-energy-type"
+        className={styles.option}
+        checked={lockMasterworkItemEnergyType}
+        onChange={(checked) =>
+          lbDispatch({
+            type: 'lockMasterworkItemEnergyTypeChanged',
+            lockMasterworkItemEnergyType: checked,
+          })
+        }
+      >
+        Lock Masterworked Item Element
+      </CheckButton>
+      <CheckButton
+        name="lo-assume-legendary-masterwork"
+        className={styles.option}
+        checked={assumeLegendaryMasterwork}
+        onChange={(checked) =>
+          lbDispatch({
+            type: 'assumeLegendaryMasterworkChanged',
+            assumeLegendaryMasterwork: checked,
+          })
+        }
+      >
+        Assume Legendary Masterwork
+      </CheckButton>
+      <CheckButton
+        name="lo-assume-exotic-masterwork"
+        className={styles.option}
+        checked={assumeExoticMasterwork}
+        onChange={(checked) =>
+          lbDispatch({ type: 'assumeExoticMasterworkChanged', assumeExoticMasterwork: checked })
+        }
+      >
+        Assume Exotic Masterwork
+      </CheckButton>
     </div>
   );
 }
