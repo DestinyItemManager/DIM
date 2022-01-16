@@ -13,7 +13,8 @@ export enum D2SeasonEnum {
   HUNT,
   CHOSEN,
   SPLICER,
-  __REDACTED_15__,
+  LOST,
+  WITCH_QUEEN,
 
   __LENGTH__, // This always needs to be last
 }
@@ -228,6 +229,20 @@ export const D2SeasonInfo = {
     releaseDate: '2021-08-24',
     resetTime: '17:00:00Z',
     numWeeks: 26,
+  },
+  16: {
+    DLCName: 'Witch Queen',
+    seasonName: 'Season of [REDACTED]',
+    seasonTag: 'wq',
+    season: 16,
+    maxLevel: 50,
+    powerFloor: 1100,
+    softCap: 1250,
+    powerfulCap: 1370,
+    pinnacleCap: 1380,
+    releaseDate: '2022-02-22',
+    resetTime: '17:00:00Z',
+    numWeeks: 15,
   },
 } as Record<
   number,
