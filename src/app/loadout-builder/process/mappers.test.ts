@@ -3,6 +3,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../../testing/test-utils';
+import { MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 
 describe('lo process mappers', () => {
@@ -11,14 +12,12 @@ describe('lo process mappers', () => {
   // void class item mod
   let perpetuationMod: PluggableInventoryItemDefinition;
   // any class item mod
-  let distributionMod: PluggableInventoryItemDefinition;
 
   beforeAll(async () => {
     const [fetchedDefs, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
     defs = fetchedDefs;
 
     perpetuationMod = defs.InventoryItem.get(4137020505) as PluggableInventoryItemDefinition;
-    distributionMod = defs.InventoryItem.get(1513970148) as PluggableInventoryItemDefinition;
 
     for (const store of stores) {
       for (const storeItem of store.items) {
@@ -48,13 +47,9 @@ describe('lo process mappers', () => {
     expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Void);
   });
 
-  test('mapped energy is Any when no slot specific mods and a high enough spend tier', () => {
-    const modifiedItem: DimItem = {
-      ...classItem,
-      energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
-    };
+  test('mapped energy capacity is 10 when assumed masterwork is used', () => {
     const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
+      dimItem: classItem,
       assumeLegendaryMasterwork: true,
       assumeExoticMasterwork: true,
       lockItemEnergyType: false,
@@ -62,47 +57,13 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
+    expect(mappedItem.energy?.capacity).toBe(10);
   });
 
-  test('mapped energy is the items when no slot specific mods, a high enough spend tier, and lockItemEnergyType is true', () => {
+  test('mapped energy capacity is the items when assumed masterwork is not used', () => {
     const modifiedItem: DimItem = {
       ...classItem,
-      energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
-    };
-    const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
-      assumeLegendaryMasterwork: true,
-      assumeExoticMasterwork: true,
-      lockItemEnergyType: true,
-      lockMasterworkItemEnergyType: true,
-      modsForSlot: [],
-    });
-
-    expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
-  });
-
-  test('mapped energy is Any when any slot specific mod and a high enough spend tier', () => {
-    const modifiedItem: DimItem = {
-      ...classItem,
-      energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
-    };
-    const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
-      assumeLegendaryMasterwork: true,
-      assumeExoticMasterwork: true,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
-      modsForSlot: [distributionMod],
-    });
-
-    expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
-  });
-
-  test('mapped energy is the dim items when no mods and low spend tier', () => {
-    const modifiedItem: DimItem = {
-      ...classItem,
-      energy: { ...classItem.energy!, energyType: DestinyEnergyType.Arc },
+      energy: { ...classItem.energy!, energyCapacity: 9 },
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
@@ -113,14 +74,13 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Arc);
+    expect(mappedItem.energy?.capacity).toBe(modifiedItem.energy?.energyCapacity);
   });
 
-  test('mapped energy capacity is the dim items when no mods and low spend tier', () => {
-    const energyCapacity = 7;
+  test('mapped energy capacity defaults to MIN_LO_ITEM_ENERGY when assumed masterwork is not used and the item energy is low', () => {
     const modifiedItem: DimItem = {
       ...classItem,
-      energy: { ...classItem.energy!, energyCapacity },
+      energy: { ...classItem.energy!, energyCapacity: 2 },
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
@@ -131,46 +91,32 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.capacity).toBe(energyCapacity);
+    expect(mappedItem.energy?.capacity).toBe(MIN_LO_ITEM_ENERGY);
   });
 
-  test('mapped energy capacity is the spend tiers when a high enough tier is used', () => {
-    const energyCapacity = 7;
-    const modifiedItem: DimItem = {
-      ...classItem,
-      energy: { ...classItem.energy!, energyCapacity },
-    };
-    const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
-      modsForSlot: [],
-    });
-
-    expect(mappedItem.energy?.capacity).toBe(9);
-  });
-
-  test('mapped energy capacity is the spend tiers when a high enough tier is used', () => {
-    const energyCost = 3;
-    const modifiedMod: PluggableInventoryItemDefinition = {
-      ...perpetuationMod,
-      plug: {
-        ...perpetuationMod.plug,
-        energyCost: { ...perpetuationMod.plug.energyCost!, energyCost },
-      },
-    };
-    const modsForSlot = [modifiedMod, modifiedMod];
+  test('mapped energy type is Any when energy is not locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
       assumeLegendaryMasterwork: false,
       assumeExoticMasterwork: false,
       lockItemEnergyType: false,
       lockMasterworkItemEnergyType: false,
-      modsForSlot,
+      modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.val).toBe(energyCost * modsForSlot.length);
+    expect(mappedItem.energy?.type).toBe(DestinyEnergyType.Any);
+  });
+
+  test('mapped energy type is the items when energy is locked', () => {
+    const mappedItem = mapDimItemToProcessItem({
+      dimItem: classItem,
+      assumeLegendaryMasterwork: false,
+      assumeExoticMasterwork: false,
+      lockItemEnergyType: true,
+      lockMasterworkItemEnergyType: true,
+      modsForSlot: [],
+    });
+
+    expect(mappedItem.energy?.type).toBe(classItem.energy?.energyType);
   });
 });
