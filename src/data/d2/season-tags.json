@@ -13,5 +13,6 @@
   "hunt": 12,
   "chosen": 13,
   "splicer": 14,
-  "lost": 15
+  "lost": 15,
+  "wq": 16
 }
