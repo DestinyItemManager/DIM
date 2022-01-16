@@ -183,7 +183,7 @@ describe('process-utils', () => {
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
-      modifyItem({ item, energyVal: generalMod.energy!.val })
+      modifyItem({ item, energyVal: item.energy!.capacity - generalMod.energy!.val })
     );
     const generalModPerms = generateProcessModPermutations(generalMods);
     expect(canTakeSlotIndependentMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
@@ -196,7 +196,10 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: generalMod.energy!.type,
-          energyVal: itemIndex === i ? generalMod.energy!.val : generalMod.energy!.val + 1,
+          energyVal:
+            itemIndex === i
+              ? item.energy!.capacity - generalMod.energy!.val
+              : item.energy!.capacity,
         })
       );
       const combatModPerms = generateProcessModPermutations([combatMod]);
@@ -212,7 +215,7 @@ describe('process-utils', () => {
       modifyItem({
         item,
         energyType: combatMod.energy!.type,
-        energyVal: combatMod.energy!.val,
+        energyVal: item.energy!.capacity - combatMod.energy!.val,
         compatibleModSeasons: [tag],
       })
     );
@@ -230,7 +233,7 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: combatMod.energy!.type,
-          energyVal: combatMod.energy!.val,
+          energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
         })
       );
@@ -247,7 +250,7 @@ describe('process-utils', () => {
       modifyItem({
         item,
         energyType: activityMod.energy!.type,
-        energyVal: activityMod.energy!.val,
+        energyVal: item.energy!.capacity - activityMod.energy!.val,
         compatibleModSeasons: [tag],
       })
     );
@@ -265,7 +268,7 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: combatMod.energy!.type,
-          energyVal: combatMod.energy!.val,
+          energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
       );
