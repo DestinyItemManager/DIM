@@ -1,3 +1,4 @@
+import type { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -11,8 +12,8 @@ import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 
-const bucketIcons = {
-  Kinetic: dmgKinetic,
+const bucketIcons: { [key in DimBucketType]?: string } = {
+  KineticSlot: dmgKinetic,
   Energy: energyWeapon,
   Power: powerWeapon,
   Helmet: helmet,

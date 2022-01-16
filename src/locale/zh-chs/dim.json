@@ -91,6 +91,8 @@
       "Unmatched": "此物品和要比较的物品类别不同。"
     },
     "InitialItem": "比较工具从这个物品启动",
+    "IsVendorItem": "你不拥有此物品。它在一位商人的库存里，可能可以购买。",
+    "SoldBy": "售于：{{vendorName}}",
     "SwipeAdvice": "使用双指滚动"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "会将物品移到保险库来腾出空间。"
   },
   "FashionDrawer": {
-    "Accept": "使用此外貌",
+    "Accept": "保存外貌",
     "ClearOrnaments": "清除皮肤",
+    "ClearOrnamentsTitle": "将所有皮肤重置为“无偏好”",
     "ClearShaders": "清除着色器",
-    "Reset": "全部重置",
+    "ClearShadersTitle": "将所有着色器重置为“无偏好”",
+    "NoPreference": "无偏好 - 不会更改此插槽",
+    "Reset": "清除外貌",
     "Sync": "同步",
     "SyncOrnaments": "同步皮肤",
+    "SyncOrnamentsTitle": "如整套皮肤已解锁，则应用到所有物品",
     "SyncShaders": "同步着色器",
+    "SyncShadersTitle": "为所有物品应用同一着色器",
     "Title": "选择着色器和皮肤",
-    "UseEquipped": "使用已装备的"
+    "UseEquipped": "使用已装备的外貌"
   },
   "FileUpload": {
     "Instructions": "选择或拖拽档案"
@@ -305,6 +312,7 @@
     "Inventory": "背包",
     "IosPwaPrompt": "在 Safari 中，轻触分享图标（位于屏幕底部中央），并选择“添加到主屏幕”。",
     "KeyboardShortcuts": "键盘快捷键",
+    "LaunchDIMAlone": "独立窗口",
     "Menu": "菜单",
     "Refresh": "刷新命运数据 [R]",
     "ReloadApp": "重新载入应用",
@@ -346,6 +354,10 @@
     "NoTransfer": "移动灌注材料\n{{target}} 无法移动。",
     "SwitchDirection": "切换",
     "TransferItems": "转移"
+  },
+  "ItemFeed": {
+    "Description": "物品流",
+    "HideTagged": "隐藏已标记的物品"
   },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具或管理器来比较相关物品。",
     "EnableAdvancedStats": "在装备上显示品质指数(D1)",
     "ExpandSingleCharacter": "显示所有角色",
+    "ExportProfile": "导出 API 返回的账户资料",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
     "ExportSSNoStores": "请在刷新一次库存后点击此按钮",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "按列表显示特性",
     "Select": {
-      "Ability": "选择技能",
-      "Aspect": "选择星相",
-      "Fragment": "选择碎片",
-      "Mod": "选择模组",
-      "Ornament": "选择皮肤",
-      "Projection": "选择机灵投影",
-      "Shader": "选择着色器",
-      "Transmat": "选择传送效果"
+      "Ability": "预览技能",
+      "Aspect": "预览星相",
+      "Fragment": "预览碎片",
+      "Mod": "预览模组",
+      "Ornament": "预览皮肤",
+      "Projection": "预览机灵投影",
+      "Shader": "预览着色器",
+      "Transmat": "预览传送效果"
     },
     "SelectWishlistPerks": "预览愿望单特性"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "最后更新于 {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "在您的愿望单中有{{num, number}} 个物品",
     "PreMadeFiles": "使用预制愿望清单",
+    "Untitled": "未命名的愿望清单",
     "UpdateExternalSource": "更新愿望清单来源",
     "Voltron": "voltron（默认）",
     "VoltronDescription": "voltron 是来自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",

@@ -91,6 +91,8 @@
       "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
     },
     "InitialItem": "Das ist der Gegenstand, von dem aus der Vergleich gestartet wurde",
+    "IsVendorItem": "Du besitzt diesen Gegenstand nicht. Er befindet sich im Inventar eines Händlers und könnte zum Verkauf stehen.",
+    "SoldBy": "Verkauft von: {{vendorName}}",
     "SwipeAdvice": "Zum Scrollen zwei Finger benutzen"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen."
   },
   "FashionDrawer": {
-    "Accept": "Diese Mode verwenden",
-    "ClearOrnaments": "Clear Ornaments",
-    "ClearShaders": "Clear Shaders",
-    "Reset": "Alle zurücksetzen",
+    "Accept": "Mode speichern",
+    "ClearOrnaments": "Ornament-Auswahl aufheben",
+    "ClearOrnamentsTitle": "Alle Ornamente mit \"Keine Präferenz\" markieren",
+    "ClearShaders": "Shader-Auswahl aufheben",
+    "ClearShadersTitle": "Alle Shader mit \"Keine Präferenz\" markieren",
+    "NoPreference": "Keine Präferenz - diese Fassung bleibt unverändert",
+    "Reset": "Mode-Auswahl aufheben",
     "Sync": "Synchronisieren",
     "SyncOrnaments": "Ornamente synchronisieren",
+    "SyncOrnamentsTitle": "Ornamente aus demselben Set für alle Gegenstände verwenden, falls freigeschaltet",
     "SyncShaders": "Shader synchronisieren",
+    "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
-    "UseEquipped": "Ausgerüstetes verwenden"
+    "UseEquipped": "Ausgerüstete Mode verwenden"
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -305,6 +312,7 @@
     "Inventory": "Inventar",
     "IosPwaPrompt": "Klicke im mobilen Safari auf das Teilen-Symbol (mittlere Taste unten) und wähle \"Zu Home Screen hinzufügen\".",
     "KeyboardShortcuts": "Tastaturkürzel",
+    "LaunchDIMAlone": "Separates Fenster",
     "Menu": "Menü",
     "Refresh": "Aktualisiere Destiny Daten [R]",
     "ReloadApp": "App neu laden",
@@ -346,6 +354,10 @@
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
     "SwitchDirection": "Umschalten",
     "TransferItems": "Übertragen"
+  },
+  "ItemFeed": {
+    "Description": "Gegenstands-Feed",
+    "HideTagged": "Markierte ausblenden"
   },
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "Vergiss nicht, dass du nach is:dupe suchen kannst, um schnell doppelte Gegenstände zu finden und du kannst das Vergleichstool oder den Organizer nutzen, um verwandte Gegenstände zu begutachten.",
     "EnableAdvancedStats": "Qualitätsbewertung auf Rüstung anzeigen (D1)",
     "ExpandSingleCharacter": "Alle Charaktere anzeigen",
+    "ExportProfile": "API-Profilantwort exportieren",
     "ExportSS": "Inventar-Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "ExportSSNoStores": "Du musst dein Inventar einmal laden, bevor du diesen Knopf drückst.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Perks als Liste anzeigen",
     "Select": {
-      "Ability": "Fähigkeit auswählen",
-      "Aspect": "Aspekt auswählen",
-      "Fragment": "Fragment auswählen",
-      "Mod": "Mod auswählen",
-      "Ornament": "Ornament auswählen",
-      "Projection": "Geist-Projektion auswählen",
-      "Shader": "Shader auswählen",
-      "Transmat": "Teleporteffekt auswählen"
+      "Ability": "Fähigkeits-Vorschau",
+      "Aspect": "Aspekt-Vorschau",
+      "Fragment": "Fragment-Vorschau",
+      "Mod": "Mod-Vorschau",
+      "Ornament": "Ornament-Vorschau",
+      "Projection": "Geist-Projektions-Vorschau",
+      "Shader": "Shader-Vorschau",
+      "Transmat": "Teleporteffekt-Vorschau"
     },
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Zuletzt aktualisiert: {{lastUpdatedDate}} um {{lastUpdatedTime}}",
     "Num": "{{num, number}} Rolls in deiner Wunschliste",
     "PreMadeFiles": "Eine vorgefertigte Wunschliste verwenden",
+    "Untitled": "Unbenannte Wunschliste",
     "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",
     "Voltron": "Voltron (Standard)",
     "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlisten-Rolls von Mercules904 und Pandapaxxy. Wir liefern diese standardmäßig mit aus.",

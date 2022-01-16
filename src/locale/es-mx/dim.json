@@ -91,6 +91,8 @@
       "Unmatched": "Este artículo no coincide con el tipo de objetos que estás comparando."
     },
     "InitialItem": "Este es el objeto desde el que se inició la herramienta Comparar",
+    "IsVendorItem": "Este objeto no lo tienes. Está en el inventario de un vendedor y podría estar en venta.",
+    "SoldBy": "Vendido por: {{vendorName}}",
     "SwipeAdvice": "Usa dos dedos para desplazarte"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Moverá objetos al Depósito para hacer espacio."
   },
   "FashionDrawer": {
-    "Accept": "Usar estos cosméticos",
+    "Accept": "Guardar cosméticos",
     "ClearOrnaments": "Limpiar Diseños",
+    "ClearOrnamentsTitle": "Reiniciar todos los diseños a \"sin preferencia\"",
     "ClearShaders": "Limpiar Shaders",
-    "Reset": "Reiniciar todo",
+    "ClearShadersTitle": "Reiniciar todos los shaders a \"sin preferencia\"",
+    "NoPreference": "No hay preferencia - este espacio no se cambiará",
+    "Reset": "Limpiar cosméticos",
     "Sync": "Sincronizar",
     "SyncOrnaments": "Sincronizar Diseños",
+    "SyncOrnamentsTitle": "Usar diseños del mismo conjunto en todos los objetos, si están desbloqueados",
     "SyncShaders": "Sincronizar Shaders",
+    "SyncShadersTitle": "Usar el mismo shader en todos los objetos",
     "Title": "Elegir shaders y diseños",
-    "UseEquipped": "Usar Equipados"
+    "UseEquipped": "Usar cosméticos equipados"
   },
   "FileUpload": {
     "Instructions": "Haga click o arrastre archivos"
@@ -305,6 +312,7 @@
     "Inventory": "Inventario",
     "IosPwaPrompt": "En Safari Móvil, haz click en el botón de compartir (botón central en la parte inferior) y selecciona \"Añadir a Pantalla de Inicio\".",
     "KeyboardShortcuts": "Atajos de Teclado",
+    "LaunchDIMAlone": "Separar Ventana",
     "Menu": "Menú",
     "Refresh": "Actualizar Datos de Destiny [R]",
     "ReloadApp": "Recargar App",
@@ -346,6 +354,10 @@
     "NoTransfer": "El material para infundir\n{{target}} no se puede mover.",
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
+  },
+  "ItemFeed": {
+    "Description": "Objetos Recientes",
+    "HideTagged": "Ocultar etiquetados"
   },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "No olvides de que puedes usar is:dupe para buscar rápidamente objetos duplicados, y que puedes usar la herramienta de comparación o el organizador para evaluar objetos relacionados.",
     "EnableAdvancedStats": "Mostrar la calificación de la calidad en la armadura (D1)",
     "ExpandSingleCharacter": "Mostrar todos los personajes",
+    "ExportProfile": "Exportar perfil de respuesta de la API",
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en la aplicación de hojas de cálculo de tu preferencia.",
     "ExportSSNoStores": "Necesitas cargar tu inventario una vez antes de pulsar este botón.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Mostrar perks en forma de lista",
     "Select": {
-      "Ability": "Seleccionar Habilidad",
-      "Aspect": "Seleccionar Aspecto",
-      "Fragment": "Seleccionar Fragmento",
-      "Mod": "Seleccionar Mod",
-      "Ornament": "Seleccionar Diseño",
-      "Projection": "Seleccionar Proyección de Espectro",
-      "Shader": "Seleccionar Shader",
-      "Transmat": "Seleccionar Efecto de Teletransporte"
+      "Ability": "Previsualizar Habilidad",
+      "Aspect": "Previsualizar Aspecto",
+      "Fragment": "Previsualizar Fragmento",
+      "Mod": "Previsualizar Mod",
+      "Ornament": "Previsualizar Diseño",
+      "Projection": "Previsualizar Proyección de Espectro",
+      "Shader": "Previsualizar Shader",
+      "Transmat": "Previsualizar Efecto de Teletransporte"
     },
     "SelectWishlistPerks": "Vista previa de la lista de deseos de Perks"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
     "PreMadeFiles": "Usar Una Lista de Deseos Prehecha",
+    "Untitled": "Lista de Deseos sin nombre",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "Voltron": "voltron (por defecto)",
     "VoltronDescription": "voltron es una colección autoactualizada de tiradas de listas de deseos para PVE y PVP de Mercules904 y pandapaxxy. Escogimos por esta por defecto.",

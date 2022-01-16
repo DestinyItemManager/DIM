@@ -91,6 +91,8 @@
       "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     },
     "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item",
+    "IsVendorItem": "Você não possui este item. Ele está no inventário de um vendedor e pode estar à venda.",
+    "SoldBy": "Vendido por: {{vendorName}}",
     "SwipeAdvice": "Use dois dedos para rolar"
   },
   "Cooldown": {
@@ -106,10 +108,10 @@
   },
   "Csv": {
     "EmptyFile": "Não haviam linhas no arquivo.",
-    "ImportConfirm": "Tem certeza que deseja importar marcas/anotações do CSV? Isso irá sobrescrever marcas/anotações para todos os itens contidos em sua planilha.",
-    "ImportFailed": "Falha ao importar marcas/anotações do CSV: {{error}}",
-    "ImportSuccess": "Marcas/anotações carregadas para um item.",
-    "ImportSuccess_plural": "Marcas/anotações carregadas para {{count}} itens.",
+    "ImportConfirm": "Tem certeza que deseja importar etiquetas/anotações do CSV? Isso irá sobrescrever etiquetas/anotações para todos os itens contidos em sua planilha.",
+    "ImportFailed": "Falha ao importar etiquetas/anotações do CSV: {{error}}",
+    "ImportSuccess": "Etiquetas/anotações carregadas para um item.",
+    "ImportSuccess_plural": "Etiquetas/anotações carregadas para {{count}} itens.",
     "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
@@ -152,15 +154,20 @@
     "Vault": "Itens serão movidos para o Cofre para liberar espaço."
   },
   "FashionDrawer": {
-    "Accept": "Usar este estilo",
-    "ClearOrnaments": "Limpar ornamentos",
-    "ClearShaders": "Limpar tonalizadores",
-    "Reset": "Redefinir",
+    "Accept": "Salvar estilo",
+    "ClearOrnaments": "Limpar Ornamentos",
+    "ClearOrnamentsTitle": "Redefinir todos os ornamentos para \"sem preferência\"",
+    "ClearShaders": "Limpar Tonalizadores",
+    "ClearShadersTitle": "Redefinir todos os tonalizados para \"sem preferência\"",
+    "NoPreference": "Sem preferência - este soquete não será alterado",
+    "Reset": "Redefinir estilo",
     "Sync": "Sincronizar",
-    "SyncOrnaments": "Sincronizar ornamentos",
-    "SyncShaders": "Sincronizar tonalizadores",
+    "SyncOrnaments": "Sincronizar Ornamentos",
+    "SyncOrnamentsTitle": "Usar os ornamentos do mesmo conjunto em todos os itens, se estiverem desbloqueados",
+    "SyncShaders": "Sincronizar Tonalizadores",
+    "SyncShadersTitle": "Usar o mesmo tonalizador em todos os itens",
     "Title": "Escolher tonalizadores e ornamentos",
-    "UseEquipped": "Usar equipados"
+    "UseEquipped": "Usar estilos equipados"
   },
   "FileUpload": {
     "Instructions": "Clique ou arraste arquivos"
@@ -172,12 +179,12 @@
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
     "Ascended": "Exibe itens que possuem nódulos ascendentes e que foram ascendidos.",
     "Breaker": "Filtra pelo tipo de quebra-guarda ou tipo de campeão correspondente.",
-    "BulkClear": "Tag removida de 1 item.",
-    "BulkClear_plural": "Tags removidas de {{count}} itens.",
-    "BulkRevert": "Tag revertida em 1 item.",
-    "BulkRevert_plural": "Tags revertidas em {{count}} itens.",
-    "BulkTag": "Adicionado a tag {{tag}} ao item selecionado.",
-    "BulkTag_plural": "Adicionado a tag {{tag}} aos {{count}} itens selecionados.",
+    "BulkClear": "Etiqueta removida de 1 item.",
+    "BulkClear_plural": "Etiquetas removidas de {{count}} itens.",
+    "BulkRevert": "Etiqueta revertida em 1 item.",
+    "BulkRevert_plural": "Etiquetas revertidas em {{count}} itens.",
+    "BulkTag": "Adicionado a etiqueta {{tag}} ao item selecionado.",
+    "BulkTag_plural": "Adicionado a etiqueta {{tag}} aos {{count}} itens selecionados.",
     "Class": "Mostra itens baseado na sua afinidade por classe.",
     "Combine": "Filtros podem ser combinados ou agrupados com parênteses, \"or\" (ou) e \"and\" (e) para restringir sua pesquisa, por exemplo: \"{{example}}\".",
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
@@ -230,7 +237,7 @@
     "NamedStat": "Mostra armaduras que tem pontos no atributo nomeado.",
     "Negate": "Para negar uma pesquisa, prefixe o termo com um sinal de menos ou a palavra \"not\", por exemplo: \"{{notexample}}\" ou \"{{notexample2}}\".",
     "NewItems": "Mostra novos itens.",
-    "Notes": "Procura por itens que você marcou com notas personalizadas",
+    "Notes": "Procura por itens que você marcou com anotações personalizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
     "PartialMatch": "Exibe itens onde seu nome, descrição, seus perks ou mods tenham uma correspondência parcial com o filtro indicado. Pesquise por frases inteiras usando aspas. O filtro 'perk:' buscará apenas por perks.",
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
@@ -260,8 +267,8 @@
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
     "Tags": {
-      "Tag": "Exibe itens que possuem uma determinada tag.",
-      "Tagged": "Exibe itens que possuam qualquer tag."
+      "Tag": "Exibe itens que possuem uma determinada etiqueta.",
+      "Tagged": "Exibe itens que possuam qualquer etiqueta."
     },
     "Timelost": "\\(Retroperda\\)",
     "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
@@ -285,7 +292,7 @@
   },
   "Header": {
     "About": "Sobre o DIM",
-    "BulkTag": "Marcar itens em massa",
+    "BulkTag": "Etiquetar itens em massa",
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
     "CompareMatching": "Comparar Itens",
@@ -305,6 +312,7 @@
     "Inventory": "Inventário",
     "IosPwaPrompt": "No Safari, clique no ícone de compartilhamento (botão do meio, na parte inferior) e selecione \"Adicionar à Tela Inicial\".",
     "KeyboardShortcuts": "Atalhos do teclado",
+    "LaunchDIMAlone": "Em Janela Separada",
     "Menu": "Menu",
     "Refresh": "Atualizar dados do Destiny [R]",
     "ReloadApp": "Recarregar o App",
@@ -327,7 +335,7 @@
     "ClearNewItems": "Limpar novos itens",
     "Enter": "ENTER",
     "LockUnlock": "Travar ou destravar um item",
-    "MarkItemAs": "Marcar item como '{{tag}}'",
+    "MarkItemAs": "Etiquetar item como '{{tag}}'",
     "Menu": "Alternar menu",
     "Pull": "Trazer o item para o personagem ativo",
     "RefreshInventory": "Atualizar inventário",
@@ -346,6 +354,10 @@
     "NoTransfer": "O material de infusão\n {{target}} não pode ser movido.",
     "SwitchDirection": "Inverter",
     "TransferItems": "Transferir"
+  },
+  "ItemFeed": {
+    "Description": "Itens Recentes",
+    "HideTagged": "Ocultar Etiquetados"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
@@ -699,7 +711,7 @@
   "Organizer": {
     "BulkMove": "Mover Para",
     "BulkMoveLoadoutName": "Selecionado no Organizador",
-    "BulkTag": "Tag",
+    "BulkTag": "Etiqueta",
     "Columns": {
       "Archetype": "Arquétipo",
       "BaseStats": "Atributos base",
@@ -729,7 +741,7 @@
       "StatQuality": "Qualidade dos Atributos",
       "StatQualityStat": "{{stat}}%",
       "Stats": "Atributos",
-      "Tag": "Tag",
+      "Tag": "Etiqueta",
       "Tier": "Nível",
       "Traits": "Atributos de Arma",
       "WishList": "Lista de desejos",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação ou o organizador para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
     "ExpandSingleCharacter": "Exibir todos os personagens",
+    "ExportProfile": "Exportar a resposta da API com os dados do perfil",
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
     "ExportSSNoStores": "Você precisa carregar seu inventário uma vez antes de clicar neste botão.",
@@ -846,7 +859,7 @@
     "SortByRecent": "Obtido recentemente (D2)",
     "SortBySeason": "Temporada (D2)",
     "SortBySunset": "Poder Foi Limitado (D2)",
-    "SortByTag": "Tag ({{taglist}})",
+    "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Exibir perks em listagem",
     "Select": {
-      "Ability": "Selecionar Habilidade",
-      "Aspect": "Selecionar Aspecto",
-      "Fragment": "Selecionar Fragmento",
-      "Mod": "Selecionar Mod",
-      "Ornament": "Selecionar Ornamento",
-      "Projection": "Selecionar Projeção de Fantasma",
-      "Shader": "Selecionar Tonalizador",
-      "Transmat": "Selecionar Efeito de Transmaterialização"
+      "Ability": "Pré-visualizar Habilidade",
+      "Aspect": "Pré-visualizar Aspecto",
+      "Fragment": "Pré-visualizar Fragmento",
+      "Mod": "Pré-visualizar Mod",
+      "Ornament": "Pré-visualizar Ornamento",
+      "Projection": "Pré-visualizar Projeção de Fantasma",
+      "Shader": "Pré-visualizar Tonalizador",
+      "Transmat": "Pré-visualizar Efeito de Transmaterialização"
     },
     "SelectWishlistPerks": "Pré-visualizar lista de desejos de perks"
   },
@@ -913,7 +926,7 @@
   },
   "Storage": {
     "ApiPermissionPrompt": {
-      "Description": "Agora o DIM é capaz de armazenar suas configurações, tags e sets em servidores próprios, permitindo sincronizar estes dados entre diferentes versões do DIM, sem login separado. Você pode importar seus dados atuais a partir da página de Configurações, caso não tenha ativado a Sincronização DIM anteriormente. Este feito só foi possível devido aos nossos apoiadores do OpenCollective!",
+      "Description": "Agora o DIM é capaz de armazenar suas configurações, etiquetas e sets em servidores próprios, permitindo sincronizar estes dados entre diferentes versões do DIM, sem login separado. Você pode importar seus dados atuais a partir da página de Configurações, caso não tenha ativado a Sincronização DIM anteriormente. Este feito só foi possível devido aos nossos apoiadores do OpenCollective!",
       "No": "Por enquanto, não",
       "Title": "Ativar Sincronização DIM?",
       "Yes": "Ativar sincronização"
@@ -927,21 +940,21 @@
     "Details": {
       "IndexedDBStorage": "Armazenamento local salvará suas informações apenas neste navegador. Limpar seus dados de navegação apagará essas informações."
     },
-    "DimApiFinePrint": "DIM salvará suas configurações, tags e sets em servidores próprios e sincronizará entre diferentes versões do aplicativo.",
+    "DimApiFinePrint": "DIM salvará suas configurações, etiquetas e sets em servidores próprios e sincronizará entre diferentes versões do aplicativo.",
     "DimSyncEnabled": "Sincronização DIM ativada",
     "EnableDimApi": "Ativar a Sincronização DIM (recomendado)",
     "Export": "Baixar Dados de Backup",
     "Import": "Importar Dados de Backup",
-    "ImportConfirmDimApi": "Você confirma que quer substituir suas tags, sets e configurações atuais com esta versão? Esta opção sobrescreverá totalmente tudo o que você tiver atualmente.",
+    "ImportConfirmDimApi": "Você confirma que quer substituir suas etiquetas, sets e configurações atuais com esta versão? Esta opção sobrescreverá totalmente tudo o que você tiver atualmente.",
     "ImportExport": "Backup e Importação",
     "ImportFailed": "Importação Falhou! {{error}}",
     "ImportNoFile": "Nenhum arquivo selecionado!",
     "ImportNotification": {
       "FailedBody": "Não foi possível importar os dados. {{error}}",
       "FailedTitle": "Falha na importação",
-      "NoData": "Nenhum set ou tag encontrado no backup",
-      "SuccessBodyForced": "Dados de configurações, {{tags}} tags e {{loadouts}} sets foram importados de seu backup para a Sincronização DIM, substituindo o que havia por lá.",
-      "SuccessBodyLocal": "Importamos as configurações, {{loadouts}} sets e {{tags}} itens com tags do seu backup para o armazenamento local, substituindo o que já existia. Não podemos garantir que o armazenamento local não seja perdido, então considere ativar a Sincronização DIM.",
+      "NoData": "Nenhum set ou etiqueta encontrado no backup",
+      "SuccessBodyForced": "Dados de configurações, {{tags}} etiquetas e {{loadouts}} sets foram importados de seu backup para a Sincronização DIM, substituindo o que havia por lá.",
+      "SuccessBodyLocal": "Importamos as configurações, {{loadouts}} sets e {{tags}} itens com etiquetas do seu backup para o armazenamento local, substituindo o que já existia. Não podemos garantir que o armazenamento local não seja perdido, então considere ativar a Sincronização DIM.",
       "SuccessTitle": "Sucesso ao Importar"
     },
     "ImportTooManyFiles": "Por favor selecione somente um arquivo para importar.",
@@ -963,7 +976,7 @@
     "Junk": "Lixo",
     "Keep": "Manter",
     "LockAll": "Travar Itens",
-    "TagItem": "Marcar item",
+    "TagItem": "Etiquetar como...",
     "UnlockAll": "Destravar itens"
   },
   "Triumphs": {
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Última atualização: {{lastUpdatedDate}} às {{lastUpdatedTime}}",
     "Num": "{{num, number}} valores em sua lista de desejos",
     "PreMadeFiles": "Usar uma lista de desejos predefinida",
+    "Untitled": "Lista de Desejos sem Tìtulo",
     "UpdateExternalSource": "Atualizar fonte da Lista de Desejos",
     "Voltron": "voltron (padrão)",
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de Mercules904 e pandapaxxy. Nós a usamos por padrão.",
