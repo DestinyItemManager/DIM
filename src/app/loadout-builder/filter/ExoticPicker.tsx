@@ -7,9 +7,7 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
-import { AppIcon, searchIcon } from 'app/shell/icons';
-import { useIsPhonePortrait } from 'app/shell/selectors';
-import { isiOSBrowser } from 'app/utils/browsers';
+import { SearchInput } from 'app/search/SearchInput';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -138,7 +136,6 @@ function filterAndGroupExotics(
 /** A drawer to select an exotic for your build. */
 export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
   const defs = useD2Definitions()!;
-  const isPhonePortrait = useIsPhonePortrait();
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
 
@@ -154,29 +151,18 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
     [language, query, lockableExotics]
   );
 
-  const autoFocus = !isPhonePortrait && !isiOSBrowser();
-
   return (
     <Sheet
       header={
         <div>
           <h1>{t('LB.ChooseAnExotic')}</h1>
           <div className="item-picker-search">
-            <div className="search-filter" role="search">
-              <AppIcon icon={searchIcon} className="search-bar-icon" />
-              <input
-                className="filter-input"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                autoFocus={autoFocus}
-                placeholder={t('LB.SearchAnExotic')}
-                type="text"
-                name="filter"
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            </div>
+            <SearchInput
+              query={query}
+              setQuery={setQuery}
+              placeholder={t('LB.SearchAnExotic')}
+              autoFocus
+            />
           </div>
         </div>
       }

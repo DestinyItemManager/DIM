@@ -2,14 +2,13 @@ import { languageSelector } from 'app/dim-api/selectors';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
-import { AppIcon, searchIcon } from 'app/shell/icons';
+import { SearchInput } from 'app/search/SearchInput';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
@@ -80,14 +79,7 @@ export default function PlugDrawer({
   const [selected, setSelected] = useState(() =>
     assignPlugsToPlugSets(plugSets, initiallySelected)
   );
-  const filterInput = useRef<HTMLInputElement>(null);
   const isPhonePortrait = useIsPhonePortrait();
-
-  useEffect(() => {
-    if (!isPhonePortrait && filterInput.current) {
-      filterInput.current.focus();
-    }
-  }, [isPhonePortrait, filterInput]);
 
   const handlePlugSelected = useCallback(
     (
@@ -180,8 +172,6 @@ export default function PlugDrawer({
     queryFilteredPlugSets.sort(sortPlugGroups);
   }
 
-  const autoFocus = !isPhonePortrait && !isiOSBrowser();
-
   // Flatten out the plugs and sort so the footer has a predictable order
   const flatSelectedPlugs = _.compact(Object.values(selected).flat());
   if (sortPlugs) {
@@ -215,22 +205,7 @@ export default function PlugDrawer({
     <div>
       <h1>{title}</h1>
       <div className="item-picker-search">
-        <div className="search-filter" role="search">
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            ref={filterInput}
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            autoFocus={autoFocus}
-            placeholder={searchPlaceholder}
-            type="text"
-            name="filter"
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
-        </div>
+        <SearchInput query={query} setQuery={setQuery} placeholder={searchPlaceholder} autoFocus />
       </div>
     </div>
   );
