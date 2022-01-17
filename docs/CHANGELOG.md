@@ -1,5 +1,9 @@
 ## Next
 
+* Widened and reorganized the Loadouts menu.
+  * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
+  * Randomize loadout is now at the end of the list of loadouts.
+
 ## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
 
 * Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
