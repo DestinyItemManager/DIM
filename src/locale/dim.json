@@ -880,6 +880,7 @@
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Display perks as a list",
+    "Search": "Search names or descriptions",
     "Select": {
       "Ability": "Preview Ability",
       "Aspect": "Preview Aspect",
