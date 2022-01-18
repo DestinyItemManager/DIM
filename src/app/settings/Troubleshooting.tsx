@@ -3,6 +3,7 @@ import { getStores } from 'app/bungie-api/destiny2-api';
 import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { setMockProfileResponse } from 'app/inventory/actions';
+import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import { download } from 'app/utils/util';
@@ -32,6 +33,7 @@ export function TroubleshootingSettings() {
 
     try {
       await dispatch(importMockProfileResponse(files[0]));
+      dispatch(loadStores());
       alert('succeeded');
     } catch (e) {
       alert(e.message);
