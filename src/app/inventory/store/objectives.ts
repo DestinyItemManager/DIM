@@ -7,7 +7,7 @@ import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
-import { DimItem } from '../item-types';
+import trialsHashes from 'data/d2/d2-trials-objectives.json';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
@@ -63,52 +63,25 @@ export function isBooleanObjective(
   );
 }
 
-export function isTrialsPassage(item: DimItem, defs: D2ManifestDefinitions) {
-  if (item.objectives?.length === 3 && item.isExotic) {
-    for (const objective of item.objectives) {
-      const objectiveDef = defs.Objective.get(objective.objectiveHash);
-      if (isFlawlessObjective(objective, objectiveDef)) {
-        return true;
-      }
-    }
-  }
-  return false;
+export function isTrialsPassage(itemHash: number) {
+  return trialsHashes.passages.includes(itemHash);
 }
 
-export function isFlawlessPassage(
-  objectives: DestinyObjectiveProgress[] | null,
-  defs: D2ManifestDefinitions
-) {
-  if (objectives && objectives.length === 3) {
-    for (const objective of objectives) {
-      if (isFlawlessObjective(objective, defs.Objective.get(objective.objectiveHash))) {
-        return objective.complete;
-      }
-    }
-    return false;
-  }
-  return false;
+/**
+ * Checks if the trials passage is flawless
+ */
+export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | null) {
+  return objectives?.some((obj) => isFlawlessObjective(obj.objectiveHash) && obj.complete);
 }
 
-// Assumes that the item related to the objective is a trials passage
-export function isFlawlessObjective(
-  objective: DestinyObjectiveProgress,
-  objectiveDef: DestinyObjectiveDefinition
-) {
-  return (
-    objective.completionValue === 1 &&
-    objectiveDef.allowValueChangeWhenCompleted &&
-    !objectiveDef.allowOvercompletion
-  );
+export function isFlawlessObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Flawless';
 }
 
-export function isWinsObjective(
-  objective: DestinyObjectiveProgress,
-  objectiveDef: DestinyObjectiveDefinition
-) {
-  return (
-    objective.completionValue === 7 &&
-    !objectiveDef.allowValueChangeWhenCompleted &&
-    !objectiveDef.allowOvercompletion
-  );
+export function isWinsObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Wins';
+}
+
+export function isRoundsWonObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Rounds Won';
 }

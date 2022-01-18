@@ -1,6 +1,10 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { isBooleanObjective, isFlawlessObjective } from 'app/inventory/store/objectives';
+import {
+  isBooleanObjective,
+  isFlawlessObjective,
+  isRoundsWonObjective,
+} from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
@@ -64,13 +68,9 @@ export default function Objective({
   }
 
   const isBoolean = isBooleanObjective(objectiveDef, completionValue);
-  const showAsCounter =
-    isTrialsPassage &&
-    objectiveDef.allowOvercompletion &&
-    !objectiveDef.allowNegativeValue &&
-    !objectiveDef.allowValueChangeWhenCompleted;
+  const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
   const passageFlawed =
-    isTrialsPassage && isFlawlessObjective(objective, objectiveDef) && !objective.complete;
+    isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !objective.complete;
 
   const classes = clsx('objective-row', {
     'objective-complete': complete && !showAsCounter,
