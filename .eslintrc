@@ -75,6 +75,11 @@
         "message": "Please use the native js filter."
       }
     ],
+    "spaced-comment": [
+      "error",
+      "always",
+      { "exceptions": ["@__INLINE__"], "block": { "balanced": true } }
+    ],
     "arrow-body-style": ["error", "as-needed"],
     "curly": ["error", "all"],
     "eqeqeq": ["error", "always"],
