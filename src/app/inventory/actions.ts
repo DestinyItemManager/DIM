@@ -139,3 +139,6 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
+
+/** input a mock profile API response */
+export const setMockProfileResponse = createAction('inventory/MOCK_PROFILE')<string>();

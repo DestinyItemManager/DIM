@@ -179,10 +179,16 @@ function loadStoresData(
       // TODO: if we've already loaded profile recently, don't load it again
 
       try {
+        const invState = getState().inventory;
+        const mockProfileData = invState.mockProfileData;
+        const readOnly = invState.mockProfileData;
+
         const [defs, , profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
           dispatch(loadNewItems(account)),
-          getStores(account, components),
+          mockProfileData
+            ? (JSON.parse(mockProfileData) as DestinyProfileResponse)
+            : getStores(account, components),
         ]);
 
         // If we switched account since starting this, give up
@@ -198,6 +204,18 @@ function loadStoresData(
 
         const buckets = d2BucketsSelector(getState())!;
         const stores = buildStores(defs, buckets, profileInfo, transaction);
+
+        if (readOnly) {
+          for (const store of stores) {
+            store.hadErrors = true;
+            for (const item of store.items) {
+              item.lockable = false;
+              item.trackable = false;
+              item.notransfer = true;
+              item.taggable = false;
+            }
+          }
+        }
 
         const currencies = processCurrencies(profileInfo, defs);
 
