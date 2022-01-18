@@ -4,6 +4,7 @@ interface CssExports {
   'close': string;
   'header': string;
   'initialItem': string;
+  'isFindable': string;
   'itemAside': string;
   'itemName': string;
 }

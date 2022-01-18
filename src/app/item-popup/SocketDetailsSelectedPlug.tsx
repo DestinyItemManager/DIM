@@ -12,14 +12,7 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import {
-  DEFAULT_ASPECTS,
-  DEFAULT_FRAGMENT,
-  DEFAULT_ORNAMENTS,
-  DEFAULT_PROJECTION,
-  DEFAULT_SHADER,
-  DEFAULT_TRANSMAT,
-} from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -30,7 +23,7 @@ import {
 } from 'app/utils/item-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -47,31 +40,40 @@ const costStatHashes = [
   StatHashes.ArcCost,
 ];
 
+const whitelistPlugCategoryToLocKey = {
+  [PlugCategoryHashes.Shader]: 'Shader',
+  [PlugCategoryHashes.ShipSpawnfx]: 'Transmat',
+  [PlugCategoryHashes.Hologram]: 'Projection',
+};
+
+const socketCategoryToLocKey = {
+  [SocketCategoryHashes.Abilities]: 'Ability',
+  [SocketCategoryHashes.Aspects]: 'Aspect',
+  [SocketCategoryHashes.Fragments]: 'Fragment',
+};
+
 /** Figures out what kind of socket this is so that the "Apply" button can name the correct thing
  * instead of generically saying "Select/Insert Mod".
  * Note that these are used as part of the localization key.
  */
 function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSocketEntryDefinition) {
   const socketTypeDef = socket.socketTypeHash && defs.SocketType.get(socket.socketTypeHash);
-  if (socketTypeDef && socketTypeDef.socketCategoryHash === SocketCategoryHashes.Abilities) {
-    return 'Ability';
+  if (socketTypeDef) {
+    if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash]) {
+      return socketCategoryToLocKey[socketTypeDef.socketCategoryHash];
+    } else {
+      const plug = socketTypeDef.plugWhitelist.find(
+        (p) => whitelistPlugCategoryToLocKey[p.categoryHash]
+      );
+      if (plug) {
+        return whitelistPlugCategoryToLocKey[plug.categoryHash];
+      }
+    }
   }
 
   const initialPlugHash = socket.singleInitialItemHash;
-  if (initialPlugHash) {
-    if (initialPlugHash === DEFAULT_SHADER) {
-      return 'Shader';
-    } else if (DEFAULT_ORNAMENTS.includes(initialPlugHash)) {
-      return 'Ornament';
-    } else if (initialPlugHash === DEFAULT_FRAGMENT) {
-      return 'Fragment';
-    } else if (DEFAULT_ASPECTS.includes(initialPlugHash)) {
-      return 'Aspect';
-    } else if (initialPlugHash === DEFAULT_PROJECTION) {
-      return 'Projection';
-    } else if (initialPlugHash === DEFAULT_TRANSMAT) {
-      return 'Transmat';
-    }
+  if (initialPlugHash && DEFAULT_ORNAMENTS.includes(initialPlugHash)) {
+    return 'Ornament';
   }
 
   return 'Mod';

@@ -168,7 +168,7 @@ export default function Destiny() {
 
   if (!account) {
     if (pathname.includes('/armory/')) {
-      return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} />;
+      return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} replace />;
     } else {
       return accountsLoaded ? (
         <div className="dim-page">

@@ -91,6 +91,8 @@
       "Unmatched": "Impossibile confrontare oggetti di tipo diverso."
     },
     "InitialItem": "Questo è l'oggetto dal quale è stato lanciato lo Strumento di Confronto",
+    "IsVendorItem": "Non possiedi questo oggetto. È nell'inventario di un mercante e potrebbe essere in vendita.",
+    "SoldBy": "Venduto da: {{vendorName}}",
     "SwipeAdvice": "Usa due dita per scorrere"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Sposterà gli oggetti nel Deposito per fare spazio."
   },
   "FashionDrawer": {
-    "Accept": "Usa questo stile",
+    "Accept": "Salva stile",
     "ClearOrnaments": "Cancella Decori",
+    "ClearOrnamentsTitle": "Reimposta tutti i decori su \"nessuna preferenza\"",
     "ClearShaders": "Cancella Shader",
-    "Reset": "Resetta tutto",
+    "ClearShadersTitle": "Reimposta tutti gli shader su \"nessuna preferenza\"",
+    "NoPreference": "Nessuna preferenza - questo slot non verrà cambiato",
+    "Reset": "Cancella stile",
     "Sync": "Sincronizza",
     "SyncOrnaments": "Sincronizza Decori",
+    "SyncOrnamentsTitle": "Usa i decori dello stesso set su tutti gli oggetti, se sono sbloccati",
     "SyncShaders": "Sincronizza Shader",
+    "SyncShadersTitle": "Usa lo stesso shader su tutti gli oggetti",
     "Title": "Scegli shader e decori",
-    "UseEquipped": "Usa Equipaggiati"
+    "UseEquipped": "Usa lo stile equipaggiato"
   },
   "FileUpload": {
     "Instructions": "Clicca o trascina i files"
@@ -305,6 +312,7 @@
     "Inventory": "Inventario",
     "IosPwaPrompt": "Su Safari, clicca l'icona \"condividi\" (il bottone centrale in basso) e seleziona \"Aggiungi a schermata Home\".",
     "KeyboardShortcuts": "Scorciatoie da tastiera",
+    "LaunchDIMAlone": "Finestra Separata",
     "Menu": "Menù",
     "Refresh": "Aggiorna i dati di Destiny [R]",
     "ReloadApp": "Ricarica App",
@@ -346,6 +354,10 @@
     "NoTransfer": "Trasferimento materiale d'Infusione\n{{target}} non può essere spostato.",
     "SwitchDirection": "Cambia",
     "TransferItems": "Trasferisci"
+  },
+  "ItemFeed": {
+    "Description": "Oggetti Recenti",
+    "HideTagged": "Nascondi etichettati"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi utilizzare lo strumento di confronto o il gestore deposito per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
     "ExpandSingleCharacter": "Mostra tutti i personaggi",
+    "ExportProfile": "Esporta risposta profilo API",
     "ExportSS": "Scarica inventario in formato foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
     "ExportSSNoStores": "Devi caricare il tuo inventario una volta prima di cliccare questo pulsante.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Mostra i perk come una lista",
     "Select": {
-      "Ability": "Seleziona Abilità",
-      "Aspect": "Seleziona Natura",
-      "Fragment": "Seleziona Frammento",
-      "Mod": "Seleziona Modifica",
-      "Ornament": "Seleziona Decoro",
-      "Projection": "Seleziona Proiezione Spettro",
-      "Shader": "Seleziona Shader",
-      "Transmat": "Seleziona Effetto Transmat"
+      "Ability": "Anteprima Abilità",
+      "Aspect": "Anteprima Natura",
+      "Fragment": "Anteprima Frammento",
+      "Mod": "Anteprima Modifica",
+      "Ornament": "Anteprima Decoro",
+      "Projection": "Anteprima Proiezione Spettro",
+      "Shader": "Anteprima Shader",
+      "Transmat": "Anteprima Effetto Transmat"
     },
     "SelectWishlistPerks": "Anteprima dei perk della Lista Desideri"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
     "Num": "{{num, number}} roll nella tua Lista Desideri",
     "PreMadeFiles": "Utilizza una Lista Desideri pre-compilata",
+    "Untitled": "Lista Desideri senza nome",
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy. La utilizziamo come default.",

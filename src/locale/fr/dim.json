@@ -91,6 +91,8 @@
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     },
     "InitialItem": "C'est l'objet depuis lequel l'outil de comparaison a été lancé",
+    "IsVendorItem": "Cet objet ne vous appartient pas. Il est dans l'inventaire d'un vendeur et peut être vendu.",
+    "SoldBy": "Vendu par: {{vendorName}}",
     "SwipeAdvice": "Utilisez deux doigts pour faire défiler"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Il déplacera des objets vers le coffre pour faire de la place."
   },
   "FashionDrawer": {
-    "Accept": "Utiliser ce style",
+    "Accept": "Sauvegarder le style",
     "ClearOrnaments": "Retirer les ornements",
+    "ClearOrnamentsTitle": "Réinitialiser tous les ornements à \"aucune préférence\"",
     "ClearShaders": "Retirer les revêtements",
-    "Reset": "Retirer tout",
-    "Sync": "Synchroniser",
+    "ClearShadersTitle": "Réinitialiser tous les revêtements à \"aucune préférence\"",
+    "NoPreference": "Aucune préférence - cet emplacement restera inchangé",
+    "Reset": "Retirer le style",
+    "Sync": "Sync",
     "SyncOrnaments": "Synchroniser les ornements",
+    "SyncOrnamentsTitle": "Utiliser les ornements du même ensemble sur tous les objets, s'ils sont déverrouillés",
     "SyncShaders": "Synchroniser les revêtements",
+    "SyncShadersTitle": "Utiliser le même revêtement sur tous les objets",
     "Title": "Choisir les revêtements et ornements",
-    "UseEquipped": "Utiliser ceux équipés"
+    "UseEquipped": "Utiliser le style équipé"
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -305,6 +312,7 @@
     "Inventory": "Inventaire",
     "IosPwaPrompt": "Dans Safari, cliquez sur l'icône de partage (bouton central en bas) et sélectionnez \"Ajouter à l'écran d'accueil\".",
     "KeyboardShortcuts": "Raccourcis Clavier",
+    "LaunchDIMAlone": "Nouvelle fenêtre",
     "Menu": "Menu",
     "Refresh": "Rafraîchir les données de Destiny [R]",
     "ReloadApp": "Recharger l'application",
@@ -346,6 +354,10 @@
     "NoTransfer": "Transférer matériel d'infusion\n {{target}} ne peut pas être déplacé.",
     "SwitchDirection": "Inverser",
     "TransferItems": "Transférer"
+  },
+  "ItemFeed": {
+    "Description": "Flux d'article",
+    "HideTagged": "Cacher les marqués"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "N'oubliez pas que vous pouvez rechercher is:dupe pour trouver rapidement les doublons, et vous pouvez utiliser l'outil de comparaison ou l'organisateur pour évaluer les objets en relation.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
     "ExpandSingleCharacter": "Afficher tous les personnages",
+    "ExportProfile": "Exporter la réponse de profil d'API",
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "ExportSSNoStores": "Vous devez charger votre inventaire une première fois avant de cliquer sur ce bouton.",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "Afficher les attributs sous forme de liste",
     "Select": {
-      "Ability": "Sélectionner une capacité",
-      "Aspect": "Sélectionner un aspect",
-      "Fragment": "Sélectionner un fragment",
-      "Mod": "Sélectionner un mod",
-      "Ornament": "Sélectionner un ornement",
-      "Projection": "Sélectionner une projection de spectre",
-      "Shader": "Sélectionner un revêtement",
-      "Transmat": "Sélectionner un effet de téléportation"
+      "Ability": "Prévisualiser la capacité",
+      "Aspect": "Prévisualiser l'aspect",
+      "Fragment": "Prévisualiser le fragment",
+      "Mod": "Prévisualiser le mod",
+      "Ornament": "Prévisualiser l'ornement",
+      "Projection": "Prévisualiser la projection de spectre",
+      "Shader": "Prévisualiser le revêtement",
+      "Transmat": "Prévisualiser l'effet de téléportation"
     },
     "SelectWishlistPerks": "Aperçu des attributs de la liste de souhaits"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Dernière mise à jour : {{lastUpdatedDate}} à {{lastUpdatedTime}}",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
     "PreMadeFiles": "Utiliser une liste de souhaits préétablie",
+    "Untitled": "Liste de souhaits sans titre",
     "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",
     "Voltron": "voltron (par défaut)",
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de Mercules904 et pandapaxxy mise à jour automatiquement. Elle est activé par défaut.",

@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -175,14 +175,11 @@ function LoadoutBuilder({
   const defs = useD2Definitions()!;
   const [
     {
-      upgradeSpendTier,
+      loadoutParameters,
       statOrder,
-      lockItemEnergyType,
       pinnedItems,
       excludedItems,
-      lockedMods,
       subclass,
-      lockedExoticHash,
       selectedStoreId,
       statFilters,
       modPicker,
@@ -192,25 +189,39 @@ function LoadoutBuilder({
   ] = useLbState(stores, preloadedLoadout, initialClassType, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
+  const lockItemEnergyType = Boolean(loadoutParameters.lockItemEnergyType);
+  const upgradeSpendTier = loadoutParameters.upgradeSpendTier ?? UpgradeSpendTier.Nothing;
+  const lockedExoticHash = loadoutParameters.exoticArmorHash;
+
+  const lockedMods = useMemo(
+    () =>
+      (loadoutParameters.mods ?? []).map((m) => defs.InventoryItem.get(m)).filter(isPluggableItem),
+    [defs, loadoutParameters.mods]
+  );
+
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
   useEffect(() => {
-    const newSavedLoadoutParams = buildLoadoutParams(
-      upgradeSpendTier,
-      lockItemEnergyType,
-      [], // ignore locked mods
-      '', // and the search query
-      // and don't save stat ranges either, just whether they're ignored
-      _.mapValues(statFilters, (m) => ({
-        ignored: m.ignored,
-        min: 0,
-        max: 10,
-      })),
-      statOrder,
-      undefined // same with locked exotic
+    const newSavedLoadoutParams = _.pick(
+      buildLoadoutParams(
+        loadoutParameters,
+        '', // and the search query
+        // and don't save stat ranges either, just whether they're ignored
+        _.mapValues(statFilters, (m) => ({
+          ignored: m.ignored,
+          min: 0,
+          max: 10,
+        })),
+        statOrder
+      ),
+      // Only keep a few parameters
+      'statConstraints',
+      'upgradeSpendTier',
+      'lockItemEnergyType'
     );
+
     setSetting('loParameters', newSavedLoadoutParams);
-  }, [setSetting, statFilters, statOrder, upgradeSpendTier, lockItemEnergyType]);
+  }, [setSetting, statFilters, statOrder, loadoutParameters]);
 
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
@@ -279,25 +290,8 @@ function LoadoutBuilder({
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
   // TODO: replace some of these individual params with this object
   const params = useMemo(
-    () =>
-      buildLoadoutParams(
-        upgradeSpendTier,
-        lockItemEnergyType,
-        lockedMods,
-        searchQuery,
-        statFilters,
-        statOrder,
-        lockedExoticHash
-      ),
-    [
-      upgradeSpendTier,
-      lockItemEnergyType,
-      lockedMods,
-      searchQuery,
-      statFilters,
-      statOrder,
-      lockedExoticHash,
-    ]
+    () => buildLoadoutParams(loadoutParameters, searchQuery, statFilters, statOrder),
+    [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
   const sets = result?.sets;

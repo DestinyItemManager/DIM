@@ -91,6 +91,8 @@
       "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
     },
     "InitialItem": "比較ツールが起動されたアイテムです",
+    "IsVendorItem": "このアイテムを所有していません。ベンダーの在庫にあり、販売されている可能性があります。",
+    "SoldBy": "販売者: {{vendorName}}",
     "SwipeAdvice": "2本の指でスクロール"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "アイテムを保管庫に移動してスペースを確保します。"
   },
   "FashionDrawer": {
-    "Accept": "このファッションを選択",
+    "Accept": "ファッションを保存",
     "ClearOrnaments": "装備品をクリア",
+    "ClearOrnamentsTitle": "全ての装飾品を「優先なし」にリセット",
     "ClearShaders": "シェーダーをクリア",
-    "Reset": "すべてをリセット",
+    "ClearShadersTitle": "全てのシェーダーを「優先なし」にリセット",
+    "NoPreference": "優先なし - このソケットは変更されません",
+    "Reset": "ファッションをクリア",
     "Sync": "同期",
     "SyncOrnaments": "装備品を同期",
+    "SyncOrnamentsTitle": "ロック解除されている場合は、全てのアイテムに同じセットの装飾品を利用する",
     "SyncShaders": "シェーダーを同期",
+    "SyncShadersTitle": "全てのアイテムに同じシェーダーを利用する",
     "Title": "シェーダーと装備品を選択",
-    "UseEquipped": "装備を使用"
+    "UseEquipped": "装備済みのファッションを利用する"
   },
   "FileUpload": {
     "Instructions": "クリックするか、ファイルをドラッグします。"
@@ -305,6 +312,7 @@
     "Inventory": "所持品",
     "IosPwaPrompt": "Safariで共有アイコン(下の真ん中のボタン)をクリックし、\"ホーム画面に追加\"を選択します。",
     "KeyboardShortcuts": "キーボード ショート カット",
+    "LaunchDIMAlone": "ウィンドウを分割する",
     "Menu": "メニュー",
     "Refresh": "Destiny データ [R] を更新",
     "ReloadApp": "アプリの再読み込み",
@@ -346,6 +354,10 @@
     "NoTransfer": "融合材料を転送\n {{target}} 移動できません.",
     "SwitchDirection": "変更",
     "TransferItems": "転送"
+  },
+  "ItemFeed": {
+    "Description": "アイテムフィード",
+    "HideTagged": "タグ付けされたものを隠す"
   },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "重複アイテムは is:dupe で素早く検索でき、比較ツールやオーガナイザーを使用して関連アイテムを評価できます。",
     "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
     "ExpandSingleCharacter": "全てのキャラクターを表示",
+    "ExportProfile": "APIプロファイルの応答をエクスポート",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "ExportSSNoStores": "このボタンをクリックする前に、所持品を一度ロードする必要があります。",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "パークをリストで表示",
     "Select": {
-      "Ability": "アビリティを選択",
-      "Aspect": "アスペクトを選択",
-      "Fragment": "かけらを選択",
-      "Mod": "Mod を選択",
-      "Ornament": "装飾を選択",
-      "Projection": "ゴーストのプロジェクションを選択",
-      "Shader": "シェーダーを選択",
-      "Transmat": "トランスマットエフェクトを選択"
+      "Ability": "アビリティをプレビュー",
+      "Aspect": "特性をプレビュー",
+      "Fragment": "かけらをプレビュー",
+      "Mod": "Mod のプレビュー",
+      "Ornament": "装飾をプレビュー",
+      "Projection": "ゴーストのプロジェクションをプレビュー",
+      "Shader": "シェーダーをプレビュー",
+      "Transmat": "トランスマット効果をプレビュー"
     },
     "SelectWishlistPerks": "お気に入りパークのプレビュー"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "最終更新: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} あなたの欲しい物リストにロールする",
     "PreMadeFiles": "既製のほしい物リストを使用する",
+    "Untitled": "未題のウィッシュリスト",
     "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
     "Voltron": "voltron (標準)",
     "VoltronDescription": "voltronはMercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新コレクションです。デフォルトでこれを発送します。",

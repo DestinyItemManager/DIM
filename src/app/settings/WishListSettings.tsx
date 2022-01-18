@@ -34,7 +34,6 @@ export default function WishListSettings() {
   const choosyVoltronNotSelected = wishListSource !== choosyVoltronLocation;
   const wishListLastUpdated = useSelector(wishListsLastFetchedSelector);
   const wishList = useSelector(wishListsSelector).wishListAndInfo;
-  const { title, description } = wishList;
   const numWishListRolls = wishList.wishListRolls.length;
   const [liveWishListSource, setLiveWishListSource] = useState(wishListSource);
   useEffect(() => {
@@ -184,16 +183,15 @@ export default function WishListSettings() {
               {t('WishListRoll.Clear')}
             </button>
           </div>
-          {(title || description) && (
-            <div className="fineprint">
-              {title && (
-                <div>
-                  <b>{title}</b>
-                </div>
-              )}
+          {wishList.infos.map(({ title, description, numRolls }, idx) => (
+            <div className="fineprint" key={idx}>
+              <div>
+                <b>{title || t('WishListRoll.Untitled')}</b>{' '}
+                {wishList.infos.length > 1 && <i>({numRolls})</i>}
+              </div>
               <div>{description}</div>
             </div>
-          )}
+          ))}
         </div>
       )}
     </section>

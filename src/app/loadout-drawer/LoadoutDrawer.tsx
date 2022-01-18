@@ -242,6 +242,7 @@ export default function LoadoutDrawer() {
           onChange={handleNotesChanged}
           value={loadout.notes}
           placeholder={t('Loadouts.NotesPlaceholder')}
+          maxLength={2048}
         />
       )}
       <GeneratedLoadoutStats items={items} loadout={loadout} savedMods={savedMods} />

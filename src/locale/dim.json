@@ -91,6 +91,8 @@
       "Unmatched": "This item doesn't match the type of items being compared."
     },
     "InitialItem": "This is the item the Compare tool was launched from",
+    "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
+    "SoldBy": "Sold by: {{vendorName}}",
     "SwipeAdvice": "Use two fingers to scroll"
   },
   "Cooldown": {
@@ -310,6 +312,7 @@
     "Inventory": "Inventory",
     "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Keyboard Shortcuts",
+    "LaunchDIMAlone": "Separate Window",
     "Menu": "Menu",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
@@ -351,6 +354,10 @@
     "NoTransfer": "Transfer infusion material\n {{target}} cannot be moved.",
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
+  },
+  "ItemFeed": {
+    "Description": "Item Feed",
+    "HideTagged": "Hide Tagged"
   },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
@@ -818,6 +825,7 @@
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
     "EnableAdvancedStats": "Show stat quality rating on armor (D1)",
     "ExpandSingleCharacter": "Show all characters",
+    "ExportProfile": "Export API profile response",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
@@ -873,14 +881,14 @@
     },
     "ListStyle": "Display perks as a list",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Preview Ability",
+      "Aspect": "Preview Aspect",
+      "Fragment": "Preview Fragment",
+      "Mod": "Preview Mod",
+      "Ornament": "Preview Ornament",
+      "Projection": "Preview Ghost Projection",
+      "Shader": "Preview Shader",
+      "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
@@ -979,6 +987,7 @@
     "Collections": "Collections",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
+    "NoItems": "This Vendor is currently not offering any items.",
     "Vendors": "Vendors"
   },
   "Views": {
@@ -1053,6 +1062,7 @@
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
     "PreMadeFiles": "Use A Pre-Made Wish List",
+    "Untitled": "Untitled Wish List",
     "UpdateExternalSource": "Update Wish List Source",
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",

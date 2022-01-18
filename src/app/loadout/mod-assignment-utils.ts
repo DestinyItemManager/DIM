@@ -15,7 +15,11 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  getSocketByIndex,
+  getSocketsByCategoryHash,
+  plugFitsIntoSocket,
+} from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -316,6 +320,8 @@ export function fitMostMods(
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
  * "which/how many mods will fit" is `fitMostMods`'s job, and this consumes its output
+ *
+ * This also only works on armor mods, not cosmetics/fashion
  */
 export function pickPlugPositions(
   defs: D2ManifestDefinitions,
@@ -329,10 +335,10 @@ export function pickPlugPositions(
   if (!item.sockets) {
     return assignments;
   }
-  const existingModSockets = [
-    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods),
-    ...getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
-  ].sort(
+  const existingModSockets = getSocketsByCategoryHash(
+    item.sockets,
+    SocketCategoryHashes.ArmorMods
+  ).sort(
     // We are sorting so that we can assign mods to the socket with the least number of possible options
     // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
     compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
@@ -347,10 +353,8 @@ export function pickPlugPositions(
     // If it wasn't found already plugged, find the first socket with a matching PCH
     // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex(
-        (socket) =>
-          socket.socketDefinition.singleInitialItemHash === modToInsert.hash ||
-          socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === modToInsert.hash)
+      destinationSocketIndex = existingModSockets.findIndex((socket) =>
+        plugFitsIntoSocket(socket, modToInsert.hash)
       );
     }
 
@@ -374,10 +378,8 @@ export function pickPlugPositions(
     existingModSockets.splice(destinationSocketIndex, 1);
   }
 
-  // For each remaining socket that won't have mods assigned,
-  // return it to its default (usually "Empty Mod Socket")
-
-  // so we fall back to the first item in its reusable PlugSet
+  // For each remaining armor mod socket that won't have mods assigned,
+  // allow it to be returned to its default (usually "Empty Mod Socket").
   for (const socket of existingModSockets) {
     const defaultModHash = getDefaultPlugHash(socket, defs);
     const mod =
@@ -447,8 +449,11 @@ export function createPluggingStrategy(
     }
   }
 
-  // sort lower gains first
-  optionalRegains.sort(compareBy((res) => -res.energySpend));
+  // sort lower gains first, but put zero gains at the end. Otherwise the zero
+  // gains will be used as part of "adding up" to make the energy needed
+  optionalRegains.sort(
+    compareBy((res) => (res.energySpend < 0 ? -res.energySpend : Number.MAX_VALUE))
+  );
 
   const operationSet: PluggingAction[] = [];
 
@@ -494,9 +499,7 @@ export function createPluggingStrategy(
   }
 
   // append any "reset to default"s that we didn't consume
-  for (const regainOperation of optionalRegains) {
-    operationSet.push(regainOperation);
-  }
+  operationSet.push(...optionalRegains);
   return operationSet;
 }
 /** given conditions and assigned mods, can this mod be placed on this armor item? */

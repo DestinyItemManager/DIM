@@ -12,6 +12,7 @@ import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -52,6 +53,7 @@ export default function LoadoutView({
   const allItems = useSelector(allItemsSelector);
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+  const isPhonePortrait = useIsPhonePortrait();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(() => {
@@ -107,9 +109,9 @@ export default function LoadoutView({
       <div className={styles.contents}>
         {(items.length > 0 || subclass || savedMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
-            <div>
+            {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
-            </div>
+            )}
             {['Weapons', 'Armor', 'General'].map((category) => (
               <LoadoutItemCategorySection
                 key={category}
@@ -152,7 +154,7 @@ export default function LoadoutView({
                 )}
               </div>
             ) : (
-              <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
+              !isPhonePortrait && <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
             )}
           </>
         )}

@@ -62,6 +62,9 @@ export default function AccountRedirectRoute() {
   }
 
   return (
-    <Navigate to={`/${account.membershipId}/d${account.destinyVersion}${pathname}${search}`} />
+    <Navigate
+      to={`/${account.membershipId}/d${account.destinyVersion}${pathname}${search}`}
+      replace
+    />
   );
 }

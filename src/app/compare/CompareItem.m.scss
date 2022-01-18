@@ -5,6 +5,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  height: 32px;
+  > div {
+    min-width: 32px;
+  }
   // pull & lock buttons
   > div:nth-child(1),
   > div:nth-child(2) {
@@ -25,13 +29,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  cursor: pointer;
   margin-top: 2px;
   margin-bottom: 2px;
   :global(.app-icon) {
     font-size: 8px;
     margin-right: 2px;
     vertical-align: initial;
+  }
+  &.isFindable {
+    cursor: pointer;
   }
 }
 

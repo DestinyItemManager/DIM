@@ -91,6 +91,8 @@
       "Unmatched": "此物品和要比較的物品類別不同。"
     },
     "InitialItem": "比較工具從這個物品啟動",
+    "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
+    "SoldBy": "Sold by: {{vendorName}}",
     "SwipeAdvice": "使用雙指滾動"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "會將物品移到保險庫來騰出空間。"
   },
   "FashionDrawer": {
-    "Accept": "Use this fashion",
+    "Accept": "Save fashion",
     "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",
-    "Reset": "Reset all",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
     "Sync": "Sync",
     "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
     "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
     "Title": "Choose shaders and ornaments",
-    "UseEquipped": "Use Equipped"
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "選擇或拖拽檔案"
@@ -305,6 +312,7 @@
     "Inventory": "背包",
     "IosPwaPrompt": "在 Safari 中，輕觸分享圖標（位於屏幕底部中央），並選擇「添加到主屏幕」。",
     "KeyboardShortcuts": "鍵盤快捷鍵",
+    "LaunchDIMAlone": "Separate Window",
     "Menu": "菜單",
     "Refresh": "刷新命運數據 [R]",
     "ReloadApp": "重新載入應用",
@@ -346,6 +354,10 @@
     "NoTransfer": "移動灌注材料\n{{target}} 無法移動。",
     "SwitchDirection": "切換",
     "TransferItems": "轉移"
+  },
+  "ItemFeed": {
+    "Description": "Item Feed",
+    "HideTagged": "Hide Tagged"
   },
   "ItemMove": {
     "Consolidate": "合併{{name}}",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
     "ExpandSingleCharacter": "顯示所有角色",
+    "ExportProfile": "Export API profile response",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
     "ExportSSNoStores": "請在刷新一次庫存後點擊此按鈕",
@@ -868,14 +881,14 @@
     },
     "ListStyle": "按列表顯示特性",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Preview Ability",
+      "Aspect": "Preview Aspect",
+      "Fragment": "Preview Fragment",
+      "Mod": "Preview Mod",
+      "Ornament": "Preview Ornament",
+      "Projection": "Preview Ghost Projection",
+      "Shader": "Preview Shader",
+      "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "預覽願望單特性"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "最後更新於 {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "在您的願望單中有{{num, number}} 個物品",
     "PreMadeFiles": "使用預製願望清單",
+    "Untitled": "Untitled Wish List",
     "UpdateExternalSource": "更新願望清單來源",
     "Voltron": "voltron（默認）",
     "VoltronDescription": "voltron 是來自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 願望清單特性表，並會自動更新。這是我們的默認列表。",

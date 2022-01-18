@@ -40,7 +40,7 @@ import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -952,7 +952,6 @@ function applyLoadoutMods(
     }
 
     // TODO: prefer equipping to armor that *is* part of the loadout
-    // TODO: compute assignments should consider which mods are already on the item!
     const { itemModAssignments, unassignedMods } = fitMostMods(armor, mods, defs);
 
     for (const mod of unassignedMods) {
@@ -963,29 +962,6 @@ function applyLoadoutMods(
           error: new DimError('Loadouts.UnassignedModError'),
         })
       );
-    }
-
-    // Patch in assignments for mods by bucket (shaders/ornaments)
-    for (const [bucketHashStr, modsForBucket] of Object.entries(modsByBucket)) {
-      const bucketHash = parseInt(bucketHashStr, 10);
-      const item = armor.find((i) => i.bucket.hash === bucketHash);
-      if (item) {
-        itemModAssignments[item.id] = [
-          ...itemModAssignments[item.id],
-          ...modsForBucket.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem),
-        ];
-      } else {
-        for (const modHash of modsForBucket) {
-          // I guess technically these are unassigned
-          setLoadoutState(
-            setModResult({
-              modHash: modHash,
-              state: LoadoutModState.Unassigned,
-              error: new DimError('Loadouts.UnassignedModError'),
-            })
-          );
-        }
-      }
     }
 
     const applyModsPromises: Promise<void>[] = [];
@@ -1017,6 +993,25 @@ function applyLoadoutMods(
         itemModAssignments[item.id],
         clearUnassignedSocketsPerItem
       );
+
+      // Patch in assignments for mods by bucket (shaders/ornaments)
+      for (const modHash of modsByBucket[item.bucket.hash] ?? []) {
+        const modDef = defs.InventoryItem.get(modHash);
+        const socket = item.sockets?.allSockets.find((s) => plugFitsIntoSocket(s, modHash));
+        if (socket && isPluggableItem(modDef)) {
+          assignments.push({ mod: modDef, socketIndex: socket.socketIndex, requested: true });
+        } else {
+          // I guess technically these are unassigned
+          setLoadoutState(
+            setModResult({
+              modHash: modHash,
+              state: LoadoutModState.Unassigned,
+              error: new DimError('Loadouts.UnassignedModError'),
+            })
+          );
+        }
+      }
+
       const pluggingSteps = createPluggingStrategy(item, assignments, defs);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);

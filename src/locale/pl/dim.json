@@ -91,6 +91,8 @@
       "Unmatched": "Ten przedmiot nie pasuje do typu porównywanych przedmiotów."
     },
     "InitialItem": "To przedmiot dla którego uruchomiono narzędzie porównania",
+    "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
+    "SoldBy": "Sold by: {{vendorName}}",
     "SwipeAdvice": "Użyj dwóch palców do przewijania"
   },
   "Cooldown": {
@@ -152,15 +154,20 @@
     "Vault": "Przeniesie przedmioty do schowka aby zrobić miejsce."
   },
   "FashionDrawer": {
-    "Accept": "Use this fashion",
+    "Accept": "Save fashion",
     "ClearOrnaments": "Clear Ornaments",
+    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",
-    "Reset": "Reset all",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
     "Sync": "Sync",
     "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
     "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
     "Title": "Choose shaders and ornaments",
-    "UseEquipped": "Use Equipped"
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "Kliknij lub przeciągnij pliki"
@@ -305,6 +312,7 @@
     "Inventory": "Ekwipunek",
     "IosPwaPrompt": "W Safari, kliknij ikonę udostępniania (środkowy przycisk u dołu) i wybierz \"Dodaj do Ekranu Domowego\".",
     "KeyboardShortcuts": "Skróty Klawiszowe",
+    "LaunchDIMAlone": "Separate Window",
     "Menu": "Menu",
     "Refresh": "Odśwież Dane Destiny [R]",
     "ReloadApp": "Przeładuj aplikację",
@@ -346,6 +354,10 @@
     "NoTransfer": "Przenoszenie materiału do nasycenia\n {{target}} nie może być przeniesiony.",
     "SwitchDirection": "Przełącz",
     "TransferItems": "Przenieś"
+  },
+  "ItemFeed": {
+    "Description": "Item Feed",
+    "HideTagged": "Hide Tagged"
   },
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
@@ -689,8 +701,8 @@
     "Help": "Dodaj notatki do tego przedmiotu"
   },
   "Notification": {
-    "Cancel": "Cancel",
-    "OK": "Dismiss"
+    "Cancel": "Anuluj",
+    "OK": "Odrzuć"
   },
   "Objectives": {
     "Complete": "Ukończone",
@@ -813,6 +825,7 @@
     "DontForgetDupes": "Nie zapomnij, że możesz wyszukać is:dupe aby szybko znaleźć zduplikowane przedmioty, oraz możesz użyć narzędzia porównującego lub organizera do oceny podobnych przedmiotów.",
     "EnableAdvancedStats": "Pokaż ocenę jakości statystyk pancerza (D1)",
     "ExpandSingleCharacter": "Pokaż wszystkie postacie",
+    "ExportProfile": "Export API profile response",
     "ExportSS": "Arkusze kalkulacyjne ekwipunku",
     "ExportSSHelp": "Pobierz listę CSV swoich przedmiotów, którą można łatwo przeglądać w wybranej aplikacji arkusza kalkulacyjnego.",
     "ExportSSNoStores": "Przed kliknięciem tego przycisku musisz załadować swój ekwipunek.",
@@ -861,21 +874,21 @@
       "Aspect": "Insert Aspect",
       "Fragment": "Insert Fragment",
       "Mod": "Insert Mod",
-      "Ornament": "Apply Ornament",
-      "Projection": "Apply Ghost Projection",
+      "Ornament": "Nałuż Ozdobę",
+      "Projection": "Zastosuj Projekcję Ducha",
       "Shader": "Apply Shader",
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Wyświetlaj perki jako listę",
     "Select": {
-      "Ability": "Select Ability",
-      "Aspect": "Select Aspect",
-      "Fragment": "Select Fragment",
-      "Mod": "Select Mod",
-      "Ornament": "Select Ornament",
-      "Projection": "Select Ghost Projection",
-      "Shader": "Select Shader",
-      "Transmat": "Select Transmat Effect"
+      "Ability": "Podgląd umiejętności",
+      "Aspect": "Preview Aspect",
+      "Fragment": "Preview Fragment",
+      "Mod": "Preview Mod",
+      "Ornament": "Preview Ornament",
+      "Projection": "Preview Ghost Projection",
+      "Shader": "Preview Shader",
+      "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Podgląd listy życzeń perków"
   },
@@ -1048,6 +1061,7 @@
     "LastUpdated": "Ostatnia aktualizacja: {{lastUpdatedDate}} o {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
     "PreMadeFiles": "Użyj Gotową Listę Życzeń",
+    "Untitled": "Untitled Wish List",
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
     "Voltron": "voltron (domyślna)",
     "VoltronDescription": "voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy. Domyślnie zawarte w aplikacji.",

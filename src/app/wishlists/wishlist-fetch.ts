@@ -103,7 +103,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
-    const wishListAndInfo = toWishList(wishListTexts.join('\n'));
+    const wishListAndInfo = toWishList(...wishListTexts);
     wishListAndInfo.source = wishlistToFetch;
 
     const existingWishLists = wishListsSelector(getState());

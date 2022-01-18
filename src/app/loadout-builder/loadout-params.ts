@@ -4,7 +4,6 @@ import {
   defaultLoadoutParameters,
   LoadoutParameters,
   StatConstraint,
-  UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -15,15 +14,13 @@ import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
 
 export function buildLoadoutParams(
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean,
-  lockedMods: PluggableInventoryItemDefinition[],
+  loadoutParameters: LoadoutParameters,
   searchQuery: string,
   statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
-  statOrder: number[],
-  exoticArmorHash?: number
+  statOrder: number[]
 ): LoadoutParameters {
   const params: LoadoutParameters = {
+    ...loadoutParameters,
     statConstraints: _.compact(
       statOrder.map((statHash) => {
         const minMax = statFilters[statHash];
@@ -42,18 +39,12 @@ export function buildLoadoutParams(
         return stat;
       })
     ),
-    lockItemEnergyType,
-    upgradeSpendTier,
   };
 
-  if (lockedMods) {
-    params.mods = lockedMods.map((mod) => mod.hash);
-  }
   if (searchQuery) {
     params.query = searchQuery;
-  }
-  if (exoticArmorHash) {
-    params.exoticArmorHash = exoticArmorHash;
+  } else {
+    delete params.query;
   }
 
   return params;
