@@ -109,6 +109,13 @@ export default memo(function GeneratedSets({
 
   const measureSet = useMemo(() => getMeasureSet(sets), [sets]);
 
+  // Trigger height measurement again when needed
+  useLayoutEffect(() => {
+    setRowSize({ rowHeight: 0, rowWidth: 0 });
+    // Sets may gain extra perks,
+    // mod locks add "change element" hints above items.
+  }, [sets, lockedMods]);
+
   useLayoutEffect(() => {
     if (measureSetRef.current) {
       setRowSize({
@@ -116,8 +123,7 @@ export default memo(function GeneratedSets({
         rowWidth: measureSetRef.current.clientWidth,
       });
     }
-    // We need to include sets in the dependencies for this hook to fire correctly
-  }, [rowHeight, sets]);
+  }, [rowHeight]);
 
   useEffect(() => {
     const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
