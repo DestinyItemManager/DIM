@@ -5,15 +5,15 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import React, { useEffect, useRef } from 'react';
 
 /**
- * A styled text input without fancy features like autocompletion or debouncing.
+ * A styled text input without fancy features like autocompletion or de-bouncing.
  */
 export function SearchInput({
-  setQuery,
+  onQueryChanged,
   placeholder,
   autoFocus,
   query,
 }: {
-  setQuery: (newValue: string) => void;
+  onQueryChanged: (newValue: string) => void;
   placeholder?: string;
   autoFocus?: boolean;
   query?: string;
@@ -43,7 +43,7 @@ export function SearchInput({
         type="text"
         name="filter"
         value={query}
-        onChange={(e) => setQuery(e.currentTarget.value)}
+        onChange={(e) => onQueryChanged(e.currentTarget.value)}
       />
     </div>
   );

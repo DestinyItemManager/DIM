@@ -277,7 +277,7 @@ function SocketDetails({
       <div className="item-picker-search">
         <SearchInput
           query={query}
-          setQuery={setQuery}
+          onQueryChanged={setQuery}
           placeholder={t('Sockets.Search')}
           autoFocus
         />
@@ -308,6 +308,7 @@ function SocketDetails({
       header={header}
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
+      freezeInitialHeight={true}
     >
       <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((mod) => (

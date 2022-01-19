@@ -192,7 +192,12 @@ export default function PlugDrawer({
     <div>
       <h1>{title}</h1>
       <div className="item-picker-search">
-        <SearchInput query={query} setQuery={setQuery} placeholder={searchPlaceholder} autoFocus />
+        <SearchInput
+          query={query}
+          onQueryChanged={setQuery}
+          placeholder={searchPlaceholder}
+          autoFocus
+        />
       </div>
     </div>
   );

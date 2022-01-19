@@ -159,7 +159,7 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
           <div className="item-picker-search">
             <SearchInput
               query={query}
-              setQuery={setQuery}
+              onQueryChanged={setQuery}
               placeholder={t('LB.SearchAnExotic')}
               autoFocus
             />

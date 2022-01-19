@@ -50,7 +50,11 @@ export default function FilterHelp() {
           <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
         <div className={clsx(styles.search)}>
-          <SearchInput query={search} setQuery={setSearch} placeholder={t('Filter.SearchPrompt')} />
+          <SearchInput
+            query={search}
+            onQueryChanged={setSearch}
+            placeholder={t('Filter.SearchPrompt')}
+          />
         </div>
         <table>
           <thead>
