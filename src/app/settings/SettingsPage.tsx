@@ -1,5 +1,4 @@
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
-import { getStores } from 'app/bungie-api/destiny2-api';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
@@ -16,7 +15,6 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
-import { download } from 'app/utils/util';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
@@ -36,6 +34,7 @@ import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
+import { TroubleshootingSettings } from './Troubleshooting';
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -87,6 +86,7 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
+
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
@@ -144,16 +144,6 @@ export default function SettingsPage() {
     e.preventDefault();
     window.location.reload();
     return false;
-  };
-
-  const saveProfileResponse = async () => {
-    if (currentAccount) {
-      download(
-        JSON.stringify(await getStores(currentAccount), null, '\t'),
-        'profile-data.json',
-        'application/json'
-      );
-    }
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
@@ -505,13 +495,7 @@ export default function SettingsPage() {
           <Spreadsheets />
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
-            <section id="troubleshooting">
-              <div className="setting">
-                <button type="button" className="dim-button" onClick={saveProfileResponse}>
-                  {t('Settings.ExportProfile')}
-                </button>
-              </div>
-            </section>
+            <TroubleshootingSettings />
           )}
         </form>
       </PageWithMenu.Contents>
