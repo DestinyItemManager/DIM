@@ -1,6 +1,8 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
@@ -8,6 +10,8 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
+import { createPlugSearchPredicate } from 'app/search/plug-search';
+import { SearchInput } from 'app/search/SearchInput';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -19,8 +23,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import '../inventory/StoreBucket.scss';
 import styles from './SocketDetails.m.scss';
@@ -171,6 +175,8 @@ function SocketDetails({
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
     initialPlug || null
   );
+  const [query, setQuery] = useState('');
+  const language = useSelector(languageSelector);
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
@@ -218,15 +224,21 @@ function SocketDetails({
   const unlocked = (i: PluggableInventoryItemDefinition) =>
     i.hash === initialPlugHash || unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash);
 
+  const searchFilter = createPlugSearchPredicate(query, language, defs);
+
   let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
+    .filter(isPluggableItem)
     .filter(
       (i) =>
-        !i.plug ||
         !i.plug.energyCost ||
         (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
         i.plug.energyCost.energyType === DestinyEnergyType.Any
-    )
-    .filter(isPluggableItem)
+    );
+
+  const requiresEnergy = mods.some((i) => i.plug.energyCost?.energyCost);
+
+  mods = mods
+    .filter(searchFilter)
     .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
     .sort(
       chainComparator(
@@ -243,33 +255,35 @@ function SocketDetails({
     mods.unshift(initialPlug);
   }
 
-  const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
   const initialItem =
     socket.socketDefinition.singleInitialItemHash > 0 &&
     defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
-  const header = (
-    <h1>
-      {initialItem && (
-        <BungieImage
-          className={styles.categoryIcon}
-          src={initialItem.displayProperties.icon}
-          alt=""
-        />
-      )}
-      {requiresEnergy && energyType && (
-        <ElementIcon className={styles.energyElement} element={energyType} />
-      )}
-      <div>{socketCategory.displayProperties.name}</div>
-    </h1>
-  );
 
-  const modListRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (modListRef.current) {
-      const firstElement = modListRef.current.querySelector("[tabIndex='0']")!;
-      (firstElement as HTMLInputElement)?.focus();
-    }
-  }, []);
+  const header = (
+    <div>
+      <h1>
+        {initialItem && (
+          <BungieImage
+            className={styles.categoryIcon}
+            src={initialItem.displayProperties.icon}
+            alt=""
+          />
+        )}
+        {requiresEnergy && energyType && (
+          <ElementIcon className={styles.energyElement} element={energyType} />
+        )}
+        <div>{socketCategory.displayProperties.name}</div>
+      </h1>
+      <div className="item-picker-search">
+        <SearchInput
+          query={query}
+          onQueryChanged={setQuery}
+          placeholder={t('Sockets.Search')}
+          autoFocus
+        />
+      </div>
+    </div>
+  );
 
   const footer =
     selectedPlug &&
@@ -294,8 +308,9 @@ function SocketDetails({
       header={header}
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
+      freezeInitialHeight={true}
     >
-      <div ref={modListRef} className={clsx('sub-bucket', styles.modList)}>
+      <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((mod) => (
           <SocketDetailsMod
             key={mod.hash}

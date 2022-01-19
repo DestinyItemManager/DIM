@@ -946,6 +946,7 @@
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
+    "Search": "Search names or descriptions",
     "SelectWishlistPerks": "Preview Wishlist Perks",
     "Insert": {
       "Mod": "Insert Mod",
