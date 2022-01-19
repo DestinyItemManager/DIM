@@ -179,9 +179,7 @@ function loadStoresData(
       // TODO: if we've already loaded profile recently, don't load it again
 
       try {
-        const invState = getState().inventory;
-        const mockProfileData = invState.mockProfileData;
-        const readOnly = invState.mockProfileData;
+        const { mockProfileData, readOnly } = getState().inventory;
 
         const [defs, , profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
