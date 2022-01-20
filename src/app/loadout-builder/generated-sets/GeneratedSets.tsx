@@ -123,7 +123,8 @@ export default memo(function GeneratedSets({
         rowWidth: measureSetRef.current.clientWidth,
       });
     }
-  }, [rowHeight]);
+    // Include sets to recover after no sets were found and rowHeight stayed 0
+  }, [rowHeight, sets]);
 
   useEffect(() => {
     const handleWindowResize = _.throttle(() => setRowSize({ rowHeight: 0, rowWidth: 0 }), 300, {
