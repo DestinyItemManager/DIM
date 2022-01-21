@@ -308,7 +308,6 @@ function SocketDetails({
       header={header}
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
-      freezeInitialHeight={true}
     >
       <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((mod) => (
