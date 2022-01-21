@@ -114,7 +114,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
   };
 }
 
-/// D1 Stuff ///
+// D1 Stuff
 
 function farmD1(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {

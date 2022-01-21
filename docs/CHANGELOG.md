@@ -1,5 +1,10 @@
 ## Next
 
+* Weapons CSV download now includes a Zoom stat column.
+* Shaders, ornaments, and mods can now be searched in their choosers.
+
+## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
+
 * Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
 * The shader picker now filters invalid shaders more consistently and won't call shaders "mods".
 * Fixed Records page sometimes duplicating Triumphs or Seals section while missing Collections.

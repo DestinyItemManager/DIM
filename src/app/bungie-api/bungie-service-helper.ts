@@ -67,7 +67,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
   )
 );
 
-/** used to get manifest and global alerts*/
+/** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     sentryTraceHttpClient(
