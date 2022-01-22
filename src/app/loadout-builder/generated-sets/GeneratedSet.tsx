@@ -8,7 +8,14 @@ import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, ArmorStatHashes, MIN_LO_ITEM_ENERGY, PinnedItems } from '../types';
+import {
+  ArmorSet,
+  ArmorStatHashes,
+  AssumeArmorMasterwork,
+  LockArmorEnergyType,
+  MIN_LO_ITEM_ENERGY,
+  PinnedItems,
+} from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -30,10 +37,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork?: AssumeArmorMasterwork;
+  lockArmorEnergyType?: LockArmorEnergyType;
 }
 
 /**
@@ -55,10 +60,8 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -86,21 +89,12 @@ function GeneratedSet({
     const { itemModAssignments } = fitMostMods({
       items: displayedItems,
       plannedMods: lockedMods,
-      assumeLegendaryMasterwork,
-      assumeExoticMasterwork,
-      lockItemEnergyType,
-      lockMasterworkItemEnergyType,
+      assumeArmorMasterwork,
+      lockArmorEnergyType,
       minItemEnergy: MIN_LO_ITEM_ENERGY,
     });
     return itemModAssignments;
-  }, [
-    displayedItems,
-    lockedMods,
-    assumeLegendaryMasterwork,
-    assumeExoticMasterwork,
-    lockItemEnergyType,
-    lockMasterworkItemEnergyType,
-  ]);
+  }, [displayedItems, lockedMods, assumeArmorMasterwork, lockArmorEnergyType]);
 
   if (set.armor.some((items) => !items.length)) {
     errorLog('loadout optimizer', 'No valid sets!');

@@ -1,10 +1,29 @@
+@import '../../variables';
+
 .energyOptions {
   margin: 8px 0;
 }
 
-.option {
+.settingGroup {
   background-color: black;
-  &:not(:first-child) {
-    margin-top: 4px;
+  padding: 8px;
+}
+
+.title {
+  margin-bottom: 4px;
+}
+
+.buttons {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+}
+
+.button {
+  cursor: pointer;
+  flex-grow: 1;
+
+  &:hover,
+  &:active {
+    background-color: #e2af55 !important;
+    color: black !important;
   }
 }

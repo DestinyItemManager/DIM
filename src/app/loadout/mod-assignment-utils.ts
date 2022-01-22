@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -63,20 +64,16 @@ interface ModAssignments {
 export function fitMostMods({
   items,
   plannedMods,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   minItemEnergy,
 }: {
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
   items: DimItem[];
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[];
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   minItemEnergy: number;
 }): {
   itemModAssignments: {
@@ -134,10 +131,8 @@ export function fitMostMods({
       if (targetItem) {
         if (
           isBucketSpecificModValid({
-            assumeLegendaryMasterwork,
-            assumeExoticMasterwork,
-            lockItemEnergyType,
-            lockMasterworkItemEnergyType,
+            assumeArmorMasterwork,
+            lockArmorEnergyType,
             item: targetItem,
             mod: plannedMod,
             assignedMods: bucketSpecificAssignments[targetItem.id].assigned,
@@ -160,10 +155,8 @@ export function fitMostMods({
       buildItemEnergy({
         item,
         assignedMods: bucketSpecificAssignments[item.id].assigned,
-        assumeLegendaryMasterwork,
-        assumeExoticMasterwork,
-        lockItemEnergyType,
-        lockMasterworkItemEnergyType,
+        assumeArmorMasterwork,
+        lockArmorEnergyType,
         minItemEnergy,
       })
   );
@@ -516,18 +509,14 @@ export function createPluggingStrategy(
 }
 /** given conditions and assigned mods, can this mod be placed on this armor item? */
 function isBucketSpecificModValid({
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   item,
   mod,
   assignedMods,
 }: {
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   item: DimItem;
   mod: PluggableInventoryItemDefinition;
   /** mods that are already assigned to this item */
@@ -536,17 +525,13 @@ function isBucketSpecificModValid({
   // given spending rules, what we can assume this item's energy is
   const itemEnergyCapacity = Math.max(
     item.energy?.energyCapacity || 1,
-    (item.isExotic && assumeExoticMasterwork) || (!item.isExotic && assumeLegendaryMasterwork)
+    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
+      (!item.isExotic && assumeArmorMasterwork === AssumeArmorMasterwork.Legendary)
       ? 10
       : 0
   );
   // given spending/element rules & current assignments, what element is this armor?
-  const itemEnergyType = getItemEnergyType(
-    item,
-    lockItemEnergyType,
-    lockMasterworkItemEnergyType,
-    assignedMods
-  );
+  const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, assignedMods);
 
   // how many armor energy points are already used
   const energyUsed = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
@@ -684,36 +669,22 @@ function isPlugActive(
 function buildItemEnergy({
   item,
   assignedMods,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   minItemEnergy,
 }: {
   item: DimItem;
   assignedMods: PluggableInventoryItemDefinition[];
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork?: AssumeArmorMasterwork;
+  lockArmorEnergyType?: LockArmorEnergyType;
   minItemEnergy: number;
 }): ItemEnergy {
   return {
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
-    derivedCapacity: calculateAssumedItemEnergy(
-      item,
-      assumeLegendaryMasterwork,
-      assumeExoticMasterwork,
-      minItemEnergy
-    ),
+    derivedCapacity: calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(
-      item,
-      lockItemEnergyType,
-      lockMasterworkItemEnergyType,
-      assignedMods
-    ),
+    derivedType: getItemEnergyType(item, lockArmorEnergyType, assignedMods),
   };
 }
 

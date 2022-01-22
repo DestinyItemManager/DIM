@@ -97,46 +97,36 @@ describe('process-utils', () => {
         if (!helmet && isArmor2Helmet(storeItem)) {
           helmet = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeLegendaryMasterwork: false,
-            assumeExoticMasterwork: false,
-            lockItemEnergyType: false,
-            lockMasterworkItemEnergyType: false,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
           });
         }
         if (!arms && isArmor2Arms(storeItem)) {
           arms = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeLegendaryMasterwork: false,
-            assumeExoticMasterwork: false,
-            lockItemEnergyType: false,
-            lockMasterworkItemEnergyType: false,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
           });
         }
         if (!chest && isArmor2Chest(storeItem)) {
           chest = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeLegendaryMasterwork: false,
-            assumeExoticMasterwork: false,
-            lockItemEnergyType: false,
-            lockMasterworkItemEnergyType: false,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
           });
         }
         if (!legs && isArmor2Legs(storeItem)) {
           legs = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeLegendaryMasterwork: false,
-            assumeExoticMasterwork: false,
-            lockItemEnergyType: false,
-            lockMasterworkItemEnergyType: false,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
           });
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
           classItem = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeLegendaryMasterwork: false,
-            assumeExoticMasterwork: false,
-            lockItemEnergyType: false,
-            lockMasterworkItemEnergyType: false,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
           });
         }
 

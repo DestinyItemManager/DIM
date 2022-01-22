@@ -16,7 +16,7 @@ import React, {
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, PinnedItems } from '../types';
+import { ArmorSet, AssumeArmorMasterwork, LockArmorEnergyType, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -76,10 +76,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork?: AssumeArmorMasterwork;
+  lockArmorEnergyType?: LockArmorEnergyType;
   notes?: string;
 }
 
@@ -98,10 +96,8 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   notes,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
@@ -160,10 +156,8 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          assumeLegendaryMasterwork={assumeLegendaryMasterwork}
-          assumeExoticMasterwork={assumeExoticMasterwork}
-          lockItemEnergyType={lockItemEnergyType}
-          lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
+          assumeArmorMasterwork={assumeArmorMasterwork}
+          lockArmorEnergyType={lockArmorEnergyType}
           notes={notes}
         />
       ) : sets.length > 0 ? (
@@ -193,10 +187,8 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  assumeLegendaryMasterwork={assumeLegendaryMasterwork}
-                  assumeExoticMasterwork={assumeExoticMasterwork}
-                  lockItemEnergyType={lockItemEnergyType}
-                  lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
+                  assumeArmorMasterwork={assumeArmorMasterwork}
+                  lockArmorEnergyType={lockArmorEnergyType}
                   notes={notes}
                 />
               )}

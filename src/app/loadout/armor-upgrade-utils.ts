@@ -1,28 +1,24 @@
 import { DimItem } from 'app/inventory/item-types';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from 'app/loadout-builder/types';
 
 /** Gets the max energy allowed from the passed in UpgradeSpendTier */
 export function calculateAssumedItemEnergy(
   item: DimItem,
-  assumeLegendaryMasterwork: boolean,
-  assumeExoticMasterwork: boolean,
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined,
   minItemEnergy: number
 ) {
   const itemEnergy = item.energy?.energyCapacity || minItemEnergy;
   const assumedEnergy =
-    (item.isExotic && assumeExoticMasterwork) || (!item.isExotic && assumeLegendaryMasterwork)
+    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
+    (assumeArmorMasterwork === AssumeArmorMasterwork.Legendary && !item.isExotic)
       ? 10
       : minItemEnergy;
   return Math.max(itemEnergy, assumedEnergy);
 }
 
-export function isArmorEnergyLocked({
-  item,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
-}: {
-  item: DimItem;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
-}) {
-  return item.energy?.energyCapacity === 10 ? lockMasterworkItemEnergyType : lockItemEnergyType;
+export function isArmorEnergyLocked(item: DimItem, lockArmorEnergyType?: LockArmorEnergyType) {
+  return (
+    lockArmorEnergyType === LockArmorEnergyType.All ||
+    (item.masterwork && lockArmorEnergyType === LockArmorEnergyType.Masterworked)
+  );
 }

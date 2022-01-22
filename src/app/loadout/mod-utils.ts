@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LockArmorEnergyType } from 'app/loadout-builder/types';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -107,8 +108,7 @@ export function createGetModRenderKey() {
  */
 export function getItemEnergyType(
   item: DimItem,
-  lockItemEnergyType: boolean,
-  lockMasterworkItemEnergyType: boolean,
+  lockArmorEnergyType: LockArmorEnergyType | undefined,
   bucketSpecificMods?: PluggableInventoryItemDefinition[]
 ) {
   if (!item.energy) {
@@ -124,7 +124,7 @@ export function getItemEnergyType(
     return bucketSpecificModType;
   }
 
-  return isArmorEnergyLocked({ item, lockItemEnergyType, lockMasterworkItemEnergyType })
+  return isArmorEnergyLocked(item, lockArmorEnergyType)
     ? item.energy.energyType
     : DestinyEnergyType.Any;
 }

@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { LockArmorEnergyType } from 'app/loadout-builder/types';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -75,10 +76,8 @@ export default function ModAssignmentDrawer({
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: true,
-      lockMasterworkItemEnergyType: true,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: LockArmorEnergyType.All,
       minItemEnergy: 1,
     });
 

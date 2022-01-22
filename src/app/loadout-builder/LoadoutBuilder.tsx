@@ -190,10 +190,6 @@ function LoadoutBuilder({
   ] = useLbState(stores, preloadedLoadout, initialClassType, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
-  const lockItemEnergyType = Boolean(loadoutParameters.lockItemEnergyType);
-  const lockMasterworkItemEnergyType = Boolean(loadoutParameters.lockMasterworkItemEnergyType);
-  const assumeLegendaryMasterwork = Boolean(loadoutParameters.assumeLegendaryMasterwork);
-  const assumeExoticMasterwork = Boolean(loadoutParameters.assumeExoticMasterwork);
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
 
   const lockedMods = useMemo(
@@ -219,10 +215,8 @@ function LoadoutBuilder({
       ),
       // Only keep a few parameters
       'statConstraints',
-      'assumeLegendaryMasterwork',
-      'assumeExoticMasterwork',
-      'lockItemEnergyType',
-      'lockMasterworkItemEnergyType'
+      'assumeArmorMasterwork',
+      'lockArmorEnergyType'
     );
 
     setSetting('loParameters', newSavedLoadoutParams);
@@ -261,8 +255,7 @@ function LoadoutBuilder({
         excludedItems,
         lockedMods,
         lockedExoticHash,
-        lockItemEnergyType,
-        lockMasterworkItemEnergyType,
+        lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
         searchFilter,
       }),
     [
@@ -272,8 +265,7 @@ function LoadoutBuilder({
       excludedItems,
       lockedMods,
       lockedExoticHash,
-      lockItemEnergyType,
-      lockMasterworkItemEnergyType,
+      loadoutParameters.lockArmorEnergyType,
       searchFilter,
     ]
   );
@@ -284,10 +276,8 @@ function LoadoutBuilder({
     filteredItems,
     lockedMods,
     subclass,
-    assumeLegendaryMasterwork,
-    assumeExoticMasterwork,
-    lockItemEnergyType,
-    lockMasterworkItemEnergyType,
+    assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
+    lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
@@ -360,10 +350,8 @@ function LoadoutBuilder({
         onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
       <EnergyOptions
-        assumeLegendaryMasterwork={assumeLegendaryMasterwork}
-        assumeExoticMasterwork={assumeExoticMasterwork}
-        lockItemEnergyType={lockItemEnergyType}
-        lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
+        assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
+        lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
@@ -482,10 +470,8 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            assumeLegendaryMasterwork={assumeLegendaryMasterwork}
-            assumeExoticMasterwork={assumeExoticMasterwork}
-            lockItemEnergyType={lockItemEnergyType}
-            lockMasterworkItemEnergyType={lockMasterworkItemEnergyType}
+            assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
+            lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
             notes={notes}
           />
         )}

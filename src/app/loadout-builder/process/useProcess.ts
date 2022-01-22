@@ -22,7 +22,15 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { StatsSet } from '../process-worker/stats-set';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import { ArmorSet, ItemsByBucket, MIN_LO_ITEM_ENERGY, StatFilters, StatRanges } from '../types';
+import {
+  ArmorSet,
+  AssumeArmorMasterwork,
+  ItemsByBucket,
+  LockArmorEnergyType,
+  MIN_LO_ITEM_ENERGY,
+  StatFilters,
+  StatRanges,
+} from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -50,10 +58,8 @@ export function useProcess({
   filteredItems,
   lockedMods,
   subclass,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   statOrder,
   statFilters,
   anyExotic,
@@ -64,10 +70,8 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedMods: PluggableInventoryItemDefinition[];
   subclass: DimLoadoutItem | undefined;
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
@@ -141,10 +145,8 @@ export function useProcess({
         defs,
         items,
         statOrder,
-        assumeLegendaryMasterwork,
-        assumeExoticMasterwork,
-        lockItemEnergyType,
-        lockMasterworkItemEnergyType,
+        assumeArmorMasterwork,
+        lockArmorEnergyType,
         generalMods,
         combatMods,
         activityMods
@@ -157,10 +159,8 @@ export function useProcess({
           processItems[bucketHash].push(
             mapDimItemToProcessItem({
               dimItem: item,
-              assumeLegendaryMasterwork,
-              assumeExoticMasterwork,
-              lockItemEnergyType,
-              lockMasterworkItemEnergyType,
+              assumeArmorMasterwork,
+              lockArmorEnergyType,
               modsForSlot: lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]],
             })
           );
@@ -219,7 +219,6 @@ export function useProcess({
   }, [
     defs,
     filteredItems,
-    lockItemEnergyType,
     lockedMods,
     selectedStore.classType,
     selectedStore.id,
@@ -228,9 +227,8 @@ export function useProcess({
     anyExotic,
     disabledDueToMaintenance,
     subclass?.socketOverrides,
-    assumeLegendaryMasterwork,
-    assumeExoticMasterwork,
-    lockMasterworkItemEnergyType,
+    assumeArmorMasterwork,
+    lockArmorEnergyType,
   ]);
 
   return { result, processing, remainingTime };
@@ -274,10 +272,8 @@ function groupItems(
   defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
-  assumeLegendaryMasterwork: boolean,
-  assumeExoticMasterwork: boolean,
-  lockItemEnergyType: boolean,
-  lockMasterworkItemEnergyType: boolean,
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined,
+  lockArmorEnergyType: LockArmorEnergyType | undefined,
   generalMods: PluggableInventoryItemDefinition[],
   combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[]
@@ -327,7 +323,7 @@ function groupItems(
         item.energy &&
         requiredEnergyTypes.has(item.energy.energyType) &&
         // If we can swap to another energy type, there's no need to group by current energy type
-        isArmorEnergyLocked({ item, lockItemEnergyType, lockMasterworkItemEnergyType })
+        isArmorEnergyLocked(item, lockArmorEnergyType)
           ? item.energy.energyType
           : DestinyEnergyType.Any;
     }
@@ -347,12 +343,7 @@ function groupItems(
         // Add in masterwork stat bonus if we're assuming masterwork stats
         if (
           defs &&
-          calculateAssumedItemEnergy(
-            item,
-            assumeLegendaryMasterwork,
-            assumeExoticMasterwork,
-            MIN_LO_ITEM_ENERGY
-          ) === 10
+          calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY) === 10
         ) {
           value += 2;
         }

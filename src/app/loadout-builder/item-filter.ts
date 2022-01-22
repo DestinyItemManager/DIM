@@ -12,6 +12,7 @@ import {
   ItemsByBucket,
   LockableBucketHash,
   LockableBucketHashes,
+  LockArmorEnergyType,
   LOCKED_EXOTIC_NO_EXOTIC,
   PinnedItems,
 } from './types';
@@ -26,8 +27,7 @@ export function filterItems({
   excludedItems,
   lockedMods,
   lockedExoticHash,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  lockArmorEnergyType,
   searchFilter,
 }: {
   defs: D2ManifestDefinitions | undefined;
@@ -36,8 +36,7 @@ export function filterItems({
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash: number | undefined;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  lockArmorEnergyType?: LockArmorEnergyType;
   searchFilter: ItemFilter;
 }): ItemsByBucket {
   const filteredItems: {
@@ -82,12 +81,7 @@ export function filterItems({
       const excludedAndModsFilteredItems = firstPassFilteredItems.filter(
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
-          matchedLockedModEnergy(
-            item,
-            lockedModsForPlugCategoryHash,
-            lockItemEnergyType,
-            lockMasterworkItemEnergyType
-          ) &&
+          matchedLockedModEnergy(item, lockedModsForPlugCategoryHash, lockArmorEnergyType) &&
           hasEnoughSocketsForMods(item, lockedModsForPlugCategoryHash)
       );
 
@@ -105,15 +99,12 @@ export function filterItems({
 function matchedLockedModEnergy(
   item: DimItem,
   lockedMods: PluggableInventoryItemDefinition[] | undefined,
-  lockItemEnergyType: boolean,
-  lockMasterworkItemEnergyType: boolean
+  lockArmorEnergyType?: LockArmorEnergyType
 ) {
   if (!lockedMods) {
     return true;
   }
-  return lockedMods.every((mod) =>
-    doEnergiesMatch({ mod, item, lockItemEnergyType, lockMasterworkItemEnergyType })
-  );
+  return lockedMods.every((mod) => doEnergiesMatch(mod, item, lockArmorEnergyType));
 }
 
 /**

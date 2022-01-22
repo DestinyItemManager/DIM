@@ -19,17 +19,18 @@ import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from
 import {
   ArmorSet,
   ArmorStatHashes,
+  AssumeArmorMasterwork,
   ExcludedItems,
   LockableBucketHashes,
+  LockArmorEnergyType,
   PinnedItems,
   StatFilters,
 } from './types';
 
 export interface LoadoutBuilderState {
   loadoutParameters: LoadoutParameters & {
-    lockMasterworkItemEnergyType?: boolean;
-    assumeLegendaryMasterwork?: boolean;
-    assumeExoticMasterwork?: boolean;
+    assumeArmorMasterwork?: AssumeArmorMasterwork;
+    lockArmorEnergyType?: LockArmorEnergyType;
   };
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -174,10 +175,8 @@ export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
-  | { type: 'lockItemEnergyTypeChanged'; lockItemEnergyType: boolean }
-  | { type: 'lockMasterworkItemEnergyTypeChanged'; lockMasterworkItemEnergyType: boolean }
-  | { type: 'assumeLegendaryMasterworkChanged'; assumeLegendaryMasterwork: boolean }
-  | { type: 'assumeExoticMasterworkChanged'; assumeExoticMasterwork: boolean }
+  | { type: 'assumeArmorMasterworkChanged'; assumeArmorMasterwork?: AssumeArmorMasterwork }
+  | { type: 'lockArmorEnergyTypeChanged'; lockArmorEnergyType?: LockArmorEnergyType }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
@@ -293,36 +292,18 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           statOrder: action.sortOrder,
         };
       }
-      case 'lockItemEnergyTypeChanged': {
+      case 'assumeArmorMasterworkChanged': {
+        const { assumeArmorMasterwork } = action;
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            lockItemEnergyType: action.lockItemEnergyType,
-          },
+          loadoutParameters: { ...state.loadoutParameters, assumeArmorMasterwork },
         };
       }
-      case 'lockMasterworkItemEnergyTypeChanged': {
+      case 'lockArmorEnergyTypeChanged': {
+        const { lockArmorEnergyType } = action;
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            lockMasterworkItemEnergyType: action.lockMasterworkItemEnergyType,
-          },
-        };
-      }
-      case 'assumeLegendaryMasterworkChanged': {
-        const { assumeLegendaryMasterwork } = action;
-        return {
-          ...state,
-          loadoutParameters: { ...state.loadoutParameters, assumeLegendaryMasterwork },
-        };
-      }
-      case 'assumeExoticMasterworkChanged': {
-        const { assumeExoticMasterwork } = action;
-        return {
-          ...state,
-          loadoutParameters: { ...state.loadoutParameters, assumeExoticMasterwork },
+          loadoutParameters: { ...state.loadoutParameters, lockArmorEnergyType },
         };
       }
       case 'addGeneralMods': {

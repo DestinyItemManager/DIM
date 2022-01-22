@@ -16,7 +16,13 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
+import {
+  ArmorSet,
+  ArmorStats,
+  AssumeArmorMasterwork,
+  LockArmorEnergyType,
+  MIN_LO_ITEM_ENERGY,
+} from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -120,28 +126,19 @@ export function getTotalModStatChanges(
 
 export function mapDimItemToProcessItem({
   dimItem,
-  assumeLegendaryMasterwork,
-  assumeExoticMasterwork,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   modsForSlot,
 }: {
   dimItem: DimItem;
-  assumeLegendaryMasterwork: boolean;
-  assumeExoticMasterwork: boolean;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
   const { bucket, id, hash, type, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
-  const capacity = calculateAssumedItemEnergy(
-    dimItem,
-    assumeLegendaryMasterwork,
-    assumeExoticMasterwork,
-    MIN_LO_ITEM_ENERGY
-  );
+  const capacity = calculateAssumedItemEnergy(dimItem, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
 
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
@@ -163,10 +160,7 @@ export function mapDimItemToProcessItem({
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyType;
 
-  if (
-    !energyType &&
-    !isArmorEnergyLocked({ item: dimItem, lockItemEnergyType, lockMasterworkItemEnergyType })
-  ) {
+  if (!energyType && !isArmorEnergyLocked(dimItem, lockArmorEnergyType)) {
     energyType = DestinyEnergyType.Any;
   }
 

@@ -3,7 +3,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../../testing/test-utils';
-import { MIN_LO_ITEM_ENERGY } from '../types';
+import { AssumeArmorMasterwork, LockArmorEnergyType, MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 
 describe('lo process mappers', () => {
@@ -36,10 +36,8 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeLegendaryMasterwork: true,
-      assumeExoticMasterwork: true,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
+      assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      lockArmorEnergyType: undefined,
       modsForSlot: [perpetuationMod],
     });
 
@@ -50,10 +48,8 @@ describe('lo process mappers', () => {
   test('mapped energy capacity is 10 when assumed masterwork is used', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeLegendaryMasterwork: true,
-      assumeExoticMasterwork: true,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
+      assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      lockArmorEnergyType: undefined,
       modsForSlot: [],
     });
 
@@ -67,10 +63,8 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: undefined,
       modsForSlot: [],
     });
 
@@ -84,10 +78,8 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: undefined,
       modsForSlot: [],
     });
 
@@ -97,10 +89,8 @@ describe('lo process mappers', () => {
   test('mapped energy type is Any when energy is not locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: false,
-      lockMasterworkItemEnergyType: false,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: undefined,
       modsForSlot: [],
     });
 
@@ -110,10 +100,8 @@ describe('lo process mappers', () => {
   test('mapped energy type is the items when energy is locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: true,
-      lockMasterworkItemEnergyType: true,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: LockArmorEnergyType.All,
       modsForSlot: [],
     });
 

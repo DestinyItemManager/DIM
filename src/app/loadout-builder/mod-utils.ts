@@ -1,29 +1,23 @@
 import { isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-
+import { LockArmorEnergyType } from '../loadout-builder/types';
 /**
  * Checks that:
  *   1. The armour piece is Armour 2.0
  *   2. The mod matches the Armour energy OR the mod has the any Energy type
  */
-export function doEnergiesMatch({
-  mod,
-  item,
-  lockItemEnergyType,
-  lockMasterworkItemEnergyType,
-}: {
-  mod: PluggableInventoryItemDefinition;
-  item: DimItem;
-  lockItemEnergyType: boolean;
-  lockMasterworkItemEnergyType: boolean;
-}) {
+export function doEnergiesMatch(
+  mod: PluggableInventoryItemDefinition,
+  item: DimItem,
+  lockArmorEnergyType?: LockArmorEnergyType
+) {
   return (
     item.energy &&
     (!mod.plug.energyCost ||
       mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
       mod.plug.energyCost.energyType === item.energy.energyType ||
-      !isArmorEnergyLocked({ item, lockItemEnergyType, lockMasterworkItemEnergyType }))
+      !isArmorEnergyLocked(item, lockArmorEnergyType))
   );
 }
 

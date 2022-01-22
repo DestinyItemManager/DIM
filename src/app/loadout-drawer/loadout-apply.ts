@@ -22,7 +22,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { LockableBucketHashes, LockArmorEnergyType } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -955,10 +955,8 @@ function applyLoadoutMods(
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      assumeLegendaryMasterwork: false,
-      assumeExoticMasterwork: false,
-      lockItemEnergyType: true,
-      lockMasterworkItemEnergyType: true,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: LockArmorEnergyType.All,
       minItemEnergy: 1,
     });
 
