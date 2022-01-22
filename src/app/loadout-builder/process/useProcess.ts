@@ -6,7 +6,10 @@ import { keyByStatHash } from 'app/inventory/store/stats';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashesByName,
+  MAX_ARMOR_ENERGY_CAPACITY,
+} from 'app/search/d2-known-values';
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -343,7 +346,8 @@ function groupItems(
         // Add in masterwork stat bonus if we're assuming masterwork stats
         if (
           defs &&
-          calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY) === 10
+          calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY) ===
+            MAX_ARMOR_ENERGY_CAPACITY
         ) {
           value += 2;
         }

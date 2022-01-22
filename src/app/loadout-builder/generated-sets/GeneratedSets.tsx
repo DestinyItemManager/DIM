@@ -76,8 +76,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork?: AssumeArmorMasterwork;
-  lockArmorEnergyType?: LockArmorEnergyType;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   notes?: string;
 }
 

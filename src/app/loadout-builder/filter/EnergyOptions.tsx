@@ -5,32 +5,32 @@ import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '../types';
 import styles from './EnergyOptions.m.scss';
 
-interface RadioOption {
+interface Option {
   label: string;
   selected: boolean;
   onClick(): void;
 }
 
-const RadioSetting = React.memo(function RadioSetting({
+const SelectableOptions = React.memo(function RadioSetting({
   label,
   options,
 }: {
   label: string;
-  options: RadioOption[];
+  options: Option[];
 }) {
   return (
     <div className={styles.settingGroup}>
       <div className={styles.title}>{label}</div>
       <div className={styles.buttons}>
         {options.map(({ label, selected, onClick }) => (
-          <RadioOptionButton key={label} label={label} selected={selected} onClick={onClick} />
+          <OptionButton key={label} label={label} selected={selected} onClick={onClick} />
         ))}
       </div>
     </div>
   );
 });
 
-function RadioOptionButton({ label, selected, onClick }: RadioOption) {
+function OptionButton({ label, selected, onClick }: Option) {
   return (
     <button
       type="button"
@@ -49,11 +49,11 @@ export default function EnergyOptions({
   lockArmorEnergyType,
   lbDispatch,
 }: {
-  assumeArmorMasterwork?: AssumeArmorMasterwork;
-  lockArmorEnergyType?: LockArmorEnergyType;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const lockEnergyOptions: RadioOption[] = useMemo(
+  const lockEnergyOptions: Option[] = useMemo(
     () => [
       {
         label: t('LoadoutBuilder.Masterworked'),
@@ -83,7 +83,7 @@ export default function EnergyOptions({
     [lbDispatch, lockArmorEnergyType]
   );
 
-  const assumeMasterworkOptions: RadioOption[] = useMemo(
+  const assumeMasterworkOptions: Option[] = useMemo(
     () => [
       {
         label: t('LoadoutBuilder.Legendary'),
@@ -117,8 +117,8 @@ export default function EnergyOptions({
 
   return (
     <div className={styles.energyOptions}>
-      <RadioSetting label={t('LoadoutBuilder.LockElement')} options={lockEnergyOptions} />
-      <RadioSetting
+      <SelectableOptions label={t('LoadoutBuilder.LockElement')} options={lockEnergyOptions} />
+      <SelectableOptions
         label={t('LoadoutBuilder.AssumeMasterwork')}
         options={assumeMasterworkOptions}
       />

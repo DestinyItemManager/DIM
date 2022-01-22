@@ -36,7 +36,7 @@ export function filterItems({
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash: number | undefined;
-  lockArmorEnergyType?: LockArmorEnergyType;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   searchFilter: ItemFilter;
 }): ItemsByBucket {
   const filteredItems: {
@@ -99,7 +99,7 @@ export function filterItems({
 function matchedLockedModEnergy(
   item: DimItem,
   lockedMods: PluggableInventoryItemDefinition[] | undefined,
-  lockArmorEnergyType?: LockArmorEnergyType
+  lockArmorEnergyType: LockArmorEnergyType | undefined
 ) {
   if (!lockedMods) {
     return true;

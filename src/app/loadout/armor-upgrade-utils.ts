@@ -16,7 +16,10 @@ export function calculateAssumedItemEnergy(
   return Math.max(itemEnergy, assumedEnergy);
 }
 
-export function isArmorEnergyLocked(item: DimItem, lockArmorEnergyType?: LockArmorEnergyType) {
+export function isArmorEnergyLocked(
+  item: DimItem,
+  lockArmorEnergyType: LockArmorEnergyType | undefined
+) {
   return (
     lockArmorEnergyType === LockArmorEnergyType.All ||
     (item.masterwork && lockArmorEnergyType === LockArmorEnergyType.Masterworked)

@@ -1,6 +1,6 @@
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
-import { modsWithConditionalStats } from 'app/search/d2-known-values';
+import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
   DestinyClass,
@@ -143,7 +143,7 @@ export function mapDimItemToProcessItem({
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
       let value = base;
-      if (capacity === 10) {
+      if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
         value += 2;
       }
       statMap[statHash] = value;

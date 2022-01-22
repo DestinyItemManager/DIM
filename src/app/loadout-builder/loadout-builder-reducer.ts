@@ -175,8 +175,11 @@ export type LoadoutBuilderAction =
   | { type: 'changeCharacter'; storeId: string }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
-  | { type: 'assumeArmorMasterworkChanged'; assumeArmorMasterwork?: AssumeArmorMasterwork }
-  | { type: 'lockArmorEnergyTypeChanged'; lockArmorEnergyType?: LockArmorEnergyType }
+  | {
+      type: 'assumeArmorMasterworkChanged';
+      assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+    }
+  | { type: 'lockArmorEnergyTypeChanged'; lockArmorEnergyType: LockArmorEnergyType | undefined }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }

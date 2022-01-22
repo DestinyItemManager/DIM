@@ -10,7 +10,7 @@ import { LockArmorEnergyType } from '../loadout-builder/types';
 export function doEnergiesMatch(
   mod: PluggableInventoryItemDefinition,
   item: DimItem,
-  lockArmorEnergyType?: LockArmorEnergyType
+  lockArmorEnergyType: LockArmorEnergyType | undefined
 ) {
   return (
     item.energy &&

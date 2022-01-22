@@ -675,8 +675,8 @@ function buildItemEnergy({
 }: {
   item: DimItem;
   assignedMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork?: AssumeArmorMasterwork;
-  lockArmorEnergyType?: LockArmorEnergyType;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   minItemEnergy: number;
 }): ItemEnergy {
   return {
