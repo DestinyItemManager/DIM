@@ -880,6 +880,7 @@
       "Transmat": "トランスマット効果を適用"
     },
     "ListStyle": "パークをリストで表示",
+    "Search": "検索名または説明文",
     "Select": {
       "Ability": "アビリティをプレビュー",
       "Aspect": "特性をプレビュー",
@@ -973,8 +974,8 @@
     "ClearTag": "タグをクリア",
     "Favorite": "お気に入り",
     "Infuse": "融合する",
-    "Junk": "不要",
-    "Keep": "保管",
+    "Junk": "ジャンク",
+    "Keep": "キープ",
     "LockAll": "ロックされたアイテム",
     "TagItem": "アイテムをタグする",
     "UnlockAll": "アイテムのロックを解除"
@@ -986,7 +987,8 @@
   "Vendors": {
     "Collections": "コレクション",
     "Engram": "報酬エングラム",
-    "FilterToUnacquired": "未読アイテムのみ表示する",
+    "FilterToUnacquired": "未収集アイテムのみ表示",
+    "NoItems": "このベンダーは現在、アイテムを提供していません。",
     "Vendors": "ベンダー"
   },
   "Views": {
