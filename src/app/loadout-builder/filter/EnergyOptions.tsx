@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -55,7 +56,7 @@ export default function EnergyOptions({
   const lockEnergyOptions: RadioOption[] = useMemo(
     () => [
       {
-        label: 'Masterworked',
+        label: t('LoadoutBuilder.Masterworked'),
         selected: lockArmorEnergyType === LockArmorEnergyType.Masterworked,
         onClick: () => {
           lbDispatch({
@@ -68,7 +69,7 @@ export default function EnergyOptions({
         },
       },
       {
-        label: 'All',
+        label: t('LoadoutBuilder.All'),
         selected: lockArmorEnergyType === LockArmorEnergyType.All,
         onClick: () => {
           lbDispatch({
@@ -85,7 +86,7 @@ export default function EnergyOptions({
   const assumeMasterworkOptions: RadioOption[] = useMemo(
     () => [
       {
-        label: 'Legendary',
+        label: t('LoadoutBuilder.Legendary'),
         selected: assumeArmorMasterwork === AssumeArmorMasterwork.Legendary,
         onClick: () => {
           lbDispatch({
@@ -98,7 +99,7 @@ export default function EnergyOptions({
         },
       },
       {
-        label: 'All',
+        label: t('LoadoutBuilder.All'),
         selected: assumeArmorMasterwork === AssumeArmorMasterwork.All,
         onClick: () => {
           lbDispatch({
@@ -116,8 +117,11 @@ export default function EnergyOptions({
 
   return (
     <div className={styles.energyOptions}>
-      <RadioSetting label="Lock Element" options={lockEnergyOptions} />
-      <RadioSetting label="Assume Masterwork" options={assumeMasterworkOptions} />
+      <RadioSetting label={t('LoadoutBuilder.LockElement')} options={lockEnergyOptions} />
+      <RadioSetting
+        label={t('LoadoutBuilder.AssumeMasterwork')}
+        options={assumeMasterworkOptions}
+      />
     </div>
   );
 }
