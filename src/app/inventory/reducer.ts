@@ -44,6 +44,19 @@ export interface InventoryState {
    */
   readonly newItems: Set<string>;
   readonly newItemsLoaded: boolean;
+
+  /**
+   * indicates this isn't really "your" inventory,
+   * or should otherwise disallow modifications such as
+   * moving, locking, plugging, etc
+   */
+  readonly readOnly: boolean;
+
+  /**
+   * a JSON-encoded API profile response. if this is present,
+   * we use it instead of talking to the Bungie API
+   */
+  readonly mockProfileData?: string;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -53,6 +66,7 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
+  readOnly: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -117,6 +131,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 
     case getType(setCurrentAccount):
       return initialState;
+
+    case getType(actions.setMockProfileResponse):
+      return produce(state, (draft) => {
+        draft.mockProfileData = action.payload;
+        draft.readOnly = true;
+      });
 
     default:
       return state;

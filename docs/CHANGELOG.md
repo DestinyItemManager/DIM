@@ -1,6 +1,7 @@
 ## Next
 
 * Weapons CSV download now includes a Zoom stat column.
+* Shaders, ornaments, and mods can now be searched in their choosers.
 
 ## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
 

@@ -28,7 +28,6 @@ import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
 import AppInstallBanner from './AppInstallBanner';
 import styles from './Header.m.scss';
-//import './header.scss';
 import { AppIcon, faExternalLinkAlt, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';

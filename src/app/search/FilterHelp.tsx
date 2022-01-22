@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
 import { searchConfigSelector } from './search-config';
+import { SearchInput } from './SearchInput';
 import { generateSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
@@ -19,9 +20,6 @@ function keywordsString(keywords: string | string[]) {
 export default function FilterHelp() {
   const searchConfig = useSelector(searchConfigSelector);
   const [search, setSearch] = useState('');
-
-  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearch(event.target.value);
 
   const searchLower = search.toLowerCase();
   const filters = search
@@ -51,17 +49,11 @@ export default function FilterHelp() {
           {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
           <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
-        <div className={clsx(styles.search, 'search-filter')} role="search">
-          <input
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
+        <div className={clsx(styles.search)}>
+          <SearchInput
+            query={search}
+            onQueryChanged={setSearch}
             placeholder={t('Filter.SearchPrompt')}
-            type="text"
-            name="filter"
-            value={search}
-            onChange={onSearchChange}
           />
         </div>
         <table>

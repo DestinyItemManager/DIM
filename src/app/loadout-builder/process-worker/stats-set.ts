@@ -81,14 +81,6 @@ export class StatsSet<T> {
     // See if the input stats are lower than some other known set
     return betterStatsHelper(this.statNodes, stats, 0) === BetterStatsResult.BETTER_STATS_EXIST;
   }
-
-  /**
-   * Get all saved stats sets which are lower than the input example. This won't return
-   * something with the exact same stats as the input, but if any stat is lower than the
-   * input and all other stats are lower or equal, it will be returned.
-   */
-  // TODO: should be removeByLowerStats? Combine with an insert?
-  //getByLowerStats(stats: number[]) {}
 }
 
 /**
