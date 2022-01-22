@@ -13,7 +13,7 @@
     height: calc(var(--item-size) * 10 / 9 + 4px);
   }
 }
-.pursuit.flawedPassage:before {
+.pursuit.flawedPassage::before {
   content: '';
   background: rgba(255, 0, 0, 0.2);
   width: 100%;

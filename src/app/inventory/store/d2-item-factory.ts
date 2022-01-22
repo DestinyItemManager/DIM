@@ -559,7 +559,7 @@ export function makeItem(
       createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
           const checkTrialsPassage = isTrialsPassage(createdItem.hash);
-          //Only the "Wins" objective should count towards completion
+          // Only the "Wins" objective should count towards completion
           if (checkTrialsPassage && !isWinsObjective(objective.objectiveHash)) {
             return 0;
           }
