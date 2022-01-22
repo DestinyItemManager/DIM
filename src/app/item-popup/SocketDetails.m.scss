@@ -22,11 +22,6 @@
       line-height: 0;
     }
   }
-
-  // Cap the height for exceedingly large plug lists (shaders...)
-  :global(.sheet-container) {
-    max-height: 840px;
-  }
 }
 
 .clickableMod {
