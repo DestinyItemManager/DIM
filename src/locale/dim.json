@@ -493,6 +493,7 @@
     "NoExotic": "No Exotic",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "No loadouts to compare",
+    "None": "None",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",

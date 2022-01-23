@@ -4,6 +4,7 @@ interface CssExports {
   'button': string;
   'buttons': string;
   'energyOptions': string;
+  'selected': string;
   'settingGroup': string;
   'title': string;
 }

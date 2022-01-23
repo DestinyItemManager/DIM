@@ -554,6 +554,7 @@
     "NoExotic": "No Exotic",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
     "NoLoadoutsToCompare": "No loadouts to compare",
+    "None": "None",
     "NotExotics": "{{material}} (Not Exotics)",
     "NotMasterworked": "{{material}} (Not Masterworked)",
     "NoUpgrades": "No Upgrades",

@@ -20,10 +20,8 @@
 .button {
   cursor: pointer;
   flex-grow: 1;
+}
 
-  &:hover,
-  &:active {
-    background-color: #e2af55 !important;
-    color: black !important;
-  }
+.selected {
+  cursor: default;
 }
