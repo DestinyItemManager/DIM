@@ -74,24 +74,29 @@ export default function FashionDrawer({
   // the loadout, or a suitable "example" item from inventory.
   const exampleItemsByBucketHash = Object.fromEntries(
     LockableBucketHashes.map((bucketHash) => {
+      const looksFashionable = (i: DimItem) =>
+        i.bucket.hash === bucketHash && i.power && i.energy && i.classType === classType;
+      const getFashionSockets = (i: DimItem) =>
+        getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorCosmetics);
+
       // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
       const exampleItem =
         armorItemsByBucketHash[bucketHash] ??
         // Try to find a legendary example
         allItems.find(
-          (i) =>
-            i.bucket.hash === bucketHash &&
-            i.power &&
-            i.tier === 'Legendary' &&
-            i.classType === classType
+          (i) => i.tier === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1
         ) ??
-        // Fall back to a non-legendary one
+        // Fall back to any non-exotic example
+        allItems.find(
+          (i) => !i.isExotic && looksFashionable(i) && getFashionSockets(i).length > 1
+        ) ??
+        // Finally, find something shaderable at least. This user must have only rudimentary armor.
         allItems.find(
           (i) =>
+            !i.isExotic &&
             i.bucket.hash === bucketHash &&
-            i.power &&
-            i.tier !== 'Exotic' &&
-            i.classType === classType
+            i.classType === classType &&
+            getFashionSockets(i).length
         );
       return [bucketHash, exampleItem];
     })
