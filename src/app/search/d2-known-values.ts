@@ -29,9 +29,9 @@ export const DEFAULT_GLOW = 3807544519; // InventoryItem "Remove Armor Glow"
 
 /** An array of default ornament hashes */
 export const DEFAULT_ORNAMENTS: number[] = [
-  2931483505, // InventoryItem "Default Ornament"
-  1959648454, // InventoryItem "Default Ornament"
-  702981643, // InventoryItem "Default Ornament"
+  2931483505, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
+  1959648454, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
+  702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
 /** if a socket contains these, consider it empty */
