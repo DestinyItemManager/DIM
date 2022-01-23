@@ -225,7 +225,7 @@ function LoadoutRow({
         <button
           key="save"
           type="button"
-          className="dim-button"
+          className="dim-button danger"
           onClick={() => handleDeleteClick(loadout)}
         >
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
