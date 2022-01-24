@@ -119,14 +119,19 @@
 }
 
 .loadoutTypeIcon {
-  color: #666;
+  color: #999;
 }
 
 .warningIcon {
   color: yellow;
+  font-size: 10px;
 }
 
 .content {
   background-color: #3a4150;
   color: #e4e4e4;
+}
+
+.note {
+  color: #888;
 }

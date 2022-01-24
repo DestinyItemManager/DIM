@@ -6,6 +6,7 @@ interface CssExports {
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;
+  'note': string;
   'warningIcon': string;
 }
 export const cssExports: CssExports;

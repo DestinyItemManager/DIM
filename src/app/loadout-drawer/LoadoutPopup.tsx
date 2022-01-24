@@ -198,7 +198,10 @@ function LoadoutPopup({
           <li className={styles.menuItem}>
             <span onClick={onStartFarming}>
               <AppIcon icon={engramIcon} />
-              <span>{t('FarmingMode.FarmingMode')}</span>
+              <span>
+                {t('FarmingMode.FarmingMode')}{' '}
+                <span className={styles.note}>{t('FarmingMode.FarmingModeNote')}</span>
+              </span>
             </span>
           </li>
         )}
@@ -223,7 +226,7 @@ function LoadoutPopup({
             <AppIcon icon={faList} />
             <span>{t('Loadouts.ManageLoadouts')}</span>
           </Link>
-          <AppIcon icon={rightArrowIcon} />
+          <AppIcon icon={rightArrowIcon} className={styles.note} />
         </li>
 
         <li className={styles.menuItem}>
@@ -286,6 +289,9 @@ function LoadoutPopup({
               title={loadout.notes ? loadout.notes : loadout.name}
               onClick={() => applySavedLoadout(loadout)}
             >
+              {dimStore.isVault && (
+                <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
+              )}
               {isMissingItems(allItems, loadout) && (
                 <AppIcon
                   className={styles.warningIcon}
@@ -293,7 +299,6 @@ function LoadoutPopup({
                   title={t('Loadouts.MissingItemsWarning')}
                 />
               )}
-              <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               {loadout.name}
             </span>
             <span
