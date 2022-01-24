@@ -10,7 +10,7 @@ describe('autocompleteTermSuggestions', () => {
   const searchConfig = buildSearchConfig(2);
   const filterComplete = makeFilterComplete(searchConfig);
 
-  const cases = [
+  const cases: [query: string, caretIndex: number][] = [
     ['is:haspower is:b', 16],
     ['(is:blue jun)', 11],
     ['is:bow is:void', 11],

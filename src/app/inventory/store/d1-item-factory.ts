@@ -614,7 +614,7 @@ function buildTalentGrid(
       node.column -= minColumn;
     });
   }
-  const maxColumn = _.maxBy(gridNodes, (n: any) => n.column).column;
+  const maxColumn = _.maxBy(gridNodes, (n: any) => n.column)!.column;
 
   return {
     nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),

@@ -14,7 +14,7 @@ export function generateModPermutations(mods: (PluggableInventoryItemDefinition 
  * with the 5 items.
  */
 export function generatePermutationsOfFive<T>(
-  items: T[],
+  items: (T | null)[],
   createPermutationKey: (items: (T | null)[]) => string
 ): (T | null)[][] {
   if (!items.length) {
