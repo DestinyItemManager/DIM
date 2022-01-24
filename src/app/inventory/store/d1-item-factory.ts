@@ -50,8 +50,8 @@ export function processItems(
       createdItem.owner = owner.id;
       result.push(createdItem);
     } else {
-      // the item failed to be created for some reason. 3 things can currently cause this:
-      // an exception occurred, the item lacks a definition, or it lacks a name
+      // the item failed to be created for some reason. 2 things can currently cause this:
+      // an exception occurred while creating the item, or it has a definition but lacks a name
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
       const bucketDef = defs.InventoryBucket[item.bucketHash];
