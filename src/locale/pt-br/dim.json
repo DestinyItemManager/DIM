@@ -462,7 +462,7 @@
     "Code": "Carregando código DIM...",
     "FilterHelp": "Carregando ajuda de busca...",
     "Profile": "Carregando perfil do Destiny...",
-    "Vendors": "Carregando comerciantes do Destiny..."
+    "Vendors": "Carregando vendedores do Destiny..."
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Adicionar Mods +5",
@@ -880,6 +880,7 @@
       "Transmat": "Aplicar Efeito de Transmaterialização"
     },
     "ListStyle": "Exibir perks em listagem",
+    "Search": "Pesquisar por nome ou descrição",
     "Select": {
       "Ability": "Pré-visualizar Habilidade",
       "Aspect": "Pré-visualizar Aspecto",
@@ -987,6 +988,7 @@
     "Collections": "Coleções",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Exibir apenas não coletados",
+    "NoItems": "Este Vendedor não está oferencendo nenhum item no momento.",
     "Vendors": "Vendedores"
   },
   "Views": {

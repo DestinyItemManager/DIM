@@ -1,6 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { languageSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
@@ -169,12 +170,7 @@ function LoadoutRow({
   const dispatch = useThunkDispatch();
 
   const actionButtons = useMemo(() => {
-    const handleDeleteClick = (loadout: Loadout) => {
-      if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-        dispatch(deleteLoadout(loadout.id));
-      }
-    };
-
+    const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
     const shareBuild = () => {
       const p: Record<string, string> = {
         class: loadout.classType.toString(),
@@ -222,14 +218,9 @@ function LoadoutRow({
 
     if (saved) {
       actionButtons.push(
-        <button
-          key="save"
-          type="button"
-          className="dim-button"
-          onClick={() => handleDeleteClick(loadout)}
-        >
+        <ConfirmButton key="delete" danger onClick={() => handleDeleteClick(loadout)}>
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-        </button>
+        </ConfirmButton>
       );
     }
 

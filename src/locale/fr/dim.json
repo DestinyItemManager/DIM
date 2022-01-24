@@ -91,7 +91,7 @@
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     },
     "InitialItem": "C'est l'objet depuis lequel l'outil de comparaison a été lancé",
-    "IsVendorItem": "Cet objet ne vous appartient pas. Il est dans l'inventaire d'un vendeur et peut être vendu.",
+    "IsVendorItem": "Cet objet ne vous appartient pas. Il est dans l'inventaire d'un vendeur et peut être en vente.",
     "SoldBy": "Vendu par: {{vendorName}}",
     "SwipeAdvice": "Utilisez deux doigts pour faire défiler"
   },
@@ -356,8 +356,8 @@
     "TransferItems": "Transférer"
   },
   "ItemFeed": {
-    "Description": "Flux d'article",
-    "HideTagged": "Cacher les marqués"
+    "Description": "Flux d'objets",
+    "HideTagged": "Masquer ceux avec une étiquette"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -880,6 +880,7 @@
       "Transmat": "Appliquer l'effet de téléportation"
     },
     "ListStyle": "Afficher les attributs sous forme de liste",
+    "Search": "Rechercher des noms ou des descriptions",
     "Select": {
       "Ability": "Prévisualiser la capacité",
       "Aspect": "Prévisualiser l'aspect",
@@ -987,6 +988,7 @@
     "Collections": "Collections",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
+    "NoItems": "Ce vendeur ne propose actuellement aucun objet.",
     "Vendors": "Marchands"
   },
   "Views": {

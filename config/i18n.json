@@ -299,6 +299,7 @@
   },
   "General": {
     "ClickForDetails": "Click for details",
+    "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
   "Ghost": {
@@ -947,6 +948,7 @@
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
+    "Search": "Search names or descriptions",
     "SelectWishlistPerks": "Preview Wishlist Perks",
     "Insert": {
       "Mod": "Insert Mod",

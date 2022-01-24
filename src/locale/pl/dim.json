@@ -880,6 +880,7 @@
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Wyświetlaj perki jako listę",
+    "Search": "Search names or descriptions",
     "Select": {
       "Ability": "Podgląd umiejętności",
       "Aspect": "Preview Aspect",
@@ -987,6 +988,7 @@
     "Collections": "Kolekcja",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
+    "NoItems": "This Vendor is currently not offering any items.",
     "Vendors": "Sprzedawcy"
   },
   "Views": {

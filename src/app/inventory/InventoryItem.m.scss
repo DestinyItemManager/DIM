@@ -3,7 +3,8 @@
 // Items hidden by search.
 .searchHidden {
   opacity: 0.2;
-  transform: scale(0.75);
+  // TODO: Testing whether scale transform triggers slow sheet animations: https://github.com/DestinyItemManager/DIM/issues/7458
+  // transform: scale(0.75);
 }
 
 // The top-level item container. Global because it's referenced by other styles.

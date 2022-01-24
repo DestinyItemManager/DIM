@@ -880,6 +880,7 @@
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "按列表顯示特性",
+    "Search": "Search names or descriptions",
     "Select": {
       "Ability": "Preview Ability",
       "Aspect": "Preview Aspect",
@@ -987,6 +988,7 @@
     "Collections": "收藏品",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
+    "NoItems": "This Vendor is currently not offering any items.",
     "Vendors": "商販"
   },
   "Views": {

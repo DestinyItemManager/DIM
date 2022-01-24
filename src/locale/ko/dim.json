@@ -880,6 +880,7 @@
       "Transmat": "전송 효과 적용"
     },
     "ListStyle": "특성을 목록으로 표시",
+    "Search": "이름 또는 설명 검색",
     "Select": {
       "Ability": "능력 미리보기",
       "Aspect": "상 미리보기",
@@ -987,6 +988,7 @@
     "Collections": "수집품",
     "Engram": "보상 인그램",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
+    "NoItems": "이 상인은 현재 어떤 아이템도 판매하지 않습니다.",
     "Vendors": "상인"
   },
   "Views": {

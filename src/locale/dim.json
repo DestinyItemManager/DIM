@@ -289,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Click for details",
+    "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
   "Header": {
@@ -541,7 +542,6 @@
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSpace": "Move other items away",
     "ClearingSpace": "Moving other items away",
-    "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
@@ -880,6 +880,7 @@
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Display perks as a list",
+    "Search": "Search names or descriptions",
     "Select": {
       "Ability": "Preview Ability",
       "Aspect": "Preview Aspect",

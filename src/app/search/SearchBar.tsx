@@ -285,7 +285,7 @@ function SearchBar(
     const { type, changes } = actionAndChanges;
     switch (type) {
       case useCombobox.stateChangeTypes.ItemClick:
-        //exit early if non FilterHelper item was selected
+        // exit early if non FilterHelper item was selected
         if (!changes.selectedItem || changes.selectedItem.type !== SearchItemType.Help) {
           return changes;
         }

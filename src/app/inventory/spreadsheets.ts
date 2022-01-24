@@ -444,6 +444,7 @@ function downloadWeapons(
       aa: 0,
       impact: 0,
       range: 0,
+      zoom: 0,
       stability: 0,
       rof: 0,
       reload: 0,
@@ -472,6 +473,9 @@ function downloadWeapons(
               break;
             case StatHashes.Range:
               stats.range = stat.value;
+              break;
+            case StatHashes.Zoom:
+              stats.zoom = stat.value;
               break;
             case StatHashes.Stability:
               stats.stability = stat.value;
@@ -513,6 +517,7 @@ function downloadWeapons(
     row.AA = stats.aa;
     row.Impact = stats.impact;
     row.Range = stats.range;
+    row.Zoom = stats.zoom;
     row['Blast Radius'] = stats.blastRadius;
     row.Velocity = stats.velocity;
     row.Stability = stats.stability;
