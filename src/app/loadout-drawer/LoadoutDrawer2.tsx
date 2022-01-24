@@ -136,9 +136,7 @@ export default function LoadoutDrawer2() {
   }
 
   const onDeleteLoadout = () => {
-    if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      dispatch(deleteLoadout(loadout.id));
-    }
+    dispatch(deleteLoadout(loadout.id));
     close();
   };
 
