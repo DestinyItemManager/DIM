@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -557,7 +558,15 @@ export function makeItem(
       createdItem.complete = createdItem.objectives.every((o) => o.complete);
       createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
-          return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
+          const checkTrialsPassage = isTrialsPassage(createdItem.hash);
+          // Only the "Wins" objective should count towards completion
+          if (checkTrialsPassage && !isWinsObjective(objective.objectiveHash)) {
+            return 0;
+          }
+          return (
+            Math.min(1, (objective.progress || 0) / objective.completionValue) /
+            (checkTrialsPassage ? 1 : length)
+          );
         } else {
           return 0;
         }

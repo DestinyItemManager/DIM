@@ -8,6 +8,7 @@
 
 * Weapons CSV download now includes a Zoom stat column.
 * Shaders, ornaments, and mods can now be searched in their choosers.
+* Trials passages now show the number of rounds won and the progress of completion is now tied to the number of wins.
 
 ## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
 
