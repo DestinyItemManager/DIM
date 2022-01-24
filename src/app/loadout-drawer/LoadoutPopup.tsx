@@ -289,7 +289,7 @@ function LoadoutPopup({
               title={loadout.notes ? loadout.notes : loadout.name}
               onClick={() => applySavedLoadout(loadout)}
             >
-              {dimStore.isVault && (
+              {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
               {isMissingItems(allItems, loadout) && (
