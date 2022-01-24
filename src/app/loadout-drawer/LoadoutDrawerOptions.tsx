@@ -172,7 +172,7 @@ export default function LoadoutDrawerOptions({
         {loadout.notes === undefined && (
           <div className={styles.inputGroup}>
             <button
-              className="dim-button danger"
+              className="dim-button"
               onClick={addNotes}
               type="button"
               title={t('Loadouts.AddNotes')}
