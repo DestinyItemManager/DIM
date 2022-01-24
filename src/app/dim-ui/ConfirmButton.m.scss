@@ -1,0 +1,36 @@
+.confirmButton {
+  & > div {
+    transition: height 0.5s ease-in 0.5s;
+    overflow-y: hidden;
+
+    &:nth-child(1) {
+      height: 16px;
+    }
+    &:nth-child(2) {
+      height: 0px;
+    }
+  }
+
+  &.confirmMode {
+    color: white !important;
+    &[class~='danger'] {
+      &:hover {
+        background-color: #aa2222 !important;
+      }
+    }
+
+    &:hover {
+      background-color: #af7d27 !important;
+    }
+
+    & > div {
+      transition: height 0.1s;
+      &:nth-child(1) {
+        height: 0px;
+      }
+      &:nth-child(2) {
+        height: 16px;
+      }
+    }
+  }
+}
