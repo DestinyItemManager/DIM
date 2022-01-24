@@ -326,4 +326,4 @@ function SocketDetails({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(SocketDetails);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(SocketDetails);

@@ -331,7 +331,7 @@ function LoadoutPopup({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(LoadoutPopup);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(LoadoutPopup);
 
 /**
  * Filter a loadout down to only the equipped items in the loadout.

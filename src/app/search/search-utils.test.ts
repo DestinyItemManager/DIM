@@ -24,7 +24,7 @@ describe('generateSuggestionsForFilter', () => {
 
   test.each(cases)(
     "full suggestions for filter format '%s', keyword '%s' with suggestions %s",
-    (format: FilterDefinition['format'], keywords: string, suggestions?: string[]) => {
+    (format: FilterDefinition['format'], keywords: string | string[], suggestions?: string[]) => {
       const candidates = generateSuggestionsForFilter({
         format,
         keywords,

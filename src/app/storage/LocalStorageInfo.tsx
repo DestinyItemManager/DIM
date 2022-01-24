@@ -11,9 +11,9 @@ export default function LocalStorageInfo({ showDetails }: { showDetails: boolean
 
   useEffect(() => {
     if ('storage' in navigator && 'estimate' in navigator.storage) {
-      navigator.storage.estimate().then((quota: { quota: number; usage: number }) => {
-        if (quota.usage >= 0 && quota.quota >= 0) {
-          setQuota(quota);
+      navigator.storage.estimate().then(({ usage, quota }) => {
+        if (usage && usage >= 0 && quota && quota >= 0) {
+          setQuota({ usage, quota });
         }
       });
     }
