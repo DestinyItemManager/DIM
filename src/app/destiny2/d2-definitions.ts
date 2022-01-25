@@ -2,6 +2,7 @@ import { generateConversionTable } from 'app/dim-ui/rich-destiny-text';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
+import { warnLogCollapsedStack } from 'app/utils/log';
 import {
   AllDestinyManifestComponents,
   DestinyActivityDefinition,
@@ -188,14 +189,16 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         if (!dbEntry && tableShort !== 'Record') {
           // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
           // but other than that they should be whole & reasonable sized numbers
-          const errorString =
-            id < 1 || !Number.isSafeInteger(id) ? 'invalidHash' : 'hashLookupFailure';
-          const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
-          reportException(errorString, new HashLookupFailure(table, id), {
-            requestingEntryInfo,
-            failedHash: id,
-            failedComponent: table,
-          });
+          if (id < 1 || !Number.isSafeInteger(id)) {
+            const requestingEntryInfo = typeof requestor === 'object' ? requestor.hash : requestor;
+            reportException('invalidHash', new HashLookupFailure(table, id), {
+              requestingEntryInfo,
+              failedHash: id,
+              failedComponent: table,
+            });
+          } else {
+            warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
+          }
         }
         return dbEntry;
       },
