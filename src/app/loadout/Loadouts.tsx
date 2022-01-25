@@ -1,4 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { languageSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
@@ -12,6 +13,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
@@ -43,10 +45,10 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <Loadouts />;
+  return <Loadouts account={account} />;
 }
 
-function Loadouts() {
+function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
@@ -148,6 +150,7 @@ function Loadouts() {
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
             equippable={loadout !== currentLoadout}
+            account={account}
           />
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
@@ -161,27 +164,25 @@ function LoadoutRow({
   store,
   saved,
   equippable,
+  account,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
+  account: DestinyAccount;
 }) {
   const dispatch = useThunkDispatch();
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
-    const shareBuild = () => {
-      const p: Record<string, string> = {
-        class: loadout.classType.toString(),
-        p: JSON.stringify(loadout.parameters),
-      };
-      if (loadout.notes) {
-        p.n = loadout.notes;
-      }
-      const urlParams = new URLSearchParams(p);
-      const url = `${location.origin}/optimizer?${urlParams}`;
-      copyString(url);
+    const shareBuild = async () => {
+      // TODO: cache these a bit locally so you can hammer the button without creating a bunch of links
+      const shareUrl = await createLoadoutShare(
+        account.membershipId,
+        convertDimLoadoutToApiLoadout(loadout)
+      );
+      copyString(shareUrl);
       showNotification({
         type: 'success',
         title: t('LoadoutBuilder.CopiedBuild'),
