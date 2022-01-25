@@ -34,8 +34,7 @@ function RadioButton({ label, selected, onClick }: Option) {
   return (
     <button
       type="button"
-      className={clsx('dim-button', styles.button, {
-        selected,
+      className={clsx(styles.button, {
         [styles.selected]: selected,
       })}
       onClick={onClick}

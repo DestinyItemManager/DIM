@@ -18,10 +18,22 @@
 }
 
 .button {
+  composes: dim-button from global;
   cursor: pointer;
   flex-grow: 1;
 }
 
 .selected {
   cursor: default;
+  position: relative;
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: $orange;
+    height: 2px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+  }
 }
