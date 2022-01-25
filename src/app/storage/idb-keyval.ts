@@ -1,4 +1,4 @@
-// This is a private copy of idb-keyval for until https://github.com/jakearchibald/idb-keyval/pull/65 and https://github.com/jakearchibald/idb-keyval/pull/50 get merged
+// This is a private copy of idb-keyval since https://github.com/jakearchibald/idb-keyval/pull/65 and https://github.com/jakearchibald/idb-keyval/pull/50 won't be merged
 
 export class Store {
   private readonly _dbName: string;
@@ -53,6 +53,15 @@ export class Store {
     return this._dbp!.then((db) => {
       db.close();
       this._dbp = undefined;
+    });
+  }
+
+  _delete(): Promise<void> {
+    this._close();
+    return new Promise((resolve, reject) => {
+      const deletereq = indexedDB.deleteDatabase(this._dbName);
+      deletereq.onerror = () => reject(deletereq.error);
+      deletereq.onsuccess = () => resolve();
     });
   }
 }
@@ -113,6 +122,10 @@ export function keys(store = getDefaultStore()): Promise<IDBValidKey[]> {
 
 export function close(store = getDefaultStore()): Promise<void> {
   return store._close();
+}
+
+export function deleteDatabase(store = getDefaultStore()): Promise<void> {
+  return store._delete();
 }
 
 // When the app gets frozen (iOS PWA), close the IDBDatabase connection

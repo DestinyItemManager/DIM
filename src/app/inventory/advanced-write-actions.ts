@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { mergedCollectiblesSelector } from 'app/vendors/selectors';
@@ -17,7 +18,6 @@ import {
   insertSocketPlug,
   insertSocketPlugFree,
 } from 'bungie-api-ts/destiny2';
-import { get, set } from 'idb-keyval';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';

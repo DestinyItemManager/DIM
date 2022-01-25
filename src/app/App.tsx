@@ -1,7 +1,7 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import { set } from 'app/storage/idb-keyval';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { set } from 'idb-keyval';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
@@ -26,6 +26,8 @@ import Header from './shell/Header';
 import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
+import { deleteDatabase } from './storage/idb-keyval';
+import { reportException } from './utils/exceptions';
 import { errorLog } from './utils/log';
 
 const WhatsNew = React.lazy(
@@ -148,13 +150,31 @@ function useStorageTest() {
     (async () => {
       try {
         localStorage.setItem('test', 'true');
-        if (!window.indexedDB) {
-          throw new Error('IndexedDB not available');
-        }
+      } catch (e) {
+        errorLog('storage', 'Failed localStorage Test', e);
+        setStorageWorks(false);
+        return;
+      }
+
+      if (!window.indexedDB) {
+        errorLog('storage', 'IndexedDB not available');
+        setStorageWorks(false);
+        return;
+      }
+
+      try {
         await set('idb-test', true);
       } catch (e) {
-        errorLog('storage', 'Failed Storage Test', e);
-        setStorageWorks(false);
+        errorLog('storage', 'Failed IndexedDB Test - trying to delete database', e);
+        try {
+          await deleteDatabase();
+          await set('idb-test', true);
+          // Report to sentry, I want to know if this ever works
+          reportException('deleting database fixed IDB', e);
+        } catch (e2) {
+          errorLog('storage', 'Failed IndexedDB Test - deleting database did not help', e);
+          setStorageWorks(false);
+        }
       }
     })();
   }, []);
