@@ -1,8 +1,7 @@
 import { settingSelector } from 'app/dim-api/selectors';
-import { set } from 'app/storage/idb-keyval';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
 import styles from './App.m.scss';
@@ -20,15 +19,11 @@ import About from './shell/About';
 import AccountRedirectRoute from './shell/AccountRedirectRoute';
 import DefaultAccount from './shell/DefaultAccount';
 import Destiny from './shell/Destiny';
-import ErrorPanel from './shell/ErrorPanel';
 import GATracker from './shell/GATracker';
 import Header from './shell/Header';
 import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
-import { deleteDatabase } from './storage/idb-keyval';
-import { reportException } from './utils/exceptions';
-import { errorLog } from './utils/log';
 
 const WhatsNew = React.lazy(
   () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -49,19 +44,6 @@ export default function App() {
   const charColMobile = useSelector(settingSelector('charColMobile'));
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
-  const storageWorks = useStorageTest();
-
-  if (!storageWorks) {
-    return (
-      <div className="dim-page">
-        <ErrorPanel
-          title={t('Help.NoStorage')}
-          fallbackMessage={t('Help.NoStorageMessage')}
-          showTwitters={true}
-        />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -141,43 +123,4 @@ export default function App() {
       </ClickOutsideRoot>
     </div>
   );
-}
-
-/** Test that localStorage and IndexedDB work */
-function useStorageTest() {
-  const [storageWorks, setStorageWorks] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        localStorage.setItem('test', 'true');
-      } catch (e) {
-        errorLog('storage', 'Failed localStorage Test', e);
-        setStorageWorks(false);
-        return;
-      }
-
-      if (!window.indexedDB) {
-        errorLog('storage', 'IndexedDB not available');
-        setStorageWorks(false);
-        return;
-      }
-
-      try {
-        await set('idb-test', true);
-      } catch (e) {
-        errorLog('storage', 'Failed IndexedDB Test - trying to delete database', e);
-        try {
-          await deleteDatabase();
-          await set('idb-test', true);
-          // Report to sentry, I want to know if this ever works
-          reportException('deleting database fixed IDB', e);
-        } catch (e2) {
-          errorLog('storage', 'Failed IndexedDB Test - deleting database did not help', e);
-          setStorageWorks(false);
-        }
-      }
-    })();
-  }, []);
-
-  return storageWorks;
 }
