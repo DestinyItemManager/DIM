@@ -10,15 +10,11 @@
 }
 
 .button {
-  composes: dim-button from global;
   align-self: center;
-  display: inline-flex;
+}
+
+.buttonContents {
   align-items: center;
+  display: inline-flex;
   @include horizontal-space-children(4px);
-  &:hover {
-    & .badge {
-      background-color: black;
-      color: $orange;
-    }
-  }
 }
