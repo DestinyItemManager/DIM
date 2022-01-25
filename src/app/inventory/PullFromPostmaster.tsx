@@ -1,3 +1,4 @@
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -32,10 +33,14 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   };
 
   return (
-    <div className={styles.button} onClick={onClick}>
-      <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
-      <span className={styles.badge}>{numPullablePostmasterItems}</span>
-      <span>{t('Loadouts.PullFromPostmaster')}</span>
+    <div className={styles.button}>
+      <ConfirmButton onClick={onClick}>
+        <div className={styles.buttonContents}>
+          <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
+          <span className={styles.badge}>{numPullablePostmasterItems}</span>
+          <span>{t('Loadouts.PullFromPostmaster')}</span>
+        </div>
+      </ConfirmButton>
     </div>
   );
 }
