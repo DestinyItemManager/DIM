@@ -848,7 +848,7 @@
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "SingleCharacter": "Only show current character",
-    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
+    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Items from hidden characters' inventories that can still be used by the current character will appear as if they were in the vault, even though they are still on the hidden characters. Class-specific items that can't be used by the current character will be hidden entirely.",
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
