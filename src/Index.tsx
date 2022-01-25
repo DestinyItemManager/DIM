@@ -19,6 +19,12 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import './app/utils/exceptions';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { StorageBroken, storageTest } from './StorageTest';
+
+infoLog(
+  'app',
+  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
+);
 
 safariTouchFix();
 
@@ -33,6 +39,12 @@ const i18nPromise = initi18n();
 (async () => {
   // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes
   await idbReady();
+  // Block on testing that we can use LocalStorage and IDB, before everything starts trying to use it
+  const storageWorks = await storageTest();
+  if (!storageWorks) {
+    ReactDOM.render(<StorageBroken />, document.getElementById('app'));
+    return;
+  }
 
   if ($featureFlags.wishLists) {
     saveWishListToIndexedDB();
@@ -51,11 +63,6 @@ const i18nPromise = initi18n();
 
   // Settings depends on i18n
   watchLanguageChanges();
-
-  infoLog(
-    'app',
-    `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
-  );
 
   ReactDOM.render(<Root />, document.getElementById('app'));
 })();

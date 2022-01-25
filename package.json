@@ -193,7 +193,6 @@
     "framer-motion": "^5.2.1",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.0.21",
-    "idb-keyval": "^3.1.0",
     "immer": "^9.0.2",
     "lodash": "^4.17.8",
     "memoize-one": "^6.0.0",
