@@ -13,9 +13,11 @@ interface Option {
 
 const RadioSetting = React.memo(function RadioSetting({
   label,
+  name,
   options,
 }: {
   label: string;
+  name: string;
   options: Option[];
 }) {
   return (
@@ -23,24 +25,29 @@ const RadioSetting = React.memo(function RadioSetting({
       <div className={styles.title}>{label}</div>
       <div className={styles.buttons}>
         {options.map(({ label, selected, onClick }) => (
-          <RadioButton key={label} label={label} selected={selected} onClick={onClick} />
+          <RadioButton
+            key={label}
+            label={label}
+            selected={selected}
+            onClick={onClick}
+            name={name}
+          />
         ))}
       </div>
     </div>
   );
 });
 
-function RadioButton({ label, selected, onClick }: Option) {
+function RadioButton({ label, name, selected, onClick }: Option & { name: string }) {
   return (
-    <button
-      type="button"
+    <label
       className={clsx(styles.button, {
         [styles.selected]: selected,
       })}
-      onClick={onClick}
     >
+      <input type="radio" name={name} checked={selected} onClick={onClick} />
       {label}
-    </button>
+    </label>
   );
 }
 
@@ -139,8 +146,13 @@ export default function EnergyOptions({
 
   return (
     <div className={styles.energyOptions}>
-      <RadioSetting label={t('LoadoutBuilder.LockElement')} options={lockEnergyOptions} />
       <RadioSetting
+        name="lockElement"
+        label={t('LoadoutBuilder.LockElement')}
+        options={lockEnergyOptions}
+      />
+      <RadioSetting
+        name="assumeMasterwork"
         label={t('LoadoutBuilder.AssumeMasterwork')}
         options={assumeMasterworkOptions}
       />
