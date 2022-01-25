@@ -987,7 +987,10 @@ AddEncoding br .br
 
 <FilesMatch "\.html(\.(gz|br))?">
     <IfModule mod_headers.c>
-        Header set Cache-Control "max-age=0, s-maxage=86400, must-revalidate"
+        # s-maxage tells CloudFlare how long it can cache (max-age is for browsers)
+        # We set our html to a low cache lifetime (5 min) because *many* paths map to this - our other files like service-worker.js get
+        # manually invalidated as part of the deploy, but we can't invalidate every path e.g. https://beta.destinyitemmanager.com/4611686018433092312/d2/inventory
+        Header set Cache-Control "max-age=0, s-maxage=300, must-revalidate"
         Header unset Expires
     </IfModule>
 </FilesMatch>
