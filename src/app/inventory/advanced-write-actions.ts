@@ -59,8 +59,9 @@ function canInsertForFree(
 ) {
   const { insertPlugFreeProtectedPlugItemHashes, insertPlugFreeBlockedSocketTypeHashes } =
     destiny2CoreSettings;
+  const pluggedDef = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   if (
-    (insertPlugFreeProtectedPlugItemHashes || []).includes(plugItemHash) ||
+    (pluggedDef && (insertPlugFreeProtectedPlugItemHashes || []).includes(pluggedDef.hash)) ||
     (insertPlugFreeBlockedSocketTypeHashes || []).includes(socket.socketDefinition.socketTypeHash)
   ) {
     return false;
@@ -78,7 +79,7 @@ function canInsertForFree(
     // And have no cost to insert
     !hasInsertionCost(defs, plug) &&
     // And the current plug didn't cost anything (can't replace a non-free mod with a free one)
-    (!socket.plugged || !hasInsertionCost(defs, socket.plugged.plugDef));
+    (!pluggedDef || !hasInsertionCost(defs, pluggedDef));
 
   return free;
 }
