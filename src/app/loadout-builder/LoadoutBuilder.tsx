@@ -1,4 +1,6 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -7,8 +9,9 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -53,6 +56,7 @@ interface ProvidedProps {
   notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
   initialLoadoutParameters: LoadoutParameters;
+  account: DestinyAccount;
 }
 
 interface StoreProps {
@@ -160,6 +164,7 @@ function mapStateToProps() {
  * The Loadout Optimizer screen
  */
 function LoadoutBuilder({
+  account,
   stores,
   items,
   loadouts,
@@ -301,17 +306,16 @@ function LoadoutBuilder({
     [statOrder, enabledStats, sets]
   );
 
-  const shareBuild = (notes?: string) => {
-    const p: Record<string, string> = {
-      class: classType.toString(),
-      p: JSON.stringify(params),
-    };
-    if (notes) {
-      p.n = notes;
-    }
-    const urlParams = new URLSearchParams(p);
-    const url = `${location.origin}/optimizer?${urlParams}`;
-    copyString(url);
+  const shareBuild = async (notes?: string) => {
+    // TODO: replace this with a new share tool
+    const loadout = newLoadout(t('LoadoutBuilder.ShareBuildTitle'), [], classType);
+    loadout.notes = notes;
+    loadout.parameters = params;
+    const shareUrl = await createLoadoutShare(
+      account.membershipId,
+      convertDimLoadoutToApiLoadout(loadout)
+    );
+    copyString(shareUrl);
     showNotification({
       type: 'success',
       title: t('LoadoutBuilder.CopiedBuild'),

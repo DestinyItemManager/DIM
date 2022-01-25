@@ -513,6 +513,7 @@
   "LoadoutBuilder": {
     "CopiedBuild": "Copied build settings URL to clipboard",
     "ShareBuild": "Share Build Settings",
+    "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "AnyExotic": "Any Exotic",

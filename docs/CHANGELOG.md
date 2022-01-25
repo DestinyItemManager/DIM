@@ -3,6 +3,7 @@
 * Widened and reorganized the Loadouts menu.
   * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
   * Randomize loadout is now at the end of the list of loadouts.
+* Sharing a build from the Loadouts page or Loadout Optimizer now uses our dim.gg links which are easier to share and show a preview.
 
 ## 7.2.0 <span class="changelog-date">(2022-01-23)</span>
 
