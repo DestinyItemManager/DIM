@@ -502,7 +502,8 @@ function FashionSocket({
     plugHash !== undefined &&
     (plugHash === socket?.socketDefinition.singleInitialItemHash ||
       (unlockedPlugSetItems.has(plugHash) &&
-        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)));
+        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
+      socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
 
   return (
     <ClosableContainer
