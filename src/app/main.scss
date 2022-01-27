@@ -278,6 +278,7 @@ select {
   border: 1px solid transparent;
   transition: all 150ms ease-out;
   box-sizing: border-box;
+  text-align: center;
 
   @include phone-portrait {
     font-size: 14px;
