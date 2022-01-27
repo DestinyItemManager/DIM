@@ -43,7 +43,7 @@ const loadoutTypes: DimBucketType[] = [
   'Chest',
   'Leg',
   'ClassItem',
-
+  'Class',
   'Artifact',
   'Ghost',
   'Consumable',
