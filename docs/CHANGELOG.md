@@ -1,6 +1,7 @@
 ## Next
 
-* Removing subclass from loadout will now enable 'Add Equipped' button
+* Removing subclass from loadout will now enable "Add Equipped" button.
+* "Add Equipped" button will no longer cause multiple items in the same slot to be listed as equipped.
 * Widened and reorganized the Loadouts menu.
   * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
   * Randomize loadout is now at the end of the list of loadouts.

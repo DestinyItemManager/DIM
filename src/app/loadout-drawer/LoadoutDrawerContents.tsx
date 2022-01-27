@@ -301,10 +301,18 @@ function fillLoadoutFromEquipped(
     (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
   );
 
+  const hasEquippedInBucket = (bucket: InventoryBucket) =>
+    itemsByBucket[bucket.hash]?.some(
+      (bucketItem) =>
+        loadout.items.find(
+          (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
+        )?.equipped
+    );
+
   const newLoadout = produce(loadout, (draftLoadout) => {
     const mods: number[] = [];
     for (const item of newEquippedItems) {
-      if (!itemsByBucket[item.bucket.hash]?.some((i) => i.equipped)) {
+      if (!hasEquippedInBucket(item.bucket)) {
         const loadoutItem: LoadoutItem = {
           id: item.id,
           hash: item.hash,
