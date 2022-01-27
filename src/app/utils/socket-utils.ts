@@ -53,18 +53,12 @@ function isArmorModSocket(socket: DimSocket) {
 
 /** isModSocket and contains its default plug */
 export function isEmptyArmorModSocket(socket: DimSocket) {
-  return (
-    isArmorModSocket(socket) &&
-    socket.socketDefinition.singleInitialItemHash === socket.plugged?.plugDef.hash
-  );
+  return isArmorModSocket(socket) && socket.emptyPlugItemHash === socket.plugged?.plugDef.hash;
 }
 
 /** isModSocket and contains something other than its default plug */
 export function isUsedArmorModSocket(socket: DimSocket) {
-  return (
-    isArmorModSocket(socket) &&
-    socket.socketDefinition.singleInitialItemHash !== socket.plugged?.plugDef.hash
-  );
+  return isArmorModSocket(socket) && socket.emptyPlugItemHash !== socket.plugged?.plugDef.hash;
 }
 
 /** Given an item and a list of socketIndexes, find all the sockets that match those indices, in the order the indexes were provided */
@@ -161,7 +155,7 @@ export function socketContainsIntrinsicPlug(socket: DimSocket) {
  */
 export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
   return (
-    socket.socketDefinition.singleInitialItemHash === plugHash ||
+    socket.emptyPlugItemHash === plugHash ||
     socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === plugHash) ||
     // TODO(#7793): This should use reusablePlugItems on the socket def
     // because the check should operate on static definitions. This is still

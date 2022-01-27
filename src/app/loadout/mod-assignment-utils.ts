@@ -28,7 +28,6 @@ import { generateModPermutations } from './mod-permutations';
 import {
   activityModPlugCategoryHashes,
   bucketHashToPlugCategoryHash,
-  getDefaultPlugHash,
   getItemEnergyType,
 } from './mod-utils';
 
@@ -387,7 +386,7 @@ export function pickPlugPositions(
   // For each remaining armor mod socket that won't have mods assigned,
   // allow it to be returned to its default (usually "Empty Mod Socket").
   for (const socket of existingModSockets) {
-    const defaultModHash = getDefaultPlugHash(socket, defs);
+    const defaultModHash = socket.emptyPlugItemHash;
     const mod =
       defaultModHash &&
       (defs.InventoryItem.get(defaultModHash) as PluggableInventoryItemDefinition);
@@ -412,17 +411,11 @@ export function pickPlugPositions(
  * - remove or swap in cheaper mods to free up enough armor energy, before applying mods which cost more
  * - mark mod removals as optional, if they aren't required to free up a slot or energy
  *
- * Artifice armor may not be accurate unless you pass in defs.
- *
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
  * This consumes the output of `pickPlugPositions` and just orders & adds metadata
  */
-export function createPluggingStrategy(
-  item: DimItem,
-  assignments: Assignment[],
-  defs: D2ManifestDefinitions
-): PluggingAction[] {
+export function createPluggingStrategy(item: DimItem, assignments: Assignment[]): PluggingAction[] {
   // stuff we need to apply, that frees up energy. we'll apply these first
   const requiredRegains: PluggingAction[] = [];
   // stuff we need to apply, but it will cost us...
@@ -448,7 +441,7 @@ export function createPluggingStrategy(
 
     if (pluggingAction.energySpend > 0) {
       requiredSpends.push(pluggingAction);
-    } else if (!pluggingAction.required && isAssigningToDefault(item, assignment, defs)) {
+    } else if (!pluggingAction.required && isAssigningToDefault(item, assignment)) {
       optionalRegains.push(pluggingAction);
     } else {
       requiredRegains.push(pluggingAction);
@@ -650,15 +643,15 @@ function isPlugActive(
       bucketSpecificAssignments.some(
         (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
       ) ||
-        bucketIndependentAssignmentsForItem.some(
-          (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        ) ||
-        allMods?.some(
-          (plugDef) =>
-            plugDef !== mod &&
-            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
-            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        )
+      bucketIndependentAssignmentsForItem.some(
+        (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      ) ||
+      allMods?.some(
+        (plugDef) =>
+          plugDef !== mod &&
+          modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+          plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+      )
     );
   }
 }
@@ -725,8 +718,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
   return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
 }
 
-/** Artifice Armor won't be properly detected unless defs are passed in */
-function isAssigningToDefault(item: DimItem, assignment: Assignment, defs: D2ManifestDefinitions) {
+export function isAssigningToDefault(item: DimItem, assignment: Assignment) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {
     warnLog(
@@ -738,7 +730,7 @@ function isAssigningToDefault(item: DimItem, assignment: Assignment, defs: D2Man
       item.hash
     );
   }
-  return socket && assignment.mod.hash === getDefaultPlugHash(socket, defs);
+  return socket && assignment.mod.hash === socket.emptyPlugItemHash;
 }
 
 /**

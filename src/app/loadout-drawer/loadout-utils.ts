@@ -78,7 +78,7 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         // otherwise we ignore them, this stops us showing/saving empty socket plugs
         if (
           socket.plugged &&
-          (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
+          (socket.plugged.plugDef.hash !== socket.emptyPlugItemHash ||
             category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
             category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
             category.category.hash === SocketCategoryHashes.Super)
@@ -139,10 +139,10 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
       ? _.compact(
-          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
-            (s) => s.plugged?.plugDef.hash
-          )
+        getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+          (s) => s.plugged?.plugDef.hash
         )
+      )
       : [];
     if (plugs.length) {
       modsByBucket[item.bucket.hash] = plugs;
@@ -187,9 +187,9 @@ export function getLight(store: DimStore, items: DimItem[]): number {
         (memo, item) =>
           memo +
           item.power *
-            (itemWeight[
-              item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
-            ] || 1),
+          (itemWeight[
+            item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
+          ] || 1),
         0
       ) / itemWeightDenominator;
 

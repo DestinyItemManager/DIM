@@ -33,7 +33,6 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
-import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -412,7 +411,7 @@ function doApplyLoadout(
                   state.itemStates[initialItem.index].state =
                     // If we're doing a bulk equip later, set to MovedPendingEquip
                     itemsToEquip.length > 1 &&
-                    itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
+                      itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
                       ? LoadoutItemState.MovedPendingEquip
                       : LoadoutItemState.Succeeded;
                 }
@@ -842,7 +841,7 @@ function applySocketOverrides(
                 category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
                 category.category.hash === SocketCategoryHashes.Super)
             ) {
-              modHash = getDefaultPlugHash(socket, defs);
+              modHash = socket.socketDefinition.singleInitialItemHash;
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
@@ -865,18 +864,18 @@ function applySocketOverrides(
         ) =>
           requested
             ? setLoadoutState(
-                setSocketOverrideResult(
-                  dimItem,
-                  socketIndex,
-                  LoadoutSocketOverrideState.Failed,
-                  error,
-                  equipNotPossible
-                )
+              setSocketOverrideResult(
+                dimItem,
+                socketIndex,
+                LoadoutSocketOverrideState.Failed,
+                error,
+                equipNotPossible
               )
+            )
             : setLoadoutState((state) => ({
-                ...state,
-                equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
-              }));
+              ...state,
+              equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
+            }));
 
         await dispatch(
           equipModsToItem(dimItem, modsForItem, handleSuccess, handleFailure, cancelToken)
@@ -985,15 +984,15 @@ function applyLoadoutMods(
     ) =>
       requested
         ? setLoadoutState(
-            setModResult(
-              { modHash: mod.hash, state: LoadoutModState.Failed, error },
-              equipNotPossible
-            )
+          setModResult(
+            { modHash: mod.hash, state: LoadoutModState.Failed, error },
+            equipNotPossible
           )
+        )
         : setLoadoutState((state) => ({
-            ...state,
-            equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
-          }));
+          ...state,
+          equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
+        }));
 
     for (const item of armor) {
       const assignments = pickPlugPositions(
@@ -1021,7 +1020,7 @@ function applyLoadoutMods(
         }
       }
 
-      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
+      const pluggingSteps = createPluggingStrategy(item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
@@ -1125,7 +1124,7 @@ function equipModsToItem(
       // match the appearance that the user wanted. We'll still report as if we
       // applied the ornament.
       if (mod.hash === item.hash) {
-        const defaultPlugHash = getDefaultPlugHash(socket, defs);
+        const defaultPlugHash = socket.emptyPlugItemHash;
         if (defaultPlugHash) {
           mod = (defs.InventoryItem.get(defaultPlugHash) ??
             mod) as PluggableInventoryItemDefinition;
@@ -1146,7 +1145,7 @@ function equipModsToItem(
           item.name,
           'socket',
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
+          socket.socketIndex
         );
 
         // TODO: short circuit if equipping is not possible
@@ -1168,7 +1167,7 @@ function equipModsToItem(
           item.name,
           'socket',
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
+          socket.socketIndex
         );
         // TODO: error here explaining why
         onFailure(assignment);

@@ -57,7 +57,7 @@ const tableTrimmers = {
       if (def.sockets) {
         def.sockets.intrinsicSockets = emptyArray();
         for (const socket of def.sockets.socketEntries) {
-          if (socket.reusablePlugSetHash && socket.reusablePlugItems.length > 0) {
+          if (socket.reusablePlugItems.length > 0) {
             socket.reusablePlugItems = emptyArray();
           }
         }

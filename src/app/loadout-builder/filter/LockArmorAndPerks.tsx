@@ -4,7 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
@@ -154,7 +154,7 @@ export default memo(function LockArmorAndPerks({
 
       const isDefaultAbility = Boolean(
         socket &&
-          getDefaultPlugHash(socket, defs) === overridePlug.hash &&
+          socket.socketDefinition.singleInitialItemHash === overridePlug.hash &&
           abilityAndSuperSockets.includes(socket)
       );
 
