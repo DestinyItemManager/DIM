@@ -1,3 +1,7 @@
+## Next CHANGELOG
+
+Next CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)
+
 ## 3.17.1
 
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.

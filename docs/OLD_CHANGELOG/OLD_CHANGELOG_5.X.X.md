@@ -1,3 +1,7 @@
+## Next CHANGELOG
+
+Next CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
+
 ## 5.74.0 <span className="changelog-date">(2020-03-15)</span>
 
 * Updated item metadata for Season of the Worthy! Mod slots, sources, ghost perks, etc.
@@ -703,3 +707,7 @@
 * Work around a memory leak bug in MS Edge.
 * Update titles on item popups to display closer to what's in game.
 * Added community curations (a way to look for god rolls).
+
+## Previous CHANGELOG
+
+Previous CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)

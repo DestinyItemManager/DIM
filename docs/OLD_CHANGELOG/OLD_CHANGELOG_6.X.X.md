@@ -1,3 +1,7 @@
+## Current CHANGELOG
+
+Current CHANGELOG available [here](/docs/CHANGELOG.md)
+
 ## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
 
 * The Loadouts page is a bit cleaner and more compact in the mobile view.
@@ -1267,3 +1271,6 @@
 * Show how much of each material you have next to Spider's vendor info.
 * Updated privacy policy with DIM Sync info.
 
+## Previous CHANGELOG
+
+Previous CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_5.X.X.md)
