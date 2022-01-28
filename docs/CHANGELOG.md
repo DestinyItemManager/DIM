@@ -1,5 +1,8 @@
 ## Next
 
+* Organizer drill-down buttons now show a more accurate armor count.
+* Delete Loadout button now looks more warning-ish, and asks for confirmation without using a popup.
+* DIM will now try to recover from a state where the browser has a corrupted storage database.
 * Removing subclass from loadout will now enable "Add Equipped" button.
 * "Add Equipped" button will no longer cause multiple items in the same slot to be listed as equipped.
 * Widened and reorganized the Loadouts menu.
