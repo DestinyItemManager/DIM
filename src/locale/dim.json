@@ -4,7 +4,8 @@
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "Couldn't get permission to change item"
+    "FailedToken": "Couldn't get permission to change item",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
