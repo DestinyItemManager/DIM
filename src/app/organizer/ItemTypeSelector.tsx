@@ -322,6 +322,12 @@ export function getSelectionTree(destinyVersion: DestinyVersion) {
   return destinyVersion === 2 ? d2SelectionTree : d1SelectionTree;
 }
 
+const armorTopLevelCatHashes = [
+  ItemCategoryHashes.Hunter,
+  ItemCategoryHashes.Titan,
+  ItemCategoryHashes.Warlock,
+];
+
 /**
  * This component offers a means for narrowing down your selection to a single item type
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
@@ -354,6 +360,11 @@ export default function ItemTypeSelector({
             <div key={depth} className={styles.level}>
               {currentSelection.subCategories?.map((subCategory) => {
                 const categoryHashList = [...upstreamCategories, subCategory.itemCategoryHash];
+
+                // a top level class-specific category implies armor
+                if (armorTopLevelCatHashes.some((h) => categoryHashList.includes(h))) {
+                  categoryHashList.push(ItemCategoryHashes.Armor);
+                }
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
