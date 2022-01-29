@@ -1,10 +1,10 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { DimBucketType } from 'app/inventory/inventory-buckets';
-import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { DimBucketType } from 'app/inventory-stores/inventory-buckets';
+import { DimCharacterStat, DimStore } from 'app/inventory-stores/store-types';
+import { SocketOverrides } from 'app/inventory-stores/store/override-sockets';
+import { isPluggableItem } from 'app/inventory-stores/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
@@ -20,7 +20,7 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory-stores/item-types';
 import { Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics

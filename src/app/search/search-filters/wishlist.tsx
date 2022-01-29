@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { FilterDefinition } from '../filter-types';
 import { checkIfIsDupe, computeDupes, makeDupeID } from './dupes';

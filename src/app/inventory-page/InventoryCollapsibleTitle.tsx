@@ -11,10 +11,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
+import { DimStore } from '../inventory-stores/store-types';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './InventoryCollapsibleTitle.scss';
-import { DimStore } from './store-types';
 
 interface Props {
   sectionId: string;

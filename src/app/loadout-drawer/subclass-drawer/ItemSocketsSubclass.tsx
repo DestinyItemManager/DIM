@@ -1,7 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import PressTip from 'app/dim-ui/PressTip';
-import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory-stores/item-types';
+import { SocketOverrides } from 'app/inventory-stores/store/override-sockets';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import Socket from 'app/item-popup/Socket';
 import { useD2Definitions } from 'app/manifest/selectors';

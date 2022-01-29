@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 

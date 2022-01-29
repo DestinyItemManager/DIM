@@ -1,6 +1,10 @@
 import { itemPop, scrollToPosition } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
+import HeaderShadowDiv from 'app/inventory-page/HeaderShadowDiv';
+import { locateItem$ } from 'app/inventory-page/locate-item';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { getCurrentStore, getStore, getVault } from 'app/inventory-stores/stores-helpers';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
@@ -8,11 +12,7 @@ import clsx from 'clsx';
 import { motion, PanInfo } from 'framer-motion';
 import React, { useCallback, useRef, useState } from 'react';
 import PhoneStoresHeader from '../inventory-page/PhoneStoresHeader';
-import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
-import { locateItem$ } from './locate-item';
-import { DimStore } from './store-types';
 import { StoreBuckets } from './StoreBuckets';
-import { getCurrentStore, getStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface Props {

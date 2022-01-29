@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { armorStats } from 'app/search/d2-known-values';
 import { isSunset } from 'app/utils/item-utils';

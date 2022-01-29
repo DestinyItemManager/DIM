@@ -7,7 +7,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import { isWellRested } from '../inventory/store/well-rested';
+import { isWellRested } from '../inventory-stores/store/well-rested';
 
 export default function WellRestedPerkIcon({
   progressions,

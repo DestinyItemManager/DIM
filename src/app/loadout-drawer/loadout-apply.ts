@@ -1,19 +1,22 @@
+import { canInsertPlug, insertPlug } from 'app/bungie-api/advanced-write-actions';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
-import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
-import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
   executeMoveItem,
   getSimilarItem,
   MoveReservations,
-} from 'app/inventory/item-move-service';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
-import { loadoutNotification } from 'app/inventory/MoveNotifications';
-import { storesSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+} from 'app/inventory-actions/item-move-service';
+import { updateManualMoveTimestamp } from 'app/inventory-actions/manual-moves';
+import { updateCharacters } from 'app/inventory-stores/d2-stores';
+import {
+  DimItem,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory-stores/item-types';
+import { storesSelector, unlockedPlugSetItemsSelector } from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { isPluggableItem } from 'app/inventory-stores/store/sockets';
 import {
   amountOfItem,
   findItemsByBucket,
@@ -21,7 +24,7 @@ import {
   getStore,
   getVault,
   spaceLeftForItem,
-} from 'app/inventory/stores-helpers';
+} from 'app/inventory-stores/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
@@ -30,6 +33,7 @@ import {
 } from 'app/loadout/mod-assignment-utils';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
+import { loadoutNotification } from 'app/notifications/MoveNotifications';
 import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';

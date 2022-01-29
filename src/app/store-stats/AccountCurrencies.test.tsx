@@ -1,4 +1,4 @@
-import { AccountCurrency } from 'app/inventory/store-types';
+import { AccountCurrency } from 'app/inventory-stores/store-types';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import * as redux from 'react-redux';

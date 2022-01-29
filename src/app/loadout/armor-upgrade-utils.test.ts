@@ -1,6 +1,6 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
 import {

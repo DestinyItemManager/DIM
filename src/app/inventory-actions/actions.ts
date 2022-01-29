@@ -1,6 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import {
@@ -9,10 +10,9 @@ import {
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
-import { TagValue } from './dim-item-info';
-import { InventoryBuckets } from './inventory-buckets';
-import { DimItem } from './item-types';
-import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
+import { TagValue } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
+import { AccountCurrency, DimCharacterStat, DimStore } from '../inventory-stores/store-types';
 
 /**
  * Update the current profile (D2 only) and the computed/massaged state of inventory, plus account-wide info like currencies.

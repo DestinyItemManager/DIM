@@ -1,5 +1,5 @@
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import { DimItem, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug } from '../inventory-stores/item-types';
 import { DimWishList, WishListRoll } from './types';
 
 export const enum UiWishListRoll {

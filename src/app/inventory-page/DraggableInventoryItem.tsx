@@ -2,8 +2,8 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { DimItem } from '../inventory-stores/item-types';
 import { isDragging$ } from './drag-events';
-import { DimItem } from './item-types';
 
 interface Props {
   item: DimItem;

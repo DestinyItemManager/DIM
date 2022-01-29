@@ -1,8 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
+import { getCurrentStore } from 'app/inventory-stores/stores-helpers';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -15,14 +16,13 @@ import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   bucketsSelector,
   ownedItemsSelector,
   profileResponseSelector,
   storesSelector,
-} from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
+} from '../inventory-stores/selectors';
+import { DimStore } from '../inventory-stores/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';

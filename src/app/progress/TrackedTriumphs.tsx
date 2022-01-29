@@ -1,6 +1,6 @@
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { profileResponseSelector } from 'app/inventory/selectors';
+import { profileResponseSelector } from 'app/inventory-stores/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
 import Record from 'app/records/Record';

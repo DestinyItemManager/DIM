@@ -1,4 +1,4 @@
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 
 export function generateModPermutations(mods: (PluggableInventoryItemDefinition | null)[]) {
   const createPermutationKey = (permutation: (PluggableInventoryItemDefinition | null)[]) =>

@@ -1,6 +1,6 @@
 import { languageSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { LoreLink } from 'app/item-popup/ItemDescription';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';

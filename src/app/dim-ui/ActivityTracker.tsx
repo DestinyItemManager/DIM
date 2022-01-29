@@ -1,3 +1,4 @@
+import { isDragging$ } from 'app/inventory-page/drag-events';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -6,7 +7,6 @@ import { EventBus } from 'app/utils/observable';
 import { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh as triggerRefresh, refresh$ } from '../shell/refresh-events';
 

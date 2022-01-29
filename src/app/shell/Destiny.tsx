@@ -9,8 +9,8 @@ import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
-import { storesSelector } from 'app/inventory/selectors';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { storesSelector } from 'app/inventory-stores/selectors';
+import { getCurrentStore } from 'app/inventory-stores/stores-helpers';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -22,7 +22,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
-import { itemTagList } from '../inventory/dim-item-info';
+import { itemTagList } from '../inventory-stores/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import styles from './Destiny.m.scss';
@@ -30,7 +30,7 @@ import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(
-  () => import(/* webpackChunkName: "inventory" */ 'app/inventory/Inventory')
+  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory')
 );
 const Progress = React.lazy(
   () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')

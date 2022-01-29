@@ -4,15 +4,15 @@ import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import ItemIcon from 'app/inventory-item/ItemIcon';
+import { allItemsSelector, bucketsSelector } from 'app/inventory-stores/selectors';
+import { makeFakeItem } from 'app/inventory-stores/store/d2-item-factory';
 import {
   applySocketOverrides,
   SocketOverrides,
   useSocketOverrides,
-} from 'app/inventory/store/override-sockets';
-import { getEvent, getSeason } from 'app/inventory/store/season';
+} from 'app/inventory-stores/store/override-sockets';
+import { getEvent, getSeason } from 'app/inventory-stores/store/season';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';

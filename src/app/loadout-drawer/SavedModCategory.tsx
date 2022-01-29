@@ -1,4 +1,4 @@
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import React from 'react';
 import { AddButton } from './Buttons';

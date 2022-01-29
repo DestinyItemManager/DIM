@@ -1,7 +1,9 @@
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import HeaderShadowDiv from 'app/inventory-page/HeaderShadowDiv';
+import InventoryCollapsibleTitle from 'app/inventory-page/InventoryCollapsibleTitle';
+import { StoreBuckets } from 'app/inventory-page/StoreBuckets';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
 import ItemFeed from 'app/progress/ItemFeed';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
@@ -10,13 +12,11 @@ import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
+import { DimStore } from '../inventory-stores/store-types';
+import { findItemsByBucket, getCurrentStore, getVault } from '../inventory-stores/stores-helpers';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
-import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
 import { locateItem$ } from './locate-item';
-import { DimStore } from './store-types';
-import { StoreBuckets } from './StoreBuckets';
-import { findItemsByBucket, getCurrentStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface Props {

@@ -1,10 +1,10 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
+import { moveItemToCurrentStore } from '../inventory-actions/move-item';
+import ConnectedInventoryItem from '../inventory-item/ConnectedInventoryItem';
+import ItemPopupTrigger from '../inventory-item/ItemPopupTrigger';
+import { DimItem } from '../inventory-stores/item-types';
 import DraggableInventoryItem from './DraggableInventoryItem';
-import { DimItem } from './item-types';
-import ItemPopupTrigger from './ItemPopupTrigger';
-import { moveItemToCurrentStore } from './move-item';
 
 interface Props {
   item: DimItem;

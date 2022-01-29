@@ -1,7 +1,11 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import {
+  DimItem,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory-stores/item-types';
+import { isPluggableItem } from 'app/inventory-stores/store/sockets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';

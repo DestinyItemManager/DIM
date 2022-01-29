@@ -1,12 +1,12 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { sortedStoresSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { sortedStoresSelector } from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
 import ItemPopup from './ItemPopup';
 

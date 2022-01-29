@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { EventBus } from 'app/utils/observable';
 import { Loadout } from './loadout-types';
 

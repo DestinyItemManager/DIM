@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import {

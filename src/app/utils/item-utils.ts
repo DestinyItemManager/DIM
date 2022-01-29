@@ -6,9 +6,9 @@ import {
   DimMasterwork,
   DimSocket,
   PluggableInventoryItemDefinition,
-} from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { getSeason } from 'app/inventory/store/season';
+} from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { getSeason } from 'app/inventory-stores/store/season';
 import {
   armor2PlugCategoryHashes,
   energyNamesByEnum,

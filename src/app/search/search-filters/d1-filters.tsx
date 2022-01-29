@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { D1Item } from 'app/inventory/item-types';
+import { D1Item } from 'app/inventory-stores/item-types';
 import { getItemYear } from 'app/utils/item-utils';
 import {
   boosts,

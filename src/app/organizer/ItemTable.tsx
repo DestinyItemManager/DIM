@@ -5,22 +5,22 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
-import { setItemNote } from 'app/inventory/actions';
-import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
+import { setItemNote } from 'app/inventory-actions/actions';
+import { bulkLockItems, bulkTagItems } from 'app/inventory-actions/bulk-actions';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory-actions/spreadsheets';
+import { ItemInfos, TagInfo } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
 import {
   allItemsSelector,
   itemInfosSelector,
   newItemsSelector,
   storesSelector,
-} from 'app/inventory/selectors';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
-import { DimStore } from 'app/inventory/store-types';
+} from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
-} from 'app/inventory/store/override-sockets';
+} from 'app/inventory-stores/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';

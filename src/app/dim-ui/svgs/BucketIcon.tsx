@@ -1,5 +1,5 @@
-import type { DimBucketType } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
+import type { DimBucketType } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';

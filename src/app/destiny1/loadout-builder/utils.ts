@@ -1,8 +1,8 @@
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
-import { D1Item } from '../../inventory/item-types';
-import { D1Store, DimStore } from '../../inventory/store-types';
+import { D1Item } from '../../inventory-stores/item-types';
+import { D1Store, DimStore } from '../../inventory-stores/store-types';
 import { Vendor } from '../vendors/vendor.service';
 import {
   ArmorSet,

@@ -1,7 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
 import React from 'react';
 import { useLocation, useParams } from 'react-router';
 import Armory from './Armory';

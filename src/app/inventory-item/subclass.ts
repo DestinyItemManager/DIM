@@ -1,7 +1,7 @@
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
-import { DimTalentGrid } from './item-types';
+import { DimTalentGrid } from '../inventory-stores/item-types';
 
 const superIconNodeHashes = {
   arcStaff: 2936898795,

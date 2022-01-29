@@ -3,7 +3,7 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { quoteFilterString } from 'app/search/search-filters/freeform';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';

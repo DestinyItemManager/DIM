@@ -1,3 +1,4 @@
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
 import {
   DestinyCollectibleComponent,
@@ -10,9 +11,8 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { DimItem } from '../inventory/item-types';
-import { makeFakeItem } from '../inventory/store/d2-item-factory';
+import { DimItem } from '../inventory-stores/item-types';
+import { makeFakeItem } from '../inventory-stores/store/d2-item-factory';
 
 /**
  * Not actually always a vendor item.

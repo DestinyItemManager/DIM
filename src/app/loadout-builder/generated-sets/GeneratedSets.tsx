@@ -1,6 +1,6 @@
 import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
@@ -14,7 +14,7 @@ import React, {
   useState,
 } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
-import { DimStore } from '../../inventory/store-types';
+import { DimStore } from '../../inventory-stores/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';

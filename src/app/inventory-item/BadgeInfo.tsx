@@ -6,10 +6,10 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
+import { itemNoteSelector } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
-import { itemNoteSelector } from './dim-item-info';
-import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
 
 const energyTypeStyles: Record<DestinyEnergyType, string> = {

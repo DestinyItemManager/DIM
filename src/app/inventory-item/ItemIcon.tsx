@@ -9,7 +9,7 @@ import {
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { DimItem } from './item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './ItemIcon.m.scss';
 
 const itemTierStyles = {

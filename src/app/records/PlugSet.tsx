@@ -1,10 +1,10 @@
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { percent } from '../shell/filters';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';

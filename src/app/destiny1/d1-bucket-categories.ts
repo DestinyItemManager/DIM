@@ -1,4 +1,4 @@
-import type { D1BucketCategory, DimBucketType } from 'app/inventory/inventory-buckets';
+import type { D1BucketCategory, DimBucketType } from 'app/inventory-stores/inventory-buckets';
 
 export const D1Categories: {
   [key in D1BucketCategory]: DimBucketType[];

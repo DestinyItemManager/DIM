@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './MainSearchBarActions.m.scss';
 import { filteredItemsSelector, validateQuerySelector } from './search-filter';
 import './search-filter.scss';

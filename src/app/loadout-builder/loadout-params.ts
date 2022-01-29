@@ -6,7 +6,7 @@ import {
   StatConstraint,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { isInsertableArmor2Mod } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';

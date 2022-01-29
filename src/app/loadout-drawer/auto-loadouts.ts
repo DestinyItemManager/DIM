@@ -1,10 +1,10 @@
 import { t } from 'app/i18next-t';
-import type { DimBucketType } from 'app/inventory/inventory-buckets';
+import type { DimBucketType } from 'app/inventory-stores/inventory-buckets';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory-stores/item-types';
+import { DimStore } from '../inventory-stores/store-types';
 import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from './loadout-utils';
 

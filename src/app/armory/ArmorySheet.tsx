@@ -1,6 +1,6 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import React, { useMemo } from 'react';
 import Armory from './Armory';
 import styles from './ArmorySheet.m.scss';

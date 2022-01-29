@@ -1,6 +1,6 @@
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 
 export interface MinMax {
   min: number;

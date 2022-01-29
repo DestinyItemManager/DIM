@@ -1,8 +1,8 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { storesSelector } from 'app/inventory/selectors';
-import { getClass } from 'app/inventory/store/character-utils';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
+import { storesSelector } from 'app/inventory-stores/selectors';
+import { getClass } from 'app/inventory-stores/store/character-utils';
 import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

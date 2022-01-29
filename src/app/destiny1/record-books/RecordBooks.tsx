@@ -1,6 +1,6 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
@@ -11,8 +11,8 @@ import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { storesSelector } from '../../inventory/selectors';
-import { D1Store } from '../../inventory/store-types';
+import { storesSelector } from '../../inventory-stores/selectors';
+import { D1Store } from '../../inventory-stores/store-types';
 import Objective from '../../progress/Objective';
 import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';

@@ -1,7 +1,7 @@
 import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
-import { storesLoadedSelector } from 'app/inventory/selectors';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory-actions/spreadsheets';
+import { storesLoadedSelector } from 'app/inventory-stores/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';

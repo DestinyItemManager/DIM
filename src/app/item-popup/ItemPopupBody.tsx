@@ -5,7 +5,7 @@ import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { percent } from '../shell/filters';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';

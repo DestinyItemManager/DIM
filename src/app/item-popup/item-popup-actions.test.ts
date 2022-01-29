@@ -1,5 +1,5 @@
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import 'cross-fetch/polyfill';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { getTestStores } from '../../testing/test-utils';

@@ -3,8 +3,8 @@ import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
 import PressTip from '../dim-ui/PressTip';
+import { D1Store } from '../inventory-stores/store-types';
 import './D1Reputation.scss';
-import { D1Store } from './store-types';
 
 export default function D1Reputation({ store }: { store: D1Store }) {
   if (!store.progressions.length) {

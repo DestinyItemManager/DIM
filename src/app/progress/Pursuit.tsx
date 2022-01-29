@@ -1,8 +1,8 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import { DimItem } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { isNewSelector } from 'app/inventory/selectors';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import ItemPopupTrigger from 'app/inventory-item/ItemPopupTrigger';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { isNewSelector } from 'app/inventory-stores/selectors';
+import { isBooleanObjective } from 'app/inventory-stores/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';

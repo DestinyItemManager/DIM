@@ -1,7 +1,7 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';

@@ -1,7 +1,7 @@
 import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { savedLoadoutParametersSelector } from '../dim-api/selectors';
-import { sortedStoresSelector } from '../inventory/selectors';
+import { sortedStoresSelector } from '../inventory-stores/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
 interface Props {

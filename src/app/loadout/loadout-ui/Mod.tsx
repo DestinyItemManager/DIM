@@ -1,4 +1,4 @@
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';

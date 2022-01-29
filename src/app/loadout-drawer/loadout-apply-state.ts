@@ -1,6 +1,6 @@
 // State tracking and publishing for the loadout apply process.
 
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { Observable } from 'app/utils/observable';
 import produce from 'immer';
 

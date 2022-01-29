@@ -1,4 +1,4 @@
-import { ownedItemsSelector } from 'app/inventory/selectors';
+import { ownedItemsSelector } from 'app/inventory-stores/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

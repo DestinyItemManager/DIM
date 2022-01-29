@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
+import { isTrialsPassage, isWinsObjective } from 'app/inventory-stores/store/objectives';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -29,9 +29,9 @@ import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
+import { InventoryBuckets } from '../../inventory-stores/inventory-buckets';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
-import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';

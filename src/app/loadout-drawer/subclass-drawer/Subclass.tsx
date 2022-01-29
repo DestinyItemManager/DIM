@@ -1,5 +1,5 @@
-import { DimItem } from 'app/inventory/item-types';
-import { applySocketOverrides, SocketOverrides } from 'app/inventory/store/override-sockets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { applySocketOverrides, SocketOverrides } from 'app/inventory-stores/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import React, { useCallback, useMemo } from 'react';
 import LoadoutDrawerItem from '../LoadoutDrawerItem';

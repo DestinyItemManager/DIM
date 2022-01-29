@@ -4,7 +4,7 @@ import {
   isBooleanObjective,
   isFlawlessObjective,
   isRoundsWonObjective,
-} from 'app/inventory/store/objectives';
+} from 'app/inventory-stores/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
 import { timerDurationFromMs } from 'app/utils/time';
 import {

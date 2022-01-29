@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { D1Stat, DimItem } from '../inventory/item-types';
+import { D1Stat, DimItem } from '../inventory-stores/item-types';
 import { getColor, percent } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';

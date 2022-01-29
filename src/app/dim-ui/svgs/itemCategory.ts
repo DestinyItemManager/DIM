@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';

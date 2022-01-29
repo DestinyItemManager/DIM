@@ -3,10 +3,14 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import ConnectedInventoryItem from 'app/inventory-item/ConnectedInventoryItem';
+import { DefItemIcon } from 'app/inventory-item/ItemIcon';
+import {
+  DimItem,
+  DimSocket,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory-stores/item-types';
+import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory-stores/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';

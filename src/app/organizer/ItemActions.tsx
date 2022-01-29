@@ -1,7 +1,7 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
-import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
-import { DimStore } from 'app/inventory/store-types';
+import { itemTagList, TagInfo } from 'app/inventory-stores/dim-item-info';
+import { DimStore } from 'app/inventory-stores/store-types';
 import {
   AppIcon,
   lockIcon,

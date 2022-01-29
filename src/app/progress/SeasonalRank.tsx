@@ -1,6 +1,6 @@
 import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
-import { DimStore } from 'app/inventory/store-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyCharacterProgressionComponent,

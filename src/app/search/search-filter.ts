@@ -5,8 +5,8 @@ import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { ItemInfos } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
+import { ItemInfos } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import {
   allItemsSelector,
   currentStoreSelector,
@@ -14,8 +14,8 @@ import {
   itemHashTagsSelector,
   itemInfosSelector,
   sortedStoresSelector,
-} from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
+} from '../inventory-stores/selectors';
+import { DimStore } from '../inventory-stores/store-types';
 import { Loadout } from '../loadout-drawer/loadout-types';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';

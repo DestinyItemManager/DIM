@@ -2,11 +2,11 @@ import {
   DimItem,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
-} from 'app/inventory/item-types';
+} from 'app/inventory-stores/item-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimSocket, DimSockets } from '../inventory/item-types';
+import { DimSocket, DimSockets } from '../inventory-stores/item-types';
 import { isArmor2Mod } from './item-utils';
 
 function getSocketHashesByCategoryStyle(

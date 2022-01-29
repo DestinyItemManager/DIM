@@ -33,8 +33,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory-stores/item-types';
+import { DimStore } from '../inventory-stores/store-types';
 import { reportException } from '../utils/exceptions';
 import {
   authenticatedHttpClient,

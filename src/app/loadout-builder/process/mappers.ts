@@ -15,7 +15,7 @@ import {
 import { StatHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory-stores/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,

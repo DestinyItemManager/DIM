@@ -1,10 +1,10 @@
 import { addCompareItem } from 'app/compare/actions';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
-import { DimItem } from 'app/inventory/item-types';
-import { consolidate, distribute } from 'app/inventory/move-item';
-import { sortedStoresSelector } from 'app/inventory/selectors';
-import { getStore } from 'app/inventory/stores-helpers';
+import { consolidate, distribute } from 'app/inventory-actions/move-item';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { sortedStoresSelector } from 'app/inventory-stores/selectors';
+import { getStore } from 'app/inventory-stores/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';

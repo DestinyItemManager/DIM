@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { ActionType, getType, Reducer } from 'typesafe-actions';

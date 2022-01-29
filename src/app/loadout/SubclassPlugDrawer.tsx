@@ -1,9 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { DimItem, DimPlugSet, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { profileResponseSelector } from 'app/inventory/selectors';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import {
+  DimItem,
+  DimPlugSet,
+  PluggableInventoryItemDefinition,
+} from 'app/inventory-stores/item-types';
+import { profileResponseSelector } from 'app/inventory-stores/selectors';
+import { SocketOverrides } from 'app/inventory-stores/store/override-sockets';
+import { isPluggableItem } from 'app/inventory-stores/store/sockets';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/PlugSection';

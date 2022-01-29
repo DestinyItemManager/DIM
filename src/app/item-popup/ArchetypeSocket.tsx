@@ -1,4 +1,4 @@
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory-stores/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './ArchetypeSocket.m.scss';

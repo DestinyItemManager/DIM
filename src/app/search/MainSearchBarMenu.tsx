@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { filteredItemsSelector, validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 

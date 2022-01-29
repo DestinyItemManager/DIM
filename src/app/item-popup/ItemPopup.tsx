@@ -1,8 +1,8 @@
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import Sheet from 'app/dim-ui/Sheet';
 import { usePopper } from 'app/dim-ui/usePopper';
-import { DimItem } from 'app/inventory/item-types';
-import { sortedStoresSelector } from 'app/inventory/selectors';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { sortedStoresSelector } from 'app/inventory-stores/selectors';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { useIsPhonePortrait } from 'app/shell/selectors';

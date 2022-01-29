@@ -2,7 +2,7 @@ import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { canSwapEnergyFromUpgradeSpendTier } from 'app/loadout/armor-upgrade-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory-stores/item-types';
 
 /**
  * Checks that:

@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
-import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
-import { currentStoreSelector } from 'app/inventory/selectors';
+import { PullFromPostmaster } from 'app/inventory-page/PullFromPostmaster';
+import { currentStoreSelector } from 'app/inventory-stores/selectors';
 import {
   postmasterAlmostFull,
   postmasterSpaceUsed,

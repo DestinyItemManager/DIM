@@ -1,9 +1,9 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { allItemsSelector, bucketsSelector } from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';

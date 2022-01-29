@@ -1,8 +1,12 @@
 import PressTip from 'app/dim-ui/PressTip';
-import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import {
+  bucketsSelector,
+  currentStoreSelector,
+  vaultSelector,
+} from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { findItemsByBucket } from 'app/inventory-stores/stores-helpers';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';

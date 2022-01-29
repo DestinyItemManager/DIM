@@ -1,6 +1,6 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { isDragging$ } from 'app/inventory/drag-events';
+import { isDragging$ } from 'app/inventory-page/drag-events';
 import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useState } from 'react';

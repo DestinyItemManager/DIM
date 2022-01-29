@@ -22,11 +22,11 @@ import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { DimItem } from './item-types';
-import ItemIcon, { DefItemIcon } from './ItemIcon';
+import ConnectedInventoryItem from '../inventory-item/ConnectedInventoryItem';
+import ItemIcon, { DefItemIcon } from '../inventory-item/ItemIcon';
+import { DimItem } from '../inventory-stores/item-types';
+import { DimStore } from '../inventory-stores/store-types';
 import styles from './MoveNotifications.m.scss';
-import { DimStore } from './store-types';
 
 /** How long to leave the notification up after it's done. */
 const lingerMs = 2000;

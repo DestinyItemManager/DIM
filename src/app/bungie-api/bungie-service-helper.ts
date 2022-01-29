@@ -5,8 +5,8 @@ import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+import { DimItem } from '../inventory-stores/item-types';
+import { DimStore } from '../inventory-stores/store-types';
 import { fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {

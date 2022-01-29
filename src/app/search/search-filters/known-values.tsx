@@ -1,7 +1,7 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { getEvent } from 'app/inventory/store/season';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { getEvent } from 'app/inventory-stores/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';

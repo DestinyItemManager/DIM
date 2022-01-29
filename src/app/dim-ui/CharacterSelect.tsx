@@ -6,7 +6,7 @@ import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from '
 import _ from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import CharacterTileButton from '../character-tile/CharacterTileButton';
-import { DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory-stores/store-types';
 import styles from './CharacterSelect.m.scss';
 
 const spring: Spring = {

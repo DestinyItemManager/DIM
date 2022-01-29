@@ -1,7 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { SocketOverrides } from 'app/inventory-stores/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';

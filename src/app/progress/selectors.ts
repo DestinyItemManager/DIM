@@ -1,5 +1,5 @@
-import { profileResponseSelector, sortedStoresSelector } from 'app/inventory/selectors';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { profileResponseSelector, sortedStoresSelector } from 'app/inventory-stores/selectors';
+import { getCurrentStore } from 'app/inventory-stores/stores-helpers';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 

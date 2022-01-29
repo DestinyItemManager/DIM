@@ -1,10 +1,13 @@
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
-import { isTrialsPassage } from 'app/inventory/store/objectives';
-import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
-import { getStore } from 'app/inventory/stores-helpers';
+import { storesSelector } from 'app/inventory-stores/selectors';
+import { isTrialsPassage } from 'app/inventory-stores/store/objectives';
+import {
+  applySocketOverrides,
+  useSocketOverrides,
+} from 'app/inventory-stores/store/override-sockets';
+import { getStore } from 'app/inventory-stores/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
@@ -20,7 +23,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { AppIcon, faCheck, faClock } from '../shell/icons';
 import ApplyPerkSelection from './ApplyPerkSelection';
 import EmblemPreview from './EmblemPreview';

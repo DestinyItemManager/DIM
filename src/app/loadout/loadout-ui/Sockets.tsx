@@ -1,5 +1,5 @@
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
+import { isPluggableItem } from 'app/inventory-stores/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

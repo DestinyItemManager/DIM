@@ -1,8 +1,8 @@
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import Select, { Option } from 'app/dim-ui/Select';
 import { t, tl } from 'app/i18next-t';
-import { setItemHashTag, setItemTag } from 'app/inventory/actions';
-import { tagSelector } from 'app/inventory/selectors';
+import { setItemHashTag, setItemTag } from 'app/inventory-actions/actions';
+import { tagSelector } from 'app/inventory-stores/selectors';
 import { AppIcon, clearIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemIsInstanced } from 'app/utils/item-utils';
@@ -10,8 +10,8 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
+import { itemTagSelectorList, TagInfo, TagValue } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './ItemTagSelector.m.scss';
 
 interface Props {

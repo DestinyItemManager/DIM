@@ -6,7 +6,7 @@ import type {
   DimBucketType,
   InventoryBucket,
   InventoryBuckets,
-} from '../inventory/inventory-buckets';
+} from '../inventory-stores/inventory-buckets';
 import { D2Categories } from './d2-bucket-categories';
 import { D2ManifestDefinitions } from './d2-definitions';
 

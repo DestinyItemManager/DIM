@@ -1,9 +1,9 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { makeFakeItem } from 'app/inventory-stores/store/d2-item-factory';
 import { emptyArray } from 'app/utils/empty';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { DimLoadoutItem, LoadoutItem } from './loadout-types';
 import { findItem } from './loadout-utils';
 

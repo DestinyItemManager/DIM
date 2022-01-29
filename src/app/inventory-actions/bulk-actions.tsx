@@ -5,11 +5,11 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
+import { getTag, tagConfig, TagValue } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
+import { itemHashTagsSelector, itemInfosSelector } from '../inventory-stores/selectors';
 import { setItemHashTag, setItemTagsBulk } from './actions';
-import { getTag, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
-import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 /**
  * Bulk tag items, with an undo button in a notification.

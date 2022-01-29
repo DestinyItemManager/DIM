@@ -1,5 +1,5 @@
 import { languageSelector } from 'app/dim-api/selectors';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';

@@ -1,8 +1,8 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { tl } from 'app/i18next-t';
-import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
-import { getSeason } from 'app/inventory/store/season';
+import { getTag, ItemInfos } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { getSeason } from 'app/inventory-stores/store/season';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';

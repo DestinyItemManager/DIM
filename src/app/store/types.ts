@@ -5,7 +5,7 @@ import type { AccountsState } from '../accounts/reducer';
 import type { CompareState } from '../compare/reducer';
 import type { DimApiState } from '../dim-api/reducer';
 import type { FarmingState } from '../farming/reducer';
-import type { InventoryState } from '../inventory/reducer';
+import type { InventoryState } from '../inventory-stores/reducer';
 import type { LoadoutsState } from '../loadout-drawer/reducer';
 import type { ManifestState } from '../manifest/reducer';
 import type { ShellState } from '../shell/reducer';

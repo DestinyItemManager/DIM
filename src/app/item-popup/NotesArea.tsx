@@ -1,11 +1,11 @@
 import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
 import { t } from 'app/i18next-t';
-import { setItemHashNote, setItemNote } from 'app/inventory/actions';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { allNotesHashtagsSelector } from 'app/inventory/selectors';
+import { setItemHashNote, setItemNote } from 'app/inventory-actions/actions';
+import { itemNoteSelector } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { getHashtagsFromNote } from 'app/inventory-stores/note-hashtags';
+import { allNotesHashtagsSelector } from 'app/inventory-stores/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';

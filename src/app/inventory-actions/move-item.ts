@@ -1,6 +1,7 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { compareOpenSelector } from 'app/compare/selectors';
 import { t } from 'app/i18next-t';
+import { InventoryBucket } from 'app/inventory-stores/inventory-buckets';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { loadoutDialogOpen } from 'app/loadout-drawer/LoadoutDrawer';
@@ -11,19 +12,23 @@ import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import { updateCharacters } from '../inventory-stores/d2-stores';
+import { DimItem } from '../inventory-stores/item-types';
+import { storesSelector } from '../inventory-stores/selectors';
+import { DimStore } from '../inventory-stores/store-types';
+import {
+  amountOfItem,
+  getCurrentStore,
+  getStore,
+  getVault,
+} from '../inventory-stores/stores-helpers';
+import { moveItemNotification } from '../notifications/MoveNotifications';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
-import { updateCharacters } from './d2-stores';
-import { InventoryBucket } from './inventory-buckets';
 import { executeMoveItem } from './item-move-service';
-import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
-import { moveItemNotification } from './MoveNotifications';
-import { storesSelector } from './selectors';
-import { DimStore } from './store-types';
-import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
 /**
  * Move the item to the currently active store. Used for double-click action.

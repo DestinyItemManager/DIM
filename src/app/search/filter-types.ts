@@ -1,9 +1,9 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { ItemInfos } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
+import { ItemInfos } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { Settings } from 'app/settings/initial-settings';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';

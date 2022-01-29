@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { statsMs } from 'app/inventory/store/stats';
+import { statsMs } from 'app/inventory-stores/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
@@ -16,7 +16,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from '../inventory-stores/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';

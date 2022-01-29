@@ -1,11 +1,11 @@
+import { insertPlug } from 'app/bungie-api/advanced-write-actions';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { energyStyles } from 'app/dim-ui/EnergyIncrements';
 import 'app/dim-ui/EnergyMeterIncrements.scss';
 import Select, { Option } from 'app/dim-ui/Select';
 import { t } from 'app/i18next-t';
-import { insertPlug } from 'app/inventory/advanced-write-actions';
-import { DimItem } from 'app/inventory/item-types';
-import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { energyUpgrade, sumModCosts } from 'app/inventory-stores/store/energy';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';

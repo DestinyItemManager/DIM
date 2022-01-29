@@ -1,8 +1,8 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { moveItemTo } from 'app/inventory/move-item';
-import { DimStore } from 'app/inventory/store-types';
+import { moveItemTo } from 'app/inventory-actions/move-item';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';

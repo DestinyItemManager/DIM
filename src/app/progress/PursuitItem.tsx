@@ -1,10 +1,10 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import {
   isBooleanObjective,
   isFlawlessPassage,
   isTrialsPassage,
-} from 'app/inventory/store/objectives';
+} from 'app/inventory-stores/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/filters';
 import { count } from 'app/utils/util';

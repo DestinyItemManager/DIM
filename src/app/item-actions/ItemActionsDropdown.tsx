@@ -1,18 +1,18 @@
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
-import { setItemNote } from 'app/inventory/actions';
-import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+import { setItemNote } from 'app/inventory-actions/actions';
+import { bulkLockItems, bulkTagItems } from 'app/inventory-actions/bulk-actions';
+import { storesSortedByImportanceSelector } from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
+import { isTagValue, itemTagSelectorList, TagValue } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import {
   AppIcon,
   clearIcon,

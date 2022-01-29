@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
-import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
+import { D1GridNode, DimGridNode, DimItem } from '../inventory-stores/item-types';
 import './ItemTalentGrid.scss';
 
 interface ProvidedProps {

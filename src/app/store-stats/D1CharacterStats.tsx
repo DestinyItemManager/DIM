@@ -1,7 +1,10 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import type { DimStore } from 'app/inventory/store-types';
-import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
+import type { DimStore } from 'app/inventory-stores/store-types';
+import {
+  getD1CharacterStatTiers,
+  statsWithTiers,
+} from 'app/inventory-stores/store/character-utils';
 import { percent } from 'app/shell/filters';
 import clsx from 'clsx';
 import React from 'react';

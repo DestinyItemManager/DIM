@@ -1,4 +1,4 @@
-import type { DimStore } from 'app/inventory/store-types';
+import type { DimStore } from 'app/inventory-stores/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';

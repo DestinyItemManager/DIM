@@ -13,7 +13,7 @@ import {
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector } from 'app/inventory-stores/selectors';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
@@ -37,7 +37,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 // eslint-disable-next-line css-modules/no-unused-class
 import popupStyles from '../item-popup/ItemDescription.m.scss';
 import styles from './ItemTriage.m.scss';

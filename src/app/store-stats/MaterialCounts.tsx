@@ -1,5 +1,5 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { materialsSelector } from 'app/inventory/selectors';
+import { materialsSelector } from 'app/inventory-stores/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { BucketHashes } from 'data/d2/generated-enums';
 import spiderMats from 'data/d2/spider-mats.json';

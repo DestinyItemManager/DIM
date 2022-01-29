@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { makeFakeItem } from 'app/inventory-stores/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
 import {

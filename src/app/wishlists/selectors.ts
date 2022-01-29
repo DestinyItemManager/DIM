@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import _ from 'lodash';

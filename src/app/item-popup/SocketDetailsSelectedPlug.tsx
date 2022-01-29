@@ -1,15 +1,15 @@
+import { canInsertPlug, insertPlug } from 'app/bungie-api/advanced-write-actions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
   DimPlug,
   DimSocket,
   DimStat,
   PluggableInventoryItemDefinition,
-} from 'app/inventory/item-types';
-import { interpolateStatValue } from 'app/inventory/store/stats';
+} from 'app/inventory-stores/item-types';
+import { interpolateStatValue } from 'app/inventory-stores/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';

@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import Plug from 'app/item-popup/Plug';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';

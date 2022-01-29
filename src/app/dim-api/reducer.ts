@@ -24,7 +24,7 @@ import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
-import * as inventoryActions from '../inventory/actions';
+import * as inventoryActions from '../inventory-actions/actions';
 import * as loadoutActions from '../loadout-drawer/actions';
 import {
   Loadout as DimLoadout,

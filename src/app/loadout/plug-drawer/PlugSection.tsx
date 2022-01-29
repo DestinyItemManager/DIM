@@ -1,4 +1,4 @@
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { Comparator } from 'app/utils/comparators';
 import React, { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';

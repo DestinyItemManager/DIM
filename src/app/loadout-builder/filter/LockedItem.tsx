@@ -1,8 +1,8 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/inventory-item/ConnectedInventoryItem';
+import ItemPopupTrigger from 'app/inventory-item/ItemPopupTrigger';
+import DraggableInventoryItem from 'app/inventory-page/DraggableInventoryItem';
+import { DimItem } from 'app/inventory-stores/item-types';
 import React from 'react';
 
 /**

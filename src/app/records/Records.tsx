@@ -3,7 +3,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/search-filter';
@@ -19,7 +19,7 @@ import {
   bucketsSelector,
   ownedItemsSelector,
   profileResponseSelector,
-} from '../inventory/selectors';
+} from '../inventory-stores/selectors';
 import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
 

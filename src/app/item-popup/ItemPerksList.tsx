@@ -1,6 +1,6 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/inventory-item/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
@@ -10,7 +10,7 @@ import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { default as React, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory-stores/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';

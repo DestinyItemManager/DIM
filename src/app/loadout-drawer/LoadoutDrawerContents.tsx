@@ -1,7 +1,10 @@
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
-import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { storesSelector } from 'app/inventory-stores/selectors';
+import {
+  SocketOverrides,
+  SocketOverridesForItems,
+} from 'app/inventory-stores/store/override-sockets';
+import { getCurrentStore, getStore } from 'app/inventory-stores/stores-helpers';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
@@ -16,9 +19,9 @@ import type {
   DimBucketType,
   InventoryBucket,
   InventoryBuckets,
-} from '../inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
+} from '../inventory-stores/inventory-buckets';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory-stores/item-types';
+import { DimStore } from '../inventory-stores/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
 import { addIcon, AppIcon, faTshirt } from '../shell/icons';
 import { Loadout, LoadoutItem } from './loadout-types';

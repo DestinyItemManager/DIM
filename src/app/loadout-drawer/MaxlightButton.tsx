@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { getArtifactBonus } from 'app/inventory-stores/stores-helpers';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';

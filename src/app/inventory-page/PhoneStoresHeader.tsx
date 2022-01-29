@@ -3,7 +3,7 @@ import { wrap } from 'app/utils/util';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
-import { DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory-stores/store-types';
 import styles from './PhoneStoresHeader.m.scss';
 
 const spring: Spring = {

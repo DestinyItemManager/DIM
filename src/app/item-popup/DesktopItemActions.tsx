@@ -1,10 +1,10 @@
 import { addCompareItem } from 'app/compare/actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { moveItemTo } from 'app/inventory/move-item';
-import { sortedStoresSelector } from 'app/inventory/selectors';
-import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
+import { moveItemTo } from 'app/inventory-actions/move-item';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { sortedStoresSelector } from 'app/inventory-stores/selectors';
+import { getCurrentStore, getVault } from 'app/inventory-stores/stores-helpers';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';

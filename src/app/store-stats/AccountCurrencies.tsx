@@ -1,5 +1,5 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { currenciesSelector } from 'app/inventory/selectors';
+import { currenciesSelector } from 'app/inventory-stores/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

@@ -1,6 +1,16 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
+import { pullItem } from 'app/inventory-actions/move-item';
+import { InventoryBucket } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import {
+  currentStoreSelector,
+  sortedStoresSelector,
+  storesSelector,
+} from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { findItemsByBucket } from 'app/inventory-stores/stores-helpers';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -16,15 +26,9 @@ import { connect } from 'react-redux';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import { addIcon, AppIcon } from '../shell/icons';
-import { InventoryBucket } from './inventory-buckets';
-import { DimItem } from './item-types';
-import { pullItem } from './move-item';
-import { currentStoreSelector, sortedStoresSelector, storesSelector } from './selectors';
-import { DimStore } from './store-types';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
-import { findItemsByBucket } from './stores-helpers';
 
 // Props provided from parents
 interface ProvidedProps {

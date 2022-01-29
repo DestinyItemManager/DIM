@@ -1,13 +1,13 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/inventory-item/ConnectedInventoryItem';
+import ItemPopupTrigger from 'app/inventory-item/ItemPopupTrigger';
+import DraggableInventoryItem from 'app/inventory-page/DraggableInventoryItem';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import { sortItems } from '../shell/filters';
 import styles from './SearchResults.m.scss';

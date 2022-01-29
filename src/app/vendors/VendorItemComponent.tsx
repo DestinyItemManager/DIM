@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -6,8 +6,8 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
+import ConnectedInventoryItem from '../inventory-item/ConnectedInventoryItem';
+import ItemPopupTrigger from '../inventory-item/ItemPopupTrigger';
 import '../progress/milestone.scss';
 import { AppIcon, faCheck } from '../shell/icons';
 import Cost from './Cost';

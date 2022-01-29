@@ -2,8 +2,8 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { locateItem } from 'app/inventory/locate-item';
+import { locateItem } from 'app/inventory-page/locate-item';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
@@ -11,7 +11,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
-import { allItemsSelector, storesSelector } from '../inventory/selectors';
+import { allItemsSelector, storesSelector } from '../inventory-stores/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
@@ -96,7 +96,7 @@ export default function GearPower() {
 
 // implement this once item popup & sheet coexist more peacefully
 //
-// import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+// import ItemPopupTrigger from 'app/inventory-stores/ItemPopupTrigger';
 // <ItemPopupTrigger item={i}>
 // {(ref, onClick) => (
 //   <span ref={ref} onClick={onClick}>

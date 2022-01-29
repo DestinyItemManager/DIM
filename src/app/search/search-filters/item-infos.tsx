@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { getNotes, getTag, itemTagSelectorList } from 'app/inventory/dim-item-info';
+import { getNotes, getTag, itemTagSelectorList } from 'app/inventory-stores/dim-item-info';
 import { FilterDefinition } from '../filter-types';
 
 // check item tags or presence of notes

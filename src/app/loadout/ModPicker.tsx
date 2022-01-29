@@ -1,10 +1,10 @@
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import {
   allItemsSelector,
   currentStoreSelector,
   profileResponseSelector,
-} from 'app/inventory/selectors';
+} from 'app/inventory-stores/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterDimPlugsUnlockedOnCharacterOrProfile } from 'app/records/plugset-helpers';
 import {

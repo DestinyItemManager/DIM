@@ -1,5 +1,5 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';

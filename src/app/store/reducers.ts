@@ -5,7 +5,7 @@ import { accounts } from '../accounts/reducer';
 import { compare } from '../compare/reducer';
 import { dimApi, DimApiState, initialState as dimApiInitialState } from '../dim-api/reducer';
 import { farming } from '../farming/reducer';
-import { inventory } from '../inventory/reducer';
+import { inventory } from '../inventory-stores/reducer';
 import { loadouts } from '../loadout-drawer/reducer';
 import { manifest } from '../manifest/reducer';
 import { shell } from '../shell/reducer';

@@ -4,8 +4,8 @@ import {
   allItemsSelector,
   bucketsSelector,
   unlockedPlugSetItemsSelector,
-} from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
+} from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';

@@ -1,6 +1,6 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
-import { buildStores } from 'app/inventory/d2-stores';
+import { buildStores } from 'app/inventory-stores/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { delay } from 'app/utils/util';
 import { DestinyManifest, DestinyProfileResponse } from 'bungie-api-ts/destiny2';

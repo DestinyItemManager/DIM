@@ -1,4 +1,4 @@
-import { DimStore } from 'app/inventory/store-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { RAID_ACTIVITY_TYPE_HASH, RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';

@@ -1,4 +1,4 @@
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory-stores/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import React from 'react';

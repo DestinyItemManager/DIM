@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { getSeason } from 'app/inventory/store/season';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { getSeason } from 'app/inventory-stores/store/season';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';

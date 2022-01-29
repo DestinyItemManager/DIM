@@ -1,4 +1,4 @@
-import { DimPlugSet } from 'app/inventory/item-types';
+import { DimPlugSet } from 'app/inventory-stores/item-types';
 import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 

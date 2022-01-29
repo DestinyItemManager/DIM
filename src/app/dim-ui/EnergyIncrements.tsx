@@ -1,5 +1,5 @@
 import 'app/dim-ui/EnergyMeterIncrements.scss';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';

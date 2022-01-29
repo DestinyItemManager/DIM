@@ -3,12 +3,12 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { storesSelector } from '../inventory-stores/selectors';
+import { DimStore } from '../inventory-stores/store-types';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout-drawer/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from '../utils/action-queue';
 import styles from './PullFromPostmaster.m.scss';
-import { storesSelector } from './selectors';
-import { DimStore } from './store-types';
 
 export function PullFromPostmaster({ store }: { store: DimStore }) {
   const [working, setWorking] = useState(false);

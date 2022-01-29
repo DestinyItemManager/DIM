@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
+import { TagValue } from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
-import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
-import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
 import { selectedSubclassPath } from './subclass';

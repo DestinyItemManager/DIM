@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { startWordRegexp } from './search-filters/freeform';
 
 export function createPlugSearchPredicate(

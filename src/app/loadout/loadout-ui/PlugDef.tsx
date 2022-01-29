@@ -1,7 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import PressTip from 'app/dim-ui/PressTip';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/inventory-item/ItemIcon';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { PlugTooltip } from 'app/item-popup/PlugTooltip';
 import React from 'react';
 

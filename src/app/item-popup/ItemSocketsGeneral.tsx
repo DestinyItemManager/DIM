@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from '../inventory-stores/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import './ItemSockets.scss';

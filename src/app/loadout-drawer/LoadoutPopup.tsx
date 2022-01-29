@@ -2,9 +2,13 @@ import { settingSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  hasClassifiedSelector,
+} from 'app/inventory-stores/selectors';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
@@ -16,7 +20,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import { DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory-stores/store-types';
 import { showNotification } from '../notifications/notifications';
 import { filteredItemsSelector, searchFilterSelector } from '../search/search-filter';
 import {

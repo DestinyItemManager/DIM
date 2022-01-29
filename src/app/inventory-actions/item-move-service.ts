@@ -25,23 +25,20 @@ import {
   setTrackedState as d2SetTrackedState,
   transfer as d2Transfer,
 } from '../bungie-api/destiny2-api';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { itemLockStateChanged, itemMoved } from './actions';
 import {
   characterDisplacePriority,
   getTag,
   ItemInfos,
   vaultDisplacePriority,
-} from './dim-item-info';
-import { DimItem } from './item-types';
-import { getLastManuallyMoved } from './manual-moves';
+} from '../inventory-stores/dim-item-info';
+import { DimItem } from '../inventory-stores/item-types';
 import {
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
   storesSelector,
-} from './selectors';
-import { DimStore } from './store-types';
+} from '../inventory-stores/selectors';
+import { DimStore } from '../inventory-stores/store-types';
 import {
   amountOfItem,
   findItemsByBucket,
@@ -50,7 +47,10 @@ import {
   getStore,
   getVault,
   spaceLeftForItem,
-} from './stores-helpers';
+} from '../inventory-stores/stores-helpers';
+import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { itemLockStateChanged, itemMoved } from './actions';
+import { getLastManuallyMoved } from './manual-moves';
 
 /**
  * You can reserve a number of each type of item in each store.

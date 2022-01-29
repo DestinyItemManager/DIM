@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './LoadoutBucketDropTarget.m.scss';
 
 interface Props {

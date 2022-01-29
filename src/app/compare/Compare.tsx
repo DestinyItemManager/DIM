@@ -1,10 +1,10 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { locateItem } from 'app/inventory/locate-item';
+import { locateItem } from 'app/inventory-page/locate-item';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
-} from 'app/inventory/store/override-sockets';
+} from 'app/inventory-stores/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';

@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimStore } from 'app/inventory/store-types';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';

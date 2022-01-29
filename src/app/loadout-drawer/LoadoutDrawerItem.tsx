@@ -1,8 +1,8 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import ConnectedInventoryItem from 'app/inventory-item/ConnectedInventoryItem';
 import React from 'react';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 
 export default function LoadoutDrawerItem({
   item,

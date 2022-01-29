@@ -1,9 +1,9 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { getEvent, getSeason } from 'app/inventory/store/season';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { getEvent, getSeason } from 'app/inventory-stores/store/season';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { D2EventEnum } from 'data/d2/d2-event-info';
 import _ from 'lodash';

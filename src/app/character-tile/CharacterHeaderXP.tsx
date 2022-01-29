@@ -3,7 +3,7 @@ import { D1ProgressionHashes } from 'app/search/d1-known-values';
 import clsx from 'clsx';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
-import { D1Store } from '../inventory/store-types';
+import { D1Store } from '../inventory-stores/store-types';
 import { percent } from '../shell/filters';
 import styles from './CharacterHeaderXP.m.scss';
 

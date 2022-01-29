@@ -1,4 +1,4 @@
-import type { DimStore } from 'app/inventory/store-types';
+import type { DimStore } from 'app/inventory-stores/store-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React from 'react';

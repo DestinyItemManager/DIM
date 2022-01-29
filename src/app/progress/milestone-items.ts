@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
 import {
   DestinyAmmunitionType,

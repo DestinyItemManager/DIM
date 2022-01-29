@@ -17,12 +17,12 @@ import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
+import { getNotes, getTag, ItemInfos, tagConfig } from '../inventory-stores/dim-item-info';
+import { DimGridNode, DimItem, DimSockets } from '../inventory-stores/item-types';
+import { itemInfosSelector, storesSelector } from '../inventory-stores/selectors';
+import { getClass } from '../inventory-stores/store/character-utils';
+import { getEvent, getSeason } from '../inventory-stores/store/season';
 import { setItemNote, setItemTagsBulk } from './actions';
-import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
-import { DimGridNode, DimItem, DimSockets } from './item-types';
-import { itemInfosSelector, storesSelector } from './selectors';
-import { getClass } from './store/character-utils';
-import { getEvent, getSeason } from './store/season';
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [

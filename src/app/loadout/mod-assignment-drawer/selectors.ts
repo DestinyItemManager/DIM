@@ -1,6 +1,6 @@
-import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { allItemsSelector, sortedStoresSelector } from 'app/inventory-stores/selectors';
+import { getCurrentStore } from 'app/inventory-stores/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { RootState } from 'app/store/types';

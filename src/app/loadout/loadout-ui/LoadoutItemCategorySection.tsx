@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { bucketsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import ConnectedInventoryItem from 'app/inventory-item/ConnectedInventoryItem';
+import ItemPopupTrigger from 'app/inventory-item/ItemPopupTrigger';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
+import { bucketsSelector, unlockedPlugSetItemsSelector } from 'app/inventory-stores/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';

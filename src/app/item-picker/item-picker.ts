@@ -1,5 +1,5 @@
 import { EventBus } from 'app/utils/observable';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */

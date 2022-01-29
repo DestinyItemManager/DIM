@@ -1,11 +1,11 @@
+import { InventoryBucket } from 'app/inventory-stores/inventory-buckets';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { findItemsByBucket } from 'app/inventory-stores/stores-helpers';
 import { postmasterAlmostFull } from 'app/loadout-drawer/postmaster';
 import clsx from 'clsx';
 import React from 'react';
-import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
-import { DimStore } from './store-types';
 import StoreBucket from './StoreBucket';
-import { findItemsByBucket } from './stores-helpers';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({

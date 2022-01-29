@@ -9,8 +9,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D1Item, DimItem } from '../inventory/item-types';
-import { D1Store } from '../inventory/store-types';
+import { D1Item, DimItem } from '../inventory-stores/item-types';
+import { D1Store } from '../inventory-stores/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-service-helper';
 

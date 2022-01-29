@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 /** any general mod */

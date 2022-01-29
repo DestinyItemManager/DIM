@@ -1,7 +1,7 @@
 import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem } from 'app/inventory/item-types';
-import { energyUpgrade } from 'app/inventory/store/energy';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { energyUpgrade } from 'app/inventory-stores/store/energy';
 import { UpgradeMaterialHashes } from 'app/search/d2-known-values';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 

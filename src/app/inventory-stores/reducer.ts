@@ -12,7 +12,7 @@ import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
 import type { AccountsAction } from '../accounts/reducer';
-import * as actions from './actions';
+import * as actions from '../inventory-actions/actions';
 import { mergeCollectibles } from './d2-stores';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';

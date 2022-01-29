@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import { DimStore } from '../inventory/store-types';
+import { DimStore } from '../inventory-stores/store-types';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';
 

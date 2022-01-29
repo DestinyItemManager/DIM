@@ -1,6 +1,6 @@
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import React from 'react';
-import { DimItem } from './item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './ItemPowerSet.m.scss';
 
 export function ItemPowerSet(items: DimItem[], powerFloor: number) {

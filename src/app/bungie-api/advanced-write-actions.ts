@@ -19,13 +19,17 @@ import {
   insertSocketPlugFree,
 } from 'bungie-api-ts/destiny2';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
-import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
+import { awaItemChanged } from '../inventory-actions/actions';
+import { DimItem, DimSocket } from '../inventory-stores/item-types';
+import {
+  currentStoreSelector,
+  d2BucketsSelector,
+  storesSelector,
+} from '../inventory-stores/selectors';
+import { makeItemSingle } from '../inventory-stores/store/d2-item-factory';
 import { showNotification } from '../notifications/notifications';
-import { awaItemChanged } from './actions';
-import { DimItem, DimSocket } from './item-types';
-import { currentStoreSelector, d2BucketsSelector, storesSelector } from './selectors';
-import { makeItemSingle } from './store/d2-item-factory';
+import { authenticatedHttpClient } from './bungie-service-helper';
+import { requestAdvancedWriteActionToken } from './destiny2-api';
 
 let awaCache: {
   [key: number]: AwaAuthorizationResult & { used: number };

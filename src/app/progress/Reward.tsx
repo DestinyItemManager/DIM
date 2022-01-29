@@ -1,5 +1,5 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
-import { DimStore } from 'app/inventory/store-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition, DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';

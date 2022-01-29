@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { isSunset } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
 

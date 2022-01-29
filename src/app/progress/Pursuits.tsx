@@ -1,8 +1,8 @@
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { findItemsByBucket } from 'app/inventory-stores/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';

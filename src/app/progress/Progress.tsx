@@ -2,16 +2,17 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
 import {
   allItemsSelector,
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
-} from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { useLoadStores } from 'app/inventory/store/hooks';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+} from 'app/inventory-stores/selectors';
+import { DimStore } from 'app/inventory-stores/store-types';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
+import { getCurrentStore, getStore } from 'app/inventory-stores/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
@@ -24,7 +25,6 @@ import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import '../records/PresentationNode.scss';
 import Milestones from './Milestones';
 import './progress.scss';

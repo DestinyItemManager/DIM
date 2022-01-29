@@ -1,6 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { allItemsSelector } from 'app/inventory-stores/selectors';
 import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';

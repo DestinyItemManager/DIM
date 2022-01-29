@@ -1,4 +1,4 @@
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import React from 'react';
 import {

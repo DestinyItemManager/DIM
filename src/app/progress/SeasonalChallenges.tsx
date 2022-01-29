@@ -1,8 +1,8 @@
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
+import { InventoryBuckets } from 'app/inventory-stores/inventory-buckets';
+import { DimItem } from 'app/inventory-stores/item-types';
+import { DimStore } from 'app/inventory-stores/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DimPresentationNode,

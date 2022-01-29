@@ -1,5 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { setItemHashTag, setItemTag } from 'app/inventory-actions/actions';
 import { setSettingAction } from 'app/settings/actions';
 import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';

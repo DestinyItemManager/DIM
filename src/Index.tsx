@@ -1,7 +1,7 @@
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
-import { saveItemInfosOnStateChange } from 'app/inventory/observers';
+import { saveItemInfosOnStateChange } from 'app/inventory-stores/observers';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { pollForBungieAlerts } from 'app/shell/alerts';
 import store from 'app/store/store';

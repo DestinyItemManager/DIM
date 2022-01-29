@@ -2,7 +2,7 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
-import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import type { DimCharacterStat, DimStore } from 'app/inventory-stores/store-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

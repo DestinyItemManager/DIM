@@ -1,4 +1,4 @@
-import { dynamicStringsSelector } from 'app/inventory/selectors';
+import { dynamicStringsSelector } from 'app/inventory-stores/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { conversionTable, iconPlaceholder } from './rich-destiny-text';

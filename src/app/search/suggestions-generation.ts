@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { ItemInfos } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
+import { ItemInfos } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
@@ -8,7 +8,7 @@ import {
   allItemsSelector,
   allNotesHashtagsSelector,
   itemInfosSelector,
-} from '../inventory/selectors';
+} from '../inventory-stores/selectors';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { FilterDefinition, SuggestionsContext } from './filter-types';
 

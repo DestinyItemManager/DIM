@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
-import { getNotes } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
+import { getNotes } from 'app/inventory-stores/dim-item-info';
+import { DimItem } from 'app/inventory-stores/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

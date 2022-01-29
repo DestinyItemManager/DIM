@@ -1,6 +1,6 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { useLoadStores } from 'app/inventory/store/hooks';
+import { useLoadStores } from 'app/inventory-stores/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
@@ -12,8 +12,8 @@ import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import { sortedStoresSelector } from '../../inventory/selectors';
-import { D1Store } from '../../inventory/store-types';
+import { sortedStoresSelector } from '../../inventory-stores/selectors';
+import { D1Store } from '../../inventory-stores/store-types';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import './activities.scss';

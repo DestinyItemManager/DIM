@@ -1,7 +1,7 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/inventory-item/ItemIcon';
+import { PluggableInventoryItemDefinition } from 'app/inventory-stores/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

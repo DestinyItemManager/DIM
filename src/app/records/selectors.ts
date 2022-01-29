@@ -1,4 +1,4 @@
-import { profileResponseSelector } from 'app/inventory/selectors';
+import { profileResponseSelector } from 'app/inventory-stores/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { SHADER_NODE } from 'app/search/d2-known-values';
 import { DestinyCollectibleState, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';

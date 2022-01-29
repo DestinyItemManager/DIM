@@ -1,5 +1,5 @@
 import { EventBus } from 'app/utils/observable';
-import { DimItem } from './item-types';
+import { DimItem } from '../inventory-stores/item-types';
 
 export const locateItem$ = new EventBus<DimItem>();
 

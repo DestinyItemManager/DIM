@@ -32,16 +32,22 @@ import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
+import {
+  CharacterInfo,
+  charactersUpdated,
+  error,
+  loadNewItems,
+  update,
+} from '../inventory-actions/actions';
+import { ArtifactXP } from '../inventory-page/ArtifactXP';
+import { ItemPowerSet } from '../inventory-page/ItemPowerSet';
 import { getLight } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
-import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
-import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
-import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';

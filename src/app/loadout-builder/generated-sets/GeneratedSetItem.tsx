@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../../inventory-stores/item-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import styles from './GeneratedSetItem.m.scss';

@@ -9,7 +9,7 @@ import primary from 'destiny-icons/general/ammo_primary.svg';
 import special from 'destiny-icons/general/ammo_special.svg';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../inventory-stores/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
 const tierClassName = {

@@ -1,4 +1,4 @@
-import { storesSelector } from 'app/inventory/selectors';
+import { storesSelector } from 'app/inventory-stores/selectors';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 
