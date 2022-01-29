@@ -140,7 +140,8 @@
     "Desc_male": "DIM transfère des engrammes et objets de lumen du {{store}} au coffre et laisse un espace disponible pour chaque type d'objet afin que rien ne soit envoyé au commis des postes.",
     "Desc_male_plural": "DIM transfère des engrammes et objets de lumen du {{store}} au coffre et laisse {{count}} espaces disponibles pour chaque type d'objet afin que rien ne soit envoyé au commis des postes.",
     "Desc_plural": "DIM transfère des engrammes et objets de lumen du {{store}} au coffre et laisse {{count}} espaces disponibles pour chaque type d'objet afin que rien ne soit envoyé au commis des postes.",
-    "FarmingMode": "Mode Farming (libère de la place)",
+    "FarmingMode": "Mode farming",
+    "FarmingModeNote": "(maintenir l'espace pour les drops)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Cliquer pour détails",
+    "Confirm": "Confirmer ?",
     "UserGuideLink": "Mode d'emploi"
   },
   "Header": {
@@ -540,7 +542,6 @@
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
     "ClearSpace": "Déplacer les autres objets ailleurs",
     "ClearingSpace": "Déplacement des autres objets",
-    "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{{name}}'?",
     "Create": "Créer Arsenal",
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
@@ -601,9 +602,8 @@
     "PullFromPostmasterNotification_male_plural": "Récupération de {{count}} objets du commis des postes vers {{store}}.",
     "PullFromPostmasterNotification_plural": "Récupération de {{count}} objets du commis des postes vers {{store}}.",
     "PullFromPostmasterPopupTitle": "Récupérer du commis des postes",
-    "PullMakeSpace": "Espace",
     "Random": "Aléatoire",
-    "Randomize": "Équiper au hasard",
+    "Randomize": "Arsenal aléatoire",
     "RandomizePrompt": "Équiper des armes, armures et spectre au hasard ?",
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
@@ -623,7 +623,7 @@
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "UnassignedMods": "Mods non assignés",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
-    "WeaponsOnly": "Armes"
+    "WeaponsOnly": "Armes uniquement"
   },
   "Manifest": {
     "Download": "Téléchargement de la dernière base de données d'informations Destiny depuis Bungie...",
@@ -833,7 +833,7 @@
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",
     "InventoryColumnsMobileLine2": "Les objets vont être redimensionnés pour s'adapter au nouveau paramètre",
-    "InventoryNumberOfSpacesToClear": "Nombre d'espaces vides à faire lors de l'utilisation du mode Farming (libère de la place)",
+    "InventoryNumberOfSpacesToClear": "Nombre d'espaces vides à garder lors du mode Farming",
     "Items": "Affichage des objets",
     "Language": "Langue",
     "LoadoutSort": "Ordre des arsenaux :",

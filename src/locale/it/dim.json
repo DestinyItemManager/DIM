@@ -140,7 +140,8 @@
     "Desc_male": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo uno spazio vuoto per tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_male_plural": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo {{count}} spazi vuoti per tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
     "Desc_plural": "DIM sta spostando Engrammi e Lumen da {{store}} nel Deposito e tenendo {{count}} spazi vuoti per tipo di oggetto per evitare che qualcosa finisca dall'Amministratrice.",
-    "FarmingMode": "Modalità farming (fare spazio)",
+    "FarmingMode": "Modalità Farming",
+    "FarmingModeNote": "(mantenere spazio per i drop)",
     "MakeRoom": {
       "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
       "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Clicca per dettagli",
+    "Confirm": "Confermi?",
     "UserGuideLink": "Guida utente"
   },
   "Header": {
@@ -540,7 +542,6 @@
     "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
     "ClearSpace": "Sposta via altri oggetti",
     "ClearingSpace": "Spostando via gli altri oggetti",
-    "ConfirmDelete": "Sei sicuro di voler eliminare '{{name}}'?",
     "Create": "Crea loadout",
     "CurrentlyEquipped": "Attualmente Equipaggiato",
     "Deequip": "Togliendo oggetti dagli altri personaggi",
@@ -601,9 +602,8 @@
     "PullFromPostmasterNotification_male_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
     "PullFromPostmasterNotification_plural": "Spostamento di {{count}} oggetti dagli Amministratori a {{store}}.",
     "PullFromPostmasterPopupTitle": "Prendi dall'Amministratrice",
-    "PullMakeSpace": "Spazio",
     "Random": "Casuale",
-    "Randomize": "Randomizza",
+    "Randomize": "Loadout Casuale",
     "RandomizePrompt": "Randomizzare le armi equipaggiate, armature e spettro?",
     "RandomizeSearch": "Randomizza da Ricerca",
     "RandomizeSearchPrompt": "Randomizzare i tuoi oggetti equipaggiati da ricerca\"{{query}}\"?",
@@ -623,7 +623,7 @@
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "UnassignedMods": "Modifiche non assegnate",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",
-    "WeaponsOnly": "Armi"
+    "WeaponsOnly": "Solo Armi"
   },
   "Manifest": {
     "Download": "Scaricamento del database di informazioni di Destiny più recente da Bungie...",
@@ -833,7 +833,7 @@
     "InventoryColumns": "Larghezza dell'inventario",
     "InventoryColumnsMobile": "Larghezza inventario personaggio su dispositivi mobili in modalità verticale",
     "InventoryColumnsMobileLine2": "Gli oggetti saranno ridimensionati per adattarsi alla nuova impostazione",
-    "InventoryNumberOfSpacesToClear": "Numero di spazi vuoti da creare quando si utilizza la Modalità Farming (fare spazio)",
+    "InventoryNumberOfSpacesToClear": "Numero di spazi vuoti da creare quando si utilizza la Modalità Farming",
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LoadoutSort": "Ordine loadout:",

@@ -140,7 +140,8 @@
     "Desc_male": "DIM está moviendo objetos de Engramas y Lumen desde {{store}} al depósito y manteniendo un espacio vacío abierto por tipo de objeto para impedir que cualquier cosa se vaya a Administración.",
     "Desc_male_plural": "DIM está moviendo objetos de Engramas y Lumen desde {{store}} al depósito y manteniendo {{count}} espacios abiertos por tipo de objeto para impedir que cualquier cosa se vaya a Administración.",
     "Desc_plural": "DIM está moviendo objetos de Engramas y Lumen desde {{store}} al depósito y manteniendo {{count}} espacios abiertos por tipo de objeto para impedir que cualquier cosa se vaya a Administración.",
-    "FarmingMode": "Modo Recolección (hacer espacio)",
+    "FarmingMode": "Modo Recolección",
+    "FarmingModeNote": "(mantenga espacio para objetos soltados)",
     "MakeRoom": {
       "Desc": "DIM solo está moviendo Engramas y objetos de Lumen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_female": "DIM solo está moviendo Engramas y objetos de Lumen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Haga click para detalles",
+    "Confirm": "¿Confirmar?",
     "UserGuideLink": "Guía de usuario"
   },
   "Header": {
@@ -540,7 +542,6 @@
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
     "ClearSpace": "Mover otros objetos fuera",
     "ClearingSpace": "Moviendo otros objetos fuera",
-    "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
     "Create": "Crear equipación",
     "CurrentlyEquipped": "Actualmente Equipado",
     "Deequip": "Desequipando objetos de otros personajes",
@@ -601,9 +602,8 @@
     "PullFromPostmasterNotification_male_plural": "Extrayendo {{count}} objetos de Administración a {{store}}.",
     "PullFromPostmasterNotification_plural": "Extrayendo {{count}} objetos de Adminstración a {{store}}.",
     "PullFromPostmasterPopupTitle": "Extraer de Administración",
-    "PullMakeSpace": "Espacio",
     "Random": "Aleatorio",
-    "Randomize": "Aleatorizar",
+    "Randomize": "Aleatorizar Equipación",
     "RandomizePrompt": "¿Aleatorizar tus armas equipadas, armaduras y espectro?",
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
@@ -623,7 +623,7 @@
     "UnassignedModError": "El modificador no encajó en tu armadura actual",
     "UnassignedMods": "Mods sin Asignar",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:",
-    "WeaponsOnly": "Armas"
+    "WeaponsOnly": "Sólo Armas"
   },
   "Manifest": {
     "Download": "Descargando la última información de la base de datos desde Bungie...",
@@ -833,7 +833,7 @@
     "InventoryColumns": "Espacio de inventario de personaje",
     "InventoryColumnsMobile": "Anchura del inventario del personaje en el móvil en modo retrato",
     "InventoryColumnsMobileLine2": "Los objetos serán redimensionados para acomodarse a la nueva configuración",
-    "InventoryNumberOfSpacesToClear": "Número de espacios vacíos a hacer cuando uses el Modo de Recolección (hacer espacio)",
+    "InventoryNumberOfSpacesToClear": "Número de espacios vacíos a hacer cuando uses el Modo Recolección",
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LoadoutSort": "Orden de equipación:",

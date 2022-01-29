@@ -140,7 +140,8 @@
     "Desc_male": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo um único espaço livre por tipo de item para prevenir que algo vá para o Chefe do Correio.",
     "Desc_male_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
     "Desc_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
-    "FarmingMode": "Modo Farm (abrir espaço)",
+    "FarmingMode": "Farming Mode",
+    "FarmingModeNote": "(maintain space for drops)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_female": "O DIM está movendo apenas engramas e consumíveis da {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Clique para detalhes",
+    "Confirm": "Confirmar?",
     "UserGuideLink": "Guia do usuário"
   },
   "Header": {
@@ -540,7 +542,6 @@
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ClearSpace": "Mover outros itens para fora",
     "ClearingSpace": "Movendo outros itens para fora",
-    "ConfirmDelete": "Tem certeza que deseja excluir '{{name}}'?",
     "Create": "Criar set",
     "CurrentlyEquipped": "Atualmente Equipado",
     "Deequip": "Desequipando itens de outros personagens",
@@ -601,9 +602,8 @@
     "PullFromPostmasterNotification_male_plural": "Movido {{count}} itens do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterNotification_plural": "Movido {{count}} itens do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterPopupTitle": "Resgatar do Chefe do Correio",
-    "PullMakeSpace": "Espaço",
     "Random": "Aleatória",
-    "Randomize": "Tornar aleatório",
+    "Randomize": "Randomize Loadout",
     "RandomizePrompt": "Randomizar suas armas, armaduras e fantasma equipados?",
     "RandomizeSearch": "Tornar aleatório a partir da busca",
     "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
@@ -623,7 +623,7 @@
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
-    "WeaponsOnly": "Armas"
+    "WeaponsOnly": "Weapons Only"
   },
   "Manifest": {
     "Download": "Baixando últimas informações da Bungie referentes à base de dados de Destiny...",
@@ -833,7 +833,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Tamanho do inventário do personagem em dispositivos móveis em modo retrato",
     "InventoryColumnsMobileLine2": "Os itens serão redimensionados para acomodar a nova configuração",
-    "InventoryNumberOfSpacesToClear": "Quantidade de espaços livres durante o Modo Farming (para liberação de espaço)",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LoadoutSort": "Ordenação de Sets:",

@@ -140,7 +140,8 @@
     "Desc_male": "DIM está moviendo Engramas y objetos de Lumen de {{store}} a la bóveda y mantiene un espacio vacío abierto por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
     "Desc_male_plural": "DIM está moviendo Engramas y objetos de Lumen de {{store}} al Deposito y mantiene {{count}} espacios abiertos por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
     "Desc_plural": "DIM está moviendo Engramas y objetos de Lumen de {{store}} al Deposito y mantiene {{count}} espacios abiertos por tipo de objeto para evitar que cualquier cosa se vaya a la Administración.",
-    "FarmingMode": "Modo de Farmeo (hacer espacio)",
+    "FarmingMode": "Modo Farmeo",
+    "FarmingModeNote": "(manten espacio para objetos soltados)",
     "MakeRoom": {
       "Desc": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_female": "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Haz click para detalles",
+    "Confirm": "¿Confirmar?",
     "UserGuideLink": "Manual del usuario"
   },
   "Header": {
@@ -540,7 +542,6 @@
     "Classified": "Algunos de tus objetos son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
     "ClearSpace": "Quitar objetos no usados",
     "ClearingSpace": "Moviendo otros objetos",
-    "ConfirmDelete": "¿Estás seguro de que quieres borrar '{{name}}'?",
     "Create": "Crear equipación",
     "CurrentlyEquipped": "Equipado en estos momentos",
     "Deequip": "Desequipando objetos de otros personajes",
@@ -601,9 +602,8 @@
     "PullFromPostmasterNotification_male_plural": "Extrayendo {{count}} objetos de la Administración a {{store}}.",
     "PullFromPostmasterNotification_plural": "Extrayendo {{count}} objetos de laAdminstración a {{store}}.",
     "PullFromPostmasterPopupTitle": "Retirar de la Administración",
-    "PullMakeSpace": "Espacio",
     "Random": "Aleatorio",
-    "Randomize": "Modo Aleatorio",
+    "Randomize": "Aleatorizar Equipación",
     "RandomizePrompt": "¿Aleatorizar tus armas equipadas, armaduras y espectro?",
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
@@ -623,7 +623,7 @@
     "UnassignedModError": "El mod no encajó en tu armadura actual",
     "UnassignedMods": "Mods sin Asignar",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o haz click en la X para quitar:",
-    "WeaponsOnly": "Armas"
+    "WeaponsOnly": "Sólo Armas"
   },
   "Manifest": {
     "Download": "Descargando la última información de la base de datos desde Bungie...",
@@ -833,7 +833,7 @@
     "InventoryColumns": "Ancho de inventario de personaje",
     "InventoryColumnsMobile": "Ancho del Inventario del personaje en el celular modo retrato",
     "InventoryColumnsMobileLine2": "Los objetos serán redimensionados para acomodarse a la nueva configuración",
-    "InventoryNumberOfSpacesToClear": "Cantidad de espacios vacíos a hacer al usar el Modo de Farmeo (hacer espacio)",
+    "InventoryNumberOfSpacesToClear": "Número de espacios vacíos a tener cuando uses el Modo Farmeo",
     "Items": "Visualización de Objetos",
     "Language": "Idioma",
     "LoadoutSort": "Orden de equipación:",
