@@ -880,6 +880,7 @@
       "Transmat": "Teleporteffekt anwenden"
     },
     "ListStyle": "Perks als Liste anzeigen",
+    "Search": "Suche Namen oder Beschreibungen",
     "Select": {
       "Ability": "Fähigkeits-Vorschau",
       "Aspect": "Aspekt-Vorschau",
@@ -987,6 +988,7 @@
     "Collections": "Sammlungen",
     "Engram": "Belohnungs-Engramm",
     "FilterToUnacquired": "Nur nicht erworbene Gegenstände anzeigen",
+    "NoItems": "Dieser Händler bietet zurzeit keine Gegenstände an.",
     "Vendors": "Händler"
   },
   "Views": {

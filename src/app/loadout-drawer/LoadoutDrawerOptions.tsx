@@ -1,3 +1,4 @@
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -44,7 +45,7 @@ export default function LoadoutDrawerOptions({
   updateLoadout(loadout: Loadout): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
-  deleteLoadout(e: React.MouseEvent): void;
+  deleteLoadout(): void;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
@@ -159,20 +160,15 @@ export default function LoadoutDrawerOptions({
         </div>
         {!isNew && (
           <div className={styles.inputGroup}>
-            <button
-              className="dim-button danger"
-              onClick={deleteLoadout}
-              type="button"
-              title={t('Loadouts.Delete')}
-            >
-              <AppIcon icon={deleteIcon} /> {t('Loadouts.Delete')}
-            </button>
+            <ConfirmButton key="delete" danger onClick={deleteLoadout}>
+              <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
+            </ConfirmButton>
           </div>
         )}
         {loadout.notes === undefined && (
           <div className={styles.inputGroup}>
             <button
-              className="dim-button danger"
+              className="dim-button"
               onClick={addNotes}
               type="button"
               title={t('Loadouts.AddNotes')}

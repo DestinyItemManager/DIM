@@ -1,10 +1,10 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
+import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
-import { del, get, set } from 'idb-keyval';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 import { reportException } from '../utils/exceptions';

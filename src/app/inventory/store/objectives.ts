@@ -7,6 +7,7 @@ import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
+import trialsHashes from 'data/d2/d2-trials-objectives.json';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
@@ -60,4 +61,27 @@ export function isBooleanObjective(
     (completionValue === 1 &&
       (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
   );
+}
+
+export function isTrialsPassage(itemHash: number) {
+  return trialsHashes.passages.includes(itemHash);
+}
+
+/**
+ * Checks if the trials passage is flawless
+ */
+export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | null) {
+  return objectives?.some((obj) => isFlawlessObjective(obj.objectiveHash) && obj.complete);
+}
+
+export function isFlawlessObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Flawless';
+}
+
+export function isWinsObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Wins';
+}
+
+export function isRoundsWonObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Rounds Won';
 }

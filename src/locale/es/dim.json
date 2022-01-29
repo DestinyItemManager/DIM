@@ -880,6 +880,7 @@
       "Transmat": "Aplicar Efecto de Teletransporte"
     },
     "ListStyle": "Mostrar ventajas como lista",
+    "Search": "Buscar nombres o descripciones",
     "Select": {
       "Ability": "Previsualizar Habilidad",
       "Aspect": "Previsualizar Aspecto",
@@ -987,6 +988,7 @@
     "Collections": "Colecciones",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
+    "NoItems": "Este Vendedor no está ofreciendo ningún artículo actualmente.",
     "Vendors": "Comerciantes"
   },
   "Views": {

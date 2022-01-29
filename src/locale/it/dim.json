@@ -880,6 +880,7 @@
       "Transmat": "Applica Effetto Transmat"
     },
     "ListStyle": "Mostra i perk come una lista",
+    "Search": "Cerca nomi o descrizioni",
     "Select": {
       "Ability": "Anteprima Abilità",
       "Aspect": "Anteprima Natura",
@@ -987,6 +988,7 @@
     "Collections": "Collezioni",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
+    "NoItems": "Questo mercante al momento non offre alcun oggetto.",
     "Vendors": "Mercanti"
   },
   "Views": {

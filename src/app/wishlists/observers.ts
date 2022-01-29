@@ -1,5 +1,5 @@
+import { set } from 'app/storage/idb-keyval';
 import { observeStore } from 'app/utils/redux-utils';
-import { set } from 'idb-keyval';
 
 export function saveWishListToIndexedDB() {
   return observeStore(

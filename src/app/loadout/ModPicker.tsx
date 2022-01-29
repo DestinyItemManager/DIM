@@ -224,7 +224,7 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ModPicker);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ModPicker);
 
 /**
  * Determine whether an armor mod can still be selected, given that the `selected` mods have already been selected.

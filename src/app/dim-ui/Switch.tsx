@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './Switch.m.scss';
 
-export default function Switch({
+export default function Switch<K extends string>({
   checked,
   onChange,
   name,
@@ -10,10 +10,10 @@ export default function Switch({
   disabled = false,
 }: {
   checked: boolean;
-  name: string;
+  name: K;
   className?: string;
   disabled?: boolean;
-  onChange(checked: boolean, name: string): void;
+  onChange: (checked: boolean, name: K) => void;
 }) {
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked, name);

@@ -15,6 +15,7 @@ import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -94,7 +95,9 @@ export default function LoadoutView({
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
-          <ClassIcon className={styles.classIcon} classType={loadout.classType} />
+          {loadout.classType === DestinyClass.Unknown && (
+            <ClassIcon className={styles.classIcon} classType={loadout.classType} />
+          )}
           {loadout.name}
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>

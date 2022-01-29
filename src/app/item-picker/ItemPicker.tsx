@@ -117,4 +117,4 @@ function ItemPicker({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ItemPicker);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ItemPicker);

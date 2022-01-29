@@ -4,6 +4,7 @@ interface CssExports {
   'amount': string;
   'complete': string;
   'expired': string;
+  'flawedPassage': string;
   'fullstack': string;
   'image': string;
   'newItem': string;

@@ -55,7 +55,7 @@ export interface SuggestionsContext {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export type FilterDefinition = {
+export interface FilterDefinition {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.
@@ -119,7 +119,7 @@ export type FilterDefinition = {
    * given an item, this generates a filter that should match that item
    */
   fromItem?: (item: DimItem) => string;
-};
+}
 
 export const enum FilterDeprecation {
   NotDeprecated,

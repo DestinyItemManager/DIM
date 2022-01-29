@@ -1,5 +1,16 @@
 ## Next
 
+* Organizer drill-down buttons now show a more accurate armor count.
+* Delete Loadout button now looks more warning-ish, and asks for confirmation without using a popup.
+* DIM will now try to recover from a state where the browser has a corrupted storage database.
+* Removing subclass from loadout will now enable "Add Equipped" button.
+* "Add Equipped" button will no longer cause multiple items in the same slot to be listed as equipped.
+* Widened and reorganized the Loadouts menu.
+  * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
+  * Randomize loadout is now at the end of the list of loadouts.
+
+## 7.2.0 <span class="changelog-date">(2022-01-23)</span>
+
 * Weapons CSV download now includes a Zoom stat column.
 * Shaders, ornaments, and mods can now be searched in their choosers.
 * Changed the Loadout Optimizer's Armor Upgrade options for Assume Masterwork and Lock Element options. All armor will now have an assumed minimum energy capacity of 7. The new settings have the following options,
@@ -9,6 +20,7 @@
   * Lock Element
     * Masterworked - Only armor that is already masterworked will have their element locked
     * All - All armor will have element locked
+* Trials passages now show the number of rounds won and the progress of completion is now tied to the number of wins.
 
 ## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
 

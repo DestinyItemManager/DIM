@@ -140,7 +140,8 @@
     "Desc_male": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
     "Desc_male_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
     "Desc_plural": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
-    "FarmingMode": "Farming Mode (make space)",
+    "FarmingMode": "Farming Mode",
+    "FarmingModeNote": "(maintain space for drops)",
     "MakeRoom": {
       "Desc": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
       "Desc_female": "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
@@ -288,6 +289,7 @@
   },
   "General": {
     "ClickForDetails": "Click for details",
+    "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
   "Header": {
@@ -532,7 +534,6 @@
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSpace": "Move other items away",
     "ClearingSpace": "Moving other items away",
-    "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
@@ -593,9 +594,8 @@
     "PullFromPostmasterNotification_male_plural": "Pulling {{count}} Postmaster items to {{store}}.",
     "PullFromPostmasterNotification_plural": "Pulling {{count}} Postmaster items to {{store}}.",
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
-    "PullMakeSpace": "Space",
     "Random": "Random",
-    "Randomize": "Randomize",
+    "Randomize": "Randomize Loadout",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
@@ -615,7 +615,7 @@
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
-    "WeaponsOnly": "Weapons"
+    "WeaponsOnly": "Weapons Only"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
@@ -825,7 +825,7 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode (make space)",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Item Display",
     "Language": "Language",
     "LoadoutSort": "Loadout order:",

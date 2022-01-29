@@ -215,4 +215,4 @@ function StoreBucket({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(StoreBucket);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(StoreBucket);
