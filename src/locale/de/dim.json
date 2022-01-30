@@ -4,7 +4,8 @@
     "ConfirmTitle": "Aktion bestätigen",
     "Error": "Fehler beim Ändern von Mods oder Perks",
     "ErrorMessage": "Wir konnten {{plug}} nicht auf {{item}} ausrüsten.\n\n{{error}}",
-    "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten"
+    "FailedToken": "Konnte keine Berechtigung zum Ändern des Gegenstands erhalten",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
@@ -847,8 +848,8 @@
     "SetSort": "Sortiere Gegenstände nach:",
     "Settings": "Einstellungen",
     "ShowNewItems": "Einen roten Punkt bei neuen Gegenständen anzeigen",
-    "SingleCharacter": "Nur aktuellen Charakter anzeigen",
-    "SingleCharacterExplanation": "DIM wird alle bis auf den zuletzt gespielten Charakter ausblenden. Die Inventare anderer Charaktere werden angezeigt, als wären sie im Tresor.",
+    "SingleCharacter": "Einzel-Charakter-Ansicht",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Gegenstandsgröße",
     "SortByAmmoType": "Munitionstyp",
     "SortByAmount": "Stapelgröße",

@@ -4,7 +4,8 @@
     "ConfirmTitle": "確認操作",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "無權限更換物品"
+    "FailedToken": "無權限更換物品",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
@@ -847,8 +848,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "設置",
     "ShowNewItems": "Show a red dot on new items",
-    "SingleCharacter": "只顯示當前角色",
-    "SingleCharacterExplanation": "DIM 將只顯示最近遊玩的角色。其他角色的物品將和保險庫顯示在一起。",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "物品顯示大小",
     "SortByAmmoType": "彈藥類型",
     "SortByAmount": "堆疊大小",

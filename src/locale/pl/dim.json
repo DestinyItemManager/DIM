@@ -4,7 +4,8 @@
     "ConfirmTitle": "Potwierdź działanie",
     "Error": "Błąd podczas zmiany modyfikacji lub perków",
     "ErrorMessage": "Nie mogliśmy włożyć {{plug}} w {{item}}.\n\n{{error}}",
-    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu"
+    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
@@ -847,8 +848,8 @@
     "SetSort": "Sortuj produkty według:",
     "Settings": "Ustawienia",
     "ShowNewItems": "Pokaż czerwoną kropkę na nowych przedmiotach",
-    "SingleCharacter": "Pokaż tylko aktualną postać",
-    "SingleCharacterExplanation": "DIM ukryje wszystkie oprócz ostatnio używanej postaci. Ekwipunki tych postaci będą traktowane jak by były w schowku.",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Rozmiar elementu",
     "SortByAmmoType": "Rodzaj amunicji",
     "SortByAmount": "Rozmiar stosu",

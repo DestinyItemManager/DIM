@@ -4,7 +4,8 @@
     "ConfirmTitle": "Conferma Azione",
     "Error": "Errore nel cambio di Modifiche o perk",
     "ErrorMessage": "Non abbiamo potuto equipaggiare {{plug}} in {{item}}.\n\n{{error}}",
-    "FailedToken": "Impossibile ottenere permesso per cambiare l'oggetto"
+    "FailedToken": "Impossibile ottenere permesso per cambiare l'oggetto",
+    "IrreversiblePlugging": "Non possiedi {{plug}}, perciò non lo sovrascriveremo."
   },
   "Accounts": {
     "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
@@ -847,8 +848,8 @@
     "SetSort": "Ordina gli oggetti per:",
     "Settings": "Impostazioni",
     "ShowNewItems": "Mostra un punto rosso sui nuovi oggetti",
-    "SingleCharacter": "Mostra solo il personaggio attuale",
-    "SingleCharacterExplanation": "DIM mostrerà solo il personaggio giocato più di recente. Gli inventari degli altri personaggi verranno mostrati come se fossero parte del Deposito.",
+    "SingleCharacter": "Visualizzazione singolo personaggio",
+    "SingleCharacterExplanation": "DIM mostrerà solamente il personaggio giocato più di recente.\nGli oggetti dei personaggi nascosti appariranno nel Deposito, se possono essere utilizzati dal personaggio attuale.\nGli oggetti specifici delle altre classi saranno completamente nascosti.",
     "SizeItem": "Dimensione oggetti",
     "SortByAmmoType": "Tipo di munizioni",
     "SortByAmount": "Dimensione della pila",

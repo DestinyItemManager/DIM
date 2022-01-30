@@ -4,7 +4,8 @@
     "ConfirmTitle": "Confirmar Acción",
     "Error": "Error cambiando mods o perks",
     "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
-    "FailedToken": "No se pudo obtener permiso para cambiar el objeto"
+    "FailedToken": "No se pudo obtener permiso para cambiar el objeto",
+    "IrreversiblePlugging": "No tienes ningún {{plug}}, así que no lo sobrescribiremos."
   },
   "Accounts": {
     "ErrorLoadInventory": "No se pueden cargar tus personajes e inventario de Destiny {{version}}",
@@ -847,8 +848,8 @@
     "SetSort": "Ordenar objetos por:",
     "Settings": "Configuración",
     "ShowNewItems": "Mostrar un punto rojo en objetos nuevos",
-    "SingleCharacter": "Mostrar sólo personaje actual",
-    "SingleCharacterExplanation": "DIM ocultará todo excepto el personaje jugado más reciente. Los inventarios de los otros personajes aparecerán como si fueran el depósito.",
+    "SingleCharacter": "Vista de Personaje Único",
+    "SingleCharacterExplanation": "DIM sólo mostrará el personaje más reciente usado.\nLos objetos en posesión por personajes ocultos aparecerán en el depósito si pueden ser usados por el personaje actual.\nLos objetos específicos para otras clases estarán completamente ocultos.",
     "SizeItem": "Tamaño de objeto",
     "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",

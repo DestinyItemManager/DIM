@@ -4,7 +4,8 @@
     "ConfirmTitle": "Confirmer L'Action",
     "Error": "Erreur lors du changement des mods ou des attributs",
     "ErrorMessage": "Nous n'avons pas pu équiper {{plug}} dans {{item}}.\n\n{{error}}",
-    "FailedToken": "Impossible d'obtenir la permission de modifier l'objet"
+    "FailedToken": "Impossible d'obtenir la permission de modifier l'objet",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
@@ -847,8 +848,8 @@
     "SetSort": "Trier les objets par :",
     "Settings": "Paramètres",
     "ShowNewItems": "Afficher un point rouge sur les nouveaux objets",
-    "SingleCharacter": "Afficher uniquement le personnage actuel",
-    "SingleCharacterExplanation": "DIM masquera tout les personnages sauf celui joué le plus récemment. L'inventaire de ces personnages apparaîtra comme étant dans le coffre.",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Taille des objets",
     "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",

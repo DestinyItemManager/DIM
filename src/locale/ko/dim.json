@@ -4,7 +4,8 @@
     "ConfirmTitle": "작업 확인",
     "Error": "개조 부품이나 특성 교체 실패",
     "ErrorMessage": "{{item}}에 {{plug}}을(를) 장착할 수 없습니다.\n\n{{error}}",
-    "FailedToken": "아이템을 변경할 권한이 없음"
+    "FailedToken": "아이템을 변경할 권한이 없음",
+    "IrreversiblePlugging": "{{plug}}을(를) 소지하고 있지 않으므로 덮어쓰지 않습니다."
   },
   "Accounts": {
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
@@ -141,7 +142,7 @@
     "Desc_male_plural": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 종류별로 {{count}}개의 빈 공간을 확보하고 있습니다.",
     "Desc_plural": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 종류별로 {{count}}개의 빈 공간을 확보하고 있습니다.",
     "FarmingMode": "파밍 모드",
-    "FarmingModeNote": "(획득할 아이템을 위해 빈 공간 유지)",
+    "FarmingModeNote": "(획득할 아이템을 위해 공간 관리)",
     "MakeRoom": {
       "Desc": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
       "Desc_female": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
@@ -847,8 +848,8 @@
     "SetSort": "아이템 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
-    "SingleCharacter": "현재 캐릭터만 표시",
-    "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
+    "SingleCharacter": "단일 캐릭터 보기",
+    "SingleCharacterExplanation": "DIM에서 가장 최근에 플레이한 캐릭터만 표시합니다.\n숨겨진 캐릭터가 소지한 아이템은 현재 캐릭터가 사용할 수 있는 경우 금고에 표시됩니다.\n다른 직업의 아이템은 완전히 숨겨집니다.",
     "SizeItem": "아이템 크기",
     "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",

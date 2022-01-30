@@ -4,7 +4,8 @@
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
-    "FailedToken": "无权限更换物品"
+    "FailedToken": "无权限更换物品",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
@@ -847,8 +848,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "设置",
     "ShowNewItems": "在新物品上显示红点",
-    "SingleCharacter": "只显示当前角色",
-    "SingleCharacterExplanation": "DIM 将只显示最近游玩的角色。其他角色的物品将和保险库显示在一起。",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",

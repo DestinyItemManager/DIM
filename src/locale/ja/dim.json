@@ -4,7 +4,8 @@
     "ConfirmTitle": "操作を確認",
     "Error": "Modまたはパークの変更でエラーが発生しました",
     "ErrorMessage": "{{item}} に {{plug}} を装備できませんでした。\n\n{{error}}",
-    "FailedToken": "アイテムを変更する権限を取得できません"
+    "FailedToken": "アイテムを変更する権限を取得できません",
+    "IrreversiblePlugging": "{{plug}} を所有していないため、上書きされません。"
   },
   "Accounts": {
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
@@ -847,8 +848,8 @@
     "SetSort": "アイテムを並べ替える：",
     "Settings": "設定",
     "ShowNewItems": "新しいアイテムに赤い点を表示",
-    "SingleCharacter": "現在のキャラクターのみを表示",
-    "SingleCharacterExplanation": "DIM は、最新のプレイしたキャラクターを除いて、すべてのキャラクターを非表示にします。これらのキャラクターのインベントリは、あたかも保管庫の中にあるかのように表示されます。",
+    "SingleCharacter": "キャラクター単体表示",
+    "SingleCharacterExplanation": "DIMは、最後にプレイしたキャラクターだけを表示します。\n表示されてないキャラクターが持っているアイテムで、現在のキャラクターが使用できる場合、保管庫に表示されます。 \n他のクラス固有のアイテムは、完全に隠されます。",
     "SizeItem": "アイテムサイズ",
     "SortByAmmoType": "弾のタイプ",
     "SortByAmount": "スタックサイズ",

@@ -4,7 +4,8 @@
     "ConfirmTitle": "Confirmar Ação",
     "Error": "Erro ao modificar mods ou perks",
     "ErrorMessage": "Não foi possível equipar {{plug}} em {{item}}.\n\n{{error}}",
-    "FailedToken": "Não foi possível obter a permissão para alterar o item"
+    "FailedToken": "Não foi possível obter a permissão para alterar o item",
+    "IrreversiblePlugging": "Você não possui {{plug}}, então não podemos sobrescrevê-lo."
   },
   "Accounts": {
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
@@ -847,8 +848,8 @@
     "SetSort": "Ordenar itens por:",
     "Settings": "Configurações",
     "ShowNewItems": "Exibe um ponto vermelho nos itens novos",
-    "SingleCharacter": "Exibir apenas o personagem atual",
-    "SingleCharacterExplanation": "DIM exibirá apenas o inventário do personagem mais recente. Os itens dos demais personagens aparecerão como se eles estivessem no cofre.",
+    "SingleCharacter": "Visão de Personagem-Ativo",
+    "SingleCharacterExplanation": "DIM exibirá apenas o personagem jogado mais recentemente.\nItens guardados pelos personagens ocultos aparecerão no Cofre, caso possam ser usados pelo personagem atual.\nItens específicos para outras classes serão totalmente ocultados.",
     "SizeItem": "Tamanho do item",
     "SortByAmmoType": "Tipo de Munição",
     "SortByAmount": "Tamanho da Pilha",
