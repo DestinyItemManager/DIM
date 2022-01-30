@@ -10,7 +10,6 @@ export interface InventoryBucket {
   readonly capacity: number;
   readonly accountWide: boolean;
   readonly category: BucketCategory;
-  /** @deprecated */
   readonly type?: DimBucketType;
   readonly sort?: D2BucketCategory | D1BucketCategory | 'Unknown';
   vaultBucket?: InventoryBucket;
@@ -25,7 +24,6 @@ export interface InventoryBucket {
 /** The major toplevel sections of the inventory. "Progress" is only in D1. */
 export type D2BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Inventory';
 export type D1BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Progress';
-/** @deprecated */
 export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTypes;
 
 export interface InventoryBuckets {

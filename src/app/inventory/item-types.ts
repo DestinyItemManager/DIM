@@ -47,9 +47,7 @@ export interface DimItem {
   classified: boolean;
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
-  /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash.
-   * @deprecated
-   */
+  /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash. */
   type: NonNullable<InventoryBucket['type']>;
   /** Localized name of this item's type. */
   typeName: string;

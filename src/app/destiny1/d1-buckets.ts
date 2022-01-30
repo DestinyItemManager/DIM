@@ -43,7 +43,6 @@ const bucketToTypeRaw = {
   [BucketHashes.Emblems]: 'Emblem',
 } as const;
 
-/** @deprecated */
 export type D1BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
 
 // A mapping from the bucket hash to DIM item types

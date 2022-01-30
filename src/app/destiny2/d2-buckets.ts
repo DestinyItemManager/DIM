@@ -48,11 +48,9 @@ const bucketToTypeRaw = {
   [BucketHashes.Finishers]: 'Finishers',
 } as const;
 
-/** @deprecated */
 export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
 
 // these don't have bucket hashes but may be manually assigned to DimItems
-/** @deprecated */
 export type D2AdditionalBucketTypes = 'Milestone' | 'Unknown';
 
 // A mapping from the bucket hash to DIM item types
