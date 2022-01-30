@@ -20,8 +20,8 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
-import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
+import styles from './Records.m.scss';
 
 interface Props {
   account: DestinyAccount;
@@ -118,7 +118,7 @@ export default function Records({ account }: Props) {
             ))}
           </div>
         )}
-        <div className="presentationNodeOptions">
+        <div className={styles.presentationNodeOptions}>
           <CheckButton
             name="hide-completed"
             checked={completedRecordsHidden}
@@ -136,7 +136,7 @@ export default function Records({ account }: Props) {
         </div>
       </PageWithMenu.Menu>
 
-      <PageWithMenu.Contents className="collections-page">
+      <PageWithMenu.Contents className={styles.page}>
         <section id="trackedTriumphs">
           <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
             <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
