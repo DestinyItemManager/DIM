@@ -1,0 +1,71 @@
+@import '../variables.scss';
+
+.loadoutOptions {
+  @include phone-portrait {
+    font-size: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  summary {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  details {
+    margin-top: 4px;
+  }
+}
+
+.secondary {
+  margin-left: auto;
+}
+
+// Group together buttons so they don't wrap onto different lines
+.inputGroup {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  @include horizontal-space-children(4px);
+
+  label {
+    width: fit-content;
+    white-space: nowrap;
+  }
+}
+
+.loadoutName {
+  width: 26em;
+  font-size: 18px;
+}
+
+.dimInput {
+  padding-left: 5px;
+  height: 23px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid #555;
+  color: white;
+  width: 100%;
+  font-size: 18px;
+
+  @include phone-portrait {
+    font-size: 14px;
+    height: 32px;
+  }
+
+  &:hover,
+  &:focus {
+    background: black;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+}

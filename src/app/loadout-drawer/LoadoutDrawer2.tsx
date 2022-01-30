@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { getStore } from 'app/inventory/stores-helpers';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useDefinitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -8,18 +9,15 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import { deleteLoadout, updateLoadout } from './actions';
-import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { Loadout } from './loadout-types';
-import { getModsFromLoadout } from './loadout-utils';
-import LoadoutDrawerOptions from './LoadoutDrawerOptions';
+import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
@@ -41,7 +39,7 @@ export default function LoadoutDrawer2() {
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
+  const [{ loadout, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
     modPicker: {
@@ -50,6 +48,7 @@ export default function LoadoutDrawer2() {
     showFashionDrawer: false,
   });
 
+  // TODO: move to a container?
   // Sync this global variable with our actual state. TODO: move to redux
   loadoutDialogOpen = Boolean(loadout);
 
@@ -69,6 +68,10 @@ export default function LoadoutDrawer2() {
 
   const loadoutItems = loadout?.items;
 
+  const store = storeId
+    ? getStore(stores, storeId)
+    : stores.find((s) => !s.isVault && s.classType === loadout?.classType);
+
   // Turn loadout items into real DimItems
   const [items] = useMemo(
     () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
@@ -82,7 +85,7 @@ export default function LoadoutDrawer2() {
   );
 
   /**
-   * If an item comes in on the addItem$ rx observable, add it.
+   * If an item comes in on the addItem$ observable, add it.
    */
   useEventBusListener(
     addItem$,
@@ -98,13 +101,19 @@ export default function LoadoutDrawer2() {
   const { pathname } = useLocation();
   useEffect(close, [pathname]);
 
-  const onSaveLoadout = (
-    e: React.MouseEvent,
-    loadoutToSave: Readonly<Loadout> | undefined = loadout
-  ) => {
+  const handleSaveLoadout = (e: React.MouseEvent, saveAsNew?: boolean) => {
     e.preventDefault();
-    if (!loadoutToSave) {
+    if (!loadout) {
       return;
+    }
+
+    let loadoutToSave = loadout;
+
+    if (saveAsNew) {
+      loadoutToSave = {
+        ...loadout,
+        id: uuidv4(), // Let it be a new ID
+      };
     }
 
     if (loadoutToSave.name === t('Loadouts.FromEquipped')) {
@@ -118,67 +127,40 @@ export default function LoadoutDrawer2() {
     close();
   };
 
-  const saveAsNew = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    if (!loadout) {
-      return;
-    }
-    const newLoadout = {
-      ...loadout,
-      id: uuidv4(), // Let it be a new ID
-    };
-    onSaveLoadout(e, newLoadout);
-  };
-
-  if (!loadout) {
+  if (!loadout || !store) {
     return null;
   }
 
-  const onDeleteLoadout = () => {
+  const handleDeleteLoadout = () => {
     dispatch(deleteLoadout(loadout.id));
     close();
   };
-
-  const savedMods = getModsFromLoadout(defs, loadout);
-
-  /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateModHashes = (mods: number[]) => stateDispatch({ type: 'updateMods', mods });
-  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
-    onUpdateModHashes(newMods.map((mod) => mod.hash));
 
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
   const header = (
-    <div className="loadout-drawer-header">
-      <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
-      <LoadoutDrawerOptions
-        loadout={loadout}
-        showClass={showClass}
-        isNew={isNew}
-        onUpdateMods={onUpdateMods}
-        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        saveLoadout={onSaveLoadout}
-        saveAsNew={saveAsNew}
-        deleteLoadout={onDeleteLoadout}
-      />
-      {loadout.notes !== undefined && (
-        <textarea
-          onChange={handleNotesChanged}
-          value={loadout.notes}
-          placeholder={t('Loadouts.NotesPlaceholder')}
-        />
-      )}
-      <GeneratedLoadoutStats items={items} loadout={loadout} savedMods={savedMods} />
-    </div>
+    <LoadoutDrawerHeader
+      loadout={loadout}
+      store={store}
+      isNew={isNew}
+      onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+      onNotesChanged={handleNotesChanged}
+      onSaveLoadout={handleSaveLoadout}
+      onDeleteLoadout={handleDeleteLoadout}
+    />
   );
 
-  const selectedStore = stores.find((s) => s.id === storeId);
+  // TODO: Bring back the drag zone
+  // TODO: minimize for better dragging/picking?
+  // TODO: actually make this editable
+  // TODO: how to choose equipped/unequipped
+  // TODO: contextual buttons!
+  // TODO: borders?
 
   return (
     <Sheet onClose={close} header={header} disabled={showingItemPicker}>
-      <LoadoutView store={selectedStore!} loadout={loadout} actionButtons={[]} />
+      <LoadoutView store={store} loadout={loadout} actionButtons={[]} />
     </Sheet>
   );
 }
