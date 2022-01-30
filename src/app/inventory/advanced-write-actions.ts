@@ -166,10 +166,10 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
       storeId,
       profileResponseSelector(getState())
     );
-    if (irreversiblePlugCheck.protected) {
+    if (irreversiblePlugCheck.protected && irreversiblePlugCheck.plug) {
       throw new DimError(
         t('AWA.IrreversiblePlugging', {
-          plug: irreversiblePlugCheck.plug!.plugDef.displayProperties.name,
+          plug: irreversiblePlugCheck.plug.plugDef.displayProperties.name,
         })
       );
     }
