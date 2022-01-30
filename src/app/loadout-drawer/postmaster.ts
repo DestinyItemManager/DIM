@@ -225,7 +225,7 @@ function moveItemsToVault(
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {};
     // reserve space for all move-asides
-    reservations[store.id] = _.countBy(items, (i) => i.type);
+    reservations[store.id] = _.countBy(items, (i) => i.bucket.hash);
 
     for (const item of items) {
       const stores = storesSelector(getState());
