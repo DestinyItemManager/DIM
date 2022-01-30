@@ -146,14 +146,12 @@ export default function LoadoutDrawerHeader({
               {t('Loadouts.SaveAsNew')}
             </button>
           )}
-        </div>
-        {!isNew && (
-          <div className={styles.inputGroup}>
+          {!isNew && (
             <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>
               <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
             </ConfirmButton>
-          </div>
-        )}
+          )}
+        </div>
         <div className={clsx(styles.inputGroup, styles.secondary)}>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}

@@ -1,6 +1,8 @@
 @import '../variables.scss';
 
 .loadoutOptions {
+  width: 100%;
+
   @include phone-portrait {
     font-size: 14px;
   }
@@ -35,11 +37,6 @@
     margin-bottom: 0;
   }
   @include horizontal-space-children(4px);
-
-  label {
-    width: fit-content;
-    white-space: nowrap;
-  }
 }
 
 .loadoutName {
