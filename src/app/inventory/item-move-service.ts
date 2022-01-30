@@ -53,11 +53,11 @@ import {
 } from './stores-helpers';
 
 /**
- * You can reserve a number of each type of item in each store.
+ * You can reserve a number of spaces in each BucketHash in each store.
  */
 export interface MoveReservations {
   [storeId: string]: {
-    [type: string]: number;
+    [type: number]: number;
   };
 }
 
@@ -488,7 +488,8 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 }
 
 interface MoveContext {
-  originalItemType: string;
+  /** Bucket hash */
+  originalItemType: number;
   excludes: Pick<DimItem, 'id' | 'hash'>[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
@@ -720,8 +721,8 @@ function canMoveToStore(
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
       // minus any reservations
-      if (reservations[s.id]?.[i.type]) {
-        left -= reservations[s.id][i.type];
+      if (reservations[s.id]?.[i.bucket.hash]) {
+        left -= reservations[s.id][i.bucket.hash];
       }
       // but not counting the original item that's moving
       if (
@@ -771,11 +772,11 @@ function canMoveToStore(
     } else {
       // Move aside one of the items that's in the way
       const moveContext: MoveContext = {
-        originalItemType: item.type,
+        originalItemType: item.bucket.hash,
         excludes,
         spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
-          if (i.type === this.originalItemType && storeReservations[s.id]) {
+          if (i.bucket.hash === this.originalItemType && storeReservations[s.id]) {
             left -= storeReservations[s.id];
           }
           return Math.max(0, left);

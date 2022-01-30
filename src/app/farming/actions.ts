@@ -206,7 +206,7 @@ function moveItemsToVault(
   // reserve one space in the active character
   reservations[store.id] = {};
   makeRoomBuckets.forEach((bucket) => {
-    reservations[store.id][bucket.type!] = 1;
+    reservations[store.id][bucket.hash] = 1;
   });
 
   return clearItemsOffCharacter(store, items, cancelToken, reservations);

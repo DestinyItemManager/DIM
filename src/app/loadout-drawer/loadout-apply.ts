@@ -716,7 +716,7 @@ function clearSpaceAfterLoadout(
     }
 
     // Reserve enough space to only leave the loadout items
-    reservations[store.id][loadoutItems[0].bucket.type!] =
+    reservations[store.id][loadoutItems[0].bucket.hash] =
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   }
 
