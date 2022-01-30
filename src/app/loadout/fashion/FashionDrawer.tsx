@@ -375,6 +375,7 @@ export default function FashionDrawer({
             item={armorItemsByBucketHash[bucketHash]}
             exampleItem={exampleItemsByBucketHash[bucketHash]}
             mods={modsByBucket[bucketHash]}
+            storeId={storeId}
             onPickPlug={setPickPlug}
             onRemovePlug={handleRemovePlug}
           />
@@ -409,6 +410,7 @@ function FashionItem({
   exampleItem,
   bucketHash,
   mods = [],
+  storeId,
   onPickPlug,
   onRemovePlug,
 }: {
@@ -416,6 +418,7 @@ function FashionItem({
   exampleItem?: DimItem;
   bucketHash: number;
   mods?: number[];
+  storeId?: string;
   onPickPlug(params: PickPlugState): void;
   onRemovePlug(bucketHash: number, modHash: number): void;
 }) {
@@ -460,6 +463,7 @@ function FashionItem({
         plug={shaderItem}
         exampleItem={exampleItem}
         defaultPlug={defaultShader}
+        storeId={storeId}
         onPickPlug={onPickPlug}
         onRemovePlug={onRemovePlug}
       />
@@ -469,6 +473,7 @@ function FashionItem({
         socket={ornamentSocket}
         plug={ornamentItem}
         exampleItem={exampleItem}
+        storeId={storeId}
         defaultPlug={defaultOrnament}
         onPickPlug={onPickPlug}
         onRemovePlug={onRemovePlug}
@@ -483,6 +488,7 @@ function FashionSocket({
   socket,
   plug,
   exampleItem,
+  storeId,
   defaultPlug,
   onPickPlug,
   onRemovePlug,
@@ -492,17 +498,21 @@ function FashionSocket({
   socket: DimSocket | undefined;
   plug: DestinyInventoryItemDefinition | undefined;
   exampleItem: DimItem;
+  storeId?: string;
   defaultPlug: DestinyInventoryItemDefinition;
   onPickPlug(params: PickPlugState): void;
   onRemovePlug(bucketHash: number, modHash: number): void;
 }) {
-  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
+  const unlockedPlugSetItems = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, storeId)
+  );
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
   const canSlotOrnament =
     plugHash !== undefined &&
     (plugHash === socket?.socketDefinition.singleInitialItemHash ||
       (unlockedPlugSetItems.has(plugHash) &&
-        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)));
+        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
+      socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
 
   return (
     <ClosableContainer

@@ -120,6 +120,7 @@ export default function LoadoutView({
                 key={category}
                 category={category}
                 subclass={subclass}
+                storeId={store.id}
                 items={categories[category]}
                 savedMods={savedMods}
                 modsByBucket={modsByBucket}
