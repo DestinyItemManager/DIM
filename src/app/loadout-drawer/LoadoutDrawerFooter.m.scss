@@ -1,0 +1,36 @@
+@import '../variables.scss';
+
+.loadoutOptions {
+  width: 100%;
+
+  @include phone-portrait {
+    font-size: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  summary {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  details {
+    margin-top: 4px;
+  }
+}
+
+// Group together buttons so they don't wrap onto different lines
+.inputGroup {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  @include horizontal-space-children(4px);
+}

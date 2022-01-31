@@ -1,9 +1,12 @@
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useDefinitions } from 'app/manifest/selectors';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -17,6 +20,10 @@ import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
+import { Loadout } from './loadout-types';
+import styles from './LoadoutDrawer2.m.scss';
+import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
@@ -139,28 +146,80 @@ export default function LoadoutDrawer2() {
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
-  const header = (
-    <LoadoutDrawerHeader
+  const handleUpdateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
+
+  const handleNameChanged = (name: string) =>
+    stateDispatch({ type: 'update', loadout: { ...loadout, name } });
+
+  const header = <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />;
+
+  const footer = (
+    <LoadoutDrawerFooter
       loadout={loadout}
-      store={store}
       isNew={isNew}
-      onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-      onNotesChanged={handleNotesChanged}
       onSaveLoadout={handleSaveLoadout}
       onDeleteLoadout={handleDeleteLoadout}
     />
   );
 
-  // TODO: Bring back the drag zone
   // TODO: minimize for better dragging/picking?
   // TODO: actually make this editable
   // TODO: how to choose equipped/unequipped
   // TODO: contextual buttons!
   // TODO: borders?
+  // TODO: does notes belong here, or in the header?
+
+  const setClearSpace = (clearSpace: boolean) => {
+    handleUpdateLoadout({
+      ...loadout,
+      clearSpace,
+    });
+  };
+
+  const toggleAnyClass = (checked: boolean) => {
+    handleUpdateLoadout({
+      ...loadout,
+      classType: checked ? DestinyClass.Unknown : store.classType,
+    });
+  };
 
   return (
-    <Sheet onClose={close} header={header} disabled={showingItemPicker}>
-      <LoadoutView store={store} loadout={loadout} actionButtons={[]} />
+    <Sheet onClose={close} header={header} footer={footer} disabled={showingItemPicker}>
+      <LoadoutDrawerDropTarget onDroppedItem={onAddItem} className={styles.body}>
+        <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
+          <summary>{t('MovePopup.Notes')}</summary>
+          <textarea
+            onChange={handleNotesChanged}
+            value={loadout.notes}
+            placeholder={t('Loadouts.NotesPlaceholder')}
+          />
+        </details>
+        <div>
+          <button type="button" className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
+          </button>
+          <button type="button" className="dim-button loadout-add">
+            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+          </button>
+        </div>
+        <LoadoutView store={store} loadout={loadout} actionButtons={[]} />
+        <div className={styles.inputGroup}>
+          <CheckButton
+            checked={loadout.classType === DestinyClass.Unknown}
+            onChange={toggleAnyClass}
+            name="anyClass"
+          >
+            {t('Loadouts.Any')}
+          </CheckButton>
+          <CheckButton
+            name="clearSpace"
+            checked={Boolean(loadout.clearSpace)}
+            onChange={setClearSpace}
+          >
+            {t('Loadouts.ClearSpace')}
+          </CheckButton>
+        </div>
+      </LoadoutDrawerDropTarget>
     </Sheet>
   );
 }
