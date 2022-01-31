@@ -1,7 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { isWeaponMasterworkSocket } from 'app/utils/socket-utils';
-import { DamageType } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**
@@ -91,4 +92,35 @@ function buildMasterworkInfo(
     tier: exoticWeapon ? maxTier : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
     stats,
   };
+}
+
+/**
+ * Determine if a masterwork with this primary stat would be a valid
+ * masterwork for this item.
+ */
+export function isValidMasterworkStat(
+  defs: D2ManifestDefinitions,
+  itemDef: DestinyInventoryItemDefinition,
+  statHash: number
+) {
+  // Bows have a charge time stat that nobody asked for
+  if (
+    statHash === StatHashes.ChargeTime &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Bows)
+  ) {
+    return false;
+  }
+
+  // Only swords have an impact masterwork
+  if (
+    statHash === StatHashes.Impact &&
+    !itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Sword)
+  ) {
+    return false;
+  }
+
+  const statGroupHash = itemDef.stats!.statGroupHash!;
+  const statGroupDef = defs.StatGroup.get(statGroupHash);
+
+  return statGroupDef.scaledStats.some((s) => s.statHash === statHash);
 }
