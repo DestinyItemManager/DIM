@@ -1,33 +1,51 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import {
-  allItemsSelector,
-  bucketsSelector,
-  unlockedPlugSetItemsSelector,
-} from 'app/inventory/selectors';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { ReactNode, useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
+import LoadoutMods from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
-import PlugDef from './loadout-ui/PlugDef';
 import styles from './LoadoutView.m.scss';
-import ModAssignmentDrawer from './mod-assignment-drawer/ModAssignmentDrawer';
-import { createGetModRenderKey } from './mod-utils';
+
+export function getItemsAndSubclassFromLoadout(
+  loadoutItems: LoadoutItem[],
+  store: DimStore,
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  allItems: DimItem[]
+): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
+  const [items, warnitems] = getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems);
+  let subclass: DimLoadoutItem | undefined;
+  for (const storeItem of items) {
+    if (storeItem.bucket.hash === BucketHashes.Subclass) {
+      const loadoutItem = items.find((loadoutItem) => loadoutItem.hash === storeItem.hash);
+      if (loadoutItem) {
+        subclass = { ...storeItem, socketOverrides: loadoutItem.socketOverrides };
+        break;
+      }
+    }
+  }
+  let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
+  if (subclass) {
+    equippableItems = equippableItems.filter((i) => i.hash !== subclass!.hash);
+  }
+  return [equippableItems, subclass, warnitems];
+}
 
 /**
  * A presentational component for a single loadout.
@@ -52,34 +70,16 @@ export default function LoadoutView({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
-  const getModRenderKey = createGetModRenderKey();
-  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const isPhonePortrait = useIsPhonePortrait();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [items, subclass, warnitems] = useMemo(() => {
-    const [items, warnitems] = getItemsFromLoadoutItems(loadout.items, defs, buckets, allItems);
-    let subclass: DimLoadoutItem | undefined;
-    for (const storeItem of items) {
-      if (storeItem.bucket.hash === BucketHashes.Subclass) {
-        const loadoutItem = items.find((loadoutItem) => loadoutItem.hash === storeItem.hash);
-        if (loadoutItem) {
-          subclass = { ...storeItem, socketOverrides: loadoutItem.socketOverrides };
-          break;
-        }
-      }
-    }
-    let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
-    if (subclass) {
-      equippableItems = equippableItems.filter((i) => i.hash !== subclass!.hash);
-    }
-    return [equippableItems, subclass, warnitems];
-  }, [loadout.items, defs, buckets, allItems, store]);
-
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, store.id)
+  const [items, subclass, warnitems] = useMemo(
+    () => getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems),
+    [loadout.items, defs, buckets, allItems, store]
   );
-  const savedMods = getModsFromLoadout(defs, loadout);
+
+  const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+
   // TODO: filter down by usable mods?
   const modsByBucket = loadout.parameters?.modsByBucket ?? {};
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
@@ -129,48 +129,15 @@ export default function LoadoutView({
                 hideOptimizeArmor={hideOptimizeArmor}
               />
             ))}
-            {savedMods.length > 0 ? (
-              <div className={styles.mods}>
-                <div className={styles.modsGrid}>
-                  {savedMods.map((mod) => (
-                    <PlugDef
-                      className={clsx({
-                        [styles.missingItem]: !(
-                          unlockedPlugSetItems.has(mod.hash) ||
-                          mod.hash === DEFAULT_SHADER ||
-                          DEFAULT_ORNAMENTS.includes(mod.hash)
-                        ),
-                      })}
-                      key={getModRenderKey(mod)}
-                      plug={mod}
-                    />
-                  ))}
-                </div>
-                {!hideShowModPlacements && (
-                  <button
-                    className={clsx('dim-button', styles.showModPlacementButton)}
-                    type="button"
-                    title="Show mod placement"
-                    onClick={() => setShowModAssignmentDrawer(true)}
-                  >
-                    {t('Loadouts.ShowModPlacement')}
-                  </button>
-                )}
-              </div>
-            ) : (
-              !isPhonePortrait && <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
-            )}
+            <LoadoutMods
+              loadout={loadout}
+              savedMods={savedMods}
+              storeId={store.id}
+              hideShowModPlacements={hideShowModPlacements}
+            />
           </>
         )}
       </div>
-      {showModAssignmentDrawer &&
-        ReactDOM.createPortal(
-          <ModAssignmentDrawer
-            loadout={loadout}
-            onClose={() => setShowModAssignmentDrawer(false)}
-          />,
-          document.body
-        )}
     </div>
   );
 }
