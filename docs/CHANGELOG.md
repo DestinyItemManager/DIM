@@ -1,5 +1,7 @@
 ## Next
 
+* Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
+
 ## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
 
 * Organizer drill-down buttons now show a more accurate armor count.
@@ -11,7 +13,6 @@
 * Widened and reorganized the Loadouts menu.
   * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
   * Randomize loadout is now at the end of the list of loadouts.
-* Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
 
 ## 7.2.0 <span class="changelog-date">(2022-01-23)</span>
 
