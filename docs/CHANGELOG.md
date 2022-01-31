@@ -1,5 +1,7 @@
 ## Next
 
+## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
+
 * Organizer drill-down buttons now show a more accurate armor count.
 * Delete Loadout button now looks more warning-ish, and asks for confirmation without using a popup.
 * DIM will now try to recover from a state where the browser has a corrupted storage database.
