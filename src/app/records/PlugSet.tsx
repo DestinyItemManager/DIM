@@ -10,7 +10,6 @@ import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
 import { VendorItem } from '../vendors/vendor-item';
 import VendorItemComponent from '../vendors/VendorItemComponent';
-import './collections.scss';
 
 const plugSetOrder = chainComparator<VendorItem>(
   compareBy((i) => i.item?.tier),
